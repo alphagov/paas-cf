@@ -1,0 +1,48 @@
+meta:
+  graphite_templates:
+    - name: metron_agent
+      release: cf
+    - name: carbon
+      release: graphite
+    - name: graphite-web
+      release: graphite
+    - name: statsd
+      release: graphite
+    - name: grafana
+      release: grafana
+
+releases:
+- name: graphite
+  version: db49809b0f339a45ae377fc162f01b0ec49c87dc
+
+jobs:
+- name: graphite_z1
+  instances: 1
+  resource_pool: graphite_z1
+  properties:
+    metron_agent:
+      zone: z1
+    carbon:
+      storage_schemas:
+        - name: "my_storage_schema"
+          pattern: "^my\\.metrics\\.*" # NB: Note the double escapes - this will evaluate to "^my\.metrics\.*"
+          retentions: "60s:1d"
+        - name: "my_storage_schema_2"
+          pattern: "metrics$"
+          retentions: "15s:7d,1m:21d,15m:5y"
+      storage_aggregations:
+        - name: "my_storage_aggregation"
+          pattern: "^my\\.metrics\\.*" # NB: Note the double escapes - this will evaluate to "^my\.metrics\.*"
+          xFilesFactor: "0.5"
+          aggregationMethod: "average"
+        - name: "my_storage_aggregation_2"
+          pattern: "metrics$"
+          xFilesFactor: "0.1"
+          aggregationMethod: "max"
+    graphite-web:
+      time_zone: Europe/London
+      httpd:
+        port: 80
+      wsgi:
+        inactivity-timeout: 60
+  templates: (( grab meta.graphite_templates ))
