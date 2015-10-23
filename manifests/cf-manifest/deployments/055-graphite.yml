@@ -39,6 +39,8 @@ jobs:
           pattern: "metrics$"
           xFilesFactor: "0.1"
           aggregationMethod: "max"
+      cache:
+        max_creates_per_minute: 500
     graphite-web:
       time_zone: Europe/London
       httpd:
