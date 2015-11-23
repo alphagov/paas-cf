@@ -22,6 +22,8 @@ jobs:
   properties:
     metron_agent:
       zone: z1
+    statsd:
+      deleteIdleStats: true
     carbon:
       filter:
         enable: true
