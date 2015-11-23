@@ -23,6 +23,10 @@ jobs:
     metron_agent:
       zone: z1
     carbon:
+      filter:
+        enable: true
+        blacklist:
+        - stats\.counters\.cfstats\.router_.+\.[0-9]+\.http\..+\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.*
       storage_schemas:
         - name: "my_storage_schema"
           pattern: "^my\\.metrics\\.*" # NB: Note the double escapes - this will evaluate to "^my\.metrics\.*"
