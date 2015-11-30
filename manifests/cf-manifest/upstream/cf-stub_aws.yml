@@ -1,0 +1,131 @@
+# The following line helps maintain current documentation at http://docs.cloudfoundry.org.
+# code_snippet cf-stub-aws start
+---
+meta:
+  environment: ENVIRONMENT
+
+director_uuid: DIRECTOR_UUID
+
+networks:
+- name: cf1
+  subnets:
+    - range: 10.10.16.0/20
+      reserved:
+        - 10.10.16.2 - 10.10.16.9
+      static:
+        - 10.10.16.10 - 10.10.16.255
+      gateway: 10.10.16.1
+      dns:
+        - 10.10.0.2
+      cloud_properties:
+        security_groups:
+          - cf
+        subnet: (( properties.template_only.aws.subnet_ids.cf1 ))
+- name: cf2
+  subnets:
+    - range: 10.10.80.0/20
+      reserved:
+        - 10.10.80.2 - 10.10.80.9
+      static:
+        - 10.10.80.10 - 10.10.80.255
+      gateway: 10.10.80.1
+      dns:
+        - 10.10.0.2
+      cloud_properties:
+        security_groups:
+          - cf
+        subnet: (( properties.template_only.aws.subnet_ids.cf2 ))
+
+properties:
+  template_only:
+    aws:
+      access_key_id: AWS_ACCESS_KEY
+      secret_access_key: AWS_SECRET_ACCESS_KEY
+      availability_zone: ZONE_1
+      availability_zone2: ZONE_2
+      subnet_ids:
+        cf1: SUBNET_ID_1
+        cf2: SUBNET_ID_2
+
+  domain: DOMAIN
+  system_domain: SYSTEM_DOMAIN
+  system_domain_organization: SYSTEM_DOMAIN_ORGANIZATION
+  app_domains:
+   - APP_DOMAIN
+
+  cc:
+    droplets:
+      droplet_directory_key: DROPLET_DIRECTORY_KEY
+    buildpacks:
+      buildpack_directory_key: BUILDPACK_DIRECTORY_KEY
+    staging_upload_user: STAGING_UPLOAD_USER
+    staging_upload_password: STAGING_UPLOAD_PASSWORD
+    bulk_api_password: BULK_API_PASSWORD
+    db_encryption_key: CCDB_ENCRYPTION_KEY
+  ccdb:
+    db_scheme: CCDB_SCHEME
+    roles:
+      - tag: CCDB_USER
+        name: CCDB_USER_NAME
+        password: CCDB_PASSWORD
+    databases:
+      - tag: cc
+        name: ccdb
+    address: CCDB_ADDRESS
+    port: CCDB_PORT
+  consul:
+    encrypt_keys:
+      - CONSUL_ENCRYPT_KEY
+    ca_cert: CONSUL_CA_CERT
+    server_cert: CONSUL_SERVER_CERT
+    server_key: CONSUL_SERVER_KEY
+    agent_cert: CONSUL_AGENT_CERT
+    agent_key: CONSUL_AGENT_KEY
+  loggregator_endpoint:
+    shared_secret: LOGGREGATOR_ENDPOINT_SHARED_SECRET
+  nats:
+    user: NATS_USER
+    password: NATS_PASSWORD
+  router:
+    status:
+      user: ROUTER_USER
+      password: ROUTER_PASSWORD
+  uaa:
+    admin:
+      client_secret: ADMIN_SECRET
+    cc:
+      client_secret: CC_CLIENT_SECRET
+    clients:
+      cc_routing:
+        secret: CC_ROUTING_SECRET
+      cloud_controller_username_lookup:
+        secret: CLOUD_CONTROLLER_USERNAME_LOOKUP_SECRET
+      doppler:
+        secret: DOPPLER_SECRET
+      gorouter:
+        secret: GOROUTER_SECRET
+      login:
+        secret: LOGIN_CLIENT_SECRET
+      notifications:
+        secret: NOTIFICATIONS_CLIENT_SECRET
+
+    jwt:
+      verification_key: JWT_VERIFICATION_KEY
+      signing_key: JWT_SIGNING_KEY
+    scim:
+      users:
+        - admin|ADMIN_PASSWORD|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose
+  uaadb:
+    db_scheme: UAADB_SCHEME
+    roles:
+      - tag: UAADB_USER
+        name: UAADB_USER_NAME
+        password: UAADB_USER_PASSWORD
+    databases:
+      - tag: uaa
+        name: uaadb
+    address: UAADB_ADDRESS
+    port: UAADB_PORT
+
+# code_snippet cf-stub-aws end
+# The previous line helps maintain current documentation at http://docs.cloudfoundry.org.
