@@ -25,6 +25,7 @@ jobs:
     statsd:
       deleteIdleStats: true
     carbon:
+      prune_delay: 10
       filter:
         enable: true
         blacklist:
