@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
 cd $(dirname $0)
 
-cat upstream-cf-manifest.yml
+spruce merge \
+  deployments/*.yml \
+  deployments/aws/*.yml
