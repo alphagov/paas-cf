@@ -1,9 +1,6 @@
-require 'yaml'
 
 RSpec.describe "generic manifest validations" do
-  before :all do
-    @manifest = YAML.load_file(File.expand_path("../../upstream-cf-manifest.yml", __FILE__))
-  end
+  let(:manifest) { manifest_with_defaults }
 
   describe "name uniqueness" do
     %w(
@@ -14,7 +11,7 @@ RSpec.describe "generic manifest validations" do
       resource_pools
     ).each do |resource_type|
       specify "all #{resource_type} have a unique name" do
-        all_resource_names = @manifest.fetch(resource_type, []).map {|r| r["name"]}
+        all_resource_names = manifest.fetch(resource_type, []).map {|r| r["name"]}
 
         duplicated_names = all_resource_names.select {|n| all_resource_names.count(n) > 1 }.uniq
         expect(duplicated_names).to be_empty,
@@ -25,18 +22,18 @@ RSpec.describe "generic manifest validations" do
 
   describe "jobs cross-references" do
     specify "all jobs reference resource_pools that exist" do
-      resource_pool_names = @manifest["resource_pools"].map {|r| r["name"]}
+      resource_pool_names = manifest["resource_pools"].map {|r| r["name"]}
 
-      @manifest["jobs"].each do |job|
+      manifest["jobs"].each do |job|
         expect(resource_pool_names).to include(job["resource_pool"]),
           "resource_pool #{job["resource_pool"]} not found for job #{job["name"]}"
       end
     end
 
     specify "all job templates reference releases that exist" do
-      release_names = @manifest["releases"].map {|r| r["name"]}
+      release_names = manifest["releases"].map {|r| r["name"]}
 
-      @manifest["jobs"].each do |job|
+      manifest["jobs"].each do |job|
         job["templates"].each do |template|
           expect(release_names).to include(template["release"]),
             "release #{template["release"]} not found for template #{template["name"]} in job #{job["name"]}"
@@ -45,9 +42,9 @@ RSpec.describe "generic manifest validations" do
     end
 
     specify "all jobs reference networks that exist" do
-      network_names = @manifest["networks"].map {|n| n["name"]}
+      network_names = manifest["networks"].map {|n| n["name"]}
 
-      @manifest["jobs"].each do |job|
+      manifest["jobs"].each do |job|
         job["networks"].each do |network|
           expect(network_names).to include(network["name"]),
             "network #{network["name"]} not found for job #{job["name"]}"
@@ -56,9 +53,9 @@ RSpec.describe "generic manifest validations" do
     end
 
     specify "all jobs reference disk_pools that exist" do
-      disk_pool_names = @manifest.fetch("disk_pools", {}).map {|p| p["name"]}
+      disk_pool_names = manifest.fetch("disk_pools", {}).map {|p| p["name"]}
 
-      @manifest["jobs"].each do |job|
+      manifest["jobs"].each do |job|
         next unless job["persistent_disk_pool"]
 
         expect(disk_pool_names).to include(job["persistent_disk_pool"]),
@@ -69,9 +66,9 @@ RSpec.describe "generic manifest validations" do
 
   describe "resource_pools cross-references" do
     specify "all resource_pools reference networks that exist" do
-      network_names = @manifest["networks"].map {|n| n["name"]}
+      network_names = manifest["networks"].map {|n| n["name"]}
 
-      @manifest["resource_pools"].each do |pool|
+      manifest["resource_pools"].each do |pool|
         expect(network_names).to include(pool["network"]),
           "network #{pool["network"]} not found for resource_pool #{pool["name"]}"
       end
