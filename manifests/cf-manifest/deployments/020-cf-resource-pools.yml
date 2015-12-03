@@ -5,67 +5,55 @@ meta:
     bosh:
       password: (( merge || "$6$4gDD3aV0rdqlrKC$2axHCxGKIObs6tAmMTqYCspcdvQXh3JJcvWOY2WGb4SrdXtnCyNaWlrf3WEqvYR2MYizEGp3kMmbpwBC6jsHt0" ))
 
-  stemcell: (( merge ))
-
 resource_pools:
   - name: small_z1
     network: cf1
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: small_z2
     network: cf2
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: medium_z1
     network: cf1
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: medium_z2
     network: cf2
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: large_z1
     network: cf1
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: large_z2
     network: cf2
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: runner_z1
     network: cf1
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: runner_z2
     network: cf2
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: router_z1
     network: (( merge || "cf1" ))
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: router_z2
     network: (( merge || "cf2" ))
     stemcell: (( meta.stemcell ))
-    cloud_properties: (( merge ))
     env: (( merge || meta.default_env ))
 
   - name: small_errand

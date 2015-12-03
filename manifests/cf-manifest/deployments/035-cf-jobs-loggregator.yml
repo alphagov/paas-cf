@@ -85,7 +85,6 @@ jobs:
         - (( "loggregator." .properties.domain ))
 
 properties:
-  <<: (( merge ))
 
   loggregator:
     maxRetainedLogMessages: 100
@@ -107,7 +106,6 @@ properties:
       cert: ~
       port: ~
       key: ~
-
 
   metron_agent:
     deployment: (( meta.environment ))

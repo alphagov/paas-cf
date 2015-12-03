@@ -29,12 +29,7 @@ meta:
       ports: '53'
 
 properties:
-  <<: (( merge ))
   app_ssh: ~
-  domain: (( merge ))
-
-  loggregator_endpoint:
-    shared_secret: (( merge ))
 
   cc:
     jobs:
@@ -84,17 +79,11 @@ properties:
     external_port: 9022
     srv_api_uri: (( "https://" external_host "." domain ))
 
-    bulk_api_password: (( merge ))
     internal_api_user: "internal_user"
     internal_api_password: (( bulk_api_password ))
 
     logging_level: debug2
     db_logging_level: debug2
-
-    staging_upload_user: (( merge ))
-    staging_upload_password: (( merge ))
-
-    db_encryption_key: (( merge ))
 
     directories: ~
 
@@ -223,8 +212,6 @@ properties:
     restricted_ips_regex: ~
 
   uaa:
-    catalina_opts: (( merge ))
-
     url: (( "https://uaa." domain ))
     issuer: (( url ))
 
@@ -233,19 +220,8 @@ properties:
 
     scim:
       userids_enabled: (( merge || true ))
-      users: (( merge ))
       external_groups: ~
       groups: ~
-
-    jwt:
-      signing_key: (( merge ))
-      verification_key: (( merge ))
-
-    cc:
-      client_secret: (( merge ))
-
-    admin:
-      client_secret: (( merge ))
 
     authentication:
       policy:
@@ -264,35 +240,28 @@ properties:
     user: ~
 
     clients:
-      <<: (( merge || nil ))
       login:
         override: true
         scope: openid,oauth.approvals
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
-        secret: (( merge ))
         authorized-grant-types: authorization_code,client_credentials,refresh_token
         redirect-uri: (( "https://login." domain ))
       notifications:
-        secret: (( merge ))
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials
       doppler:
         override: true
         authorities: uaa.resource
-        secret: (( merge ))
       cloud_controller_username_lookup:
         authorities: scim.userids
-        secret: (( merge ))
         authorized-grant-types: client_credentials
       cc_routing:
         authorities: routing.router_groups.read
-        secret: (( merge ))
         authorized-grant-types: client_credentials
       gorouter:
         authorities: clients.read,clients.write,clients.admin,routing.routes.write,routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
         scope: openid,cloud_controller_service_permissions.read
-        secret: (( merge ))
 
     database: ~
 

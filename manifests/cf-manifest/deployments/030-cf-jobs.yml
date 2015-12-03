@@ -1,9 +1,5 @@
 empty_hash: {}
 
-networks: (( merge ))
-
-lamb_meta: (( merge ))
-
 meta:
   environment: ~
 
@@ -488,8 +484,6 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-    properties:
-      <<: (( merge ))
     update: (( merge || empty_hash ))
 
   - name: loggregator_z2
@@ -498,8 +492,6 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-    properties:
-      <<: (( merge ))
     update: (( merge || empty_hash ))
 
   - name: doppler_z1
@@ -508,8 +500,6 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-    properties:
-      <<: (( merge ))
     update: (( merge || empty_hash ))
 
   - name: doppler_z2
@@ -518,8 +508,6 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-    properties:
-      <<: (( merge ))
     update: (( merge || empty_hash ))
 
   - name: loggregator_trafficcontroller_z1
@@ -528,8 +516,6 @@ jobs:
     resource_pool: small_z1
     networks:
       - name: cf1
-    properties:
-      <<: (( merge ))
     update: (( merge || empty_hash ))
 
   - name: loggregator_trafficcontroller_z2
@@ -538,8 +524,6 @@ jobs:
     resource_pool: small_z2
     networks:
       - name: cf2
-    properties:
-      <<: (( merge ))
     update: (( merge || empty_hash ))
 
   - name: router_z1
@@ -595,11 +579,8 @@ jobs:
     lifecycle: errand
     networks:
       - name: cf1
-    properties:
-      <<: (( merge ))
 
 properties:
-  <<: (( merge ))
   consul:
     agent:
       log_level: (( merge || nil ))
@@ -618,7 +599,6 @@ properties:
 
   support_address: (( merge || "http://support.cloudfoundry.com" ))
   description: null
-  domain: (( merge ))
   ssl:
     skip_cert_verify: (( merge || false ))
   system_domain: (( domain ))
@@ -630,8 +610,6 @@ properties:
   request_timeout_in_seconds: 900
 
   nats:
-    user: (( merge ))
-    password: (( merge ))
     address: (( merge || jobs.nats_z1.networks.cf1.static_ips.[0] ))
     port: 4222
     machines: (( merge || jobs.nats_z1.networks.cf1.static_ips jobs.nats_z2.networks.cf2.static_ips ))
@@ -676,12 +654,8 @@ properties:
     mtu: (( merge || nil ))
 
   loggregator:
-    <<: (( merge ))
     etcd:
       machines: (( .properties.etcd.machines ))
-
-  loggregator_endpoint:
-    shared_secret: (( merge ))
 
   doppler_endpoint:
     shared_secret: (( .properties.loggregator_endpoint.shared_secret ))
@@ -691,15 +665,7 @@ properties:
 
   logger_endpoint: ~
 
-  cc: (( merge ))
-  ccdb: (( merge ))
-
   ha_proxy: (( merge || nil ))
-
-  hm9000: (( merge ))
-
-  uaa: (( merge ))
-  uaadb: (( merge ))
 
   databases: ~
 
@@ -712,8 +678,6 @@ properties:
     ssl_skip_validation: (( merge || nil ))
     port: (( merge || nil ))
     status:
-      user: (( merge ))
-      password: (( merge ))
       port: (( merge || nil ))
     secure_cookies: (( merge || nil ))
     route_services_secret: (( merge || nil ))

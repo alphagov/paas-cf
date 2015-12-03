@@ -11,21 +11,12 @@ meta:
 
 name: (( meta.environment ))
 
-director_uuid: (( merge ))
-
 releases: (( merge || meta.releases ))
-
-networks: (( merge ))
-
-jobs: (( merge ))
-
-properties: (( merge ))
 
 compilation:
   workers: 6
   network: cf1
   reuse_compilation_vms: true
-  cloud_properties: (( merge ))
 
 update:
   canaries: 1
@@ -33,5 +24,3 @@ update:
   canary_watch_time: 30000-600000
   update_watch_time: 5000-600000
   serial: true
-
-resource_pools: (( merge ))
