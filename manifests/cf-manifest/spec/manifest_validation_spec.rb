@@ -20,6 +20,19 @@ RSpec.describe "generic manifest validations" do
     end
   end
 
+  describe "IP address uniqueness" do
+
+    specify "all jobs should use a unique IP address" do
+      all_ips = manifest["jobs"].map {|job|
+        job["networks"].map {|net| net["static_ips"]}
+      }.flatten.compact
+
+      duplicated_ips = all_ips.select {|ip| all_ips.count(ip) > 1 }.uniq
+      expect(duplicated_ips).to be_empty,
+        "found duplicate IP (#{duplicated_ips.join(',')})"
+    end
+  end
+
   describe "jobs cross-references" do
     specify "all jobs reference resource_pools that exist" do
       resource_pool_names = manifest["resource_pools"].map {|r| r["name"]}
