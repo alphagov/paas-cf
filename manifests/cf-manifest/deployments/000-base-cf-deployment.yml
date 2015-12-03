@@ -11,7 +11,7 @@ meta:
 
 name: (( meta.environment ))
 
-releases: (( merge || meta.releases ))
+releases: (( grab meta.releases ))
 
 compilation:
   workers: 6

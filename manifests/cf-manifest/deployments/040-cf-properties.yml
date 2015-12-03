@@ -127,11 +127,11 @@ properties:
       buildpack_directory_key: (( domain "-cc-buildpacks" ))
       fog_connection: ~
       cdn: ~
-    quota_definitions: (( merge || meta.default_quota_definitions ))
+    quota_definitions: (( grab meta.default_quota_definitions ))
     default_quota_definition: default
 
     user_buildpacks: []
-    system_buildpacks: (( merge || default_buildpacks ))
+    system_buildpacks: (( grab default_buildpacks ))
     default_buildpacks:
       - name: staticfile_buildpack
         package: buildpack_staticfile
@@ -154,7 +154,7 @@ properties:
 
     stacks: ~
 
-    security_group_definitions: (( merge || meta.default_security_group_definitions ))
+    security_group_definitions: (( grab meta.default_security_group_definitions ))
     default_running_security_groups: ["public_networks", "dns"]
     default_staging_security_groups: ["public_networks", "dns"]
 

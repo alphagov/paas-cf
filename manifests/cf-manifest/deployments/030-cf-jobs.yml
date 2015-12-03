@@ -4,15 +4,15 @@ meta:
   release:
     name: cf
 
-  consul_servers: (( merge || jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
+  consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
 
   nfs_client_ranges:
     - (( .networks.cf1.subnets.[0].range || nil ))
     - (( .networks.cf2.subnets.[0].range || nil ))
 
   nfs_server:
-    address: (( merge || jobs.nfs_z1.networks.cf1.static_ips.[0] || nil ))
-    allow_from_entries: (( merge || meta.nfs_client_ranges ))
+    address: (( grab jobs.nfs_z1.networks.cf1.static_ips.[0] || nil ))
+    allow_from_entries: (( grab meta.nfs_client_ranges ))
     share: ~
 
   api_routes:
@@ -160,7 +160,7 @@ meta:
 
 jobs:
   - name: consul_z1
-    templates: (( merge || meta.consul_templates ))
+    templates: (( grab meta.consul_templates ))
     instances: 2
     persistent_disk: 1024
     resource_pool: small_z1
@@ -178,7 +178,7 @@ jobs:
         zone: z1
 
   - name: consul_z2
-    templates: (( merge || meta.consul_templates ))
+    templates: (( grab meta.consul_templates ))
     instances: 1
     persistent_disk: 1024
     resource_pool: small_z2
@@ -196,25 +196,25 @@ jobs:
         zone: z2
 
   - name: ha_proxy_z1
-    templates: (( merge || meta.ha_proxy_templates ))
+    templates: (( grab meta.ha_proxy_templates ))
     instances: 0
     resource_pool: router_z1
     default_networks:
       - name: cf1
         static_ips: ~
-    networks: (( merge || default_networks ))
+    networks: (( grab default_networks ))
     properties:
       ha_proxy:
       router:
         servers:
-          z1: (( merge || jobs.router_z1.networks.cf1.static_ips ))
-          z2: (( merge || jobs.router_z2.networks.cf2.static_ips ))
+          z1: (( grab jobs.router_z1.networks.cf1.static_ips ))
+          z2: (( grab jobs.router_z2.networks.cf2.static_ips ))
       metron_agent:
         zone: z1
     update: {}
 
   - name: nats_z1
-    templates: (( merge || meta.nats_templates ))
+    templates: (( grab meta.nats_templates ))
     instances: 1
     resource_pool: medium_z1
     networks:
@@ -226,7 +226,7 @@ jobs:
     update: {}
 
   - name: nats_z2
-    templates: (( merge || meta.nats_templates ))
+    templates: (( grab meta.nats_templates ))
     instances: 1
     resource_pool: medium_z2
     networks:
@@ -238,7 +238,7 @@ jobs:
     update: {}
 
   - name: etcd_z1
-    templates: (( merge || meta.etcd_templates ))
+    templates: (( grab meta.etcd_templates ))
     instances: 2
     persistent_disk: 10024
     resource_pool: medium_z1
@@ -252,7 +252,7 @@ jobs:
       max_in_flight: 1
 
   - name: etcd_z2
-    templates: (( merge || meta.etcd_templates ))
+    templates: (( grab meta.etcd_templates ))
     instances: 1
     persistent_disk: 10024
     resource_pool: medium_z2
@@ -266,7 +266,7 @@ jobs:
       max_in_flight: 1
 
   - name: stats_z1
-    templates: (( merge || meta.stats_templates ))
+    templates: (( grab meta.stats_templates ))
     instances: 1
     resource_pool: small_z1
     networks:
@@ -277,7 +277,7 @@ jobs:
     update: {}
 
   - name: nfs_z1
-    templates: (( merge || meta.nfs_templates ))
+    templates: (( grab meta.nfs_templates ))
     instances: 0
     resource_pool: medium_z1
     persistent_disk: 102400
@@ -290,7 +290,7 @@ jobs:
     update: {}
 
   - name: postgres_z1
-    templates: (( merge || meta.postgres_templates ))
+    templates: (( grab meta.postgres_templates ))
     instances: 0
     resource_pool: medium_z1
     persistent_disk: 4096
@@ -303,7 +303,7 @@ jobs:
     update: {}
 
   - name: uaa_z1
-    templates: (( merge || meta.uaa_templates ))
+    templates: (( grab meta.uaa_templates ))
     instances: 1
     resource_pool: medium_z1
     networks:
@@ -316,14 +316,14 @@ jobs:
       metron_agent:
         zone: z1
       route_registrar:
-        routes: (( merge || meta.uaa_routes ))
+        routes: (( grab meta.uaa_routes ))
       uaa:
         proxy:
-          servers: (( merge || jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
+          servers: (( grab jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
     update: {}
 
   - name: uaa_z2
-    templates: (( merge || meta.uaa_templates ))
+    templates: (( grab meta.uaa_templates ))
     instances: 1
     resource_pool: medium_z2
     networks:
@@ -336,14 +336,14 @@ jobs:
       metron_agent:
         zone: z2
       route_registrar:
-        routes: (( merge || meta.uaa_routes ))
+        routes: (( grab meta.uaa_routes ))
       uaa:
         proxy:
-          servers: (( merge || jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
+          servers: (( grab jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
     update: {}
 
   - name: api_z1
-    templates: (( merge || meta.api_templates ))
+    templates: (( grab meta.api_templates ))
     instances: 1
     resource_pool: large_z1
     persistent_disk: 0
@@ -358,12 +358,12 @@ jobs:
       metron_agent:
         zone: z1
       route_registrar:
-        routes: (( merge || meta.api_routes ))
+        routes: (( grab meta.api_routes ))
       nfs_server: (( meta.nfs_server ))
     update: {}
 
   - name: api_z2
-    templates: (( merge || meta.api_templates ))
+    templates: (( grab meta.api_templates ))
     instances: 1
     resource_pool: large_z2
     persistent_disk: 0
@@ -378,12 +378,12 @@ jobs:
       metron_agent:
         zone: z2
       route_registrar:
-        routes: (( merge || meta.api_routes ))
+        routes: (( grab meta.api_routes ))
       nfs_server: (( meta.nfs_server ))
     update: {}
 
   - name: clock_global
-    templates: (( merge || meta.clock_templates ))
+    templates: (( grab meta.clock_templates ))
     instances: 1
     resource_pool: medium_z1
     persistent_disk: 0
@@ -395,7 +395,7 @@ jobs:
     update: {}
 
   - name: api_worker_z1
-    templates: (( merge || meta.api_worker_templates ))
+    templates: (( grab meta.api_worker_templates ))
     instances: 1
     resource_pool: small_z1
     persistent_disk: 0
@@ -408,7 +408,7 @@ jobs:
     update: {}
 
   - name: api_worker_z2
-    templates: (( merge || meta.api_worker_templates ))
+    templates: (( grab meta.api_worker_templates ))
     instances: 1
     resource_pool: small_z2
     persistent_disk: 0
@@ -421,7 +421,7 @@ jobs:
     update: {}
 
   - name: hm9000_z1
-    templates: (( merge || meta.hm9000_templates ))
+    templates: (( grab meta.hm9000_templates ))
     instances: 1
     resource_pool: medium_z1
     networks:
@@ -430,11 +430,11 @@ jobs:
       metron_agent:
         zone: z1
       route_registrar:
-        routes: (( merge || meta.hm9000_routes ))
+        routes: (( grab meta.hm9000_routes ))
     update: {}
 
   - name: hm9000_z2
-    templates: (( merge || meta.hm9000_templates ))
+    templates: (( grab meta.hm9000_templates ))
     instances: 1
     resource_pool: medium_z2
     networks:
@@ -443,11 +443,11 @@ jobs:
       metron_agent:
         zone: z2
       route_registrar:
-        routes: (( merge || meta.hm9000_routes ))
+        routes: (( grab meta.hm9000_routes ))
     update: {}
 
   - name: runner_z1
-    templates: (( merge || meta.dea_templates ))
+    templates: (( grab meta.dea_templates ))
     instances: 1
     resource_pool: runner_z1
     networks:
@@ -462,7 +462,7 @@ jobs:
       max_in_flight: 1
 
   - name: runner_z2
-    templates: (( merge || meta.dea_templates ))
+    templates: (( grab meta.dea_templates ))
     instances: 1
     resource_pool: runner_z2
     networks:
@@ -477,7 +477,7 @@ jobs:
       max_in_flight: 1
 
   - name: loggregator_z1
-    templates: (( merge || lamb_meta.loggregator_templates ))
+    templates: (( grab lamb_meta.loggregator_templates ))
     instances: 0
     resource_pool: medium_z1
     networks:
@@ -485,7 +485,7 @@ jobs:
     update: {}
 
   - name: loggregator_z2
-    templates: (( merge || lamb_meta.loggregator_templates ))
+    templates: (( grab lamb_meta.loggregator_templates ))
     instances: 0
     resource_pool: medium_z2
     networks:
@@ -493,7 +493,7 @@ jobs:
     update: {}
 
   - name: doppler_z1
-    templates: (( merge || lamb_meta.loggregator_templates ))
+    templates: (( grab lamb_meta.loggregator_templates ))
     instances: 1
     resource_pool: medium_z1
     networks:
@@ -501,7 +501,7 @@ jobs:
     update: {}
 
   - name: doppler_z2
-    templates: (( merge || lamb_meta.loggregator_templates ))
+    templates: (( grab lamb_meta.loggregator_templates ))
     instances: 1
     resource_pool: medium_z2
     networks:
@@ -509,7 +509,7 @@ jobs:
     update: {}
 
   - name: loggregator_trafficcontroller_z1
-    templates: (( merge || lamb_meta.loggregator_trafficcontroller_templates ))
+    templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
     instances: 1
     resource_pool: small_z1
     networks:
@@ -517,7 +517,7 @@ jobs:
     update: {}
 
   - name: loggregator_trafficcontroller_z2
-    templates: (( merge || lamb_meta.loggregator_trafficcontroller_templates ))
+    templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
     instances: 1
     resource_pool: small_z2
     networks:
@@ -525,13 +525,13 @@ jobs:
     update: {}
 
   - name: router_z1
-    templates: (( merge || meta.router_templates ))
+    templates: (( grab meta.router_templates ))
     instances: 1
     resource_pool: router_z1
     default_networks:
       - name: cf1
         static_ips: ~
-    networks: (( merge || default_networks ))
+    networks: (( grab default_networks ))
     properties:
       consul:
         agent:
@@ -542,13 +542,13 @@ jobs:
     update: {}
 
   - name: router_z2
-    templates: (( merge || meta.router_templates ))
+    templates: (( grab meta.router_templates ))
     instances: 1
     resource_pool: router_z2
     default_networks:
       - name: cf2
         static_ips: ~
-    networks: (( merge || default_networks ))
+    networks: (( grab default_networks ))
     properties:
       consul:
         agent:
@@ -608,16 +608,16 @@ properties:
   request_timeout_in_seconds: 900
 
   nats:
-    address: (( merge || jobs.nats_z1.networks.cf1.static_ips.[0] ))
+    address: (( grab jobs.nats_z1.networks.cf1.static_ips.[0] ))
     port: 4222
-    machines: (( merge || jobs.nats_z1.networks.cf1.static_ips jobs.nats_z2.networks.cf2.static_ips ))
+    machines: (( grab jobs.nats_z1.networks.cf1.static_ips jobs.nats_z2.networks.cf2.static_ips ))
     debug: false
     trace: false
     monitor_port: 0
     prof_port: 0
 
   etcd:
-    machines: (( merge || jobs.etcd_z1.networks.cf1.static_ips jobs.etcd_z2.networks.cf2.static_ips ))
+    machines: (( grab jobs.etcd_z1.networks.cf1.static_ips jobs.etcd_z2.networks.cf2.static_ips ))
     require_ssl: false
     peer_require_ssl: false
 
