@@ -80,7 +80,7 @@ properties:
     srv_api_uri: (( "https://" external_host "." domain ))
 
     internal_api_user: "internal_user"
-    internal_api_password: (( bulk_api_password ))
+    internal_api_password: (( properties.cc.bulk_api_password ))
 
     logging_level: debug2
     db_logging_level: debug2
@@ -94,12 +94,12 @@ properties:
     broker_client_max_async_poll_duration_minutes: ~
 
     resource_pool:
-      resource_directory_key: (( domain "-cc-resources" ))
+      resource_directory_key: (( properties.domain "-cc-resources" ))
       fog_connection: ~
       cdn: ~
 
     packages:
-      app_package_directory_key: (( domain "-cc-packages" ))
+      app_package_directory_key: (( properties.domain "-cc-packages" ))
       fog_connection: ~
       cdn: ~
       max_package_size: 1073741824
@@ -131,7 +131,7 @@ properties:
     default_quota_definition: default
 
     user_buildpacks: []
-    system_buildpacks: (( grab default_buildpacks ))
+    system_buildpacks: (( grab properties.cc.default_buildpacks ))
     default_buildpacks:
       - name: staticfile_buildpack
         package: buildpack_staticfile
@@ -150,7 +150,7 @@ properties:
       - name: binary_buildpack
         package: buildpack_binary
 
-    install_buildpacks: (( system_buildpacks user_buildpacks ))
+    install_buildpacks: (( properties.cc.system_buildpacks properties.cc.user_buildpacks ))
 
     stacks: ~
 
@@ -213,7 +213,7 @@ properties:
 
   uaa:
     url: (( "https://uaa." domain ))
-    issuer: (( url ))
+    issuer: (( properties.uaa.url ))
 
     no_ssl: ~
     require_https: ~

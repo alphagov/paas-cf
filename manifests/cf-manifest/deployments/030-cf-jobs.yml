@@ -202,7 +202,7 @@ jobs:
     default_networks:
       - name: cf1
         static_ips: ~
-    networks: (( grab default_networks ))
+    networks: (( grab jobs.ha_proxy_z1.default_networks ))
     properties:
       ha_proxy:
       router:
