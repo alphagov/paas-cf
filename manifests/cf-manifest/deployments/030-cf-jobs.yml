@@ -7,8 +7,8 @@ meta:
   consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
 
   nfs_client_ranges:
-    - (( .networks.cf1.subnets.[0].range || nil ))
-    - (( .networks.cf2.subnets.[0].range || nil ))
+    - (( grab networks.cf1.subnets.[0].range || nil ))
+    - (( grab networks.cf2.subnets.[0].range || nil ))
 
   nfs_server:
     address: (( grab jobs.nfs_z1.networks.cf1.static_ips.[0] || nil ))
@@ -19,71 +19,71 @@ meta:
   - name: api
     tags:
       component: CloudController
-    port: (( .properties.cc.external_port ))
+    port: (( grab properties.cc.external_port ))
     uris:
-    - (( "api." .properties.domain ))
+    - (( concat "api." properties.domain ))
 
   api_templates:
   - name: cloud_controller_ng
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: routing-api
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: statsd-injector
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
   - name: consul_agent
-    release: (( meta.consul_templates.consul_agent.release ))
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: route_registrar
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   api_worker_templates:
   - name: cloud_controller_worker
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: consul_agent
-    release: (( meta.consul_templates.consul_agent.release ))
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   clock_templates:
   - name: cloud_controller_clock
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   consul_templates:
   - name: consul_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   dea_templates:
   - name: dea_next
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: dea_logging_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   etcd_templates:
   - name: etcd
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: etcd_metrics_server
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   ha_proxy_templates:
   - name: haproxy
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: consul_agent
-    release: (( meta.consul_templates.consul_agent.release ))
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   hm9000_routes:
   - name: hm9000
@@ -91,72 +91,72 @@ meta:
     tags:
       component: HM9K
     uris:
-    - (( "hm9000." .properties.domain ))
+    - (( concat "hm9000." properties.domain ))
 
   hm9000_templates:
   - name: hm9000
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: route_registrar
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   nats_templates:
   - name: nats
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: nats_stream_forwarder
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   nfs_templates:
   - name: debian_nfs_server
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   postgres_templates:
   - name: postgres
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   router_templates:
   - name: gorouter
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: consul_agent
-    release: (( meta.consul_templates.consul_agent.release ))
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   stats_templates:
   - name: collector
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
   uaa_routes:
   - name: uaa
-    port: (( .properties.uaa.port ))
+    port: (( grab properties.uaa.port ))
     tags:
       component: uaa
     uris:
-    - (( "uaa." .properties.domain ))
-    - (( "*.uaa." .properties.domain ))
-    - (( "login." .properties.domain ))
-    - (( "*.login." .properties.domain ))
+    - (( concat "uaa." properties.domain ))
+    - (( concat "*.uaa." properties.domain ))
+    - (( concat "login." properties.domain ))
+    - (( concat "*.login." properties.domain ))
 
   uaa_templates:
   - name: uaa
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: consul_agent
-    release: (( meta.consul_templates.consul_agent.release ))
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: route_registrar
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: statsd-injector
-    release: (( meta.release.name ))
+    release: (( grab meta.release.name ))
 
 jobs:
   - name: consul_z1
@@ -359,7 +359,7 @@ jobs:
         zone: z1
       route_registrar:
         routes: (( grab meta.api_routes ))
-      nfs_server: (( meta.nfs_server ))
+      nfs_server: (( grab meta.nfs_server ))
     update: {}
 
   - name: api_z2
@@ -379,7 +379,7 @@ jobs:
         zone: z2
       route_registrar:
         routes: (( grab meta.api_routes ))
-      nfs_server: (( meta.nfs_server ))
+      nfs_server: (( grab meta.nfs_server ))
     update: {}
 
   - name: clock_global
@@ -404,7 +404,7 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-      nfs_server: (( meta.nfs_server ))
+      nfs_server: (( grab meta.nfs_server ))
     update: {}
 
   - name: api_worker_z2
@@ -417,7 +417,7 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-      nfs_server: (( meta.nfs_server ))
+      nfs_server: (( grab meta.nfs_server ))
     update: {}
 
   - name: hm9000_z1
@@ -561,7 +561,7 @@ jobs:
   - name: acceptance_tests
     templates:
     - name: acceptance-tests
-      release: (( meta.release.name ))
+      release: (( grab meta.release.name ))
     instances: 1
     resource_pool: small_errand
     lifecycle: errand
@@ -571,19 +571,20 @@ jobs:
   - name: smoke_tests
     templates:
     - name: smoke-tests
-      release: (( meta.release.name ))
+      release: (( grab meta.release.name ))
     instances: 0
     resource_pool: small_errand
     lifecycle: errand
     networks:
       - name: cf1
+    properties: {}
 
 properties:
   consul:
     agent:
       log_level:
       servers:
-        lan: (( meta.consul_servers ))
+        lan: (( grab meta.consul_servers ))
     ca_cert:
     agent_cert:
     agent_key:
@@ -599,9 +600,10 @@ properties:
   description: null
   ssl:
     skip_cert_verify: false
-  system_domain: (( domain ))
+  system_domain: (( grab properties.domain ))
   system_domain_organization: ~
-  app_domains: (( [domain] ))
+  app_domains:
+    - (( grab properties.domain ))
 
   disk_quota_enabled: true
 
@@ -623,9 +625,9 @@ properties:
 
   etcd_metrics_server:
     nats:
-      machines: (( .properties.nats.machines ))
-      username: (( .properties.nats.user ))
-      password: (( .properties.nats.password ))
+      machines: (( grab properties.nats.machines ))
+      username: (( grab properties.nats.user ))
+      password: (( grab properties.nats.password ))
 
   dea_next:
     memory_overcommit_factor: null
@@ -653,13 +655,13 @@ properties:
 
   loggregator:
     etcd:
-      machines: (( .properties.etcd.machines ))
+      machines: (( grab properties.etcd.machines ))
 
   doppler_endpoint:
-    shared_secret: (( .properties.loggregator_endpoint.shared_secret ))
+    shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
 
   metron_endpoint:
-    shared_secret: (( .properties.loggregator_endpoint.shared_secret ))
+    shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
 
   logger_endpoint: ~
 
@@ -687,7 +689,7 @@ properties:
 
   syslog_daemon_config: ~
 
-  nfs_server: (( meta.nfs_server ))
+  nfs_server: (( grab meta.nfs_server ))
 
   collector:
 

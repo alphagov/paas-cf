@@ -9,7 +9,7 @@ meta:
   - name: cf
     version: latest
 
-name: (( meta.environment ))
+name: (( grab meta.environment ))
 
 releases: (( grab meta.releases ))
 

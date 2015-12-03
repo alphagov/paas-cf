@@ -77,10 +77,10 @@ properties:
 
     external_host: api
     external_port: 9022
-    srv_api_uri: (( "https://" external_host "." domain ))
+    srv_api_uri: (( concat "https://" properties.cc.external_host "." properties.domain ))
 
     internal_api_user: "internal_user"
-    internal_api_password: (( properties.cc.bulk_api_password ))
+    internal_api_password: (( grab properties.cc.bulk_api_password ))
 
     logging_level: debug2
     db_logging_level: debug2
@@ -94,19 +94,19 @@ properties:
     broker_client_max_async_poll_duration_minutes: ~
 
     resource_pool:
-      resource_directory_key: (( properties.domain "-cc-resources" ))
+      resource_directory_key: (( concat properties.domain "-cc-resources" ))
       fog_connection: ~
       cdn: ~
 
     packages:
-      app_package_directory_key: (( properties.domain "-cc-packages" ))
+      app_package_directory_key: (( concat properties.domain "-cc-packages" ))
       fog_connection: ~
       cdn: ~
       max_package_size: 1073741824
       max_valid_packages_stored: ~
 
     droplets:
-      droplet_directory_key: (( domain "-cc-droplets" ))
+      droplet_directory_key: (( concat properties.domain "-cc-droplets" ))
       fog_connection: ~
       cdn: ~
       max_staged_droplets_stored: ~
@@ -115,8 +115,8 @@ properties:
 
     newrelic:
       license_key: ~
-      environment_name: (( meta.environment ))
-      developer_mode: (( cc.development_mode ))
+      environment_name: (( grab meta.environment ))
+      developer_mode: (( grab properties.cc.development_mode ))
       monitor_mode: false
       capture_params: false
       transaction_tracer:
@@ -124,7 +124,7 @@ properties:
         record_sql: "obfuscated"
 
     buildpacks:
-      buildpack_directory_key: (( domain "-cc-buildpacks" ))
+      buildpack_directory_key: (( concat properties.domain "-cc-buildpacks" ))
       fog_connection: ~
       cdn: ~
     quota_definitions: (( grab meta.default_quota_definitions ))
@@ -150,7 +150,7 @@ properties:
       - name: binary_buildpack
         package: buildpack_binary
 
-    install_buildpacks: (( properties.cc.system_buildpacks properties.cc.user_buildpacks ))
+    install_buildpacks: (( grab properties.cc.system_buildpacks properties.cc.user_buildpacks ))
 
     stacks: ~
 
@@ -171,7 +171,7 @@ properties:
     external_protocol: ~
 
   hm9000:
-    url: (( "https://hm9000." domain ))
+    url: (( concat "https://hm9000." properties.domain ))
 
   login:
     enabled: true
@@ -200,8 +200,8 @@ properties:
       password: ~
 
     links:
-      passwd: (( "https://console." domain "/password_resets/new" ))
-      signup: (( "https://console." domain "/register" ))
+      passwd: (( concat "https://console." properties.domain "/password_resets/new" ))
+      signup: (( concat "https://console." properties.domain "/register" ))
 
     logout: ~
 
@@ -212,8 +212,8 @@ properties:
     restricted_ips_regex: ~
 
   uaa:
-    url: (( "https://uaa." domain ))
-    issuer: (( properties.uaa.url ))
+    url: (( concat "https://uaa." properties.domain ))
+    issuer: (( grab properties.uaa.url ))
 
     no_ssl: ~
     require_https: ~
@@ -245,7 +245,7 @@ properties:
         scope: openid,oauth.approvals
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
         authorized-grant-types: authorization_code,client_credentials,refresh_token
-        redirect-uri: (( "https://login." domain ))
+        redirect-uri: (( concat "https://login." properties.domain ))
       notifications:
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials

@@ -7,19 +7,19 @@ lamb_meta:
 
   loggregator_templates:
   - name: doppler
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
   - name: syslog_drain_binder
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
   - name: metron_agent
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
 
   loggregator_trafficcontroller_templates:
   - name: loggregator_trafficcontroller
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
   - name: metron_agent
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
   - name: route_registrar
-    release: (( lamb_meta.release.name ))
+    release: (( grab lamb_meta.release.name ))
 
 jobs:
 - name: loggregator_z1
@@ -59,13 +59,13 @@ jobs:
     route_registrar:
       routes:
       - name: doppler
-        port: (( .properties.loggregator.outgoing_dropsonde_port ))
+        port: (( grab properties.loggregator.outgoing_dropsonde_port ))
         uris:
-        - (( "doppler." .properties.domain ))
+        - (( concat "doppler." properties.domain ))
       - name: loggregator
-        port: (( .properties.traffic_controller.outgoing_port ))
+        port: (( grab properties.traffic_controller.outgoing_port ))
         uris:
-        - (( "loggregator." .properties.domain ))
+        - (( concat "loggregator." properties.domain ))
 
 - name: loggregator_trafficcontroller_z2
   properties:
@@ -76,13 +76,13 @@ jobs:
     route_registrar:
       routes:
       - name: doppler
-        port: (( .properties.loggregator.outgoing_dropsonde_port ))
+        port: (( grab properties.loggregator.outgoing_dropsonde_port ))
         uris:
-        - (( "doppler." .properties.domain ))
+        - (( concat "doppler." properties.domain ))
       - name: loggregator
-        port: (( .properties.traffic_controller.outgoing_port ))
+        port: (( grab properties.traffic_controller.outgoing_port ))
         uris:
-        - (( "loggregator." .properties.domain ))
+        - (( concat "loggregator." properties.domain ))
 
 properties:
 
@@ -108,7 +108,7 @@ properties:
       key: ~
 
   metron_agent:
-    deployment: (( meta.environment ))
+    deployment: (( grab meta.environment ))
     preferred_protocol: ~
     tls_client:
       cert: ~

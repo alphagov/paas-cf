@@ -20,7 +20,7 @@ networks:
       cloud_properties:
         security_groups:
           - cf
-        subnet: (( properties.template_only.aws.subnet_ids.cf1 ))
+        subnet: (( grab properties.template_only.aws.subnet_ids.cf1 ))
 - name: cf2
   subnets:
     - range: 10.10.80.0/20
@@ -34,7 +34,7 @@ networks:
       cloud_properties:
         security_groups:
           - cf
-        subnet: (( properties.template_only.aws.subnet_ids.cf2 ))
+        subnet: (( grab properties.template_only.aws.subnet_ids.cf2 ))
 
 properties:
   template_only:
