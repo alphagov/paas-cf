@@ -130,7 +130,7 @@ properties:
     quota_definitions: (( merge || meta.default_quota_definitions ))
     default_quota_definition: default
 
-    user_buildpacks: (( merge || [] ))
+    user_buildpacks: []
     system_buildpacks: (( merge || default_buildpacks ))
     default_buildpacks:
       - name: staticfile_buildpack
@@ -155,10 +155,10 @@ properties:
     stacks: ~
 
     security_group_definitions: (( merge || meta.default_security_group_definitions ))
-    default_running_security_groups: (( merge || ["public_networks", "dns"] ))
-    default_staging_security_groups: (( merge || ["public_networks", "dns"] ))
+    default_running_security_groups: ["public_networks", "dns"]
+    default_staging_security_groups: ["public_networks", "dns"]
 
-    allowed_cors_domains: (( merge || [] ))
+    allowed_cors_domains: []
     thresholds:
       api:
         alert_if_above_mb: ~
@@ -219,7 +219,7 @@ properties:
     require_https: ~
 
     scim:
-      userids_enabled: (( merge || true ))
+      userids_enabled: true
       external_groups: ~
       groups: ~
 
@@ -267,4 +267,4 @@ properties:
 
     restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
 
-    zones: (( merge || nil ))
+    zones:

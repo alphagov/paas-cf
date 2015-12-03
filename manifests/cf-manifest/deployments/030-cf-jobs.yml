@@ -1,5 +1,3 @@
-empty_hash: {}
-
 meta:
   environment: ~
 
@@ -168,7 +166,7 @@ jobs:
     resource_pool: small_z1
     networks:
       - name: cf1
-        static_ips: (( merge || nil ))
+        static_ips:
     update:
       serial: true
       max_in_flight: 1
@@ -186,7 +184,7 @@ jobs:
     resource_pool: small_z2
     networks:
       - name: cf2
-        static_ips: (( merge || nil ))
+        static_ips:
     update:
       serial: true
       max_in_flight: 1
@@ -213,7 +211,7 @@ jobs:
           z2: (( merge || jobs.router_z2.networks.cf2.static_ips ))
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: nats_z1
     templates: (( merge || meta.nats_templates ))
@@ -221,11 +219,11 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-        static_ips: (( merge || nil ))
+        static_ips:
     properties:
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: nats_z2
     templates: (( merge || meta.nats_templates ))
@@ -233,11 +231,11 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-        static_ips: (( merge || nil ))
+        static_ips:
     properties:
       metron_agent:
         zone: z2
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: etcd_z1
     templates: (( merge || meta.etcd_templates ))
@@ -246,7 +244,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-        static_ips: (( merge || nil ))
+        static_ips:
     properties:
       metron_agent:
         zone: z1
@@ -260,7 +258,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-        static_ips: (( merge || nil ))
+        static_ips:
     properties:
       metron_agent:
         zone: z2
@@ -276,7 +274,7 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: nfs_z1
     templates: (( merge || meta.nfs_templates ))
@@ -289,7 +287,7 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: postgres_z1
     templates: (( merge || meta.postgres_templates ))
@@ -302,7 +300,7 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: uaa_z1
     templates: (( merge || meta.uaa_templates ))
@@ -322,7 +320,7 @@ jobs:
       uaa:
         proxy:
           servers: (( merge || jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: uaa_z2
     templates: (( merge || meta.uaa_templates ))
@@ -342,7 +340,7 @@ jobs:
       uaa:
         proxy:
           servers: (( merge || jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: api_z1
     templates: (( merge || meta.api_templates ))
@@ -362,7 +360,7 @@ jobs:
       route_registrar:
         routes: (( merge || meta.api_routes ))
       nfs_server: (( meta.nfs_server ))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: api_z2
     templates: (( merge || meta.api_templates ))
@@ -382,7 +380,7 @@ jobs:
       route_registrar:
         routes: (( merge || meta.api_routes ))
       nfs_server: (( meta.nfs_server ))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: clock_global
     templates: (( merge || meta.clock_templates ))
@@ -394,7 +392,7 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: api_worker_z1
     templates: (( merge || meta.api_worker_templates ))
@@ -407,7 +405,7 @@ jobs:
       metron_agent:
         zone: z1
       nfs_server: (( meta.nfs_server ))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: api_worker_z2
     templates: (( merge || meta.api_worker_templates ))
@@ -420,7 +418,7 @@ jobs:
       metron_agent:
         zone: z2
       nfs_server: (( meta.nfs_server ))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: hm9000_z1
     templates: (( merge || meta.hm9000_templates ))
@@ -433,7 +431,7 @@ jobs:
         zone: z1
       route_registrar:
         routes: (( merge || meta.hm9000_routes ))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: hm9000_z2
     templates: (( merge || meta.hm9000_templates ))
@@ -446,7 +444,7 @@ jobs:
         zone: z2
       route_registrar:
         routes: (( merge || meta.hm9000_routes ))
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: runner_z1
     templates: (( merge || meta.dea_templates ))
@@ -457,7 +455,7 @@ jobs:
         static_ips: ~
     properties:
       dea_next:
-        zone: (( merge || "z1" ))
+        zone: "z1"
       metron_agent:
         zone: z1
     update:
@@ -472,7 +470,7 @@ jobs:
         static_ips: ~
     properties:
       dea_next:
-        zone: (( merge || "z2" ))
+        zone: "z2"
       metron_agent:
         zone: z2
     update:
@@ -484,7 +482,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: loggregator_z2
     templates: (( merge || lamb_meta.loggregator_templates ))
@@ -492,7 +490,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: doppler_z1
     templates: (( merge || lamb_meta.loggregator_templates ))
@@ -500,7 +498,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: doppler_z2
     templates: (( merge || lamb_meta.loggregator_templates ))
@@ -508,7 +506,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: loggregator_trafficcontroller_z1
     templates: (( merge || lamb_meta.loggregator_trafficcontroller_templates ))
@@ -516,7 +514,7 @@ jobs:
     resource_pool: small_z1
     networks:
       - name: cf1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: loggregator_trafficcontroller_z2
     templates: (( merge || lamb_meta.loggregator_trafficcontroller_templates ))
@@ -524,7 +522,7 @@ jobs:
     resource_pool: small_z2
     networks:
       - name: cf2
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: router_z1
     templates: (( merge || meta.router_templates ))
@@ -541,7 +539,7 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: z1
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: router_z2
     templates: (( merge || meta.router_templates ))
@@ -558,7 +556,7 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: z2
-    update: (( merge || empty_hash ))
+    update: {}
 
   - name: acceptance_tests
     templates:
@@ -583,13 +581,13 @@ jobs:
 properties:
   consul:
     agent:
-      log_level: (( merge || nil ))
+      log_level:
       servers:
         lan: (( meta.consul_servers ))
     ca_cert:
     agent_cert:
     agent_key:
-    encrypt_keys: (( merge || [] ))
+    encrypt_keys: []
     require_ssl:
     server_cert:
     server_key:
@@ -597,10 +595,10 @@ properties:
   dropsonde:
     enabled: true
 
-  support_address: (( merge || "http://support.cloudfoundry.com" ))
+  support_address: "http://support.cloudfoundry.com"
   description: null
   ssl:
-    skip_cert_verify: (( merge || false ))
+    skip_cert_verify: false
   system_domain: (( domain ))
   system_domain_organization: ~
   app_domains: (( [domain] ))
@@ -632,14 +630,14 @@ properties:
   dea_next:
     memory_overcommit_factor: null
     disk_overcommit_factor: null
-    instance_bandwidth_limit: (( merge || nil ))
-    staging_bandwidth_limit: (( merge || nil ))
-    memory_mb: (( merge || nil ))
-    disk_mb: (( merge || nil ))
+    instance_bandwidth_limit:
+    staging_bandwidth_limit:
+    memory_mb:
+    disk_mb:
     staging_disk_inode_limit: 200000
     instance_disk_inode_limit: 200000
-    deny_networks: (( merge || [] ))
-    allow_networks: (( merge || [] ))
+    deny_networks: []
+    allow_networks: []
     kernel_network_tuning_enabled: true
     directory_server_protocol: https
     evacuation_bail_out_time_in_seconds: 600
@@ -649,9 +647,9 @@ properties:
     default_health_check_timeout: 60
     advertise_interval_in_seconds: 5
     heartbeat_interval_in_seconds: 10
-    rlimit_core: (( merge || 0 ))
+    rlimit_core: 0
     allow_host_access: ~
-    mtu: (( merge || nil ))
+    mtu:
 
   loggregator:
     etcd:
@@ -665,34 +663,34 @@ properties:
 
   logger_endpoint: ~
 
-  ha_proxy: (( merge || nil ))
+  ha_proxy:
 
   databases: ~
 
   router:
-    enable_ssl: (( merge || nil ))
-    ssl_cert: (( merge || nil ))
-    ssl_key: (( merge || nil ))
-    cipher_suites: (( merge || nil ))
-    requested_route_registration_interval_in_seconds: (( merge || nil ))
-    ssl_skip_validation: (( merge || nil ))
-    port: (( merge || nil ))
+    enable_ssl:
+    ssl_cert:
+    ssl_key:
+    cipher_suites:
+    requested_route_registration_interval_in_seconds:
+    ssl_skip_validation:
+    port:
     status:
-      port: (( merge || nil ))
-    secure_cookies: (( merge || nil ))
-    route_services_secret: (( merge || nil ))
-    route_services_secret_decrypt_only: (( merge || nil ))
-    route_service_timeout: (( merge || nil ))
-    logrotate: (( merge || nil ))
-    extra_headers_to_log: (( merge || nil ))
-    debug_addr: (( merge || nil ))
+      port:
+    secure_cookies:
+    route_services_secret:
+    route_services_secret_decrypt_only:
+    route_service_timeout:
+    logrotate:
+    extra_headers_to_log:
+    debug_addr:
 
   syslog_daemon_config: ~
 
   nfs_server: (( meta.nfs_server ))
 
-  collector: (( merge || nil ))
+  collector:
 
-  acceptance_tests: (( merge || nil ))
+  acceptance_tests:
 
-  smoke_tests: (( merge || nil ))
+  smoke_tests:
