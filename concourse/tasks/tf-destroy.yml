@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image: docker:///governmentpaas/docker-terraform
+
+run:
+  path: bash
+  args:
+  - -c
+  - paas-cf/concourse/scripts/tf-destroy.sh
+
+inputs:
+- name: paas-cf
+
