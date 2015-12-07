@@ -14,5 +14,10 @@ export fly_target=${FLY_TARGET:-tutorial}
 
 fly unpause-pipeline --pipeline "${pipeline}"
 curl "${ATC_URL}/pipelines/${pipeline}/jobs/init-bucket/builds" -X POST
-fly -t "${fly_target}" watch -j "${pipeline}/vpc"
 
+cat <<EOF
+You can watch the last vpc deploy job by running the command below.
+You might need to wait a few moments before the latest build starts.
+
+fly -t "${fly_target}" watch -j "${pipeline}/vpc"
+EOF
