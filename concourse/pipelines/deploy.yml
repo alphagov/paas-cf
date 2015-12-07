@@ -4,12 +4,13 @@ groups:
   jobs:
   - init-bucket
   - vpc
+  - concourse
 
 resources:
   - name: paas-cf
     type: git
     source:
-      uri: https://github.com/alphagov/paas-cf
+      uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
 
   - name: build-all-trigger
@@ -20,6 +21,33 @@ resources:
       access_key_id: {{aws_access_key_id}}
       secret_access_key: {{aws_secret_access_key}}
       key: build-all-trigger
+
+  - name: vpc-terraform-state
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: vpc.tfstate
+      region_name: eu-west-1
+
+  - name: concourse-terraform-state
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: concourse.tfstate
+      region_name: eu-west-1
+
+  - name: concourse-bosh-state
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: concourse-state.json
+      region_name: eu-west-1
 
 jobs:
   - name: init-bucket
@@ -50,6 +78,21 @@ jobs:
             exit 1
         inputs:
           - name: paas-cf
+    - task: s3init-concourse
+      config:
+        image: docker:///governmentpaas/toolbox
+        params:
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json
+        inputs:
+        - name: paas-cf
     - put: build-all-trigger
       params: {bump: patch}
 
@@ -76,6 +119,7 @@ jobs:
         run:
           path: sh
           args:
+          - -e
           - -c
           - |
             cd paas-cf/terraform/vpc
@@ -84,3 +128,170 @@ jobs:
         inputs:
         - name: paas-cf
 
+  - name: concourse
+    serial: true
+    plan:
+    - get: paas-cf
+      passed: [vpc]
+    - get: build-all-trigger
+      trigger: true
+      passed: [vpc]
+    - get: vpc-terraform-state
+    - get: concourse-terraform-state
+    - get: concourse-bosh-state
+
+    - task: vpc-terraform-outputs
+      config:
+        image: docker:///governmentpaas/bosh-init
+        inputs:
+        - name: paas-cf
+        - name: vpc-terraform-state
+        outputs:
+        - name: vpc-terraform-outputs
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < vpc-terraform-state/vpc.tfstate \
+            > vpc-terraform-outputs/tfvars.sh
+            ls -l vpc-terraform-outputs/tfvars.sh
+            cat vpc-terraform-outputs/tfvars.sh
+            ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+            < vpc-terraform-state/vpc.tfstate \
+            > vpc-terraform-outputs/vpc-terraform-outputs.yml
+            ls -l vpc-terraform-outputs/vpc-terraform-outputs.yml
+            cat vpc-terraform-outputs/vpc-terraform-outputs.yml
+
+    - task: terraform-apply
+      config:
+        image: docker:///governmentpaas/docker-terraform
+        inputs:
+        - name: paas-cf
+        - name: vpc-terraform-outputs
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          TF_VAR_concourse_db_password: {{concourse_db_password}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            . vpc-terraform-outputs/tfvars.sh
+            cd paas-cf/terraform/concourse
+            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=concourse.tfstate"
+            terraform apply -var env={{deploy_env}}
+
+    - task: concourse-terraform-outputs
+      config:
+        image: docker:///governmentpaas/bosh-init
+        inputs:
+        - name: paas-cf
+        - name: concourse-terraform-state
+        outputs:
+        - name: concourse-terraform-outputs
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+            < concourse-terraform-state/concourse.tfstate \
+            > concourse-terraform-outputs/concourse-terraform-outputs.yml
+            ls -l concourse-terraform-outputs/concourse-terraform-outputs.yml
+            cat concourse-terraform-outputs/concourse-terraform-outputs.yml
+
+    - task: create-concourse-secrets
+      config:
+        params: {aws_access_key_id: {{aws_access_key_id}} }
+        params: {aws_secret_access_key: {{aws_secret_access_key}} }
+        params: {concourse_atc_password: {{concourse_atc_password}} }
+        params: {concourse_db_password: {{concourse_db_password}} }
+        params: {private_ssh_key: {{private_ssh_key}} }
+        outputs:
+          - name: concourse-secrets
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            cat > concourse-secrets/concourse-secrets.yml << EOF
+            ---
+            secrets:
+              aws_access_key_id: ${aws_access_key_id}
+              aws_secret_access_key: ${aws_secret_access_key}
+              concourse_atc_password: ${concourse_atc_password}
+              concourse_db_password: ${concourse_db_password}
+            EOF
+            ls -l concourse-secrets/concourse-secrets.yml
+            echo -n "${private_ssh_key}" > concourse-secrets/id_rsa
+            chmod 400 concourse-secrets/id_rsa
+            ls -l concourse-secrets/id_rsa
+
+    - task: spruce-up-concourse-manifest
+      config:
+        image: docker:///governmentpaas/spruce
+        inputs:
+        - name: paas-cf
+        - name: concourse-secrets
+        - name: concourse-terraform-outputs
+        - name: vpc-terraform-outputs
+        outputs:
+        - name: concourse-manifest
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            spruce merge --prune terraform_outputs --prune secrets \
+              paas-cf/manifests/concourse-base.yml concourse-secrets/concourse-secrets.yml \
+              concourse-terraform-outputs/concourse-terraform-outputs.yml \
+              vpc-terraform-outputs/vpc-terraform-outputs.yml \
+              > concourse-manifest/concourse.yml
+            ls -l concourse-manifest/concourse.yml
+
+    - task: deploy-concourse
+      config:
+        image: docker:///governmentpaas/bosh-init
+        inputs:
+        - name: concourse-manifest
+        - name: concourse-secrets
+        - name: concourse-bosh-state
+        outputs:
+        - name: run
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            cp -av concourse-secrets/id_rsa run/
+            cp -v concourse-manifest/concourse.yml run/
+            cp -v concourse-bosh-state/concourse-state.json run/
+            cd run
+            bosh-init deploy concourse.yml
+      ensure:
+        task: save-state
+        config:
+          inputs:
+          - name: run
+          outputs:
+          - name: concourse-bosh-state-out
+          run:
+            path: cp
+            args: [ "run/concourse-state.json", "concourse-bosh-state-out/" ]
+
+    - put: concourse-bosh-state
+      params:
+        from: concourse-bosh-state-out/concourse-state.json
