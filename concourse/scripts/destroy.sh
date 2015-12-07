@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
 
 env=${DEPLOY_ENV-$1}

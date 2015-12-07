@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 env=${DEPLOY_ENV:-$1}
 pipeline=${PIPELINE:-$2}
