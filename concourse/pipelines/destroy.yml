@@ -1,0 +1,83 @@
+---
+resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf
+      branch: {{branch_name}}
+
+  - name: tf-state-bucket
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bucket.tfstate
+
+  - name: tf-state-vpc
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: vpc.tfstate
+
+  - name: trigger-bucket-destroy
+    type: semver
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      key: destroy-trigger
+
+jobs:
+  - name: destroy-vpc
+    serial: true
+    plan:
+      - get: paas-cf
+      - get: tf-state-vpc
+      - task: tf-destroy-vpc
+        file: paas-cf/concourse/tasks/tf-destroy.yml
+        config:
+          params:
+              DEPLOY_ENV: {{deploy_env}}
+              AWS_DEFAULT_REGION: {{aws_region}}
+              AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+              AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+              TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+              TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+              TF_FILES_PATH: paas-cf/terraform/vpc
+              TF_STATE_PATH: tf-state-vpc/vpc.tfstate
+          inputs:
+            - name: paas-cf
+            - name: tf-state-vpc
+      - put: trigger-bucket-destroy
+        params: {bump: patch}
+
+  - name: destroy-init-bucket
+    serial: true
+    plan:
+      - get: paas-cf
+      - get: tf-state-bucket
+      - get: trigger-bucket-destroy
+        trigger: true
+        passed: [destroy-vpc]
+      - task: tf-destroy-init-bucket
+        file: paas-cf/concourse/tasks/tf-destroy.yml
+        config:
+          params:
+              DEPLOY_ENV: {{deploy_env}}
+              AWS_DEFAULT_REGION: {{aws_region}}
+              AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+              AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+              TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+              TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+              TF_FILES_PATH: paas-cf/terraform/bucket
+              TF_STATE_PATH: tf-state-bucket/bucket.tfstate
+          inputs:
+            - name: paas-cf
+            - name: tf-state-bucket
+
