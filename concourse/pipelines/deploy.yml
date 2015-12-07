@@ -23,6 +23,7 @@ resources:
 
 jobs:
   - name: init-bucket
+    serial: true
     plan:
     - get: paas-cf
     - task: create-init-bucket
@@ -53,6 +54,7 @@ jobs:
       params: {bump: patch}
 
   - name: vpc
+    serial: true
     plan:
     - get: paas-cf
       trigger: true
