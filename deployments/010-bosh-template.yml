@@ -55,14 +55,6 @@ jobs:
     - (( grab meta.bosh_public_ip ))
 
   properties:
-    compiled_package_cache:
-      provider: s3
-      options:
-        access_key_id: (( grab terraform_outputs.compiled_cache_bucket_access_key_id ))
-        secret_access_key: (( grab terraform_outputs.compiled_cache_bucket_secret_access_key ))
-        bucket_name: shared-cf-bosh-blobstore
-        host: (( grab terraform_outputs.compiled_cache_bucket_host ))
-
     nats:
       address: 127.0.0.1
       user: nats
@@ -127,12 +119,4 @@ jobs:
 
 properties: ~
 
-cloud_provider:
-  ssh_tunnel:
-    host: (( grab meta.bosh_service_ip ))
-    port: 22
-    user: vcap
-    private_key: .ssh/id_rsa
-
-  mbus: (( concat "https://mbus:mbus@" meta.bosh_service_ip  ":6868" ))
 

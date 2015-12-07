@@ -16,7 +16,6 @@ meta:
   - 0.pool.ntp.org
   - 1.pool.ntp.org
 
-
 name: bosh
 
 resource_pools:
@@ -67,10 +66,4 @@ cloud_provider:
 
   properties:
     aws: (( grab meta.aws ))
-    agent:
-      mbus: "https://mbus:mbus@0.0.0.0:6868"
-    blobstore:
-      provider: local
-      path: /var/vcap/micro_bosh/data/cache
-    ntp: (( grab meta.ntp ))
 
