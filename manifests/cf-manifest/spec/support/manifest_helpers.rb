@@ -9,7 +9,12 @@ module ManifestHelpers
   private
 
   def load_default_manifest
-    output, error, status = Open3.capture3(File.expand_path("../../../build_manifest.sh", __FILE__))
+    output, error, status = Open3.capture3(
+      {
+        "TERRAFORM_OUTPUTS" => File.expand_path("../../fixtures/terraform-outputs.yml", __FILE__),
+      },
+      File.expand_path("../../../build_manifest.sh", __FILE__),
+    )
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     # Deep freeze the object so that it's safe to use across multiple examples

@@ -1,0 +1,13 @@
+---
+terraform_outputs:
+  aws_access_key_id: STUB_AWS_ACCESS_KEY
+  aws_secret_access_key: STUB_AWS_SECRET_KEY
+  cf1_subnet_id: subnet-12345678
+  cf2_subnet_id: subnet-23456781
+  cf_root_domain: unit-test.cf.paas.example.com
+  dns_zone_name: cf.paas.example.com
+  elb_name: unit-test-cf-router-elb
+  environment: unit-test
+  region: sealand-1
+  zone0: sealand-1a
+  zone1: sealand-1b
