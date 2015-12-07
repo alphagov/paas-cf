@@ -9,3 +9,11 @@ jobs:
   - {name: registry, release: bosh}
   - {name: cpi, release: bosh-aws-cpi}
 
+cloud_provider:
+  template:
+    name: cpi
+    release: bosh-aws-cpi
+
+  properties:
+    aws: (( grab meta.aws ))
+
