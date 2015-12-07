@@ -1,27 +1,16 @@
 ---
-terraform_outputs: (( merge ))
-
 meta:
-  bosh_private_ip: (( terraform_outputs.microbosh_static_private_ip ))
-  bosh_public_ip: (( terraform_outputs.microbosh_static_public_ip ))
-  bosh_service_ip: (( bosh_private_ip ))
+  bosh_private_ip: (( grab terraform_outputs.microbosh_static_private_ip ))
+  bosh_public_ip: (( grab terraform_outputs.microbosh_static_public_ip ))
+  bosh_service_ip: (( grab meta.bosh_private_ip ))
 
   aws:
-    access_key_id: (( terraform_outputs.aws_access_key_id ))
-    secret_access_key: (( terraform_outputs.aws_secret_access_key ))
-    default_key_name: (( terraform_outputs.key_pair_name ))
+    access_key_id: (( grab terraform_outputs.aws_access_key_id ))
+    secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
+    default_key_name: (( grab terraform_outputs.key_pair_name ))
     default_security_groups:
-    - (( terraform_outputs.default_security_group ))
-    region: (( terraform_outputs.region ))
-
-  cpi-release:
-    name: bosh-aws-cpi
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=28
-    sha1: c7ce03393ebedd87a860dc609758ddb9654360fa
-
-  specific_bosh_job_templates:
-    - {name: registry, release: bosh}
-    - {name: cpi, release: bosh-aws-cpi}
+    - (( grab terraform_outputs.default_security_group ))
+    region: (( grab terraform_outputs.region ))
 
   ntp:
   - 0.pool.ntp.org
@@ -39,7 +28,7 @@ resource_pools:
   cloud_properties:
     instance_type: t2.medium
     ephemeral_disk: {size: 40_000, type: gp2}
-    availability_zone: (( terraform_outputs.zone0 ))
+    availability_zone: (( grab terraform_outputs.zone0 ))
 
 disk_pools:
 - name: disks
@@ -54,9 +43,9 @@ networks:
     gateway: 10.0.0.1
     dns: [10.0.0.2]
     cloud_properties:
-      subnet: (( terraform_outputs.bosh_subnet_id ))
+      subnet: (( grab terraform_outputs.bosh_subnet_id ))
       security_groups:
-      - (( terraform_outputs.bosh_security_group ))
+      - (( grab terraform_outputs.bosh_security_group ))
 - name: public
   type: vip
 
@@ -67,7 +56,7 @@ jobs:
     hm:
       resurrector_enabled: true
 
-    aws: (( meta.aws ))
+    aws: (( grab meta.aws ))
 
     dns: null
 
@@ -77,11 +66,11 @@ cloud_provider:
     release: bosh-aws-cpi
 
   properties:
-    aws: (( meta.aws ))
+    aws: (( grab meta.aws ))
     agent:
       mbus: "https://mbus:mbus@0.0.0.0:6868"
     blobstore:
       provider: local
       path: /var/vcap/micro_bosh/data/cache
-    ntp: (( meta.ntp ))
+    ntp: (( grab meta.ntp ))
 
