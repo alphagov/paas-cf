@@ -18,5 +18,6 @@ export fly_target=${FLY_TARGET:-tutorial}
 
 fly unpause-pipeline --pipeline "${pipeline}"
 curl "${ATC_URL}/pipelines/${pipeline}/jobs/destroy-vpc/builds" -X POST
+sleep 3
 fly -t "${fly_target}" watch -j "${pipeline}/destroy-vpc"
 
