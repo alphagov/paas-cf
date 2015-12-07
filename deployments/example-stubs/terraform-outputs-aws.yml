@@ -1,0 +1,21 @@
+---
+terraform_outputs:
+  environment: test
+
+  region: eu-west-1
+  zone0: eu-west-1a
+  zone1: eu-west-1b
+  aws_access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+  aws_secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
+  compiled_cache_bucket_access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+  compiled_cache_bucket_host: s3-eu-west-1.amazonaws.com
+  compiled_cache_bucket_secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
+  key_pair_name: ssh_key_pair
+
+  bosh_subnet_id: subnet-bosh
+  default_security_group: bosh_default_sg
+  bosh_security_group: bosh_security_group
+
+  microbosh_static_private_ip: 10.0.0.6
+  microbosh_static_public_ip: 194.1.2.4
+

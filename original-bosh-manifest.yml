@@ -1,0 +1,182 @@
+cloud_provider:
+  mbus: https://mbus:mbus@10.0.0.6:6868
+  properties:
+    agent:
+      mbus: https://mbus:mbus@0.0.0.0:6868
+    aws:
+      access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+      default_key_name: ssh_key_pair
+      default_security_groups:
+      - bosh_default_sg
+      region: eu-west-1
+      secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
+    blobstore:
+      path: /var/vcap/micro_bosh/data/cache
+      provider: local
+    ntp:
+    - 0.pool.ntp.org
+    - 1.pool.ntp.org
+  ssh_tunnel:
+    host: 10.0.0.6
+    port: 22
+    private_key: .ssh/id_rsa
+    user: vcap
+  template:
+    name: cpi
+    release: bosh-aws-cpi
+disk_pools:
+- cloud_properties:
+    type: gp2
+  disk_size: 32768
+  name: disks
+jobs:
+- instances: 1
+  name: bosh
+  networks:
+  - default:
+    - dns
+    - gateway
+    name: private
+    static_ips:
+    - 10.0.0.6
+  - name: public
+    static_ips:
+    - 194.1.2.4
+  persistent_disk_pool: disks
+  properties:
+    agent:
+      mbus: nats://nats:BOSH_NATS_PASSWORD@10.0.0.6:4222
+    aws:
+      access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+      default_key_name: ssh_key_pair
+      default_security_groups:
+      - bosh_default_sg
+      region: eu-west-1
+      secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
+    blobstore:
+      address: 10.0.0.6
+      agent:
+        password: BOSH_AGENT_PASSWORD
+        user: agent
+      director:
+        password: BOSH_BLOBSTORE_DIRECTOR_PASSWORD
+        user: director
+      options:
+        endpoint: http://194.1.2.4:25250
+        password: BOSH_AGENT_PASSWORD
+        user: agent
+      provider: dav
+    compiled_package_cache:
+      options:
+        access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+        bucket_name: shared-cf-bosh-blobstore
+        host: s3-eu-west-1.amazonaws.com
+        secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
+      provider: s3
+    director:
+      address: 127.0.0.1
+      cpi_job: cpi
+      db:
+        adapter: postgres
+        database: bosh
+        host: 127.0.0.1
+        password: BOSH_POSTGRES_PASSWORD
+        user: postgres
+      ignore_missing_gateway: "false"
+      name: my-bosh
+      user_management:
+        local:
+          users:
+          - name: admin
+            password: BOSH_ADMIN_PASSWORD
+        provider: local
+    dns: null
+    hm:
+      director_account:
+        password: BOSH_HM_DIRECTOR_PASSWORD
+        user: admin
+      resurrector_enabled: true
+    nats:
+      address: 127.0.0.1
+      password: BOSH_NATS_PASSWORD
+      user: nats
+    ntp:
+    - 0.pool.ntp.org
+    - 1.pool.ntp.org
+    postgres:
+      adapter: postgres
+      database: bosh
+      host: 127.0.0.1
+      password: BOSH_POSTGRES_PASSWORD
+      user: postgres
+    redis:
+      address: 127.0.0.1
+      listen_address: 127.0.0.1
+      password: BOSH_REDIS_PASSWORD
+    registry:
+      db:
+        adapter: postgres
+        database: bosh
+        host: 127.0.0.1
+        password: BOSH_POSTGRES_PASSWORD
+        user: postgres
+      host: 10.0.0.6
+      http:
+        password: BOSH_REGISTRY_PASSWORD
+        user: admin
+      password: BOSH_REGISTRY_PASSWORD
+      username: admin
+  resource_pool: vms
+  templates:
+  - name: nats
+    release: bosh
+  - name: redis
+    release: bosh
+  - name: postgres
+    release: bosh
+  - name: blobstore
+    release: bosh
+  - name: director
+    release: bosh
+  - name: health_monitor
+    release: bosh
+  - name: registry
+    release: bosh
+  - name: cpi
+    release: bosh-aws-cpi
+name: bosh
+networks:
+- name: private
+  subnets:
+  - cloud_properties:
+      security_groups:
+      - bosh_security_group
+      subnet: subnet-bosh
+    dns:
+    - 10.0.0.2
+    gateway: 10.0.0.1
+    range: 10.0.0.0/24
+  type: manual
+- name: public
+  type: vip
+properties: null
+releases:
+- name: bosh
+  sha1: 5f835bad5fc46230cd2fa823c0a52a94829ee044
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=207
+- name: bosh-aws-cpi
+  sha1: c7ce03393ebedd87a860dc609758ddb9654360fa
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=28
+resource_pools:
+- cloud_properties:
+    availability_zone: eu-west-1a
+    ephemeral_disk:
+      size: 40000
+      type: gp2
+    instance_type: t2.medium
+  name: vms
+  network: private
+  stemcell:
+    sha1: 1a29c43d4e8abf7476ed6bb83168df1bdb742022
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3074
+
