@@ -39,79 +39,82 @@ networks:
 properties:
   domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain: (( grab terraform_outputs.cf_root_domain ))
-  system_domain_organization: SYSTEM_DOMAIN_ORGANIZATION
+  system_domain_organization: GDS
   app_domains:
    - (( grab terraform_outputs.cf_root_domain ))
 
   cc:
-    staging_upload_user: STAGING_UPLOAD_USER
-    staging_upload_password: STAGING_UPLOAD_PASSWORD
-    bulk_api_password: BULK_API_PASSWORD
-    db_encryption_key: CCDB_ENCRYPTION_KEY
+    staging_upload_user: staging_upload_user
+    staging_upload_password: (( grab secrets.staging_upload_password ))
+    bulk_api_password: (( grab secrets.bulk_api_password ))
+    db_encryption_key: (( grab secrets.cc_db_encryption_key ))
+  consul:
+    encrypt_keys: (( grab secrets.consul_encrypt_keys ))
+    ca_cert: (( grab secrets.consul_ca_cert ))
+    server_cert: (( grab secrets.consul_server_cert ))
+    server_key: (( grab secrets.consul_server_key ))
+    agent_cert: (( grab secrets.consul_agent_cert ))
+    agent_key: (( grab secrets.consul_agent_key ))
+  loggregator_endpoint:
+    shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
+  nats:
+    user: nats_user
+    password: (( grab secrets.nats_password ))
+  router:
+    status:
+      user: router_user
+      password: (( grab secrets.router_password ))
+  uaa:
+    admin:
+      client_secret: (( grab secrets.uaa_admin_client_secret ))
+    cc:
+      client_secret: (( grab secrets.uaa_cc_client_secret ))
+    clients:
+      cc_routing:
+        secret: (( grab secrets.uaa_cc_routing_secret ))
+      cloud_controller_username_lookup:
+        secret: (( grab secrets.uaa_clients_cloud_controller_username_lookup_secret ))
+      doppler:
+        secret: (( grab secrets.uaa_clients_doppler_secret ))
+      gorouter:
+        secret: (( grab secrets.uaa_clients_gorouter_secret ))
+      login:
+        secret: (( grab secrets.uaa_clients_login_secret ))
+      notifications:
+        secret: (( grab secrets.uaa_clients_notifications_secret ))
+
+    jwt:
+      verification_key: (( grab secrets.uaa_jwt_verification_key ))
+      signing_key: (( grab secrets.uaa_jwt_signing_key ))
+    scim:
+      users:
+        - (( concat "admin|" secrets.uaa_admin_password "|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose" ))
+
   ccdb:
-    db_scheme: CCDB_SCHEME
+    db_scheme: postgresql
+    address: (( grab terraform_outputs.postgres_rds_address ))
+    port: (( grab terraform_outputs.postgres_rds_port ))
     roles:
-      - tag: CCDB_USER
-        name: CCDB_USER_NAME
-        password: CCDB_PASSWORD
+      - tag: admin
+        name: ccadmin
+        password: (( secrets.ccadmin_password ))
     databases:
       - tag: cc
         name: ccdb
-    address: CCDB_ADDRESS
-    port: CCDB_PORT
-  consul:
-    encrypt_keys:
-      - CONSUL_ENCRYPT_KEY
-    ca_cert: CONSUL_CA_CERT
-    server_cert: CONSUL_SERVER_CERT
-    server_key: CONSUL_SERVER_KEY
-    agent_cert: CONSUL_AGENT_CERT
-    agent_key: CONSUL_AGENT_KEY
-  loggregator_endpoint:
-    shared_secret: LOGGREGATOR_ENDPOINT_SHARED_SECRET
-  nats:
-    user: NATS_USER
-    password: NATS_PASSWORD
-  router:
-    status:
-      user: ROUTER_USER
-      password: ROUTER_PASSWORD
-  uaa:
-    admin:
-      client_secret: ADMIN_SECRET
-    cc:
-      client_secret: CC_CLIENT_SECRET
-    clients:
-      cc_routing:
-        secret: CC_ROUTING_SECRET
-      cloud_controller_username_lookup:
-        secret: CLOUD_CONTROLLER_USERNAME_LOOKUP_SECRET
-      doppler:
-        secret: DOPPLER_SECRET
-      gorouter:
-        secret: GOROUTER_SECRET
-      login:
-        secret: LOGIN_CLIENT_SECRET
-      notifications:
-        secret: NOTIFICATIONS_CLIENT_SECRET
+        citext: true
 
-    jwt:
-      verification_key: JWT_VERIFICATION_KEY
-      signing_key: JWT_SIGNING_KEY
-    scim:
-      users:
-        - admin|ADMIN_PASSWORD|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose
   uaadb:
-    db_scheme: UAADB_SCHEME
+    db_scheme: postgresql
+    address: (( grab terraform_outputs.postgres_rds_address ))
+    port: (( grab terraform_outputs.postgres_rds_port ))
     roles:
-      - tag: UAADB_USER
-        name: UAADB_USER_NAME
-        password: UAADB_USER_PASSWORD
+      - tag: admin
+        name: uaaadmin
+        password: (( secrets.uuadmin_password ))
     databases:
       - tag: uaa
         name: uaadb
-    address: UAADB_ADDRESS
-    port: UAADB_PORT
+        citext: true
 
 # code_snippet cf-stub-aws end
 # The previous line helps maintain current documentation at http://docs.cloudfoundry.org.

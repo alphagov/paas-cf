@@ -11,3 +11,5 @@ terraform_outputs:
   region: sealand-1
   zone0: sealand-1a
   zone1: sealand-1b
+  postgres_rds_address: 127.0.0.1
+  postgres_rds_port: 5432
