@@ -7,7 +7,7 @@ meta:
     provider: AWS
     aws_access_key_id: (( grab properties.template_only.aws.access_key_id ))
     aws_secret_access_key: (( grab properties.template_only.aws.secret_access_key ))
-    region: us-east-1
+    region: (( grab properties.template_only.aws.region ))
 
   stemcell: (( grab meta.default_stemcell ))
 

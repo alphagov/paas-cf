@@ -39,8 +39,9 @@ networks:
 properties:
   template_only:
     aws:
-      access_key_id: AWS_ACCESS_KEY
-      secret_access_key: AWS_SECRET_ACCESS_KEY
+      access_key_id: (( grab terraform_outputs.aws_access_key_id ))
+      secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
+      region: (( grab terraform_outputs.region ))
       availability_zone: ZONE_1
       availability_zone2: ZONE_2
       subnet_ids:

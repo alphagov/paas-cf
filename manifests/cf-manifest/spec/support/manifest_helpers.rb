@@ -6,6 +6,12 @@ module ManifestHelpers
     @@manifest_with_defaults ||= load_default_manifest
   end
 
+
+  def terraform_fixture(key)
+    @@fixture ||= load_terraform_fixture.fetch('terraform_outputs')
+    @@fixture.fetch(key.to_s)
+  end
+
   private
 
   def load_default_manifest
@@ -20,6 +26,11 @@ module ManifestHelpers
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
     deep_freeze(YAML.load(output))
+  end
+
+  def load_terraform_fixture
+    data = YAML.load_file(File.expand_path("../../fixtures/terraform-outputs.yml", __FILE__))
+    deep_freeze(data)
   end
 
   def deep_freeze(object)
