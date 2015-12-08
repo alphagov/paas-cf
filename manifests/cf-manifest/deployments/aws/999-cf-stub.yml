@@ -42,8 +42,8 @@ properties:
       access_key_id: (( grab terraform_outputs.aws_access_key_id ))
       secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
       region: (( grab terraform_outputs.region ))
-      availability_zone: ZONE_1
-      availability_zone2: ZONE_2
+      availability_zone: (( grab terraform_outputs.zone0 ))
+      availability_zone2: (( grab terraform_outputs.zone1 ))
       subnet_ids:
         cf1: (( grab terraform_outputs.cf1_subnet_id ))
         cf2: (( grab terraform_outputs.cf2_subnet_id ))
