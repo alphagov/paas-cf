@@ -121,7 +121,8 @@ resource_pools:
         size: 10_240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
-      elbs: ["cfrouter"]
+      elbs:
+        - (( grab terraform_outputs.elb_name ))
 
   - name: router_z2
     cloud_properties:
@@ -130,7 +131,8 @@ resource_pools:
         size: 10_240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
-      elbs: ["cfrouter"]
+      elbs:
+        - (( grab terraform_outputs.elb_name ))
 
   - name: small_errand
     cloud_properties:

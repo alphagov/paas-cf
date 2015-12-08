@@ -47,4 +47,18 @@ RSpec.describe "resource_pools" do
       expect(compilation["cloud_properties"]["availability_zone"]).to eq(terraform_fixture(:zone0))
     end
   end
+
+  describe "router pools" do
+    ZONE_KEYS.keys.each do |zone_suffix|
+      context "in zone #{zone_suffix}" do
+        let(:pool) { resource_pools.find {|p| p["name"] == "router_#{zone_suffix}" } }
+
+        it "should use the correct elb instance" do
+          expect(pool["cloud_properties"]["elbs"]).to match_array([
+            terraform_fixture(:elb_name),
+          ])
+        end
+      end
+    end
+  end
 end
