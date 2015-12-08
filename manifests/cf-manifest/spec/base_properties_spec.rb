@@ -3,6 +3,10 @@ RSpec.describe "base properties" do
   let(:manifest) { manifest_with_defaults }
   let(:properties) { manifest.fetch("properties") }
 
+  it "sets the top-level manifest name" do
+    expect(manifest["name"]).to eq(terraform_fixture(:environment))
+  end
+
   it "sets the domain from the terraform outputs" do
     expect(properties["domain"]).to eq(terraform_fixture(:cf_root_domain))
   end

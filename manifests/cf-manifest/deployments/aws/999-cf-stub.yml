@@ -2,7 +2,7 @@
 # code_snippet cf-stub-aws start
 ---
 meta:
-  environment: ENVIRONMENT
+  environment: (( grab terraform_outputs.environment ))
 
 director_uuid: DIRECTOR_UUID
 
