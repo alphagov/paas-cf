@@ -32,7 +32,7 @@ variable "infra_cidrs" {
 
 variable "infra_subnet_zone_count" {
   description = "Number of zones to create infra subnet in"
-  default     = 1
+  default     = 3
 }
 
 variable "office_cidrs" {
