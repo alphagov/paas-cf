@@ -1,13 +1,13 @@
 meta:
   zones:
-    z1: (( grab properties.template_only.aws.availability_zone ))
-    z2: (( grab properties.template_only.aws.availability_zone2 ))
+    z1: (( grab terraform_outputs.zone0 ))
+    z2: (( grab terraform_outputs.zone1 ))
 
   fog_config:
     provider: AWS
-    aws_access_key_id: (( grab properties.template_only.aws.access_key_id ))
-    aws_secret_access_key: (( grab properties.template_only.aws.secret_access_key ))
-    region: (( grab properties.template_only.aws.region ))
+    aws_access_key_id: (( grab terraform_outputs.aws_access_key_id ))
+    aws_secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
+    region: (( grab terraform_outputs.region ))
 
   stemcell: (( grab meta.default_stemcell ))
 

@@ -20,7 +20,7 @@ networks:
       cloud_properties:
         security_groups:
           - cf
-        subnet: (( grab properties.template_only.aws.subnet_ids.cf1 ))
+        subnet: (( grab terraform_outputs.cf1_subnet_id ))
 - name: cf2
   subnets:
     - range: 10.10.80.0/20
@@ -34,20 +34,9 @@ networks:
       cloud_properties:
         security_groups:
           - cf
-        subnet: (( grab properties.template_only.aws.subnet_ids.cf2 ))
+        subnet: (( grab terraform_outputs.cf2_subnet_id ))
 
 properties:
-  template_only:
-    aws:
-      access_key_id: (( grab terraform_outputs.aws_access_key_id ))
-      secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
-      region: (( grab terraform_outputs.region ))
-      availability_zone: (( grab terraform_outputs.zone0 ))
-      availability_zone2: (( grab terraform_outputs.zone1 ))
-      subnet_ids:
-        cf1: (( grab terraform_outputs.cf1_subnet_id ))
-        cf2: (( grab terraform_outputs.cf2_subnet_id ))
-
   domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain_organization: SYSTEM_DOMAIN_ORGANIZATION
