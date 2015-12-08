@@ -45,8 +45,8 @@ properties:
       availability_zone: ZONE_1
       availability_zone2: ZONE_2
       subnet_ids:
-        cf1: SUBNET_ID_1
-        cf2: SUBNET_ID_2
+        cf1: (( grab terraform_outputs.cf1_subnet_id ))
+        cf2: (( grab terraform_outputs.cf2_subnet_id ))
 
   domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain: (( grab terraform_outputs.cf_root_domain ))
