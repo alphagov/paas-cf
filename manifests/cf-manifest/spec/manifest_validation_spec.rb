@@ -86,5 +86,12 @@ RSpec.describe "generic manifest validations" do
           "network #{pool["network"]} not found for resource_pool #{pool["name"]}"
       end
     end
+
+    specify "the compilation pool references a network that exists" do
+      network_names = manifest["networks"].map {|n| n["name"]}
+
+      expect(network_names).to include(manifest["compilation"]["network"]),
+        "network #{manifest["compilation"]["network"]} not found for compilation resource_pool"
+    end
   end
 end
