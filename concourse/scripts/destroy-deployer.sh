@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd $(dirname $0) && pwd)
 
 env=${DEPLOY_ENV-$1}
 pipeline="destroy-cf"
-config="${SCRIPT_DIR}/../pipelines/destroy.yml"
+config="${SCRIPT_DIR}/../pipelines/destroy-deployer.yml"
 
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" "${env}" "${pipeline}" "${config}"

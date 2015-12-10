@@ -1,6 +1,6 @@
 ---
 groups:
-- name: deploy-all
+- name: create-deployer
   jobs:
   - init-bucket
   - vpc
