@@ -3,6 +3,9 @@
 ---
 meta:
   environment: (( grab terraform_outputs.environment ))
+  default_env:
+    bosh:
+      password: (( grab secrets.vcap_password ))
 
 director_uuid: DIRECTOR_UUID
 
