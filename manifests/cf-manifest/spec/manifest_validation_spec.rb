@@ -2,6 +2,11 @@
 RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }
 
+  specify "it must have a name" do
+    expect(manifest["name"]).to be
+    expect(manifest["name"]).to match(/\S+/)
+  end
+
   describe "name uniqueness" do
     %w(
       disk_pools
