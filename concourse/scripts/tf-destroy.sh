@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 [[ -z "${DEPLOY_ENV}" ]]    && echo "DEPLOY_ENV not set"    && exit 100
