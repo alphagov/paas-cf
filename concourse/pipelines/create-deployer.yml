@@ -90,7 +90,8 @@ jobs:
           - -e
           - -c
           - |
-            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
         inputs:
         - name: paas-cf
     - put: build-all-trigger
