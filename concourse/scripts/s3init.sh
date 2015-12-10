@@ -1,12 +1,17 @@
 #!/bin/bash
-
+set -x
 bucket=$1
 file=$2
+init_file=$3
+
 [[ -z "${bucket}" ]]      && echo "Must provide bucket name"     && exit 100
 [[ -z "${file}" ]]      && echo "Must provide file name"     && exit 101
+[[ -z "${init_file}" ]]      && echo "Must provide init file path"     && exit 102
 
 aws_path=/
 content_type='application/x-compressed-tar'
+region=eu-west-1
+host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
@@ -18,24 +23,24 @@ put() {
   acl="x-amz-acl:private"
   string="PUT\n\n$content_type\n$date\n$acl\n/$bucket$aws_path$file"
   signature=$(sign "${string}")
-  curl -i -s -X PUT -d "{}" \
+  curl -i -s -X PUT -T ${init_file} \
     -H "Host: $bucket.s3.amazonaws.com" \
     -H "Date: $date" \
     -H "Content-Type: $content_type" \
     -H "$acl" \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:$signature" \
-    "https://$bucket.s3.amazonaws.com$aws_path$file"
+    "https://${host}$aws_path$file"
 }
 
 get() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="GET\n\n${contentType}\n${date}\n/$bucket$aws_path$file"
   signature=$(sign "${string}")
-  curl -i -s -H "Host: ${bucket}.s3.amazonaws.com" \
+  curl -v -i -s -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${contentType}" \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}" \
-    https://${bucket}.s3.amazonaws.com/${file}
+    https://${host}/${file}
 }
 
 response=$(get)
