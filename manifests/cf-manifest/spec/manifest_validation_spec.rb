@@ -1,3 +1,4 @@
+require 'ipaddr'
 
 RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }
@@ -59,13 +60,47 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    specify "all jobs reference networks that exist" do
-      network_names = manifest["networks"].map {|n| n["name"]}
+    describe "networks" do
+      let(:networks_by_name) {
+        manifest["networks"].each_with_object({}) { |net, result| result[net["name"]] = net }
+      }
+      let(:network_names) { networks_by_name.keys }
 
-      manifest["jobs"].each do |job|
-        job["networks"].each do |network|
-          expect(network_names).to include(network["name"]),
-            "network #{network["name"]} not found for job #{job["name"]}"
+      specify "all jobs reference networks that exist" do
+        manifest["jobs"].each do |job|
+          job["networks"].each do |network|
+            expect(network_names).to include(network["name"]),
+              "network #{network["name"]} not found for job #{job["name"]}"
+          end
+        end
+      end
+
+      specify "all jobs' static IPs are within the corresponding network's static ranges" do
+        network_static_ranges = networks_by_name.each_with_object({}) do |(name, network), results|
+          results[name] = []
+          network.fetch("subnets").each do |subnet|
+            subnet.fetch("static", []).each do |static|
+              if static =~ /\s*-\s*/
+                first, last = static.split(/\s*-\s*/, 2)
+                results[name] << Range.new(IPAddr.new(first), IPAddr.new(last))
+              else
+                results[name] << IPAddr.new(static)
+              end
+            end
+          end
+        end
+
+        manifest["jobs"].each do |job|
+          job["networks"].each do |job_network|
+            next unless job_network["static_ips"]
+
+            static_ranges = network_static_ranges.fetch(job_network["name"])
+            job_network["static_ips"].each do |ip|
+              expect(
+                static_ranges.any? {|r| r.is_a?(Range) ? r.include?(ip) : r == ip }
+              ).to be_truthy, "IP #{ip} not in static range for network #{job_network["name"]} in job #{job["name"]}"
+            end
+          end
         end
       end
     end
