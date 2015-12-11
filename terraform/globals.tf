@@ -32,7 +32,7 @@ variable "infra_cidrs" {
 
 variable "infra_subnet_zone_count" {
   description = "Number of zones to create infra subnet in"
-  default     = 1
+  default     = 3
 }
 
 variable "office_cidrs" {
@@ -40,3 +40,12 @@ variable "office_cidrs" {
   default     = "80.194.77.90/32,80.194.77.100/32"
 }
 
+variable "dns_zone_id" {
+  description = "Amazon Route53 DNS zone identifier"
+  default = "Z3SI0PSH6KKVH4"
+}
+
+variable "dns_zone_name" {
+  description = "Amazon Route53 DNS zone name"
+  default     = "cf.paas.alphagov.co.uk"
+}

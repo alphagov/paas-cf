@@ -1,0 +1,110 @@
+---
+name: concourse
+
+releases:
+  - name: concourse
+    url: https://bosh.io/d/github.com/concourse/concourse?v=0.68.0
+    sha1: 5b4ea4207fbafce212f8055c32cefe5519860acc
+  - name: garden-linux
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.328.0
+    sha1: 539822f9f2b18ccf51e72e42e03b297f934ea3fe
+  - name: bosh-aws-cpi
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=36
+    sha1: db2a6c6cdd5ff9f77bf083e10118fa72e1f5e181
+
+resource_pools:
+  - name: concourse
+    network: concourse
+    stemcell:
+      url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3147
+      sha1: a096b1f64482d130adc74c0cd4076fb4f5623e87
+    cloud_properties:
+      instance_type: t2.medium
+      availability_zone: (( grab terraform_outputs.zone0 ))
+      # elbs:
+      # - (( grab terraform_outputs.elb ))
+
+disk_pools:
+  - name: db
+    disk_size: 10240
+    cloud_properties:
+      type: gp2
+
+networks:
+  - name: concourse
+    type: manual
+    subnets:
+      - range: 10.0.0.0/24
+        dns: [10.0.0.2]
+        gateway: 10.0.0.1
+        cloud_properties:
+          security_groups:
+          - (( grab terraform_outputs.concourse_security_group ))
+          subnet: (( grab terraform_outputs.subnet0_id ))
+  - name: public
+    type: vip
+
+jobs:
+  - name: concourse
+    instances: 1
+    resource_pool: concourse
+    persistent_disk_pool: db
+
+    templates:
+      - {release: concourse, name: atc}
+      - {release: concourse, name: groundcrew}
+      - {release: concourse, name: tsa}
+      - {release: concourse, name: baggageclaim}
+      - {release: garden-linux, name: garden}
+
+    networks:
+      - name: public
+        static_ips:
+        - (( grab terraform_outputs.concourse_elastic_ip ))
+      - name: concourse
+        static_ips: [10.0.0.11]
+        default: [dns, gateway]
+
+    properties:
+      atc:
+        basic_auth_username: admin
+        basic_auth_password: (( grab secrets.concourse_atc_password ))
+        postgresql:
+          address: (( grab terraform_outputs.concourse_db_address ))
+          database: concourse
+          role:
+            name: dbadmin
+            password: (( grab secrets.concourse_db_password ))
+      tsa:
+        forward_host: 127.0.0.1
+        atc:
+          address: 127.0.0.1:8080
+      garden:
+        listen_network: tcp
+        listen_address: 0.0.0.0:7777
+      groundcrew:
+        tsa:
+          host: 127.0.0.1
+
+cloud_provider:
+  template: {name: aws_cpi, release: bosh-aws-cpi}
+
+  ssh_tunnel:
+    host: (( grab terraform_outputs.concourse_elastic_ip ))
+    port: 22
+    user: vcap
+    private_key: id_rsa # Appears to be relative to working dir
+
+  mbus: (( concat "https://mbus:mbus-password@" terraform_outputs.concourse_elastic_ip ":6868" ))
+
+  properties:
+    aws:
+      access_key_id: (( grab secrets.aws_access_key_id ))
+      secret_access_key: (( grab secrets.aws_secret_access_key ))
+      default_key_name: insecure-deployer
+      default_security_groups:
+      - (( grab terraform_outputs.concourse_security_group ))
+      region: (( grab terraform_outputs.region ))
+    agent: {mbus: "https://mbus:mbus-password@0.0.0.0:6868"}
+    blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
+    ntp: [0.pool.ntp.org, 1.pool.ntp.org]
