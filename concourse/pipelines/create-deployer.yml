@@ -263,7 +263,6 @@ jobs:
             ls -l concourse-manifest/concourse.yml
 
     - task: deploy-concourse
-      timeout: 30m
       config:
         image: docker:///governmentpaas/bosh-init
         inputs:
