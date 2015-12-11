@@ -1,20 +1,10 @@
-//[![Build Status](https://api.travis-ci.org/alphagov/paas-cf.svg)](https://travis-ci.org/alphagov/paas-cf)
+[![Build Status](https://api.travis-ci.org/alphagov/paas-cf.svg)](https://travis-ci.org/alphagov/paas-cf)
 
 # paas-cf
 
-This repository contains [Concourse](http://concourse.ci/) pipelines and related [Terraform](https://terraform.io/) and [BOSH](https://bosh.io/) manifests that allow provisioning of [CloudFoundy](https://www.cloudfoundry.org/) on AWS. It consists of two chains:
-- A concourse pipeline to provision CloudFoundry on AWS using Concourse, Terraform and BOSH
-- A concourse pipeline to destroy previously provisioned environment.
-
-## Operation
-
-* A local Vagrant virtual machine is provisioned with concourse-lite.
-* The deployment pipeline is pushed to concourse-lite using the concourse `fly` command.
-* The deployment pipeline uses Terraform to create a VPC, subnet and security group inside AWS
-* The deployment pipeline creates an RDS database instance within the VPC
-* bosh-init is used to deploy a full-blown Concourse instance inside AWS
-* The full-blown Concourse instance is used to deploy a Microbosh inside AWS
-* The Microbosh is used to deploy CloudFoundry
+This repository contains [Concourse](http://concourse.ci/) pipelines and
+related [Terraform](https://terraform.io/) and [BOSH](https://bosh.io/) manifests
+that allow provisioning of [CloudFoundy](https://www.cloudfoundry.org/) on AWS.
 
 ## Getting started
 
@@ -34,15 +24,46 @@ export TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
 ## Usage
 
-### Build
+### Prepare the environment
 
-- `git clone https://github.com/alphagov/paas-cf.git`
-- `cd paas-cf`
-- `vagrant up`
-- ```sudo curl http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=`uname | tr '[:upper:]' '[:lower:]'` -o /usr/local/bin/fly```
-- `sudo chmod +x /usr/local/bin/fly`
-- `fly login --concourse-url http://192.168.100.4:8080 sync`
-- `./concourse/scripts/create-deployer.sh`
+1. Clone repo and boot the vagrant node with concourse:
 
-### Destroy
-- `./concourse/scripts/destroy-deployer.sh`
+    ```
+git clone https://github.com/alphagov/paas-cf.git
+cd paas-cf
+vagrant up
+```
+
+2. Install your `fly` binary:
+
+    ```
+FLY_CMD_URL=http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')
+sudo curl $FLY_CMD_URL -o /usr/local/bin/fly && \
+sudo chmod +x /usr/local/bin/fly
+```
+
+3. Login on the local concourse:
+
+     ```
+fly login --concourse-url http://192.168.100.4:8080 sync
+```
+
+### Deploy the deployer concourse
+
+```
+./concourse/scripts/create-deployer.sh
+```
+
+This script will:
+
+- Use a local Vagrant virtual machine with concourse-lite.
+- Use Terraform to create a VPC, subnet and security group inside AWS
+- bosh-init is used to deploy a full-blown Concourse instance inside AWS
+
+### Destroy the deployer concourse
+
+```
+./concourse/scripts/destroy-deployer.sh
+```
+
+Will destroy the resources created in the previous run.
