@@ -19,7 +19,7 @@ resource_pools:
       url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3147
       sha1: a096b1f64482d130adc74c0cd4076fb4f5623e87
     cloud_properties:
-      instance_type: t2.medium
+      instance_type: t2.micro
       availability_zone: (( grab terraform_outputs.zone0 ))
       # elbs:
       # - (( grab terraform_outputs.elb ))
