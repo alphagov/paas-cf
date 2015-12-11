@@ -5,12 +5,6 @@ resources:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
 
-  - name: cf-terraform
-    type: git
-    source:
-      uri: https://github.com/alphagov/cf-terraform.git
-      branch: 109343082_spruce_up_bosh_manifest_tmp
-
   - name: vpc-tfstate
     type: s3
     source:
@@ -185,7 +179,6 @@ jobs:
       trigger: true
       passed: [bosh-terraform]
     - get: paas-cf
-    - get: cf-terraform
     - get: bosh-tfstate
     - get: bosh-secrets
     - get: bosh-init-state
@@ -215,7 +208,7 @@ jobs:
           - -e
           - -c
           - |
-            cd cf-terraform/bosh-manifest
+            cd paas-cf/manifests/bosh-manifest
             ./build_manifest.sh \
               ../../../bosh-secrets/bosh-secrets.yml \
               ../../../terraform-outputs/terraform-outputs.yml \
@@ -224,7 +217,6 @@ jobs:
             /bin/cat ../../../bosh-manifest/bosh-manifest.yml
         inputs:
         - name: paas-cf
-        - name: cf-terraform
         - name: terraform-outputs
         - name: bosh-secrets
         outputs:
