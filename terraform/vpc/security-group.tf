@@ -1,6 +1,6 @@
 resource "aws_security_group" "office-access-ssh" {
   vpc_id      = "${aws_vpc.myvpc.id}"
-  name        = "${var.env}-office-access"
+  name        = "${var.env}-office-access-ssh"
   description = "Allow access from office"
 
   egress {

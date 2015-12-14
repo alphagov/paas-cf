@@ -10,8 +10,8 @@ output "vpc_cidr" {
   value = "${aws_vpc.myvpc.cidr_block}"
 }
 
-output "office_access_sg_id" {
-  value = "${aws_security_group.office-access.id}"
+output "ssh_security_group" {
+  value = "${aws_security_group.office-access-ssh.name}"
 }
 
 output "vpc_id" {
@@ -41,3 +41,4 @@ output "zone1" {
 output "zone2" {
   value = "${var.zones.zone2}"
 }
+

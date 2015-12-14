@@ -38,8 +38,6 @@ networks:
         dns: [10.0.0.2]
         gateway: 10.0.0.1
         cloud_properties:
-          security_groups:
-          - (( grab terraform_outputs.concourse_security_group ))
           subnet: (( grab terraform_outputs.subnet0_id ))
   - name: public
     type: vip
@@ -104,6 +102,7 @@ cloud_provider:
       default_key_name: insecure-deployer
       default_security_groups:
       - (( grab terraform_outputs.concourse_security_group ))
+      - (( grab terraform_outputs.ssh_security_group ))
       region: (( grab terraform_outputs.region ))
     agent: {mbus: "https://mbus:mbus-password@0.0.0.0:6868"}
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
