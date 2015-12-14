@@ -4,9 +4,9 @@ bucket=$1
 file=$2
 init_file=$3
 
-[[ -z "${bucket}" ]]      && echo "Must provide bucket name"     && exit 100
-[[ -z "${file}" ]]      && echo "Must provide file name"     && exit 101
-[[ -z "${init_file}" ]]      && echo "Must provide init file path"     && exit 102
+[[ -z "${bucket}" ]]    && echo "Must provide bucket name"    && exit 100
+[[ -z "${file}" ]]      && echo "Must provide file name"      && exit 101
+[[ -z "${init_file}" ]] && echo "Must provide init file path" && exit 102
 
 aws_path=/
 content_type='application/x-compressed-tar'

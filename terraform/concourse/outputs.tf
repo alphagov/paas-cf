@@ -13,11 +13,3 @@ output "concourse_security_group" {
 output "concourse_db_address" {
   value = "${aws_db_instance.concourse.address}"
 }
-
-output "concourse_db_address" {
-  value = "${aws_db_instance.concourse.address}"
-}
-
-output "concourse_db_address" {
-  value = "${aws_db_instance.concourse.address}"
-}

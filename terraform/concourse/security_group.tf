@@ -11,13 +11,6 @@ resource "aws_security_group" "concourse" {
   }
 
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
-  }
-
-  ingress {
     from_port = 8080
     to_port   = 8080
     protocol  = "tcp"

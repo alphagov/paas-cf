@@ -42,7 +42,7 @@ variable "office_cidrs" {
 
 variable "dns_zone_id" {
   description = "Amazon Route53 DNS zone identifier"
-  default = "Z3SI0PSH6KKVH4"
+  default     = "Z3SI0PSH6KKVH4"
 }
 
 variable "dns_zone_name" {
