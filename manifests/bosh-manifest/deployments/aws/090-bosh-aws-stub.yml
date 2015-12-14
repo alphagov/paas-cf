@@ -1,11 +1,20 @@
 meta:
   aws:
-    access_key_id: (( grab terraform_outputs.aws_access_key_id ))
-    secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
-    default_key_name: (( grab terraform_outputs.key_pair_name ))
-    default_security_groups:
-    - (( grab terraform_outputs.default_security_group ))
-    region: (( grab terraform_outputs.region ))
+    common:
+      default_key_name: (( grab terraform_outputs.key_pair_name ))
+      default_security_groups:
+      - (( grab terraform_outputs.default_security_group ))
+      region: (( grab terraform_outputs.region ))
+    cloud_provider:
+      credentials_source: env_or_profile
+      default_key_name: (( grab meta.aws.common.default_key_name ))
+      default_security_groups: (( grab meta.aws.common.default_security_groups ))
+      region: (( grab meta.aws.common.region ))
+    bosh_properties:
+      credentials_source: env_or_profile
+      default_key_name: (( grab meta.aws.common.default_key_name ))
+      default_security_groups: (( grab meta.aws.common.default_security_groups ))
+      region: (( grab meta.aws.common.region ))
 
   bosh_private_ip: (( grab terraform_outputs.microbosh_static_private_ip ))
   bosh_public_ip: (( grab terraform_outputs.microbosh_static_public_ip ))
@@ -21,7 +30,7 @@ jobs:
   properties:
     hm:
       resurrector_enabled: true
-    aws: (( grab meta.aws ))
+    aws: (( grab meta.aws.bosh_properties ))
     dns: null
 
 

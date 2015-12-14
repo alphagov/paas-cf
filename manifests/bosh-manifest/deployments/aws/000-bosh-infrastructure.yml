@@ -9,6 +9,7 @@ resource_pools:
     instance_type: t2.medium
     ephemeral_disk: {size: 40_000, type: gp2}
     availability_zone: (( grab terraform_outputs.zone0 ))
+    iam_instance_profile: bosh-director
 
 disk_pools:
 - name: disks

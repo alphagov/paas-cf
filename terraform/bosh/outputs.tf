@@ -34,22 +34,6 @@ output "microbosh_static_public_ip" {
 	value = "${aws_eip.bosh.public_ip}"
 }
 
-output "aws_secret_access_key" {
-	value = "${var.AWS_SECRET_ACCESS_KEY}"
-}
-
-output "aws_access_key_id" {
-       value = "${var.AWS_ACCESS_KEY_ID}"
-}
-
-output "compiled_cache_bucket_access_key_id" {
-	value = "${var.AWS_ACCESS_KEY_ID}"
-}
-
-output "compiled_cache_bucket_secret_access_key" {
-	value = "${var.AWS_SECRET_ACCESS_KEY}"
-}
-
 output "compiled_cache_bucket_host" {
 	value = "s3-${var.region}.amazonaws.com"
 }

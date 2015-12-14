@@ -202,6 +202,9 @@ jobs:
     - task: render-manifest
       config:
         image: docker:///governmentpaas/spruce
+        params:
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
@@ -209,9 +212,25 @@ jobs:
           - -c
           - |
             cd paas-cf/manifests/bosh-manifest
+
+            # Do not use IAM profile if AWS_ACCESS_KEY_ID is defined
+            if [ ! -z  "$AWS_ACCESS_KEY_ID" ]; then
+              /bin/cat <<EOF > use-aws-credentials.yml
+            meta:
+              aws:
+                cloud_provider:
+                  credentials_source: static
+                  access_key_id: $AWS_ACCESS_KEY_ID
+                  secret_access_key: $AWS_SECRET_ACCESS_KEY
+            EOF
+            else
+              echo "---" > use-aws-credentials.yml
+            fi
+
             ./build_manifest.sh \
               ../../../bosh-secrets/bosh-secrets.yml \
               ../../../terraform-outputs/terraform-outputs.yml \
+              use-aws-credentials.yml \
               > ../../../bosh-manifest/bosh-manifest.yml
 
             /bin/cat ../../../bosh-manifest/bosh-manifest.yml
