@@ -22,8 +22,8 @@ name: bosh
 
 releases:
 - name: bosh
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=207
-  sha1: 5f835bad5fc46230cd2fa823c0a52a94829ee044
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=236
+  sha1: 88dd60313dbd7dd832faa44c90493ffa6cd85448
 
 
 disk_pools:
@@ -85,7 +85,7 @@ jobs:
       address: 127.0.0.1
       name: my-bosh
       db: (( grab meta.postgres ))
-      cpi_job: cpi
+      cpi_job: (( grab cloud_provider.template.name ))
       ignore_missing_gateway: "false"
       user_management:
         provider: local
