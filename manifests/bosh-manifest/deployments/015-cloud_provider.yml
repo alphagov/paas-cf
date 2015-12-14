@@ -1,0 +1,17 @@
+cloud_provider:
+  ssh_tunnel:
+    host: (( grab meta.bosh_service_ip ))
+    port: 22
+    user: vcap
+    private_key: .ssh/id_rsa
+
+  mbus: (( concat "https://mbus:mbus@" meta.bosh_service_ip  ":6868" ))
+
+  properties:
+    agent:
+      mbus: "https://mbus:mbus@0.0.0.0:6868"
+    blobstore:
+      provider: local
+      path: /var/vcap/micro_bosh/data/cache
+    ntp: (( grab meta.ntp ))
+

@@ -1,0 +1,32 @@
+---
+resource_pools:
+- name: vms
+  network: private
+  stemcell:
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3074
+    sha1: 1a29c43d4e8abf7476ed6bb83168df1bdb742022
+  cloud_properties:
+    instance_type: t2.medium
+    ephemeral_disk: {size: 40_000, type: gp2}
+    availability_zone: (( grab terraform_outputs.zone0 ))
+
+disk_pools:
+- name: disks
+  cloud_properties:
+    type: gp2
+
+networks:
+- name: private
+  type: manual
+  subnets:
+  - range: 10.0.0.0/24
+    gateway: 10.0.0.1
+    dns: [10.0.0.2]
+    cloud_properties:
+      subnet: (( grab terraform_outputs.bosh_subnet_id ))
+      security_groups:
+      - (( grab terraform_outputs.bosh_security_group ))
+- name: public
+  type: vip
+
+

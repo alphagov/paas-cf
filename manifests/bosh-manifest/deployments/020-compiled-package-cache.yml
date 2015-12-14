@@ -1,0 +1,12 @@
+jobs:
+- name: bosh
+  properties:
+    compiled_package_cache:
+      provider: s3
+      options:
+        access_key_id: (( grab terraform_outputs.compiled_cache_bucket_access_key_id ))
+        secret_access_key: (( grab terraform_outputs.compiled_cache_bucket_secret_access_key ))
+        bucket_name: shared-cf-bosh-blobstore
+        host: (( grab terraform_outputs.compiled_cache_bucket_host ))
+
+

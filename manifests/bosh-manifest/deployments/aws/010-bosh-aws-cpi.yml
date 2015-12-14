@@ -1,0 +1,19 @@
+releases:
+- name: bosh-aws-cpi
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=28
+  sha1: c7ce03393ebedd87a860dc609758ddb9654360fa
+
+jobs:
+- name: bosh
+  templates:
+  - {name: registry, release: bosh}
+  - {name: cpi, release: bosh-aws-cpi}
+
+cloud_provider:
+  template:
+    name: cpi
+    release: bosh-aws-cpi
+
+  properties:
+    aws: (( grab meta.aws ))
+
