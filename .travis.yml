@@ -2,10 +2,11 @@ language: bash
 sudo: false
 env:
   global:
-    - TF_VERSION="0.6.7"
+    - TF_VERSION="0.6.8"
   matrix:
     - TF_DIR="terraform/bucket"
     - TF_DIR="terraform/vpc"
+    - TF_DIR="terraform/concourse"
 
 before_install:
   - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
@@ -15,4 +16,3 @@ before_install:
 
 script: 
   - PATH=$PATH:~/bin terraform graph ${TF_DIR}
-
