@@ -213,11 +213,12 @@ jobs:
 
     - task: create-concourse-secrets
       config:
-        params: {aws_access_key_id: {{aws_access_key_id}} }
-        params: {aws_secret_access_key: {{aws_secret_access_key}} }
-        params: {concourse_atc_password: {{concourse_atc_password}} }
-        params: {concourse_db_password: {{concourse_db_password}} }
-        params: {private_ssh_key: {{private_ssh_key}} }
+        params:
+          aws_access_key_id: {{aws_access_key_id}}
+          aws_secret_access_key: {{aws_secret_access_key}}
+          concourse_atc_password: {{concourse_atc_password}}
+          concourse_db_password: {{concourse_db_password}}
+          private_ssh_key: {{private_ssh_key}}
         outputs:
           - name: concourse-secrets
         run:
@@ -239,7 +240,7 @@ jobs:
             chmod 400 concourse-secrets/id_rsa
             ls -l concourse-secrets/id_rsa
 
-    - task: spruce-up-concourse-manifest
+    - task: generate-concourse-manifest
       config:
         image: docker:///governmentpaas/spruce
         inputs:

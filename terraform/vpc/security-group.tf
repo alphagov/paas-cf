@@ -1,6 +1,6 @@
-resource "aws_security_group" "office-access" {
+resource "aws_security_group" "office-access-ssh" {
   vpc_id      = "${aws_vpc.myvpc.id}"
-  name        = "${var.env}-office-access"
+  name        = "${var.env}-office-access-ssh"
   description = "Allow access from office"
 
   egress {
@@ -17,15 +17,8 @@ resource "aws_security_group" "office-access" {
     cidr_blocks = ["${split(",", var.office_cidrs)}"]
   }
 
-  ingress {
-    from_port = 8080
-    to_port   = 8080
-    protocol  = "tcp"
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
-  }
-
   tags {
-    Name = "${var.env}-office-access"
+    Name = "${var.env}-office-access-ssh"
   }
 }
 

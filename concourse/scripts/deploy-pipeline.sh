@@ -6,11 +6,11 @@ pipeline=${PIPELINE:-$2}
 config=${PIPELINE_CONFIG:-$3}
 concourse_db_password=${CONCOURSE_DB_PASSWORD:-$4}
 concourse_atc_password=${CONCOURSE_ATC_PASSWORD:-$5}
-[[ -z "${env}" ]]      && echo "Must provide environment name"     && exit 100
-[[ -z "${pipeline}" ]] && echo "Must provide pipeline name"        && exit 101
-[[ -z "${config}" ]]   && echo "Must provide pipeline config file" && exit 102
-[[ -z "${concourse_db_password}" ]]   && echo "Must provide concourse db password" && exit 103
-[[ -z "${concourse_atc_password}" ]]   && echo "Must provide concourse ATC password" && exit 104
+[[ -z "${env}" ]]                     && echo "Must provide environment name"       && exit 100
+[[ -z "${pipeline}" ]]                && echo "Must provide pipeline name"          && exit 101
+[[ -z "${config}" ]]                  && echo "Must provide pipeline config file"   && exit 102
+[[ -z "${concourse_db_password}" ]]   && echo "Must provide concourse db password"  && exit 103
+[[ -z "${concourse_atc_password}" ]]  && echo "Must provide concourse ATC password" && exit 104
 
 branch_name=${BRANCH:-master}
 aws_region=${AWS_DEFAULT_REGION:-eu-west-1}
