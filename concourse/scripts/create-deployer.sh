@@ -6,7 +6,7 @@ ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
 FLY_TARGET=${FLY_TARGET:-$ATC_URL}
 
 env=${DEPLOY_ENV-$1}
-pipeline="cf-deploy"
+pipeline="create-deployer"
 config="${SCRIPT_DIR}/../pipelines/create-deployer.yml"
 
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
