@@ -85,3 +85,28 @@ LOG_LEVEL=DEBUG BRANCH=branch_name ./concourse/scripts/destroy-deployer.sh env_n
 ```
 
 Will destroy the resources created in the previous run.
+
+### Microbosh deployment
+
+These pipelines will deploy/destroy a microbosh using bosh-init.
+
+> Note about AWS credentials: These pipelines can receive the variables
+> `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` for terraform and `bosh-init`.
+> If not provided, it will use IAM profiles.
+
+#### Deploy a microbosh with bosh-init
+
+```
+# Optionally pass the current branch for the git resources
+export BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+./concourse/scripts/create-microbosh.sh <environment_name>
+```
+
+This pipeline will:
+
+ * Use terraform to create the Elastic Public IP and security groups for
+   microbosh.
+ * Render `manifests/bosh-manifest` using spruce.
+ * Generate a set of random passwords for bosh init.
+ * Deploy microbosh with a public IP using `bosh-init`
