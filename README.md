@@ -110,3 +110,19 @@ This pipeline will:
  * Render `manifests/bosh-manifest` using spruce.
  * Generate a set of random passwords for bosh init.
  * Deploy microbosh with a public IP using `bosh-init`
+
+#### Destroy microbosh with bosh-init
+
+```
+# Optionally pass the current branch for the git resources
+export BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+./concourse/scripts/destroy-microbosh.sh <environment_name>
+```
+
+This pipeline will:
+
+ * Get the resources from the deploy microbosh pipeline
+ * Run bosh-init to delete the deployment, updating the bosh init state
+   with an empty file.
+ * Destroy the resources created by terraform.
