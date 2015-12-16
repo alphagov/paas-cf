@@ -18,8 +18,6 @@ Provide AWS access keys as environment variables, plus the corresponding terrafo
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
-export TF_VAR_AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-export TF_VAR_AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 ```
 
 ## Usage
