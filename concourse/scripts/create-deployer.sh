@@ -24,6 +24,7 @@ aws_access_key_id: ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
 concourse_db_password: ${CONCOURSE_DB_PASSWORD}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
+log_level: ${LOG_LEVEL:-}
 private_ssh_key: |
 $(cat ~/.ssh/insecure-deployer | sed 's/^/  /')
 EOF
@@ -34,8 +35,10 @@ generate_vars_file > /dev/null # Check for missing vars
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
    "${env}" "${pipeline}" "${config}" <(generate_vars_file)
 
-fly unpause-pipeline --pipeline "${pipeline}"
-curl "${ATC_URL}/pipelines/${pipeline}/jobs/init-bucket/builds" -X POST
+fly -t "${FLY_TARGET}" unpause-pipeline --pipeline "${pipeline}"
+
+# Start pipeline
+# curl "${ATC_URL}/pipelines/${pipeline}/jobs/init-bucket/builds" -X POST
 
 cat <<EOF
 You can watch the last vpc deploy job by running the command below.

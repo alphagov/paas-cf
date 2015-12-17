@@ -2,24 +2,45 @@
 set -e
 
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
+ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
+FLY_TARGET=${FLY_TARGET:-$ATC_URL}
 
 env=${DEPLOY_ENV-$1}
-pipeline="destroy-cf"
+pipeline="destroy-deployer"
 config="${SCRIPT_DIR}/../pipelines/destroy-deployer.yml"
 
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
-bash "${SCRIPT_DIR}/deploy-pipeline.sh" "${env}" "${pipeline}" "${config}"
 
-echo "Pipeline updated, about to trigger destroy..."
-if [[ -z "${SKIP_CONFIRM}" ]] ; then
-   read -sn 1 -p "This is a destructive operation, are you sure you want to do this [Y/N]? "; [[ $${REPLY:0:1} = [Yy] ]];
-fi
+generate_vars_file() {
+   set -u # Treat unset variables as an error when substituting
+   cat <<EOF
+---
+deploy_env: ${env}
+tfstate_bucket: bucket=${env}-state
+state_bucket: ${env}-state
+branch_name: ${BRANCH:-master}
+aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
+aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+log_level: ${LOG_LEVEL:-}
+private_ssh_key: |
+$(cat ~/.ssh/insecure-deployer | sed 's/^/  /')
+EOF
+}
 
-export ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
-export fly_target=${FLY_TARGET:-tutorial}
+generate_vars_file > /dev/null # Check for missing vars
 
-fly unpause-pipeline --pipeline "${pipeline}"
-curl "${ATC_URL}/pipelines/${pipeline}/jobs/destroy-vpc/builds" -X POST
-sleep 3
-fly -t "${fly_target}" watch -j "${pipeline}/destroy-vpc"
+bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+   "${env}" "${pipeline}" "${config}" <(generate_vars_file)
 
+fly -t "${FLY_TARGET}" unpause-pipeline --pipeline "${pipeline}"
+
+# Start pipeline
+# curl "${ATC_URL}/pipelines/${pipeline}/jobs/destroy-concourse/builds" -X POST
+
+cat <<EOF
+You can watch the last vpc deploy job by running the command below.
+You might need to wait a few moments before the latest build starts.
+
+fly -t "${FLY_TARGET}" watch -j "${pipeline}/destroy-concourse"
+EOF
