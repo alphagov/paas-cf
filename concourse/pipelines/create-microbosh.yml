@@ -1,0 +1,223 @@
+resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: {{branch_name}}
+
+  - name: cf-terraform
+    type: git
+    source:
+      uri: https://github.com/alphagov/cf-terraform.git
+      branch: 109343082_spruce_up_bosh_manifest_tmp
+
+  - name: vpc-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: vpc.tfstate
+
+  - name: bosh-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bosh.tfstate
+
+  - name: bosh-init-state
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bosh-manifest-state.json
+
+  - name: bosh-manifest
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bosh-manifest.yml
+
+  - name: terraform-updated
+    type: semver
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      key: terraform-updated
+
+  - name: pipeline-trigger
+    type: semver
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      key: {{pipeline_trigger_file}}
+
+jobs:
+  - name: init
+    serial: true
+    plan:
+    - get: paas-cf
+      trigger: true
+    - put: pipeline-trigger
+      params: {bump: patch}
+
+  - name: bootstrap-s3-state
+    serial: true
+    plan:
+    - get: pipeline-trigger
+      trigger: true
+      passed: [ init ]
+    - get: paas-cf
+    - task: bosh-manifest-state.json
+      config:
+        image: docker:///governmentpaas/toolbox
+        params:
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
+        inputs:
+        - name: paas-cf
+
+  - name: bosh-terraform
+    serial: true
+    plan:
+    - get: pipeline-trigger
+      trigger: true
+      passed: [ init ]
+    - get: paas-cf
+    - get: vpc-tfstate
+    - task: terraform-variables
+      config:
+        image: docker:///governmentpaas/bosh-init
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < vpc-tfstate/vpc.tfstate \
+            > terraform-variables/tfvars.sh
+        inputs:
+        - name: paas-cf
+        - name: vpc-tfstate
+        outputs:
+        - name: terraform-variables
+    - task: terraform-apply
+      config:
+        image: docker:///governmentpaas/docker-terraform
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            . terraform-variables/tfvars.sh
+            cd paas-cf/terraform/bosh
+            STATE_BUCKET={{state_bucket}}
+            terraform remote config -backend=s3 -backend-config=bucket=${STATE_BUCKET} -backend-config="key=bosh.tfstate"
+            terraform apply -var env={{deploy_env}}
+        inputs:
+        - name: paas-cf
+        - name: terraform-variables
+    - put: terraform-updated
+      params: {bump: patch}
+
+  - name: bosh-init
+    serial: true
+    plan:
+    - get: terraform-updated
+      trigger: true
+      passed: [bosh-terraform]
+    - get: paas-cf
+    - get: cf-terraform
+    - get: bosh-tfstate
+    - get: bosh-init-state
+    - task: terraform_outputs
+      config:
+        image: docker:///governmentpaas/bosh-init
+        run:
+          path: sh
+          args:
+          - -c
+          - -e
+          - |
+            ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+              < bosh-tfstate/bosh.tfstate \
+              > terraform-outputs/terraform-outputs.yml
+        inputs:
+        - name: paas-cf
+        - name: bosh-tfstate
+        outputs:
+        - name: terraform-outputs
+    - task: render-manifest
+      config:
+        image: docker:///governmentpaas/spruce
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            cd cf-terraform/bosh-manifest
+            ./build_manifest.sh \
+              ./deployments/example-stubs//bosh-secrets.yml \
+              ../../../terraform-outputs/terraform-outputs.yml \
+              > ../../../bosh-manifest/bosh-manifest.yml
+
+            /bin/cat ../../../bosh-manifest/bosh-manifest.yml
+        inputs:
+        - name: paas-cf
+        - name: cf-terraform
+        - name: terraform-outputs
+        outputs:
+        - name: bosh-manifest
+      on_success:
+        put: bosh-manifest
+        params:
+          from: ./bosh-manifest/bosh-manifest.yml
+    - task: bosh-init-microbosh
+      config:
+        image: docker:///governmentpaas/bosh-init
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            mkdir -p bosh-manifest/.ssh
+            echo {{private_ssh_key}} >> bosh-manifest/.ssh/id_rsa
+            chmod 400 bosh-manifest/.ssh/id_rsa
+            cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
+            bosh-init deploy bosh-manifest/bosh-manifest.yml
+        inputs:
+        - name: paas-cf
+        - name: bosh-manifest
+        - name: bosh-init-state
+      on_success:
+        put: bosh-init-state
+        params:
+          from: ./bosh-manifest/bosh-manifest-state.json
+
