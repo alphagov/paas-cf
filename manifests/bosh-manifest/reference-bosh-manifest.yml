@@ -4,12 +4,11 @@ cloud_provider:
     agent:
       mbus: https://mbus:mbus@0.0.0.0:6868
     aws:
-      access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+      credentials_source: env_or_profile
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
       region: eu-west-1
-      secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
     blobstore:
       path: /var/vcap/micro_bosh/data/cache
       provider: local
@@ -47,12 +46,11 @@ jobs:
     agent:
       mbus: nats://nats:BOSH_NATS_PASSWORD@10.0.0.6:4222
     aws:
-      access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
+      credentials_source: env_or_profile
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
       region: eu-west-1
-      secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
     blobstore:
       address: 10.0.0.6
       agent:
@@ -68,10 +66,9 @@ jobs:
       provider: dav
     compiled_package_cache:
       options:
-        access_key_id: ABCDEFGHIJKMMNLOPQRSTUVWYZ
         bucket_name: shared-cf-bosh-blobstore
+        credentials_source: env_or_profile
         host: s3-eu-west-1.amazonaws.com
-        secret_access_key: fakefakefakefakefakefakefakefakefakefakefake
       provider: s3
     director:
       address: 127.0.0.1
@@ -173,6 +170,7 @@ resource_pools:
     ephemeral_disk:
       size: 40000
       type: gp2
+    iam_instance_profile: bosh-director
     instance_type: t2.medium
   name: vms
   network: private
