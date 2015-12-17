@@ -14,9 +14,8 @@ resource "aws_security_group" "bosh" {
     from_port = 22
     to_port   = 22
     protocol  = "tcp"
-    # TODO: Fix this, it should be via jumpbox
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
     security_groups = [
+      "${var.concourse_security_group_id}"
     ]
   }
 
@@ -24,9 +23,8 @@ resource "aws_security_group" "bosh" {
     from_port = 6868
     to_port   = 6868
     protocol  = "tcp"
-    # TODO: Fix this, it should be via jumpbox
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
     security_groups = [
+      "${var.concourse_security_group_id}"
     ]
   }
 
@@ -34,9 +32,9 @@ resource "aws_security_group" "bosh" {
     from_port = 25555
     to_port   = 25555
     protocol  = "tcp"
-    # TODO: Fix this, it should be via jumpbox
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
     security_groups = [
+      "${aws_security_group.bosh_client.id}",
+      "${var.concourse_security_group_id}"
     ]
   }
 
@@ -70,6 +68,16 @@ resource "aws_security_group" "bosh" {
 
   tags {
     Name = "${var.env}-bosh"
+  }
+}
+
+resource "aws_security_group" "bosh_client" {
+  name = "${var.env}-bosh-client"
+  description = "Default security group for VMs which will interact with bosh"
+  vpc_id = "${var.vpc_id}"
+
+  tags {
+    Name = "${var.env}-bosh-client"
   }
 }
 
