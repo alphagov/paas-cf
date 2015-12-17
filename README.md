@@ -14,7 +14,7 @@ You need the following prerequisites before you will be able to deploy first pip
 * Vagrant
 * AWS Access
 
-Provide AWS access keys as environment variables, plus the corresponding terraform variables.
+Provide AWS access keys as environment variables.
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
