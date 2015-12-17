@@ -21,7 +21,7 @@ cloud_provider:
     private_key: .ssh/id_rsa
     user: vcap
   template:
-    name: cpi
+    name: aws_cpi
     release: bosh-aws-cpi
 disk_pools:
 - cloud_properties:
@@ -72,7 +72,7 @@ jobs:
       provider: s3
     director:
       address: 127.0.0.1
-      cpi_job: cpi
+      cpi_job: aws_cpi
       db:
         adapter: postgres
         database: bosh
@@ -139,7 +139,7 @@ jobs:
     release: bosh
   - name: registry
     release: bosh
-  - name: cpi
+  - name: aws_cpi
     release: bosh-aws-cpi
 name: bosh
 networks:
@@ -159,11 +159,11 @@ networks:
 properties: null
 releases:
 - name: bosh
-  sha1: 5f835bad5fc46230cd2fa823c0a52a94829ee044
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=207
+  sha1: 88dd60313dbd7dd832faa44c90493ffa6cd85448
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=236
 - name: bosh-aws-cpi
-  sha1: c7ce03393ebedd87a860dc609758ddb9654360fa
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=28
+  sha1: db2a6c6cdd5ff9f77bf083e10118fa72e1f5e181
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=36
 resource_pools:
 - cloud_properties:
     availability_zone: eu-west-1a
