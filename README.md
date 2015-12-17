@@ -22,7 +22,7 @@ export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 
 ## Usage
 
-### Prepare the environment
+### Prepare the local environment
 
 1. Clone repo and boot the vagrant node with concourse:
 
@@ -40,15 +40,16 @@ sudo curl $FLY_CMD_URL -o /usr/local/bin/fly && \
 sudo chmod +x /usr/local/bin/fly
 ```
 
-3. Login on the local concourse:
+3. Login on the local vagrant concourse:
 
      ```
-fly login --concourse-url http://192.168.100.4:8080 sync
+fly login --target vagrant --concourse-url http://192.168.100.4:8080 sync
 ```
 
 ### Deploy the deployer concourse
 
 ```
+export FLY_TARGET=vagrant
 CONCOURSE_ATC_PASSWORD=atcpassword CONCOURSE_DB_PASSWORD=dbpassword ./concourse/scripts/create-deployer.sh env_name
 ```
 
@@ -58,6 +59,7 @@ CONCOURSE_ATC_PASSWORD=atcpassword CONCOURSE_DB_PASSWORD=dbpassword ./concourse/
 Also, you can specify log level and branch by setting LOG_LEVEL and BRANCH variables.
 
 ```
+export FLY_TARGET=vagrant
 BRANCH=branch_name LOG_LEVEL=DEBUG CONCOURSE_ATC_PASSWORD=atcpassword CONCOURSE_DB_PASSWORD=dbpassword ./concourse/scripts/create-deployer.sh env_name
 ```
 
@@ -75,13 +77,18 @@ This script will:
 ### Destroy the deployer concourse
 
 ```
+export FLY_TARGET=vagrant
 ./concourse/scripts/destroy-deployer.sh env_name
 ```
 
 or
 
 ```
+export FLY_TARGET=vagrant
 LOG_LEVEL=DEBUG BRANCH=branch_name ./concourse/scripts/destroy-deployer.sh env_name
+
+export FLY_TARGET=vagrant
+./concourse/scripts/destroy-deployer.sh
 ```
 
 Will destroy the resources created in the previous run.
