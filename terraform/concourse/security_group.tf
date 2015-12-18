@@ -25,6 +25,6 @@ resource "aws_security_group" "concourse" {
   }
 
   tags {
-    Name = "${var.env}-concourse-rds"
+    Name = "${var.env}-concourse"
   }
 }
