@@ -35,7 +35,7 @@ vagrant up
 2. Install your `fly` binary:
 
     ```
-FLY_CMD_URL=http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')
+FLY_CMD_URL="http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
 sudo curl $FLY_CMD_URL -o /usr/local/bin/fly && \
 sudo chmod +x /usr/local/bin/fly
 ```
