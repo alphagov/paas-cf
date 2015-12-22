@@ -49,3 +49,8 @@ variable "dns_zone_name" {
   description = "Amazon Route53 DNS zone name"
   default     = "cf.paas.alphagov.co.uk"
 }
+
+variable "microbosh_static_private_ip" {
+  description = "Microbosh internal IP"
+  default     = "10.0.0.6"
+}
