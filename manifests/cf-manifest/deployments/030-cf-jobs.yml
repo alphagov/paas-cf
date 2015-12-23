@@ -291,7 +291,7 @@ jobs:
 
   - name: postgres_z1
     templates: (( grab meta.postgres_templates ))
-    instances: 0
+    instances: 1
     resource_pool: medium_z1
     persistent_disk: 4096
     networks:
@@ -667,7 +667,24 @@ properties:
 
   ha_proxy:
 
-  databases: ~
+  databases:
+     db_scheme: postgres
+     address: ~
+     port: 5524
+     roles:
+       - tag: admin
+         name: ccadmin
+         password: (( grab secrets.ccadmin_password ))
+       - tag: admin
+         name: uaaadmin
+         password: (( grab secrets.uuadmin_password ))
+     databases:
+       - tag: cc
+         name: ccdb
+         citext: true
+       - tag: uaa
+         name: uaadb
+         citext: true
 
   router:
     enable_ssl:
