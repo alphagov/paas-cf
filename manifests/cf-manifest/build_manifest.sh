@@ -6,6 +6,7 @@ cd $(dirname $0)
 terraform_outputs=${TERRAFORM_OUTPUTS:-"outputs/terraform-outputs.yml"}
 secrets=${SECRETS:-"outputs/cf-secrets.yml"}
 ssl_certs=${SSL_CERTS:-"outputs/cf-ssl-certificates.yml"}
+director_uuid=${DIRECTOR_UUID:-"outputs/director-uuid.yml"}
 
 spruce merge \
   --prune meta --prune lamb_meta \
@@ -15,4 +16,5 @@ spruce merge \
   deployments/aws/*.yml \
   ${terraform_outputs} \
   ${secrets} \
-  ${ssl_certs}
+  ${ssl_certs} \
+  ${director_uuid}
