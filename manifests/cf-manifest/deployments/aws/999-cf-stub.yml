@@ -12,31 +12,27 @@ director_uuid: DIRECTOR_UUID
 networks:
 - name: cf1
   subnets:
-    - range: 10.10.16.0/20
+    - range: 10.0.10.0/24
       reserved:
-        - 10.10.16.2 - 10.10.16.9
+        - 10.0.10.2 - 10.0.10.9
       static:
-        - 10.10.16.10 - 10.10.16.255
-      gateway: 10.10.16.1
+        - 10.0.10.10 - 10.0.10.40
+      gateway: 10.0.10.1
       dns:
-        - 10.10.0.2
+        - 10.0.0.2
       cloud_properties:
-        security_groups:
-          - cf
         subnet: (( grab terraform_outputs.cf1_subnet_id ))
 - name: cf2
   subnets:
-    - range: 10.10.80.0/20
+    - range: 10.0.11.0/24
       reserved:
-        - 10.10.80.2 - 10.10.80.9
+        - 10.0.11.2 - 10.0.11.9
       static:
-        - 10.10.80.10 - 10.10.80.255
-      gateway: 10.10.80.1
+        - 10.0.11.10 - 10.0.11.40
+      gateway: 10.0.11.1
       dns:
-        - 10.10.0.2
+        - 10.0.0.2
       cloud_properties:
-        security_groups:
-          - cf
         subnet: (( grab terraform_outputs.cf2_subnet_id ))
 
 properties:
