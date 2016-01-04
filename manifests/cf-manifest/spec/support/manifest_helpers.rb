@@ -20,6 +20,7 @@ module ManifestHelpers
         "TERRAFORM_OUTPUTS" => File.expand_path("../../fixtures/terraform-outputs.yml", __FILE__),
         "SECRETS"           => File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
         "SSL_CERTS"         => File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
+        "DIRECTOR_UUID"         => File.expand_path("../../fixtures/director-uuid.yml", __FILE__),
       },
       File.expand_path("../../../build_manifest.sh", __FILE__),
     )
