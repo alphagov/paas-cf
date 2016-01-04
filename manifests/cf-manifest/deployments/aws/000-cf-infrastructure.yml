@@ -18,7 +18,7 @@ meta:
 properties:
 
   logger_endpoint:
-    port: 4443
+    port: 443
 
   loggregator:
     blacklisted_syslog_ranges:
@@ -48,6 +48,10 @@ compilation:
   cloud_properties:
     instance_type: c3.large
     availability_zone: (( grab meta.zones.z1 ))
+
+disk_pools:
+  - name: database_disks
+    disk_size: 1024
 
 resource_pools:
   - name: small_z1
@@ -146,6 +150,78 @@ resource_pools:
     cloud_properties:
       instance_type: c3.xlarge
       availability_zone: (( grab meta.zones.z1 ))
+
+# Diego
+  - name: access_z1
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: access_z2
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: brain_z1
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: brain_z2
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: cc_bridge_z1
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: cc_bridge_z2
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: cell_z1
+    cloud_properties:
+      instance_type: r3.xlarge
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: cell_z2
+    cloud_properties:
+      instance_type: r3.xlarge
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: database_z1
+    cloud_properties:
+      instance_type: m3.large
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: database_z2
+    cloud_properties:
+      instance_type: m3.large
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: route_emitter_z1
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: route_emitter_z2
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: colocated_z1
+    cloud_properties:
+      instance_type: r3.xlarge
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: colocated_z2
+    cloud_properties:
+      instance_type: r3.xlarge
+      availability_zone: (( grab meta.zones.z2 ))
+
 
 # set up static IPs
 jobs:

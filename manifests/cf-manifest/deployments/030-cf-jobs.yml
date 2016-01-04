@@ -579,6 +579,274 @@ jobs:
       - name: cf1
     properties: {}
 
+# Diego
+
+  - name: access_z1
+    templates: (( grab base_job_templates.access ))
+    instances: 1
+    resource_pool: access_z1
+    networks:
+      - name: cf1
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z1
+      consul:
+        agent:
+          services:
+            file_server: {}
+            ssh_proxy: {}
+
+  - name: access_z2
+    templates: (( grab base_job_templates.access ))
+    instances: 1
+    resource_pool: access_z2
+    networks:
+      - name: cf2
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z2
+      consul:
+        agent:
+          services:
+            file_server: {}
+            ssh_proxy: {}
+
+  - name: brain_z1
+    templates: (( grab base_job_templates.brain ))
+    instances: 1
+    resource_pool: brain_z1
+    networks:
+      - name: cf1
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      consul:
+        agent:
+          services:
+            auctioneer: {}
+      metron_agent:
+        zone: z1
+
+  - name: brain_z2
+    templates: (( grab base_job_templates.brain ))
+    instances: 1
+    resource_pool: brain_z2
+    networks:
+      - name: cf2
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      consul:
+        agent:
+          services:
+            auctioneer: {}
+      metron_agent:
+        zone: z2
+
+  - name: cc_bridge_z1
+    templates: (( grab base_job_templates.cc_bridge ))
+    instances: 1
+    resource_pool: cc_bridge_z1
+    networks:
+      - name: cf1
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z1
+      consul:
+        agent:
+          services:
+            cc_uploader: {}
+            nsync: {}
+            stager: {}
+            tps: {}
+
+  - name: cc_bridge_z2
+    templates: (( grab base_job_templates.cc_bridge ))
+    instances: 1
+    resource_pool: cc_bridge_z2
+    networks:
+      - name: cf2
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z2
+      consul:
+        agent:
+          services:
+            cc_uploader: {}
+            nsync: {}
+            stager: {}
+            tps: {}
+
+  - name: cell_z1
+    templates: (( grab base_job_templates.cell ))
+    instances: 1
+    resource_pool: cell_z1
+    networks:
+      - name: cf1
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z1
+      diego:
+        rep:
+          zone: z1
+
+  - name: cell_z2
+    templates: (( grab base_job_templates.cell ))
+    instances: 1
+    resource_pool: cell_z2
+    networks:
+      - name: cf2
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z2
+      diego:
+        rep:
+          zone: z2
+
+  - name: colocated_z1
+    templates: (( grab base_job_templates.colocated ))
+    instances: 1
+    persistent_disk_pool: database_disks
+    resource_pool: colocated_z1
+    networks:
+      - name: cf1
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      consul:
+        agent:
+          services:
+            auctioneer: {}
+            bbs: {}
+            cc_uploader: {}
+            etcd: {}
+            file_server: {}
+            nsync: {}
+            ssh_proxy: {}
+            stager: {}
+            tps: {}
+      diego:
+        rep:
+          zone: z1
+      metron_agent:
+        zone: z1
+
+  - name: colocated_z2
+    templates: (( grab base_job_templates.colocated ))
+    instances: 1
+    persistent_disk_pool: database_disks
+    resource_pool: colocated_z2
+    networks:
+      - name: cf2
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      consul:
+        agent:
+          services:
+            auctioneer: {}
+            bbs: {}
+            cc_uploader: {}
+            etcd: {}
+            file_server: {}
+            nsync: {}
+            ssh_proxy: {}
+            stager: {}
+            tps: {}
+      diego:
+        rep:
+          zone: z2
+      metron_agent:
+        zone: z2
+
+  - name: database_z1
+    templates: (( grab base_job_templates.database ))
+    instances: 1
+    persistent_disk_pool: database_disks
+    resource_pool: database_z1
+    networks:
+      - name: cf1
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      consul:
+        agent:
+          services:
+            etcd: {}
+            bbs: {}
+      metron_agent:
+        zone: z1
+
+  - name: database_z2
+    templates: (( grab base_job_templates.database ))
+    instances: 1
+    persistent_disk_pool: database_disks
+    resource_pool: database_z2
+    networks:
+      - name: cf2
+    update:
+      serial: true
+      max_in_flight: 1
+    properties:
+      consul:
+        agent:
+          services:
+            etcd: {}
+            bbs: {}
+      metron_agent:
+        zone: z2
+
+  - name: route_emitter_z1
+    templates: (( grab  base_job_templates.route_emitter ))
+    instances: 0
+    resource_pool: route_emitter_z1
+    networks:
+      - name: cf1
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z1
+
+  - name: route_emitter_z2
+    templates: (( grab base_job_templates.route_emitter ))
+    instances: 0
+    resource_pool: route_emitter_z2
+    networks:
+      - name: cf2
+    update:
+      serial: false
+      max_in_flight: 1
+    properties:
+      metron_agent:
+        zone: z2
+
+
+
 properties:
   consul:
     agent:
@@ -599,7 +867,7 @@ properties:
   support_address: "http://support.cloudfoundry.com"
   description: null
   ssl:
-    skip_cert_verify: false
+    skip_cert_verify: true
   system_domain: (( grab properties.domain ))
   system_domain_organization: ~
   app_domains:
@@ -686,11 +954,12 @@ properties:
          name: uaadb
          citext: true
 
+
   router:
-    enable_ssl:
-    ssl_cert:
-    ssl_key:
-    cipher_suites:
+    enable_ssl: true
+    ssl_cert: (( grab secrets.router_ssl_cert ))
+    ssl_key: (( grab secrets.router_ssl_key ))
+    cipher_suites: TLS_RSA_WITH_RC4_128_SHA:TLS_RSA_WITH_AES_128_CBC_SHA
     requested_route_registration_interval_in_seconds:
     ssl_skip_validation:
     port:

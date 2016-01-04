@@ -60,3 +60,74 @@ resource_pools:
     stemcell: (( grab meta.stemcell ))
     cloud_properties: (( grab resource_pools.large_z1.cloud_properties ))
     env: (( grab meta.default_env ))
+
+# Diego below
+  - name: access_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: access_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: brain_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: brain_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: cc_bridge_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: cc_bridge_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: cell_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: cell_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: database_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: database_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: route_emitter_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: route_emitter_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: colocated_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: colocated_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))

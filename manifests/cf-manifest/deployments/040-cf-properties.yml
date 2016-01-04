@@ -62,7 +62,7 @@ properties:
       cutoff_age_in_days: 31
 
     users_can_select_backend: true
-    default_to_diego_backend: false
+    default_to_diego_backend: true
     allow_app_ssh_access: true
     default_app_memory: 1024
     default_app_disk_in_mb: 1024
@@ -214,6 +214,8 @@ properties:
   uaa:
     url: (( concat "https://uaa." properties.domain ))
     issuer: (( grab properties.uaa.url ))
+    ssh_proxy_client_secret: (( grab secrets.uaa_admin_client_secret ))
+    token_url: (( concat properties.uaa.url "/oauth/token" ))
 
     no_ssl: ~
     require_https: ~
@@ -262,9 +264,244 @@ properties:
         authorities: clients.read,clients.write,clients.admin,routing.routes.write,routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
         scope: openid,cloud_controller_service_permissions.read
+      ssh-proxy:
+        authorized-grant-types: authorization_code
+        autoapprove: true
+        override: true
+        redirect-uri: /login
+        scope: openid,cloud_controller.read,cloud_controller.write
+        secret: ssh-proxy-secret
 
     database: ~
 
     restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
 
     zones:
+
+  diego:
+    ssl:
+      skip_cert_verify: true
+    auctioneer:
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+
+    bbs:
+      active_key_label: keylabel1
+      encryption_keys:
+        - label: keylabel1
+          passphrase: "a secure passphrase"
+      ca_cert: (( grab secrets.consul_ca_cert ))
+      server_cert: (( grab secrets.consul_server_cert ))
+      server_key: (( grab secrets.consul_server_key ))
+      auctioneer:
+        api_url: http://auctioneer.service.cf.internal:9016
+      etcd:
+        machines: ["etcd.service.cf.internal"]
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      require_ssl: false
+
+    converger:
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      require_ssl: false
+
+    file_server:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+
+    cc_uploader:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      cc:
+        base_url: (( grab properties.cc.srv_api_uri ))
+        basic_auth_password: (( grab properties.cc.internal_api_password ))
+        staging_upload_user: (( grab properties.cc.staging_upload_user ))
+        staging_upload_password: (( grab properties.cc.staging_upload_password ))
+
+    nsync:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      cc: 
+        base_url:  (( grab properties.cc.srv_api_uri ))
+        basic_auth_password: (( grab properties.cc.internal_api_password ))
+        staging_upload_user: (( grab properties.cc.staging_upload_user ))
+        staging_upload_password: (( grab properties.cc.staging_upload_password ))
+
+    rep:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+
+    route_emitter:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      nats:
+        machines: (( grab properties.nats.machines ))
+        user: (( grab properties.nats.user ))
+        password: (( grab properties.nats.password ))
+        port: (( grab properties.nats.port ))
+
+    ssh_proxy:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      host_key: (( grab secrets.consul_server_key ))
+
+      uaa_secret: (( grab properties.uaa.ssh_proxy_client_secret ))
+      uaa_token_url: (( grab properties.uaa.token_url ))
+
+    stager:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      cc:
+        base_url: (( grab properties.cc.srv_api_uri ))
+        basic_auth_password: (( grab properties.cc.internal_api_password ))
+        staging_upload_user: (( grab properties.cc.staging_upload_user ))
+        staging_upload_password: (( grab properties.cc.staging_upload_password ))
+
+    tps:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      cc:
+        base_url: (( grab properties.cc.srv_api_uri ))
+        basic_auth_password: (( grab properties.cc.internal_api_password ))
+        staging_upload_user: (( grab properties.cc.staging_upload_user ))
+        staging_upload_password: (( grab properties.cc.staging_upload_password ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab secrets.consul_ca_cert ))
+        client_cert: (( grab secrets.consul_agent_cert ))
+        client_key: (( grab secrets.consul_agent_key ))
+        require_ssl: false
+      traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
+      # Override because this is wrong in diego version 0.1441.0
+      watcher:
+        debug_addr: 0.0.0.0:17015
+
+base_job_templates:
+  brain:
+    - name: consul_agent
+      release: cf
+    - name: auctioneer
+      release: diego
+    - name: converger
+      release: diego
+    - name: metron_agent
+      release: cf
+  cell:
+    - name: rep
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: garden
+      release: garden-linux
+    - name: rootfses
+      release: diego
+    - name: metron_agent
+      release: cf
+  cc_bridge:
+    - name: stager
+      release: diego
+    - name: nsync
+      release: diego
+    - name: tps
+      release: diego
+    - name: cc_uploader
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: metron_agent
+      release: cf
+  route_emitter:
+    - name: route_emitter
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: metron_agent
+      release: cf
+  access:
+    - name: ssh_proxy
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: metron_agent
+      release: cf
+    - name: file_server
+      release: diego
+  database:
+    - name: etcd
+      release: etcd
+    - name: bbs
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: metron_agent
+      release: cf
+  colocated:
+    - name: rep
+      release: diego
+    - name: auctioneer
+      release: diego
+    - name: bbs
+      release: diego
+    - name: cc_uploader
+      release: diego
+    - name: converger
+      release: diego
+    - name: consul_agent
+      release: cf
+    - name: etcd
+      release: etcd
+    - name: file_server
+      release: diego
+    - name: garden
+      release: garden-linux
+    - name: metron_agent
+      release: cf
+    - name: nsync
+      release: diego
+    - name: rootfses
+      release: diego
+    - name: route_emitter
+      release: diego
+    - name: ssh_proxy
+      release: diego
+    - name: stager
+      release: diego
+    - name: tps
+      release: diego
+
+
