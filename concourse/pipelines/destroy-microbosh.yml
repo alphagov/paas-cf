@@ -59,6 +59,15 @@ resources:
       secret_access_key: {{aws_secret_access_key}}
       key: {{pipeline_trigger_file}}
 
+  - name: concourse-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: concourse.tfstate
+      region_name: {{aws_region}}
+
 jobs:
   - name: init
     serial: true
@@ -107,6 +116,7 @@ jobs:
     - get: bosh-init-state
       passed: [ bosh-init-delete ]
     - get: vpc-tfstate
+    - get: concourse-tfstate
     - task: terraform-variables
       config:
         image: docker:///governmentpaas/bosh-init
@@ -118,10 +128,14 @@ jobs:
           - |
             ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
             < vpc-tfstate/vpc.tfstate \
-            > terraform-variables/tfvars.sh
+            > terraform-variables/vpc.tfvars.sh
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < concourse-tfstate/concourse.tfstate \
+            > terraform-variables/concourse.tfvars.sh
         inputs:
         - name: paas-cf
         - name: vpc-tfstate
+        - name: concourse-tfstate
         outputs:
         - name: terraform-variables
     - task: terraform-destroy
@@ -140,7 +154,9 @@ jobs:
           - -e
           - -c
           - |
-            . terraform-variables/tfvars.sh
+            . terraform-variables/vpc.tfvars.sh
+            . terraform-variables/concourse.tfvars.sh
+
             cd paas-cf/terraform/bosh
             STATE_BUCKET={{state_bucket}}
             terraform remote config -backend=s3 -backend-config=bucket=${STATE_BUCKET} -backend-config="key=bosh.tfstate"
