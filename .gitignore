@@ -1,2 +1,2 @@
 **/*.tfstate
-.vagrant/
+vagrant/.vagrant/
