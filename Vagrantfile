@@ -4,6 +4,12 @@
 Vagrant.configure(2) do |config|
   config.vm.box = ENV['VAGRANT_BOX_NAME'] || 'aws_vagrant_box'
 
+  config.vm.provision "shell" do |s|
+    s.privileged = true
+    s.path = "enable_concourse_auth.sh"
+    s.args = "#{ENV['CONCOURSE_ATC_USER']} #{ENV['CONCOURSE_ATC_PASSWORD']}"
+  end
+
   config.vm.provider :aws do |aws, override|
     aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
     aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
