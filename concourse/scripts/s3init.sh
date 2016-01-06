@@ -31,7 +31,7 @@ host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
-  echo -en "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
+  /bin/echo -e -n "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
 }
 
 put() {
