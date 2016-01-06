@@ -104,8 +104,9 @@ export CONCOURSE_ATC_PASSWORD=atcpassword # change me
 export FLY_TARGET=$DEPLOY_ENV
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   fly -t remote login -c http://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk:8080 sync
+   fly -t $FLY_TARGET login -c http://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk:8080
 
+fly -t $FLY_TARGET sync
 ```
 ### Microbosh deployment
 
