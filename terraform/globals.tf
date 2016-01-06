@@ -35,9 +35,10 @@ variable "infra_subnet_zone_count" {
   default     = 3
 }
 
+/* see https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
 variable "office_cidrs" {
   description = "CSV of CIDR addresses for our office which will be trusted"
-  default     = "80.194.77.90/32,80.194.77.100/32"
+  default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
 }
 
 variable "dns_zone_id" {
