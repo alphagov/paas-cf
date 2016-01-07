@@ -11,6 +11,7 @@ env:
     - TF_DIR="terraform/concourse"
     - TF_DIR="terraform/bosh"
     - RSPEC_DIR="manifests/bosh-manifest"
+    - RSPEC_DIR="manifests/cf-manifest"
 
 before_install:
   - mkdir ~/bin
