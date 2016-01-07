@@ -1,0 +1,270 @@
+meta:
+  environment: ~
+  default_quota_definitions:
+    default:
+       memory_limit: 10240
+       total_services: 100
+       non_basic_services_allowed: true
+       total_routes: 1000
+  default_security_group_definitions:
+  - name: public_networks
+    rules:
+    - protocol: all
+      destination: 0.0.0.0-9.255.255.255
+    - protocol: all
+      destination: 11.0.0.0-169.253.255.255
+    - protocol: all
+      destination: 169.255.0.0-172.15.255.255
+    - protocol: all
+      destination: 172.32.0.0-192.167.255.255
+    - protocol: all
+      destination: 192.169.0.0-255.255.255.255
+  - name: dns
+    rules:
+    - protocol: tcp
+      destination: 0.0.0.0/0
+      ports: '53'
+    - protocol: udp
+      destination: 0.0.0.0/0
+      ports: '53'
+
+properties:
+  app_ssh: ~
+
+  cc:
+    jobs:
+      global:
+        timeout_in_seconds: 14400 # 4 hours
+      app_bits_packer:
+        timeout_in_seconds: ~
+      app_events_cleanup:
+        timeout_in_seconds: ~
+      app_usage_events_cleanup:
+        timeout_in_seconds: ~
+      blobstore_delete:
+        timeout_in_seconds: ~
+      blobstore_upload:
+        timeout_in_seconds: ~
+      droplet_deletion:
+        timeout_in_seconds: ~
+      droplet_upload:
+        timeout_in_seconds: ~
+      model_deletion:
+        timeout_in_seconds: ~
+      generic:
+        number_of_workers: ~
+
+    app_events:
+      cutoff_age_in_days: 31
+    app_usage_events:
+      cutoff_age_in_days: 31
+    audit_events:
+      cutoff_age_in_days: 31
+
+    users_can_select_backend: true
+    default_to_diego_backend: false
+    allow_app_ssh_access: true
+    default_app_memory: 1024
+    default_app_disk_in_mb: 1024
+    maximum_app_disk_in_mb: 2048
+    client_max_body_size: 15M
+
+    default_health_check_timeout: 60
+    maximum_health_check_timeout: 180
+
+    min_cli_version: ~
+    min_recommended_cli_version: ~
+
+    external_host: api
+    external_port: 9022
+    srv_api_uri: (( concat "https://" properties.cc.external_host "." properties.domain ))
+
+    internal_api_user: "internal_user"
+    internal_api_password: (( grab properties.cc.bulk_api_password ))
+
+    logging_level: debug2
+    db_logging_level: debug2
+
+    directories: ~
+
+    disable_custom_buildpacks: false
+
+    broker_client_timeout_seconds: 70
+    broker_client_default_async_poll_interval_seconds: ~
+    broker_client_max_async_poll_duration_minutes: ~
+
+    resource_pool:
+      resource_directory_key: (( concat properties.domain "-cc-resources" ))
+      fog_connection: ~
+      cdn: ~
+
+    packages:
+      app_package_directory_key: (( concat properties.domain "-cc-packages" ))
+      fog_connection: ~
+      cdn: ~
+      max_package_size: 1073741824
+      max_valid_packages_stored: ~
+
+    droplets:
+      droplet_directory_key: (( concat properties.domain "-cc-droplets" ))
+      fog_connection: ~
+      cdn: ~
+      max_staged_droplets_stored: ~
+
+    development_mode: false
+
+    newrelic:
+      license_key: ~
+      environment_name: (( grab meta.environment ))
+      developer_mode: (( grab properties.cc.development_mode ))
+      monitor_mode: false
+      capture_params: false
+      transaction_tracer:
+        enabled: true
+        record_sql: "obfuscated"
+
+    buildpacks:
+      buildpack_directory_key: (( concat properties.domain "-cc-buildpacks" ))
+      fog_connection: ~
+      cdn: ~
+    quota_definitions: (( grab meta.default_quota_definitions ))
+    default_quota_definition: default
+
+    user_buildpacks: []
+    system_buildpacks: (( grab properties.cc.default_buildpacks ))
+    default_buildpacks:
+      - name: staticfile_buildpack
+        package: buildpack_staticfile
+      - name: java_buildpack
+        package: buildpack_java
+      - name: ruby_buildpack
+        package: buildpack_ruby
+      - name: nodejs_buildpack
+        package: buildpack_nodejs
+      - name: go_buildpack
+        package: buildpack_go
+      - name: python_buildpack
+        package: buildpack_python
+      - name: php_buildpack
+        package: buildpack_php
+      - name: binary_buildpack
+        package: buildpack_binary
+
+    install_buildpacks: (( grab properties.cc.system_buildpacks properties.cc.user_buildpacks ))
+
+    stacks: ~
+
+    security_group_definitions: (( grab meta.default_security_group_definitions ))
+    default_running_security_groups: ["public_networks", "dns"]
+    default_staging_security_groups: ["public_networks", "dns"]
+
+    allowed_cors_domains: []
+    thresholds:
+      api:
+        alert_if_above_mb: ~
+        restart_if_consistently_above_mb: ~
+        restart_if_above_mb: ~
+      worker:
+        alert_if_above_mb: ~
+        restart_if_consistently_above_mb: ~
+        restart_if_above_mb: ~
+    external_protocol: ~
+
+  hm9000:
+    url: (( concat "https://hm9000." properties.domain ))
+
+  login:
+    enabled: true
+    analytics:
+      code: ~
+      domain: ~
+    url: ~
+    catalina_opts: ~
+    protocol: ~
+    brand: oss
+    asset_base_url: ~
+    uaa_base: ~
+    self_service_links_enabled: ~
+    signups_enabled: ~
+    invitations_enabled: ~
+    spring_profiles: ~
+    messages: ~
+
+    notifications:
+      url: ~
+
+    smtp:
+      host: ~
+      port: ~
+      user: ~
+      password: ~
+
+    links:
+      passwd: (( concat "https://console." properties.domain "/password_resets/new" ))
+      signup: (( concat "https://console." properties.domain "/register" ))
+
+    logout: ~
+
+    tiles: ~
+
+    saml: ~
+
+    restricted_ips_regex: ~
+
+  uaa:
+    url: (( concat "https://uaa." properties.domain ))
+    issuer: (( grab properties.uaa.url ))
+
+    no_ssl: ~
+    require_https: ~
+
+    scim:
+      userids_enabled: true
+      external_groups: ~
+      groups: ~
+
+    authentication:
+      policy:
+        lockoutAfterFailures: ~
+        countFailuresWithinSeconds: ~
+        lockoutPeriodSeconds: ~
+
+    login: ~
+
+    ldap: ~
+
+    newrelic: ~
+    port: 8080
+    spring_profiles: ~
+
+    user: ~
+
+    clients:
+      login:
+        override: true
+        scope: openid,oauth.approvals
+        authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
+        authorized-grant-types: authorization_code,client_credentials,refresh_token
+        redirect-uri: (( concat "https://login." properties.domain ))
+      notifications:
+        authorities: cloud_controller.admin,scim.read
+        authorized-grant-types: client_credentials
+      doppler:
+        override: true
+        authorities: uaa.resource
+      cloud_controller_username_lookup:
+        authorities: scim.userids
+        authorized-grant-types: client_credentials
+      cc_routing:
+        authorities: routing.router_groups.read
+        authorized-grant-types: client_credentials
+      gorouter:
+        authorities: clients.read,clients.write,clients.admin,routing.routes.write,routing.routes.read
+        authorized-grant-types: client_credentials,refresh_token
+        scope: openid,cloud_controller_service_permissions.read
+
+    database: ~
+
+    restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
+
+    zones:

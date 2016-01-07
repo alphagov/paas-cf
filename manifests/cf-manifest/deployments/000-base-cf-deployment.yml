@@ -1,0 +1,26 @@
+meta:
+  # override this in your stub to set the environment name,
+  # which is used for the deployment name
+  #
+  # i.e. cf-tabasco
+  environment: ~
+
+  releases:
+  - name: cf
+    version: latest
+
+name: (( grab meta.environment ))
+
+releases: (( grab meta.releases ))
+
+compilation:
+  workers: 6
+  network: cf1
+  reuse_compilation_vms: true
+
+update:
+  canaries: 1
+  max_in_flight: 1
+  canary_watch_time: 30000-600000
+  update_watch_time: 5000-600000
+  serial: true

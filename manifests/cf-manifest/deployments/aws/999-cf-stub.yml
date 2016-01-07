@@ -1,0 +1,121 @@
+# The following line helps maintain current documentation at http://docs.cloudfoundry.org.
+# code_snippet cf-stub-aws start
+---
+meta:
+  environment: (( grab terraform_outputs.environment ))
+  default_env:
+    bosh:
+      password: (( grab secrets.vcap_password ))
+
+director_uuid: DIRECTOR_UUID
+
+networks:
+- name: cf1
+  subnets:
+    - range: 10.0.10.0/24
+      reserved:
+        - 10.0.10.2 - 10.0.10.9
+      static:
+        - 10.0.10.10 - 10.0.10.40
+      gateway: 10.0.10.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cf1_subnet_id ))
+- name: cf2
+  subnets:
+    - range: 10.0.11.0/24
+      reserved:
+        - 10.0.11.2 - 10.0.11.9
+      static:
+        - 10.0.11.10 - 10.0.11.40
+      gateway: 10.0.11.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cf2_subnet_id ))
+
+properties:
+  domain: (( grab terraform_outputs.cf_root_domain ))
+  system_domain: (( grab terraform_outputs.cf_root_domain ))
+  system_domain_organization: GDS
+  app_domains:
+   - (( grab terraform_outputs.cf_root_domain ))
+
+  cc:
+    staging_upload_user: staging_upload_user
+    staging_upload_password: (( grab secrets.staging_upload_password ))
+    bulk_api_password: (( grab secrets.bulk_api_password ))
+    db_encryption_key: (( grab secrets.cc_db_encryption_key ))
+  consul:
+    encrypt_keys: (( grab secrets.consul_encrypt_keys ))
+    ca_cert: (( grab secrets.consul_ca_cert ))
+    server_cert: (( grab secrets.consul_server_cert ))
+    server_key: (( grab secrets.consul_server_key ))
+    agent_cert: (( grab secrets.consul_agent_cert ))
+    agent_key: (( grab secrets.consul_agent_key ))
+  loggregator_endpoint:
+    shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
+  nats:
+    user: nats_user
+    password: (( grab secrets.nats_password ))
+  router:
+    status:
+      user: router_user
+      password: (( grab secrets.router_password ))
+  uaa:
+    admin:
+      client_secret: (( grab secrets.uaa_admin_client_secret ))
+    cc:
+      client_secret: (( grab secrets.uaa_cc_client_secret ))
+    clients:
+      cc_routing:
+        secret: (( grab secrets.uaa_cc_routing_secret ))
+      cloud_controller_username_lookup:
+        secret: (( grab secrets.uaa_clients_cloud_controller_username_lookup_secret ))
+      doppler:
+        secret: (( grab secrets.uaa_clients_doppler_secret ))
+      gorouter:
+        secret: (( grab secrets.uaa_clients_gorouter_secret ))
+      login:
+        secret: (( grab secrets.uaa_clients_login_secret ))
+      notifications:
+        secret: (( grab secrets.uaa_clients_notifications_secret ))
+
+    jwt:
+      verification_key: (( grab secrets.uaa_jwt_verification_key ))
+      signing_key: (( grab secrets.uaa_jwt_signing_key ))
+    scim:
+      users:
+        - (( concat "admin|" secrets.uaa_admin_password "|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose" ))
+
+  ccdb:
+    db_scheme: postgres
+    address: (( grab jobs.postgres_z1.networks.cf1.static_ips.[0] ))
+    port: 5524
+    roles:
+      - tag: admin
+        name: ccadmin
+        password: (( grab secrets.ccadmin_password ))
+    databases:
+      - tag: cc
+        name: ccdb
+        citext: true
+
+  uaadb:
+    db_scheme: postgresql
+    address: (( grab jobs.postgres_z1.networks.cf1.static_ips.[0] ))
+    port: 5524
+    roles:
+      - tag: admin
+        name: uaaadmin
+        password: (( grab secrets.uuadmin_password ))
+    databases:
+      - tag: uaa
+        name: uaadb
+        citext: true
+
+  databases:
+    address: (( grab jobs.postgres_z1.networks.cf1.static_ips.[0] ))
+# code_snippet cf-stub-aws end
+# The previous line helps maintain current documentation at http://docs.cloudfoundry.org.
