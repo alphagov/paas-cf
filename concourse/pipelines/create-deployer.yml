@@ -116,11 +116,13 @@ jobs:
     - get: build-all-trigger
       trigger: true
       passed: [init-bucket]
+
     - task: deploy-vpc
       config:
         platform: linux
         image: docker:///governmentpaas/docker-terraform
         params:
+          VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
           AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
@@ -135,7 +137,8 @@ jobs:
           - |
             cd paas-cf/terraform/vpc
             terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=vpc.tfstate"
-            terraform apply
+            terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
+            terraform apply ${terraform_params}
         inputs:
         - name: paas-cf
 
@@ -177,6 +180,7 @@ jobs:
         - name: paas-cf
         - name: vpc-terraform-outputs
         params:
+          VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
           AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
@@ -193,7 +197,8 @@ jobs:
             . vpc-terraform-outputs/tfvars.sh
             cd paas-cf/terraform/concourse
             terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=concourse.tfstate"
-            terraform apply
+            terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
+            terraform apply ${terraform_params}
 
   - name: concourse-prepare-deploy
     serial: true

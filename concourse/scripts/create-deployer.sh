@@ -15,6 +15,7 @@ generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
+vagrant_ip: ${VAGRANT_IP}
 deploy_env: ${env}
 tfstate_bucket: bucket=${env}-state
 state_bucket: ${env}-state
