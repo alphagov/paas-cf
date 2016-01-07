@@ -102,6 +102,7 @@ jobs:
           - -e
           - -c
           - |
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
         inputs:
         - name: paas-cf
@@ -136,6 +137,7 @@ jobs:
     - get: paas-cf
     - get: vpc-tfstate
     - get: concourse-tfstate
+    - get: bosh-tfstate
     - task: terraform-variables
       config:
         image: docker:///ruby#2.2.3-slim
@@ -163,6 +165,10 @@ jobs:
         params:
           DEPLOY_ENV: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
+        inputs:
+        - name: paas-cf
+        - name: terraform-variables
+        - name: bosh-tfstate
         run:
           path: sh
           args:
@@ -172,13 +178,11 @@ jobs:
             . terraform-variables/vpc.tfvars.sh
             . terraform-variables/concourse.tfvars.sh
 
-            cd paas-cf/terraform/bosh
-            STATE_BUCKET={{state_bucket}}
-            terraform remote config -backend=s3 -backend-config=bucket=${STATE_BUCKET} -backend-config="key=bosh.tfstate"
-            terraform apply -var env={{deploy_env}}
-        inputs:
-        - name: paas-cf
-        - name: terraform-variables
+            terraform apply -var env={{deploy_env}} -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
+      ensure:
+        put: bosh-tfstate
+        params:
+          file: terraform-apply/bosh.tfstate
     - put: terraform-updated
       params: {bump: patch}
 
@@ -190,6 +194,7 @@ jobs:
       passed: [bosh-terraform]
     - get: paas-cf
     - get: bosh-tfstate
+      passed: [bosh-terraform]
     - get: bosh-secrets
     - get: bosh-init-state
     - task: terraform_outputs
