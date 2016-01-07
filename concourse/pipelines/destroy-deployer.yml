@@ -160,8 +160,8 @@ jobs:
       trigger: true
       passed: [destroy-concourse]
     - task: tf-destroy-vpc
-      file: paas-cf/concourse/tasks/tf-destroy.yml
       config:
+        image: docker:///governmentpaas/docker-terraform
         params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
@@ -169,11 +169,16 @@ jobs:
             AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
             TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
             TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-            TF_FILES_PATH: paas-cf/terraform/vpc
-            TF_STATE_PATH: vpc-terraform-state/vpc.tfstate
         inputs:
           - name: paas-cf
           - name: vpc-terraform-state
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            terraform destroy -force -state=vpc-terraform-state/vpc.tfstate paas-cf/terraform/vpc
 
   - name: destroy-init-bucket
     serial: true
@@ -185,8 +190,8 @@ jobs:
         trigger: true
         passed: [destroy-vpc]
       - task: tf-destroy-init-bucket
-        file: paas-cf/concourse/tasks/tf-destroy.yml
         config:
+          image: docker:///governmentpaas/docker-terraform
           params:
               TF_VAR_env: {{deploy_env}}
               AWS_DEFAULT_REGION: {{aws_region}}
@@ -194,8 +199,13 @@ jobs:
               AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
               TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
               TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-              TF_FILES_PATH: paas-cf/terraform/bucket
-              TF_STATE_PATH: bucket-terraform-state/bucket.tfstate
           inputs:
             - name: paas-cf
             - name: bucket-terraform-state
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              terraform destroy -force -state=bucket-terraform-state/bucket.tfstate paas-cf/terraform/bucket
