@@ -25,6 +25,15 @@ resources:
       secret_access_key: {{aws_secret_access_key}}
       key: build-all-trigger
 
+  - name: bucket-terraform-state
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bucket.tfstate
+
   - name: vpc-terraform-state
     type: s3
     source:
@@ -76,19 +85,21 @@ jobs:
           AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
           TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        inputs:
+          - name: paas-cf
         run:
           path: sh
           args:
           - -c
           - |
-            cd paas-cf/terraform/bucket
-            terraform apply 2>&1 | tee ./terraform.output
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=bucket.tfstate"
+            terraform apply -state=bucket.tfstate paas-cf/terraform/bucket 2>&1 | tee ./terraform.output
             grep -q BucketAlreadyOwnedByYou ./terraform.output && exit 0
             grep -q "Creation complete" ./terraform.output && exit 0
             exit 1
-        inputs:
-          - name: paas-cf
+      ensure:
+        put: bucket-terraform-state
+        params:
+          file: create-init-bucket/bucket.tfstate
     - task: s3init-concourse
       config:
         image: docker:///governmentpaas/curl-ssl
