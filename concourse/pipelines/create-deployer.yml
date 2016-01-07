@@ -7,6 +7,7 @@ groups:
   - concourse-terraform
   - concourse-prepare-deploy
   - concourse-deploy
+  - expunge-vagrant
 
 resources:
   - name: paas-cf
@@ -326,3 +327,84 @@ jobs:
         put: concourse-bosh-state
         params:
           from: /concourse-deploy/concourse-state.json
+
+  - name: expunge-vagrant
+    serial: true
+    plan:
+    - get: paas-cf
+    - get: build-all-trigger
+      trigger: true
+      passed: [concourse-deploy]
+    - get: vpc-terraform-state
+    - get: concourse-terraform-state
+
+    - task: vpc-terraform-outputs-to-sh
+      config:
+        image: docker:///ruby#2.2.3-slim
+        inputs:
+        - name: paas-cf
+        - name: vpc-terraform-state
+        outputs:
+        - name: vpc-terraform-outputs
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < vpc-terraform-state/vpc.tfstate \
+            > vpc-terraform-outputs/tfvars.sh
+            ls -l vpc-terraform-outputs/tfvars.sh
+            cat vpc-terraform-outputs/tfvars.sh
+
+    - task: remove-vagrant-IP-from-ssh-SG
+      config:
+        platform: linux
+        image: docker:///governmentpaas/docker-terraform
+        inputs:
+        - name: paas-cf
+        params:
+          TF_VAR_env: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - -x
+          - |
+            cd paas-cf/terraform/vpc
+            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=vpc.tfstate"
+            terraform apply -target=aws_security_group.office-access-ssh
+
+    - task: remove-vagrant-IP-from-concourse-SG
+      config:
+        platform: linux
+        image: docker:///governmentpaas/docker-terraform
+        inputs:
+        - name: paas-cf
+        - name: vpc-terraform-outputs
+        params:
+          TF_VAR_env: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          TF_VAR_concourse_db_password: {{concourse_db_password}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - -x
+          - |
+            . vpc-terraform-outputs/tfvars.sh
+            cd paas-cf/terraform/concourse
+            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=concourse.tfstate"
+            terraform apply -target=aws_security_group.concourse
