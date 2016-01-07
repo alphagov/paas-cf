@@ -75,6 +75,26 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
+    - task: try-fetch-bucket-state
+      config:
+        image: docker:///governmentpaas/curl-ssl
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        inputs:
+          - name: paas-cf
+        outputs:
+          - name: bucket-state
+        run:
+          path: sh
+          args:
+          - -c
+          - |
+            cd bucket-state
+            ../paas-cf/concourse/scripts/s3get.sh {{state_bucket}} bucket.tfstate
+            ls -l
+
     - task: create-init-bucket
       config:
         image: docker:///governmentpaas/docker-terraform
@@ -87,16 +107,17 @@ jobs:
           TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         inputs:
           - name: paas-cf
+          - name: bucket-state
         run:
           path: sh
           args:
           - -c
           - |
-            terraform apply -state=bucket.tfstate paas-cf/terraform/bucket 2>&1 | tee ./terraform.output
-            grep -q BucketAlreadyOwnedByYou ./terraform.output && exit 0
-            grep -q "Creation complete" ./terraform.output && exit 0
-            exit 1
-      ensure:
+            if [ -f bucket-state/bucket.tfstate ]; then
+              cp bucket-state/bucket.tfstate .
+            fi
+            terraform apply -state=bucket.tfstate paas-cf/terraform/bucket
+      on_success:
         put: bucket-terraform-state
         params:
           file: create-init-bucket/bucket.tfstate
