@@ -26,7 +26,6 @@ fi
 aws_path=/
 content_type='application/x-compressed-tar'
 acl="x-amz-acl:private"
-security_token="x-amz-security-token:${AWS_SECURITY_TOKEN}"
 region=eu-west-1
 host=${bucket}.s3-${region}.amazonaws.com
 
@@ -37,26 +36,26 @@ sign() {
 
 put() {
   date=$(date +"%a, %d %b %Y %T %z")
-  string="PUT\n\n${content_type}\n${date}\n${acl}\n${security_token}\n/${bucket}${aws_path}${file}"
+  string="PUT\n\n${content_type}\n${date}\n${acl}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
   curl -i -s -X PUT -T ${init_file} \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
     -H "${acl}" \
-    -H "${security_token}" \
+    ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}" \
     "https://${host}${aws_path}${file}"
 }
 
 get() {
   date=$(date +"%a, %d %b %Y %T %z")
-  string="GET\n\n${content_type}\n${date}\n${security_token}\n/${bucket}${aws_path}${file}"
+  string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
   curl -v -i -s -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
-    -H "${security_token}" \
+    ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}" \
     "https://${host}/${file}"
 }
