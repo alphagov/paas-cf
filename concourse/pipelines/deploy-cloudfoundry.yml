@@ -1,0 +1,233 @@
+resources:
+  - name: cf-deployment
+    type: bosh-deployment
+    source:
+      target: https://10.0.0.6:25555
+      username: admin
+      password: {{bosh_password}}
+      deployment: {{deploy_env}}
+      ignore_ssl: true
+
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: {{branch_name}}
+
+  - name: vpc-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: vpc.tfstate
+
+  - name: bosh-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bosh.tfstate
+
+  - name: concourse-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: concourse.tfstate
+      region_name: eu-west-1
+
+  - name: cf-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: cf.tfstate
+      region_name: eu-west-1
+
+  - name: cf-manifest
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: cf-manifest.yml
+
+jobs:
+  - name: s3init
+    serial_groups: [ deploy ]
+    serial: true
+    plan:
+      - get: paas-cf
+      - task: s3init
+        config:
+          image: docker:///governmentpaas/curl-ssl
+          params:
+            AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+            AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+          inputs:
+          - name: paas-cf
+      - put: cf-tfstate
+        params:
+          file: s3init/cf.tfstate
+  - name: terraform
+    serial_groups: [ deploy ]
+    serial: true
+    plan:
+      - aggregate:
+        - get: paas-cf
+          passed: ['s3init']
+        - get: vpc-tfstate
+        - get: concourse-tfstate
+        - get: bosh-tfstate
+        - get: cf-tfstate
+          passed: ['s3init']
+          trigger: true
+      - task: terraform-variables
+        config:
+          image: docker:///ruby
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+            - name: concourse-tfstate
+            - name: bosh-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < bosh-tfstate/bosh.tfstate > bosh.tfvars.sh
+      - task: terraform
+        config:
+          image: docker:///governmentpaas/docker-terraform
+          params:
+            TF_VAR_env: {{deploy_env}}
+            AWS_DEFAULT_REGION: {{aws_region}}
+            TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+            TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              . terraform-variables/vpc.tfvars.sh
+              . terraform-variables/concourse.tfvars.sh
+              . terraform-variables/bosh.tfvars.sh
+
+              terraform apply -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
+
+      - put: cf-tfstate
+        params:
+          file: terraform/cf.tfstate
+
+  - name: generate-manifest
+    serial_groups: [ deploy ]
+    serial: true
+    plan:
+      - aggregate:
+        - get: paas-cf
+          passed: ['terraform']
+        - get: vpc-tfstate
+        - get: bosh-tfstate
+        - get: concourse-tfstate
+        - get: cf-tfstate
+          passed: ['terraform']
+          trigger: true
+      - task: extract-terraform-outputs
+        config:
+          platform: linux
+          image: docker:///ruby
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+            - name: bosh-tfstate
+            - name: concourse-tfstate
+            - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              SCPATH="./paas-cf/concourse/scripts"
+              SCFILE="extract_terraform_state_to_yaml.rb"
+              for state in vpc bosh concourse cf; do
+                $SCPATH/$SCFILE < $state-tfstate/$state.tfstate > $state.yml
+              done
+      - task: generate-manifest
+        config:
+          platform: linux
+          image: docker:///governmentpaas/spruce
+          params:
+            TERRAFORM_OUTPUTS: "extract-terraform-outputs/*.yml"
+            MANIFESTS_DIR: "./paas-cf/manifests/cf-manifest"
+          inputs:
+            - name: paas-cf
+            - name: extract-terraform-outputs
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/manifests/cf-manifest/build_manifest.sh > cf-manifest.yml
+      - put: cf-manifest
+        params:
+          file: generate-manifest/cf-manifest.yml
+
+  - name: deploy
+    serial_groups: [ deploy ]
+    serial: true
+    plan:
+      - aggregate:
+        - task: cf-stemcell-tarball
+          config:
+            params:
+              STEMCELL_VERSION: {{stemcell-version}}
+            image: docker:///governmentpaas/curl-ssl
+            platform: linux
+            run:
+              path: sh
+              args: ["-c", "curl -L -J -o stemcell.tgz https://s3.amazonaws.com/bosh-jenkins-artifacts/bosh-stemcell/aws/light-bosh-stemcell-${STEMCELL_VERSION}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"]
+        - task: cf-release-tarball
+          config:
+            params:
+              RELEASE_VERSION: {{cf-version}}
+            platform: linux
+            image: docker:///governmentpaas/curl-ssl
+            run:
+              path: sh
+              args: ['-c', 'curl -f -L -o release.tgz https://bosh.io/d/github.com/cloudfoundry/cf-release?v=$RELEASE_VERSION']
+        - get: cf-manifest
+          passed: ['generate-manifest']
+          trigger: true
+      - put: cf-deployment
+        params:
+          manifest: cf-manifest/cf-manifest.yml
+          stemcells: ['cf-stemcell-tarball/stemcell.tgz']
+          releases:
+            - cf-release-tarball/release.tgz
