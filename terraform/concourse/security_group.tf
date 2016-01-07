@@ -14,14 +14,14 @@ resource "aws_security_group" "concourse" {
     from_port = 8080
     to_port   = 8080
     protocol  = "tcp"
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
+    cidr_blocks = ["${compact(concat(split(",", var.office_cidrs), var.vagrant_cidr))}"]
   }
 
   ingress {
     from_port = 6868
     to_port   = 6868
     protocol  = "tcp"
-    cidr_blocks = ["${split(",", var.office_cidrs)}"]
+    cidr_blocks = ["${compact(concat(split(",", var.office_cidrs), var.vagrant_cidr))}"]
   }
 
   tags {
