@@ -14,7 +14,7 @@ fi
 
 vagrant up
 
-export VAGRANT_IP=$(vagrant ssh-config | sed -n 's/.*HostName //p')
+export VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
 export CONCOURSE_URL=http://${VAGRANT_IP}:8080
 
 if [ ! -x "$FLY_CMD" ]; then
