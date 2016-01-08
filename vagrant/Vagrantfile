@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell" do |s|
     s.privileged = true
-    s.path = "enable_concourse_auth.sh"
+    s.path = "concourse_post_deploy.sh"
     s.args = "#{ENV['CONCOURSE_ATC_USER']} #{ENV['CONCOURSE_ATC_PASSWORD']}"
   end
 

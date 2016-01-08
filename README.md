@@ -52,7 +52,7 @@ This script will:
 
  * Create a running AWS concourse-lite instance:
  * Do additional post configuration of concourse, like add basic authentication
-   to concourse lite.
+   to concourse lite and mount garden container storage to instance ephemeral disk.
  * Download the `fly` command from concourse-lite in the current directory.
  * Login and create a new fly target called `<deploy-env>-bootstrap`.
  * Upload the `create-deployer` and `destroy-deployer` pipelines.
