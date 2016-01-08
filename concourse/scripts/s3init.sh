@@ -1,5 +1,4 @@
 #!/bin/sh
-set -x
 bucket=$1
 file=$2
 init_file=$3
@@ -52,7 +51,8 @@ get() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
-  curl -v -i -s -H "Host: ${bucket}.s3.amazonaws.com" \
+  curl -i -s \
+    -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
     ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \
