@@ -159,6 +159,25 @@ This pipeline will:
    with an empty file.
  * Destroy the resources created by terraform.
 
+#### Deploy cloudfoundry with microbosh
+```
+# Optionally pass the current branch for the git resources
+export BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+export FLY_TARGET=$DEPLOY_ENV
+./concourse/scripts/deploy-cloudfoundry.sh <environment_name>
+```
+
+You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
+STEMCELL_VERSION (defaults to 3104) as environment variables.
+
+This pipeline will:
+ * Get VPC, microbosh and concourse state
+ * use this state to run terraform and create required aws resources for cloud
+   foundry
+ * build the cloudfoundry manifests
+ * use these manifests and microbosh instance to deploy cloudfoundry
+
 # Additional notes
 
 ## Vagrant bootstrap concourse-lite requirements
@@ -232,4 +251,3 @@ If not, you can learn the credentials from the `atc` process arguments:
     * For vagrant bootstrap concourse-lite: `cd vagrant && vagrant ssh`
     * For deployer concourse: `ssh -l vcap ${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk`
  2. Get the password from `atc` arguments: `ps -fea | sed -n 's/.*--basic-auth[-]password \([^ ]*\).*/\1/p'`
-
