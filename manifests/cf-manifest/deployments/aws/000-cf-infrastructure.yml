@@ -156,11 +156,15 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.ssh_elb_name ))
 
   - name: access_z2
     cloud_properties:
       instance_type: m3.medium
       availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.ssh_elb_name ))
 
   - name: brain_z1
     cloud_properties:
