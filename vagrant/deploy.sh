@@ -15,7 +15,18 @@ fi
 vagrant up
 
 export VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
-export CONCOURSE_URL=http://${VAGRANT_IP}:8080
+export CONCOURSE_URL=http://localhost:8080
+
+# Try to start a SSH tunnel
+echo "Setting up SSH tunnel to concourse..."
+if ! ( [ -a .vagrant/tunnel-ctrl-socket ] && \
+  vagrant ssh -- -S .vagrant/tunnel-ctrl-socket -O check ); then
+  vagrant ssh -- -L 8080:127.0.0.1:8080 -fN \
+    -M -S .vagrant/tunnel-ctrl-socket -o "ExitOnForwardFailure yes"
+fi
+if ! curl -f -qs http://localhost:8080/login -o /dev/null; then
+  echo "Failed creating SSH tunnel to remote concourse: 'vagrant ssh -- -L 8080:127.0.0.1:8080 -N'"
+fi
 
 if [ ! -x "$FLY_CMD" ]; then
   FLY_CMD_URL="$CONCOURSE_URL/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"

@@ -50,16 +50,17 @@ AWS instance with concourse lite.
 
 This script will:
 
- * Create a running AWS concourse-lite instance:
+ * Create a running AWS concourse-lite instance.
  * Do additional post configuration of concourse, like add basic authentication
    to concourse lite and mount garden container storage to instance ephemeral disk.
+ * Configure a SSH tunnel to redirect the remote concourse port 8080 to http://localhost:8080
  * Download the `fly` command from concourse-lite in the current directory.
  * Login and create a new fly target called `<deploy-env>-bootstrap`.
  * Upload the `create-deployer` and `destroy-deployer` pipelines.
 
 After run, you will get:
 
- * Concourse URL to connect to.
+ * Concourse URL to connect to, which will be http://localhost:8080
  * Concourse credentials.
 
 To execute it:
@@ -166,14 +167,45 @@ In order to use vagrant concourse-lite on AWS, there are requirements
 on the AWS account:
 
 * Existence of a default VPC and subnet.
-* A default security group, which restricts access to the office only to
-  ports 8080 (concourse) and 22 (ssh).
+* A default security group, which restricts access to the office only
+  to port 22 (ssh).
 * A IAM role to be assigned to the VM, which allows:
   * Provision EC2 resources to setup the initial VPC and concourse.
   * Allows RDS if required.
   * Access to S3 buckets for state storage (usually named `*-state`)
 
 All these objects are currently hardcoded in `vagrant/Vagrantfile`
+
+## SSH tunnel to vagrant concourse-lite and share access to instance
+
+Instead of allowing a non secure HTTP connection via the internet to the
+concourse-lite AWS instance, we create a SSH tunnel to redirect the port
+8080 to localhost.
+
+After running vagrant/deploy.sh "daemonized" SSH redirection will be
+running listening in the port localhost:8080.
+
+If the machine needs to be shared with a coworker, and additional SSH
+public key can be added with:
+
+```
+cd vagrant
+echo "ssh-rsa AAAA... user" | \
+   vagrant ssh -- tee -a .ssh/authorized_keys
+```
+
+A new tunnel can be created manually running:
+
+```
+ssh ubuntu@<remote concourse ip> -L 8080:127.0.0.1:8080 -fN
+```
+
+To learn the public IP of the created concourse, simply run:
+
+```
+cd vagrant
+vagrant ssh-config
+```
 
 ## Optionally override the branch used by pipelines
 
