@@ -6,109 +6,111 @@ This repository contains [Concourse](http://concourse.ci/) pipelines and
 related [Terraform](https://terraform.io/) and [BOSH](https://bosh.io/) manifests
 that allow provisioning of [CloudFoundy](https://www.cloudfoundry.org/) on AWS.
 
+
 ## Getting started
 
 You need the following prerequisites before you will be able to deploy first pipeline.
 
-* Virtualbox
-* Vagrant
-* AWS Access
+* [Vagrant](https://www.vagrantup.com/)
+* [AWS Vagrant plugin](https://github.com/mitchellh/vagrant-aws)
+* AWS Access and credentials
 
-Provide AWS access keys as environment variables.
+## Usage
+
+### Concourse deployer bootstrap
+
+#### Installing vagrant and plugins
+
+To install vagrant follow the instructions [in vagrant documentation](https://docs.vagrantup.com/v2/installation/index.html).
+
+Once installed, install the vagrant AWS plugin with:
+
+```
+vagrant plugin install vagrant-aws
+```
+
+#### AWS credentials
+
+You must provide AWS access keys as environment variables.
+
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 ```
 
-## Usage
+#### SSH credentials
 
-### Prepare the local environment
+You must use a ssh-agent with the `insecure-deployer` private key added, so
+that vagrant can SSH to the new created VM.
 
-1. Clone repo and boot the vagrant node with concourse:
+#### Deployment of bootstrap concourse-lite
 
-    ```
-git clone https://github.com/alphagov/paas-cf.git
-cd paas-cf
-vagrant up
-```
-
-2. Install your `fly` binary on your host machine:
-
-    ```
-FLY_CMD_URL="http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
-sudo curl $FLY_CMD_URL -o /usr/local/bin/fly && \
-sudo chmod +x /usr/local/bin/fly
-```
-
-3. Login on the local vagrant concourse:
-
-     ```
-fly login --target vagrant --concourse-url http://192.168.100.4:8080 sync
-```
-
-### Deploy the deployer concourse
-
-```
-export FLY_TARGET=vagrant
-CONCOURSE_ATC_PASSWORD=atcpassword CONCOURSE_DB_PASSWORD=dbpassword ./concourse/scripts/create-deployer.sh env_name
-```
-
-* CONCOURSE_DB_PASSWORD is the RDS database password. It must be 8 characters long minimum
-* CONCOURSE_ATC_PASSWORD is the deployed Concourse web interface password
-
-Also, you can specify log level and branch by setting LOG_LEVEL and BRANCH variables.
-
-```
-export FLY_TARGET=vagrant
-BRANCH=branch_name LOG_LEVEL=DEBUG CONCOURSE_ATC_PASSWORD=atcpassword CONCOURSE_DB_PASSWORD=dbpassword ./concourse/scripts/create-deployer.sh env_name
-```
+Execute vagrant provision script `./vagrant/deploy.sh` to initialise a vagrant
+AWS instance with concourse lite.
 
 This script will:
 
-- Use a local Vagrant virtual machine with concourse-lite.
-- Use Terraform to create a VPC, subnet and security group inside AWS
-- bosh-init is used to deploy a full-blown Concourse instance inside AWS
+ * Create a running AWS concourse-lite instance:
+ * Do additional post configuration of concourse, like add basic authentication
+   to concourse lite.
+ * Download the `fly` command from concourse-lite in the current directory.
+ * Login and create a new fly target called `<deploy-env>-bootstrap`.
+ * Upload the `create-deployer` and `destroy-deployer` pipelines.
 
-### Login to deployed Concourse
+After run, you will get:
 
-* Point the browser to http://"environment"-concourse.cf.paas.alphagov.co.uk:8080/
-* Login with username admin and password as CONCOURSE_ATC_PASSWORD above
+ * Concourse URL to connect to.
+ * Concourse credentials.
 
-### Destroy the deployer concourse
-
-```
-export FLY_TARGET=vagrant
-./concourse/scripts/destroy-deployer.sh env_name
-```
-
-or
+To execute it:
 
 ```
-export FLY_TARGET=vagrant
-LOG_LEVEL=DEBUG BRANCH=branch_name ./concourse/scripts/destroy-deployer.sh env_name
-
-export FLY_TARGET=vagrant
-./concourse/scripts/destroy-deployer.sh
+./vagrant/deploy.sh <deploy_env>
 ```
 
-Will destroy the resources created in the previous run.
+> The concourse-lite AWS instance will be running in us-west-1, as the official
+> concourse-lite AMI image is only located there.
+>
+> The instance has some default hardcoded settings: security groups, VPC,
+> IAM role. See below for more details.
 
-### Login on the remote concourse
 
-In order to use the concourse, you must add and login to the new target:
+#### Pipelines: create-deployer and destroy-deployer
+
+These pipelines run on the bootstrap concourse-lite and will deploy the
+concourse instance (deployer) for the environment.
+
+Both pipelines are setup automatically by `./vagrant/deploy.sh`
+
+The `create-deployer` pipeline will:
+
+- Use terraform to create a VPC, subnet and security group inside AWS.
+- Use terraform to setup all the requirements for concourse.
+- bosh-init is used to deploy a full-blown Concourse instance inside AWS.
+
+The `destroy-deployer` pipeline will destroy the previous created objects.
+
+#### Login to deployed Concourse
+
+Once the `create-deployer` pipeline finished successful, you can:
+
+* Point the browser to `http://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk:8080/`
+* Login with username `admin` and password as `$CONCOURSE_ATC_PASSWORD` above
+
+You can add a new target in to use the `fly` command with:
 
 ```
-export DEPLOY_ENV=<deploy-env> # change me
-export CONCOURSE_ATC_PASSWORD=atcpassword # change me
+DEPLOY_ENV=<deploy-env>
+
+$(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 
 export FLY_TARGET=$DEPLOY_ENV
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
    fly -t $FLY_TARGET login -c http://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk:8080
-
-fly -t $FLY_TARGET sync
 ```
-### Microbosh deployment
+
+### Microbosh deployment from concourse bootstrap
 
 These pipelines will deploy/destroy a microbosh using bosh-init.
 
@@ -116,18 +118,20 @@ These pipelines will deploy/destroy a microbosh using bosh-init.
 > `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` for terraform and `bosh-init`.
 > If not provided, it will use IAM profiles.
 
-#### Deploy a microbosh with bosh-init from concourse
+#### Prerequisites
 
-Requires run first the deployer pipeline, to provide:
- * A VPC setup and bucket for the state files.
- * A running concourse configured in the CLI
+To run the following steps you must have these prerequisites:
 
-To execute it:
+ * The `create-deployer` pipeline has been run from a bootstrap concourse.
+ * A VPC is setup and there is a bucket for the state files.
+ * The `fly` command is installed and available
+ * A running concourse configured in the CLI, with target name `$DEPLOY_ENV`
+
+#### Pipelines: create-microbosh and destroy-microbosh
+
+To setup the pipeline `create-microbosh`:
 
 ```
-# Optionally pass the current branch for the git resources
-export BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
 export FLY_TARGET=$DEPLOY_ENV
 ./concourse/scripts/create-microbosh.sh <environment_name>
 ```
@@ -140,19 +144,61 @@ This pipeline will:
  * Deploy microbosh using `bosh-init`
 
 
-#### Destroy microbosh with bosh-init
+To setup the pipeline `destroy-microbosh`:
 
 ```
-# Optionally pass the current branch for the git resources
-export BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
 export FLY_TARGET=$DEPLOY_ENV
 ./concourse/scripts/destroy-microbosh.sh <environment_name>
 ```
 
 This pipeline will:
 
- * Get the resources from the deploy microbosh pipeline
- * Run bosh-init to delete the deployment, updating the bosh init state
+ * Get the resources from the deploy microbosh pipeline.
+ * Run `bosh-init` to delete the deployment, updating the bosh init state
    with an empty file.
  * Destroy the resources created by terraform.
+
+# Additional notes
+
+## Vagrant bootstrap concourse-lite requirements
+
+In order to use vagrant concourse-lite on AWS, there are requirements
+on the AWS account:
+
+* Existence of a default VPC and subnet.
+* A default security group, which restricts access to the office only to
+  ports 8080 (concourse) and 22 (ssh).
+* A IAM role to be assigned to the VM, which allows:
+  * Provision EC2 resources to setup the initial VPC and concourse.
+  * Allows RDS if required.
+  * Access to S3 buckets for state storage (usually named `*-state`)
+
+All these objects are currently hardcoded in `vagrant/Vagrantfile`
+
+## Optionally override the branch used by pipelines
+
+The pipeline setup script will accept a variable `BRANCH`, which allows
+override the working branch for development and review:
+
+```
+# Optionally pass the current branch for the git resources
+export BRANCH=$(git rev-parse --abbrev-ref HEAD)
+```
+
+## Concourse credentials
+
+`./vagrant/deploy.sh` generates the concourse ATC password for the admin user,
+based on the AWS credentials, the environment name and the application name.
+
+These credentials will be used in the final concourse installation (deployer).
+
+If you are the owner of the environment with the original AWS credentials,
+run `./vagrant/environment.sh <deploy_name>` to get them again.
+
+If not, you can learn the credentials from the `atc` process arguments:
+
+ 1. Login on the concourse server:
+    * For vagrant bootstrap concourse-lite: `cd vagrant && vagrant ssh`
+    * For deployer concourse: `ssh -l vcap ${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk`
+ 2. Get the password from `atc` arguments: `ps -fea | sed -n 's/.*--basic-auth[-]password \([^ ]*\).*/\1/p'`
+
