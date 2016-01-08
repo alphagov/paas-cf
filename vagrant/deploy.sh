@@ -1,5 +1,6 @@
 #!/bin/bash -e
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
+PROJECT_DIR=$(cd $(dirname $0)/.. && pwd)
 cd $SCRIPT_DIR
 
 hashed_password() {
@@ -16,6 +17,7 @@ export CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER:-admin} # This can be improved to
 export CONCOURSE_ATC_PASSWORD=${CONCOURSE_ATC_PASSWORD:-$(hashed_password ${AWS_SECRET_ACCESS_KEY}:${DEPLOY_ENV}:atc)}
 export CONCOURSE_DB_PASSWORD=${CONCOURSE_DB_PASSWORD:-$(hashed_password ${AWS_SECRET_ACCESS_KEY}:${DEPLOY_ENV}:db)}
 export FLY_TARGET=${DEPLOY_ENV}-bootstrap
+export FLY_CMD=${FLY_CMD:-$PROJECT_DIR/fly}
 
 # Install aws dummy box if not present
 if ! vagrant box list | grep -qe "^${VAGRANT_BOX_NAME} "; then
@@ -28,8 +30,18 @@ vagrant up
 export VAGRANT_IP=$(vagrant ssh-config | sed -n 's/.*HostName //p')
 export CONCOURSE_URL=http://${VAGRANT_IP}:8080
 
+
+
+if [ ! -x $FLY_CMD ]; then
+  FLY_CMD_URL="$CONCOURSE_URL/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
+  echo "Downloading fly command..."
+  curl $FLY_CMD_URL -o $FLY_CMD && chmod +x $FLY_CMD
+fi
+
 echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
-  fly login -t ${FLY_TARGET} --concourse-url ${CONCOURSE_URL}
+  $FLY_CMD login -t ${FLY_TARGET} --concourse-url ${CONCOURSE_URL}
+
+$FLY_CMD sync -t ${FLY_TARGET}
 
 ${SCRIPT_DIR}/../concourse/scripts/create-deployer.sh ${DEPLOY_ENV}
 ${SCRIPT_DIR}/../concourse/scripts/destroy-deployer.sh ${DEPLOY_ENV}

@@ -31,6 +31,7 @@ varsfile=$1; shift
 
 export ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
 export FLY_TARGET=${FLY_TARGET:-$ATC_URL}
+FLY_CMD=${FLY_CMD:-fly}
 
 echo "Concourse API target ${FLY_TARGET}"
 echo "Concourse API $ATC_URL"
@@ -41,7 +42,7 @@ echo "Pipeline ${pipeline}"
 echo "Config file ${config}"
 
 yes y | \
-   fly -t "${FLY_TARGET}" \
+   $FLY_CMD -t "${FLY_TARGET}" \
    set-pipeline \
    --config "${config}" \
    --pipeline "${pipeline}" \
