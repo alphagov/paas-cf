@@ -60,3 +60,8 @@ variable "microbosh_static_private_ip" {
   description = "Microbosh internal IP"
   default     = "10.0.0.6"
 }
+
+variable "concourse_elb_cert_arn" {
+  description = "Concourse ELB certificate ARN"
+  default     = "arn:aws:iam::988997429095:server-certificate/wildcard-cf-paas"
+}
