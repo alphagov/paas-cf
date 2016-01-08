@@ -101,7 +101,7 @@ jobs:
       ensure:
         put: concourse-bosh-state
         params:
-          from: /destroy-concourse/concourse-state.json
+          file: destroy-concourse/concourse-state.json
 
     - task: vpc-terraform-outputs-to-sh
       config:

@@ -107,7 +107,7 @@ jobs:
       ensure:
         put: bosh-init-state
         params:
-          from: ./bosh-manifest/bosh-manifest-state.json
+          file: bosh-manifest/bosh-manifest-state.json
 
   - name: bosh-terraform-destroy
     serial: true

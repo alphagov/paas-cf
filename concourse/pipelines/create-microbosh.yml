@@ -240,7 +240,7 @@ jobs:
       on_success:
         put: bosh-manifest
         params:
-          from: ./bosh-manifest/bosh-manifest.yml
+          file: bosh-manifest/bosh-manifest.yml
     - task: bosh-init-microbosh
       config:
         image: docker:///governmentpaas/bosh-init
@@ -262,5 +262,5 @@ jobs:
       on_success:
         put: bosh-init-state
         params:
-          from: ./bosh-manifest/bosh-manifest-state.json
+          file: bosh-manifest/bosh-manifest-state.json
 

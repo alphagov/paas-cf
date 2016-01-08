@@ -331,7 +331,7 @@ jobs:
 
     - put: concourse-manifest
       params:
-        from: concourse-manifest/concourse.yml
+        file: concourse-manifest/concourse.yml
 
   - name: concourse-deploy
     serial: true
@@ -369,7 +369,7 @@ jobs:
       ensure:
         put: concourse-bosh-state
         params:
-          from: /concourse-deploy/concourse-state.json
+          file: concourse-deploy/concourse-state.json
 
   - name: expunge-vagrant
     serial: true
