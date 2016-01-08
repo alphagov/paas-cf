@@ -90,7 +90,7 @@ jobs:
           - name: paas-cf
     - task: s3init-concourse
       config:
-        image: docker:///governmentpaas/toolbox
+        image: docker:///governmentpaas/curl-ssl
         params:
           AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
           AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}

@@ -95,7 +95,7 @@ jobs:
     - get: paas-cf
     - task: bosh-manifest-state.json
       config:
-        image: docker:///governmentpaas/toolbox
+        image: docker:///governmentpaas/curl-ssl
         run:
           path: sh
           args:
@@ -115,7 +115,7 @@ jobs:
     - get: paas-cf
     - task: bosh-secrets.yml
       config:
-        image: docker:///governmentpaas/toolbox
+        image: docker:///governmentpaas/curl-ssl
         run:
           path: sh
           args:
@@ -138,7 +138,7 @@ jobs:
     - get: concourse-tfstate
     - task: terraform-variables
       config:
-        image: docker:///governmentpaas/bosh-init
+        image: docker:///ruby#2.2.3-slim
         run:
           path: sh
           args:
@@ -194,7 +194,7 @@ jobs:
     - get: bosh-init-state
     - task: terraform_outputs
       config:
-        image: docker:///governmentpaas/bosh-init
+        image: docker:///ruby#2.2.3-slim
         run:
           path: sh
           args:
