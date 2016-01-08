@@ -1,6 +1,6 @@
 #!/bin/bash -e
-SCRIPT_DIR=$(cd $(dirname $0) && pwd)
-cd $SCRIPT_DIR
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+cd "$SCRIPT_DIR"
 
 export VAGRANT_DEFAULT_PROVIDER="aws"
 export VAGRANT_BOX_NAME="aws_vagrant_box"
