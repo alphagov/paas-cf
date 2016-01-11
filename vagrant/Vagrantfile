@@ -29,8 +29,7 @@ Vagrant.configure(2) do |config|
     # "Concourse Vagrant" security group
     aws.security_groups = ['sg-ee21a597']
 
-    # Could be replaced by key per user in the future. But would require each user's key to be in AWS.
-    aws.keypair_name = 'insecure-deployer'
+    # We will rely on vagrant generating a ssh key, but this must be the ubuntu user, as the vagrant user does not exist on the vm
     override.ssh.username = "ubuntu"
 
     # Fix issue on osx: https://github.com/mitchellh/vagrant/issues/5401#issuecomment-115240904
