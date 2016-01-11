@@ -4,6 +4,7 @@ set -e
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
 ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
 FLY_TARGET=${FLY_TARGET:-$ATC_URL}
+FLY_CMD=${FLY_CMD:-fly}
 
 env=${DEPLOY_ENV-$1}
 pipeline="destroy-microbosh"

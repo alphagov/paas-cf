@@ -41,6 +41,11 @@ variable "office_cidrs" {
   default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
 }
 
+variable "vagrant_cidr" {
+  description = "IP address of the AWS Vagrant bootstrap concourse"
+  default     = ""
+}
+
 variable "dns_zone_id" {
   description = "Amazon Route53 DNS zone identifier"
   default     = "Z3SI0PSH6KKVH4"

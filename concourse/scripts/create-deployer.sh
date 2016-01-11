@@ -4,8 +4,9 @@ set -e
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
 ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
 FLY_TARGET=${FLY_TARGET:-$ATC_URL}
+FLY_CMD=${FLY_CMD:-fly}
 
-env=${DEPLOY_ENV-$1}
+env=${DEPLOY_ENV:-$1}
 pipeline="create-deployer"
 config="${SCRIPT_DIR}/../pipelines/create-deployer.yml"
 
@@ -15,6 +16,7 @@ generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
+vagrant_ip: ${VAGRANT_IP}
 deploy_env: ${env}
 tfstate_bucket: bucket=${env}-state
 state_bucket: ${env}-state
@@ -35,7 +37,7 @@ generate_vars_file > /dev/null # Check for missing vars
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
    "${env}" "${pipeline}" "${config}" <(generate_vars_file)
 
-fly -t "${FLY_TARGET}" unpause-pipeline --pipeline "${pipeline}"
+$FLY_CMD -t "${FLY_TARGET}" unpause-pipeline --pipeline "${pipeline}"
 
 # Start pipeline
 # curl "${ATC_URL}/pipelines/${pipeline}/jobs/init-bucket/builds" -X POST
@@ -44,5 +46,5 @@ cat <<EOF
 You can watch the last vpc deploy job by running the command below.
 You might need to wait a few moments before the latest build starts.
 
-fly -t "${FLY_TARGET}" watch -j "${pipeline}/vpc"
+$FLY_CMD -t "${FLY_TARGET}" watch -j "${pipeline}/vpc"
 EOF
