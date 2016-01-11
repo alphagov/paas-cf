@@ -18,11 +18,6 @@ if [[ -z "$CONCOURSE_ATC_PASSWORD" ]]; then
 else
   echo "\$CONCOURSE_ATC_PASSWORD already set, not generating. Unset with 'unset CONCOURSE_ATC_PASSWORD'" 1>&2
 fi
-if [[ -z "$CONCOURSE_DB_PASSWORD" ]]; then
-  CONCOURSE_DB_PASSWORD=$(hashed_password "${AWS_SECRET_ACCESS_KEY}:${DEPLOY_ENV}:db")
-else
-  echo "\$CONCOURSE_DB_PASSWORD already set, not generating. Unset with 'unset CONCOURSE_DB_PASSWORD'" 1>&2
-fi
 
 cat <<EOF
 export DEPLOY_ENV=$DEPLOY_ENV
@@ -30,7 +25,6 @@ export VAGRANT_DEFAULT_PROVIDER=aws
 export VAGRANT_BOX_NAME=aws_vagrant_box
 export CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER}
 export CONCOURSE_ATC_PASSWORD=${CONCOURSE_ATC_PASSWORD}
-export CONCOURSE_DB_PASSWORD=${CONCOURSE_DB_PASSWORD}
 export FLY_TARGET=${DEPLOY_ENV}-bootstrap
 export FLY_CMD=${FLY_CMD:-$PROJECT_DIR/fly}
 EOF

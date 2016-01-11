@@ -171,7 +171,6 @@ on the AWS account:
   to port 22 (ssh).
 * A IAM role to be assigned to the VM, which allows:
   * Provision EC2 resources to setup the initial VPC and concourse.
-  * Allows RDS if required.
   * Access to S3 buckets for state storage (usually named `*-state`)
 
 All these objects are currently hardcoded in `vagrant/Vagrantfile`
