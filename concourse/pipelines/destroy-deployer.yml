@@ -68,6 +68,7 @@ jobs:
     - get: concourse-manifest
     - get: concourse-bosh-state
     - get: vpc-terraform-state
+    - get: concourse-terraform-state
 
     - task: destroy-concourse
       timeout: 30m
@@ -100,7 +101,7 @@ jobs:
       ensure:
         put: concourse-bosh-state
         params:
-          from: /destroy-concourse/concourse-state.json
+          file: destroy-concourse/concourse-state.json
 
     - task: vpc-terraform-outputs-to-sh
       config:
@@ -128,6 +129,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
+        - name: concourse-terraform-state
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
           AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
@@ -142,9 +144,11 @@ jobs:
           - -c
           - |
             . vpc-terraform-outputs/tfvars.sh
-            cd paas-cf/terraform/concourse
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=concourse.tfstate"
-            terraform destroy -force
+            terraform destroy -force -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate paas-cf/terraform/concourse
+      ensure:
+        put: concourse-terraform-state
+        params:
+          file: destroy-concourse-terraform/concourse.tfstate
 
     - put: destroy-all-trigger
       params: {bump: patch}
@@ -159,8 +163,8 @@ jobs:
       trigger: true
       passed: [destroy-concourse]
     - task: tf-destroy-vpc
-      file: paas-cf/concourse/tasks/tf-destroy.yml
       config:
+        image: docker:///governmentpaas/docker-terraform
         params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
@@ -168,11 +172,20 @@ jobs:
             AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
             TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
             TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-            TF_FILES_PATH: paas-cf/terraform/vpc
-            TF_STATE_PATH: vpc-terraform-state/vpc.tfstate
         inputs:
           - name: paas-cf
           - name: vpc-terraform-state
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            terraform destroy -force -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
+      ensure:
+        put: vpc-terraform-state
+        params:
+          file: tf-destroy-vpc/vpc.tfstate
 
   - name: destroy-init-bucket
     serial: true
@@ -184,8 +197,8 @@ jobs:
         trigger: true
         passed: [destroy-vpc]
       - task: tf-destroy-init-bucket
-        file: paas-cf/concourse/tasks/tf-destroy.yml
         config:
+          image: docker:///governmentpaas/docker-terraform
           params:
               TF_VAR_env: {{deploy_env}}
               AWS_DEFAULT_REGION: {{aws_region}}
@@ -193,8 +206,13 @@ jobs:
               AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
               TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
               TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-              TF_FILES_PATH: paas-cf/terraform/bucket
-              TF_STATE_PATH: bucket-terraform-state/bucket.tfstate
           inputs:
             - name: paas-cf
             - name: bucket-terraform-state
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              terraform destroy -force -state=bucket-terraform-state/bucket.tfstate paas-cf/terraform/bucket

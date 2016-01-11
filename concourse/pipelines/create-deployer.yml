@@ -25,6 +25,15 @@ resources:
       secret_access_key: {{aws_secret_access_key}}
       key: build-all-trigger
 
+  - name: bucket-terraform-state
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: bucket.tfstate
+
   - name: vpc-terraform-state
     type: s3
     source:
@@ -66,6 +75,26 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
+    - task: try-fetch-bucket-state
+      config:
+        image: docker:///governmentpaas/curl-ssl
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        inputs:
+          - name: paas-cf
+        outputs:
+          - name: bucket-state
+        run:
+          path: sh
+          args:
+          - -c
+          - |
+            cd bucket-state
+            ../paas-cf/concourse/scripts/s3get.sh {{state_bucket}} bucket.tfstate
+            ls -l
+
     - task: create-init-bucket
       config:
         image: docker:///governmentpaas/docker-terraform
@@ -76,19 +105,22 @@ jobs:
           AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
           TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        inputs:
+          - name: paas-cf
+          - name: bucket-state
         run:
           path: sh
           args:
           - -c
           - |
-            cd paas-cf/terraform/bucket
-            terraform apply 2>&1 | tee ./terraform.output
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=bucket.tfstate"
-            grep -q BucketAlreadyOwnedByYou ./terraform.output && exit 0
-            grep -q "Creation complete" ./terraform.output && exit 0
-            exit 1
-        inputs:
-          - name: paas-cf
+            if [ -f bucket-state/bucket.tfstate ]; then
+              cp bucket-state/bucket.tfstate .
+            fi
+            terraform apply -state=bucket.tfstate paas-cf/terraform/bucket
+      on_success:
+        put: bucket-terraform-state
+        params:
+          file: create-init-bucket/bucket.tfstate
     - task: s3init-concourse
       config:
         image: docker:///governmentpaas/curl-ssl
@@ -101,8 +133,9 @@ jobs:
           - -e
           - -c
           - |
-            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} vpc.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
         inputs:
         - name: paas-cf
     - put: build-all-trigger
@@ -117,11 +150,15 @@ jobs:
     - get: build-all-trigger
       trigger: true
       passed: [init-bucket]
+    - get: vpc-terraform-state
 
     - task: deploy-vpc
       config:
         platform: linux
         image: docker:///governmentpaas/docker-terraform
+        inputs:
+        - name: paas-cf
+        - name: vpc-terraform-state
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -136,12 +173,12 @@ jobs:
           - -e
           - -c
           - |
-            cd paas-cf/terraform/vpc
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=vpc.tfstate"
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
-            terraform apply ${terraform_params}
-        inputs:
-        - name: paas-cf
+            terraform apply ${terraform_params} -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
+      ensure:
+        put: vpc-terraform-state
+        params:
+          file: deploy-vpc/vpc.tfstate
 
   - name: concourse-terraform
     serial: true
@@ -152,6 +189,7 @@ jobs:
       trigger: true
       passed: [vpc]
     - get: vpc-terraform-state
+      passed: [vpc]
     - get: concourse-terraform-state
 
     - task: vpc-terraform-outputs-to-sh
@@ -180,6 +218,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
+        - name: concourse-terraform-state
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -195,10 +234,12 @@ jobs:
           - -c
           - |
             . vpc-terraform-outputs/tfvars.sh
-            cd paas-cf/terraform/concourse
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=concourse.tfstate"
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
-            terraform apply ${terraform_params}
+            terraform apply ${terraform_params} -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate paas-cf/terraform/concourse
+      ensure:
+        put: concourse-terraform-state
+        params:
+          file: terraform-apply/concourse.tfstate
 
   - name: concourse-prepare-deploy
     serial: true
@@ -209,7 +250,9 @@ jobs:
       trigger: true
       passed: [concourse-terraform]
     - get: vpc-terraform-state
+      passed: [vpc]
     - get: concourse-terraform-state
+      passed: [concourse-terraform]
 
     - task: terraform-outputs-to-yaml
       config:
@@ -285,7 +328,7 @@ jobs:
 
     - put: concourse-manifest
       params:
-        from: concourse-manifest/concourse.yml
+        file: concourse-manifest/concourse.yml
 
   - name: concourse-deploy
     serial: true
@@ -323,7 +366,7 @@ jobs:
       ensure:
         put: concourse-bosh-state
         params:
-          from: /concourse-deploy/concourse-state.json
+          file: concourse-deploy/concourse-state.json
 
   - name: expunge-vagrant
     serial: true
@@ -333,7 +376,9 @@ jobs:
       trigger: true
       passed: [concourse-deploy]
     - get: vpc-terraform-state
+      passed: [vpc]
     - get: concourse-terraform-state
+      passed: [concourse-terraform]
 
     - task: vpc-terraform-outputs-to-sh
       config:
@@ -361,6 +406,7 @@ jobs:
         image: docker:///governmentpaas/docker-terraform
         inputs:
         - name: paas-cf
+        - name: vpc-terraform-state
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
@@ -375,9 +421,13 @@ jobs:
           - -c
           - -x
           - |
-            cd paas-cf/terraform/vpc
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=vpc.tfstate"
-            terraform apply -target=aws_security_group.office-access-ssh
+            terraform apply -target=aws_security_group.office-access-ssh \
+              -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate \
+              paas-cf/terraform/vpc
+      ensure:
+        put: vpc-terraform-state
+        params:
+          file: remove-vagrant-IP-from-ssh-SG/vpc.tfstate
 
     - task: remove-vagrant-IP-from-concourse-SG
       config:
@@ -386,6 +436,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
+        - name: concourse-terraform-state
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
@@ -401,6 +452,10 @@ jobs:
           - -x
           - |
             . vpc-terraform-outputs/tfvars.sh
-            cd paas-cf/terraform/concourse
-            terraform remote config -backend=s3 -backend-config={{tfstate_bucket}} -backend-config="key=concourse.tfstate"
-            terraform apply -target=aws_security_group.concourse
+            terraform apply -target=aws_security_group.concourse \
+              -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate \
+              paas-cf/terraform/concourse
+      ensure:
+        put: concourse-terraform-state
+        params:
+          file: remove-vagrant-IP-from-concourse-SG/concourse.tfstate
