@@ -53,6 +53,7 @@ jobs:
     persistent_disk_pool: db
 
     templates:
+      - {release: concourse, name: postgresql}
       - {release: concourse, name: atc}
       - {release: concourse, name: groundcrew}
       - {release: concourse, name: tsa}
@@ -72,11 +73,15 @@ jobs:
         basic_auth_username: admin
         basic_auth_password: (( grab secrets.concourse_atc_password ))
         postgresql:
-          address: (( grab terraform_outputs.concourse_db_address ))
-          database: concourse
-          role:
-            name: dbadmin
-            password: (( grab secrets.concourse_db_password ))
+          address: 127.0.0.1:5432
+          role: &atc-role
+            name: atc
+            password: dummy-password
+
+      postgresql:
+        databases: [{name: atc}]
+        roles:
+          - *atc-role
       tsa:
         forward_host: 127.0.0.1
         atc:

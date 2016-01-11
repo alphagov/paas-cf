@@ -188,7 +188,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
           TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_concourse_db_password: {{concourse_db_password}}
         run:
           path: sh
           args:
@@ -245,7 +244,6 @@ jobs:
           aws_access_key_id: {{aws_access_key_id}}
           aws_secret_access_key: {{aws_secret_access_key}}
           concourse_atc_password: {{concourse_atc_password}}
-          concourse_db_password: {{concourse_db_password}}
         outputs:
           - name: concourse-secrets
         run:
@@ -260,7 +258,6 @@ jobs:
               aws_access_key_id: ${aws_access_key_id}
               aws_secret_access_key: ${aws_secret_access_key}
               concourse_atc_password: ${concourse_atc_password}
-              concourse_db_password: ${concourse_db_password}
             EOF
             ls -l concourse-secrets/concourse-secrets.yml
 
@@ -396,7 +393,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
           TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_concourse_db_password: {{concourse_db_password}}
         run:
           path: sh
           args:

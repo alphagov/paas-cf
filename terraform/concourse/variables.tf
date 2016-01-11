@@ -1,7 +1,3 @@
-variable "concourse_db_password" {
-  description = "Concourse database password"
-}
-
 variable "vpc_id" {
   description = "id of VPC created in main 'vpc' terraform"
 }
