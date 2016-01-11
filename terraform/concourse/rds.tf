@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "${var.region}"
-}
-
 resource "aws_db_subnet_group" "concourse_rds" {
   name = "${var.env}-concourse-rds-subnet"
   description = "Subnet group for Concourse RDS"
