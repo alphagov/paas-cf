@@ -95,7 +95,7 @@ The `destroy-deployer` pipeline will destroy the previous created objects.
 
 Once the `create-deployer` pipeline finished successful, you can:
 
-* Point the browser to `http://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk:8080/`
+* Point the browser to `https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk/`
 * Login with username `admin` and password as `$CONCOURSE_ATC_PASSWORD` above
 
 You can add a new target in to use the `fly` command with:
@@ -108,7 +108,7 @@ $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 export FLY_TARGET=$DEPLOY_ENV
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   fly -t $FLY_TARGET login -c http://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk:8080
+   fly -t $FLY_TARGET login -k -c https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk
 ```
 
 ### Microbosh deployment from concourse bootstrap
