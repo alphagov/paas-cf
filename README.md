@@ -36,7 +36,7 @@ vagrant up
 
     ```
 FLY_CMD_URL="http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
-sudo curl $FLY_CMD_URL -o /usr/local/bin/fly && \
+sudo wget $FLY_CMD_URL -O /usr/local/bin/fly && \
 sudo chmod +x /usr/local/bin/fly
 ```
 
