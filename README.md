@@ -32,7 +32,7 @@ cd paas-cf
 vagrant up
 ```
 
-2. Install your `fly` binary:
+2. Install your `fly` binary on your host machine:
 
     ```
 FLY_CMD_URL="http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
