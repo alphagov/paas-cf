@@ -29,16 +29,6 @@ resource_pools:
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
 
-  - name: runner_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-
-  - name: runner_z2
-    network: cf2
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-
   - name: router_z1
     network: "cf1"
     stemcell: (( grab meta.stemcell ))

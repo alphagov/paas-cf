@@ -85,22 +85,6 @@ meta:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
 
-  hm9000_routes:
-  - name: hm9000
-    port: 5155
-    tags:
-      component: HM9K
-    uris:
-    - (( concat "hm9000." properties.domain ))
-
-  hm9000_templates:
-  - name: hm9000
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: route_registrar
-    release: (( grab meta.release.name ))
-
   nats_templates:
   - name: nats
     release: (( grab meta.release.name ))
@@ -419,62 +403,6 @@ jobs:
         zone: z2
       nfs_server: (( grab meta.nfs_server ))
     update: {}
-
-  - name: hm9000_z1
-    templates: (( grab meta.hm9000_templates ))
-    instances: 1
-    resource_pool: medium_z1
-    networks:
-      - name: cf1
-    properties:
-      metron_agent:
-        zone: z1
-      route_registrar:
-        routes: (( grab meta.hm9000_routes ))
-    update: {}
-
-  - name: hm9000_z2
-    templates: (( grab meta.hm9000_templates ))
-    instances: 1
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-    properties:
-      metron_agent:
-        zone: z2
-      route_registrar:
-        routes: (( grab meta.hm9000_routes ))
-    update: {}
-
-  - name: runner_z1
-    templates: (( grab meta.dea_templates ))
-    instances: 1
-    resource_pool: runner_z1
-    networks:
-      - name: cf1
-        static_ips: ~
-    properties:
-      dea_next:
-        zone: "z1"
-      metron_agent:
-        zone: z1
-    update:
-      max_in_flight: 1
-
-  - name: runner_z2
-    templates: (( grab meta.dea_templates ))
-    instances: 1
-    resource_pool: runner_z2
-    networks:
-      - name: cf2
-        static_ips: ~
-    properties:
-      dea_next:
-        zone: "z2"
-      metron_agent:
-        zone: z2
-    update:
-      max_in_flight: 1
 
   - name: loggregator_z1
     templates: (( grab lamb_meta.loggregator_templates ))

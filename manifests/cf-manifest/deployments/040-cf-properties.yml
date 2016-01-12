@@ -61,7 +61,7 @@ properties:
     audit_events:
       cutoff_age_in_days: 31
 
-    users_can_select_backend: true
+    users_can_select_backend: false
     default_to_diego_backend: true
     allow_app_ssh_access: true
     default_app_memory: 1024
@@ -169,9 +169,6 @@ properties:
         restart_if_consistently_above_mb: ~
         restart_if_above_mb: ~
     external_protocol: ~
-
-  hm9000:
-    url: (( concat "https://hm9000." properties.domain ))
 
   login:
     enabled: true
