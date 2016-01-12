@@ -1,6 +1,9 @@
 #!/bin/bash
 gardenDir="/var/vcap/data/garden"
 
+echo "Removing packer ssh key..."
+sed -i '/ vagrant$/ ! { d }' /root/.ssh/authorized_keys /home/*/.ssh/authorized_keys
+
 # This assumes you are running on an instance with attached ephemeral disk as current (0.70) concourse image does
 echo "Mounting ${gardenDir} on to ephemeral disk..."
 cp -R ${gardenDir}/* /mnt
