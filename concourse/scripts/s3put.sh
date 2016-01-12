@@ -1,12 +1,15 @@
 #!/bin/sh
 bucket=$1
 file=$2
+meta_url="http://169.254.169.254/latest/meta-data"
+
+# Check if region set, if not attempt to get from instance metadata
+[ -z "${AWS_DEFAULT_REGION}" ] && AWS_DEFAULT_REGION=$(curl -s ${meta_url}/placement/availability-zone | sed 's/.$//')
 
 # Attempt to use instance profile if keys not configured
 if [ -z "${AWS_SECRET_ACCESS_KEY}" ] && [ -z ${AWS_ACCESS_KEY_ID} ] ; then
-  meta_url="http://169.254.169.254/latest/meta-data/iam/security-credentials/"
-  profile_name=$(curl -s ${meta_url})
-  instance_profile=$(curl -s ${meta_url}/${profile_name})
+  profile_name=$(curl -s ${meta_url}/iam/security-credentials/)
+  instance_profile=$(curl -s ${meta_url}/iam/security-credentials/${profile_name})
 
       AWS_ACCESS_KEY_ID=$(echo "${instance_profile}" | awk -F\" '$2 == "AccessKeyId"     { print $4 }')
      AWS_SECURITY_TOKEN=$(echo "${instance_profile}" | awk -F\" '$2 == "Token"           { print $4 }')
@@ -19,12 +22,12 @@ fi
 [ -z "${file}" ]      && echo "Must provide file name"      && exit 101
 [ -z "${AWS_ACCESS_KEY_ID}"     ] && echo "AWS_ACCESS_KEY_ID nor specified or present in instance profile"     && exit 103
 [ -z "${AWS_SECRET_ACCESS_KEY}" ] && echo "AWS_SECRET_ACCESS_KEY nor specified or present in instance profile" && exit 104
+[ -z "${AWS_DEFAULT_REGION}"    ] && echo "AWS_DEFAULT_REGION nor specified or present in instance profile"    && exit 105
 
 aws_path=/
 content_type='application/x-compressed-tar'
 acl="x-amz-acl:private"
-region=eu-west-1
-host=${bucket}.s3-${region}.amazonaws.com
+host=${bucket}.s3-${AWS_DEFAULT_REGION}.amazonaws.com
 
 sign() {
   string=$1
