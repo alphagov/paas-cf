@@ -40,8 +40,8 @@ export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 
 #### SSH credentials
 
-You must use a ssh-agent with the `insecure-deployer` private key added, so
-that vagrant can SSH to the new created VM.
+You must have insecure-deployer private key present in `~/.ssh/insecure-deployer` location, 
+as it is being used by pipeline creation scripts.
 
 #### Deployment of bootstrap concourse-lite
 
