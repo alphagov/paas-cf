@@ -339,6 +339,48 @@ jobs:
     - get: concourse-bosh-state
     - get: concourse-manifest
       passed: [concourse-prepare-deploy]
+    - get: paas-cf
+    - task: generate-key-and-add-to-ec2
+      config:
+        image: docker:///governmentpaas/docker-terraform
+        inputs:
+        - name: paas-cf
+        outputs:
+        - name: bosh-init-key
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          DEPLOY_ENV: {{deploy_env}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ssh-keygen -t rsa -b 4096 -f bosh-init-key/id_rsa -N ''
+            sed "s/<SED_KEY_NAME>/${DEPLOY_ENV}-deployer/" paas-cf/terraform/bosh-init-keys/dummy.state > /tmp/dummy.state
+            terraform apply -state /tmp/dummy.state -var key-name="${DEPLOY_ENV}-deployer" paas-cf/terraform/bosh-init-keys
+    - task: upload-concourse-ssh-key-to-s3
+      config:
+        image: docker:///governmentpaas/curl-ssl
+        inputs:
+        - name: paas-cf
+        - name: bosh-init-key
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            cd bosh-init-key
+            cp id_rsa deployer-key
+            ../paas-cf/concourse/scripts/s3put.sh {{state_bucket}} deployer-key
+            rm deployer-key
 
     - task: concourse-deploy
       timeout: 30m
@@ -347,14 +389,14 @@ jobs:
         inputs:
         - name: concourse-manifest
         - name: concourse-bosh-state
-        params: {private_ssh_key: {{private_ssh_key}} }
+        - name: bosh-init-key
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            echo -n "${private_ssh_key}" > id_rsa
+            cp bosh-init-key/id_rsa id_rsa
             chmod 400 id_rsa
             ls -l id_rsa
             cp -v concourse-bosh-state/concourse-state.json .
