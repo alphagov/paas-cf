@@ -1,0 +1,107 @@
+resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: {{branch_name}}
+
+  - name: cf-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: cf.tfstate
+      region_name: {{aws_region}}
+
+  - name: vpc-tfstate
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: vpc.tfstate
+      region_name: {{aws_region}}
+
+  - name: trigger-tf-destroy
+    type: semver
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      key: trigger-tf-destroy
+
+jobs:
+  - name: delete-deployment
+    serial_groups: [ destroy ]
+    serial: true
+    plan:
+      - task: delete-deplyment
+        config:
+          image: docker:///concourse/bosh-deployment-resource
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              bosh -n -t https://10.0.0.6:25555 -u admin -p {{bosh_password}} delete deployment {{deploy_env}}
+      - put: trigger-tf-destroy
+        params: {bump: patch}
+
+  - name: terraform-destroy
+    serial_groups: [ destroy ]
+    serial: true
+    plan:
+      - aggregate:
+        - get: trigger-tf-destroy
+          passed: ['delete-deployment']
+          trigger: true
+        - get: paas-cf
+        - get: cf-tfstate
+        - get: vpc-tfstate
+      - task: terraform-variables
+        config:
+          image: docker:///ruby#2.2.3-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+            - name: vpc-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < cf-tfstate/cf.tfstate > cf.tfvars.sh
+              ls -l cf.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
+              ls -l vpc.tfvars.sh
+      - task: cf-terraform-destroy
+        config:
+          image: docker:///governmentpaas/docker-terraform
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
+            TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+            TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              . terraform-variables/cf.tfvars.sh
+              . terraform-variables/vpc.tfvars.sh
+              terraform destroy -force -var env={{deploy_env}} -state=cf-tfstate/cf.tfstate \
+                -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
+        ensure:
+          put: cf-tfstate
+          params:
+            file: cf-terraform-destroy/cf.tfstate
