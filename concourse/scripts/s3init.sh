@@ -30,20 +30,21 @@ host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
-  /bin/echo -e -n "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
+  printf "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
 }
 
 put() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="PUT\n\n${content_type}\n${date}\n${acl}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
-  curl -i -s -X PUT -T ${init_file} \
+  curl -s -X PUT -T ${init_file} \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
     -H "${acl}" \
     ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}" \
+    --dump-header headers.txt \
     "https://${host}${aws_path}${file}"
 }
 
@@ -51,22 +52,25 @@ get() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
-  curl -i -s \
+  curl -s \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
     ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}" \
+    -o ${file} \
+    --dump-header headers.txt \
     "https://${host}/${file}"
 }
 
-response=$(get)
-if echo ${response} | grep -q "200 OK"; then
+get
+if grep -q "200 OK" headers.txt; then
   echo $file already exists in $bucket bucket.
-elif echo ${response} | grep -q "<Code>NoSuchKey</Code>"; then
-  echo $file cannot be found in $bucket bucket. Creating empty json file.
+elif  grep -q "<Code>NoSuchKey</Code>" ${file}; then
+  echo ${file} cannot be found in ${bucket} bucket. Creating empty json file.
   put
+  get
 else
-  echo Unexpected response: $response
+  echo Unexpected response: $(cat ${file} headers.txt)
   exit 1
 fi

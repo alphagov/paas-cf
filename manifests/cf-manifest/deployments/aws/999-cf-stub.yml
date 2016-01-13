@@ -7,7 +7,7 @@ meta:
     bosh:
       password: (( grab secrets.vcap_password ))
 
-director_uuid: DIRECTOR_UUID
+director_uuid: ~
 
 networks:
 - name: cf1

@@ -27,7 +27,7 @@ host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
-  /bin/echo -e -n "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
+  printf "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
 }
 
 date=$(date +"%a, %d %b %Y %T %z")
@@ -35,7 +35,7 @@ string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-to
 signature=$(sign "${string}")
 curl -o "${file}" -s -f \
   --write-out "Response code: %{http_code}\nBytes: %{size_download}\n" \
-  -H "Host: ${bucket}.s3.amazonaws.com" \
+  -H "Host: ${host}" \
   -H "Date: ${date}" \
   -H "Content-Type: ${content_type}" \
   ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \

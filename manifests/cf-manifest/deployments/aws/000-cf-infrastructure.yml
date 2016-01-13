@@ -5,8 +5,8 @@ meta:
 
   fog_config:
     provider: AWS
-    aws_access_key_id: (( grab terraform_outputs.aws_access_key_id ))
-    aws_secret_access_key: (( grab terraform_outputs.aws_secret_access_key ))
+    aws_access_key_id: (( grab secrets.aws_access_key_id ))
+    aws_secret_access_key: (( grab secrets.aws_secret_access_key ))
     region: (( grab terraform_outputs.region ))
 
   stemcell: (( grab meta.default_stemcell ))

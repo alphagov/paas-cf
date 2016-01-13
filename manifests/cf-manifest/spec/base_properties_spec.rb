@@ -29,8 +29,8 @@ RSpec.describe "base properties" do
     shared_examples "a component with an AWS connection" do
       let(:fog_connection) { subject.fetch("fog_connection") }
 
-      specify { expect(fog_connection).to include("aws_access_key_id" => terraform_fixture("aws_access_key_id")) }
-      specify { expect(fog_connection).to include("aws_secret_access_key" => terraform_fixture("aws_secret_access_key")) }
+      specify { expect(fog_connection).to include("aws_access_key_id" => aws_secrets_fixture["secrets"]["aws_access_key_id"]) }
+      specify { expect(fog_connection).to include("aws_secret_access_key" => aws_secrets_fixture["secrets"]["aws_secret_access_key"]) }
       specify { expect(fog_connection).to include("region" => terraform_fixture(:region)) }
       specify { expect(fog_connection).to include("provider" => "AWS") }
     end
