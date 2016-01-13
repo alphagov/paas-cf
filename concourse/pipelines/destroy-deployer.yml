@@ -75,6 +75,7 @@ jobs:
       config:
         image: docker:///governmentpaas/bosh-init
         inputs:
+        - name: paas-cf
         - name: concourse-manifest
         - name: concourse-bosh-state
         params: {private_ssh_key: {{private_ssh_key}} }
@@ -95,7 +96,7 @@ jobs:
             export BOSH_INIT_LOG_LEVEL={{log_level}}
             bosh-init delete concourse.yml
             [ -f concourse-state.json ] \
-              || echo '{}' > concourse-state.json
+              || cp paas-cf/concourse/init_files/bosh-init-state.json.tpl concourse-state.json
             rm concourse-manifest/concourse.yml
             rm id_rsa
       ensure:
