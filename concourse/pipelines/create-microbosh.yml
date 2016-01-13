@@ -260,5 +260,5 @@ jobs:
       on_success:
         put: bosh-init-state
         params:
-          file: bosh-manifest/bosh-manifest-state.json
+          file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
 
