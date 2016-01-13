@@ -81,8 +81,6 @@ jobs:
   - name: init
     serial: true
     plan:
-    - get: paas-cf
-      trigger: true
     - put: pipeline-trigger
       params: {bump: patch}
 
