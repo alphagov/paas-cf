@@ -11,14 +11,6 @@ variable "vpc_id" {
   description = "id of VPC created in main 'vpc' terraform"
 }
 
-variable "AWS_ACCESS_KEY_ID" {
-  description = "AWS access key to be pass to the bosh CPI"
-}
-
-variable "AWS_SECRET_ACCESS_KEY" {
-  description = "AWS secret access key to be pass to the bosh CPI"
-}
-
 variable "health_check_interval" {
   description = "Interval between requests for load balancer health checks"
   default     = 5

@@ -5,6 +5,7 @@ set -e
 manifests_dir=${MANIFESTS_DIR:-"./"}
 terraform_outputs=${TERRAFORM_OUTPUTS:-"${manifests_dir}/outputs/terraform-outputs.yml"}
 secrets=${SECRETS:-"${manifests_dir}/outputs/cf-secrets.yml"}
+aws_secrets=${AWS_SECRETS:-"${manifests_dir}/outputs/aws-secrets.yml"}
 ssl_certs=${SSL_CERTS:-"${manifests_dir}/outputs/cf-ssl-certificates.yml"}
 
 spruce merge \
@@ -15,4 +16,5 @@ spruce merge \
   ${manifests_dir}/deployments/aws/*.yml \
   ${terraform_outputs} \
   ${secrets} \
+  ${aws_secrets} \
   ${ssl_certs} 

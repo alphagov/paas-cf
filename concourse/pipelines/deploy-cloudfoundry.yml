@@ -178,6 +178,27 @@ jobs:
               for state in vpc bosh concourse cf; do
                 $SCPATH/$SCFILE < $state-tfstate/$state.tfstate > $state.yml
               done
+
+      - task: create-aws-secrets
+        config:
+          params:
+            aws_access_key_id: {{aws_access_key_id}}
+            aws_secret_access_key: {{aws_secret_access_key}}
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              cat > aws-secrets.yml << EOF
+              ---
+              secrets:
+                aws_access_key_id: ${aws_access_key_id}
+                aws_secret_access_key: ${aws_secret_access_key}
+              EOF
+              ls -l aws-secrets.yml
+
+
       - task: generate-manifest
         config:
           platform: linux
@@ -185,9 +206,11 @@ jobs:
           params:
             TERRAFORM_OUTPUTS: "extract-terraform-outputs/*.yml"
             MANIFESTS_DIR: "./paas-cf/manifests/cf-manifest"
+            AWS_SECRETS: "create-aws-secrets/aws-secrets.yml"
           inputs:
             - name: paas-cf
             - name: extract-terraform-outputs
+            - name: create-aws-secrets
           run:
             path: sh
             args:

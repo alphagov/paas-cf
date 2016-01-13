@@ -12,6 +12,10 @@ module ManifestHelpers
     @@fixture.fetch(key.to_s)
   end
 
+  def aws_secrets_fixture
+    @@aws_fixture ||= YAML.load(File.read("spec/fixtures/aws-secrets.yml"))
+  end
+
   private
 
   def load_default_manifest
@@ -19,6 +23,7 @@ module ManifestHelpers
       {
         "TERRAFORM_OUTPUTS" => File.expand_path("../../fixtures/terraform-outputs.yml", __FILE__),
         "SECRETS"           => File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
+        "AWS_SECRETS"       => File.expand_path("../../fixtures/aws-secrets.yml", __FILE__),
         "SSL_CERTS"         => File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
       },
       File.expand_path("../../../build_manifest.sh", __FILE__),

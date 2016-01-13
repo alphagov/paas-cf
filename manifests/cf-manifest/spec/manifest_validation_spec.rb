@@ -54,6 +54,7 @@ RSpec.describe "generic manifest validations" do
 
       manifest["jobs"].each do |job|
         job["templates"].each do |template|
+
           expect(release_names).to include(template["release"]),
             "release #{template["release"]} not found for template #{template["name"]} in job #{job["name"]}"
         end
