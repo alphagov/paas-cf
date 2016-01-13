@@ -9,3 +9,7 @@ output "concourse_security_group" {
 output "concourse_security_group_id" {
   value = "${aws_security_group.concourse.id}"
 }
+
+output "concourse_elb_name" {
+  value = "${aws_elb.concourse.name}"
+}

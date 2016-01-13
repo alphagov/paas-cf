@@ -11,16 +11,16 @@ resource "aws_security_group" "concourse" {
   }
 
   ingress {
-    from_port = 8080
-    to_port   = 8080
-    protocol  = "tcp"
-    cidr_blocks = ["${compact(concat(split(",", var.office_cidrs), var.vagrant_cidr))}"]
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = ["${aws_security_group.concourse-elb.id}"]
   }
 
   ingress {
-    from_port = 6868
-    to_port   = 6868
-    protocol  = "tcp"
+    from_port   = 6868
+    to_port     = 6868
+    protocol    = "tcp"
     cidr_blocks = ["${compact(concat(split(",", var.office_cidrs), var.vagrant_cidr))}"]
   }
 

@@ -22,6 +22,8 @@ resource_pools:
       instance_type: t2.medium
       availability_zone: (( grab terraform_outputs.zone0 ))
       iam_instance_profile: bosh-bootstrap
+      elbs:
+      - (( grab terraform_outputs.concourse_elb_name ))
 
 disk_pools:
   - name: db
