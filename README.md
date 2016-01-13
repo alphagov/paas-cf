@@ -38,11 +38,6 @@ export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 ```
 
-#### SSH credentials
-
-You must have insecure-deployer private key present in `~/.ssh/insecure-deployer` location, 
-as it is being used by pipeline creation scripts.
-
 #### Deployment of bootstrap concourse-lite
 
 Execute vagrant provision script `./vagrant/deploy.sh` to initialise a vagrant
@@ -109,6 +104,39 @@ export FLY_TARGET=$DEPLOY_ENV
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
    fly -t $FLY_TARGET login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
+```
+
+#### SSH to deployed Concourse and microbosh
+
+In the `create-deployer` pipeline when creating the initial VPC,
+a keypair is generated and uploaded to AWS to be used by deployed instances.
+`bosh-init` needs this key to be able to create a SSH tunnel to
+forward some ports to the agent of the new VM.
+
+Both public and private keys are also uploaded to S3 to be consumed by
+other jobs in the pipelines as resources and/or by us for troubleshooting.
+
+To manually ssh to the deployed concourse, learn its IP via AWS console and
+download the `id_rsa` file from the s3 state bucket.
+
+For example:
+
+```
+./concourse/scripts/s3get.sh "${DEPLOY_ENV}-state" id_rsa && \
+chmod 400 id_rsa && \
+ssh-add $(pwd)/id_rsa
+
+ssh vcap@<concourse_ip>
+```
+
+microbosh is deployed to use the same SSH key, although is not publically
+accessible. But you can connect via the concourse host and forward SSH
+credentials (option -A):
+
+```
+ssh vcap@<concourse_ip> -A
+
+ssh vcap@10.0.0.6
 ```
 
 ### Microbosh deployment from concourse bootstrap
