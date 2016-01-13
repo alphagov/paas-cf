@@ -461,7 +461,6 @@ jobs:
           args:
           - -e
           - -c
-          - -x
           - |
             terraform apply -target=aws_security_group.office-access-ssh \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate \
@@ -491,7 +490,6 @@ jobs:
           args:
           - -e
           - -c
-          - -x
           - |
             . vpc-terraform-outputs/tfvars.sh
             terraform apply -target=aws_security_group.concourse \
