@@ -108,7 +108,7 @@ $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 export FLY_TARGET=$DEPLOY_ENV
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   fly -t $FLY_TARGET login -k -c https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk
+   fly -t $FLY_TARGET login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
 
 ### Microbosh deployment from concourse bootstrap
