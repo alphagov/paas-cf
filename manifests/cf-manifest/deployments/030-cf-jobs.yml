@@ -583,7 +583,7 @@ jobs:
 
   - name: access_z1
     templates: (( grab base_job_templates.access ))
-    instances: 1
+    instances: 0
     resource_pool: access_z1
     networks:
       - name: cf1
@@ -601,7 +601,7 @@ jobs:
 
   - name: access_z2
     templates: (( grab base_job_templates.access ))
-    instances: 1
+    instances: 0
     resource_pool: access_z2
     networks:
       - name: cf2
@@ -619,7 +619,7 @@ jobs:
 
   - name: brain_z1
     templates: (( grab base_job_templates.brain ))
-    instances: 1
+    instances: 0
     resource_pool: brain_z1
     networks:
       - name: cf1
@@ -636,7 +636,7 @@ jobs:
 
   - name: brain_z2
     templates: (( grab base_job_templates.brain ))
-    instances: 1
+    instances: 0
     resource_pool: brain_z2
     networks:
       - name: cf2
@@ -653,7 +653,7 @@ jobs:
 
   - name: cc_bridge_z1
     templates: (( grab base_job_templates.cc_bridge ))
-    instances: 1
+    instances: 0
     resource_pool: cc_bridge_z1
     networks:
       - name: cf1
@@ -673,7 +673,7 @@ jobs:
 
   - name: cc_bridge_z2
     templates: (( grab base_job_templates.cc_bridge ))
-    instances: 1
+    instances: 0
     resource_pool: cc_bridge_z2
     networks:
       - name: cf2
@@ -693,7 +693,7 @@ jobs:
 
   - name: cell_z1
     templates: (( grab base_job_templates.cell ))
-    instances: 1
+    instances: 0
     resource_pool: cell_z1
     networks:
       - name: cf1
@@ -709,7 +709,7 @@ jobs:
 
   - name: cell_z2
     templates: (( grab base_job_templates.cell ))
-    instances: 1
+    instances: 0
     resource_pool: cell_z2
     networks:
       - name: cf2
@@ -783,7 +783,7 @@ jobs:
 
   - name: database_z1
     templates: (( grab base_job_templates.database ))
-    instances: 1
+    instances: 0
     persistent_disk_pool: database_disks
     resource_pool: database_z1
     networks:
@@ -802,7 +802,7 @@ jobs:
 
   - name: database_z2
     templates: (( grab base_job_templates.database ))
-    instances: 1
+    instances: 0
     persistent_disk_pool: database_disks
     resource_pool: database_z2
     networks:
