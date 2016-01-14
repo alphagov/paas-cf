@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "serial": 1,
+    "modules": [
+        {
+            "path": [
+                "root"
+            ],
+            "outputs": {},
+            "resources": {
+                "aws_key_pair.bosh-init": {
+                    "type": "aws_key_pair",
+                    "primary": {
+                        "id": "<SED_KEY_NAME>",
+                        "attributes": {
+                        },
+                        "meta": {
+                            "schema_version": "1"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

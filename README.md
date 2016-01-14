@@ -111,6 +111,17 @@ echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
    fly -t $FLY_TARGET login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
 
+#### ssh to deployed Concourse
+
+During the deploy process, a keypair is created in aws to create the instance
+with. This is uploaded to s3 and then discarded, to avoid the private key being
+left anywhere in the pipeline. To ssh to the instance, find its ip in the
+console and download the deployer-key file from the s3 state bucket, then run
+
+```
+ssh -i <deployer-key-file-from-state-bucket> vcap@${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk
+```
+
 ### Microbosh deployment from concourse bootstrap
 
 These pipelines will deploy/destroy a microbosh using bosh-init.

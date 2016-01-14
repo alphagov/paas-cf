@@ -26,8 +26,6 @@ aws_access_key_id: ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 log_level: ${LOG_LEVEL:-}
-private_ssh_key: |
-$(cat ~/.ssh/insecure-deployer | sed 's/^/  /')
 EOF
 }
 
