@@ -37,8 +37,3 @@ output "microbosh_static_public_ip" {
 output "compiled_cache_bucket_host" {
 	value = "s3-${var.region}.amazonaws.com"
 }
-
-# TODO: Generate a key pair per installation
-output "key_pair_name" {
-	value = "${var.key_pair_name}"
-}
