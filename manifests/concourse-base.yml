@@ -30,7 +30,7 @@ resource_pools:
 
 disk_pools:
   - name: db
-    disk_size: 10240
+    disk_size: 40960
     cloud_properties:
       type: gp2
 
