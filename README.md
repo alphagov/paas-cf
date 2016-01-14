@@ -159,7 +159,7 @@ This pipeline will:
    with an empty file.
  * Destroy the resources created by terraform.
 
-#### Deploy cloudfoundry with microbosh
+### Deploy and destroy cloudfoundry with microbosh
 ```
 # Optionally pass the current branch for the git resources
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -177,6 +177,17 @@ This pipeline will:
    foundry
  * build the cloudfoundry manifests
  * use these manifests and microbosh instance to deploy cloudfoundry
+
+ To setup destroy pipeline you have to execute:
+
+ ```
+ ./concourse/scripts/destroy-cloudfoundry.sh <environment_name>
+```
+
+This pipeline will
+
+ * Connect to microbosh and delete CF deployment
+ * Use Terraform to destroy all the resources created by `deploy-cloudfoundry`
 
 # Additional notes
 
