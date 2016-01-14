@@ -121,8 +121,8 @@ jobs:
           - -e
           - -c
           - |
-            ./paas-cf/concourse/scripts/generate-bosh-secrets.sh > ./bosh-secrets.yml
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml ./bosh-secrets.yml
+            ./paas-cf/concourse/scripts/generate-bosh-secrets.sh > ./generated-bosh-secrets.yml
+            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml ./generated-bosh-secrets.yml
         inputs:
         - name: paas-cf
 
