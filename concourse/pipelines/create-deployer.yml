@@ -152,6 +152,26 @@ jobs:
       passed: [init-bucket]
     - get: vpc-terraform-state
 
+    - task: ssh-keygen
+      config:
+        image: docker:///governmentpaas/curl-ssl
+        inputs:
+        - name: paas-cf
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
+          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            apk add --update openssh
+            ssh-keygen -t rsa -b 4096 -f generated_id_rsa -N ''
+            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa generated_id_rsa
+            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub generated_id_rsa.pub
+
     - task: deploy-vpc
       config:
         platform: linux
@@ -159,6 +179,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-terraform-state
+        - name: ssh-keygen
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -173,6 +194,7 @@ jobs:
           - -e
           - -c
           - |
+            cp ssh-keygen/id_rsa.pub paas-cf/terraform/vpc
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
       ensure:
@@ -337,6 +359,7 @@ jobs:
       trigger: true
       passed: [concourse-prepare-deploy]
     - get: concourse-bosh-state
+    - get: ssh-private-key
     - get: concourse-manifest
       passed: [concourse-prepare-deploy]
 
