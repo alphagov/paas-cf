@@ -77,7 +77,6 @@ jobs:
         inputs:
         - name: concourse-manifest
         - name: concourse-bosh-state
-        params: {private_ssh_key: {{private_ssh_key}} }
         run:
           path: sh
           args:
