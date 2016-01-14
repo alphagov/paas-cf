@@ -134,7 +134,7 @@ To setup the pipeline `create-microbosh`:
 
 ```
 export FLY_TARGET=$DEPLOY_ENV
-./concourse/scripts/create-microbosh.sh <environment_name>
+./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
 ```
 
 This pipeline will:
@@ -149,7 +149,7 @@ To setup the pipeline `destroy-microbosh`:
 
 ```
 export FLY_TARGET=$DEPLOY_ENV
-./concourse/scripts/destroy-microbosh.sh <environment_name>
+./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
 ```
 
 This pipeline will:
@@ -165,7 +165,7 @@ This pipeline will:
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 export FLY_TARGET=$DEPLOY_ENV
-./concourse/scripts/deploy-cloudfoundry.sh <environment_name>
+./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
 ```
 
 You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
