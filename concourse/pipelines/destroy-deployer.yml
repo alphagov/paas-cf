@@ -132,10 +132,6 @@ jobs:
         - name: concourse-terraform-state
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           TF_VAR_env: {{deploy_env}}
         run:
           path: sh
@@ -168,10 +164,6 @@ jobs:
         params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
-            AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-            AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-            TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-            TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         inputs:
           - name: paas-cf
           - name: vpc-terraform-state
@@ -203,10 +195,6 @@ jobs:
           params:
               TF_VAR_env: {{deploy_env}}
               AWS_DEFAULT_REGION: {{aws_region}}
-              AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-              AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-              TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-              TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           inputs:
             - name: paas-cf
             - name: bucket-terraform-state
