@@ -31,6 +31,9 @@ Vagrant.configure(2) do |config|
     # "Concourse Vagrant" security group
     aws.security_groups = ['sg-ee21a597']
 
+    # Add IAM role to allow access to necessary AWS APIs
+    aws.iam_instance_profile_name = 'bootstrap-concourse'
+
     # We will rely on vagrant generating a ssh key, but this must be the ubuntu user, as the vagrant user does not exist on the vm
     override.ssh.username = "ubuntu"
 
