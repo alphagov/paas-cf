@@ -180,6 +180,7 @@ jobs:
           - -e
           - -c
           - |
+            touch paas-cf/terraform/vpc/id_rsa.pub
             terraform destroy -force -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
       ensure:
         put: vpc-terraform-state
