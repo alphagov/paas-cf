@@ -11,3 +11,4 @@ terraform_outputs:
   zone1: sealand-1b
   postgres_rds_address: 127.0.0.1
   postgres_rds_port: 5432
+  ssh_elb_name: stub_ssh_elb
