@@ -64,7 +64,7 @@ To execute it:
 ./vagrant/deploy.sh <deploy_env>
 ```
 
-> The concourse-lite AWS instance will be running in us-west-1, as the official
+> The concourse-lite AWS instance will be running in us-east-1, as the official
 > concourse-lite AMI image is only located there.
 >
 > The instance has some default hardcoded settings: security groups, VPC,
