@@ -24,8 +24,6 @@ branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 aws_access_key_id: ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
-private_ssh_key: |
-$(cat ~/.ssh/insecure-deployer | sed 's/^/  /')
 debug: ${DEBUG:-}
 EOF
 }

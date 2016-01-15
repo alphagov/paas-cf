@@ -113,7 +113,7 @@ cloud_provider:
     aws:
       access_key_id: (( grab secrets.aws_access_key_id ))
       secret_access_key: (( grab secrets.aws_secret_access_key ))
-      default_key_name: insecure-deployer
+      default_key_name: (( grab terraform_outputs.key_pair_name ))
       default_security_groups:
       - (( grab terraform_outputs.concourse_security_group ))
       - (( grab terraform_outputs.ssh_security_group ))
