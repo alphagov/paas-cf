@@ -296,8 +296,6 @@ jobs:
     - task: create-concourse-secrets
       config:
         params:
-          aws_access_key_id: {{aws_access_key_id}}
-          aws_secret_access_key: {{aws_secret_access_key}}
           concourse_atc_password: {{concourse_atc_password}}
         outputs:
           - name: concourse-secrets
@@ -310,8 +308,6 @@ jobs:
             cat > concourse-secrets/concourse-secrets.yml << EOF
             ---
             secrets:
-              aws_access_key_id: ${aws_access_key_id}
-              aws_secret_access_key: ${aws_secret_access_key}
               concourse_atc_password: ${concourse_atc_password}
             EOF
             ls -l concourse-secrets/concourse-secrets.yml
