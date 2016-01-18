@@ -6,7 +6,7 @@ resource "aws_eip" "cf" {
 resource "aws_nat_gateway" "cf" {
   count = "${var.zone_count}"
   allocation_id = "${element(aws_eip.cf.*.id, count.index)}"
-  subnet_id = "${element(aws_subnet.cf.*.id, count.index)}"
+  subnet_id = "${element(split(",", var.infra_subnet_ids), count.index)}"
 }
 
 resource "aws_route_table" "internet" {

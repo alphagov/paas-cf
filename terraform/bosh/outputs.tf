@@ -15,7 +15,7 @@ output "region" {
 }
 
 output "bosh_subnet_id" {
-	value = "${var.subnet0_id}"
+	value = "${element(split(",", var.infra_subnet_ids), 0)}"
 }
 
 output "bosh_security_group" {

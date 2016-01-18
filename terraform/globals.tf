@@ -40,6 +40,11 @@ variable "infra_cidrs" {
   }
 }
 
+variable "infra_subnet_ids" {
+  description = "A comma separated list of infrastructure subnets"
+  default     = ""
+}
+
 /* see https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
 variable "office_cidrs" {
   description = "CSV of CIDR addresses for our office which will be trusted"

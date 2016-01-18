@@ -22,14 +22,6 @@ output "subnet0_id" {
   value = "${aws_subnet.infra.0.id}"
 }
 
-output "subnet1_id" {
-  value = "${aws_subnet.infra.1.id}"
-}
-
-output "subnet2_id" {
-  value = "${aws_subnet.infra.2.id}"
-}
-
 output "zone0" {
   value = "${var.zones.zone0}"
 }
@@ -46,3 +38,6 @@ output "key_pair_name" {
   value = "${aws_key_pair.env_key_pair.key_name}"
 }
 
+output "infra_subnet_ids" {
+  value = "${join(",", aws_subnet.infra.*.id)}"
+}
