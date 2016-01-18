@@ -21,6 +21,11 @@ variable "zones" {
   }
 }
 
+variable "zone_count" {
+  description = "Number of zones to use"
+  default = 2
+}
+
 variable "infra_cidrs" {
   description = "CIDR for infrastructure subnet indexed by AZ"
   default     = {
@@ -28,11 +33,6 @@ variable "infra_cidrs" {
     zone1 = "10.0.1.0/24"
     zone2 = "10.0.2.0/24"
   }
-}
-
-variable "infra_subnet_zone_count" {
-  description = "Number of zones to create infra subnet in"
-  default     = 3
 }
 
 /* see https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
