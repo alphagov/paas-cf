@@ -129,14 +129,11 @@ ssh-add $(pwd)/id_rsa
 ssh vcap@<concourse_ip>
 ```
 
-microbosh is deployed to use the same SSH key, although is not publically
-accessible. But you can connect via the concourse host and forward SSH
-credentials (option -A):
+microbosh is deployed to use the same SSH key, although is not publicly
+accessible. But you can use the concourse host as a jumpbox:
 
 ```
-ssh vcap@<concourse_ip> -A
-
-ssh vcap@10.0.0.6
+ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
 ```
 
 ### Microbosh deployment from concourse bootstrap
