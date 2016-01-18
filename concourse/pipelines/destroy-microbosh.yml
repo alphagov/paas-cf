@@ -99,7 +99,7 @@ jobs:
             bosh-init delete bosh-manifest/bosh-manifest.yml
             # If the delete is successful, the file will be missing
             [ -f "bosh-manifest/bosh-manifest-state.json" ] || \
-                echo "{}" > bosh-manifest/bosh-manifest-state.json
+                cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-manifest/bosh-manifest-state.json
         inputs:
         - name: paas-cf
         - name: bosh-manifest
