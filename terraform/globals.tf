@@ -12,6 +12,11 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "vpc_id" {
+  description = "id of VPC created in main 'vpc' terraform"
+  default     = ""
+}
+
 variable "zones" {
   description = "AWS availability zones"
   default     = {

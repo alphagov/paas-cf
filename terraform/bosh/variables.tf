@@ -1,7 +1,3 @@
-variable "vpc_id" {
-  description = "id of VPC created in main 'vpc' terraform"
-}
-
 variable "subnet0_id" {
   description = "id of subnet0 created in main 'vpc' terraform"
 }

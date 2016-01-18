@@ -7,10 +7,6 @@ variable "cf_cidrs" {
   }
 }
 
-variable "vpc_id" {
-  description = "id of VPC created in main 'vpc' terraform"
-}
-
 variable "health_check_interval" {
   description = "Interval between requests for load balancer health checks"
   default     = 5
