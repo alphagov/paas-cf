@@ -288,5 +288,5 @@ If not, you can learn the credentials from the `atc` process arguments:
 
  1. Login on the concourse server:
     * For vagrant bootstrap concourse-lite: `cd vagrant && vagrant ssh`
-    * For deployer concourse: `ssh -l vcap ${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk`
+    * [For deployer concourse](#ssh-to-deployed-concourse-and-microbosh)
  2. Get the password from `atc` arguments: `ps -fea | sed -n 's/.*--basic-auth[-]password \([^ ]*\).*/\1/p'`
