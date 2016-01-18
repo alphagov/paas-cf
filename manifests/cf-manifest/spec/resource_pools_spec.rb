@@ -6,7 +6,6 @@ RSpec.describe "resource_pools" do
     small
     medium
     large
-    runner
     router
   )
   ERRAND_POOL_NAMES = %w(

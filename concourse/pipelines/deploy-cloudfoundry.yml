@@ -227,7 +227,7 @@ jobs:
     serial: true
     plan:
       - aggregate:
-        - task: cf-stemcell-tarball
+        - task: stemcell-tarball
           config:
             params:
               STEMCELL_VERSION: {{stemcell-version}}
@@ -236,21 +236,95 @@ jobs:
             run:
               path: sh
               args: ["-c", "curl -L -J -o stemcell.tgz https://s3.amazonaws.com/bosh-jenkins-artifacts/bosh-stemcell/aws/light-bosh-stemcell-${STEMCELL_VERSION}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"]
+
         - task: cf-release-tarball
           config:
             params:
-              RELEASE_VERSION: {{cf-version}}
+              RELEASE_VERSION: {{cf-release-version}}
+              URL: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=${RELEASE_VERSION}
             platform: linux
             image: docker:///governmentpaas/curl-ssl
             run:
               path: sh
-              args: ['-c', 'curl -f -L -o release.tgz https://bosh.io/d/github.com/cloudfoundry/cf-release?v=$RELEASE_VERSION']
+              args:
+                - -e
+                - -c
+                - |
+                  eval curl -f -L -o release.tgz ${URL}
+
+        - task: nginx-release-tarball
+          config:
+            params:
+              RELEASE_VERSION: {{nginx-release-version}}
+              URL: https://s3.amazonaws.com/nginx-release/nginx-${RELEASE_VERSION}.tgz
+            platform: linux
+            image: docker:///governmentpaas/curl-ssl
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  eval curl -f -L -o release.tgz ${URL}
+
+        - task: diego-release-tarball
+          config:
+            params:
+              RELEASE_VERSION: {{diego-release-version}}
+              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=${RELEASE_VERSION}
+            platform: linux
+            image: docker:///governmentpaas/curl-ssl
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  eval curl -f -L -o release.tgz ${URL}
+
+        - task: garden-release-tarball
+          config:
+            params:
+              RELEASE_VERSION: {{garden-release-version}}
+              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=${RELEASE_VERSION}
+            platform: linux
+            image: docker:///governmentpaas/curl-ssl
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  eval curl -f -L -o release.tgz ${URL}
+
+        - task: etcd-release-tarball
+          config:
+            params:
+              RELEASE_VERSION: {{etcd-release-version}}
+              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=${RELEASE_VERSION}
+            platform: linux
+            image: docker:///governmentpaas/curl-ssl
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  eval curl -f -L -o release.tgz ${URL}
+
         - get: cf-manifest
           passed: ['generate-manifest']
           trigger: true
+
       - put: cf-deployment
         params:
           manifest: cf-manifest/cf-manifest.yml
-          stemcells: ['cf-stemcell-tarball/stemcell.tgz']
+          stemcells:
+            - stemcell-tarball/stemcell.tgz
           releases:
             - cf-release-tarball/release.tgz
+            - nginx-release-tarball/release.tgz
+            - diego-release-tarball/release.tgz
+            - garden-release-tarball/release.tgz
+            - etcd-release-tarball/release.tgz
+

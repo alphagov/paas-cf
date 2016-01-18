@@ -68,13 +68,6 @@ RSpec.describe "base properties" do
     end
   end
 
-  describe "host manager" do
-    subject(:hm9000) { properties.fetch("hm9000") }
-
-    it { is_expected.to include("url" => "https://hm9000.#{terraform_fixture(:cf_root_domain)}") }
-
-  end
-
   describe "login" do
     subject(:login) { properties.fetch("login") }
 

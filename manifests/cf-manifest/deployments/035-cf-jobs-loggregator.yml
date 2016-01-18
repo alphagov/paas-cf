@@ -91,6 +91,8 @@ properties:
     debug: false
     blacklisted_syslog_ranges: ~
     outgoing_dropsonde_port: 8081
+    dropsonde_incoming_port: 3457
+    traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
     tls:
       ca: ~
 
@@ -99,7 +101,7 @@ properties:
     debug: false
     blacklisted_syslog_ranges: ~
     unmarshaller_count: 5
-    port: 4443
+    port: 443
     enable_tls_transport: ~
     tls_server:
       cert: ~
@@ -109,6 +111,7 @@ properties:
   metron_agent:
     deployment: (( grab meta.environment ))
     preferred_protocol: ~
+    dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
     tls_client:
       cert: ~
       key: ~
