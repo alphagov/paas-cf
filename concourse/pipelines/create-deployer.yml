@@ -89,8 +89,6 @@ jobs:
         image: docker:///governmentpaas/curl-ssl
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         inputs:
           - name: paas-cf
         outputs:
@@ -110,10 +108,6 @@ jobs:
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         inputs:
           - name: paas-cf
           - name: bucket-state
@@ -133,9 +127,6 @@ jobs:
     - task: s3init-concourse
       config:
         image: docker:///governmentpaas/curl-ssl
-        params:
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
@@ -168,8 +159,6 @@ jobs:
         - name: paas-cf
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
@@ -193,10 +182,6 @@ jobs:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
@@ -254,10 +239,6 @@ jobs:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
@@ -315,8 +296,6 @@ jobs:
     - task: create-concourse-secrets
       config:
         params:
-          aws_access_key_id: {{aws_access_key_id}}
-          aws_secret_access_key: {{aws_secret_access_key}}
           concourse_atc_password: {{concourse_atc_password}}
         outputs:
           - name: concourse-secrets
@@ -329,8 +308,6 @@ jobs:
             cat > concourse-secrets/concourse-secrets.yml << EOF
             ---
             secrets:
-              aws_access_key_id: ${aws_access_key_id}
-              aws_secret_access_key: ${aws_secret_access_key}
               concourse_atc_password: ${concourse_atc_password}
             EOF
             ls -l concourse-secrets/concourse-secrets.yml
@@ -442,10 +419,6 @@ jobs:
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
@@ -471,10 +444,6 @@ jobs:
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
-          AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
-          TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-          TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
         run:
           path: sh
           args:
