@@ -59,6 +59,15 @@ resources:
       secret_access_key: {{aws_secret_access_key}}
       versioned_file: cf-manifest.yml
 
+  - name: cf-secrets
+    type: s3
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      versioned_file: cf-secrets.yml
+
 jobs:
   - name: s3init
     serial_groups: [ deploy ]
@@ -139,19 +148,53 @@ jobs:
           params:
             file: terraform/cf.tfstate
 
+  - name: generate-cf-secrets
+    plan:
+      - get: paas-cf
+        passed: ['s3init']
+        trigger: true
+
+      - task: generate
+        config:
+          image: docker:///governmentpaas/mksecrets
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -c
+              - -e
+              - |
+                ./paas-cf/concourse/scripts/generate-cf-secrets.sh > cf-secrets.yml
+                ls -l cf-secrets.yml
+
+      - task: upload
+        config:
+          image: docker:///governmentpaas/curl-ssl
+          inputs:
+            - name: paas-cf
+            - name: generate
+          run:
+            path: paas-cf/concourse/scripts/s3init.sh
+            args:
+              - {{state_bucket}}
+              - cf-secrets.yml
+              - generate/cf-secrets.yml
+
   - name: generate-manifest
     serial_groups: [ deploy ]
     serial: true
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['terraform']
+          passed: ['terraform','generate-cf-secrets']
         - get: vpc-tfstate
         - get: bosh-tfstate
         - get: concourse-tfstate
         - get: cf-tfstate
           passed: ['terraform']
           trigger: true
+        - get: cf-secrets
       - task: extract-terraform-outputs
         config:
           platform: linux
@@ -202,10 +245,12 @@ jobs:
             TERRAFORM_OUTPUTS: "extract-terraform-outputs/*.yml"
             MANIFESTS_DIR: "./paas-cf/manifests/cf-manifest"
             AWS_SECRETS: "create-aws-secrets/aws-secrets.yml"
+            SECRETS: "cf-secrets/cf-secrets.yml"
           inputs:
             - name: paas-cf
             - name: extract-terraform-outputs
             - name: create-aws-secrets
+            - name: cf-secrets
           run:
             path: sh
             args:
@@ -322,4 +367,3 @@ jobs:
             - diego-release-tarball/release.tgz
             - garden-release-tarball/release.tgz
             - etcd-release-tarball/release.tgz
-
