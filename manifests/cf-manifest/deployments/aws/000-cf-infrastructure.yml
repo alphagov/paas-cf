@@ -102,6 +102,24 @@ resource_pools:
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
 
+  - name: api_z1
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: api_z2
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+
   - name: router_z1
     cloud_properties:
       instance_type: c3.large
