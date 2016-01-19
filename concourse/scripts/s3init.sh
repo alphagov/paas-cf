@@ -2,6 +2,7 @@
 bucket=$1
 file=$2
 init_file=$3
+set -e
 
 # Attempt to use instance profile if keys not configured
 if [ -z "${AWS_SECRET_ACCESS_KEY}" ] && [ -z ${AWS_ACCESS_KEY_ID} ] ; then
