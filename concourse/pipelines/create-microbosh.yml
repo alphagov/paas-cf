@@ -274,7 +274,7 @@ jobs:
         - name: bosh-manifest
         - name: bosh-init-state
         - name: ssh-private-key
-      on_success:
+      ensure:
         put: bosh-init-state
         params:
           file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
