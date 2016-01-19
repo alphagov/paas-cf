@@ -426,6 +426,7 @@ jobs:
           - -c
           - |
             terraform apply -target=aws_security_group.office-access-ssh \
+              -target=aws_subnet.infra \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate \
               paas-cf/terraform/vpc
       ensure:
