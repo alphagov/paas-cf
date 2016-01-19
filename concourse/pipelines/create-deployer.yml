@@ -17,65 +17,51 @@ resources:
       branch: {{branch_name}}
 
   - name: build-all-trigger
-    type: semver
+    type: semver-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       key: build-all-trigger
 
   - name: bucket-terraform-state
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: bucket.tfstate
 
   - name: vpc-terraform-state
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: vpc.tfstate
       region_name: {{aws_region}}
 
   - name: concourse-terraform-state
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: concourse.tfstate
       region_name: {{aws_region}}
 
   - name: concourse-bosh-state
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: concourse-state.json
       region_name: {{aws_region}}
 
   - name: concourse-manifest
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: concourse.yml
       region_name: {{aws_region}}
 
   - name: ssh-private-key
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: id_rsa
       region_name: {{aws_region}}
 
