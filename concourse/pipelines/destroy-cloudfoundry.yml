@@ -6,30 +6,24 @@ resources:
       branch: {{branch_name}}
 
   - name: cf-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: cf.tfstate
       region_name: {{aws_region}}
 
   - name: vpc-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: vpc.tfstate
       region_name: {{aws_region}}
 
   - name: trigger-tf-destroy
-    type: semver
+    type: semver-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       key: trigger-tf-destroy
 
 jobs:

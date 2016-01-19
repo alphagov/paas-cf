@@ -6,83 +6,65 @@ resources:
       branch: {{branch_name}}
 
   - name: vpc-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: vpc.tfstate
 
   - name: bosh-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: bosh.tfstate
 
   - name: concourse-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: concourse.tfstate
       region_name: eu-west-1
 
   - name: bosh-init-state
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: bosh-manifest-state.json
 
   - name: bosh-manifest
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: bosh-manifest.yml
 
   - name: bosh-secrets
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: bosh-secrets.yml
 
   - name: terraform-updated
-    type: semver
+    type: semver-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       key: terraform-updated
 
   - name: pipeline-trigger
-    type: semver
+    type: semver-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       key: {{pipeline_trigger_file}}
 
   - name: ssh-private-key
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: id_rsa
       region_name: {{aws_region}}
 
