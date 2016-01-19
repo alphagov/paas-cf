@@ -67,7 +67,7 @@ get
 if grep -q "200 OK" headers.txt; then
   echo $file already exists in $bucket bucket.
 elif  grep -q "<Code>NoSuchKey</Code>" ${file}; then
-  echo ${file} cannot be found in ${bucket} bucket. Creating empty json file.
+  echo ${file} cannot be found in ${bucket} bucket. Uploading init file ${init_file}.
   put
   get
 else
