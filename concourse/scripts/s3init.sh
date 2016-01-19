@@ -2,6 +2,7 @@
 bucket=$1
 file=$2
 init_file=$3
+set -e
 
 # Attempt to use instance profile if keys not configured
 if [ -z "${AWS_SECRET_ACCESS_KEY}" ] && [ -z ${AWS_ACCESS_KEY_ID} ] ; then
@@ -67,7 +68,7 @@ get
 if grep -q "200 OK" headers.txt; then
   echo $file already exists in $bucket bucket.
 elif  grep -q "<Code>NoSuchKey</Code>" ${file}; then
-  echo ${file} cannot be found in ${bucket} bucket. Creating empty json file.
+  echo ${file} cannot be found in ${bucket} bucket. Uploading init file ${init_file}.
   put
   get
 else

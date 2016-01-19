@@ -1,18 +1,18 @@
 #!/bin/sh
 
-pwgen() {
-   openssl rand -base64 12
+simplepass() {
+  pwgen -1s 12
 }
 
 cat <<EOF
 ---
 secrets:
-  bosh_postgres_password: $(pwgen)
-  bosh_nats_password: $(pwgen)
-  bosh_agent_password: $(pwgen)
-  bosh_registry_password: $(pwgen)
-  bosh_redis_password: $(pwgen)
-  bosh_blobstore_director_password: $(pwgen)
-  bosh_hm_director_password: $(pwgen)
-  bosh_admin_password: $(pwgen)
+  bosh_postgres_password: $(simplepass)
+  bosh_nats_password: $(simplepass)
+  bosh_agent_password: $(simplepass)
+  bosh_registry_password: $(simplepass)
+  bosh_redis_password: $(simplepass)
+  bosh_blobstore_director_password: $(simplepass)
+  bosh_hm_director_password: $(simplepass)
+  bosh_admin_password: $(simplepass)
 EOF
