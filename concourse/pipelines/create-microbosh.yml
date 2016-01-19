@@ -121,19 +121,33 @@ jobs:
       trigger: true
       passed: [ init ]
     - get: paas-cf
-    - task: bosh-secrets.yml
+
+    - task: generate
       config:
-        image: docker:///governmentpaas/curl-ssl
+        image: docker:///governmentpaas/mksecrets
+        inputs:
+        - name: paas-cf
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            ./paas-cf/concourse/scripts/generate-bosh-secrets.sh > ./generated-bosh-secrets.yml
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml ./generated-bosh-secrets.yml
+            ./paas-cf/concourse/scripts/generate-bosh-secrets.sh > bosh-secrets.yml
+            ls -l bosh-secrets.yml
+
+    - task: upload
+      config:
+        image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: paas-cf
+        - name: generate
+        run:
+          path: paas-cf/concourse/scripts/s3init.sh
+          args:
+          - {{state_bucket}}
+          - bosh-secrets.yml
+          - generate/bosh-secrets.yml
 
   - name: bosh-terraform
     serial: true
