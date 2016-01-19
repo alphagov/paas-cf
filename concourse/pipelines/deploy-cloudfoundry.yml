@@ -68,9 +68,6 @@ jobs:
       - task: s3init
         config:
           image: docker:///governmentpaas/curl-ssl
-          params:
-            AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-            AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           run:
             path: sh
             args:
@@ -122,8 +119,6 @@ jobs:
           params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
-            TF_VAR_AWS_ACCESS_KEY_ID: {{aws_access_key_id}}
-            TF_VAR_AWS_SECRET_ACCESS_KEY: {{aws_secret_access_key}}
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -139,10 +134,10 @@ jobs:
               . terraform-variables/bosh.tfvars.sh
 
               terraform apply -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
-
-      - put: cf-tfstate
-        params:
-          file: terraform/cf.tfstate
+        ensure:
+          put: cf-tfstate
+          params:
+            file: terraform/cf.tfstate
 
   - name: generate-manifest
     serial_groups: [ deploy ]
