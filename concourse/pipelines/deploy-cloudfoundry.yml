@@ -134,10 +134,10 @@ jobs:
               . terraform-variables/bosh.tfvars.sh
 
               terraform apply -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
-
-      - put: cf-tfstate
-        params:
-          file: terraform/cf.tfstate
+        ensure:
+          put: cf-tfstate
+          params:
+            file: terraform/cf.tfstate
 
   - name: generate-manifest
     serial_groups: [ deploy ]
