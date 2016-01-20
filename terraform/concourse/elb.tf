@@ -1,6 +1,6 @@
 resource "aws_elb" "concourse" {
   name            = "${var.env}-concourse"
-  subnets         = ["${var.subnet0_id}"]
+  subnets         = ["${split(",", var.infra_subnet_ids)}"]
   security_groups = ["${aws_security_group.concourse-elb.id}"]
 
   health_check {

@@ -7,10 +7,6 @@ variable "cf_cidrs" {
   }
 }
 
-variable "vpc_id" {
-  description = "id of VPC created in main 'vpc' terraform"
-}
-
 variable "health_check_interval" {
   description = "Interval between requests for load balancer health checks"
   default     = 5
@@ -38,4 +34,9 @@ variable "elb_idle_timeout" {
 
 variable "subnet0_id" {
     description = "Subnet that is used to provision ELB"
+}
+
+variable "cf_subnet_count" {
+  description = "Number of CF subnets"
+  default     = 2
 }

@@ -1,6 +1,6 @@
 resource "aws_elb" "router" {
   name = "${var.env}-cf-router-elb"
-  subnets = ["${var.subnet0_id}"]
+  subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"
   security_groups = [
@@ -30,7 +30,7 @@ resource "aws_elb" "router" {
 
 resource "aws_elb" "ssh-proxy-router" {
   name = "${var.env}-ssh-proxy-elb"
-  subnets = ["${var.subnet0_id}"]
+  subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"
   security_groups = [

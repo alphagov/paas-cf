@@ -12,6 +12,11 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "vpc_id" {
+  description = "id of VPC created in main 'vpc' terraform"
+  default     = ""
+}
+
 variable "zones" {
   description = "AWS availability zones"
   default     = {
@@ -19,6 +24,11 @@ variable "zones" {
     zone1 = "eu-west-1b"
     zone2 = "eu-west-1c"
   }
+}
+
+variable "zone_count" {
+  description = "Number of zones to use"
+  default = 2
 }
 
 variable "infra_cidrs" {
@@ -30,9 +40,9 @@ variable "infra_cidrs" {
   }
 }
 
-variable "infra_subnet_zone_count" {
-  description = "Number of zones to create infra subnet in"
-  default     = 3
+variable "infra_subnet_ids" {
+  description = "A comma separated list of infrastructure subnets"
+  default     = ""
 }
 
 /* see https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
