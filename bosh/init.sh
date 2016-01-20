@@ -39,3 +39,6 @@ pushd ${SCRIPT_DIR}
    bosh deployment cf-manifest.yml
   popd
 popd
+
+echo "If you need to enable bosh ssh please source $SCRIPT_DIR/bosh_ssh.sh"
+echo ". $SCRIPT_DIR/bosh_ssh.sh"
