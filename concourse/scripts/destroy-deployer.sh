@@ -31,13 +31,3 @@ bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
    "${env}" "${pipeline}" "${config}" <(generate_vars_file)
 
 $FLY_CMD -t "${FLY_TARGET}" unpause-pipeline --pipeline "${pipeline}"
-
-# Start pipeline
-# curl "${ATC_URL}/pipelines/${pipeline}/jobs/destroy-concourse/builds" -X POST
-
-cat <<EOF
-You can watch the last vpc deploy job by running the command below.
-You might need to wait a few moments before the latest build starts.
-
-$FLY_CMD -t "${FLY_TARGET}" watch -j "${pipeline}/destroy-concourse"
-EOF
