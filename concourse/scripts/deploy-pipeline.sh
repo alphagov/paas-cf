@@ -48,3 +48,6 @@ yes y | \
    --pipeline "${pipeline}" \
    --load-vars-from "${varsfile}"
 
+$FLY_CMD -t "${FLY_TARGET}" \
+  unpause-pipeline \
+  --pipeline "${pipeline}"
