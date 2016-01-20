@@ -1,15 +1,20 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.require_version ">= 1.7.0"
+Vagrant.require_version ">= 1.8.0"
 
 Vagrant.configure(2) do |config|
   config.vm.box = ENV['VAGRANT_BOX_NAME'] || 'aws_vagrant_box'
 
-  config.vm.provision "shell" do |s|
-    s.privileged = true
-    s.path = "concourse_post_deploy.sh"
-    s.args = "#{ENV['CONCOURSE_ATC_USER']} #{ENV['CONCOURSE_ATC_PASSWORD']}"
+  Dir.glob("./post-deploy.d/*").sort.each do |post_deploy_file|
+    config.vm.provision "shell" do |s|
+      s.privileged = true
+      s.env = ENV.select {
+        |key| ['CONCOURSE_ATC_PASSWORD', 'CONCOURSE_ATC_USER'].include? key
+      }
+      s.name = post_deploy_file
+      s.path = post_deploy_file
+    end
   end
 
   config.vm.provider :aws do |aws, override|

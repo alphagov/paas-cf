@@ -21,8 +21,6 @@ tfstate_bucket: bucket=${env}-state
 state_bucket: ${env}-state
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
-aws_access_key_id: ${AWS_ACCESS_KEY_ID}
-aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
 log_level: ${LOG_LEVEL:-}
 EOF
 }

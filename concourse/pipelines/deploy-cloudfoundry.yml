@@ -15,57 +15,45 @@ resources:
       branch: {{branch_name}}
 
   - name: vpc-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: vpc.tfstate
 
   - name: bosh-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: bosh.tfstate
 
   - name: concourse-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: concourse.tfstate
       region_name: eu-west-1
 
   - name: cf-tfstate
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: cf.tfstate
       region_name: eu-west-1
 
   - name: cf-manifest
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: cf-manifest.yml
 
   - name: cf-secrets
-    type: s3
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      access_key_id: {{aws_access_key_id}}
-      secret_access_key: {{aws_secret_access_key}}
       versioned_file: cf-secrets.yml
 
 jobs:

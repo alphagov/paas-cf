@@ -100,6 +100,9 @@ jobs:
       groundcrew:
         tsa:
           host: 127.0.0.1
+        additional_resource_types:
+          - { type: s3-iam, image: "docker:///governmentpaas/s3-resource" }
+          - { type: semver-iam, image: "docker:///governmentpaas/semver-resource" }
 
 cloud_provider:
   template: {name: aws_cpi, release: bosh-aws-cpi}
