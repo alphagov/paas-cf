@@ -38,6 +38,8 @@ export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 ```
 
+The access keys are required to spin up the bootstrap concourse-lite instance only. From that point on they won't be required as all the pipelines will use [instance profiles](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) to make calls to AWS.
+
 #### Deployment of bootstrap concourse-lite
 
 Execute vagrant provision script `./vagrant/deploy.sh` to initialise a vagrant
@@ -45,7 +47,7 @@ AWS instance with concourse lite.
 
 This script will:
 
- * Create a running AWS concourse-lite instance.
+ * Create a running AWS concourse-lite instance with IAM role `bootstrap-concourse` (see [Vagrant bootstrap concourse-lite requirements](https://github.com/alphagov/paas-cf#vagrant-bootstrap-concourse-lite-requirements)).
  * Do additional post configuration of concourse, like add basic authentication
    to concourse lite and mount garden container storage to instance ephemeral disk.
  * Configure a SSH tunnel to redirect the remote concourse port 8080 to http://localhost:8080
@@ -138,11 +140,7 @@ ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
 
 ### Microbosh deployment from concourse bootstrap
 
-These pipelines will deploy/destroy a microbosh using bosh-init.
-
-> Note about AWS credentials: These pipelines can receive the variables
-> `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` for terraform and `bosh-init`.
-> If not provided, it will use IAM profiles.
+These pipelines will deploy/destroy a microbosh using bosh-init. It will use the IAM profile `deployer-concourse` that was given to the Concourse instance.
 
 #### Prerequisites
 
@@ -197,11 +195,13 @@ You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
 STEMCELL_VERSION (defaults to 3104) as environment variables.
 
 This pipeline will:
+
  * Get VPC, microbosh and concourse state
  * use this state to run terraform and create required aws resources for cloud
    foundry
  * build the cloudfoundry manifests
  * use these manifests and microbosh instance to deploy cloudfoundry
+ * Setup the cloud controller IAM role to `cf-cloudcontroller`. It must be allowed to access the S3 buckets `*-cf-resources`, `*-cf-packages`, `*-cf-droplets`, `*-cf-buildpacks`.
 
  To setup destroy pipeline you have to execute:
 
