@@ -63,11 +63,6 @@ resources:
       stop: 21:00 -0000
       interval: 24h
 
-  - name: deploy-timestamp
-    type: time
-    source:
-      interval: 24h
-
 jobs:
   - name: s3init
     serial_groups: [ deploy ]
@@ -345,16 +340,12 @@ jobs:
             - diego-release-tarball/release.tgz
             - garden-release-tarball/release.tgz
             - etcd-release-tarball/release.tgz
-        ensure:
-          put: deploy-timestamp
 
   - name: delete
     serial: true
     plan:
     - get: delete-timer
       trigger: true
-    - get: deploy-timestamp
-      passed: [ deploy ]
     - task: delete-deployment
       config:
         inputs:
