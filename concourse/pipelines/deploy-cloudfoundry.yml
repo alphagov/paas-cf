@@ -56,13 +56,6 @@ resources:
       region_name: {{aws_region}}
       versioned_file: cf-secrets.yml
 
-  - name: delete-timer
-    type: time
-    source:
-      start: 20:00 -0000
-      stop: 6:00 -0000
-      interval: 2h
-
 jobs:
   - name: s3init
     serial_groups: [ deploy ]
@@ -340,21 +333,3 @@ jobs:
             - diego-release-tarball/release.tgz
             - garden-release-tarball/release.tgz
             - etcd-release-tarball/release.tgz
-
-  - name: delete
-    serial: true
-    plan:
-    - get: delete-timer
-      trigger: true
-    - task: delete-deployment
-      config:
-        inputs:
-        - name: delete-timer
-        image: docker:///concourse/bosh-deployment-resource
-        run:
-          path: sh
-          args:
-          - -e
-          - -c
-          - |
-            bosh -n -t https://10.0.0.6:25555 -u admin -p {{bosh_password}} delete deployment {{deploy_env}}
