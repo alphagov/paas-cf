@@ -29,12 +29,10 @@ pipeline=$1; shift
 config=$1; shift
 varsfile=$1; shift
 
-export ATC_URL=${ATC_URL:-"http://192.168.100.4:8080"}
-export FLY_TARGET=${FLY_TARGET:-$ATC_URL}
+export FLY_TARGET=${FLY_TARGET:-$env}
 FLY_CMD=${FLY_CMD:-fly}
 
 echo "Concourse API target ${FLY_TARGET}"
-echo "Concourse API $ATC_URL"
 echo "AWS Region ${aws_region}"
 
 echo "Deployment ${env}"
