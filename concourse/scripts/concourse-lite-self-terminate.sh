@@ -3,7 +3,6 @@ set -e
 set -u
 
 SCRIPT_DIR=$(cd $(dirname $0) && pwd)
-FLY_CMD=${FLY_CMD:-fly}
 
 env=${DEPLOY_ENV:-$1}
 pipeline="self-terminate"
@@ -24,6 +23,3 @@ generate_vars_file > /dev/null # Check for missing vars
 
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
    "${env}" "${pipeline}" "${config}" <(generate_vars_file)
-
-$FLY_CMD -t "${FLY_TARGET}" unpause-pipeline --pipeline "${pipeline}"
-
