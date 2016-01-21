@@ -60,8 +60,8 @@ resources:
     type: time
     source:
       start: 20:00 -0000
-      stop: 21:00 -0000
-      interval: 24h
+      stop: 6:00 -0000
+      interval: 2h
 
 jobs:
   - name: s3init
