@@ -28,6 +28,24 @@ resource "aws_security_group" "web" {
     ]
   }
 
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}"
+    ]
+  }
+
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}"
+    ]
+  }
+
   tags {
     Name = "${var.env}-cf-web"
   }
