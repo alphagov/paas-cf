@@ -36,19 +36,15 @@ generate_vars_file > /dev/null # Check for missing vars
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
    "${env}" "${pipeline}" "${config}" <(generate_vars_file)
 
-fly -t "$FLY_TARGET" unpause-pipeline --pipeline "${pipeline}"
-
 if [ ! "${DISABLE_AUTODELETE:-}" ]; then
    bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
 	  "${env}" "${pipeline_autodelete}" "${config_autodelete}" <(generate_vars_file)
-
-   fly -t "$FLY_TARGET" unpause-pipeline --pipeline "${pipeline_autodelete}"
 
    echo
    echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
    echo "         To disable it, set DISABLE_AUTODELETE=1 or pause the pipeline."
 else
-   yes y | fly -t "$FLY_TARGET" destroy-pipeline --pipeline "${pipeline_autodelete}" || true
+   yes y | ${FLY_CMD:-fly} -t "$FLY_TARGET" destroy-pipeline --pipeline "${pipeline_autodelete}" || true
 
    echo
    echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
