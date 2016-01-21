@@ -102,10 +102,8 @@ DEPLOY_ENV=<deploy-env>
 
 $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 
-export FLY_TARGET=$DEPLOY_ENV
-
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   fly -t $FLY_TARGET login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
+   fly -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
 
 #### SSH to deployed Concourse and microbosh
@@ -156,7 +154,6 @@ To run the following steps you must have these prerequisites:
 To setup the pipeline `create-microbosh`:
 
 ```
-export FLY_TARGET=$DEPLOY_ENV
 ./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
 ```
 
@@ -171,7 +168,6 @@ This pipeline will:
 To setup the pipeline `destroy-microbosh`:
 
 ```
-export FLY_TARGET=$DEPLOY_ENV
 ./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
 ```
 
@@ -187,7 +183,6 @@ This pipeline will:
 # Optionally pass the current branch for the git resources
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-export FLY_TARGET=$DEPLOY_ENV
 ./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
 ```
 
