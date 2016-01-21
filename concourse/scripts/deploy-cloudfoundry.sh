@@ -5,7 +5,10 @@ SCRIPT_DIR=$(cd "$(dirname $0)" && pwd)
 
 env=${DEPLOY_ENV-$1}
 pipeline="deploy-cloudfoundry"
+pipeline_autodelete="autodelete-cloudfoundry"
 config="${SCRIPT_DIR}/../pipelines/deploy-cloudfoundry.yml"
+config_autodelete="${SCRIPT_DIR}/../pipelines/autodelete-cloudfoundry.yml"
+
 bosh_password=$("$SCRIPT_DIR"/s3get.sh ${env}-state bosh-secrets.yml > /dev/null && awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets.yml)
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 
@@ -32,3 +35,21 @@ generate_vars_file > /dev/null # Check for missing vars
 
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
    "${env}" "${pipeline}" "${config}" <(generate_vars_file)
+
+fly -t "$FLY_TARGET" unpause-pipeline --pipeline "${pipeline}"
+
+if [ ! "${DISABLE_AUTODELETE:-}" ]; then
+   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+	  "${env}" "${pipeline_autodelete}" "${config_autodelete}" <(generate_vars_file)
+
+   fly -t "$FLY_TARGET" unpause-pipeline --pipeline "${pipeline_autodelete}"
+
+   echo
+   echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
+   echo "         To disable it, set DISABLE_AUTODELETE=1 or pause the pipeline."
+else
+   yes y | fly -t "$FLY_TARGET" destroy-pipeline --pipeline "${pipeline_autodelete}" || true
+
+   echo
+   echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
+fi

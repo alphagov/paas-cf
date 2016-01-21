@@ -203,7 +203,10 @@ This pipeline will:
  * use these manifests and microbosh instance to deploy cloudfoundry
  * Setup the cloud controller IAM role to `cf-cloudcontroller`. It must be allowed to access the S3 buckets `*-cf-resources`, `*-cf-packages`, `*-cf-droplets`, `*-cf-buildpacks`.
 
- To setup destroy pipeline you have to execute:
+An additional pipeline `autodelete-cloudfoundry` is setup to automatically
+delete the environment at night.
+
+To setup destroy pipeline you have to execute:
 
  ```
  ./concourse/scripts/destroy-cloudfoundry.sh <environment_name>
@@ -287,3 +290,20 @@ If not, you can learn the credentials from the `atc` process arguments:
     * For vagrant bootstrap concourse-lite: `cd vagrant && vagrant ssh`
     * [For deployer concourse](#ssh-to-deployed-concourse-and-microbosh)
  2. Get the password from `atc` arguments: `ps -fea | sed -n 's/.*--basic-auth[-]password \([^ ]*\).*/\1/p'`
+
+## Overnight deletion of environments
+
+In order to avoid unnecessary costs in AWS, there is some logic to
+stop environments and VMs at night:
+
+ * **Terminate vagrant concourse-lite VM**: concourse-lite will have a
+   pipeline `self-terminate` which will be triggered at night and
+   terminate the concourse-lite vagrant instance.
+
+ * **Delete Cloud Foundry deployment**: The `autodelete-cloudfoundry` pipeline
+   will be triggered every night to delete the specific deployment.
+
+In all cases, to prevent this from happening, you can simply pause the
+pipelines or its resources or jobs.
+
+Note that the *concourse deployer* and *microbosh* VMs will be kept running.
