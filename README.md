@@ -103,7 +103,7 @@ DEPLOY_ENV=<deploy-env>
 $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   fly -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
+   ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
 
 #### SSH to deployed Concourse and microbosh
