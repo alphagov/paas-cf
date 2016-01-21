@@ -912,3 +912,12 @@ properties:
   acceptance_tests:
 
   smoke_tests:
+    api: (( grab meta.api_domain ))
+    apps_domain: (( grab properties.app_domains[0] ))
+    user: "admin"
+    password: (( grab secrets.uaa_admin_password ))
+    org: "SMOKE_TESTS"
+    space: "SMOKE_TESTS"
+    use_existing_org: false
+    use_existing_space: false
+    skip_ssl_validation: true
