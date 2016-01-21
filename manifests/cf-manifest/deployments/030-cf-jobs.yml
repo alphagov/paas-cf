@@ -1,6 +1,8 @@
 meta:
   environment: ~
 
+  api_domain: (( concat "api." properties.domain ))
+
   release:
     name: cf
 
@@ -21,7 +23,7 @@ meta:
       component: CloudController
     port: (( grab properties.cc.external_port ))
     uris:
-    - (( concat "api." properties.domain ))
+    - (( grab meta.api_domain ))
 
   api_templates:
   - name: cloud_controller_ng
