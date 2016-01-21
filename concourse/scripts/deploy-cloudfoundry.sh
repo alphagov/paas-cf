@@ -18,8 +18,6 @@ state_bucket: ${env}-state
 pipeline_name: ${pipeline}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
-aws_access_key_id: ${AWS_ACCESS_KEY_ID}
-aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
 bosh_password: ${bosh_password}
 stemcell-version: ${STEMCELL_VERSION:-3104}
 cf-release-version: ${CF_RELEASE_VERSION:-225}

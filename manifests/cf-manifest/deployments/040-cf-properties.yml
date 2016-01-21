@@ -94,19 +94,19 @@ properties:
     broker_client_max_async_poll_duration_minutes: ~
 
     resource_pool:
-      resource_directory_key: (( concat properties.domain "-cc-resources" ))
+      resource_directory_key: (( concat meta.environment "-cf-resources" ))
       fog_connection: ~
       cdn: ~
 
     packages:
-      app_package_directory_key: (( concat properties.domain "-cc-packages" ))
+      app_package_directory_key: (( concat meta.environment "-cf-packages" ))
       fog_connection: ~
       cdn: ~
       max_package_size: 1073741824
       max_valid_packages_stored: ~
 
     droplets:
-      droplet_directory_key: (( concat properties.domain "-cc-droplets" ))
+      droplet_directory_key: (( concat meta.environment "-cf-droplets" ))
       fog_connection: ~
       cdn: ~
       max_staged_droplets_stored: ~
@@ -124,7 +124,7 @@ properties:
         record_sql: "obfuscated"
 
     buildpacks:
-      buildpack_directory_key: (( concat properties.domain "-cc-buildpacks" ))
+      buildpack_directory_key: (( concat meta.environment "-cf-buildpacks" ))
       fog_connection: ~
       cdn: ~
     quota_definitions: (( grab meta.default_quota_definitions ))

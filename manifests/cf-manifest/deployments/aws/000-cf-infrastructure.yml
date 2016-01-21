@@ -5,8 +5,7 @@ meta:
 
   fog_config:
     provider: AWS
-    aws_access_key_id: (( grab secrets.aws_access_key_id ))
-    aws_secret_access_key: (( grab secrets.aws_secret_access_key ))
+    use_iam_profile: true
     region: (( grab terraform_outputs.region ))
 
   stemcell: (( grab meta.default_stemcell ))
@@ -97,6 +96,24 @@ resource_pools:
   - name: large_z2
     cloud_properties:
       instance_type: m3.medium
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: api_z1
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: api_z2
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
       ephemeral_disk:
         size: 65_536
         type: gp2

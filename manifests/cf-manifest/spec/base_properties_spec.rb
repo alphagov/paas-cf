@@ -29,8 +29,7 @@ RSpec.describe "base properties" do
     shared_examples "a component with an AWS connection" do
       let(:fog_connection) { subject.fetch("fog_connection") }
 
-      specify { expect(fog_connection).to include("aws_access_key_id" => aws_secrets_fixture["secrets"]["aws_access_key_id"]) }
-      specify { expect(fog_connection).to include("aws_secret_access_key" => aws_secrets_fixture["secrets"]["aws_secret_access_key"]) }
+      specify { expect(fog_connection).to include("use_iam_profile" => true) }
       specify { expect(fog_connection).to include("region" => terraform_fixture(:region)) }
       specify { expect(fog_connection).to include("provider" => "AWS") }
     end
@@ -40,7 +39,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("buildpack_directory_key" => "#{terraform_fixture(:cf_root_domain)}-cc-buildpacks") }
+      it { is_expected.to include("buildpack_directory_key" => "#{terraform_fixture(:environment)}-cf-buildpacks") }
     end
 
     describe "droplets" do
@@ -48,7 +47,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("droplet_directory_key" => "#{terraform_fixture(:cf_root_domain)}-cc-droplets") }
+      it { is_expected.to include("droplet_directory_key" => "#{terraform_fixture(:environment)}-cf-droplets") }
     end
 
     describe "packages" do
@@ -56,7 +55,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("app_package_directory_key" => "#{terraform_fixture(:cf_root_domain)}-cc-packages") }
+      it { is_expected.to include("app_package_directory_key" => "#{terraform_fixture(:environment)}-cf-packages") }
     end
 
     describe "resource_pool" do
@@ -64,7 +63,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("resource_directory_key" => "#{terraform_fixture(:cf_root_domain)}-cc-resources") }
+      it { is_expected.to include("resource_directory_key" => "#{terraform_fixture(:environment)}-cf-resources") }
     end
   end
 

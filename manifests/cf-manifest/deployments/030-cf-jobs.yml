@@ -329,7 +329,7 @@ jobs:
   - name: api_z1
     templates: (( grab meta.api_templates ))
     instances: 1
-    resource_pool: large_z1
+    resource_pool: api_z1
     persistent_disk: 0
     networks:
       - name: cf1
@@ -349,7 +349,7 @@ jobs:
   - name: api_z2
     templates: (( grab meta.api_templates ))
     instances: 1
-    resource_pool: large_z2
+    resource_pool: api_z2
     persistent_disk: 0
     networks:
       - name: cf2
