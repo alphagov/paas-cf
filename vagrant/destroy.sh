@@ -11,7 +11,10 @@ export VAGRANT_BOX_NAME="aws_vagrant_box"
 export DEPLOY_ENV=${DEPLOY_ENV:-$1}
 [[ -z "${DEPLOY_ENV}" ]] && echo "Must provide environment name" && exit 100
 
-read -r -sn 1 -p "This is a destructive operation, are you sure you want to do this [Y/N]? "; [[ ${REPLY:0:1} = [Yy] ]];
+read -r -p "This is a destructive operation, are you sure you want to do this [y/N]? "
+if ! [[ ${REPLY:0:1} == [Yy] ]]; then
+  exit 1
+fi
 
 # TODO: implement 1 & 2
 # 1. Trigger destroy in the deployer concourse, wait to complete
