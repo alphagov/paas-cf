@@ -5,14 +5,6 @@ env:
   global:
     - TF_VERSION="0.6.8"
     - SPRUCE_VERSION="0.13.0"
-  matrix:
-    - TF_DIR="terraform/bucket"
-    - TF_DIR="terraform/vpc"
-    - TF_DIR="terraform/concourse"
-    - TF_DIR="terraform/bosh"
-    - RSPEC_DIR="manifests/bosh-manifest"
-    - RSPEC_DIR="manifests/cf-manifest"
-    - SHELLCHECK="true"
 
 addons:
   apt:
@@ -23,32 +15,16 @@ addons:
 
 before_install:
   - mkdir ~/bin
+  - export PATH=~/bin:$PATH
   - |
-    if [ "${TF_DIR}" ]; then
-      wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-      unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
-      rm terraform_${TF_VERSION}_linux_amd64.zip
-    fi
+    wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+    unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
+    rm terraform_${TF_VERSION}_linux_amd64.zip
   - |
-    if [ "${RSPEC_DIR}" ]; then
-      wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-      tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-      mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
-      rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
-    fi
+    wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
+    tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
+    mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
+    rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
 
 script:
-  - |
-    if [ "${TF_DIR}" ]; then
-      PATH=$PATH:~/bin terraform graph ${TF_DIR}
-    fi
-  - |
-    if [ "${RSPEC_DIR}" ]; then
-      bundle install && \
-      cd ${RSPEC_DIR} && \
-      PATH=$PATH:~/bin bundle exec rspec
-    fi
-  - |
-    if [ "${SHELLCHECK}" ]; then
-      find . -name '*.sh' -print0 | xargs -0 shellcheck
-    fi
+  - make test
