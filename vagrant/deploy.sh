@@ -1,4 +1,7 @@
-#!/bin/bash -e
+#!/bin/bash
+
+set -e
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 cd "$SCRIPT_DIR"
 
@@ -14,7 +17,8 @@ fi
 
 vagrant up
 
-export VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
+VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
+export VAGRANT_IP
 export CONCOURSE_URL=http://localhost:8080
 export FLY_TARGET=${DEPLOY_ENV}-bootstrap
 
