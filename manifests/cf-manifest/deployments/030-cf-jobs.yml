@@ -910,6 +910,18 @@ properties:
   collector:
 
   acceptance_tests:
+    api: (( grab meta.api_domain ))
+    apps_domain: (( grab properties.app_domains[0] ))
+    system_domain: (( grab properties.system_domain ))
+    admin_user: "admin"
+    admin_password: (( grab secrets.uaa_admin_password ))
+    skip_ssl_validation: true
+    backend: "diego"
+    skip_diego_unsupported_tests: true
+    include_route_services: true
+    include_tasks: true
+    client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
+    include_v3: true
 
   smoke_tests:
     api: (( grab meta.api_domain ))
