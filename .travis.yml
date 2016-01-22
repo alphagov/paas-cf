@@ -15,13 +15,19 @@ env:
 
 before_install:
   - mkdir ~/bin
-  - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-  - unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
-  - rm terraform_${TF_VERSION}_linux_amd64.zip
-  - wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-  - tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-  - mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
-  - rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
+  - |
+    if [ "${TF_DIR}" ]; then
+      wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+      unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
+      rm terraform_${TF_VERSION}_linux_amd64.zip
+    fi
+  - |
+    if [ "${RSPEC_DIR}" ]; then
+      wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
+      tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
+      mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
+      rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
+    fi
 
 script:
   - |
