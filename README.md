@@ -129,6 +129,8 @@ ssh-add $(pwd)/id_rsa
 ssh vcap@<concourse_ip>
 ```
 
+If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
+
 microbosh is deployed to use the same SSH key, although is not publicly
 accessible. But you can use the concourse host as a jumpbox:
 
