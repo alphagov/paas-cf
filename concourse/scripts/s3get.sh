@@ -27,6 +27,7 @@ host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
+  # shellcheck disable=SC2059
   printf "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
 }
 
