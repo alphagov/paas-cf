@@ -9,8 +9,9 @@ pipeline_autodelete="autodelete-cloudfoundry"
 config="${SCRIPT_DIR}/../pipelines/deploy-cloudfoundry.yml"
 config_autodelete="${SCRIPT_DIR}/../pipelines/autodelete-cloudfoundry.yml"
 
-bosh_password=$("$SCRIPT_DIR"/s3get.sh ${env}-state bosh-secrets.yml > /dev/null && awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets.yml)
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
+
+bosh_password=$("$SCRIPT_DIR"/s3get.sh "${env}-state" bosh-secrets.yml > /dev/null && awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets.yml)
 
 generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
