@@ -226,21 +226,18 @@ jobs:
     - task: render-manifest
       config:
         image: docker:///governmentpaas/spruce
+        params:
+          BOSH_SECRETS: "../../../bosh-secrets/bosh-secrets.yml"
+          BOSH_TERRAFORM_OUTPUTS: "../../../terraform-outputs/bosh.terraform-outputs.yml"
+          VPC_TERRAFORM_OUTPUTS: "../../../terraform-outputs/vpc.terraform-outputs.yml"
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            cd paas-cf/manifests/bosh-manifest
-
-            ./build_manifest.sh \
-              ../../../bosh-secrets/bosh-secrets.yml \
-              ../../../terraform-outputs/bosh.terraform-outputs.yml \
-              ../../../terraform-outputs/vpc.terraform-outputs.yml \
-              > ../../../bosh-manifest/bosh-manifest.yml
-
-            /bin/cat ../../../bosh-manifest/bosh-manifest.yml
+            ./paas-cf/manifests/bosh-manifest/build_manifest.sh > bosh-manifest/bosh-manifest.yml
+            /bin/cat bosh-manifest/bosh-manifest.yml
         inputs:
         - name: paas-cf
         - name: terraform-outputs

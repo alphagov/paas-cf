@@ -1,0 +1,12 @@
+---
+terraform_outputs:
+  bosh_security_group: bosh_security_group
+  bosh_subnet_id: subnet-bosh
+  compiled_cache_bucket_host: s3-eu-west-1.amazonaws.com
+  default_security_group: bosh_default_sg
+  environment: test
+  microbosh_static_private_ip: 10.0.0.6
+  microbosh_static_public_ip: 194.1.2.4
+  region: eu-west-1
+  zone0: eu-west-1a
+  zone1: eu-west-1b

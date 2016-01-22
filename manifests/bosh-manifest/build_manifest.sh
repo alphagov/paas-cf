@@ -1,13 +1,7 @@
 #!/bin/sh
 
-set -e
-cd $(dirname $0)
-
-if [ $# -gt 0 ]; then
-  STUBS=$@
-else
-  STUBS=deployments/example-stubs/*.yml
-fi
+set -eu
+cd "$(dirname "$0")"
 
 spruce merge \
   --prune meta \
@@ -15,6 +9,6 @@ spruce merge \
   --prune terraform_outputs \
   deployments/*.yml \
   deployments/aws/*.yml \
-  $STUBS
-
-
+  "${BOSH_SECRETS}" \
+  "${BOSH_TERRAFORM_OUTPUTS}" \
+  "${VPC_TERRAFORM_OUTPUTS}"
