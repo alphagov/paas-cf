@@ -2,7 +2,7 @@
 set -e
 set -u
 
-SCRIPT_DIR=$(cd $(dirname $0) && pwd)
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 env=${DEPLOY_ENV:-$1}
 pipeline="self-terminate"
