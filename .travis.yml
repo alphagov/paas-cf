@@ -44,8 +44,8 @@ script:
     fi
   - |
     if [ "${RSPEC_DIR}" ]; then
-      cd ${RSPEC_DIR} && \
       bundle install && \
+      cd ${RSPEC_DIR} && \
       PATH=$PATH:~/bin bundle exec rspec
     fi
   - |
