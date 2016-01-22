@@ -12,6 +12,14 @@ env:
     - TF_DIR="terraform/bosh"
     - RSPEC_DIR="manifests/bosh-manifest"
     - RSPEC_DIR="manifests/cf-manifest"
+    - SHELLCHECK="true"
+
+addons:
+  apt:
+    sources:
+      - debian-sid
+    packages:
+      - shellcheck
 
 before_install:
   - mkdir ~/bin
@@ -40,4 +48,7 @@ script:
       bundle install && \
       PATH=$PATH:~/bin bundle exec rspec
     fi
-
+  - |
+    if [ "${SHELLCHECK}" ]; then
+      find . -name '*.sh' -print0 | xargs -0 shellcheck
+    fi
