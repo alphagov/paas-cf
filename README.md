@@ -87,38 +87,6 @@ echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
    ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
 
-#### SSH to deployed Concourse and microbosh
-
-In the `create-deployer` pipeline when creating the initial VPC,
-a keypair is generated and uploaded to AWS to be used by deployed instances.
-`bosh-init` needs this key to be able to create a SSH tunnel to
-forward some ports to the agent of the new VM.
-
-Both public and private keys are also uploaded to S3 to be consumed by
-other jobs in the pipelines as resources and/or by us for troubleshooting.
-
-To manually ssh to the deployed concourse, learn its IP via AWS console and
-download the `id_rsa` file from the s3 state bucket.
-
-For example:
-
-```
-./concourse/scripts/s3get.sh "${DEPLOY_ENV}-state" id_rsa && \
-chmod 400 id_rsa && \
-ssh-add $(pwd)/id_rsa
-
-ssh vcap@<concourse_ip>
-```
-
-If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
-
-microbosh is deployed to use the same SSH key, although is not publicly
-accessible. But you can use the concourse host as a jumpbox:
-
-```
-ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
-```
-
 ## BOSH and Cloud Foundry
 
 ### Microbosh deployment from concourse bootstrap
@@ -238,6 +206,38 @@ override the working branch for development and review:
 ```
 # Optionally pass the current branch for the git resources
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
+```
+
+#### SSH to deployed Concourse and microbosh
+
+In the `create-deployer` pipeline when creating the initial VPC,
+a keypair is generated and uploaded to AWS to be used by deployed instances.
+`bosh-init` needs this key to be able to create a SSH tunnel to
+forward some ports to the agent of the new VM.
+
+Both public and private keys are also uploaded to S3 to be consumed by
+other jobs in the pipelines as resources and/or by us for troubleshooting.
+
+To manually ssh to the deployed concourse, learn its IP via AWS console and
+download the `id_rsa` file from the s3 state bucket.
+
+For example:
+
+```
+./concourse/scripts/s3get.sh "${DEPLOY_ENV}-state" id_rsa && \
+chmod 400 id_rsa && \
+ssh-add $(pwd)/id_rsa
+
+ssh vcap@<concourse_ip>
+```
+
+If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
+
+microbosh is deployed to use the same SSH key, although is not publicly
+accessible. But you can use the concourse host as a jumpbox:
+
+```
+ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
 ```
 
 ## Concourse credentials
