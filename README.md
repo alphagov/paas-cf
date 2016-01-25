@@ -2,10 +2,13 @@
 
 # paas-cf
 
-This repository contains [Concourse](http://concourse.ci/) pipelines and
-related [Terraform](https://terraform.io/) and [BOSH](https://bosh.io/) manifests
-that allow provisioning of [CloudFoundy](https://www.cloudfoundry.org/) on AWS.
+This repository contains [Concourse][] pipelines and related [Terraform][]
+and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 
+[Concourse]: http://concourse.ci/
+[Terraform]: https://terraform.io/
+[BOSH]: https://bosh.io/
+[CloudFoundry]: https://www.cloudfoundry.org/
 
 ## Getting started
 
