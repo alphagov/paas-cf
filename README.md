@@ -21,23 +21,22 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
   its *environment*, e.g. BOSH and CloudFoundry. It should be kept running
   while that *environment* exists.
 
-## Usage
+## Bootstrap Concourse
 
-### Concourse deployer bootstrap
+### Prerequisites
 
-#### Installing vagrant and plugins
+You will need a recent version of [Vagrant installed][]. The exact version
+requirements are listed in the [`Vagrantfile`](vagrant/Vagrantfile).
 
-To install vagrant follow the instructions [in vagrant documentation](https://docs.vagrantup.com/v2/installation/index.html).
+[Vagrant installed]: https://docs.vagrantup.com/v2/installation/index.html
 
-Once installed, install the vagrant AWS plugin with:
+Install the AWS plugin for Vagrant:
 
 ```
 vagrant plugin install vagrant-aws
 ```
 
-#### AWS credentials
-
-You must provide AWS access keys as environment variables.
+You must provide AWS access keys as environment variables:
 
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
@@ -46,62 +45,38 @@ export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 
 The access keys are required to spin up the bootstrap concourse-lite instance only. From that point on they won't be required as all the pipelines will use [instance profiles](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) to make calls to AWS.
 
-#### Deployment of bootstrap concourse-lite
+### Deploy
 
-Execute vagrant provision script `./vagrant/deploy.sh` to initialise a vagrant
-AWS instance with concourse lite.
-
-This script will:
-
- * Create a running AWS concourse-lite instance with IAM role `bootstrap-concourse` (see [Vagrant bootstrap concourse-lite requirements](https://github.com/alphagov/paas-cf#vagrant-bootstrap-concourse-lite-requirements)).
- * Do additional post configuration of concourse, like add basic authentication
-   to concourse lite and mount garden container storage to instance ephemeral disk.
- * Configure a SSH tunnel to redirect the remote concourse port 8080 to http://localhost:8080
- * Download the `fly` command from concourse-lite in the current directory.
- * Login and create a new fly target called `<deploy-env>-bootstrap`.
- * Upload the `create-deployer` and `destroy-deployer` pipelines.
-
-After run, you will get:
-
- * Concourse URL to connect to, which will be http://localhost:8080
- * Concourse credentials.
-
-To execute it:
+Run the following script with the name of your environment:
 
 ```
 ./vagrant/deploy.sh <deploy_env>
 ```
 
-> The concourse-lite AWS instance will be running in us-east-1, as the official
-> concourse-lite AMI image is only located there.
->
-> The instance has some default hardcoded settings: security groups, VPC,
-> IAM role. See below for more details.
+An SSH tunnel is created so that you can access it securely. The deploy
+script can be re-run to update the pipelines or setup the tunnel again.
 
+When complete it will output a URL and BasicAuth credentials that you can
+use to login.
 
-#### Pipelines: create-deployer and destroy-deployer
+## Deployer Concourse
 
-These pipelines run on the bootstrap concourse-lite and will deploy the
-concourse instance (deployer) for the environment.
+### Prerequisites
 
-Both pipelines are setup automatically by `./vagrant/deploy.sh`
+You will need a working [Bootstrap Concourse](#bootstrap-concourse).
 
-The `create-deployer` pipeline will:
+### Deploy
 
-- Use terraform to create a VPC, subnet and security group inside AWS.
-- Use terraform to setup all the requirements for concourse.
-- bosh-init is used to deploy a full-blown Concourse instance inside AWS.
+Run the `create-deployer` pipeline from your *Bootstrap Concourse*.
 
-The `destroy-deployer` pipeline will destroy the previous created objects.
+When complete you should:
 
-#### Login to deployed Concourse
+1. Access the UI from a browser with the same credentials as your
+  *Bootstrap Concourse*.
 
-Once the `create-deployer` pipeline finished successful, you can:
+  - `https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk/`
 
-* Point the browser to `https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk/`
-* Login with username `admin` and password as `$CONCOURSE_ATC_PASSWORD` above
-
-You can add a new target in to use the `fly` command with:
+1. Add a new target to the `fly` CLI utility:
 
 ```
 DEPLOY_ENV=<deploy-env>
@@ -143,6 +118,8 @@ accessible. But you can use the concourse host as a jumpbox:
 ```
 ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
 ```
+
+## BOSH and Cloud Foundry
 
 ### Microbosh deployment from concourse bootstrap
 
