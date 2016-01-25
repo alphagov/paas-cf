@@ -10,14 +10,6 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 [BOSH]: https://bosh.io/
 [CloudFoundry]: https://www.cloudfoundry.org/
 
-## Getting started
-
-You need the following prerequisites before you will be able to deploy first pipeline.
-
-* [Vagrant](https://www.vagrantup.com/)
-* [AWS Vagrant plugin](https://github.com/mitchellh/vagrant-aws)
-* AWS Access and credentials
-
 ## Usage
 
 ### Concourse deployer bootstrap
