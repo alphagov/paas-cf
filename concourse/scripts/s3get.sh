@@ -34,6 +34,7 @@ sign() {
 date=$(date +"%a, %d %b %Y %T %z")
 string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
 signature=$(sign "${string}")
+# shellcheck disable=SC2086
 curl -o "${file}" -s -f \
   --write-out "Response code: %{http_code}\nBytes: %{size_download}\n" \
   -H "Host: ${host}" \

@@ -39,6 +39,7 @@ put() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="PUT\n\n${content_type}\n${date}\n${acl}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
+  # shellcheck disable=SC2086
   curl -s -X PUT -T "${init_file}" \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
@@ -54,6 +55,7 @@ get() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
+  # shellcheck disable=SC2086
   curl -s \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
