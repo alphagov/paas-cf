@@ -10,6 +10,17 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 [BOSH]: https://bosh.io/
 [CloudFoundry]: https://www.cloudfoundry.org/
 
+## Glossary
+
+- Environment: a single Cloud Foundry installation and its supporting
+  infrastructure.
+- Bootstrap Concourse: is responsible for creating or destroying a *Deployer
+  Concourse* to an *environment*. You don't need to keep this once you
+  have a *Deployer Concourse* running.
+- Deployer Concourse: is responsible for deploying everything else within
+  its *environment*, e.g. BOSH and CloudFoundry. It should be kept running
+  while that *environment* exists.
+
 ## Usage
 
 ### Concourse deployer bootstrap
