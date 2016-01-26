@@ -122,26 +122,11 @@ To setup the pipeline `create-microbosh`:
 ./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
 ```
 
-This pipeline will:
-
- * Use terraform to create the required resources for microbosh.
- * Render `manifests/bosh-manifest` using spruce.
- * Generate a set of random passwords for bosh init.
- * Deploy microbosh using `bosh-init`
-
-
 To setup the pipeline `destroy-microbosh`:
 
 ```
 ./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
 ```
-
-This pipeline will:
-
- * Get the resources from the deploy microbosh pipeline.
- * Run `bosh-init` to delete the deployment, updating the bosh init state
-   with an empty file.
- * Destroy the resources created by terraform.
 
 ### Deploy and destroy cloudfoundry with microbosh
 ```
@@ -151,15 +136,6 @@ This pipeline will:
 You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
 STEMCELL_VERSION (defaults to 3104) as environment variables.
 
-This pipeline will:
-
- * Get VPC, microbosh and concourse state
- * use this state to run terraform and create required aws resources for cloud
-   foundry
- * build the cloudfoundry manifests
- * use these manifests and microbosh instance to deploy cloudfoundry
- * Setup the cloud controller IAM role to `cf-cloudcontroller`. It must be allowed to access the S3 buckets `*-cf-resources`, `*-cf-packages`, `*-cf-droplets`, `*-cf-buildpacks`.
-
 An additional pipeline `autodelete-cloudfoundry` is setup to automatically
 delete the environment at night.
 
@@ -168,11 +144,6 @@ To setup destroy pipeline you have to execute:
  ```
  ./concourse/scripts/destroy-cloudfoundry.sh <environment_name>
 ```
-
-This pipeline will
-
- * Connect to microbosh and delete CF deployment
- * Use Terraform to destroy all the resources created by `deploy-cloudfoundry`
 
 # Additional notes
 
