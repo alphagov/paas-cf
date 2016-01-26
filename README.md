@@ -2,36 +2,41 @@
 
 # paas-cf
 
-This repository contains [Concourse](http://concourse.ci/) pipelines and
-related [Terraform](https://terraform.io/) and [BOSH](https://bosh.io/) manifests
-that allow provisioning of [CloudFoundy](https://www.cloudfoundry.org/) on AWS.
+This repository contains [Concourse][] pipelines and related [Terraform][]
+and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 
+[Concourse]: http://concourse.ci/
+[Terraform]: https://terraform.io/
+[BOSH]: https://bosh.io/
+[CloudFoundry]: https://www.cloudfoundry.org/
 
-## Getting started
+## Glossary
 
-You need the following prerequisites before you will be able to deploy first pipeline.
+- Environment: a single Cloud Foundry installation and its supporting
+  infrastructure.
+- Bootstrap Concourse: is responsible for creating or destroying a *Deployer
+  Concourse* to an *environment*. You don't need to keep this once you
+  have a *Deployer Concourse* running.
+- Deployer Concourse: is responsible for deploying everything else within
+  its *environment*, e.g. BOSH and CloudFoundry. It should be kept running
+  while that *environment* exists.
 
-* [Vagrant](https://www.vagrantup.com/)
-* [AWS Vagrant plugin](https://github.com/mitchellh/vagrant-aws)
-* AWS Access and credentials
+## Bootstrap Concourse
 
-## Usage
+### Prerequisites
 
-### Concourse deployer bootstrap
+You will need a recent version of [Vagrant installed][]. The exact version
+requirements are listed in the [`Vagrantfile`](vagrant/Vagrantfile).
 
-#### Installing vagrant and plugins
+[Vagrant installed]: https://docs.vagrantup.com/v2/installation/index.html
 
-To install vagrant follow the instructions [in vagrant documentation](https://docs.vagrantup.com/v2/installation/index.html).
-
-Once installed, install the vagrant AWS plugin with:
+Install the AWS plugin for Vagrant:
 
 ```
 vagrant plugin install vagrant-aws
 ```
 
-#### AWS credentials
-
-You must provide AWS access keys as environment variables.
+You must provide AWS access keys as environment variables:
 
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
@@ -40,62 +45,38 @@ export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 
 The access keys are required to spin up the bootstrap concourse-lite instance only. From that point on they won't be required as all the pipelines will use [instance profiles](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) to make calls to AWS.
 
-#### Deployment of bootstrap concourse-lite
+### Deploy
 
-Execute vagrant provision script `./vagrant/deploy.sh` to initialise a vagrant
-AWS instance with concourse lite.
-
-This script will:
-
- * Create a running AWS concourse-lite instance with IAM role `bootstrap-concourse` (see [Vagrant bootstrap concourse-lite requirements](https://github.com/alphagov/paas-cf#vagrant-bootstrap-concourse-lite-requirements)).
- * Do additional post configuration of concourse, like add basic authentication
-   to concourse lite and mount garden container storage to instance ephemeral disk.
- * Configure a SSH tunnel to redirect the remote concourse port 8080 to http://localhost:8080
- * Download the `fly` command from concourse-lite in the current directory.
- * Login and create a new fly target called `<deploy-env>-bootstrap`.
- * Upload the `create-deployer` and `destroy-deployer` pipelines.
-
-After run, you will get:
-
- * Concourse URL to connect to, which will be http://localhost:8080
- * Concourse credentials.
-
-To execute it:
+Run the following script with the name of your environment:
 
 ```
 ./vagrant/deploy.sh <deploy_env>
 ```
 
-> The concourse-lite AWS instance will be running in us-east-1, as the official
-> concourse-lite AMI image is only located there.
->
-> The instance has some default hardcoded settings: security groups, VPC,
-> IAM role. See below for more details.
+An SSH tunnel is created so that you can access it securely. The deploy
+script can be re-run to update the pipelines or setup the tunnel again.
 
+When complete it will output a URL and BasicAuth credentials that you can
+use to login.
 
-#### Pipelines: create-deployer and destroy-deployer
+## Deployer Concourse
 
-These pipelines run on the bootstrap concourse-lite and will deploy the
-concourse instance (deployer) for the environment.
+### Prerequisites
 
-Both pipelines are setup automatically by `./vagrant/deploy.sh`
+You will need a working [Bootstrap Concourse](#bootstrap-concourse).
 
-The `create-deployer` pipeline will:
+### Deploy
 
-- Use terraform to create a VPC, subnet and security group inside AWS.
-- Use terraform to setup all the requirements for concourse.
-- bosh-init is used to deploy a full-blown Concourse instance inside AWS.
+Run the `create-deployer` pipeline from your *Bootstrap Concourse*.
 
-The `destroy-deployer` pipeline will destroy the previous created objects.
+When complete you should:
 
-#### Login to deployed Concourse
+1. Access the UI from a browser with the same credentials as your
+  *Bootstrap Concourse*.
 
-Once the `create-deployer` pipeline finished successful, you can:
+  - `https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk/`
 
-* Point the browser to `https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk/`
-* Login with username `admin` and password as `$CONCOURSE_ATC_PASSWORD` above
-
-You can add a new target in to use the `fly` command with:
+1. Add a new target to the `fly` CLI utility:
 
 ```
 DEPLOY_ENV=<deploy-env>
@@ -106,37 +87,7 @@ echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
    ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
 
-#### SSH to deployed Concourse and microbosh
-
-In the `create-deployer` pipeline when creating the initial VPC,
-a keypair is generated and uploaded to AWS to be used by deployed instances.
-`bosh-init` needs this key to be able to create a SSH tunnel to
-forward some ports to the agent of the new VM.
-
-Both public and private keys are also uploaded to S3 to be consumed by
-other jobs in the pipelines as resources and/or by us for troubleshooting.
-
-To manually ssh to the deployed concourse, learn its IP via AWS console and
-download the `id_rsa` file from the s3 state bucket.
-
-For example:
-
-```
-./concourse/scripts/s3get.sh "${DEPLOY_ENV}-state" id_rsa && \
-chmod 400 id_rsa && \
-ssh-add $(pwd)/id_rsa
-
-ssh vcap@<concourse_ip>
-```
-
-If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
-
-microbosh is deployed to use the same SSH key, although is not publicly
-accessible. But you can use the concourse host as a jumpbox:
-
-```
-ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
-```
+## BOSH and Cloud Foundry
 
 ### Microbosh deployment from concourse bootstrap
 
@@ -216,20 +167,6 @@ This pipeline will
 
 # Additional notes
 
-## Vagrant bootstrap concourse-lite requirements
-
-In order to use vagrant concourse-lite on AWS, there are requirements
-on the AWS account:
-
-* Existence of a default VPC and subnet.
-* A default security group, which restricts access to the office only
-  to port 22 (ssh).
-* A IAM role to be assigned to the VM, which allows:
-  * Provision EC2 resources to setup the initial VPC and concourse.
-  * Access to S3 buckets for state storage (usually named `*-state`)
-
-All these objects are currently hardcoded in `vagrant/Vagrantfile`
-
 ## SSH tunnel to vagrant concourse-lite and share access to instance
 
 Instead of allowing a non secure HTTP connection via the internet to the
@@ -269,6 +206,38 @@ override the working branch for development and review:
 ```
 # Optionally pass the current branch for the git resources
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
+```
+
+#### SSH to deployed Concourse and microbosh
+
+In the `create-deployer` pipeline when creating the initial VPC,
+a keypair is generated and uploaded to AWS to be used by deployed instances.
+`bosh-init` needs this key to be able to create a SSH tunnel to
+forward some ports to the agent of the new VM.
+
+Both public and private keys are also uploaded to S3 to be consumed by
+other jobs in the pipelines as resources and/or by us for troubleshooting.
+
+To manually ssh to the deployed concourse, learn its IP via AWS console and
+download the `id_rsa` file from the s3 state bucket.
+
+For example:
+
+```
+./concourse/scripts/s3get.sh "${DEPLOY_ENV}-state" id_rsa && \
+chmod 400 id_rsa && \
+ssh-add $(pwd)/id_rsa
+
+ssh vcap@<concourse_ip>
+```
+
+If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
+
+microbosh is deployed to use the same SSH key, although is not publicly
+accessible. But you can use the concourse host as a jumpbox:
+
+```
+ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
 ```
 
 ## Concourse credentials
