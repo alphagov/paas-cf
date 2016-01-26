@@ -59,6 +59,14 @@ script can be re-run to update the pipelines or setup the tunnel again.
 When complete it will output a URL and BasicAuth credentials that you can
 use to login.
 
+### Destroy
+
+Run the following script, with the name of your existing environment:
+
+```
+./vagrant/destroy.sh <deploy_env>
+```
+
 ## Deployer Concourse
 
 ### Prerequisites
@@ -86,6 +94,10 @@ $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
    ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
 ```
+
+### Destroy
+
+Run the `destroy-deployer` pipeline from your *Bootstrap Concourse*.
 
 ## BOSH and Cloud Foundry
 
