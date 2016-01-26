@@ -220,7 +220,7 @@ override the working branch for development and review:
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
 ```
 
-#### SSH to deployed Concourse and microbosh
+## SSH to deployed Concourse and microbosh
 
 In the `create-deployer` pipeline when creating the initial VPC,
 a keypair is generated and uploaded to AWS to be used by deployed instances.
