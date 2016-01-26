@@ -31,7 +31,7 @@ jobs:
     serial_groups: [ destroy ]
     serial: true
     plan:
-      - task: delete-deplyment
+      - task: delete-deployment
         config:
           image: docker:///concourse/bosh-deployment-resource
           run:
