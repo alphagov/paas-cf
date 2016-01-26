@@ -10,18 +10,26 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 [BOSH]: https://bosh.io/
 [CloudFoundry]: https://www.cloudfoundry.org/
 
-## Glossary
+## Overview
 
-- Environment: a single Cloud Foundry installation and its supporting
-  infrastructure.
-- Bootstrap Concourse: is responsible for creating or destroying a *Deployer
-  Concourse* to an *environment*. You don't need to keep this once you
-  have a *Deployer Concourse* running.
-- Deployer Concourse: is responsible for deploying everything else within
-  its *environment*, e.g. BOSH and CloudFoundry. It should be kept running
-  while that *environment* exists.
+The following components needs to be deployed in order. They should be
+destroyed in reverse order so as not to leave any orphaned resources:
+
+1. [Bootstrap Concourse](#bootstrap-concourse)
+1. [Deployer Concourse](#deployer-concourse)
+1. [MicroBOSH](#microbosh)
+1. [CloudFoundry](#cloudfoundry)
+
+The word *environment* is used herein to describe a single Cloud Foundry
+installation and its supporting infrastructure.
 
 ## Bootstrap Concourse
+
+This runs outside an environment and is responsible for creating or
+destroying a [Deployer Concourse](#deployer-concourse) in an environment.
+You don't need to keep this running once you have the Deployer Concourse,
+and you can create it again when the Deployer Concourse needs to be modified
+or destroyed.
 
 ### Prerequisites
 
@@ -69,6 +77,11 @@ Run the following script, with the name of your existing environment:
 
 ## Deployer Concourse
 
+This runs within an environment and is responsible for deploying everything
+else to that environment, such as [MicroBOSH](#microbosh) and
+[CloudFoundry](#cloudfoundry). It should be kept running while that
+environment exists.
+
 ### Prerequisites
 
 You will need a working [Bootstrap Concourse](#bootstrap-concourse).
@@ -100,6 +113,9 @@ echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
 Run the `destroy-deployer` pipeline from your *Bootstrap Concourse*.
 
 ## MicroBOSH
+
+MicroBOSH is responsible for deploying [CloudFoundry](#cloudfoundry) and
+supporting services for the platform.
 
 ### Prerequisites
 
