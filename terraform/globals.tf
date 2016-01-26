@@ -57,13 +57,13 @@ variable "vagrant_cidr" {
 }
 
 variable "dns_zone_id" {
-  description = "Amazon Route53 DNS zone identifier"
-  default     = "Z3SI0PSH6KKVH4"
+  description = "Amazon Route53 DNS zone identifier. Different per account."
+  default     = "dummy_default"
 }
 
 variable "dns_zone_name" {
-  description = "Amazon Route53 DNS zone name"
-  default     = "cf.paas.alphagov.co.uk"
+  description = "Amazon Route53 DNS zone name. Differs per account."
+  default     = "dummy_default"
 }
 
 variable "microbosh_static_private_ip" {
@@ -74,4 +74,9 @@ variable "microbosh_static_private_ip" {
 variable "web_access_cidrs" {
   description = "CSV of CIDR addresses for which we allow web access"
   default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
+}
+
+variable "concourse_elb_cert_arn" {
+  description = "Concourse ELB certificate ARN. Specific per account."
+  default     = "dummy_default"
 }
