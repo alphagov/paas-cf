@@ -145,9 +145,6 @@ This pipeline will:
 
 ### Deploy and destroy cloudfoundry with microbosh
 ```
-# Optionally pass the current branch for the git resources
-export BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
 ./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
 ```
 
