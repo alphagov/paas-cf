@@ -99,22 +99,13 @@ echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
 
 Run the `destroy-deployer` pipeline from your *Bootstrap Concourse*.
 
-## BOSH and Cloud Foundry
+## MicroBOSH
 
-### Microbosh deployment from concourse bootstrap
+### Prerequisites
 
-These pipelines will deploy/destroy a microbosh using bosh-init. It will use the IAM profile `deployer-concourse` that was given to the Concourse instance.
+You will need a working [Deployer Concourse](#deployer-concourse).
 
-#### Prerequisites
-
-To run the following steps you must have these prerequisites:
-
- * The `create-deployer` pipeline has been run from a bootstrap concourse.
- * A VPC is setup and there is a bucket for the state files.
- * The `fly` command is installed and available
- * A running concourse configured in the CLI, with target name `$DEPLOY_ENV`
-
-#### Pipelines: create-microbosh and destroy-microbosh
+### Deploy
 
 To setup the pipeline `create-microbosh`:
 
@@ -122,13 +113,22 @@ To setup the pipeline `create-microbosh`:
 ./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
 ```
 
+### Destroy
+
 To setup the pipeline `destroy-microbosh`:
 
 ```
 ./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
 ```
 
-### Deploy and destroy cloudfoundry with microbosh
+## CloudFoundry
+
+### Prerequisites
+
+You will need a working [MicroBOSH](#microbosh).
+
+### Deploy
+
 ```
 ./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
 ```
@@ -138,6 +138,8 @@ STEMCELL_VERSION (defaults to 3104) as environment variables.
 
 An additional pipeline `autodelete-cloudfoundry` is setup to automatically
 delete the environment at night.
+
+### Destroy
 
 To setup destroy pipeline you have to execute:
 
