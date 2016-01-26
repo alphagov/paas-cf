@@ -5,10 +5,10 @@ init_file=$3
 set -e
 
 # Attempt to use instance profile if keys not configured
-if [ -z "${AWS_SECRET_ACCESS_KEY}" ] && [ -z ${AWS_ACCESS_KEY_ID} ] ; then
+if [ -z "${AWS_SECRET_ACCESS_KEY}" ] && [ -z "${AWS_ACCESS_KEY_ID}" ] ; then
   meta_url="http://169.254.169.254/latest/meta-data/iam/security-credentials/"
-  profile_name=$(curl -s ${meta_url})
-  instance_profile=$(curl -s ${meta_url}/${profile_name})
+  profile_name=$(curl -s "${meta_url}")
+  instance_profile=$(curl -s "${meta_url}/${profile_name}")
 
       AWS_ACCESS_KEY_ID=$(echo "${instance_profile}" | awk -F\" '$2 == "AccessKeyId"     { print $4 }')
      AWS_SECURITY_TOKEN=$(echo "${instance_profile}" | awk -F\" '$2 == "Token"           { print $4 }')
@@ -31,6 +31,7 @@ host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
+  # shellcheck disable=SC2059
   printf "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
 }
 
@@ -38,7 +39,8 @@ put() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="PUT\n\n${content_type}\n${date}\n${acl}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
-  curl -s -X PUT -T ${init_file} \
+  # shellcheck disable=SC2086
+  curl -s -X PUT -T "${init_file}" \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
@@ -53,25 +55,26 @@ get() {
   date=$(date +"%a, %d %b %Y %T %z")
   string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
   signature=$(sign "${string}")
+  # shellcheck disable=SC2086
   curl -s \
     -H "Host: ${bucket}.s3.amazonaws.com" \
     -H "Date: ${date}" \
     -H "Content-Type: ${content_type}" \
     ${AWS_SECURITY_TOKEN:+-H "x-amz-security-token: ${AWS_SECURITY_TOKEN}"} \
     -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}" \
-    -o ${file} \
+    -o "${file}" \
     --dump-header headers.txt \
     "https://${host}/${file}"
 }
 
 get
 if grep -q "200 OK" headers.txt; then
-  echo $file already exists in $bucket bucket.
-elif  grep -q "<Code>NoSuchKey</Code>" ${file}; then
-  echo ${file} cannot be found in ${bucket} bucket. Uploading init file ${init_file}.
+  echo "$file already exists in $bucket bucket."
+elif  grep -q "<Code>NoSuchKey</Code>" "${file}"; then
+  echo "${file} cannot be found in ${bucket} bucket. Uploading init file ${init_file}."
   put
   get
 else
-  echo Unexpected response: $(cat ${file} headers.txt)
+  echo "Unexpected response: $(cat "${file}" headers.txt)"
   exit 1
 fi

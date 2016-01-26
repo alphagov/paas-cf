@@ -1,37 +1,30 @@
 sudo: false
 rvm:
-  - 2.2.2
+  - 2.2.3
 env:
   global:
     - TF_VERSION="0.6.8"
     - SPRUCE_VERSION="0.13.0"
-  matrix:
-    - TF_DIR="terraform/bucket"
-    - TF_DIR="terraform/vpc"
-    - TF_DIR="terraform/concourse"
-    - TF_DIR="terraform/bosh"
-    - RSPEC_DIR="manifests/bosh-manifest"
-    - RSPEC_DIR="manifests/cf-manifest"
+
+addons:
+  apt:
+    sources:
+      - debian-sid
+    packages:
+      - shellcheck
 
 before_install:
   - mkdir ~/bin
-  - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-  - unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
-  - rm terraform_${TF_VERSION}_linux_amd64.zip
-  - wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-  - tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-  - mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
-  - rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
+  - export PATH=~/bin:$PATH
+  - |
+    wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+    unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
+    rm terraform_${TF_VERSION}_linux_amd64.zip
+  - |
+    wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
+    tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
+    mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
+    rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
 
 script:
-  - |
-    if [ "${TF_DIR}" ]; then
-      PATH=$PATH:~/bin terraform graph ${TF_DIR}
-    fi
-  - |
-    if [ "${RSPEC_DIR}" ]; then
-      cd ${RSPEC_DIR} && \
-      bundle install && \
-      PATH=$PATH:~/bin bundle exec rspec
-    fi
-
+  - make test

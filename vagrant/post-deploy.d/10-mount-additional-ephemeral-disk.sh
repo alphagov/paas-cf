@@ -8,8 +8,8 @@ if ! mount | grep -q $gardenDir; then
     umount /mnt
 
     # Unmount all aufs mounts
-    mounts=$(cat /proc/mounts | grep /var/vcap/data/garden/aufs_graph/aufs/mnt | awk '{print $2}')
-    [[ -n "${mounts}" ]] && echo ${mounts} | xargs umount
+    mounts=$(grep /var/vcap/data/garden/aufs_graph/aufs/mnt /proc/mounts | awk '{print $2}')
+    [[ -n "${mounts}" ]] && echo "${mounts}" | xargs umount
 
     # Only lazy unmount works here
     umount -l /var/vcap/data/garden/aufs_graph/aufs

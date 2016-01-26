@@ -33,8 +33,6 @@ export FLY_TARGET=${FLY_TARGET:-$env}
 FLY_CMD=${FLY_CMD:-fly}
 
 echo "Concourse API target ${FLY_TARGET}"
-echo "AWS Region ${aws_region}"
-
 echo "Deployment ${env}"
 echo "Pipeline ${pipeline}"
 echo "Config file ${config}"

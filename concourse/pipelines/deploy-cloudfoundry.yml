@@ -210,7 +210,7 @@ jobs:
           platform: linux
           image: docker:///governmentpaas/spruce
           params:
-            TERRAFORM_OUTPUTS: "extract-terraform-outputs/*.yml"
+            TERRAFORM_OUTPUT_DIR: "extract-terraform-outputs"
             MANIFESTS_DIR: "./paas-cf/manifests/cf-manifest"
             SECRETS: "cf-secrets/cf-secrets.yml"
           inputs:

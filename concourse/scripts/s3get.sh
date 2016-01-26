@@ -27,12 +27,14 @@ host=${bucket}.s3-${region}.amazonaws.com
 
 sign() {
   string=$1
+  # shellcheck disable=SC2059
   printf "${string}" | openssl sha1 -hmac "${AWS_SECRET_ACCESS_KEY}" -binary | base64
 }
 
 date=$(date +"%a, %d %b %Y %T %z")
 string="GET\n\n${content_type}\n${date}\n${AWS_SECURITY_TOKEN:+x-amz-security-token:$AWS_SECURITY_TOKEN\n}/${bucket}${aws_path}${file}"
 signature=$(sign "${string}")
+# shellcheck disable=SC2086
 curl -o "${file}" -s -f \
   --write-out "Response code: %{http_code}\nBytes: %{size_download}\n" \
   -H "Host: ${host}" \

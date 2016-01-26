@@ -17,7 +17,7 @@ module ManifestHelpers
   def load_default_manifest
     output, error, status = Open3.capture3(
       {
-        "TERRAFORM_OUTPUTS" => File.expand_path("../../fixtures/terraform-outputs.yml", __FILE__),
+        "TERRAFORM_OUTPUT_DIR" => File.expand_path("../../fixtures/terraform", __FILE__),
         "SECRETS"           => File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
         "SSL_CERTS"         => File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
       },
@@ -31,7 +31,7 @@ module ManifestHelpers
   end
 
   def load_terraform_fixture
-    data = YAML.load_file(File.expand_path("../../fixtures/terraform-outputs.yml", __FILE__))
+    data = YAML.load_file(File.expand_path("../../fixtures/terraform/terraform-outputs.yml", __FILE__))
     deep_freeze(data)
   end
 
