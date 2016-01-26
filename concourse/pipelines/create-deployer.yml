@@ -268,8 +268,11 @@ jobs:
             cp generate-concourse-cert/concourse.crt generate-concourse-cert/concourse.key .
             . vpc-terraform-outputs/tfvars.sh
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
-            terraform apply ${terraform_params} -state=concourse-terraform-state/concourse.tfstate \
-              -state-out=concourse.tfstate paas-cf/terraform/concourse
+            terraform apply ${terraform_params} \
+              -var-file=paas-cf/terraform/{{account}}.tfvars \
+              -state=concourse-terraform-state/concourse.tfstate \
+              -state-out=concourse.tfstate \
+              paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state
         params:
@@ -480,7 +483,7 @@ jobs:
             . vpc-terraform-outputs/tfvars.sh
             terraform apply -target=aws_security_group.concourse \
               -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate \
-              paas-cf/terraform/concourse
+              -var-file=paas-cf/terraform/{{account}}.tfvars paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state
         params:

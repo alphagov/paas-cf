@@ -129,7 +129,11 @@ jobs:
           - |
             . vpc-terraform-outputs/tfvars.sh
             touch concourse.crt concourse.key
-            terraform destroy -force -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate paas-cf/terraform/concourse
+            terraform destroy -force \
+              -var-file=paas-cf/terraform/{{account}}.tfvars \
+              -state=concourse-terraform-state/concourse.tfstate \
+              -state-out=concourse.tfstate \
+              paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state
         params:

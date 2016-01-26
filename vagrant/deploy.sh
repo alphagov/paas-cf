@@ -21,6 +21,7 @@ VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/pub
 export VAGRANT_IP
 export CONCOURSE_URL=http://localhost:8080
 export FLY_TARGET=${DEPLOY_ENV}-bootstrap
+export ACCOUNT=${ACCOUNT:-development}
 
 # Try to start a SSH tunnel
 echo "Setting up SSH tunnel to concourse..."
