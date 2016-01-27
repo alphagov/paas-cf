@@ -162,8 +162,8 @@ by default.
 
 To setup destroy pipeline you have to execute:
 
- ```
- ./concourse/scripts/destroy-cloudfoundry.sh <environment_name>
+```
+./concourse/scripts/destroy-cloudfoundry.sh $DEPLOY_ENV
 ```
 
 # Additional notes
