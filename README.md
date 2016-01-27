@@ -131,21 +131,18 @@ supporting services for the platform.
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-### Deploy
-
-Run the `create-microbosh` pipeline which can be set up by running:
-
+Deploy the pipeline configurations with:
 ```
 ./concourse/scripts/pipelines-microbosh.sh $DEPLOY_ENV
 ```
 
+### Deploy
+
+Run the `create-microbosh` pipeline.
+
 ### Destroy
 
-Run the `destroy-microbosh` pipeline which can be set up by running:
-
-```
-./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
-```
+Run the `destroy-microbosh` pipeline.
 
 ## CloudFoundry
 
