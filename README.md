@@ -136,7 +136,7 @@ You will need a working [Deployer Concourse](#deployer-concourse).
 Run the `create-microbosh` pipeline which can be set up by running:
 
 ```
-./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
+./concourse/scripts/pipelines-microbosh.sh $DEPLOY_ENV
 ```
 
 ### Destroy
@@ -158,7 +158,7 @@ You will need a working [MicroBOSH](#microbosh).
 Run the `deploy-cloudfoundry` pipeline which can be set up by running:
 
 ```
-./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
+./concourse/scripts/pipelines-cloudfoundry.sh $DEPLOY_ENV
 ```
 
 You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
