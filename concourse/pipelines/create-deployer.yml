@@ -65,6 +65,13 @@ resources:
       versioned_file: id_rsa
       region_name: {{aws_region}}
 
+  - name: concourse-cert
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: concourse-cert.tar.gz
+      region_name: {{aws_region}}
+
 jobs:
   - name: init-bucket
     serial: true
@@ -194,6 +201,7 @@ jobs:
     - get: vpc-terraform-state
       passed: [vpc]
     - get: concourse-terraform-state
+    - get: concourse-cert
 
     - task: vpc-terraform-outputs-to-sh
       config:
@@ -215,6 +223,30 @@ jobs:
             ls -l vpc-terraform-outputs/tfvars.sh
             cat vpc-terraform-outputs/tfvars.sh
 
+    - task: generate-concourse-cert
+      config:
+        image: docker:///governmentpaas/curl-ssl
+        inputs:
+        - name: concourse-cert
+        - name: vpc-terraform-outputs
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            tar xzvf concourse-cert/concourse-cert.tar.gz
+            if [ -f concourse.crt ] && [ -f concourse.key ]; then
+              echo Certificate and private key already created, nothing to do
+              cp concourse-cert/concourse-cert.tar.gz .
+              exit 0
+            fi
+            . vpc-terraform-outputs/tfvars.sh
+            openssl req -x509 -newkey rsa:2048 -keyout concourse.key \
+              -out concourse.crt -days 365 -nodes -subj \
+              "/C=UK/ST=London/L=London/O=GDS/CN={{deploy_env}}-concourse.${TF_VAR_dns_zone_name}"
+            tar czvf concourse-cert.tar.gz concourse.crt concourse.key
+
     - task: terraform-apply
       config:
         image: docker:///governmentpaas/docker-terraform
@@ -222,6 +254,7 @@ jobs:
         - name: paas-cf
         - name: vpc-terraform-outputs
         - name: concourse-terraform-state
+        - name: generate-concourse-cert
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -232,13 +265,19 @@ jobs:
           - -e
           - -c
           - |
+            cp generate-concourse-cert/concourse.crt generate-concourse-cert/concourse.key .
             . vpc-terraform-outputs/tfvars.sh
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
-            terraform apply ${terraform_params} -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate paas-cf/terraform/concourse
+            terraform apply ${terraform_params} -state=concourse-terraform-state/concourse.tfstate \
+              -state-out=concourse.tfstate paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state
         params:
           file: terraform-apply/concourse.tfstate
+
+    - put: concourse-cert
+      params:
+        file: generate-concourse-cert/concourse-cert.tar.gz
 
   - name: concourse-prepare-deploy
     serial: true
