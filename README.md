@@ -61,6 +61,9 @@ Run the following script with the name of your environment:
 ./vagrant/deploy.sh <deploy_env>
 ```
 
+NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
+by default.
+
 An SSH tunnel is created so that you can access it securely. The deploy
 script can be re-run to update the pipelines or setup the tunnel again.
 
@@ -152,8 +155,8 @@ You will need a working [MicroBOSH](#microbosh).
 You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
 STEMCELL_VERSION (defaults to 3104) as environment variables.
 
-An additional pipeline `autodelete-cloudfoundry` is setup to automatically
-delete the environment at night.
+NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
+by default.
 
 ### Destroy
 
