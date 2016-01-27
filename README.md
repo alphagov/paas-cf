@@ -150,10 +150,7 @@ Run the `destroy-microbosh` pipeline.
 
 You will need a working [MicroBOSH](#microbosh).
 
-### Deploy
-
-Run the `deploy-cloudfoundry` pipeline which can be set up by running:
-
+Deploy the pipeline configurations with:
 ```
 ./concourse/scripts/pipelines-cloudfoundry.sh $DEPLOY_ENV
 ```
@@ -161,16 +158,16 @@ Run the `deploy-cloudfoundry` pipeline which can be set up by running:
 You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
 STEMCELL_VERSION (defaults to 3104) as environment variables.
 
+### Deploy
+
+Run the `deploy-cloudfoundry` pipeline.
+
 NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
 by default.
 
 ### Destroy
 
-Run the `destroy-cloudfoundry` pipeline which can be set up by running:
-
-```
-./concourse/scripts/destroy-cloudfoundry.sh $DEPLOY_ENV
-```
+Run the `destroy-cloudfoundry` pipeline.
 
 # Additional notes
 
