@@ -15,7 +15,6 @@ generate_vars_file() {
 ---
 deploy_env: ${env}
 state_bucket: ${env}-state
-pipeline_name: ${pipeline}
 pipeline_trigger_file: ${pipeline}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
