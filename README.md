@@ -198,17 +198,17 @@ echo "ssh-rsa AAAA... user" | \
    vagrant ssh -- tee -a .ssh/authorized_keys
 ```
 
-A new tunnel can be created manually running:
-
-```
-ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
-```
-
-To learn the public IP of your *Bootstrap Concourse*, simply run:
+To learn the public IP of your *Bootstrap Concourse* run:
 
 ```
 cd vagrant
 vagrant ssh-config
+```
+
+A new tunnel can be created manually running:
+
+```
+ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
 ```
 
 ## SSH to Deployer Concourse and MicroBOSH
