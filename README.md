@@ -168,6 +168,16 @@ To setup destroy pipeline you have to execute:
 
 # Additional notes
 
+## Optionally override the branch used by pipelines
+
+All of the pipeline scripts honour a `BRANCH` environment variable which
+allows you to override the git branch used within the pipeline. This is
+useful for development and code review:
+
+```
+BRANCH=$(git rev-parse --abbrev-ref HEAD) <pipeline_script>.sh
+```
+
 ## SSH to Bootstrap Concourse and sharing
 
 Instead of allowing a non secure HTTP connection via the internet to the
@@ -197,16 +207,6 @@ To learn the public IP of your *Bootstrap Concourse*, simply run:
 ```
 cd vagrant
 vagrant ssh-config
-```
-
-## Optionally override the branch used by pipelines
-
-The pipeline setup script will accept a variable `BRANCH`, which allows
-override the working branch for development and review:
-
-```
-# Optionally pass the current branch for the git resources
-export BRANCH=$(git rev-parse --abbrev-ref HEAD)
 ```
 
 ## SSH to Deployer Concourse and MicroBOSH
