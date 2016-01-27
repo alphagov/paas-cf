@@ -126,7 +126,7 @@ You will need a working [Deployer Concourse](#deployer-concourse).
 
 ### Deploy
 
-To setup the pipeline `create-microbosh`:
+Run the `create-microbosh` pipeline which can be setup by running:
 
 ```
 ./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
@@ -134,7 +134,7 @@ To setup the pipeline `create-microbosh`:
 
 ### Destroy
 
-To setup the pipeline `destroy-microbosh`:
+Run the `destroy-microbosh` pipeline which can be setup by running:
 
 ```
 ./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
@@ -148,6 +148,8 @@ You will need a working [MicroBOSH](#microbosh).
 
 ### Deploy
 
+Run the `deploy-cloudfoundry` pipeline which can be setup by running:
+
 ```
 ./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
 ```
@@ -160,7 +162,7 @@ by default.
 
 ### Destroy
 
-To setup destroy pipeline you have to execute:
+Run the `destroy-cloudfoundry` pipeline which can be setup by running:
 
 ```
 ./concourse/scripts/destroy-cloudfoundry.sh $DEPLOY_ENV
