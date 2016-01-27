@@ -41,3 +41,7 @@ output "key_pair_name" {
 output "infra_subnet_ids" {
   value = "${join(",", aws_subnet.infra.*.id)}"
 }
+
+output "dns_zone_name" {
+  value = "${var.dns_zone_name}"
+}
