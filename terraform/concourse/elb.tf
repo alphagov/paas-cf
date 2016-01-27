@@ -1,3 +1,9 @@
+resource "aws_iam_server_certificate" "concourse" {
+  name = "${var.env}-concourse"
+  certificate_body = "${file("concourse.crt")}"
+  private_key = "${file("concourse.key")}"
+}
+
 resource "aws_elb" "concourse" {
   name            = "${var.env}-concourse"
   subnets         = ["${split(",", var.infra_subnet_ids)}"]
@@ -16,7 +22,7 @@ resource "aws_elb" "concourse" {
     instance_protocol   = "tcp"
     lb_port             = 443
     lb_protocol         = "ssl"
-    ssl_certificate_id  = "${var.concourse_elb_cert_arn}"
+    ssl_certificate_id  = "${aws_iam_server_certificate.concourse.arn}"
   }
 
   tags {

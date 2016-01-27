@@ -75,8 +75,3 @@ variable "web_access_cidrs" {
   description = "CSV of CIDR addresses for which we allow web access"
   default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
 }
-
-variable "concourse_elb_cert_arn" {
-  description = "Concourse ELB certificate ARN"
-  default     = "arn:aws:iam::988997429095:server-certificate/wildcard-cf-paas"
-}
