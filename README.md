@@ -165,11 +165,11 @@ To setup destroy pipeline you have to execute:
 
 # Additional notes
 
-## SSH tunnel to vagrant concourse-lite and share access to instance
+## SSH to Bootstrap Concourse and sharing
 
 Instead of allowing a non secure HTTP connection via the internet to the
-concourse-lite AWS instance, we create a SSH tunnel to redirect the port
-8080 to localhost.
+*Bootstrap Concourse*, we create a SSH tunnel to redirect the port 8080 to
+localhost.
 
 After running vagrant/deploy.sh "daemonized" SSH redirection will be
 running listening in the port localhost:8080.
@@ -186,10 +186,10 @@ echo "ssh-rsa AAAA... user" | \
 A new tunnel can be created manually running:
 
 ```
-ssh ubuntu@<remote concourse ip> -L 8080:127.0.0.1:8080 -fN
+ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
 ```
 
-To learn the public IP of the created concourse, simply run:
+To learn the public IP of your *Bootstrap Concourse*, simply run:
 
 ```
 cd vagrant
@@ -206,7 +206,7 @@ override the working branch for development and review:
 export BRANCH=$(git rev-parse --abbrev-ref HEAD)
 ```
 
-## SSH to deployed Concourse and microbosh
+## SSH to Deployer Concourse and MicroBOSH
 
 In the `create-deployer` pipeline when creating the initial VPC,
 a keypair is generated and uploaded to AWS to be used by deployed instances.
@@ -216,7 +216,7 @@ forward some ports to the agent of the new VM.
 Both public and private keys are also uploaded to S3 to be consumed by
 other jobs in the pipelines as resources and/or by us for troubleshooting.
 
-To manually ssh to the deployed concourse, learn its IP via AWS console and
+To manually ssh to the *Deployer Concourse*, learn its IP via AWS console and
 download the `id_rsa` file from the s3 state bucket.
 
 For example:
@@ -226,16 +226,16 @@ For example:
 chmod 400 id_rsa && \
 ssh-add $(pwd)/id_rsa
 
-ssh vcap@<concourse_ip>
+ssh vcap@<deployer_concourse_ip>
 ```
 
 If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
 
-microbosh is deployed to use the same SSH key, although is not publicly
-accessible. But you can use the concourse host as a jumpbox:
+MicroBOSH is deployed to use the same SSH key, although is not publicly
+accessible. But you can use the *Deployer Concourse* as a jumpbox:
 
 ```
-ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
+ssh -o ProxyCommand="ssh -W%h:%p %r@<deployer_concourse_ip>" vcap@10.0.0.6
 ```
 
 ## Concourse credentials
@@ -243,16 +243,16 @@ ssh -o ProxyCommand="ssh -W%h:%p %r@<concourse_ip>" vcap@10.0.0.6
 `./vagrant/deploy.sh` generates the concourse ATC password for the admin user,
 based on the AWS credentials, the environment name and the application name.
 
-These credentials will be used in the final concourse installation (deployer).
+These credentials will also be used by the *Deployer Concourse*.
 
 If you are the owner of the environment with the original AWS credentials,
-run `./vagrant/environment.sh <deploy_name>` to get them again.
+run `./vagrant/environment.sh <deploy_env>` to get them again.
 
 If not, you can learn the credentials from the `atc` process arguments:
 
- 1. Login on the concourse server:
-    * For vagrant bootstrap concourse-lite: `cd vagrant && vagrant ssh`
-    * [For deployer concourse](#ssh-to-deployed-concourse-and-microbosh)
+ 1. SSH to the Concourse server:
+    * For *Bootstrap Concourse*: `cd vagrant && vagrant ssh`
+    * [For *Deployer Concourse*](#ssh-to-deployer-concourse-and-microbosh)
  2. Get the password from `atc` arguments: `ps -fea | sed -n 's/.*--basic-auth[-]password \([^ ]*\).*/\1/p'`
 
 ## Overnight deletion of environments
@@ -260,14 +260,13 @@ If not, you can learn the credentials from the `atc` process arguments:
 In order to avoid unnecessary costs in AWS, there is some logic to
 stop environments and VMs at night:
 
- * **Terminate vagrant concourse-lite VM**: concourse-lite will have a
-   pipeline `self-terminate` which will be triggered at night and
-   terminate the concourse-lite vagrant instance.
+ * **Bootstrap Concourse**: The `self-terminate` pipeline
+   will be triggered every night to terminate the *Bootstrap Concourse*.
 
- * **Delete Cloud Foundry deployment**: The `autodelete-cloudfoundry` pipeline
+ * **Cloud Foundry deployment**: The `autodelete-cloudfoundry` pipeline
    will be triggered every night to delete the specific deployment.
 
 In all cases, to prevent this from happening, you can simply pause the
 pipelines or its resources or jobs.
 
-Note that the *concourse deployer* and *microbosh* VMs will be kept running.
+Note that the *Deployer Concourse* and *MicroBOSH* VMs will be kept running.
