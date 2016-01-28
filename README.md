@@ -51,7 +51,14 @@ export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 ```
 
-The access keys are required to spin up the bootstrap concourse-lite instance only. From that point on they won't be required as all the pipelines will use [instance profiles](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html) to make calls to AWS.
+The access keys are only required to spin up the *Bootstrap Concourse*. From
+that point on they won't be required as all the pipelines will use [instance
+profiles][] to make calls to AWS. The policies for these are defined in the
+repo [aws-account-wide-terraform][] (not public because it also contains
+state files).
+
+[instance profiles]: http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
+[aws-account-wide-terraform]: https://github.gds/government-paas/aws-account-wide-terraform
 
 ### Deploy
 
