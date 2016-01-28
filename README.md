@@ -65,7 +65,7 @@ NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
 by default.
 
 An SSH tunnel is created so that you can access it securely. The deploy
-script can be re-run to update the pipelines or setup the tunnel again.
+script can be re-run to update the pipelines or set up the tunnel again.
 
 When complete it will output a URL and BasicAuth credentials that you can
 use to login.
@@ -126,7 +126,7 @@ You will need a working [Deployer Concourse](#deployer-concourse).
 
 ### Deploy
 
-Run the `create-microbosh` pipeline which can be setup by running:
+Run the `create-microbosh` pipeline which can be set up by running:
 
 ```
 ./concourse/scripts/create-microbosh.sh $DEPLOY_ENV
@@ -134,7 +134,7 @@ Run the `create-microbosh` pipeline which can be setup by running:
 
 ### Destroy
 
-Run the `destroy-microbosh` pipeline which can be setup by running:
+Run the `destroy-microbosh` pipeline which can be set up by running:
 
 ```
 ./concourse/scripts/destroy-microbosh.sh $DEPLOY_ENV
@@ -148,7 +148,7 @@ You will need a working [MicroBOSH](#microbosh).
 
 ### Deploy
 
-Run the `deploy-cloudfoundry` pipeline which can be setup by running:
+Run the `deploy-cloudfoundry` pipeline which can be set up by running:
 
 ```
 ./concourse/scripts/deploy-cloudfoundry.sh $DEPLOY_ENV
@@ -162,7 +162,7 @@ by default.
 
 ### Destroy
 
-Run the `destroy-cloudfoundry` pipeline which can be setup by running:
+Run the `destroy-cloudfoundry` pipeline which can be set up by running:
 
 ```
 ./concourse/scripts/destroy-cloudfoundry.sh $DEPLOY_ENV
