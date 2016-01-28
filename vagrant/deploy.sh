@@ -12,7 +12,7 @@ $("$SCRIPT_DIR/environment.sh" "$@") || exit $?
 # Install aws dummy box if not present
 if ! vagrant box list | grep -qe "^${VAGRANT_BOX_NAME} "; then
   vagrant box add "${VAGRANT_BOX_NAME}" \
-	https://github.com/mitchellh/vagrant-aws/raw/74021d7c9fbc519307d661656f6ce96eeb61153c/dummy.box
+    https://github.com/mitchellh/vagrant-aws/raw/74021d7c9fbc519307d661656f6ce96eeb61153c/dummy.box
 fi
 
 vagrant up
