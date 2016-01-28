@@ -13,7 +13,7 @@ generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
-account: ${AWS_ACCOUNT}
+account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 tfstate_bucket: bucket=${env}-state
 state_bucket: ${env}-state
