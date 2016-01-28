@@ -6,16 +6,25 @@ resources:
       stop: 6:00 -0000
       interval: 2h
 
+  - name: bosh-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh-secrets.yml
+
 jobs:
   - name: delete
     serial: true
     plan:
     - get: delete-timer
       trigger: true
+    - get: bosh-secrets
     - task: delete-deployment
       config:
         inputs:
         - name: delete-timer
+        - name: bosh-secrets
         image: docker:///concourse/bosh-deployment-resource
         run:
           path: sh
@@ -23,4 +32,5 @@ jobs:
           - -e
           - -c
           - |
-            bosh -n -t https://10.0.0.6:25555 -u admin -p {{bosh_password}} delete deployment {{deploy_env}}
+            bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
+            bosh -n -t https://10.0.0.6:25555 -u admin -p "${bosh_password}" delete deployment {{deploy_env}}
