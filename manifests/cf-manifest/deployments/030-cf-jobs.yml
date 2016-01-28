@@ -63,14 +63,6 @@ meta:
   - name: metron_agent
     release: (( grab meta.release.name ))
 
-  dea_templates:
-  - name: dea_next
-    release: (( grab meta.release.name ))
-  - name: dea_logging_agent
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-
   etcd_templates:
   - name: etcd
     release: (( grab meta.release.name ))
@@ -826,30 +818,6 @@ properties:
       machines: (( grab properties.nats.machines ))
       username: (( grab properties.nats.user ))
       password: (( grab properties.nats.password ))
-
-  dea_next:
-    memory_overcommit_factor: null
-    disk_overcommit_factor: null
-    instance_bandwidth_limit:
-    staging_bandwidth_limit:
-    memory_mb:
-    disk_mb:
-    staging_disk_inode_limit: 200000
-    instance_disk_inode_limit: 200000
-    deny_networks: []
-    allow_networks: []
-    kernel_network_tuning_enabled: true
-    directory_server_protocol: https
-    evacuation_bail_out_time_in_seconds: 600
-    logging_level: debug
-    staging_disk_limit_mb: 6144
-    staging_memory_limit_mb: 1024
-    default_health_check_timeout: 60
-    advertise_interval_in_seconds: 5
-    heartbeat_interval_in_seconds: 10
-    rlimit_core: 0
-    allow_host_access: ~
-    mtu:
 
   loggregator:
     etcd:

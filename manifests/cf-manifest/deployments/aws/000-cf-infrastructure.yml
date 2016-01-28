@@ -37,12 +37,6 @@ properties:
   uaa:
     catalina_opts: -Xmx768m -XX:MaxPermSize=256m
 
-  dea_next:
-    deny_networks:
-      - 169.254.0.0/16 # AWS Status
-      - 10.10.0.0/16
-    allow_networks: ["10.10.0.2/32"] # Amazon DNS
-
 compilation:
   cloud_properties:
     instance_type: c3.large
