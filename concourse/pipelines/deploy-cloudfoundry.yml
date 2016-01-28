@@ -333,3 +333,54 @@ jobs:
             - diego-release-tarball/release.tgz
             - garden-release-tarball/release.tgz
             - etcd-release-tarball/release.tgz
+
+  - name: smoke-tests
+    plan:
+    - get: cf-manifest
+      passed: ['deploy']
+    - get: cf-deployment
+      passed: ['deploy']
+      trigger: true
+    - task: smoke-tests
+      config:
+        inputs:
+        - name: cf-manifest
+        image: docker:///concourse/bosh-deployment-resource
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            bosh -u admin -p {{bosh_password}} target https://10.0.0.6:25555
+            bosh login admin {{bosh_password}}
+            sed "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
+            bosh deployment cf-manifest.yml
+            bosh -n \
+              run errand smoke_tests \
+              --download-logs --logs-dir .
+
+  - name: acceptance-tests
+    plan:
+    - get: cf-manifest
+      passed: ['deploy']
+    - get: cf-deployment
+      passed: ['deploy']
+    - task: acceptance-tests
+      config:
+        inputs:
+        - name: cf-manifest
+        image: docker:///concourse/bosh-deployment-resource
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            bosh -u admin -p {{bosh_password}} target https://10.0.0.6:25555
+            bosh login admin {{bosh_password}}
+            sed "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
+            bosh deployment cf-manifest.yml
+            bosh -n \
+              run errand acceptance_tests \
+              --download-logs --logs-dir .

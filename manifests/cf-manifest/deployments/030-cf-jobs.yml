@@ -480,27 +480,6 @@ jobs:
         zone: z2
     update: {}
 
-  - name: acceptance_tests
-    templates:
-    - name: acceptance-tests
-      release: (( grab meta.release.name ))
-    instances: 1
-    resource_pool: small_errand
-    lifecycle: errand
-    networks:
-      - name: cf1
-
-  - name: smoke_tests
-    templates:
-    - name: smoke-tests
-      release: (( grab meta.release.name ))
-    instances: 0
-    resource_pool: small_errand
-    lifecycle: errand
-    networks:
-      - name: cf1
-    properties: {}
-
 # Diego
 
   - name: access_z1
@@ -876,16 +855,3 @@ properties:
   nfs_server: (( grab meta.nfs_server ))
 
   collector:
-
-  acceptance_tests:
-
-  smoke_tests:
-    api: (( grab meta.api_domain ))
-    apps_domain: (( grab properties.app_domains[0] ))
-    user: "admin"
-    password: (( grab secrets.uaa_admin_password ))
-    org: "SMOKE_TESTS"
-    space: "SMOKE_TESTS"
-    use_existing_org: false
-    use_existing_space: false
-    skip_ssl_validation: true

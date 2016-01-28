@@ -1,0 +1,47 @@
+jobs:
+  - name: acceptance_tests
+    templates:
+    - name: acceptance-tests
+      release: (( grab meta.release.name ))
+    instances: 1
+    resource_pool: small_errand
+    lifecycle: errand
+    networks:
+      - name: cf1
+
+  - name: smoke_tests
+    templates:
+    - name: smoke-tests
+      release: (( grab meta.release.name ))
+    instances: 0
+    resource_pool: small_errand
+    lifecycle: errand
+    networks:
+      - name: cf1
+    properties: {}
+
+properties:
+  acceptance_tests:
+    api: (( grab meta.api_domain ))
+    apps_domain: (( grab properties.app_domains[0] ))
+    system_domain: (( grab properties.system_domain ))
+    admin_user: "admin"
+    admin_password: (( grab secrets.uaa_admin_password ))
+    skip_ssl_validation: true
+    backend: "diego"
+    skip_diego_unsupported_tests: true
+    include_route_services: true
+    include_tasks: true
+    client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
+    include_v3: true
+
+  smoke_tests:
+    api: (( grab meta.api_domain ))
+    apps_domain: (( grab properties.app_domains[0] ))
+    user: "admin"
+    password: (( grab secrets.uaa_admin_password ))
+    org: "SMOKE_TESTS"
+    space: "SMOKE_TESTS"
+    use_existing_org: false
+    use_existing_space: false
+    skip_ssl_validation: true
