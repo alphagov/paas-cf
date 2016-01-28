@@ -179,12 +179,12 @@ Run the `destroy-cloudfoundry` pipeline which can be set up by running:
 
 ## Optionally override the branch used by pipelines
 
-All of the pipeline scripts honour a `BRANCH` environment variable which
-allows you to override the git branch used within the pipeline. This is
-useful for development and code review:
+All of the pipeline scripts (including `vagrant/deploy.sh`) honour a
+`BRANCH` environment variable which allows you to override the git branch
+used within the pipeline. This is useful for development and code review:
 
 ```
-BRANCH=$(git rev-parse --abbrev-ref HEAD) <pipeline_script>.sh
+BRANCH=$(git rev-parse --abbrev-ref HEAD) <script>.sh
 ```
 
 ## SSH to Bootstrap Concourse and sharing
