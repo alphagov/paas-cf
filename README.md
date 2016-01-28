@@ -187,17 +187,12 @@ used within the pipeline. This is useful for development and code review:
 BRANCH=$(git rev-parse --abbrev-ref HEAD) <script>.sh
 ```
 
-## SSH to Bootstrap Concourse and sharing
+## Sharing your Bootstrap Concourse
 
-Instead of allowing a non secure HTTP connection via the internet to the
-*Bootstrap Concourse*, we create a SSH tunnel to redirect the port 8080 to
-localhost.
+If you need to share access to your *Bootstrap Concourse* with a colleague
+then you will need to reproduce some of the work that Vagrant does.
 
-After running vagrant/deploy.sh "daemonized" SSH redirection will be
-running listening in the port localhost:8080.
-
-If the machine needs to be shared with a coworker, and additional SSH
-public key can be added with:
+Add their SSH public key:
 
 ```
 cd vagrant
@@ -205,14 +200,15 @@ echo "ssh-rsa AAAA... user" | \
    vagrant ssh -- tee -a .ssh/authorized_keys
 ```
 
-To learn the public IP of your *Bootstrap Concourse* run:
+Learn the public IP of your *Bootstrap Concourse* run:
 
 ```
 cd vagrant
 vagrant ssh-config
 ```
 
-A new tunnel can be created manually running:
+They will then need to manually create the SSH tunnel that is normally
+handled by `vagrant/deploy.sh`:
 
 ```
 ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
