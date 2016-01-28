@@ -1,13 +1,4 @@
 resources:
-  - name: cf-deployment
-    type: bosh-deployment
-    source:
-      target: https://10.0.0.6:25555
-      username: admin
-      password: {{bosh_password}}
-      deployment: {{deploy_env}}
-      ignore_ssl: true
-
   - name: paas-cf
     type: git
     source:
@@ -234,114 +225,159 @@ jobs:
     serial: true
     plan:
       - aggregate:
+        - get: paas-cf
+          passed: ['generate-manifest']
+        - get: cf-manifest
+          passed: ['generate-manifest']
+          trigger: true
+      - aggregate:
         - task: stemcell-tarball
           config:
             params:
-              STEMCELL_VERSION: {{stemcell-version}}
-            image: docker:///governmentpaas/curl-ssl
+              VERSION: {{stemcell-version}}
+              NAME: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+              URL: https://bosh.io/d/stemcells/"${NAME}"?v="${VERSION}"
+              BOSH_PASSWORD: {{bosh_password}}
+              TYPE: stemcell
+            image: docker:///concourse/bosh-deployment-resource
             platform: linux
-            run:
-              path: sh
-              args: ["-c", "curl -L -J -o stemcell.tgz https://s3.amazonaws.com/bosh-jenkins-artifacts/bosh-stemcell/aws/light-bosh-stemcell-${STEMCELL_VERSION}-aws-xen-hvm-ubuntu-trusty-go_agent.tgz"]
-
-        - task: cf-release-tarball
-          config:
-            params:
-              RELEASE_VERSION: {{cf-release-version}}
-              URL: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=${RELEASE_VERSION}
-            platform: linux
-            image: docker:///governmentpaas/curl-ssl
+            inputs:
+            - name: paas-cf
             run:
               path: sh
               args:
-                - -e
-                - -c
-                - |
-                  eval curl -f -L -o release.tgz ${URL}
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
+        - task: cf-release-tarball
+          config:
+            params:
+              VERSION: {{cf-release-version}}
+              NAME: cf
+              URL: https://bosh.io/d/github.com/cloudfoundry/cf-release?v="${VERSION}"
+              BOSH_PASSWORD: {{bosh_password}}
+              TYPE: release
+            image: docker:///concourse/bosh-deployment-resource
+            platform: linux
+            inputs:
+            - name: paas-cf
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: nginx-release-tarball
           config:
             params:
-              RELEASE_VERSION: {{nginx-release-version}}
-              URL: https://s3.amazonaws.com/nginx-release/nginx-${RELEASE_VERSION}.tgz
+              VERSION: {{nginx-release-version}}
+              NAME: nginx
+              URL: https://s3.amazonaws.com/nginx-release/nginx-"${VERSION}".tgz
+              BOSH_PASSWORD: {{bosh_password}}
+              TYPE: release
+            image: docker:///concourse/bosh-deployment-resource
             platform: linux
-            image: docker:///governmentpaas/curl-ssl
+            inputs:
+            - name: paas-cf
             run:
               path: sh
               args:
-                - -e
-                - -c
-                - |
-                  eval curl -f -L -o release.tgz ${URL}
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: diego-release-tarball
           config:
             params:
-              RELEASE_VERSION: {{diego-release-version}}
-              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=${RELEASE_VERSION}
+              VERSION: {{diego-release-version}}
+              NAME: diego
+              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v="${VERSION}"
+              BOSH_PASSWORD: {{bosh_password}}
+              TYPE: release
+            image: docker:///concourse/bosh-deployment-resource
             platform: linux
-            image: docker:///governmentpaas/curl-ssl
+            inputs:
+            - name: paas-cf
             run:
               path: sh
               args:
-                - -e
-                - -c
-                - |
-                  eval curl -f -L -o release.tgz ${URL}
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: garden-release-tarball
           config:
             params:
-              RELEASE_VERSION: {{garden-release-version}}
-              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=${RELEASE_VERSION}
+              VERSION: {{garden-release-version}}
+              NAME: garden-linux
+              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v="${VERSION}"
+              BOSH_PASSWORD: {{bosh_password}}
+              TYPE: release
+            image: docker:///concourse/bosh-deployment-resource
             platform: linux
-            image: docker:///governmentpaas/curl-ssl
+            inputs:
+            - name: paas-cf
             run:
               path: sh
               args:
-                - -e
-                - -c
-                - |
-                  eval curl -f -L -o release.tgz ${URL}
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: etcd-release-tarball
           config:
             params:
-              RELEASE_VERSION: {{etcd-release-version}}
-              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=${RELEASE_VERSION}
+              VERSION: {{etcd-release-version}}
+              NAME: etcd
+              URL: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v="${VERSION}"
+              BOSH_PASSWORD: {{bosh_password}}
+              TYPE: release
+            image: docker:///concourse/bosh-deployment-resource
             platform: linux
-            image: docker:///governmentpaas/curl-ssl
+            inputs:
+            - name: paas-cf
             run:
               path: sh
               args:
-                - -e
-                - -c
-                - |
-                  eval curl -f -L -o release.tgz ${URL}
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
-        - get: cf-manifest
-          passed: ['generate-manifest']
-          trigger: true
+      - task: cf-deploy
+        config:
+          image: docker:///concourse/bosh-deployment-resource
+          inputs:
+          - name: cf-manifest
+          platform: linux
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              bosh -u admin -p {{bosh_password}} target https://10.0.0.6:25555
+              bosh login admin {{bosh_password}}
+              sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
+              bosh deployment cf-manifest.yml
+              bosh -n deploy
 
-      - put: cf-deployment
+      - put: cf-manifest
         params:
-          manifest: cf-manifest/cf-manifest.yml
-          stemcells:
-            - stemcell-tarball/stemcell.tgz
-          releases:
-            - cf-release-tarball/release.tgz
-            - nginx-release-tarball/release.tgz
-            - diego-release-tarball/release.tgz
-            - garden-release-tarball/release.tgz
-            - etcd-release-tarball/release.tgz
+          file: cf-deploy/cf-manifest.yml
 
   - name: smoke-tests
     plan:
-    - get: cf-manifest
-      passed: ['deploy']
-    - get: cf-deployment
-      passed: ['deploy']
-      trigger: true
+    - aggregate:
+      - get: cf-manifest
+        passed: ['deploy']
+        trigger: true
     - task: smoke-tests
       config:
         inputs:
@@ -355,18 +391,16 @@ jobs:
           - |
             bosh -u admin -p {{bosh_password}} target https://10.0.0.6:25555
             bosh login admin {{bosh_password}}
-            sed "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
-            bosh deployment cf-manifest.yml
+            bosh deployment cf-manifest/cf-manifest.yml
             bosh -n \
               run errand smoke_tests \
               --download-logs --logs-dir .
 
   - name: acceptance-tests
     plan:
-    - get: cf-manifest
-      passed: ['deploy']
-    - get: cf-deployment
-      passed: ['deploy']
+    - aggregate:
+      - get: cf-manifest
+        passed: ['deploy']
     - task: acceptance-tests
       config:
         inputs:
@@ -380,8 +414,7 @@ jobs:
           - |
             bosh -u admin -p {{bosh_password}} target https://10.0.0.6:25555
             bosh login admin {{bosh_password}}
-            sed "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
-            bosh deployment cf-manifest.yml
+            bosh deployment cf-manifest/cf-manifest.yml
             bosh -n \
               run errand acceptance_tests \
               --download-logs --logs-dir .
