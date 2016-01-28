@@ -58,12 +58,10 @@ variable "vagrant_cidr" {
 
 variable "dns_zone_id" {
   description = "Amazon Route53 DNS zone identifier. Different per account."
-  default     = "dummy_default"
 }
 
 variable "dns_zone_name" {
   description = "Amazon Route53 DNS zone name. Differs per account."
-  default     = "dummy_default"
 }
 
 variable "microbosh_static_private_ip" {
@@ -78,5 +76,4 @@ variable "web_access_cidrs" {
 
 variable "concourse_elb_cert_arn" {
   description = "Concourse ELB certificate ARN. Specific per account."
-  default     = "dummy_default"
 }
