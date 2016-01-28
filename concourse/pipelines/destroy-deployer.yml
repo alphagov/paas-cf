@@ -167,7 +167,8 @@ jobs:
           - -c
           - |
             touch paas-cf/terraform/vpc/id_rsa.pub
-            terraform destroy -force -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
+            terraform destroy -force -var-file=paas-cf/terraform/{{account}}.tfvars \
+              -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
       ensure:
         put: vpc-terraform-state
         params:
@@ -197,4 +198,5 @@ jobs:
             - -e
             - -c
             - |
-              terraform destroy -force -state=bucket-terraform-state/bucket.tfstate paas-cf/terraform/bucket
+              terraform destroy -force -var-file=paas-cf/terraform/{{account}}.tfvars \
+                -state=bucket-terraform-state/bucket.tfstate paas-cf/terraform/bucket

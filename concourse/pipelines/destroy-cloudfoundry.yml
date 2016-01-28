@@ -91,8 +91,8 @@ jobs:
             - |
               . terraform-variables/cf.tfvars.sh
               . terraform-variables/vpc.tfvars.sh
-              terraform destroy -force -var env={{deploy_env}} -state=cf-tfstate/cf.tfstate \
-                -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
+              terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{account}}.tfvars \
+                -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
