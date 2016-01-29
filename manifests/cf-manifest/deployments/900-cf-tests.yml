@@ -34,6 +34,7 @@ properties:
     include_tasks: true
     client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
     include_v3: true
+    include_security_groups: true
 
   smoke_tests:
     api: (( grab meta.api_domain ))
