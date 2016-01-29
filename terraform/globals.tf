@@ -57,13 +57,11 @@ variable "vagrant_cidr" {
 }
 
 variable "dns_zone_id" {
-  description = "Amazon Route53 DNS zone identifier"
-  default     = "Z3SI0PSH6KKVH4"
+  description = "Amazon Route53 DNS zone identifier. Different per account."
 }
 
 variable "dns_zone_name" {
-  description = "Amazon Route53 DNS zone name"
-  default     = "cf.paas.alphagov.co.uk"
+  description = "Amazon Route53 DNS zone name. Differs per account."
 }
 
 variable "microbosh_static_private_ip" {

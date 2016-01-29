@@ -17,7 +17,3 @@ output "cf_root_domain" {
 output "elb_name" {
   value = "${aws_elb.router.name}"
 }
-
-output "web_access_cidrs" {
-  value = "${var.web_access_cidrs}"
-}
