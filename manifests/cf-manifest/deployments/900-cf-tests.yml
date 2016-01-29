@@ -29,12 +29,14 @@ properties:
     admin_password: (( grab secrets.uaa_admin_password ))
     skip_ssl_validation: true
     backend: "diego"
-    skip_diego_unsupported_tests: true
-    include_route_services: true
-    include_tasks: true
     client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
+    skip_diego_unsupported_tests: true
+    include_tasks: true
     include_v3: true
     include_security_groups: true
+    include_routing: true
+    skip_regex: 'routing.API'
+    include_route_services: false
 
   smoke_tests:
     api: (( grab meta.api_domain ))
