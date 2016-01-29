@@ -42,9 +42,9 @@ fi
 echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
   $FLY_CMD login -t "${FLY_TARGET}" --concourse-url "${CONCOURSE_URL}"
 
-"${SCRIPT_DIR}"/../concourse/scripts/concourse-lite-self-terminate.sh "${DEPLOY_ENV}"
 "${SCRIPT_DIR}"/../concourse/scripts/create-deployer.sh "${DEPLOY_ENV}"
 "${SCRIPT_DIR}"/../concourse/scripts/destroy-deployer.sh "${DEPLOY_ENV}"
+"${SCRIPT_DIR}"/../concourse/scripts/concourse-lite-self-terminate.sh "${DEPLOY_ENV}"
 
 echo
 echo "Concourse auth is ${CONCOURSE_ATC_USER} : ${CONCOURSE_ATC_PASSWORD}"
