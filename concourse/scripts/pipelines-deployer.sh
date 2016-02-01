@@ -3,10 +3,7 @@ set -e
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${DEPLOY_ENV-$1}
-pipeline="create-microbosh"
-config="${SCRIPT_DIR}/../pipelines/create-microbosh.yml"
-
+env=${DEPLOY_ENV:-$1}
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 
 generate_vars_file() {
@@ -14,16 +11,22 @@ generate_vars_file() {
    cat <<EOF
 ---
 account: ${AWS_ACCOUNT:-dev}
+vagrant_ip: ${VAGRANT_IP}
 deploy_env: ${env}
+tfstate_bucket: bucket=${env}-state
 state_bucket: ${env}-state
-pipeline_trigger_file: ${pipeline}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
-debug: ${DEBUG:-}
+concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
+log_level: ${LOG_LEVEL:-}
 EOF
 }
 
 generate_vars_file > /dev/null # Check for missing vars
 
-bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-   "${env}" "${pipeline}" "${config}" <(generate_vars_file)
+for ACTION in create destroy; do
+  bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+    "${env}" "${ACTION}-deployer" \
+    "${SCRIPT_DIR}/../pipelines/${ACTION}-deployer.yml" \
+    <(generate_vars_file)
+done

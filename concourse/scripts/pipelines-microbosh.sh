@@ -4,9 +4,6 @@ set -e
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 env=${DEPLOY_ENV-$1}
-pipeline="destroy-microbosh"
-config="${SCRIPT_DIR}/../pipelines/destroy-microbosh.yml"
-
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 
 generate_vars_file() {
@@ -16,14 +13,19 @@ generate_vars_file() {
 account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
-pipeline_trigger_file: ${pipeline}.trigger
+pipeline_trigger_file: ${trigger_file}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 debug: ${DEBUG:-}
 EOF
 }
 
-generate_vars_file > /dev/null # Check for missing vars
+for ACTION in create destroy; do
+  trigger_file="${ACTION}-microbosh.trigger"
+  generate_vars_file > /dev/null # Check for missing vars
 
-bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-   "${env}" "${pipeline}" "${config}" <(generate_vars_file)
+  bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+    "${env}" "${ACTION}-microbosh" \
+    "${SCRIPT_DIR}/../pipelines/${ACTION}-microbosh.yml" \
+    <(generate_vars_file)
+done

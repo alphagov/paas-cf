@@ -4,9 +4,7 @@ set -e
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 env=${DEPLOY_ENV-$1}
-pipeline="deploy-cloudfoundry"
 pipeline_autodelete="autodelete-cloudfoundry"
-config="${SCRIPT_DIR}/../pipelines/deploy-cloudfoundry.yml"
 config_autodelete="${SCRIPT_DIR}/../pipelines/autodelete-cloudfoundry.yml"
 
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
@@ -29,10 +27,15 @@ etcd-release-version: ${ETCD_RELEASE_VERSION:-18}
 debug: ${DEBUG:-}
 EOF
 }
+
 generate_vars_file > /dev/null # Check for missing vars
 
-bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-   "${env}" "${pipeline}" "${config}" <(generate_vars_file)
+for ACTION in deploy destroy; do
+  bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+    "${env}" "${ACTION}-cloudfoundry" \
+    "${SCRIPT_DIR}/../pipelines/${ACTION}-cloudfoundry.yml" \
+    <(generate_vars_file)
+done
 
 if [ ! "${DISABLE_AUTODELETE:-}" ]; then
    bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
