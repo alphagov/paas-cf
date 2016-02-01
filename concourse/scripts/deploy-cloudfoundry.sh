@@ -11,8 +11,6 @@ config_autodelete="${SCRIPT_DIR}/../pipelines/autodelete-cloudfoundry.yml"
 
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 
-bosh_password=$("$SCRIPT_DIR"/s3get.sh "${env}-state" bosh-secrets.yml > /dev/null && awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets.yml)
-
 generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
@@ -22,7 +20,6 @@ deploy_env: ${env}
 state_bucket: ${env}-state
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
-bosh_password: ${bosh_password}
 stemcell-version: ${STEMCELL_VERSION:-3104}
 cf-release-version: ${CF_RELEASE_VERSION:-225}
 nginx-release-version: ${NIGNX_RELEASE_VERSION:-2}
