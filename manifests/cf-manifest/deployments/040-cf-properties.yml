@@ -285,10 +285,10 @@ properties:
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: (( grab secrets.consul_ca_cert ))
-        client_cert: (( grab secrets.consul_agent_cert ))
-        client_key: (( grab secrets.consul_agent_key ))
+        client_cert: (( grab secrets.bbs_client_cert  ))
+        client_key: (( grab secrets.bbs_client_key  ))
+        require_ssl: true
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-      require_ssl: false
 
     file_server:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
@@ -475,5 +475,3 @@ base_job_templates:
       release: diego
     - name: tps
       release: diego
-
-
