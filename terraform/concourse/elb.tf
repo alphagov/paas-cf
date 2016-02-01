@@ -2,10 +2,6 @@ resource "aws_iam_server_certificate" "concourse" {
   name = "${var.env}-concourse"
   certificate_body = "${file("concourse.crt")}"
   private_key = "${file("concourse.key")}"
-
-  provisioner "local-exec" {
-    command = "sleep 10"
-  }
 }
 
 resource "aws_elb" "concourse" {
