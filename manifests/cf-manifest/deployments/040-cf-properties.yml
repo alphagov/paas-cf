@@ -267,9 +267,9 @@ properties:
       encryption_keys:
         - label: keylabel1
           passphrase: "a secure passphrase"
-      ca_cert: (( grab secrets.consul_ca_cert ))
-      server_cert: (( grab secrets.consul_server_cert ))
-      server_key: (( grab secrets.consul_server_key ))
+      ca_cert: (( grab secrets.bbs_ca_cert ))
+      server_cert: (( grab secrets.bbs_server_cert ))
+      server_key: (( grab secrets.bbs_server_key ))
       auctioneer:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
@@ -279,7 +279,7 @@ properties:
         client_key: (( grab secrets.consul_agent_key ))
         require_ssl: false
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-      require_ssl: false
+      require_ssl: true
 
     converger:
       bbs:
