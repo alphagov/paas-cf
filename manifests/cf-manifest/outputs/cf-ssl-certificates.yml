@@ -31,7 +31,62 @@ secrets:
     cdyDkOCW3J2Ahzq0hqAagncTPMYNOCkJ6Kutl56cSwtLVK/CWP7fLFn/MUx9cG5N
     fX585CwYweArQksAfGWcQMOKJPgtSjc5Ni9N98Bz4/uWbA1zTyqBvCxxLOOznKzX
     dj1nAFot9in5E+iZgaprtZNIozKeCEO29MdgyzTCyaE0xs5fNUEE3FI=
-    -----END CERTIFICATE-----  
+    -----END CERTIFICATE-----
+  # new certificate authority key for BBS See:
+  # https://github.com/cloudfoundry-incubator/diego-release
+  # generated using ./certstrap init --common-name "diegoCA"
+  bbs_ca_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    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
+    -----END RSA PRIVATE KEY-----
   router_ssl_cert:  |
     -----BEGIN CERTIFICATE-----
     MIIEADCCAuigAwIBAgIJAKfsWxYN1H6gMA0GCSqGSIb3DQEBBQUAMF0xCzAJBgNV
