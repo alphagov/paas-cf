@@ -1,4 +1,219 @@
 secrets:
+  # new certificate authority certificate for BBS See:
+  # https://github.com/cloudfoundry-incubator/diego-release
+  # generated using ./certstrap init --common-name "diegoCA"
+  bbs_ca_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIFBTCCAu2gAwIBAgIBATANBgkqhkiG9w0BAQsFADASMRAwDgYDVQQDEwdkaWVn
+    b0NBMB4XDTE2MDEyMTExMzA1MloXDTI2MDEyMTExMzA1OFowEjEQMA4GA1UEAxMH
+    ZGllZ29DQTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAJv/ad0wov3H
+    Tgr0Dxaa+53r7jW3WnHSPiTpiLgDYmSJCH8GjSW81/7fJTtdbui9xN37gqXwlb2L
+    weJE9UR1V+jitP6LAAyIwaRcsPOkanrkJSoBxcXfvc9ulXCNvJfEUQMMrRqA5Ztl
+    vf3LL11lEewaHO7P7YIV4hFXcmpZWI4/TB37SHY2+lpFqnmSxFBIOJRTZpdoHTWX
+    YnV76Knqd3FOiTAicyiooa2A9nEnpM1rEzBtEMq6iIPbxL5mgfA1AkTCDxzJEwzV
+    SZp4pGRdyLz/9AZa83LCIfO0eBCEaSfTTUaJbNuuB6xmInhBfT0dLEHwIgT8W5GA
+    gYnheUg06qsCESC/DJAbK9+tv3rnWCVsyMkU0PZo3103H7fO5RPVLjZ47MGz2Yin
+    9nvnsY0tLwqqnd+6m6k3ZfN3xK4TBmZy+t8DiqZg6UYjjIQzaJS5Sc8n31JTfqQ/
+    f3d7Gv+g2UT7A4PkZV+ngYiY4UJAcCsVoXlEB2Fuss1Ooy8Ihwo/hVZNw0o/iE5K
+    c4EkX2dC7yDM234TpaEPTXydGzozsjldTXRYTuUpz9Ze9tdww3xtE3FYm/wiuJeT
+    /cE7EOUKqeggIC0FxCg8c3WG6thzTeG/VRQYrD6Osxbi7RLcAL4Zc1GmuyaDn0Ua
+    JProlQNod/MjqFpR8IYG9f8cTTqnrFz5AgMBAAGjZjBkMA4GA1UdDwEB/wQEAwIB
+    BjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBS6EXXyCy4OP62Z2eOyeHca
+    9YTUhDAfBgNVHSMEGDAWgBS6EXXyCy4OP62Z2eOyeHca9YTUhDANBgkqhkiG9w0B
+    AQsFAAOCAgEAUfEOQkaSHjpM2Qg3zqd+Azz3+3oY5F+/BsIgBmRZXLN27HsX5gzk
+    2QCmiUo1D0dFtb8rwkDUt/Iby+Yigv3r6bJFk1EGMsFJxB8V54AsTM2+CHI0Dl28
+    Qhx8V21w8WGP/790dOX7AmoaRjvV5mB4QFlZbxJFPBxWz8r/xcPP4P+qpcVeLRa+
+    V+8G1aYXn9w0ZXozIOAIrf05x7CNvBUQ8aWEpr7fh1qxvwcufxDGQ056dX0a3WVn
+    Fr6UWfmI8svw+rUfa/9runoCcYmCBogcKQSa0/JVTQI3tb0A10nzrNJ52KzTMlYW
+    vDYQ69RgoOf4GueuPiXseA9+/MfFiOXIetRru0oHqVni1PSW7y6qf7sjcdQmfYzI
+    T0kb4q8NdWJh3na6uLYaS/MJ7Yfoa+ct8SL4f4of0op5k7cPWt1uUIDLt0mGDngA
+    xBk7ziLfthmC40zzdKPbwu7lnJBNsYQMZe8Aq+twoO8F3eKzOFMAMzlyxcp+jhwy
+    cdyDkOCW3J2Ahzq0hqAagncTPMYNOCkJ6Kutl56cSwtLVK/CWP7fLFn/MUx9cG5N
+    fX585CwYweArQksAfGWcQMOKJPgtSjc5Ni9N98Bz4/uWbA1zTyqBvCxxLOOznKzX
+    dj1nAFot9in5E+iZgaprtZNIozKeCEO29MdgyzTCyaE0xs5fNUEE3FI=
+    -----END CERTIFICATE-----
+  # new certificate authority key for BBS See:
+  # https://github.com/cloudfoundry-incubator/diego-release
+  # generated using ./certstrap init --common-name "diegoCA"
+  bbs_ca_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    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
+    -----END RSA PRIVATE KEY-----
+  # new certificate for properties.diego.CLIENT.bbs.client_cert See:
+  # https://github.com/cloudfoundry-incubator/diego-release
+  # generated using ./certstrap request-cert --common-name "clientName"
+  # ./certstrap sign clientName --CA diegoCA
+  bbs_client_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIEIzCCAgugAwIBAgIRAKTzAh7Ilo3nMTeno4qzl9wwDQYJKoZIhvcNAQELBQAw
+    EjEQMA4GA1UEAxMHZGllZ29DQTAeFw0xNjAxMjExMTM5NTlaFw0xODAxMjExMTM5
+    NTlaMBUxEzARBgNVBAMTCmNsaWVudE5hbWUwggEiMA0GCSqGSIb3DQEBAQUAA4IB
+    DwAwggEKAoIBAQDVlkgUM7MJOGUdZnAe5W96+YKZ1OC85s6KISVl9+jn7aLL2mDg
+    1Je5hcfurvkl9sTZgjQN1+f9Tp5UzEP0XW0N+c1x85ik/OwM4kvfziPHyVKjfBcl
+    roHhL0ZgLcHiJw1fUWsNC1IUiwGiYNofafGAtwahix1lJeA0LAfdBWSrXxjEs1HE
+    WSmRHxhsO/JbS/uHKBDXRIi5apsQwSUAgTyKLKr1h0iboNJYYWYE67M1XONyN0x8
+    nQf9SRidsm/5qpVktj25RYKD76/M1ugYfbuYDILLESLq6B1Z8AL98jZufwjLCKba
+    Yd5f9yw0EDGOgYz2qc1DDa5eZ6XU51kbMvanAgMBAAGjcTBvMA4GA1UdDwEB/wQE
+    AwIDuDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwHQYDVR0OBBYEFJXT
+    1CEuVJnWLeXG3s7mdPuEkzmTMB8GA1UdIwQYMBaAFLoRdfILLg4/rZnZ47J4dxr1
+    hNSEMA0GCSqGSIb3DQEBCwUAA4ICAQBjGyAp87c5+JkOlWU92dOEQ4xxPVCkPGNh
+    YAA37dCCkxUP5QtwPUJDZ6ZHp41zWOFA6NvdZMKxhVO5zdAOeFQANsx5PFfi4PZ/
+    G5VyMfWH87oj0825BDw8dur6+hpxYdViYPCRzC/SpIy61iNmy5QqSQSKyGpzEnwF
+    czINDdryUzfcggs7HOFY4Y/BmZwcgp6KNCj68yZ0ruPo/fjoa0YBOaQN+i56YPgk
+    BZSFbxC2buMdT80q9Jx1o6Veft4CPaaA+rT7IDucyyeg27hiDrH28xM6w8d14zNc
+    hFygvCBHt5IIvnie+wnx93c115bU6evfmPYqscdfpKz8NezEaPw9WAnG8vTfFSxW
+    dlZjJJiAdOy+roF/UTMWCePr54907t9qRISXudn6iumCe2s9hc/+YVVUFH7iZe8z
+    c9YJN+IAjhU5GKeKnye7IRxxxLkK+llBpYkVPu2jMiXNzDUNJ0j1pBm06k4s7m5Q
+    7tSAOGKBtEsPnN3P0z8LOyg55lKdBgo3RDuuRe/AJTu5i2yn9/fSuYBKXicGIvww
+    41XO3fWfA9ObmLuR8/dj5GIZIukCxaeIJX/7QdizcwLZgFcMmls/PNKtdpoATCyO
+    BDacDlnQAfXYyQXFlaeF65AD2Jzqk/TJk4f/E0RG085rJ3RbaxuFWpk6dC+BpfzP
+    Zu2FbYrO5w==
+    -----END CERTIFICATE-----
+  bbs_client_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA1ZZIFDOzCThlHWZwHuVvevmCmdTgvObOiiElZffo5+2iy9pg
+    4NSXuYXH7q75JfbE2YI0Ddfn/U6eVMxD9F1tDfnNcfOYpPzsDOJL384jx8lSo3wX
+    Ja6B4S9GYC3B4icNX1FrDQtSFIsBomDaH2nxgLcGoYsdZSXgNCwH3QVkq18YxLNR
+    xFkpkR8YbDvyW0v7hygQ10SIuWqbEMElAIE8iiyq9YdIm6DSWGFmBOuzNVzjcjdM
+    fJ0H/UkYnbJv+aqVZLY9uUWCg++vzNboGH27mAyCyxEi6ugdWfAC/fI2bn8Iywim
+    2mHeX/csNBAxjoGM9qnNQw2uXmel1OdZGzL2pwIDAQABAoIBAHuXmZ/vBqPIOWKY
+    2zpVo3uyk+s2LtHAcTWm1oA5w1EpxnFVrYeMHTvieP3ZzBw2vlPqrvpvvDNs4dvJ
+    02y8/xT+Pu64edTG8kTGUgdwvm2mRqaJcM+COm+2rm+LKs0Vsfw9HcgPi/CNO2Xd
+    y3owEOpdfn3OBTV5hFJMRESWEVnD/u6Tg3lpDS0a8oGGhrpWFdgrzut5i2On/0MR
+    Yay03SztlYufF1X8azbKZHDRKZcqABTRomO3BURhABMiane8jTTbmKtoYpWrV6Ba
+    A2cEum/pfCkE8tHzMHf7vtUYhBloeWS7wxB8F88DKzGZ3tmEhZ2Ro1TI1VpsiwjM
+    MorWvNECgYEA/tnxt5Tit9lVmpzrsokxYE/72UZM4DBXgc3YzXoP/VDihj96Y796
+    af7yvGfGpwXN/ThEJvpicOUp39LdQQZV+2OsyPHeZ5/3dmI2+CsvLTmFRb0iT7FJ
+    a+9jdpWz4mY2o+nTTd53DjsC/8DUKY5DxXylBV1UmnN2MSC8YZ1BPUkCgYEA1oy5
+    qdA5B+AdJYKDOISATvW8SvVnwGyXb7p0eI/GUxeLnslCD7Y0/n/wnYI9ZNvA1M3z
+    O51DDjRYFc2vVf6XGDc8+rWPjeDmDMVHqY12SxpNIShqGqxbwkA3DerBdK9lElU8
+    PAeG7i08oeCC8UM3rQOUPlwBJTspCxbu4oSSRG8CgYEAjKkmLLlUWTzvbqLlxGjM
+    g+ghjU6r56FG6zH+U4rngF1AafBnUN7CZfZ9a1er4Uvm4bhIhWr1InKZphvwWo9w
+    rYvaNh6pLnCwWPrkdB0BsOhqko9NfMbRS22ZbD48Rt07k0Tfh78d3xDbGuYHM9h9
+    t2aQfmGA7K6FsZ/r2cS92WECgYA5jHfEp/iUNzY6OH7QKyJri5idFqRkxfv82Sui
+    pxYQdbFavys8IainV1QIO8YSBqv7qN6EcBNrfPjfqFNOosKOmUp/CTJfYSLz6/rj
+    7PD9BioIKdoEG5VlTmo2DnEjxmQ6/afxhidYPcQUu68D3f7SJrKd43nfLbY9pkIf
+    emXtewKBgQCGpkso7dCrZCZGs/gMTyai+VUv6gurDjtn8YmimmFU4FKv/U2uJEc/
+    Pxrn6dErnIaqxTBV+f/wCJBW1gSAP77JyVC3B6EHQ7vXbqdPphTiMc6xA63PBpWq
+    +fHIjJpeYIOpBu4cdNKNZDgWm4lwkM+k+MpSbwISIGCU1kkc/6ltrQ==
+    -----END RSA PRIVATE KEY-----
+  # new private key for properties.diego.bbs.server_key See:
+  # https://github.com/cloudfoundry-incubator/diego-release
+  # generated using:
+  # ./certstrap request-cert \
+  # --common-name "bbs.service.cf.internal" \
+  # --domain "*.bbs.service.cf.internal,bbs.service.cf.internal"
+  # ./certstrap sign bbs.service.cf.internal --CA diegoCA
+  bbs_server_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIEcDCCAligAwIBAgIQY+RobV2cg3V8qNPgBowt9jANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdkaWVnb0NBMB4XDTE2MDEyMTExNDAzNVoXDTE4MDEyMTExNDAz
+    NVowIjEgMB4GA1UEAxMXYmJzLnNlcnZpY2UuY2YuaW50ZXJuYWwwggEiMA0GCSqG
+    SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDXaXW1lYOMk64cc+wF8hVfWmkZxG237jva
+    al8KfqKYBMoGxg45pcJii9/au2tFMgs7vdcmPtW4b3foNx9ndtQjrwDESIH+FPvU
+    srInXRUndk9CZfPOi1umbaknEqeuA5TxxxWPs+ZwCHI1Oy8fA7kTUgkBpw24Tk3q
+    /8+sDIIkzYToC5HjiSseHPrl+pmlXHUW6Cudi9ZYmwby1bxZVqcAEHOB7GJOOBcH
+    vJYbld6ZEnUCeWZ5CZGAVBO6HRnoFdqu9niBYdiMsbpaOVSrcBE2N7IghAmU7KWv
+    qKROBzt0BrKGdgMF2fVd+CLYQqxMpOIt/BnTlVB83xE0ZK+f0NPTAgMBAAGjgbEw
+    ga4wDgYDVR0PAQH/BAQDAgO4MB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcD
+    AjAdBgNVHQ4EFgQUzUh9zhlx0PKGvqiA4Te8s4RYx7YwHwYDVR0jBBgwFoAUuhF1
+    8gsuDj+tmdnjsnh3GvWE1IQwPQYDVR0RBDYwNIIZKi5iYnMuc2VydmljZS5jZi5p
+    bnRlcm5hbIIXYmJzLnNlcnZpY2UuY2YuaW50ZXJuYWwwDQYJKoZIhvcNAQELBQAD
+    ggIBADz7HU1JW4x8DLvQbDWvWucvmUsHZ/H27fcvSFsvwutRP0ifGcmOLtq3+7/P
+    dU/QzRr8zlnhOH9JhxJS9cPCRiY326CPP8lpynPYLGMOwKmM0T2YuwmxypjO47Q4
+    XtN3U4dBWZHWIt1VAN58TDDrpMpVTArrDfrVvrTdghVU0/I9eP1W6fL8p8vhNnaT
+    9lcnAX2y7/ypULbH/0Fs2d1lSAm8jH5hViV+/nf5WqH4bUeyHeIrhfvT+C5PDR1p
+    N/iHm2YExxha/Jk5Mi+rd0jVXH8I1SQ0ynxSv61Nm5vaxQaKHnVKVjJuYBR2LJwA
+    7El7SUR/aKffkXNF83aV7lYOZo5A1r4Fqus4YaJ+4pIbTw0FzOGInQjRrMh74YmM
+    LzLhGip9CpBqfQ36KR01uuzZ3Y5p14LGY+ZDwstwLkV/aik0T0sVFIAfUVeQXCpt
+    x4fjef8CFMgwdKrWWoXaEq9zUav7D329bjsaTqW6lYbhEO42UxVSpPu1h/UpeCIc
+    tKWqXFSjsaddXy3UsNOfsNRcW+EiHayhb2FmWYKYTKzjbsztQOKt8vI1UyXYT43O
+    kdtMmjGxvHMBp0Oy2MRPkHQTwi4cSDy6hWr+UgF/nJ5AC2I50LAM478r88s89zR3
+    Dyo5mgTvYM3lA9hHdK6nnQ6ZX2uLNLA2ilCHTejqYUejdFhC
+    -----END CERTIFICATE-----
+  # new private key for properties.diego.bbs.server_key See:
+  # https://github.com/cloudfoundry-incubator/diego-release
+  # generated using:
+  # ./certstrap request-cert \
+  # --common-name "bbs.service.cf.internal" \
+  # --domain "*.bbs.service.cf.internal,bbs.service.cf.internal"
+  # ./certstrap sign bbs.service.cf.internal --CA diegoCA
+  bbs_server_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA12l1tZWDjJOuHHPsBfIVX1ppGcRtt+472mpfCn6imATKBsYO
+    OaXCYovf2rtrRTILO73XJj7VuG936DcfZ3bUI68AxEiB/hT71LKyJ10VJ3ZPQmXz
+    zotbpm2pJxKnrgOU8ccVj7PmcAhyNTsvHwO5E1IJAacNuE5N6v/PrAyCJM2E6AuR
+    44krHhz65fqZpVx1FugrnYvWWJsG8tW8WVanABBzgexiTjgXB7yWG5XemRJ1Anlm
+    eQmRgFQTuh0Z6BXarvZ4gWHYjLG6WjlUq3ARNjeyIIQJlOylr6ikTgc7dAayhnYD
+    Bdn1Xfgi2EKsTKTiLfwZ05VQfN8RNGSvn9DT0wIDAQABAoIBAFrG5IXrRg6dxYfU
+    CijPRdZzIUtsjdgvGyYGIZsolph9nC2SlTgR9ILW8zUYOjJkznsUm3BQlnws7Vj8
+    sc1GNEv9WdNdwvoyGZYe4BjajymcH/aZRE9MRwkxuVDv+Z3JgKELBrkSVQ/tX0Oz
+    dz4YsYvEzGrX3V5IEWnw97FHbCjZdQ3Akiu8ZCBe9bvxvuBHkAtXdHEINVx4gCOj
+    EQn/mhLI/1HUa4WxvRwPxoa6pa8120kvlADXMd4ozFXcPrxPirlaBCrstR+tT+R/
+    +TBheJQKGd2IVQJ5rrWpPogGYd9GxB9y4LeXC6CBynkKK5O8XReEynMSG2L+Fl/n
+    trsxbPECgYEA9G98rkwIeVrXTrXcSbxwHdjt/w5roW9N/RxlL3B2HpChOXFlCwja
+    4rPBerDPBAgF75hkCZ1FVS5qYUQpNnsCMgiN3SppOrzj2UX+tVWMv4Y5/xGXMbgr
+    2G/Kq5WZvaHXUKqoYoBPuAM7VwILoYfA53TQObuFvwkq1Yf9kxgXaocCgYEA4Zpz
+    RGXQX+0akb5VRYcqOEFy2BLysNE4dHO6kaVMPeNKgDUD3vRDsBNF2XOzlprz6nC2
+    V1k+UxKnI4pSPpgL+WVjAzi1PyGhNIEuicDUy2EtTrsJOIinzPo8hE34a8R/ZowA
+    8MCks5kWm1m9m7k69HoV44sf/TmzlxGo9Gw2I1UCgYEApOj+jj0fznf6INFTMLAg
+    WBK95sEc3kpQrH5Wyd2u40oia7XUPNCZlC9ATn0w/YBIOPBwNYhUeXaaMMsinu34
+    ejcJNvhhDE7ZzgGKKV7xWVm+kRaWEeY2NoydiIuisKyaroKknegBYJ1VkIsBu9Xx
+    0HYf8YNRZaRSsMNR0caELcsCgYBMgOO1vhD7dpwb8D9aZIucqBUZ0NMbwtcyJkyO
+    N0+zbPBGqbO2V37cpqx5IRM1bzZnufEbjdfks96Z3r4lG8pzuD3rSb+suOrBs0zk
+    yc9faITEvghSc4Tzraf39bjYUrohPDjVa35uqOtRowz5Ucb8QKpLj1I5vOd5wzNY
+    L5nsQQKBgQChhBWRkRkWzkproLyJd+kwCzMKhXBydrWwdPhZE3ssnknXIPw93neA
+    wT+J1MgbvFRHIulYJ0c6RudahIcJQdu/ZhOZ6P/Fdv/jdKpnw+IfZpoPcB9+94rT
+    M/69EynwlpLOSW/ljEuoo4BbCWgRTtWlbDvpxNQMLl8MjBQflOcLvg==
+    -----END RSA PRIVATE KEY-----
   router_ssl_cert:  |
     -----BEGIN CERTIFICATE-----
     MIIEADCCAuigAwIBAgIJAKfsWxYN1H6gMA0GCSqGSIb3DQEBBQUAMF0xCzAJBgNV
