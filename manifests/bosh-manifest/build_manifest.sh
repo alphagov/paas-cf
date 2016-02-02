@@ -9,6 +9,7 @@ spruce merge \
   --prune terraform_outputs \
   deployments/*.yml \
   deployments/aws/*.yml \
+  "${BOSH_CA_CERT}" \
   "${BOSH_SECRETS}" \
   "${BOSH_TERRAFORM_OUTPUTS}" \
   "${VPC_TERRAFORM_OUTPUTS}"

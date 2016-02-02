@@ -244,10 +244,17 @@ jobs:
       trigger: true
       passed: [bosh-terraform]
     - get: paas-cf
+      passed:
+      - bosh-terraform
+      - generate-secrets
+      - generate-CA-certs
+      - bootstrap-s3-state
     - get: vpc-tfstate
     - get: bosh-tfstate
       passed: [bosh-terraform]
     - get: bosh-secrets
+    - get: bosh-CA-crt
+      passed: [generate-CA-certs]
     - task: terraform_outputs
       config:
         image: docker:///ruby#2.2.3-slim
@@ -286,6 +293,7 @@ jobs:
       config:
         image: docker:///governmentpaas/spruce
         params:
+          BOSH_CA_CERT: "../../../bosh-cert/bosh-ca-cert.yml"
           BOSH_SECRETS: "../../../bosh-secrets/bosh-secrets.yml"
           BOSH_TERRAFORM_OUTPUTS: "../../../terraform-outputs/bosh.terraform-outputs.yml"
           VPC_TERRAFORM_OUTPUTS: "../../../terraform-outputs/vpc.terraform-outputs.yml"
@@ -301,6 +309,7 @@ jobs:
         - name: paas-cf
         - name: terraform-outputs
         - name: bosh-secrets
+        - name: bosh-cert
         outputs:
         - name: bosh-manifest
       on_success:
