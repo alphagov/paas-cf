@@ -769,10 +769,6 @@ properties:
   description: null
   ssl:
     skip_cert_verify: true
-  system_domain: (( grab properties.domain ))
-  system_domain_organization: ~
-  app_domains:
-    - (( grab properties.domain ))
 
   disk_quota_enabled: true
 

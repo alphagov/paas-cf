@@ -14,6 +14,10 @@ output "cf_root_domain" {
   value = "${var.env}.${var.system_dns_zone_name}"
 }
 
+output "cf_apps_domain" {
+  value = "${var.env}.${var.apps_dns_zone_name}"
+}
+
 output "elb_name" {
   value = "${aws_elb.router.name}"
 }
