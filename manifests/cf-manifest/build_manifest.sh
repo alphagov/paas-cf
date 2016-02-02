@@ -6,6 +6,7 @@ manifests_dir=${MANIFESTS_DIR:-"./"}
 terraform_output_dir=${TERRAFORM_OUTPUT_DIR:-"${manifests_dir}/outputs/terraform"}
 secrets=${SECRETS:-"${manifests_dir}/outputs/cf-secrets.yml"}
 ssl_certs=${SSL_CERTS:-"${manifests_dir}/outputs/cf-ssl-certificates.yml"}
+ssl_certs_dir=${SSL_CERTS_DIR:-}
 
 spruce merge \
   --prune meta --prune lamb_meta \
@@ -15,4 +16,5 @@ spruce merge \
   "${manifests_dir}"/deployments/aws/*.yml \
   "${terraform_output_dir}"/*.yml \
   "${secrets}" \
-  "${ssl_certs}"
+  "${ssl_certs}" \
+  ${ssl_certs_dir:+"${ssl_certs_dir}"/*.yml}
