@@ -237,7 +237,7 @@ jobs:
         params:
           file: terraform-apply/bosh.tfstate
 
-  - name: bosh-init
+  - name: generate-bosh-manifest
     serial: true
     plan:
     - get: pipeline-trigger
@@ -248,8 +248,6 @@ jobs:
     - get: bosh-tfstate
       passed: [bosh-terraform]
     - get: bosh-secrets
-    - get: bosh-init-state
-    - get: ssh-private-key
     - task: terraform_outputs
       config:
         image: docker:///ruby#2.2.3-slim
@@ -309,6 +307,18 @@ jobs:
         put: bosh-manifest
         params:
           file: bosh-manifest/bosh-manifest.yml
+
+  - name: bosh-init
+    plan:
+    - get: pipeline-trigger
+      trigger: true
+      passed: [generate-bosh-manifest]
+    - get: bosh-manifest
+      trigger: true
+      passed: [generate-bosh-manifest]
+    - get: bosh-init-state
+    - get: ssh-private-key
+
     - task: bosh-init-microbosh
       config:
         image: docker:///governmentpaas/bosh-init
@@ -324,7 +334,6 @@ jobs:
             cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
             bosh-init deploy bosh-manifest/bosh-manifest.yml
         inputs:
-        - name: paas-cf
         - name: bosh-manifest
         - name: bosh-init-state
         - name: ssh-private-key
@@ -332,4 +341,3 @@ jobs:
         put: bosh-init-state
         params:
           file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
-
