@@ -11,7 +11,7 @@ output "ssh_elb_name" {
 }
 
 output "cf_root_domain" {
-  value = "${var.env}.${var.dns_zone_name}"
+  value = "${var.env}.${var.system_dns_zone_name}"
 }
 
 output "elb_name" {

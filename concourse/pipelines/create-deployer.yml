@@ -246,7 +246,7 @@ jobs:
             . vpc-terraform-outputs/tfvars.sh
             openssl req -x509 -newkey rsa:2048 -keyout concourse.key \
               -out concourse.crt -days 365 -nodes -subj \
-              "/C=UK/ST=London/L=London/O=GDS/CN={{deploy_env}}-concourse.${TF_VAR_dns_zone_name}"
+              "/C=UK/ST=London/L=London/O=GDS/CN={{deploy_env}}-concourse.${TF_VAR_system_dns_zone_name}"
             tar czvf concourse-cert.tar.gz concourse.crt concourse.key
 
     - task: terraform-apply

@@ -55,8 +55,8 @@ resource "aws_security_group" "concourse-elb" {
 }
 
 resource "aws_route53_record" "concourse" {
-  zone_id = "${var.dns_zone_id}"
-  name    = "${var.env}-concourse.${var.dns_zone_name}."
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "${var.env}-concourse.${var.system_dns_zone_name}."
   type    = "CNAME"
   ttl     = "60"
   records = ["${aws_elb.concourse.dns_name}"]

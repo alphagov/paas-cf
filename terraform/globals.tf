@@ -56,12 +56,12 @@ variable "vagrant_cidr" {
   default     = ""
 }
 
-variable "dns_zone_id" {
-  description = "Amazon Route53 DNS zone identifier. Different per account."
+variable "system_dns_zone_id" {
+  description = "Amazon Route53 DNS zone identifier for the system components. Different per account."
 }
 
-variable "dns_zone_name" {
-  description = "Amazon Route53 DNS zone name. Differs per account."
+variable "system_dns_zone_name" {
+  description = "Amazon Route53 DNS zone name for the system components. Differs per account."
 }
 
 variable "microbosh_static_private_ip" {
