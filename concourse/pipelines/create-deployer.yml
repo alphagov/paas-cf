@@ -130,7 +130,7 @@ jobs:
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} vpc.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
-            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-cert.tar.gz paas-cf/concourse/init_files/concourse-cert.tar.gz
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
         inputs:
         - name: paas-cf
     - put: build-all-trigger
