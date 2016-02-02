@@ -79,6 +79,7 @@ jobs:
   - name: init
     serial: true
     plan:
+    - get: paas-cf
     - put: pipeline-trigger
       params: {bump: patch}
 
@@ -114,6 +115,7 @@ jobs:
       trigger: true
       passed: [ init ]
     - get: paas-cf
+      passed: [init]
 
     - task: generate
       config:
@@ -149,6 +151,7 @@ jobs:
       trigger: true
       passed: [ init ]
     - get: paas-cf
+      passed: [init]
     - get: bosh-CA-crt
     - get: bosh-CA-key
 
@@ -187,6 +190,7 @@ jobs:
       trigger: true
       passed: [ init ]
     - get: paas-cf
+      passed: [init]
     - get: vpc-tfstate
     - get: concourse-tfstate
     - get: bosh-tfstate
@@ -244,11 +248,7 @@ jobs:
       trigger: true
       passed: [bosh-terraform]
     - get: paas-cf
-      passed:
-      - bosh-terraform
-      - generate-secrets
-      - generate-CA-certs
-      - bootstrap-s3-state
+      passed: [init]
     - get: vpc-tfstate
     - get: bosh-tfstate
       passed: [bosh-terraform]
