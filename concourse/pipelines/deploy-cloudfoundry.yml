@@ -82,6 +82,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bbs_client-cert.tar.gz
 
+  - name: consul_server-cert
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: consul_server-cert.tar.gz
+
 jobs:
   - name: init
     serial_groups: [ deploy ]
@@ -216,6 +223,7 @@ jobs:
             CERT_LIST: |
               bbs_server,bbs.service.cf.internal
               bbs_client
+              consul_server
             DEPLOY_ENV: {{deploy_env}}
           run:
             path: sh
@@ -254,6 +262,7 @@ jobs:
           - generate-cf-certs
         - get: bbs_server-cert
         - get: bbs_client-cert
+        - get: consul_server-cert
         - get: vpc-tfstate
         - get: bosh-tfstate
         - get: concourse-tfstate
@@ -268,6 +277,7 @@ jobs:
           - name: paas-cf
           - name: bbs_server-cert
           - name: bbs_client-cert
+          - name: consul_server-cert
           run:
             path: sh
             args:
