@@ -89,6 +89,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: consul_server-cert.tar.gz
 
+  - name: consul_agent-cert
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: consul_agent-cert.tar.gz
+
 jobs:
   - name: init
     serial_groups: [ deploy ]
@@ -224,6 +231,7 @@ jobs:
               bbs_server,bbs.service.cf.internal
               bbs_client
               consul_server
+              consul_agent
             DEPLOY_ENV: {{deploy_env}}
           run:
             path: sh
@@ -263,6 +271,7 @@ jobs:
         - get: bbs_server-cert
         - get: bbs_client-cert
         - get: consul_server-cert
+        - get: consul_agent-cert
         - get: vpc-tfstate
         - get: bosh-tfstate
         - get: concourse-tfstate
@@ -278,6 +287,7 @@ jobs:
           - name: bbs_server-cert
           - name: bbs_client-cert
           - name: consul_server-cert
+          - name: consul_agent-cert
           run:
             path: sh
             args:
