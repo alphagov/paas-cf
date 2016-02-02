@@ -64,6 +64,14 @@ variable "system_dns_zone_name" {
   description = "Amazon Route53 DNS zone name for the system components. Differs per account."
 }
 
+variable "apps_dns_zone_id" {
+  description = "Amazon Route53 DNS zone identifier for hosted apps. Different per account."
+}
+
+variable "apps_dns_zone_name" {
+  description = "Amazon Route53 DNS zone name for hosted apps. Differs per account."
+}
+
 variable "microbosh_static_private_ip" {
   description = "Microbosh internal IP"
   default     = "10.0.0.6"
