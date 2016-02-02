@@ -55,12 +55,12 @@ resources:
       versioned_file: bosh-secrets.yml
 
 jobs:
-  - name: s3init
+  - name: init
     serial_groups: [ deploy ]
     serial: true
     plan:
       - get: paas-cf
-      - task: s3init
+      - task: init
         config:
           image: docker:///governmentpaas/curl-ssl
           run:
@@ -74,19 +74,19 @@ jobs:
           - name: paas-cf
       - put: cf-tfstate
         params:
-          file: s3init/cf.tfstate
+          file: init/cf.tfstate
   - name: terraform
     serial_groups: [ deploy ]
     serial: true
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['s3init']
+          passed: ['init']
         - get: vpc-tfstate
         - get: concourse-tfstate
         - get: bosh-tfstate
         - get: cf-tfstate
-          passed: ['s3init']
+          passed: ['init']
           trigger: true
       - task: terraform-variables
         config:
@@ -138,7 +138,7 @@ jobs:
   - name: generate-cf-secrets
     plan:
       - get: paas-cf
-        passed: ['s3init']
+        passed: ['init']
         trigger: true
 
       - task: generate
