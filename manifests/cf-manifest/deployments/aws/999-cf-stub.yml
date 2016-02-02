@@ -35,6 +35,27 @@ networks:
       cloud_properties:
         subnet: (( grab terraform_outputs.cf2_subnet_id ))
 
+- name: cell1
+  subnets:
+    - range: 10.0.20.0/24
+      reserved:
+        - 10.0.20.2 - 10.0.20.3
+      gateway: 10.0.20.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cell1_subnet_id ))
+- name: cell2
+  subnets:
+    - range: 10.0.21.0/24
+      reserved:
+        - 10.0.21.2 - 10.0.21.3
+      gateway: 10.0.21.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cell2_subnet_id ))
+
 properties:
   domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain: (( grab terraform_outputs.cf_root_domain ))

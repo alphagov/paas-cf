@@ -444,8 +444,6 @@ base_job_templates:
     - name: metron_agent
       release: cf
   colocated:
-    - name: rep
-      release: diego
     - name: auctioneer
       release: diego
     - name: bbs
@@ -460,13 +458,9 @@ base_job_templates:
       release: etcd
     - name: file_server
       release: diego
-    - name: garden
-      release: garden-linux
     - name: metron_agent
       release: cf
     - name: nsync
-      release: diego
-    - name: rootfses
       release: diego
     - name: route_emitter
       release: diego
