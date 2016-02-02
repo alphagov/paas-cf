@@ -236,13 +236,11 @@ jobs:
         put: bosh-tfstate
         params:
           file: terraform-apply/bosh.tfstate
-    - put: terraform-updated
-      params: {bump: patch}
 
   - name: bosh-init
     serial: true
     plan:
-    - get: terraform-updated
+    - get: pipeline-trigger
       trigger: true
       passed: [bosh-terraform]
     - get: paas-cf
