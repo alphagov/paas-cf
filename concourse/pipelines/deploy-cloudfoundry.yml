@@ -96,6 +96,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: consul_agent-cert.tar.gz
 
+  - name: router_ssl-cert
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: router_ssl-cert.tar.gz
+
 jobs:
   - name: init
     serial_groups: [ deploy ]
@@ -232,6 +239,7 @@ jobs:
               bbs_client
               consul_server
               consul_agent
+              router_ssl,*.{{deploy_env}}.cf.paas.alphagov.co.uk
             DEPLOY_ENV: {{deploy_env}}
           run:
             path: sh
@@ -272,6 +280,7 @@ jobs:
         - get: bbs_client-cert
         - get: consul_server-cert
         - get: consul_agent-cert
+        - get: router_ssl-cert
         - get: vpc-tfstate
         - get: bosh-tfstate
         - get: concourse-tfstate
@@ -288,6 +297,7 @@ jobs:
           - name: bbs_client-cert
           - name: consul_server-cert
           - name: consul_agent-cert
+          - name: router_ssl-cert
           run:
             path: sh
             args:
