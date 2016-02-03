@@ -19,7 +19,6 @@ fi
 
 [ -z "${bucket}" ]    && echo "Must provide bucket name"    && exit 100
 [ -z "${file}" ]      && echo "Must provide file name"      && exit 101
-[ -z "${init_file}" ] && echo "Must provide init file path" && exit 102
 [ -z "${AWS_ACCESS_KEY_ID}"     ] && echo "AWS_ACCESS_KEY_ID nor specified or present in instance profile"     && exit 103
 [ -z "${AWS_SECRET_ACCESS_KEY}" ] && echo "AWS_SECRET_ACCESS_KEY nor specified or present in instance profile" && exit 104
 
@@ -71,9 +70,14 @@ get
 if grep -q "200 OK" headers.txt; then
   echo "$file already exists in $bucket bucket."
 elif  grep -q "<Code>NoSuchKey</Code>" "${file}"; then
-  echo "${file} cannot be found in ${bucket} bucket. Uploading init file ${init_file}."
-  put
-  get
+  if [ -z "${init_file}" ]; then
+    echo "${file} cannot be found in ${bucket} bucket and no init file provided."
+    exit 1
+  else
+    echo "${file} cannot be found in ${bucket} bucket. Uploading init file ${init_file}."
+    put
+    get
+  fi
 else
   echo "Unexpected response: $(cat "${file}" headers.txt)"
   exit 1
