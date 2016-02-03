@@ -17,7 +17,7 @@ RSpec.describe "base properties" do
 
   it "sets the app domains" do
     expect(properties["app_domains"]).to match_array([
-      terraform_fixture(:cf_root_domain),
+      terraform_fixture(:cf_apps_domain),
     ])
   end
 

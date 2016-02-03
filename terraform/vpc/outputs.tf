@@ -42,6 +42,6 @@ output "infra_subnet_ids" {
   value = "${join(",", aws_subnet.infra.*.id)}"
 }
 
-output "dns_zone_name" {
-  value = "${var.dns_zone_name}"
+output "system_dns_zone_name" {
+  value = "${var.system_dns_zone_name}"
 }

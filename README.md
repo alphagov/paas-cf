@@ -105,7 +105,7 @@ When complete you should:
 1. Access the UI from a browser with the same credentials as your
   *Bootstrap Concourse*.
 
-  - `https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk/`
+  - `https://deployer.${DEPLOY_ENV}.cf.paas.alphagov.co.uk/`
 
 1. Add a new target to the `fly` CLI utility:
 
@@ -115,7 +115,7 @@ DEPLOY_ENV=<deploy-env>
 $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://${DEPLOY_ENV}-concourse.cf.paas.alphagov.co.uk"
+   ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://deployer.${DEPLOY_ENV}.cf.paas.alphagov.co.uk"
 ```
 
 ### Destroy

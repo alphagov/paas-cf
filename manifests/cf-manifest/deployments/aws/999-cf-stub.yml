@@ -40,7 +40,7 @@ properties:
   system_domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain_organization: GDS
   app_domains:
-   - (( grab terraform_outputs.cf_root_domain ))
+   - (( grab terraform_outputs.cf_apps_domain ))
 
   cc:
     staging_upload_user: staging_upload_user
