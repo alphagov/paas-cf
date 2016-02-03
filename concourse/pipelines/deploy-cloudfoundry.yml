@@ -91,15 +91,11 @@ jobs:
             - -c
             - |
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bbs_server-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
           inputs:
           - name: paas-cf
       - put: cf-tfstate
         params:
           file: init/cf.tfstate
-      - put: bbs_server-cert
-        params:
-          file: init/bbs_server-cert.tar.gz
 
   - name: terraform
     serial_groups: [ deploy ]
@@ -200,40 +196,43 @@ jobs:
         - get: paas-cf
           passed: ['init']
           trigger: true
-        - get: bbs_server-cert
-          passed: ['init']
-          trigger: true
         - get: bosh-CA-key
         - get: bosh-CA-crt
-      - try:
-          task: generate-bbs_server
-          config:
-            image: docker:///governmentpaas/certstrap
-            inputs:
-            - name: bosh-CA-key
-            - name: bosh-CA-crt
-            - name: bbs_server-cert
-            run:
-              path: sh
-              args:
-              - -e
-              - -c
-              - |
-                if [ -z "$(tar -tvzf bbs_server-cert/bbs_server-cert.tar.gz)" ]; then
-                  mkdir out
-                  cp bosh-CA-key/bosh-CA.key out/
-                  cp bosh-CA-crt/bosh-CA.crt out/
-                  certstrap request-cert --passphrase "" --common-name "bbs_server" --domain "bbs.service.cf.internal"
-                  certstrap sign --CA "bosh-CA" --passphrase "" "bbs_server"
-                  cd out && tar -cvzf ../bbs_server-cert.tar.gz bbs_server.*
+      - task: generate-cf-certs
+        config:
+          image: docker:///governmentpaas/certstrap
+          inputs:
+          - name: bosh-CA-key
+          - name: bosh-CA-crt
+          - name: paas-cf
+          params:
+            CERT_LIST: |
+              bbs_server,bbs.service.cf.internal
+            DEPLOY_ENV: {{deploy_env}}
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              mkdir out
+              cp bosh-CA-key/bosh-CA.key out/
+              cp bosh-CA-crt/bosh-CA.crt out/
+              for cert in ${CERT_LIST}; do
+                cn=$(eval echo ${cert%%,*}) # eval to workaround poor concourse interpolation
+                domains=$(eval echo ${cert#*,})
+
+                if ! paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ${cn}-cert.tar.gz ; then
+                  certstrap request-cert --passphrase "" --common-name "${cn}" ${domains:+--domain "${domains}"}
+                  certstrap sign --CA "bosh-CA" --passphrase "" "${cn}"
+                  cd out
+                  tar -cvzf ../${cn}-cert.tar.gz ${cn}.*
+                  ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ${cn}-cert.tar.gz ../${cn}-cert.tar.gz
+                  cd ..
                 else
-                  echo "Certificate is already generated"
+                  echo "Certificate ${cn} is already generated, skipping."
                 fi
-          on_success:
-            aggregate:
-            - put: bbs_server-cert
-              params:
-                file: generate-bbs_server/bbs_server-cert.tar.gz
+              done
 
   - name: generate-manifest
     serial_groups: [ deploy ]
@@ -241,9 +240,11 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['terraform','generate-cf-secrets']
+          passed:
+          - terraform
+          - generate-cf-secrets
+          - generate-cf-certs
         - get: bbs_server-cert
-          passed: ['generate-cf-certs']
         - get: vpc-tfstate
         - get: bosh-tfstate
         - get: concourse-tfstate
