@@ -3,7 +3,7 @@ rvm:
   - 2.2.3
 env:
   global:
-    - TF_VERSION="0.6.8"
+    - TF_VERSION="0.6.10"
     - SPRUCE_VERSION="0.13.0"
 
 addons:

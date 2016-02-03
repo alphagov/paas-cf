@@ -93,12 +93,12 @@ resource_pools:
     env: (( grab meta.default_env ))
 
   - name: cell_z1
-    network: cf1
+    network: cell1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
 
   - name: cell_z2
-    network: cf2
+    network: cell2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
 

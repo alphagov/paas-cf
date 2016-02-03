@@ -594,10 +594,10 @@ jobs:
 
   - name: cell_z1
     templates: (( grab base_job_templates.cell ))
-    instances: 0
+    instances: 1
     resource_pool: cell_z1
     networks:
-      - name: cf1
+      - name: cell1
     update:
       serial: false
       max_in_flight: 1
@@ -610,10 +610,10 @@ jobs:
 
   - name: cell_z2
     templates: (( grab base_job_templates.cell ))
-    instances: 0
+    instances: 1
     resource_pool: cell_z2
     networks:
-      - name: cf2
+      - name: cell2
     update:
       serial: false
       max_in_flight: 1
