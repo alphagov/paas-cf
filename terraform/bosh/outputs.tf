@@ -37,3 +37,7 @@ output "microbosh_static_public_ip" {
 output "compiled_cache_bucket_host" {
   value = "s3-${var.region}.amazonaws.com"
 }
+
+output "compiled_cache_bucket_name" {
+  value = "shared-cf-bosh-blobstore-${var.aws_account}"
+}

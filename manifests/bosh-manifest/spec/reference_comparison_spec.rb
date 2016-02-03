@@ -7,9 +7,9 @@ RSpec.describe "comparing with reference" do
 
   specify "the output matches reference manifest" do
     expect(
-      manifest_with_defaults.reject {|k,v| %w(meta lamb_meta).include?(k) }.to_yaml
+      manifest_with_defaults.to_yaml
     ).to eq(
-      reference_manifest.reject {|k,v| k == "meta" }.to_yaml
+      reference_manifest.to_yaml
     )
   end
 end
