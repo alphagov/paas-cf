@@ -101,6 +101,7 @@ jobs:
     - get: paas-cf
     - get: bosh-init-state
       passed: [ bosh-init-delete ]
+      trigger: true
     - get: vpc-tfstate
     - get: concourse-tfstate
     - get: bosh-tfstate
