@@ -13,7 +13,7 @@ generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
-account: ${AWS_ACCOUNT:-dev}
+aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
 branch_name: ${BRANCH:-master}

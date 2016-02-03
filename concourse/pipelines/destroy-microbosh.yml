@@ -145,7 +145,7 @@ jobs:
             . terraform-variables/vpc.tfvars.sh
             . terraform-variables/concourse.tfvars.sh
 
-            terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{account}}.tfvars \
+            terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
       ensure:
         put: bosh-tfstate
