@@ -14,6 +14,7 @@ module ManifestHelpers
         "BOSH_SECRETS" => File.expand_path("../../fixtures/bosh-secrets.yml", __FILE__),
         "BOSH_TERRAFORM_OUTPUTS" => File.expand_path("../../fixtures/bosh-terraform-outputs.yml", __FILE__),
         "VPC_TERRAFORM_OUTPUTS" => File.expand_path("../../fixtures/vpc-terraform-outputs.yml", __FILE__),
+        "BOSH_CA_CERT"         => File.expand_path("../../fixtures/bosh-ssl-certificates.yml", __FILE__),
       },
       File.expand_path("../../../build_manifest.sh", __FILE__),
     )
