@@ -293,17 +293,18 @@ jobs:
       config:
         image: docker:///governmentpaas/spruce
         params:
-          BOSH_CA_CERT: "../../../bosh-cert/bosh-ca-cert.yml"
-          BOSH_SECRETS: "../../../bosh-secrets/bosh-secrets.yml"
-          BOSH_TERRAFORM_OUTPUTS: "../../../terraform-outputs/bosh.terraform-outputs.yml"
-          VPC_TERRAFORM_OUTPUTS: "../../../terraform-outputs/vpc.terraform-outputs.yml"
+          BOSH_MANIFEST_STUBS: |
+            ./bosh-secrets/bosh-secrets.yml
+            ./bosh-cert/bosh-ca-cert.yml
+            ./terraform-outputs/bosh.terraform-outputs.yml
+            ./terraform-outputs/vpc.terraform-outputs.yml
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            ./paas-cf/manifests/bosh-manifest/build_manifest.sh > bosh-manifest/bosh-manifest.yml
+            ./paas-cf/manifests/bosh-manifest/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
             /bin/cat bosh-manifest/bosh-manifest.yml
         inputs:
         - name: paas-cf
