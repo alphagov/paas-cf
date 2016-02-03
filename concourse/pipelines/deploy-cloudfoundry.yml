@@ -274,10 +274,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed:
-          - terraform
-          - generate-cf-secrets
-          - generate-cf-certs
+          passed: [init]
         - get: bosh-CA
         - get: bbs_server-cert
         - get: bbs_client-cert
@@ -389,7 +386,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['generate-manifest']
+          passed: [init]
         - get: cf-manifest
           passed: ['generate-manifest']
           trigger: true
