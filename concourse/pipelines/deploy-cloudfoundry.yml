@@ -237,7 +237,7 @@ jobs:
               bosh-CA:bbs_client,
               bosh-CA:router_ssl,*.${DEPLOY_ENV}.cf.paas.alphagov.co.uk
               bosh-CA:uaa_jwt_signing,
-              bosh-CA:consul_server,
+              bosh-CA:consul_server,server.dc1.cf.internal,server.dc2.cf.internal
               bosh-CA:consul_agent,
             DEPLOY_ENV: {{deploy_env}}
           run:
@@ -278,6 +278,7 @@ jobs:
           - terraform
           - generate-cf-secrets
           - generate-cf-certs
+        - get: bosh-CA
         - get: bbs_server-cert
         - get: bbs_client-cert
         - get: consul_server-cert
@@ -295,6 +296,7 @@ jobs:
         config:
           image: docker:///alpine#3.3
           inputs:
+          - name: bosh-CA
           - name: paas-cf
           - name: bbs_server-cert
           - name: bbs_client-cert
@@ -308,11 +310,13 @@ jobs:
             - -e
             - -c
             - |
-              for cert in *-cert; do
+              for cert in *-cert *-CA; do
                 cn=${cert%%-cert}
+                yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+
                 tar -xzf ${cert}/${cert}.tar.gz
-                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${cn}_key ${cn}.key  > ${cn}_key.yml
-                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${cn}_cert ${cn}.crt  > ${cn}_cert.yml
+                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key  > ${cn}_key.yml
+                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt  > ${cn}_cert.yml
               done
       - task: uaa_jwt_verification_key
         config:

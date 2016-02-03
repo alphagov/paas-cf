@@ -6,6 +6,8 @@ meta:
        total_services: 100
        non_basic_services_allowed: true
        total_routes: 1000
+  secrets:
+    consul_ca_cert: (( grab secrets.bosh_ca_cert ))
 
 properties:
   app_ssh: ~
@@ -256,7 +258,7 @@ properties:
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: (( grab secrets.consul_ca_cert ))
+        ca_cert: (( grab meta.secrets.consul_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
@@ -274,7 +276,7 @@ properties:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
         machines: ["etcd.service.cf.internal"]
-        ca_cert: (( grab secrets.consul_ca_cert ))
+        ca_cert: (( grab meta.secrets.consul_ca_cert ))
         client_cert: (( grab secrets.consul_agent_cert ))
         client_key: (( grab secrets.consul_agent_key ))
         require_ssl: false
@@ -284,7 +286,7 @@ properties:
     converger:
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: (( grab secrets.consul_ca_cert ))
+        ca_cert: (( grab meta.secrets.consul_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
