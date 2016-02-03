@@ -232,13 +232,13 @@ jobs:
           - name: bosh-CA
           - name: paas-cf
           params:
-            CERT_LIST: |
-              bbs_server,bbs.service.cf.internal
-              bbs_client
-              consul_server
-              consul_agent
-              router_ssl,*.{{deploy_env}}.cf.paas.alphagov.co.uk
-              uaa_jwt_signing
+            CERTS_TO_GENERATE: |
+              bosh-CA:bbs_server,bbs.service.cf.internal
+              bosh-CA:bbs_client,
+              bosh-CA:router_ssl,*.${DEPLOY_ENV}.cf.paas.alphagov.co.uk
+              bosh-CA:uaa_jwt_signing,
+              bosh-CA:consul_server,
+              bosh-CA:consul_agent,
             DEPLOY_ENV: {{deploy_env}}
           run:
             path: sh
@@ -247,14 +247,18 @@ jobs:
             - -c
             - |
               mkdir out
-              tar -xzf bosh-CA/bosh-CA.tar.gz -C out
-              for cert in ${CERT_LIST}; do
-                cn=$(eval echo ${cert%%,*}) # eval to workaround poor concourse interpolation
-                domains=$(eval echo ${cert#*,})
+              for ca_tgz in */*-CA.tar.gz; do
+                tar -xzf $ca_tgz -C out
+              done
+              for cert_entry in ${CERTS_TO_GENERATE}; do
+                cert_info=$(eval echo ${cert_entry%%,*}) # eval to workaround poor concourse interpolation
+                ca=${cert_info%%:*}
+                cn=${cert_info#*:}
+                domains=$(eval echo ${cert_entry#*,})
 
                 if ! paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ${cn}-cert.tar.gz ; then
                   certstrap request-cert --passphrase "" --common-name "${cn}" ${domains:+--domain "${domains}"}
-                  certstrap sign --CA "bosh-CA" --passphrase "" "${cn}"
+                  certstrap sign --CA $ca --passphrase "" "${cn}"
                   cd out
                   tar -cvzf ../${cn}-cert.tar.gz ${cn}.*
                   ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ${cn}-cert.tar.gz ../${cn}-cert.tar.gz
