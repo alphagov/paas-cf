@@ -24,3 +24,8 @@ resource "aws_route_table_association" "internet" {
   route_table_id = "${element(aws_route_table.internet.*.id, count.index)}"
 }
 
+resource "aws_route_table_association" "cell_internet" {
+  count          = "${var.zone_count}"
+  subnet_id      = "${element(aws_subnet.cell.*.id, count.index)}"
+  route_table_id = "${element(aws_route_table.internet.*.id, count.index)}"
+}

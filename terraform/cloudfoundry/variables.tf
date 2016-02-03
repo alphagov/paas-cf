@@ -7,6 +7,15 @@ variable "cf_cidrs" {
   }
 }
 
+variable "cell_cidrs" {
+  description = "CIDR for cell subnet indexed by AZ"
+  default     = {
+    zone0 = "10.0.20.0/24"
+    zone1 = "10.0.21.0/24"
+    zone2 = "10.0.22.0/24"
+  }
+}
+
 variable "health_check_interval" {
   description = "Interval between requests for load balancer health checks"
   default     = 5

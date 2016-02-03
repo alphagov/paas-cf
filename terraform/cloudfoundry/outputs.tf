@@ -6,6 +6,14 @@ output "cf2_subnet_id" {
   value = "${aws_subnet.cf.1.id}"
 }
 
+output "cell1_subnet_id" {
+  value = "${aws_subnet.cell.0.id}"
+}
+
+output "cell2_subnet_id" {
+  value = "${aws_subnet.cell.1.id}"
+}
+
 output "ssh_elb_name" {
   value = "${aws_elb.ssh-proxy-router.name}"
 }
