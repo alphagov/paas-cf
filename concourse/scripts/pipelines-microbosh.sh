@@ -10,7 +10,7 @@ generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
-aws_account: ${AWS_ACCOUNT:-trial}
+aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
 pipeline_trigger_file: ${trigger_file}
