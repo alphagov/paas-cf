@@ -6,6 +6,7 @@ meta:
   release:
     name: cf
 
+
   consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
 
   nfs_client_ranges:
@@ -65,9 +66,9 @@ meta:
 
   etcd_templates:
   - name: etcd
-    release: (( grab meta.release.name ))
+    release: etcd
   - name: etcd_metrics_server
-    release: (( grab meta.release.name ))
+    release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: consul_agent
@@ -226,8 +227,6 @@ jobs:
         agent:
           services:
             etcd: {}
-    update:
-      max_in_flight: 1
 
   - name: etcd_z2
     templates: (( grab meta.etcd_templates ))
@@ -244,8 +243,6 @@ jobs:
         agent:
           services:
             etcd: {}
-    update:
-      max_in_flight: 1
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
