@@ -1,0 +1,5 @@
+aws_account = "dev"
+system_dns_zone_id = "Z1TAH54WN7GPLT"
+system_dns_zone_name = "dev.paas.alphagov.co.uk"
+apps_dns_zone_id = "Z2M760FEEY23BS"
+apps_dns_zone_name = "dev-apps.paas.alphagov.co.uk"
