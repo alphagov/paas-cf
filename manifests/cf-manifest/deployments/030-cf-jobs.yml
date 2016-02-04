@@ -600,7 +600,6 @@ jobs:
             auctioneer: {}
             bbs: {}
             cc_uploader: {}
-            etcd: {}
             file_server: {}
             nsync: {}
             ssh_proxy: {}
@@ -626,7 +625,6 @@ jobs:
             auctioneer: {}
             bbs: {}
             cc_uploader: {}
-            etcd: {}
             file_server: {}
             nsync: {}
             ssh_proxy: {}
@@ -649,7 +647,6 @@ jobs:
       consul:
         agent:
           services:
-            etcd: {}
             bbs: {}
       metron_agent:
         zone: z1
@@ -665,7 +662,6 @@ jobs:
       consul:
         agent:
           services:
-            etcd: {}
             bbs: {}
       metron_agent:
         zone: z2
