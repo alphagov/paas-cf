@@ -222,6 +222,12 @@ jobs:
     properties:
       metron_agent:
         zone: z1
+      consul:
+        agent:
+          services:
+            etcd: {}
+    update:
+      max_in_flight: 1
 
   - name: etcd_z2
     templates: (( grab meta.etcd_templates ))
@@ -234,6 +240,12 @@ jobs:
     properties:
       metron_agent:
         zone: z2
+      consul:
+        agent:
+          services:
+            etcd: {}
+    update:
+      max_in_flight: 1
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
