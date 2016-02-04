@@ -16,12 +16,12 @@ module ManifestHelpers
 
   def load_default_manifest
     output, error, status = Open3.capture3(
-      {
-        "TERRAFORM_OUTPUT_DIR" => File.expand_path("../../fixtures/terraform", __FILE__),
-        "SECRETS"           => File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
-        "SSL_CERTS"         => File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
-      },
-      File.expand_path("../../../build_manifest.sh", __FILE__),
+      [
+        File.expand_path("../../../build_manifest.sh", __FILE__),
+        File.expand_path("../../fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
+        File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
+      ].join(' ')
     )
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 

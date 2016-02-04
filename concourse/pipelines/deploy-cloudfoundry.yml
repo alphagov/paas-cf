@@ -361,11 +361,11 @@ jobs:
           platform: linux
           image: docker:///governmentpaas/spruce
           params:
-            TERRAFORM_OUTPUT_DIR: "extract-terraform-outputs"
-            MANIFESTS_DIR: "./paas-cf/manifests/cf-manifest"
-            SECRETS: "cf-secrets/cf-secrets.yml"
-            SSL_CERTS_DIR: "cf-certs"
-            UAA_JWT_VERIFICATION_KEY: "uaa_jwt_verification_key/uaa_jwt_verification_key.yml"
+            MANIFEST_STUBS: |
+              ./extract-terraform-outputs/*.yml
+              ./cf-secrets/cf-secrets.yml
+              ./cf-certs/*.yml
+              ./uaa_jwt_verification_key/uaa_jwt_verification_key.yml
           inputs:
             - name: paas-cf
             - name: extract-terraform-outputs
@@ -378,7 +378,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/build_manifest.sh > cf-manifest.yml
+              ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest.yml
       - put: cf-manifest
         params:
           file: generate-manifest/cf-manifest.yml
