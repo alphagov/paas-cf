@@ -16,6 +16,16 @@ variable "cell_cidrs" {
   }
 }
 
+variable "cell_cidr_all" {
+  description = "CIDR for all cell subnets"
+  default     = "10.0.32.0/20"
+}
+
+variable "cf_cidr_all" {
+  description = "CIDR for all cell subnets"
+  default     = "10.0.16.0/20"
+}
+
 variable "health_check_interval" {
   description = "Interval between requests for load balancer health checks"
   default     = 5
