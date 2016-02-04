@@ -105,7 +105,7 @@ When complete you should:
 1. Access the UI from a browser with the same credentials as your
   *Bootstrap Concourse*.
 
-  - `https://deployer.${DEPLOY_ENV}.cf.paas.alphagov.co.uk/`
+  - `https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk/`
 
 1. Add a new target to the `fly` CLI utility:
 
@@ -115,7 +115,7 @@ DEPLOY_ENV=<deploy-env>
 $(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
 
 echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://deployer.${DEPLOY_ENV}.cf.paas.alphagov.co.uk"
+   ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk"
 ```
 
 ### Destroy
@@ -180,6 +180,24 @@ used within the pipeline. This is useful for development and code review:
 ```
 BRANCH=$(git rev-parse --abbrev-ref HEAD) <script>.sh
 ```
+
+## Optionally deploy to a different AWS account
+
+By default the scripts will deploy to the dev account. To deploy to a different
+account, you'll need to export AWS access keys and secrets for the account, and
+then set the `AWS_ACCOUNT` environment variable. eg to deploy/use the trial account:
+
+```
+export AWS_ACCESS_KEY_ID=your_trial_access_key
+export AWS_SECRET_ACCESS_KEY=your_trial_secret_key
+export AWS_ACCOUNT=trial
+```
+
+Due to the isolation between AWS accounts, when switching accounts, it's
+necessary to start with a comletely new deployment.
+
+**Note:** Different AWS accounts use different DNS names, so it'll be necessary
+to adjust some of the instructions above accordingly.
 
 ## Sharing your Bootstrap Concourse
 
