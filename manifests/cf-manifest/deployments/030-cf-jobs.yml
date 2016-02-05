@@ -6,6 +6,7 @@ meta:
   release:
     name: cf
 
+
   consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
 
   nfs_client_ranges:
@@ -65,11 +66,14 @@ meta:
 
   etcd_templates:
   - name: etcd
-    release: (( grab meta.release.name ))
+    release: etcd
   - name: etcd_metrics_server
-    release: (( grab meta.release.name ))
+    release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+
 
   ha_proxy_templates:
   - name: haproxy
@@ -219,6 +223,10 @@ jobs:
     properties:
       metron_agent:
         zone: z1
+      consul:
+        agent:
+          services:
+            etcd: {}
 
   - name: etcd_z2
     templates: (( grab meta.etcd_templates ))
@@ -231,6 +239,10 @@ jobs:
     properties:
       metron_agent:
         zone: z2
+      consul:
+        agent:
+          services:
+            etcd: {}
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
@@ -585,7 +597,6 @@ jobs:
             auctioneer: {}
             bbs: {}
             cc_uploader: {}
-            etcd: {}
             file_server: {}
             nsync: {}
             ssh_proxy: {}
@@ -611,7 +622,6 @@ jobs:
             auctioneer: {}
             bbs: {}
             cc_uploader: {}
-            etcd: {}
             file_server: {}
             nsync: {}
             ssh_proxy: {}
@@ -634,7 +644,6 @@ jobs:
       consul:
         agent:
           services:
-            etcd: {}
             bbs: {}
       metron_agent:
         zone: z1
@@ -650,7 +659,6 @@ jobs:
       consul:
         agent:
           services:
-            etcd: {}
             bbs: {}
       metron_agent:
         zone: z2

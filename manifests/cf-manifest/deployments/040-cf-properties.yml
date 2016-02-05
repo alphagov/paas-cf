@@ -435,8 +435,6 @@ base_job_templates:
     - name: file_server
       release: diego
   database:
-    - name: etcd
-      release: etcd
     - name: bbs
       release: diego
     - name: consul_agent
@@ -454,8 +452,6 @@ base_job_templates:
       release: diego
     - name: consul_agent
       release: cf
-    - name: etcd
-      release: etcd
     - name: file_server
       release: diego
     - name: metron_agent
