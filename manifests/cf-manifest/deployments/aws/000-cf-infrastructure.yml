@@ -213,12 +213,12 @@ resource_pools:
 
   - name: colocated_z1
     cloud_properties:
-      instance_type: r3.xlarge
+      instance_type: m3.medium
       availability_zone: (( grab meta.zones.z1 ))
 
   - name: colocated_z2
     cloud_properties:
-      instance_type: r3.xlarge
+      instance_type: m3.medium
       availability_zone: (( grab meta.zones.z2 ))
 
 
