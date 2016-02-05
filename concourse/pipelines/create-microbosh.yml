@@ -275,7 +275,7 @@ jobs:
           - -c
           - |
             tar -xzf bosh-CA/bosh-CA.tar.gz
-            paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca bosh-CA.crt > bosh-ca-cert.yml
+            paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert bosh-CA.crt > bosh-ca-cert.yml
         inputs:
         - name: paas-cf
         - name: bosh-CA
