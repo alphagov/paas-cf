@@ -1,18 +1,18 @@
 variable "cf_cidrs" {
   description = "CIDR for cf components subnet indexed by AZ"
   default     = {
-    zone0 = "10.0.10.0/24"
-    zone1 = "10.0.11.0/24"
-    zone2 = "10.0.12.0/24"
+    zone0 = "10.0.16.0/24"
+    zone1 = "10.0.17.0/24"
+    zone2 = "10.0.18.0/24"
   }
 }
 
 variable "cell_cidrs" {
   description = "CIDR for cell subnet indexed by AZ"
   default     = {
-    zone0 = "10.0.20.0/24"
-    zone1 = "10.0.21.0/24"
-    zone2 = "10.0.22.0/24"
+    zone0 = "10.0.32.0/24"
+    zone1 = "10.0.33.0/24"
+    zone2 = "10.0.34.0/24"
   }
 }
 
