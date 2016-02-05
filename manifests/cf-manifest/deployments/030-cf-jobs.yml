@@ -147,7 +147,6 @@ jobs:
         static_ips:
     update:
       serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -163,9 +162,6 @@ jobs:
     networks:
       - name: cf2
         static_ips:
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -189,7 +185,6 @@ jobs:
           z2: (( grab jobs.router_z2.networks.cf2.static_ips ))
       metron_agent:
         zone: z1
-    update: {}
 
   - name: nats_z1
     templates: (( grab meta.nats_templates ))
@@ -201,7 +196,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: {}
 
   - name: nats_z2
     templates: (( grab meta.nats_templates ))
@@ -213,7 +207,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-    update: {}
 
   - name: etcd_z1
     templates: (( grab meta.etcd_templates ))
@@ -226,8 +219,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update:
-      max_in_flight: 1
 
   - name: etcd_z2
     templates: (( grab meta.etcd_templates ))
@@ -240,8 +231,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-    update:
-      max_in_flight: 1
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
@@ -252,7 +241,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: {}
 
   - name: nfs_z1
     templates: (( grab meta.nfs_templates ))
@@ -265,7 +253,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: {}
 
   - name: postgres_z1
     templates: (( grab meta.postgres_templates ))
@@ -278,7 +265,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: {}
 
   - name: uaa_z1
     templates: (( grab meta.uaa_templates ))
@@ -298,7 +284,6 @@ jobs:
       uaa:
         proxy:
           servers: (( grab jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
-    update: {}
 
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
@@ -318,7 +303,6 @@ jobs:
       uaa:
         proxy:
           servers: (( grab jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
-    update: {}
 
   - name: api_z1
     templates: (( grab meta.api_templates ))
@@ -338,7 +322,6 @@ jobs:
       route_registrar:
         routes: (( grab meta.api_routes ))
       nfs_server: (( grab meta.nfs_server ))
-    update: {}
 
   - name: api_z2
     templates: (( grab meta.api_templates ))
@@ -358,7 +341,6 @@ jobs:
       route_registrar:
         routes: (( grab meta.api_routes ))
       nfs_server: (( grab meta.nfs_server ))
-    update: {}
 
   - name: clock_global
     templates: (( grab meta.clock_templates ))
@@ -370,7 +352,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-    update: {}
 
   - name: api_worker_z1
     templates: (( grab meta.api_worker_templates ))
@@ -383,7 +364,6 @@ jobs:
       metron_agent:
         zone: z1
       nfs_server: (( grab meta.nfs_server ))
-    update: {}
 
   - name: api_worker_z2
     templates: (( grab meta.api_worker_templates ))
@@ -396,7 +376,6 @@ jobs:
       metron_agent:
         zone: z2
       nfs_server: (( grab meta.nfs_server ))
-    update: {}
 
   - name: loggregator_z1
     templates: (( grab lamb_meta.loggregator_templates ))
@@ -404,7 +383,6 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-    update: {}
 
   - name: loggregator_z2
     templates: (( grab lamb_meta.loggregator_templates ))
@@ -412,7 +390,6 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-    update: {}
 
   - name: doppler_z1
     templates: (( grab lamb_meta.loggregator_templates ))
@@ -420,7 +397,6 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-    update: {}
 
   - name: doppler_z2
     templates: (( grab lamb_meta.loggregator_templates ))
@@ -428,7 +404,6 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-    update: {}
 
   - name: loggregator_trafficcontroller_z1
     templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
@@ -436,7 +411,6 @@ jobs:
     resource_pool: small_z1
     networks:
       - name: cf1
-    update: {}
 
   - name: loggregator_trafficcontroller_z2
     templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
@@ -444,7 +418,6 @@ jobs:
     resource_pool: small_z2
     networks:
       - name: cf2
-    update: {}
 
   - name: router_z1
     templates: (( grab meta.router_templates ))
@@ -461,7 +434,6 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: z1
-    update: {}
 
   - name: router_z2
     templates: (( grab meta.router_templates ))
@@ -478,7 +450,6 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: z2
-    update: {}
 
 # Diego
 
@@ -488,9 +459,6 @@ jobs:
     resource_pool: access_z1
     networks:
       - name: cf1
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z1
@@ -506,9 +474,6 @@ jobs:
     resource_pool: access_z2
     networks:
       - name: cf2
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z2
@@ -524,9 +489,6 @@ jobs:
     resource_pool: brain_z1
     networks:
       - name: cf1
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -541,9 +503,6 @@ jobs:
     resource_pool: brain_z2
     networks:
       - name: cf2
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -558,9 +517,6 @@ jobs:
     resource_pool: cc_bridge_z1
     networks:
       - name: cf1
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z1
@@ -578,9 +534,6 @@ jobs:
     resource_pool: cc_bridge_z2
     networks:
       - name: cf2
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z2
@@ -598,9 +551,6 @@ jobs:
     resource_pool: cell_z1
     networks:
       - name: cell1
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z1
@@ -614,9 +564,6 @@ jobs:
     resource_pool: cell_z2
     networks:
       - name: cell2
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z2
@@ -631,9 +578,6 @@ jobs:
     resource_pool: colocated_z1
     networks:
       - name: cf1
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -660,9 +604,6 @@ jobs:
     resource_pool: colocated_z2
     networks:
       - name: cf2
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -689,9 +630,6 @@ jobs:
     resource_pool: database_z1
     networks:
       - name: cf1
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -708,9 +646,6 @@ jobs:
     resource_pool: database_z2
     networks:
       - name: cf2
-    update:
-      serial: true
-      max_in_flight: 1
     properties:
       consul:
         agent:
@@ -726,9 +661,6 @@ jobs:
     resource_pool: route_emitter_z1
     networks:
       - name: cf1
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z1
@@ -739,9 +671,6 @@ jobs:
     resource_pool: route_emitter_z2
     networks:
       - name: cf2
-    update:
-      serial: false
-      max_in_flight: 1
     properties:
       metron_agent:
         zone: z2

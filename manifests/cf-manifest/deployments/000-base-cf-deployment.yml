@@ -25,8 +25,8 @@ compilation:
   reuse_compilation_vms: true
 
 update:
-  canaries: 1
-  max_in_flight: 1
+  canaries: 0
+  max_in_flight: 2
   canary_watch_time: 30000-600000
   update_watch_time: 5000-600000
-  serial: true
+  serial: false
