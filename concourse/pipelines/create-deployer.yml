@@ -112,7 +112,7 @@ jobs:
             if [ -f bucket-state/bucket.tfstate ]; then
               cp bucket-state/bucket.tfstate .
             fi
-            terraform apply -state=bucket.tfstate -var-file=paas-cf/terraform/{{account}}.tfvars \
+            terraform apply -state=bucket.tfstate -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               paas-cf/terraform/bucket
       on_success:
         put: bucket-terraform-state
@@ -185,7 +185,7 @@ jobs:
           - |
             cp ssh-keygen/id_rsa.pub paas-cf/terraform/vpc
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
-            terraform apply ${terraform_params} -var-file=paas-cf/terraform/{{account}}.tfvars \
+            terraform apply ${terraform_params} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
       ensure:
         put: vpc-terraform-state
@@ -271,7 +271,7 @@ jobs:
             . vpc-terraform-outputs/tfvars.sh
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} \
-              -var-file=paas-cf/terraform/{{account}}.tfvars \
+              -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=concourse-terraform-state/concourse.tfstate \
               -state-out=concourse.tfstate \
               paas-cf/terraform/concourse
@@ -457,7 +457,7 @@ jobs:
           - -c
           - |
             terraform apply -target=aws_security_group.office-access-ssh \
-              -var-file=paas-cf/terraform/{{account}}.tfvars \
+              -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -target=aws_subnet.infra \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate \
               paas-cf/terraform/vpc
@@ -486,7 +486,7 @@ jobs:
             . vpc-terraform-outputs/tfvars.sh
             terraform apply -target=aws_security_group.concourse \
               -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate \
-              -var-file=paas-cf/terraform/{{account}}.tfvars paas-cf/terraform/concourse
+              -var-file=paas-cf/terraform/{{aws_account}}.tfvars paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state
         params:

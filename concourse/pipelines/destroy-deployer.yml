@@ -130,7 +130,7 @@ jobs:
             . vpc-terraform-outputs/tfvars.sh
             touch concourse.crt concourse.key
             terraform destroy -force \
-              -var-file=paas-cf/terraform/{{account}}.tfvars \
+              -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=concourse-terraform-state/concourse.tfstate \
               -state-out=concourse.tfstate \
               paas-cf/terraform/concourse
@@ -167,7 +167,7 @@ jobs:
           - -c
           - |
             touch paas-cf/terraform/vpc/id_rsa.pub
-            terraform destroy -force -var-file=paas-cf/terraform/{{account}}.tfvars \
+            terraform destroy -force -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
       ensure:
         put: vpc-terraform-state
@@ -198,5 +198,5 @@ jobs:
             - -e
             - -c
             - |
-              terraform destroy -force -var-file=paas-cf/terraform/{{account}}.tfvars \
+              terraform destroy -force -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=bucket-terraform-state/bucket.tfstate paas-cf/terraform/bucket

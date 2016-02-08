@@ -3,6 +3,19 @@
 
 Vagrant.require_version ">= 1.8.0"
 
+AWS_ACCOUNT = ENV.fetch("AWS_ACCOUNT", "dev")
+AWS_ACCOUNT_DATA = {
+  "trial" => {
+    :subnet_id => "subnet-b2e3a488", # us-east-1e in default VPC, 172.31.0.0/20 range
+    :security_group => "sg-ee21a597", # "Concourse Vagrant" security group
+  },
+  "dev" => {
+    :subnet_id => "subnet-d55defe8", # us-east-1e in default VPC, 172.31.32.0/20 range
+    :security_group => "sg-99e0c0e0", # "Bootstrap Concourse" security group
+  },
+}
+AWS_ACCOUNT_VARIABLES = AWS_ACCOUNT_DATA.fetch(AWS_ACCOUNT)
+
 Vagrant.configure(2) do |config|
   config.vm.box = ENV['VAGRANT_BOX_NAME'] || 'aws_vagrant_box'
 
@@ -30,11 +43,8 @@ Vagrant.configure(2) do |config|
     # Only HVM instances with ephemeral disks can be used
     aws.instance_type = 'm3.large'
 
-    # us-east-1e in default VPC, 172.31.0.0/20 range
-    aws.subnet_id = 'subnet-b2e3a488'
-
-    # "Concourse Vagrant" security group
-    aws.security_groups = ['sg-ee21a597']
+    aws.subnet_id = AWS_ACCOUNT_VARIABLES.fetch(:subnet_id)
+    aws.security_groups = [AWS_ACCOUNT_VARIABLES.fetch(:security_group)]
 
     # Add IAM role to allow access to necessary AWS APIs
     aws.iam_instance_profile_name = 'bootstrap-concourse'

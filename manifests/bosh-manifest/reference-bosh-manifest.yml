@@ -66,7 +66,7 @@ jobs:
       provider: dav
     compiled_package_cache:
       options:
-        bucket_name: shared-cf-bosh-blobstore
+        bucket_name: shared-cf-bosh-blobstore-unit-test
         credentials_source: env_or_profile
         host: s3-eu-west-1.amazonaws.com
       provider: s3

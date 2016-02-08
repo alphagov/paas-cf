@@ -1,3 +1,7 @@
+variable "aws_account" {
+  description = "the AWS account being deployed to"
+}
+
 variable "env" {
   description = "Environment name"
 }

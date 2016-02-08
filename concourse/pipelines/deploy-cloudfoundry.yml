@@ -128,7 +128,7 @@ jobs:
               . terraform-variables/concourse.tfvars.sh
               . terraform-variables/bosh.tfvars.sh
 
-              terraform apply -var-file=paas-cf/terraform/{{account}}.tfvars \
+              terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
