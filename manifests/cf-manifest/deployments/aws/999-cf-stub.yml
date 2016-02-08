@@ -70,7 +70,7 @@ properties:
     db_encryption_key: (( grab secrets.cc_db_encryption_key ))
   consul:
     encrypt_keys: (( grab secrets.consul_encrypt_keys ))
-    ca_cert: (( grab secrets.consul_ca_cert ))
+    ca_cert: (( grab meta.secrets.consul_ca_cert ))
     server_cert: (( grab secrets.consul_server_cert ))
     server_key: (( grab secrets.consul_server_key ))
     agent_cert: (( grab secrets.consul_agent_cert ))

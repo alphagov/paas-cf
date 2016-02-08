@@ -1,0 +1,4 @@
+---
+properties:
+  director:
+    trusted_certs: (( grab secrets.bosh_ca_cert ))

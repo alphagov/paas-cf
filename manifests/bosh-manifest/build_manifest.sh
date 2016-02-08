@@ -1,14 +1,14 @@
 #!/bin/sh
 
 set -eu
-cd "$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
+DEPLOYMENT_DIR=${DEPLOYMENT_DIR:-"${SCRIPT_DIR}"/deployments}
 
 spruce merge \
   --prune meta \
   --prune secrets \
   --prune terraform_outputs \
-  deployments/*.yml \
-  deployments/aws/*.yml \
-  "${BOSH_SECRETS}" \
-  "${BOSH_TERRAFORM_OUTPUTS}" \
-  "${VPC_TERRAFORM_OUTPUTS}"
+  "${DEPLOYMENT_DIR}"/*.yml \
+  "${DEPLOYMENT_DIR}"/aws/*.yml \
+  "$@"
+
