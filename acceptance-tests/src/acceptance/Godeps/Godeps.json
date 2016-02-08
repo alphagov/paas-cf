@@ -6,6 +6,26 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/cf",
+			"Rev": "28076d2e08da4cfeed911136cf5bdc0175b34b33"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/generator",
+			"Rev": "28076d2e08da4cfeed911136cf5bdc0175b34b33"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/helpers",
+			"Rev": "28076d2e08da4cfeed911136cf5bdc0175b34b33"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/runner",
+			"Rev": "28076d2e08da4cfeed911136cf5bdc0175b34b33"
+		},
+		{
+			"ImportPath": "github.com/nu7hatch/gouuid",
+			"Rev": "179d4d0c4d8d407a32af483c2354df1d2c91e6c3"
+		},
+		{
 			"ImportPath": "github.com/onsi/ginkgo",
 			"Comment": "v1.2.0-42-g07d85e6",
 			"Rev": "07d85e6b10c4289c7d612f9b13f45ba36f66d55b"
