@@ -237,12 +237,11 @@ Both public and private keys are also uploaded to S3 to be consumed by
 other jobs in the pipelines as resources and/or by us for troubleshooting.
 
 To manually ssh to the *Deployer Concourse*, learn its IP via AWS console and
-download the `id_rsa` file from the s3 state bucket.
-
-For example:
+download the `id_rsa` file from the s3 state bucket. You will need
+[aws-cli](#aws-cli), to do this:
 
 ```
-./concourse/scripts/s3get.sh "${DEPLOY_ENV}-state" id_rsa && \
+aws s3 cp "s3://${DEPLOY_ENV}-state/id_rsa" . && \
 chmod 400 id_rsa && \
 ssh-add $(pwd)/id_rsa
 
@@ -290,3 +289,15 @@ In all cases, to prevent this from happening, you can simply pause the
 pipelines or its resources or jobs.
 
 Note that the *Deployer Concourse* and *MicroBOSH* VMs will be kept running.
+
+## aws-cli
+
+You might need [aws-cli][] installed on your machine to debug a deployment.
+You can install it using [Homebrew][] or a [variety of other methods][]. You
+should provide [access keys using environment variables][] instead of
+providing them to the interactive configure command.
+
+[aws-cli]: https://aws.amazon.com/cli/
+[Homebrew]: http://brew.sh/
+[variety of other methods]: http://docs.aws.amazon.com/cli/latest/userguide/installing.html
+[access keys using environment variables]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-environment
