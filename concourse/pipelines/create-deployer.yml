@@ -90,9 +90,10 @@ jobs:
           path: sh
           args:
           - -c
+          - -e
           - |
             cd bucket-state
-            aws s3 cp s3://{{state_bucket}}/bucket.tfstate .
+            aws s3 cp s3://{{state_bucket}}/bucket.tfstate . || true
             ls -l
 
     - task: create-init-bucket
