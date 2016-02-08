@@ -158,6 +158,40 @@ jobs:
       metron_agent:
         zone: z1
 
+  - name: etcd_z1
+    templates: (( grab meta.etcd_templates ))
+    instances: 1
+    persistent_disk: 10024
+    resource_pool: medium_z1
+    networks:
+      - name: cf1
+        static_ips:
+    update:
+      serial: true
+    properties:
+      metron_agent:
+        zone: z1
+      consul:
+        agent:
+          services:
+            etcd: {}
+
+  - name: etcd_z2
+    templates: (( grab meta.etcd_templates ))
+    instances: 2
+    persistent_disk: 10024
+    resource_pool: medium_z2
+    networks:
+      - name: cf2
+        static_ips:
+    properties:
+      metron_agent:
+        zone: z2
+      consul:
+        agent:
+          services:
+            etcd: {}
+
   - name: consul_z2
     templates: (( grab meta.consul_templates ))
     instances: 1
@@ -211,38 +245,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-
-  - name: etcd_z1
-    templates: (( grab meta.etcd_templates ))
-    instances: 2
-    persistent_disk: 10024
-    resource_pool: medium_z1
-    networks:
-      - name: cf1
-        static_ips:
-    properties:
-      metron_agent:
-        zone: z1
-      consul:
-        agent:
-          services:
-            etcd: {}
-
-  - name: etcd_z2
-    templates: (( grab meta.etcd_templates ))
-    instances: 1
-    persistent_disk: 10024
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-        static_ips:
-    properties:
-      metron_agent:
-        zone: z2
-      consul:
-        agent:
-          services:
-            etcd: {}
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
