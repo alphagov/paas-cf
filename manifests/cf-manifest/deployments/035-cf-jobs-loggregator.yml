@@ -12,6 +12,8 @@ lamb_meta:
     release: (( grab lamb_meta.release.name ))
   - name: metron_agent
     release: (( grab lamb_meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   loggregator_trafficcontroller_templates:
   - name: loggregator_trafficcontroller
@@ -20,6 +22,8 @@ lamb_meta:
     release: (( grab lamb_meta.release.name ))
   - name: route_registrar
     release: (( grab lamb_meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
 jobs:
 - name: loggregator_z1

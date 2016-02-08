@@ -6,6 +6,7 @@ meta:
   release:
     name: cf
 
+  etcd_consul_service: ["etcd.service.cf.internal"]
 
   consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
 
@@ -90,18 +91,24 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   nfs_templates:
   - name: debian_nfs_server
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   postgres_templates:
   - name: postgres
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   router_templates:
   - name: gorouter
@@ -116,6 +123,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
 
   uaa_routes:
   - name: uaa
@@ -735,7 +744,7 @@ properties:
 
   loggregator:
     etcd:
-      machines: (( grab properties.etcd.machines ))
+      machines: (( grab meta.etcd_consul_service ))
 
   doppler_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
