@@ -49,3 +49,7 @@ variable "cf_subnet_count" {
   description = "Number of CF subnets"
   default     = 2
 }
+
+variable "concourse_elastic_ip" {
+  description = "Public IP of the deployer-concourse machine"
+}

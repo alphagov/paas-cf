@@ -17,6 +17,7 @@ resource "aws_security_group" "web" {
     cidr_blocks = [
       "${split(",", var.web_access_cidrs)}",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
+      "${var.concourse_elastic_ip}/32",
     ]
   }
 
@@ -27,6 +28,7 @@ resource "aws_security_group" "web" {
     cidr_blocks = [
       "${split(",", var.web_access_cidrs)}",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
+      "${var.concourse_elastic_ip}/32",
     ]
   }
 

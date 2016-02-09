@@ -12,6 +12,13 @@ resources:
       versioned_file: cf.tfstate
       region_name: {{aws_region}}
 
+  - name: concourse-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: concourse.tfstate
+      region_name: {{aws_region}}
+
   - name: vpc-tfstate
     type: s3-iam
     source:
@@ -65,6 +72,7 @@ jobs:
           trigger: true
         - get: paas-cf
         - get: cf-tfstate
+        - get: concourse-tfstate
         - get: vpc-tfstate
       - task: terraform-variables
         config:
@@ -72,6 +80,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-tfstate
+            - name: concourse-tfstate
             - name: vpc-tfstate
           run:
             path: sh
@@ -82,6 +91,9 @@ jobs:
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
               < cf-tfstate/cf.tfstate > cf.tfvars.sh
               ls -l cf.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
+              ls -l concourse.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
               < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
               ls -l vpc.tfvars.sh
@@ -101,6 +113,7 @@ jobs:
             - -c
             - |
               . terraform-variables/cf.tfvars.sh
+              . terraform-variables/concourse.tfvars.sh
               . terraform-variables/vpc.tfvars.sh
               terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
