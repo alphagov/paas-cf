@@ -15,7 +15,8 @@ resource "aws_security_group" "web" {
     to_port   = 80
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.web_access_cidrs)}"
+      "${split(",", var.web_access_cidrs)}",
+      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]
   }
 
@@ -24,25 +25,8 @@ resource "aws_security_group" "web" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.web_access_cidrs)}"
-    ]
-  }
-
-  ingress {
-    from_port = 80
-    to_port   = 80
-    protocol  = "tcp"
-    cidr_blocks = [
-      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}"
-    ]
-  }
-
-  ingress {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
-    cidr_blocks = [
-      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}"
+      "${split(",", var.web_access_cidrs)}",
+      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]
   }
 
