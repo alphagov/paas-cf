@@ -601,6 +601,7 @@ jobs:
         passed: ['deploy']
       - get: cf-manifest
         passed: ['deploy']
+        trigger: true
     - task: generate-test-config
       config:
         inputs:
