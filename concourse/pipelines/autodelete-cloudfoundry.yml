@@ -42,4 +42,4 @@ jobs:
             sleeptime=$((${decimal##-} % 60*20));
             echo "Sleeping for $sleeptime seconds before deletion.."; sleep $sleeptime && 
             bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
-            bosh -n -t https://10.0.0.6:25555 -u admin -p "${bosh_password}" delete deployment {{deploy_env}}
+            bosh -n -t https://10.0.0.6:25555 -u admin -p "${bosh_password}" delete deployment {{deploy_env}} --force
