@@ -276,7 +276,7 @@ properties:
       auctioneer:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
-        machines: ["etcd.service.cf.internal"]
+        machines: (( grab meta.etcd_consul_service ))
         ca_cert: (( grab meta.secrets.consul_ca_cert ))
         client_cert: (( grab secrets.consul_agent_cert ))
         client_key: (( grab secrets.consul_agent_key ))
