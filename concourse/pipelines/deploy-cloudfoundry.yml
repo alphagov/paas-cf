@@ -121,10 +121,6 @@ jobs:
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
           inputs:
           - name: paas-cf
-      - put: cf-tfstate
-        params:
-          file: init/cf.tfstate
-
   - name: terraform
     serial_groups: [ deploy ]
     serial: true
@@ -132,12 +128,11 @@ jobs:
       - aggregate:
         - get: paas-cf
           passed: ['init']
+          trigger: true
         - get: vpc-tfstate
         - get: concourse-tfstate
         - get: bosh-tfstate
         - get: cf-tfstate
-          passed: ['init']
-          trigger: true
       - task: terraform-variables
         config:
           image: docker:///ruby
