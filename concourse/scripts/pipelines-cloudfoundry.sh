@@ -16,6 +16,7 @@ generate_vars_file() {
 aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
+pipeline_trigger_file: ${trigger_file}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 stemcell-version: ${STEMCELL_VERSION:-3104}
@@ -28,9 +29,11 @@ debug: ${DEBUG:-}
 EOF
 }
 
-generate_vars_file > /dev/null # Check for missing vars
 
 for ACTION in deploy destroy; do
+  trigger_file="${ACTION}-cloudfoundry.trigger"
+  generate_vars_file > /dev/null # Check for missing vars
+
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
     "${env}" "${ACTION}-cloudfoundry" \
     "${SCRIPT_DIR}/../pipelines/${ACTION}-cloudfoundry.yml" \
@@ -38,6 +41,7 @@ for ACTION in deploy destroy; do
 done
 
 if [ ! "${DISABLE_AUTODELETE:-}" ]; then
+   trigger_file="autodelete-cloudfoundry.trigger"
    bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
 	  "${env}" "${pipeline_autodelete}" "${config_autodelete}" <(generate_vars_file)
 
