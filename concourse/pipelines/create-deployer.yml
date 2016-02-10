@@ -79,7 +79,7 @@ jobs:
     - get: paas-cf
     - task: try-fetch-bucket-state
       config:
-        image: docker:///governmentpaas/curl-ssl
+        image: docker:///governmentpaas/awscli
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
         inputs:
@@ -90,9 +90,10 @@ jobs:
           path: sh
           args:
           - -c
+          - -e
           - |
             cd bucket-state
-            ../paas-cf/concourse/scripts/s3get.sh {{state_bucket}} bucket.tfstate
+            aws s3 cp s3://{{state_bucket}}/bucket.tfstate . || true
             ls -l
 
     - task: create-init-bucket
