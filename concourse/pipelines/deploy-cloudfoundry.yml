@@ -195,10 +195,26 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['init']
+          passed: ['terraform']
           trigger: true
         - get: bosh-CA
         - get: cf-certs
+        - get: cf-tfstate
+          passed: ['terraform']
+      - task: terraform-variables
+        config:
+          image: docker:///ruby#2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < cf-tfstate/cf.tfstate > cf.tfvars.sh
       - task: generate-cf-certs
         config:
           image: docker:///governmentpaas/certstrap
@@ -206,23 +222,26 @@ jobs:
           - name: bosh-CA
           - name: paas-cf
           - name: cf-certs
+          - name: terraform-variables
           outputs:
           - name: updated-cf-certs
-          params:
-            CERTS_TO_GENERATE: |
-              bosh-CA:bbs_server,bbs.service.cf.internal
-              bosh-CA:bbs_client,
-              bosh-CA:router_ssl,*.${DEPLOY_ENV}.cf.paas.alphagov.co.uk
-              bosh-CA:uaa_jwt_signing,
-              bosh-CA:consul_server,server.dc1.cf.internal,server.dc2.cf.internal
-              bosh-CA:consul_agent,
-            DEPLOY_ENV: {{deploy_env}}
           run:
             path: sh
             args:
             - -e
             - -c
             - |
+              . terraform-variables/cf.tfvars.sh
+
+              CERTS_TO_GENERATE="
+              bosh-CA:bbs_server,bbs.service.cf.internal
+              bosh-CA:bbs_client,
+              bosh-CA:router_ssl,*.${TF_VAR_cf_root_domain},*.${TF_VAR_cf_apps_domain}
+              bosh-CA:uaa_jwt_signing,
+              bosh-CA:consul_server,server.dc1.cf.internal,server.dc2.cf.internal
+              bosh-CA:consul_agent,
+              "
+
               mkdir out
               echo "Extracting CA certs"
               tar -xvzf bosh-CA/bosh-CA.tar.gz -C out
@@ -259,7 +278,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: [init]
+          passed: ['generate-cf-certs']
         - get: bosh-CA
           passed: ['generate-cf-certs']
         - get: cf-certs
@@ -268,7 +287,7 @@ jobs:
         - get: bosh-tfstate
         - get: concourse-tfstate
         - get: cf-tfstate
-          passed: ['terraform']
+          passed: ['generate-cf-certs']
           trigger: true
         - get: cf-secrets
       - task: cf-certs-yaml
