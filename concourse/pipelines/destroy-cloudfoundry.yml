@@ -26,12 +26,12 @@ resources:
       versioned_file: vpc.tfstate
       region_name: {{aws_region}}
 
-  - name: trigger-tf-destroy
+  - name: pipeline-trigger
     type: semver-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      key: trigger-tf-destroy
+      key: {{pipeline_trigger_file}}
 
   - name: bosh-secrets
     type: s3-iam
@@ -59,7 +59,7 @@ jobs:
             - |
               bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
               bosh -n -t https://10.0.0.6:25555 -u admin -p "${bosh_password}" delete deployment {{deploy_env}}
-      - put: trigger-tf-destroy
+      - put: pipeline-trigger
         params: {bump: patch}
 
   - name: terraform-destroy
@@ -67,7 +67,7 @@ jobs:
     serial: true
     plan:
       - aggregate:
-        - get: trigger-tf-destroy
+        - get: pipeline-trigger
           passed: ['delete-deployment']
           trigger: true
         - get: paas-cf

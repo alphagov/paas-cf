@@ -1,4 +1,12 @@
 resources:
+
+  - name: pipeline-trigger
+    type: semver-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      key: {{pipeline_trigger_file}}
+
   - name: paas-cf
     type: git
     source:
@@ -121,10 +129,8 @@ jobs:
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
           inputs:
           - name: paas-cf
-      - put: cf-tfstate
-        params:
-          file: init/cf.tfstate
-
+      - put: pipeline-trigger
+        params: {bump: patch}
   - name: terraform
     serial_groups: [ deploy ]
     serial: true
@@ -132,12 +138,13 @@ jobs:
       - aggregate:
         - get: paas-cf
           passed: ['init']
+        - get: pipeline-trigger
+          passed: [ 'init' ]
+          trigger: true
         - get: vpc-tfstate
         - get: concourse-tfstate
         - get: bosh-tfstate
         - get: cf-tfstate
-          passed: ['init']
-          trigger: true
       - task: terraform-variables
         config:
           image: docker:///ruby
