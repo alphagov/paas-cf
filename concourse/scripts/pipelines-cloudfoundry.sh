@@ -49,7 +49,7 @@ if [ ! "${DISABLE_AUTODELETE:-}" ]; then
    echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
    echo "         To disable it, set DISABLE_AUTODELETE=1 or pause the pipeline."
 else
-   yes y | ${FLY_CMD:-fly} -t "$FLY_TARGET" destroy-pipeline --pipeline "${pipeline_autodelete}" || true
+   yes y | ${FLY_CMD:-fly} -t "${FLY_TARGET:-$env}" destroy-pipeline --pipeline "${pipeline_autodelete}" || true
 
    echo
    echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
