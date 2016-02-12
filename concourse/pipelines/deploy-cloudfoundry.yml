@@ -564,6 +564,7 @@ jobs:
       - get: cf-manifest
         passed: ['deploy']
         trigger: true
+      - get: bosh-CA
     - task: generate-test-config
       config:
         inputs:
@@ -586,6 +587,7 @@ jobs:
         inputs:
           - name: paas-cf
           - name: test-config
+          - name: bosh-CA
         image: docker:///governmentpaas/cf-acceptance-tests
         run:
           path: sh
@@ -593,5 +595,10 @@ jobs:
           - -e
           - -c
           - |
+            echo "Adding bosh-CA to root certificates"
+            tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
+            update-ca-certificates
+
+            echo "Running tests"
             export CONFIG="$(pwd)/test-config/config.json"
             ./paas-cf/acceptance-tests/run_tests.sh
