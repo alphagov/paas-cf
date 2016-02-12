@@ -348,7 +348,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: [init]
+          passed: ['generate-manifest']
         - get: cf-manifest
           passed: ['generate-manifest']
           trigger: true
