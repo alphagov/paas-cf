@@ -27,7 +27,7 @@ properties:
     system_domain: (( grab properties.system_domain ))
     admin_user: "admin"
     admin_password: (( grab secrets.uaa_admin_password ))
-    skip_ssl_validation: true
+    skip_ssl_validation: false
     backend: "diego"
     client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
     skip_diego_unsupported_tests: true
@@ -51,4 +51,4 @@ properties:
     space: "SMOKE_TESTS"
     use_existing_org: false
     use_existing_space: false
-    skip_ssl_validation: true
+    skip_ssl_validation: false

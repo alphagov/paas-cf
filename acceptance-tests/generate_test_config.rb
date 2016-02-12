@@ -15,7 +15,6 @@ config = {
   "admin_user" => "admin",
   "admin_password" => admin_password,
   "apps_domain" => apps_domain,
-  "skip_ssl_validation" => true,
   "use_http" => false,
 }
 puts config.to_json

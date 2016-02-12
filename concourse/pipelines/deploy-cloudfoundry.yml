@@ -69,47 +69,12 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-CA.tar.gz
 
-  - name: bbs_server-cert
+  - name: cf-certs
     type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      versioned_file: bbs_server-cert.tar.gz
-
-  - name: bbs_client-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: bbs_client-cert.tar.gz
-
-  - name: consul_server-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: consul_server-cert.tar.gz
-
-  - name: consul_agent-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: consul_agent-cert.tar.gz
-
-  - name: router_ssl-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: router_ssl-cert.tar.gz
-
-  - name: uaa_jwt_signing-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: uaa_jwt_signing-cert.tar.gz
+      versioned_file: cf-certs.tar.gz
 
 jobs:
   - name: init
@@ -127,6 +92,7 @@ jobs:
             - -c
             - |
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
           inputs:
           - name: paas-cf
       - put: pipeline-trigger
@@ -229,51 +195,56 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['init']
+          passed: ['terraform']
           trigger: true
         - get: bosh-CA
-      - task: generate-cf-certs
+        - get: cf-certs
+        - get: cf-tfstate
+          passed: ['terraform']
+      - task: terraform-variables
         config:
-          image: docker:///governmentpaas/certstrap
+          image: docker:///ruby#2.2-slim
           inputs:
-          - name: bosh-CA
-          - name: paas-cf
-          params:
-            CERTS_TO_GENERATE: |
-              bosh-CA:bbs_server,bbs.service.cf.internal
-              bosh-CA:bbs_client,
-              bosh-CA:router_ssl,*.${DEPLOY_ENV}.cf.paas.alphagov.co.uk
-              bosh-CA:uaa_jwt_signing,
-              bosh-CA:consul_server,server.dc1.cf.internal,server.dc2.cf.internal
-              bosh-CA:consul_agent,
-            DEPLOY_ENV: {{deploy_env}}
+            - name: paas-cf
+            - name: cf-tfstate
           run:
             path: sh
             args:
             - -e
             - -c
             - |
-              mkdir out
-              for ca_tgz in */*-CA.tar.gz; do
-                tar -xzf $ca_tgz -C out
-              done
-              for cert_entry in ${CERTS_TO_GENERATE}; do
-                cert_info=$(eval echo ${cert_entry%%,*}) # eval to workaround poor concourse interpolation
-                ca=${cert_info%%:*}
-                cn=${cert_info#*:}
-                domains=$(eval echo ${cert_entry#*,})
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < cf-tfstate/cf.tfstate > cf.tfvars.sh
+      - task: generate-cf-certs
+        config:
+          image: docker:///governmentpaas/certstrap
+          inputs:
+          - name: bosh-CA
+          - name: paas-cf
+          - name: cf-certs
+          - name: terraform-variables
+          outputs:
+          - name: updated-cf-certs
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              . terraform-variables/cf.tfvars.sh
 
-                if ! paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ${cn}-cert.tar.gz ; then
-                  certstrap request-cert --passphrase "" --common-name "${cn}" ${domains:+--domain "${domains}"}
-                  certstrap sign --CA $ca --passphrase "" "${cn}"
-                  cd out
-                  tar -cvzf ../${cn}-cert.tar.gz ${cn}.*
-                  ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ${cn}-cert.tar.gz ../${cn}-cert.tar.gz
-                  cd ..
-                else
-                  echo "Certificate ${cn} is already generated, skipping."
-                fi
-              done
+              mkdir certs
+              echo "Extracting extant certs"
+              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+              ./paas-cf/concourse/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
+
+              cd certs
+              echo "Creating updated cert tarball"
+              tar -cvzf ../updated-cf-certs/cf-certs.tar.gz .
+      - put: cf-certs
+        params:
+          file: updated-cf-certs/cf-certs.tar.gz
 
   - name: generate-manifest
     serial_groups: [ deploy ]
@@ -281,60 +252,46 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: [init]
+          passed: ['generate-cf-certs']
         - get: bosh-CA
-        - get: bbs_server-cert
-        - get: bbs_client-cert
-        - get: consul_server-cert
-        - get: consul_agent-cert
-        - get: router_ssl-cert
-        - get: uaa_jwt_signing-cert
+          passed: ['generate-cf-certs']
+        - get: cf-certs
+          passed: ['generate-cf-certs']
         - get: vpc-tfstate
         - get: bosh-tfstate
         - get: concourse-tfstate
         - get: cf-tfstate
-          passed: ['terraform']
+          passed: ['generate-cf-certs']
           trigger: true
         - get: cf-secrets
-      - task: cf-certs
-        config:
-          image: docker:///alpine#3.3
-          inputs:
-          - name: bosh-CA
-          - name: paas-cf
-          - name: bbs_server-cert
-          - name: bbs_client-cert
-          - name: consul_server-cert
-          - name: consul_agent-cert
-          - name: router_ssl-cert
-          - name: uaa_jwt_signing-cert
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              for cert in *-cert *-CA; do
-                cn=${cert%%-cert}
-                yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
-
-                tar -xzf ${cert}/${cert}.tar.gz
-                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key  > ${cn}_key.yml
-                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt  > ${cn}_cert.yml
-              done
-      - task: uaa_jwt_verification_key
+      - task: cf-certs-yaml
         config:
           image: docker:///governmentpaas/certstrap
           inputs:
+          - name: bosh-CA
           - name: paas-cf
-          - name: uaa_jwt_signing-cert
+          - name: cf-certs
           run:
             path: sh
             args:
             - -e
             - -c
             - |
-              tar -xzf uaa_jwt_signing-cert/uaa_jwt_signing-cert.tar.gz
+              echo "Extracting CA certs"
+              tar -xzvf bosh-CA/bosh-CA.tar.gz
+              echo "Extracting CloudFoundry certs"
+              tar -xzvf cf-certs/cf-certs.tar.gz
+
+              for file in *.crt; do
+                cn=${file%.crt}
+                yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+
+                echo "Converting ${cn} certs to YAML"
+                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key  > ${cn}_key.yml
+                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt  > ${cn}_cert.yml
+              done
+
+              echo "Generating uaa_jwt_signing public key from private key"
               openssl rsa -pubout -in uaa_jwt_signing.key -out uaa_jwt_verification.pem
               paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem  > uaa_jwt_verification_key.yml
 
@@ -368,14 +325,12 @@ jobs:
             MANIFEST_STUBS: |
               ./extract-terraform-outputs/*.yml
               ./cf-secrets/cf-secrets.yml
-              ./cf-certs/*.yml
-              ./uaa_jwt_verification_key/uaa_jwt_verification_key.yml
+              ./cf-certs-yaml/*.yml
           inputs:
             - name: paas-cf
             - name: extract-terraform-outputs
             - name: cf-secrets
-            - name: cf-certs
-            - name: uaa_jwt_verification_key
+            - name: cf-certs-yaml
           run:
             path: sh
             args:
@@ -393,7 +348,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: [init]
+          passed: ['generate-manifest']
         - get: cf-manifest
           passed: ['generate-manifest']
           trigger: true
@@ -609,6 +564,7 @@ jobs:
       - get: cf-manifest
         passed: ['deploy']
         trigger: true
+      - get: bosh-CA
     - task: generate-test-config
       config:
         inputs:
@@ -631,6 +587,7 @@ jobs:
         inputs:
           - name: paas-cf
           - name: test-config
+          - name: bosh-CA
         image: docker:///governmentpaas/cf-acceptance-tests
         run:
           path: sh
@@ -638,5 +595,10 @@ jobs:
           - -e
           - -c
           - |
+            echo "Adding bosh-CA to root certificates"
+            tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
+            update-ca-certificates
+
+            echo "Running tests"
             export CONFIG="$(pwd)/test-config/config.json"
             ./paas-cf/acceptance-tests/run_tests.sh
