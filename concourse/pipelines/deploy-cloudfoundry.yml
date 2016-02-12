@@ -233,37 +233,11 @@ jobs:
             - |
               . terraform-variables/cf.tfvars.sh
 
-              CERTS_TO_GENERATE="
-              bosh-CA:bbs_server,bbs.service.cf.internal
-              bosh-CA:bbs_client,
-              bosh-CA:router_ssl,*.${TF_VAR_cf_root_domain},*.${TF_VAR_cf_apps_domain}
-              bosh-CA:uaa_jwt_signing,
-              bosh-CA:consul_server,server.dc1.cf.internal,server.dc2.cf.internal
-              bosh-CA:consul_agent,
-              "
-
-              mkdir out
-              echo "Extracting CA certs"
-              tar -xvzf bosh-CA/bosh-CA.tar.gz -C out
-
               mkdir certs
               echo "Extracting extant certs"
               tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-              for cert_entry in ${CERTS_TO_GENERATE}; do
-                cert_info=$(eval echo ${cert_entry%%,*}) # eval to workaround poor concourse interpolation
-                ca=${cert_info%%:*}
-                cn=${cert_info#*:}
-                domains=$(eval echo ${cert_entry#*,})
-
-                if [ -f "certs/${cn}.crt" ]; then
-                  echo "Certificate ${cn} is already generated, skipping."
-                else
-                  certstrap request-cert --passphrase "" --common-name "${cn}" ${domains:+--domain "${domains}"}
-                  certstrap sign --CA "${ca}" --passphrase "" "${cn}"
-                  mv out/${cn}.* certs/
-                fi
-              done
+              ./paas-cf/concourse/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
 
               cd certs
               echo "Creating updated cert tarball"
