@@ -8,6 +8,7 @@ cloud_provider:
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
+      max_retries: 8
       region: eu-west-1
     blobstore:
       path: /var/vcap/micro_bosh/data/cache
@@ -50,6 +51,7 @@ jobs:
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
+      max_retries: 8
       region: eu-west-1
     blobstore:
       address: 10.0.0.6
@@ -168,11 +170,11 @@ properties:
       -----END RSA PRIVATE KEY-----
 releases:
 - name: bosh
-  sha1: 88dd60313dbd7dd832faa44c90493ffa6cd85448
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=236
+  sha1: 940956a23b642af3bb24b3cac37c4da746d6f9a9
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=253
 - name: bosh-aws-cpi
-  sha1: db2a6c6cdd5ff9f77bf083e10118fa72e1f5e181
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=36
+  sha1: a1fe03071e8b9bf1fa97a4022151081bf144c8bc
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=44
 resource_pools:
 - cloud_properties:
     availability_zone: eu-west-1a
@@ -186,4 +188,3 @@ resource_pools:
   stemcell:
     sha1: 1a29c43d4e8abf7476ed6bb83168df1bdb742022
     url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3074
-
