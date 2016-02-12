@@ -10,11 +10,14 @@ meta:
       default_key_name: (( grab meta.aws.common.default_key_name ))
       default_security_groups: (( grab meta.aws.common.default_security_groups ))
       region: (( grab meta.aws.common.region ))
+      max_retries: 8
     bosh_properties:
       credentials_source: env_or_profile
       default_key_name: (( grab meta.aws.common.default_key_name ))
       default_security_groups: (( grab meta.aws.common.default_security_groups ))
       region: (( grab meta.aws.common.region ))
+      max_retries: 8
+
 
   bosh_private_ip: (( grab terraform_outputs.microbosh_static_private_ip ))
   bosh_public_ip: (( grab terraform_outputs.microbosh_static_public_ip ))
@@ -32,5 +35,3 @@ jobs:
       resurrector_enabled: true
     aws: (( grab meta.aws.bosh_properties ))
     dns: null
-
-
