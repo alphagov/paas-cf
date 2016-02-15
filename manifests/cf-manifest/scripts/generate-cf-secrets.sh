@@ -7,7 +7,7 @@ simplepass() {
 }
 
 vcap_password_orig=$(simplepass)
-vcap_password=$(echo "${vcap_password_orig}" | mkpasswd -m sha-512)
+vcap_password=$(echo "${vcap_password_orig}" | mkpasswd -s -m sha-512)
 
 cat <<EOF
 ---
