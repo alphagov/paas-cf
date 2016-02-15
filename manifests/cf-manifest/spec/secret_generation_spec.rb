@@ -7,6 +7,8 @@ RSpec.describe "secret generation" do
     }
 
     specify "it should produce lint-free YAML" do
+      skip "No mkpasswd(1) on Mac OS X" if Gem::Platform.local.os == 'darwin'
+
       yaml, error, status = Open3.capture3(script)
       expect(status).to be_success, "script exited #{status.exitstatus}, stderr:\n#{error}"
       expect(yaml).to_not be_empty
