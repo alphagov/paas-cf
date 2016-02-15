@@ -120,7 +120,7 @@ jobs:
           - -e
           - -c
           - |
-            ./paas-cf/concourse/scripts/generate-bosh-secrets.sh > bosh-secrets.yml
+            ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.sh > bosh-secrets.yml
             ls -l bosh-secrets.yml
 
     - task: upload
