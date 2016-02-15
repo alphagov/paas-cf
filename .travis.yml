@@ -25,6 +25,8 @@ before_install:
     tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
     mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
     rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
+  - |
+    pip install --user yamllint
 
 script:
   - make test
