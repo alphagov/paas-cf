@@ -45,11 +45,14 @@ jobs:
     serial_groups: [ destroy ]
     serial: true
     plan:
-      - get: bosh-secrets
+      - aggregate:
+        - get: bosh-secrets
+        - get: paas-cf
       - task: delete-deployment
         config:
           inputs:
           - name: bosh-secrets
+          - name: paas-cf
           image: docker:///governmentpaas/bosh-cli
           run:
             path: sh
@@ -57,8 +60,8 @@ jobs:
             - -e
             - -c
             - |
-              bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
-              bosh -n -t https://10.0.0.6:25555 -u admin -p "${bosh_password}" delete deployment {{deploy_env}}
+              ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+              bosh -n delete deployment {{deploy_env}}
       - put: pipeline-trigger
         params: {bump: patch}
 
@@ -71,6 +74,7 @@ jobs:
           passed: ['delete-deployment']
           trigger: true
         - get: paas-cf
+          passed: ['delete-deployment']
         - get: cf-tfstate
         - get: concourse-tfstate
         - get: vpc-tfstate

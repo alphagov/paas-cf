@@ -4,6 +4,7 @@ platform: linux
 image: docker:///governmentpaas/bosh-cli
 
 inputs:
+  - name: paas-cf
   - name: cf-manifest
   - name: bosh-secrets
 run:
@@ -12,9 +13,8 @@ run:
   - -c
   - -e
   - |
-    bosh_password=$(awk '/bosh_admin_password/ { print $2 }' bosh-secrets/bosh-secrets.yml)
-    bosh -t 10.0.0.6 login admin "${bosh_password}"
-    bosh target 10.0.0.6
+    ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+
     uuid=$(bosh status --uuid)
     sed -e "s/^director_uuid:.*$/director_uuid: ${uuid}/" cf-manifest/cf-manifest.yml > cf-manifest-with-uuid.yml
     bosh deployment ./cf-manifest-with-uuid.yml
