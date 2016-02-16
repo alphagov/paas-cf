@@ -226,6 +226,21 @@ handled by `vagrant/deploy.sh`:
 ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
 ```
 
+## Using the bosh cli and `bosh ssh`
+
+There's a script that starts an interactive session on the deployer concourse
+to allow running bosh CLI commands targeting MicroBOSH:
+
+```
+./concourse/scripts/bosh-cli.sh $DEPLOY_ENV
+```
+
+This connects you to a one-off task in concourse that's already logged into
+bosh and has the deployment set using the CF manifest.
+
+**Note:** `bosh ssh` no longer asks for a sudo password. By default it sets
+this to blank (just press enter when asked for the sudo password within the VM)
+
 ## SSH to Deployer Concourse and MicroBOSH
 
 In the `create-deployer` pipeline when creating the initial VPC,
