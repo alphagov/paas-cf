@@ -8,6 +8,7 @@ resource "aws_elb" "concourse" {
   name            = "${var.env}-concourse"
   subnets         = ["${split(",", var.infra_subnet_ids)}"]
   security_groups = ["${aws_security_group.concourse-elb.id}"]
+  idle_timeout    = 600
 
   health_check {
     target              = "TCP:8080"
