@@ -50,7 +50,7 @@ jobs:
         config:
           inputs:
           - name: bosh-secrets
-          image: docker:///concourse/bosh-deployment-resource
+          image: docker:///governmentpaas/bosh-cli
           run:
             path: sh
             args:

@@ -361,7 +361,7 @@ jobs:
               NAME: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
               URL: https://bosh.io/d/stemcells/"${NAME}"?v="${VERSION}"
               TYPE: stemcell
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -381,7 +381,7 @@ jobs:
               NAME: cf
               URL: https://bosh.io/d/github.com/cloudfoundry/cf-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -402,7 +402,7 @@ jobs:
               NAME: nginx
               URL: https://s3.amazonaws.com/nginx-release/nginx-"${VERSION}".tgz
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -423,7 +423,7 @@ jobs:
               NAME: diego
               URL: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -444,7 +444,7 @@ jobs:
               NAME: garden-linux
               URL: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -465,7 +465,7 @@ jobs:
               NAME: etcd
               URL: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -481,7 +481,7 @@ jobs:
 
       - task: cf-deploy
         config:
-          image: docker:///concourse/bosh-deployment-resource
+          image: docker:///governmentpaas/bosh-cli
           inputs:
           - name: cf-manifest
           - name: bosh-secrets
@@ -515,7 +515,7 @@ jobs:
         inputs:
         - name: cf-manifest
         - name: bosh-secrets
-        image: docker:///concourse/bosh-deployment-resource
+        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
@@ -541,7 +541,7 @@ jobs:
         inputs:
         - name: cf-manifest
         - name: bosh-secrets
-        image: docker:///concourse/bosh-deployment-resource
+        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
