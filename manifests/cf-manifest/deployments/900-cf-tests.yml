@@ -35,7 +35,7 @@ properties:
     include_v3: true
     include_security_groups: true
     include_routing: true
-    skip_regex: 'routing.API|allows\spreviously-blocked\sip'
+    skip_regex: 'routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain'
     include_internet_dependent: true
     include_logging: true
     include_operator: true
