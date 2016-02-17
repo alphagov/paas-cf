@@ -1,4 +1,10 @@
 resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: {{branch_name}}
+
   - name: delete-timer
     type: time
     source:
@@ -20,12 +26,13 @@ jobs:
     - get: delete-timer
       trigger: true
     - get: bosh-secrets
+    - get: paas-cf
     - task: delete-deployment
       config:
         inputs:
         - name: delete-timer
         - name: bosh-secrets
-        image: docker:///concourse/bosh-deployment-resource
+        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
@@ -40,6 +47,7 @@ jobs:
             short=${sum:0:15};
             decimal=$((0x$short));
             sleeptime=$((${decimal##-} % 60*20));
-            echo "Sleeping for $sleeptime seconds before deletion.."; sleep $sleeptime && 
-            bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
-            bosh -n -t https://10.0.0.6:25555 -u admin -p "${bosh_password}" delete deployment {{deploy_env}} --force
+            echo "Sleeping for $sleeptime seconds before deletion.."
+            sleep $sleeptime
+            ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+            bosh -n delete deployment {{deploy_env}} --force

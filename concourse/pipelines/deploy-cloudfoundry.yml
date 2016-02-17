@@ -361,7 +361,7 @@ jobs:
               NAME: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
               URL: https://bosh.io/d/stemcells/"${NAME}"?v="${VERSION}"
               TYPE: stemcell
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -372,7 +372,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_PASSWORD=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml) \
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
         - task: cf-release-tarball
           config:
@@ -381,7 +381,7 @@ jobs:
               NAME: cf
               URL: https://bosh.io/d/github.com/cloudfoundry/cf-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -392,7 +392,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_PASSWORD=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml) \
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: nginx-release-tarball
@@ -402,7 +402,7 @@ jobs:
               NAME: nginx
               URL: https://s3.amazonaws.com/nginx-release/nginx-"${VERSION}".tgz
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -413,7 +413,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_PASSWORD=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml) \
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: diego-release-tarball
@@ -423,7 +423,7 @@ jobs:
               NAME: diego
               URL: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -434,7 +434,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_PASSWORD=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml) \
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: garden-release-tarball
@@ -444,7 +444,7 @@ jobs:
               NAME: garden-linux
               URL: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -455,7 +455,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_PASSWORD=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml) \
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
         - task: etcd-release-tarball
@@ -465,7 +465,7 @@ jobs:
               NAME: etcd
               URL: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v="${VERSION}"
               TYPE: release
-            image: docker:///concourse/bosh-deployment-resource
+            image: docker:///governmentpaas/bosh-cli
             platform: linux
             inputs:
             - name: paas-cf
@@ -476,13 +476,14 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_PASSWORD=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml) \
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 ./paas-cf/concourse/scripts/bosh_ensure_uploaded.sh
 
       - task: cf-deploy
         config:
-          image: docker:///concourse/bosh-deployment-resource
+          image: docker:///governmentpaas/bosh-cli
           inputs:
+          - name: paas-cf
           - name: cf-manifest
           - name: bosh-secrets
           platform: linux
@@ -492,9 +493,7 @@ jobs:
             - -e
             - -c
             - |
-              bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
-              bosh -u admin -p "${bosh_password}" target https://10.0.0.6:25555
-              bosh login admin "${bosh_password}"
+              ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
               sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
               bosh deployment cf-manifest.yml
               bosh -n deploy
@@ -506,6 +505,8 @@ jobs:
   - name: smoke-tests
     plan:
     - aggregate:
+      - get: paas-cf
+        passed: ['deploy']
       - get: cf-manifest
         passed: ['deploy']
         trigger: true
@@ -513,18 +514,17 @@ jobs:
     - task: smoke-tests
       config:
         inputs:
+        - name: paas-cf
         - name: cf-manifest
         - name: bosh-secrets
-        image: docker:///concourse/bosh-deployment-resource
+        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
-            bosh -u admin -p "${bosh_password}" target https://10.0.0.6:25555
-            bosh login admin "${bosh_password}"
+            ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
             bosh deployment cf-manifest/cf-manifest.yml
             bosh -n \
               run errand smoke_tests \
@@ -533,24 +533,25 @@ jobs:
   - name: acceptance-tests
     plan:
     - aggregate:
+      - get: paas-cf
+        passed: ['deploy']
       - get: cf-manifest
         passed: ['deploy']
       - get: bosh-secrets
     - task: acceptance-tests
       config:
         inputs:
+        - name: paas-cf
         - name: cf-manifest
         - name: bosh-secrets
-        image: docker:///concourse/bosh-deployment-resource
+        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            bosh_password=$(awk '$1~/bosh_admin_password/ {print $2}' bosh-secrets/bosh-secrets.yml)
-            bosh -u admin -p "${bosh_password}" target https://10.0.0.6:25555
-            bosh login admin "${bosh_password}"
+            ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
             bosh deployment cf-manifest/cf-manifest.yml
             bosh -n \
               run errand acceptance_tests \
