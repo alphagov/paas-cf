@@ -144,6 +144,19 @@ resource "aws_network_acl_rule" "115_router_in" {
     protocol = -1
     rule_number = 115
     rule_action = "allow"
+    from_port = 1024
+    to_port = 65535
+    cidr_block = "${var.router_cidr_all}"
+    egress = false
+}
+
+resource "aws_network_acl_rule" "116_router_consul_in" {
+    network_acl_id = "${aws_network_acl.cf.id}"
+    protocol = "udp"
+    rule_number = 116
+    rule_action = "allow"
+    from_port = 8300
+    to_port = 8500
     cidr_block = "${var.router_cidr_all}"
     egress = false
 }
