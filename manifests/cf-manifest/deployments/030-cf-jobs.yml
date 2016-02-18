@@ -35,7 +35,7 @@ meta:
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd-injector
-    release: (( grab lamb_meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
@@ -80,6 +80,36 @@ meta:
   - name: haproxy
     release: (( grab meta.release.name ))
   - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+
+  loggregator_templates:
+  - name: doppler
+    release: (( grab meta.release.name ))
+  - name: syslog_drain_binder
+    release: (( grab meta.release.name ))
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+
+  loggregator_trafficcontroller_routes:
+  - name: doppler
+    port: (( grab properties.loggregator.outgoing_dropsonde_port ))
+    uris:
+    - (( concat "doppler." properties.domain ))
+  - name: loggregator
+    port: (( grab properties.traffic_controller.outgoing_port ))
+    uris:
+    - (( concat "loggregator." properties.domain ))
+
+  loggregator_trafficcontroller_templates:
+  - name: loggregator_trafficcontroller
+    release: (( grab meta.release.name ))
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: route_registrar
     release: (( grab meta.release.name ))
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -400,46 +430,80 @@ jobs:
       nfs_server: (( grab meta.nfs_server ))
 
   - name: loggregator_z1
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 0
     resource_pool: medium_z1
     networks:
       - name: cf1
+    properties:
+      doppler:
+        zone: z1
+      metron_agent:
+        zone: z1
 
   - name: loggregator_z2
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 0
     resource_pool: medium_z2
     networks:
       - name: cf2
+    properties:
+      doppler:
+        zone: z2
+      metron_agent:
+        zone: z2
 
   - name: doppler_z1
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 1
     resource_pool: medium_z1
     networks:
       - name: cf1
+    properties:
+      doppler:
+        zone: z1
+      metron_agent:
+        zone: z1
 
   - name: doppler_z2
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 1
     resource_pool: medium_z2
     networks:
       - name: cf2
+    properties:
+      doppler:
+        zone: z2
+      metron_agent:
+        zone: z2
 
   - name: loggregator_trafficcontroller_z1
-    templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
+    templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
     resource_pool: small_z1
     networks:
       - name: cf1
+    properties:
+      traffic_controller:
+        zone: z1
+      metron_agent:
+        zone: z1
+      route_registrar:
+        routes: (( grab meta.loggregator_trafficcontroller_routes ))
 
   - name: loggregator_trafficcontroller_z2
-    templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
+    templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
     resource_pool: small_z2
     networks:
       - name: cf2
+    properties:
+      traffic_controller:
+        zone: z2
+      metron_agent:
+        zone: z2
+      route_registrar:
+        routes: (( grab meta.loggregator_trafficcontroller_routes ))
 
   - name: router_z1
     templates: (( grab meta.router_templates ))
