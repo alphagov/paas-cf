@@ -40,12 +40,12 @@ resource_pools:
     env: (( grab meta.default_env ))
 
   - name: router_z1
-    network: "cf1"
+    network: "router1"
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
 
   - name: router_z2
-    network: "cf2"
+    network: "router2"
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
 

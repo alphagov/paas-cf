@@ -220,16 +220,15 @@ jobs:
     templates: (( grab meta.ha_proxy_templates ))
     instances: 0
     resource_pool: router_z1
-    default_networks:
+    networks:
       - name: cf1
         static_ips: ~
-    networks: (( grab jobs.ha_proxy_z1.default_networks ))
     properties:
       ha_proxy:
       router:
         servers:
-          z1: (( grab jobs.router_z1.networks.cf1.static_ips ))
-          z2: (( grab jobs.router_z2.networks.cf2.static_ips ))
+          z1: (( grab jobs.router_z1.networks.router1.static_ips ))
+          z2: (( grab jobs.router_z2.networks.router2.static_ips ))
       metron_agent:
         zone: z1
 
@@ -306,7 +305,7 @@ jobs:
         routes: (( grab meta.uaa_routes ))
       uaa:
         proxy:
-          servers: (( grab jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
+          servers: (( grab jobs.router_z1.networks.router1.static_ips jobs.router_z2.networks.router2.static_ips ))
 
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
@@ -325,7 +324,7 @@ jobs:
         routes: (( grab meta.uaa_routes ))
       uaa:
         proxy:
-          servers: (( grab jobs.router_z1.networks.cf1.static_ips jobs.router_z2.networks.cf2.static_ips))
+          servers: (( grab jobs.router_z1.networks.router1.static_ips jobs.router_z2.networks.router2.static_ips ))
 
   - name: api_z1
     templates: (( grab meta.api_templates ))
@@ -446,10 +445,9 @@ jobs:
     templates: (( grab meta.router_templates ))
     instances: 1
     resource_pool: router_z1
-    default_networks:
-      - name: cf1
+    networks:
+      - name: router1
         static_ips: ~
-    networks: (( grab default_networks ))
     properties:
       consul:
         agent:
@@ -462,10 +460,9 @@ jobs:
     templates: (( grab meta.router_templates ))
     instances: 1
     resource_pool: router_z2
-    default_networks:
-      - name: cf2
+    networks:
+      - name: router2
         static_ips: ~
-    networks: (( grab default_networks ))
     properties:
       consul:
         agent:
