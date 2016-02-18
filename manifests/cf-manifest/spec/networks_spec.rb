@@ -5,6 +5,8 @@ RSpec.describe "networks" do
     cf2
     cell1
     cell2
+    router1
+    router2
   )
 
   let(:networks) { manifest_with_defaults.fetch("networks") }

@@ -4,6 +4,8 @@ terraform_outputs:
   cf2_subnet_id: subnet-23456781
   cell1_subnet_id: subnet-09876543
   cell2_subnet_id: subnet-98765432
+  router1_subnet_id: subnet-09876543
+  router2_subnet_id: subnet-98765432
   cf_root_domain: unit-test.dev.paas.example.com
   cf_apps_domain: unit-test.dev-apps.paas.example.com
   system_dns_zone_name: dev.paas.example.com
