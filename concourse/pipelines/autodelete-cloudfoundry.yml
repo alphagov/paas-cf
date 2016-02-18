@@ -32,6 +32,7 @@ jobs:
         inputs:
         - name: delete-timer
         - name: bosh-secrets
+        - name: paas-cf
         image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
