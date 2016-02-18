@@ -12,7 +12,9 @@ meta:
 
   default_stemcell:
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: latest
+    version: 3104
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3104
+    sha1: 624c3ea55cbdb7143ffecf36d7e8c0275926a824
 
 properties:
 

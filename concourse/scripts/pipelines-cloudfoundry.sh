@@ -19,7 +19,6 @@ state_bucket: ${env}-state
 pipeline_trigger_file: ${trigger_file}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
-stemcell-version: ${STEMCELL_VERSION:-3104}
 debug: ${DEBUG:-}
 EOF
 }
