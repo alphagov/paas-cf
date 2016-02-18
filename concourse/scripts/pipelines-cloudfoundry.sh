@@ -20,11 +20,6 @@ pipeline_trigger_file: ${trigger_file}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 stemcell-version: ${STEMCELL_VERSION:-3104}
-cf-release-version: ${CF_RELEASE_VERSION:-225}
-nginx-release-version: ${NIGNX_RELEASE_VERSION:-2}
-diego-release-version: ${DIEGO_RELEASE_VERSION:-0.1441.0}
-garden-release-version: ${GARDEN_RELEASE_VERSION:-0.327.0}
-etcd-release-version: ${ETCD_RELEASE_VERSION:-18}
 debug: ${DEBUG:-}
 EOF
 }
