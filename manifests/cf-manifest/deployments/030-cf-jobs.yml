@@ -27,10 +27,11 @@ meta:
     uris:
     - (( grab meta.api_domain ))
 
+  api_consul_services:
+    cloud_controller_ng: {}
+
   api_templates:
   - name: cloud_controller_ng
-    release: (( grab meta.release.name ))
-  - name: routing-api
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
@@ -366,9 +367,7 @@ jobs:
     properties:
       consul:
         agent:
-          services:
-            cloud_controller_ng: {}
-            routing-api: {}
+          services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z1
       route_registrar:
@@ -385,9 +384,7 @@ jobs:
     properties:
       consul:
         agent:
-          services:
-            cloud_controller_ng: {}
-            routing-api: {}
+          services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z2
       route_registrar:
@@ -854,6 +851,7 @@ properties:
     logrotate:
     extra_headers_to_log:
     debug_addr:
+    enable_routing_api:
 
   syslog_daemon_config: ~
 
