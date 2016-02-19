@@ -230,7 +230,7 @@ properties:
     token_url: (( concat properties.uaa.url "/oauth/token" ))
 
     no_ssl: ~
-    require_https: ~
+    require_https: false
 
     scim:
       userids_enabled: true
