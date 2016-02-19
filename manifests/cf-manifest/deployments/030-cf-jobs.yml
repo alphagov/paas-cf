@@ -781,7 +781,6 @@ properties:
   request_timeout_in_seconds: 900
 
   nats:
-    address: (( grab jobs.nats_z1.networks.cf1.static_ips.[0] ))
     port: 4222
     machines: (( grab jobs.nats_z1.networks.cf1.static_ips jobs.nats_z2.networks.cf2.static_ips ))
     debug: false
