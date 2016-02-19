@@ -846,7 +846,7 @@ properties:
     secure_cookies:
     route_services_secret:
     route_services_secret_decrypt_only:
-    route_service_timeout:
+    route_services_timeout:
     logrotate:
     extra_headers_to_log:
     debug_addr:
