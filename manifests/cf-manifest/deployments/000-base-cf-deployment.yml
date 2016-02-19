@@ -9,15 +9,25 @@ name: (( grab meta.environment ))
 
 releases:
   - name: cf
-    version: latest
+    version: 225
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=225
+    sha1: d4668747f7ae7a4c02cd43536a3dcc625def8c7f
   - name: nginx
-    version: latest
+    version: 2
+    url: https://s3.amazonaws.com/nginx-release/nginx-2.tgz
+    sha1: 667cc1a0f9117bdb4b217ee2b76dc20e61371c02
   - name: diego
     version: 0.1441.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1441.0
+    sha1: f02185e07f4af1b8bf30377728edbe3be24f7bd9
   - name: garden-linux
     version: 0.327.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.327.0
+    sha1: 939dd056dd5581ec206081b3cbea19cbbf7d353f
   - name: etcd
     version: 18
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=18
+    sha1: 222e26f1f38a23f4355ec2517683fdc7c70704aa
 
 compilation:
   workers: 6
