@@ -233,6 +233,9 @@ properties:
       external_groups: ~
       groups: ~
 
+    ssl:
+      port: -1
+
     authentication:
       policy:
         lockoutAfterFailures: ~
