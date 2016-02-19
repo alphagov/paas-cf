@@ -171,6 +171,12 @@ Run the `destroy-cloudfoundry` pipeline.
 
 # Additional notes
 
+## Running tests locally
+
+You will need to install some dependencies to run the unit tests on your own
+machine. The most up-to-date reference for these is the Travis CI
+configuration in [`.travis.yml`](.travis.yml).
+
 ## Optionally override the branch used by pipelines
 
 All of the pipeline scripts (including `vagrant/deploy.sh`) honour a
