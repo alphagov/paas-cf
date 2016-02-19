@@ -13,6 +13,12 @@ resources:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
 
+  - name: cf-release
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry/cf-release
+      tag_filter: {{cf-release-version}}
+
   - name: vpc-tfstate
     type: s3-iam
     source:
@@ -441,18 +447,26 @@ jobs:
       - get: pipeline-trigger
         passed: [ 'deploy']
         trigger: true
+      - get: cf-release
+        params:
+          depth: 1
+          submodules:
+          - src/smoke-tests
       - get: paas-cf
         passed: ['deploy']
       - get: cf-manifest
         passed: ['deploy']
         trigger: true
       - get: bosh-secrets
-    - task: smoke-tests
+      - get: bosh-CA
+    - task: generate-test-config
       config:
         inputs:
+        - name: cf-release
         - name: paas-cf
         - name: cf-manifest
-        - name: bosh-secrets
+        outputs:
+        - name: test-config
         image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
@@ -460,11 +474,45 @@ jobs:
           - -e
           - -c
           - |
-            ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-            bosh deployment cf-manifest/cf-manifest.yml
-            bosh -n \
-              run errand smoke_tests \
-              --download-logs --logs-dir .
+            ./paas-cf/tests/bosh-template-renderer/render.rb \
+              ./cf-release/jobs/smoke-tests/templates/run.erb \
+              ./cf-release/jobs/smoke-tests/spec \
+              ./cf-manifest/cf-manifest.yml \
+                > ./test-config/run
+
+            chmod +x ./test-config/run
+
+            ./paas-cf/tests/bosh-template-renderer/render.rb \
+              ./cf-release/jobs/smoke-tests/templates/config.json.erb \
+              ./cf-release/jobs/smoke-tests/spec \
+              ./cf-manifest/cf-manifest.yml \
+                > ./test-config/config.json
+
+    - task: run-tests
+      config:
+        inputs:
+        - name: paas-cf
+        - name: cf-release
+        - name: cf-manifest
+        - name: bosh-secrets
+        - name: test-config
+        - name: bosh-CA
+        image: docker:///governmentpaas/cf-acceptance-tests
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            echo "Adding bosh-CA to root certificates"
+            tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
+            update-ca-certificates
+            mkdir -p /var/vcap/jobs/smoke-tests/bin/ /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry
+            ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
+            ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
+            ln -snf /usr/local/go /var/vcap/packages/golang1.4
+            ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
+            /var/vcap/jobs/smoke-tests/bin/run
 
   - name: acceptance-tests
     plan:
