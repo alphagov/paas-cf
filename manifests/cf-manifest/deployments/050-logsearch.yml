@@ -64,7 +64,7 @@ resource_pools:
   env: (( grab meta.default_env ))
   cloud_properties:
     availability_zone: eu-west-1a
-    instance_type: t2.micro
+    instance_type: m3.medium
 
 - name: kibana
   network: cf1
