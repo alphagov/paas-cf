@@ -275,7 +275,6 @@ jobs:
   release: logsearch
   templates:
   - {name: parser, release: logsearch}
-  - {name: elasticsearch, release: logsearch}
   resource_pool: parser
   instances: 1
   networks:
