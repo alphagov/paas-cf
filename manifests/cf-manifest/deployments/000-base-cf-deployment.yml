@@ -9,9 +9,9 @@ name: (( grab meta.environment ))
 
 releases:
   - name: cf
-    version: 225
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=225
-    sha1: d4668747f7ae7a4c02cd43536a3dcc625def8c7f
+    version: 228
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=228
+    sha1: cc9d5930f67e48c6862b686c628730a0846bd9e3
   - name: nginx
     version: 2
     url: https://s3.amazonaws.com/nginx-release/nginx-2.tgz
