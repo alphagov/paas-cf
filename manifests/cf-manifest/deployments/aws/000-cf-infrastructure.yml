@@ -309,6 +309,3 @@ jobs:
     networks:
       - name: cf2
         static_ips: (( static_ips(10, 25) ))
-
-  - name: smoke_tests
-    instances: 1
