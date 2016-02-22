@@ -162,6 +162,8 @@ jobs:
     plan:
       - get: paas-cf
         passed: ['init']
+      - get: pipeline-trigger
+        passed: [ 'init' ]
         trigger: true
 
       - task: generate
@@ -192,11 +194,15 @@ jobs:
               - generate/cf-secrets.yml
 
   - name: generate-cf-certs
+    serial_groups: [ deploy ]
+    serial: true
     plan:
       - aggregate:
+        - get: pipeline-trigger
+          passed: [ 'terraform' ]
+          trigger: true
         - get: paas-cf
           passed: ['terraform']
-          trigger: true
         - get: bosh-CA
         - get: cf-certs
         - get: cf-tfstate
@@ -251,6 +257,9 @@ jobs:
     serial: true
     plan:
       - aggregate:
+        - get: pipeline-trigger
+          passed: [ 'generate-cf-certs' ]
+          trigger: true
         - get: paas-cf
           passed: ['generate-cf-certs']
         - get: bosh-CA
@@ -347,6 +356,9 @@ jobs:
     serial: true
     plan:
       - aggregate:
+        - get: pipeline-trigger
+          passed: [ 'generate-manifest' ]
+          trigger: true
         - get: paas-cf
           passed: ['generate-manifest']
         - get: cf-manifest
@@ -379,6 +391,9 @@ jobs:
   - name: smoke-tests
     plan:
     - aggregate:
+      - get: pipeline-trigger
+        passed: [ 'deploy']
+        trigger: true
       - get: paas-cf
         passed: ['deploy']
       - get: cf-manifest
@@ -434,6 +449,9 @@ jobs:
   - name: custom-acceptance-tests
     plan:
     - aggregate:
+      - get: pipeline-trigger
+        passed: [ 'deploy']
+        trigger: true
       - get: paas-cf
         passed: ['deploy']
       - get: cf-manifest
