@@ -2,6 +2,7 @@ meta:
   zones:
     z1: (( grab terraform_outputs.zone0 ))
     z2: (( grab terraform_outputs.zone1 ))
+    z3: (( grab terraform_outputs.zone2 ))
 
   fog_config:
     provider: AWS
@@ -80,6 +81,14 @@ resource_pools:
         size: 10_240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
+
+  - name: medium_z3
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z3 ))
 
   - name: large_z1
     cloud_properties:
@@ -293,4 +302,9 @@ jobs:
   - name: etcd_z2
     networks:
       - name: cf2
-        static_ips: (( static_ips(10, 25) ))
+        static_ips: (( static_ips(9) ))
+
+  - name: etcd_z3
+    networks:
+      - name: cf3
+        static_ips: (( static_ips(9) ))
