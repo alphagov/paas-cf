@@ -9,25 +9,25 @@ name: (( grab meta.environment ))
 
 releases:
   - name: cf
-    version: 225
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=225
-    sha1: d4668747f7ae7a4c02cd43536a3dcc625def8c7f
+    version: 228
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=228
+    sha1: cc9d5930f67e48c6862b686c628730a0846bd9e3
   - name: nginx
     version: 2
     url: https://s3.amazonaws.com/nginx-release/nginx-2.tgz
     sha1: 667cc1a0f9117bdb4b217ee2b76dc20e61371c02
   - name: diego
-    version: 0.1441.0
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1441.0
-    sha1: f02185e07f4af1b8bf30377728edbe3be24f7bd9
+    version: 0.1450.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1450.0
+    sha1: 351162532cc27424836b9ff3300b39333b584f23
   - name: garden-linux
-    version: 0.327.0
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.327.0
-    sha1: 939dd056dd5581ec206081b3cbea19cbbf7d353f
+    version: 0.331.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.331.0
+    sha1: b89d7fe2e230bd88f143d5eba1ca1d15570aa146
   - name: etcd
-    version: 18
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=18
-    sha1: 222e26f1f38a23f4355ec2517683fdc7c70704aa
+    version: 27
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=27
+    sha1: 11a64cb5e23cdd1f6c670fad0d776424807f4923
 
 compilation:
   workers: 6

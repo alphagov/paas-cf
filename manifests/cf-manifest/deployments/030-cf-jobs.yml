@@ -27,15 +27,16 @@ meta:
     uris:
     - (( grab meta.api_domain ))
 
+  api_consul_services:
+    cloud_controller_ng: {}
+
   api_templates:
   - name: cloud_controller_ng
-    release: (( grab meta.release.name ))
-  - name: routing-api
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd-injector
-    release: (( grab lamb_meta.release.name ))
+    release: (( grab meta.release.name ))
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
@@ -80,6 +81,36 @@ meta:
   - name: haproxy
     release: (( grab meta.release.name ))
   - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+
+  loggregator_templates:
+  - name: doppler
+    release: (( grab meta.release.name ))
+  - name: syslog_drain_binder
+    release: (( grab meta.release.name ))
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+
+  loggregator_trafficcontroller_routes:
+  - name: doppler
+    port: (( grab properties.loggregator.outgoing_dropsonde_port ))
+    uris:
+    - (( concat "doppler." properties.domain ))
+  - name: loggregator
+    port: (( grab properties.traffic_controller.outgoing_port ))
+    uris:
+    - (( concat "loggregator." properties.domain ))
+
+  loggregator_trafficcontroller_templates:
+  - name: loggregator_trafficcontroller
+    release: (( grab meta.release.name ))
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: route_registrar
     release: (( grab meta.release.name ))
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -336,9 +367,7 @@ jobs:
     properties:
       consul:
         agent:
-          services:
-            cloud_controller_ng: {}
-            routing-api: {}
+          services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z1
       route_registrar:
@@ -355,9 +384,7 @@ jobs:
     properties:
       consul:
         agent:
-          services:
-            cloud_controller_ng: {}
-            routing-api: {}
+          services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z2
       route_registrar:
@@ -400,46 +427,80 @@ jobs:
       nfs_server: (( grab meta.nfs_server ))
 
   - name: loggregator_z1
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 0
     resource_pool: medium_z1
     networks:
       - name: cf1
+    properties:
+      doppler:
+        zone: z1
+      metron_agent:
+        zone: z1
 
   - name: loggregator_z2
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 0
     resource_pool: medium_z2
     networks:
       - name: cf2
+    properties:
+      doppler:
+        zone: z2
+      metron_agent:
+        zone: z2
 
   - name: doppler_z1
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 1
     resource_pool: medium_z1
     networks:
       - name: cf1
+    properties:
+      doppler:
+        zone: z1
+      metron_agent:
+        zone: z1
 
   - name: doppler_z2
-    templates: (( grab lamb_meta.loggregator_templates ))
+    templates: (( grab meta.loggregator_templates ))
     instances: 1
     resource_pool: medium_z2
     networks:
       - name: cf2
+    properties:
+      doppler:
+        zone: z2
+      metron_agent:
+        zone: z2
 
   - name: loggregator_trafficcontroller_z1
-    templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
+    templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
     resource_pool: small_z1
     networks:
       - name: cf1
+    properties:
+      traffic_controller:
+        zone: z1
+      metron_agent:
+        zone: z1
+      route_registrar:
+        routes: (( grab meta.loggregator_trafficcontroller_routes ))
 
   - name: loggregator_trafficcontroller_z2
-    templates: (( grab lamb_meta.loggregator_trafficcontroller_templates ))
+    templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
     resource_pool: small_z2
     networks:
       - name: cf2
+    properties:
+      traffic_controller:
+        zone: z2
+      metron_agent:
+        zone: z2
+      route_registrar:
+        routes: (( grab meta.loggregator_trafficcontroller_routes ))
 
   - name: router_z1
     templates: (( grab meta.router_templates ))
@@ -720,7 +781,6 @@ properties:
   request_timeout_in_seconds: 900
 
   nats:
-    address: (( grab jobs.nats_z1.networks.cf1.static_ips.[0] ))
     port: 4222
     machines: (( grab jobs.nats_z1.networks.cf1.static_ips jobs.nats_z2.networks.cf2.static_ips ))
     debug: false
@@ -777,7 +837,7 @@ properties:
     enable_ssl: true
     ssl_cert: (( grab secrets.router_ssl_cert ))
     ssl_key: (( grab secrets.router_ssl_key ))
-    cipher_suites: TLS_RSA_WITH_RC4_128_SHA:TLS_RSA_WITH_AES_128_CBC_SHA
+    cipher_suites: TLS_RSA_WITH_AES_128_CBC_SHA:TLS_RSA_WITH_AES_256_CBC_SHA
     requested_route_registration_interval_in_seconds:
     ssl_skip_validation:
     port:
@@ -786,10 +846,11 @@ properties:
     secure_cookies:
     route_services_secret:
     route_services_secret_decrypt_only:
-    route_service_timeout:
+    route_services_timeout:
     logrotate:
     extra_headers_to_log:
     debug_addr:
+    enable_routing_api:
 
   syslog_daemon_config: ~
 
