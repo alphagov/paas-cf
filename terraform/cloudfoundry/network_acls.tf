@@ -13,11 +13,3 @@ resource "aws_network_acl" "cell" {
     Name = "${var.env}-cell-acl"
   }
 }
-
-resource "aws_network_acl" "router" {
-  vpc_id = "${var.vpc_id}"
-  subnet_ids = ["${aws_subnet.router.*.id}"]
-  tags {
-    Name = "${var.env}-router-acl"
-  }
-}
