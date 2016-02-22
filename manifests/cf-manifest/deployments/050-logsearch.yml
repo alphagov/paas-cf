@@ -104,8 +104,6 @@ jobs:
   templates:
   - {name: elasticsearch, release: logsearch}
   resource_pool: elasticsearch_master
-  update:
-    serial: true
   instances: 1
   networks:
   - name: cf1
@@ -233,8 +231,6 @@ jobs:
   templates:
   - {name: elasticsearch, release: logsearch}
   resource_pool: elasticsearch_data
-  update:
-    serial: true
   instances: 2
   networks:
   - name: cf1
