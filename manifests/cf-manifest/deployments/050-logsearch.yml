@@ -320,3 +320,7 @@ properties:
       host: (( grab jobs.elasticsearch_master.networks.cf1.static_ips.[0] ))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
+  syslog_daemon_config:
+    address: (( grab jobs.ingestor.networks.cf1.static_ips.[0] ))
+    port: 2514
+    transport: relp
