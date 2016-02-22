@@ -2,6 +2,7 @@
 terraform_outputs:
   cf1_subnet_id: subnet-12345678
   cf2_subnet_id: subnet-23456781
+  cf3_subnet_id: subnet-34567812
   cell1_subnet_id: subnet-09876543
   cell2_subnet_id: subnet-98765432
   router1_subnet_id: subnet-09876543

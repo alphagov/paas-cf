@@ -6,6 +6,10 @@ output "cf2_subnet_id" {
   value = "${aws_subnet.cf.1.id}"
 }
 
+output "cf3_subnet_id" {
+  value = "${aws_subnet.cf.2.id}"
+}
+
 output "cell1_subnet_id" {
   value = "${aws_subnet.cell.0.id}"
 }
