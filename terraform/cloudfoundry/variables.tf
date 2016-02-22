@@ -77,3 +77,23 @@ variable "cf_subnet_count" {
 variable "concourse_elastic_ip" {
   description = "Public IP of the deployer-concourse machine"
 }
+
+variable "concourse_security_group_id" {
+  description = "Security group ID for concourse"
+}
+
+variable "secrets_cf_db_master_password" {
+  description = "Master password for CF database"
+}
+
+variable "cf_db_multi_az" {
+  description = "CF database multi availabiliy zones"
+}
+
+variable "cf_db_backup_retention_period" {
+  description = "CF database backup retention period"
+}
+
+variable "skip-final-snapshot" {
+  descrition = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
+}
