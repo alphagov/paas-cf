@@ -227,85 +227,70 @@ resource_pools:
 # set up static IPs
 jobs:
   - name: nats_z1
-    instances: 1
     networks:
       - name: cf1
         static_ips: (( static_ips(1) ))
 
   - name: nats_z2
-    instances: 1
     networks:
       - name: cf2
         static_ips: (( static_ips(1) ))
 
   - name: router_z1
-    instances: 1
     networks:
       - name: router1
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
 
   - name: router_z2
-    instances: 1
     networks:
       - name: router2
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
 
   - name: postgres_z1
-    instances: 1
     networks:
       - name: cf1
         static_ips: (( static_ips(7) ))
 
   - name: loggregator_z1
-    instances: 0
     networks:
       - name: cf1
 
   - name: loggregator_z2
-    instances: 0
     networks:
       - name: cf2
 
   - name: doppler_z1
-    instances: 1
     networks:
       - name: cf1
 
   - name: doppler_z2
-    instances: 1
     networks:
       - name: cf2
 
   - name: loggregator_trafficcontroller_z1
-    instances: 1
     networks:
       - name: cf1
 
   - name: loggregator_trafficcontroller_z2
-    instances: 1
     networks:
       - name: cf2
 
   - name: consul_z1
-    instances: 2
     networks:
       - name: cf1
         static_ips: (( static_ips(27, 28, 29) ))
 
   - name: consul_z2
-    instances: 1
     networks:
       - name: cf2
         static_ips: (( static_ips(27, 28, 29) ))
 
   - name: etcd_z1
-    instances: 1
     networks:
       - name: cf1
         static_ips: (( static_ips(9) ))
 
   - name: etcd_z2
-    instances: 2
     networks:
       - name: cf2
         static_ips: (( static_ips(10, 25) ))
