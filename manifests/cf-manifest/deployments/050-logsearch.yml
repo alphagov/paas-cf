@@ -182,10 +182,10 @@ jobs:
     nats_to_syslog:
       nats:
         subject: ">"
-        user: nats
-        password: nats-password
-        port: 4222
-        machines: [10.0.0.6]
+        user: (( grab properties.nats.user ))
+        password: (( grab properties.nats.password ))
+        port: (( grab properties.nats.port ))
+        machines: (( grab properties.nats.machines ))
       debug: true
       syslog:
         host: 127.0.0.1
