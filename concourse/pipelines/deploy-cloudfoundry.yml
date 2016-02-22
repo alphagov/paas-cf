@@ -194,6 +194,8 @@ jobs:
               - generate/cf-secrets.yml
 
   - name: generate-cf-certs
+    serial_groups: [ deploy ]
+    serial: true
     plan:
       - aggregate:
         - get: pipeline-trigger
