@@ -16,6 +16,15 @@ variable "cell_cidrs" {
   }
 }
 
+variable "router_cidrs" {
+  description = "CIDR for router subnets indexed by AZ"
+  default     = {
+    zone0 = "10.0.48.0/24"
+    zone1 = "10.0.49.0/24"
+    zone2 = "10.0.50.0/24"
+  }
+}
+
 variable "cell_cidr_all" {
   description = "CIDR for all cell subnets"
   default     = "10.0.32.0/20"
@@ -24,6 +33,11 @@ variable "cell_cidr_all" {
 variable "cf_cidr_all" {
   description = "CIDR for all cell subnets"
   default     = "10.0.16.0/20"
+}
+
+variable "router_cidr_all" {
+  description = "CIDR for all router subnets"
+  default     = "10.0.48.0/20"
 }
 
 variable "health_check_interval" {

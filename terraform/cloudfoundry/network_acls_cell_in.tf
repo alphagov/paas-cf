@@ -28,3 +28,14 @@ resource "aws_network_acl_rule" "101_internet_cell_in" {
     to_port = 61000
     egress = false
 }
+
+resource "aws_network_acl_rule" "110_router_cell_in" {
+    network_acl_id = "${aws_network_acl.cell.id}"
+    protocol = "tcp"
+    rule_number = 110
+    rule_action = "allow"
+    cidr_block = "${var.router_cidr_all}"
+    from_port = 1024
+    to_port = 65535
+    egress = false
+}
