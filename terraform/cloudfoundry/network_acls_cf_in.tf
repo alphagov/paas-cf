@@ -161,6 +161,17 @@ resource "aws_network_acl_rule" "116_router_consul_in" {
     egress = false
 }
 
+resource "aws_network_acl_rule" "117_kibana" {
+    network_acl_id = "${aws_network_acl.cf.id}"
+    protocol = "tcp"
+    rule_number = 117
+    rule_action = "allow"
+    from_port = 5601
+    to_port = 5601
+    cidr_block = "${var.infra_cidr_all}"
+    egress = false
+}
+
 resource "aws_network_acl_rule" "120_local_drop" {
     network_acl_id = "${aws_network_acl.cf.id}"
     protocol = "tcp"
