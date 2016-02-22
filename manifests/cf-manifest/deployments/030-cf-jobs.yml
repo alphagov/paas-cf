@@ -8,7 +8,7 @@ meta:
 
   etcd_consul_service: ["etcd.service.cf.internal"]
 
-  consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips ))
+  consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips jobs.consul_z3.networks.cf3.static_ips ))
 
   nfs_client_ranges:
     - (( grab networks.cf1.subnets.[0].range || nil ))
@@ -183,7 +183,7 @@ meta:
 jobs:
   - name: consul_z1
     templates: (( grab meta.consul_templates ))
-    instances: 2
+    instances: 1
     persistent_disk: 1024
     resource_pool: small_z1
     networks:
@@ -197,6 +197,21 @@ jobs:
           mode: server
       metron_agent:
         zone: z1
+
+  - name: consul_z2
+    templates: (( grab meta.consul_templates ))
+    instances: 1
+    persistent_disk: 1024
+    resource_pool: small_z2
+    networks:
+      - name: cf2
+        static_ips:
+    properties:
+      consul:
+        agent:
+          mode: server
+      metron_agent:
+        zone: z2
 
   - name: etcd_z1
     templates: (( grab meta.etcd_templates ))
@@ -215,6 +230,21 @@ jobs:
         agent:
           services:
             etcd: {}
+
+  - name: consul_z3
+    templates: (( grab meta.consul_templates ))
+    instances: 1
+    persistent_disk: 1024
+    resource_pool: small_z3
+    networks:
+      - name: cf3
+        static_ips:
+    properties:
+      consul:
+        agent:
+          mode: server
+      metron_agent:
+        zone: z3
 
   - name: etcd_z2
     templates: (( grab meta.etcd_templates ))
@@ -247,21 +277,6 @@ jobs:
         agent:
           services:
             etcd: {}
-
-  - name: consul_z2
-    templates: (( grab meta.consul_templates ))
-    instances: 1
-    persistent_disk: 1024
-    resource_pool: small_z2
-    networks:
-      - name: cf2
-        static_ips:
-    properties:
-      consul:
-        agent:
-          mode: server
-      metron_agent:
-        zone: z2
 
   - name: ha_proxy_z1
     templates: (( grab meta.ha_proxy_templates ))
