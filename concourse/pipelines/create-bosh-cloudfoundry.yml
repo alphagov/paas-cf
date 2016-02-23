@@ -370,11 +370,15 @@ jobs:
         params:
           file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
 
-  - name: init
+  - name: init-cloudfoundry
     serial_groups: [ deploy ]
     serial: true
     plan:
       - get: paas-cf
+        passed: ['init']
+      - get: pipeline-trigger
+        passed: ['bosh-init']
+        trigger: true
       - task: init
         config:
           image: docker:///governmentpaas/curl-ssl
@@ -388,8 +392,6 @@ jobs:
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
           inputs:
           - name: paas-cf
-      - put: pipeline-trigger
-        params: {bump: patch}
   - name: terraform
     serial_groups: [ deploy ]
     serial: true
@@ -398,7 +400,7 @@ jobs:
         - get: paas-cf
           passed: ['init']
         - get: pipeline-trigger
-          passed: [ 'init' ]
+          passed: [ 'init-cloudfoundry' ]
           trigger: true
         - get: vpc-tfstate
         - get: concourse-tfstate
@@ -456,7 +458,7 @@ jobs:
       - get: paas-cf
         passed: ['init']
       - get: pipeline-trigger
-        passed: [ 'init' ]
+        passed: [ 'init-cloudfoundry' ]
         trigger: true
 
       - task: generate
@@ -495,7 +497,7 @@ jobs:
           passed: [ 'terraform' ]
           trigger: true
         - get: paas-cf
-          passed: ['terraform']
+          passed: ['init']
         - get: bosh-CA
         - get: cf-certs
         - get: cf-tfstate
