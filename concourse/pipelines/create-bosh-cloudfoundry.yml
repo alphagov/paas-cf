@@ -20,13 +20,6 @@ resources:
       region_name: {{aws_region}}
       versioned_file: vpc.tfstate
 
-  - name: bosh-tfstate
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: bosh.tfstate
-
   - name: concourse-tfstate
     type: s3-iam
     source:
@@ -34,11 +27,11 @@ resources:
       versioned_file: concourse.tfstate
       region_name: eu-west-1
 
-  - name: cf-tfstate
+  - name: bosh-cf-tfstate
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: cf.tfstate
+      versioned_file: bosh-cf.tfstate
       region_name: eu-west-1
 
   - name: cf-manifest
@@ -114,7 +107,7 @@ jobs:
             - -e
             - -c
             - |
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
           inputs:
           - name: paas-cf
@@ -136,7 +129,7 @@ jobs:
           - -e
           - -c
           - |
-            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
         inputs:
@@ -214,75 +207,76 @@ jobs:
               params:
                 file: generate/bosh-CA.tar.gz
 
-  - name: bosh-terraform
+  - name: terraform
     serial: true
     plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-      passed: [init]
-    - get: vpc-tfstate
-    - get: concourse-tfstate
-    - get: bosh-tfstate
-    - task: terraform-variables
-      config:
-        image: docker:///ruby#2.2.3-slim
-        run:
-          path: sh
-          args:
-          - -e
-          - -c
-          - |
-            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-            < vpc-tfstate/vpc.tfstate \
-            > terraform-variables/vpc.tfvars.sh
-            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-            < concourse-tfstate/concourse.tfstate \
-            > terraform-variables/concourse.tfvars.sh
-        inputs:
-        - name: paas-cf
-        - name: vpc-tfstate
-        - name: concourse-tfstate
-        outputs:
-        - name: terraform-variables
-    - task: terraform-apply
-      config:
-        image: docker:///governmentpaas/docker-terraform
-        params:
-          DEPLOY_ENV: {{deploy_env}}
-          AWS_DEFAULT_REGION: {{aws_region}}
-        inputs:
-        - name: paas-cf
-        - name: terraform-variables
-        - name: bosh-tfstate
-        run:
-          path: sh
-          args:
-          - -e
-          - -c
-          - |
-            . terraform-variables/vpc.tfvars.sh
-            . terraform-variables/concourse.tfvars.sh
+      - aggregate:
+        - get: paas-cf
+          passed: ['bootstrap-s3-state']
+        - get: pipeline-trigger
+          passed: [ 'bootstrap-s3-state']
+          trigger: true
+        - get: vpc-tfstate
+        - get: concourse-tfstate
+        - get: bosh-cf-tfstate
+      - task: terraform-variables
+        config:
+          image: docker:///ruby
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+            - name: concourse-tfstate
+            - name: bosh-cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < bosh-cf-tfstate/bosh-cf.tfstate > bosh-cf.tfvars.sh
+      - task: terraform
+        config:
+          image: docker:///governmentpaas/docker-terraform
+          params:
+            TF_VAR_env: {{deploy_env}}
+            AWS_DEFAULT_REGION: {{aws_region}}
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: bosh-cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              . terraform-variables/vpc.tfvars.sh
+              . terraform-variables/concourse.tfvars.sh
+              . terraform-variables/bosh-cf.tfvars.sh
 
-            terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-              -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
-      ensure:
-        put: bosh-tfstate
-        params:
-          file: terraform-apply/bosh.tfstate
+              terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                -state=bosh-cf-tfstate/bosh-cf.tfstate -state-out=bosh-cf.tfstate paas-cf/terraform/bosh-cloudfoundry
+        ensure:
+          put: bosh-cf-tfstate
+          params:
+            file: terraform/bosh-cf.tfstate
 
   - name: generate-bosh-manifest
     serial: true
     plan:
     - get: pipeline-trigger
       trigger: true
-      passed: ['bosh-terraform']
+      passed: ['terraform']
     - get: paas-cf
-      passed: ['bosh-terraform']
+      passed: ['terraform']
     - get: vpc-tfstate
-    - get: bosh-tfstate
-      passed: ['bosh-terraform']
+    - get: bosh-cf-tfstate
+      passed: ['terraform']
     - get: bosh-secrets
     - get: bosh-CA
       passed: [generate-CA-certs]
@@ -299,11 +293,11 @@ jobs:
               < vpc-tfstate/vpc.tfstate \
               > terraform-outputs/vpc.terraform-outputs.yml
             ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-              < bosh-tfstate/bosh.tfstate \
-              > terraform-outputs/bosh.terraform-outputs.yml
+              < bosh-cf-tfstate/bosh-cf.tfstate \
+              > terraform-outputs/bosh-cf.terraform-outputs.yml
         inputs:
         - name: paas-cf
-        - name: bosh-tfstate
+        - name: bosh-cf-tfstate
         - name: vpc-tfstate
         outputs:
         - name: terraform-outputs
@@ -328,7 +322,7 @@ jobs:
           BOSH_MANIFEST_STUBS: |
             ./bosh-secrets/bosh-secrets.yml
             ./bosh-cert/bosh-ca-cert.yml
-            ./terraform-outputs/bosh.terraform-outputs.yml
+            ./terraform-outputs/bosh-cf.terraform-outputs.yml
             ./terraform-outputs/vpc.terraform-outputs.yml
         run:
           path: sh
@@ -384,73 +378,12 @@ jobs:
         params:
           file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
 
-  - name: terraform
-    serial_groups: [ deploy ]
-    serial: true
-    plan:
-      - aggregate:
-        - get: paas-cf
-          passed: ['generate-bosh-manifest']
-        - get: pipeline-trigger
-          passed: [ 'generate-bosh-manifest' ]
-          trigger: true
-        - get: vpc-tfstate
-        - get: concourse-tfstate
-        - get: bosh-tfstate
-        - get: cf-tfstate
-      - task: terraform-variables
-        config:
-          image: docker:///ruby
-          inputs:
-            - name: paas-cf
-            - name: vpc-tfstate
-            - name: concourse-tfstate
-            - name: bosh-tfstate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < bosh-tfstate/bosh.tfstate > bosh.tfvars.sh
-      - task: terraform
-        config:
-          image: docker:///governmentpaas/docker-terraform
-          params:
-            TF_VAR_env: {{deploy_env}}
-            AWS_DEFAULT_REGION: {{aws_region}}
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-            - name: cf-tfstate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              . terraform-variables/vpc.tfvars.sh
-              . terraform-variables/concourse.tfvars.sh
-              . terraform-variables/bosh.tfvars.sh
-
-              terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
-        ensure:
-          put: cf-tfstate
-          params:
-            file: terraform/cf.tfstate
-
   - name: generate-cf-secrets
     plan:
       - get: paas-cf
-        passed: ['terraform']
+        passed: ['generate-bosh-manifest']
       - get: pipeline-trigger
-        passed: [ 'terraform' ]
+        passed: [ 'generate-bosh-manifest' ]
         trigger: true
 
       - task: generate
@@ -486,20 +419,19 @@ jobs:
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: [ 'terraform' ]
+          passed: [ 'generate-bosh-manifest' ]
           trigger: true
         - get: paas-cf
-          passed: ['terraform']
+          passed: ['generate-bosh-manifest']
         - get: bosh-CA
         - get: cf-certs
-        - get: cf-tfstate
-          passed: ['terraform']
+        - get: bosh-cf-tfstate
       - task: terraform-variables
         config:
           image: docker:///ruby#2.2-slim
           inputs:
             - name: paas-cf
-            - name: cf-tfstate
+            - name: bosh-cf-tfstate
           run:
             path: sh
             args:
@@ -507,7 +439,7 @@ jobs:
             - -c
             - |
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < cf-tfstate/cf.tfstate > cf.tfvars.sh
+                < bosh-cf-tfstate/bosh-cf.tfstate > bosh-cf.tfvars.sh
       - task: generate-cf-certs
         config:
           image: docker:///governmentpaas/certstrap
@@ -524,7 +456,7 @@ jobs:
             - -e
             - -c
             - |
-              . terraform-variables/cf.tfvars.sh
+              . terraform-variables/bosh-cf.tfvars.sh
 
               mkdir certs
               echo "Extracting extant certs"
@@ -545,7 +477,7 @@ jobs:
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: [ 'generate-cf-certs' ]
+          passed: [ 'bosh-init' ]
           trigger: true
         - get: paas-cf
           passed: ['generate-cf-certs']
@@ -554,9 +486,8 @@ jobs:
         - get: cf-certs
           passed: ['generate-cf-certs']
         - get: vpc-tfstate
-        - get: bosh-tfstate
         - get: concourse-tfstate
-        - get: cf-tfstate
+        - get: bosh-cf-tfstate
           passed: ['generate-cf-certs']
           trigger: true
         - get: cf-secrets
@@ -598,9 +529,8 @@ jobs:
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
-            - name: bosh-tfstate
+            - name: bosh-cf-tfstate
             - name: concourse-tfstate
-            - name: cf-tfstate
           run:
             path: sh
             args:
@@ -609,7 +539,7 @@ jobs:
             - |
               SCPATH="./paas-cf/concourse/scripts"
               SCFILE="extract_terraform_state_to_yaml.rb"
-              for state in vpc bosh concourse cf; do
+              for state in vpc bosh-cf concourse; do
                 $SCPATH/$SCFILE < $state-tfstate/$state.tfstate > $state.yml
               done
 
