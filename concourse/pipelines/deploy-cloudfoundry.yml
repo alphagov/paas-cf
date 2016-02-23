@@ -82,6 +82,7 @@ jobs:
     serial: true
     plan:
       - get: paas-cf
+        trigger: {{auto_deploy}}
       - task: init
         config:
           image: docker:///governmentpaas/curl-ssl

@@ -23,6 +23,12 @@ debug: ${DEBUG:-}
 EOF
 }
 
+generate_manifest_file() {
+   # This exists because concourse does not support boolean value interpolation by design
+   enable_auto_deploy=$([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
+   sed -e "s/{{auto_deploy}}/${enable_auto_deploy}/" \
+       < "${SCRIPT_DIR}/../pipelines/${ACTION}-cloudfoundry.yml"
+}
 
 for ACTION in deploy destroy; do
   trigger_file="${ACTION}-cloudfoundry.trigger"
@@ -30,7 +36,7 @@ for ACTION in deploy destroy; do
 
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
     "${env}" "${ACTION}-cloudfoundry" \
-    "${SCRIPT_DIR}/../pipelines/${ACTION}-cloudfoundry.yml" \
+    <(generate_manifest_file) \
     <(generate_vars_file)
 done
 
