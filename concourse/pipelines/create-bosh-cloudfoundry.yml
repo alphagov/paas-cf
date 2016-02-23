@@ -263,12 +263,12 @@ jobs:
     plan:
     - get: pipeline-trigger
       trigger: true
-      passed: [bosh-terraform]
+      passed: ['bosh-terraform']
     - get: paas-cf
-      passed: [init]
+      passed: ['bosh-terraform']
     - get: vpc-tfstate
     - get: bosh-tfstate
-      passed: [bosh-terraform]
+      passed: ['bosh-terraform']
     - get: bosh-secrets
     - get: bosh-CA
       passed: [generate-CA-certs]
@@ -375,7 +375,7 @@ jobs:
     serial: true
     plan:
       - get: paas-cf
-        passed: ['init']
+        passed: ['generate-bosh-manifest']
       - get: pipeline-trigger
         passed: ['bosh-init']
         trigger: true
@@ -398,7 +398,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['init']
+          passed: ['init-cloudfoundry']
         - get: pipeline-trigger
           passed: [ 'init-cloudfoundry' ]
           trigger: true
@@ -456,7 +456,7 @@ jobs:
   - name: generate-cf-secrets
     plan:
       - get: paas-cf
-        passed: ['init']
+        passed: ['terraform']
       - get: pipeline-trigger
         passed: [ 'init-cloudfoundry' ]
         trigger: true
@@ -497,7 +497,7 @@ jobs:
           passed: [ 'terraform' ]
           trigger: true
         - get: paas-cf
-          passed: ['init']
+          passed: ['terraform']
         - get: bosh-CA
         - get: cf-certs
         - get: cf-tfstate
