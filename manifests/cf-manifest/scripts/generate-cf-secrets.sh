@@ -14,9 +14,9 @@ cat <<EOF
   secrets:
     vcap_password_orig: ${vcap_password_orig}
     vcap_password: ${vcap_password}
-    postgres_password: $(simplepass)
-    ccadmin_password: $(simplepass)
-    uuadmin_password: $(simplepass)
+    cf_db_master_password: $(simplepass)
+    cf_db_api_password: $(simplepass)
+    cf_db_uaa_password: $(simplepass)
     staging_upload_password: $(simplepass)
     bulk_api_password: $(simplepass)
     nats_password: $(simplepass)
