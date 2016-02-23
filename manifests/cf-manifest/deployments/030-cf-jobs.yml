@@ -355,7 +355,7 @@ jobs:
     instances: 1
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       consul:
         agent:
@@ -374,7 +374,7 @@ jobs:
     instances: 1
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf2_rds
     properties:
       consul:
         agent:
@@ -394,7 +394,7 @@ jobs:
     resource_pool: api_z1
     persistent_disk: 0
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       consul:
         agent:
@@ -411,7 +411,7 @@ jobs:
     resource_pool: api_z2
     persistent_disk: 0
     networks:
-      - name: cf2
+      - name: cf2_rds
     properties:
       consul:
         agent:
@@ -428,7 +428,7 @@ jobs:
     resource_pool: medium_z1
     persistent_disk: 0
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       metron_agent:
         zone: z1
@@ -439,7 +439,7 @@ jobs:
     resource_pool: api_z1
     persistent_disk: 0
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       metron_agent:
         zone: z1
@@ -451,7 +451,7 @@ jobs:
     resource_pool: api_z2
     persistent_disk: 0
     networks:
-      - name: cf2
+      - name: cf2_rds
     properties:
       metron_agent:
         zone: z2
