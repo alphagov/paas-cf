@@ -40,6 +40,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-secrets.yml
 
+  - name: cf-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: cf-secrets.yml
+
 jobs:
   - name: delete-deployment
     serial_groups: [ destroy ]
@@ -78,6 +85,8 @@ jobs:
         - get: cf-tfstate
         - get: concourse-tfstate
         - get: vpc-tfstate
+        - get: cf-secrets
+
       - task: terraform-variables
         config:
           image: docker:///ruby#2.2.3-slim
@@ -86,6 +95,7 @@ jobs:
             - name: cf-tfstate
             - name: concourse-tfstate
             - name: vpc-tfstate
+            - name: cf-secrets
           run:
             path: sh
             args:
@@ -101,6 +111,9 @@ jobs:
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
               < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
               ls -l vpc.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+              < cf-secrets/cf-secrets.yml > cf-secrets.tfvars.sh
+              ls -l cf-secrets.tfvars.sh
       - task: cf-terraform-destroy
         config:
           image: docker:///governmentpaas/terraform
@@ -119,6 +132,8 @@ jobs:
               . terraform-variables/cf.tfvars.sh
               . terraform-variables/concourse.tfvars.sh
               . terraform-variables/vpc.tfvars.sh
+              . terraform-variables/cf-secrets.tfvars.sh
+
               terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:

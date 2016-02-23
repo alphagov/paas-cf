@@ -98,7 +98,8 @@ jobs:
           - name: paas-cf
       - put: pipeline-trigger
         params: {bump: patch}
-  - name: terraform
+
+  - name: generate-secrets
     serial_groups: [ deploy ]
     serial: true
     plan:
@@ -108,10 +109,50 @@ jobs:
         - get: pipeline-trigger
           passed: [ 'init' ]
           trigger: true
+
+      - task: generate-cf-secrets
+        config:
+          image: docker:///governmentpaas/mksecrets
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -c
+              - -e
+              - |
+                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.sh > cf-secrets.yml
+                ls -l cf-secrets.yml
+
+      - task: upload
+        config:
+          image: docker:///governmentpaas/curl-ssl
+          inputs:
+            - name: paas-cf
+            - name: generate-cf-secrets
+          run:
+            path: paas-cf/concourse/scripts/s3init.sh
+            args:
+              - {{state_bucket}}
+              - cf-secrets.yml
+              - generate-cf-secrets/cf-secrets.yml
+
+  - name: terraform
+    serial_groups: [ deploy ]
+    serial: true
+    plan:
+      - aggregate:
+        - get: paas-cf
+          passed: ['generate-secrets']
+        - get: pipeline-trigger
+          passed: [ 'generate-secrets' ]
+          trigger: true
         - get: vpc-tfstate
         - get: concourse-tfstate
         - get: bosh-tfstate
         - get: cf-tfstate
+        - get: cf-secrets
+
       - task: terraform-variables
         config:
           image: docker:///ruby
@@ -120,6 +161,7 @@ jobs:
             - name: vpc-tfstate
             - name: concourse-tfstate
             - name: bosh-tfstate
+            - name: cf-secrets
           run:
             path: sh
             args:
@@ -132,6 +174,9 @@ jobs:
               < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
               < bosh-tfstate/bosh.tfstate > bosh.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+              < cf-secrets/cf-secrets.yml > cf-secrets.tfvars.sh
+
       - task: terraform
         config:
           image: docker:///governmentpaas/terraform
@@ -151,6 +196,7 @@ jobs:
               . terraform-variables/vpc.tfvars.sh
               . terraform-variables/concourse.tfvars.sh
               . terraform-variables/bosh.tfvars.sh
+              . terraform-variables/cf-secrets.tfvars.sh
 
               terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
@@ -158,41 +204,6 @@ jobs:
           put: cf-tfstate
           params:
             file: terraform/cf.tfstate
-
-  - name: generate-cf-secrets
-    plan:
-      - get: paas-cf
-        passed: ['init']
-      - get: pipeline-trigger
-        passed: [ 'init' ]
-        trigger: true
-
-      - task: generate
-        config:
-          image: docker:///governmentpaas/mksecrets
-          inputs:
-            - name: paas-cf
-          run:
-            path: sh
-            args:
-              - -c
-              - -e
-              - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.sh > cf-secrets.yml
-                ls -l cf-secrets.yml
-
-      - task: upload
-        config:
-          image: docker:///governmentpaas/curl-ssl
-          inputs:
-            - name: paas-cf
-            - name: generate
-          run:
-            path: paas-cf/concourse/scripts/s3init.sh
-            args:
-              - {{state_bucket}}
-              - cf-secrets.yml
-              - generate/cf-secrets.yml
 
   - name: generate-cf-certs
     serial_groups: [ deploy ]
