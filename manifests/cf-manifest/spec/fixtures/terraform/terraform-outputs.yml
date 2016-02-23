@@ -2,6 +2,7 @@
 terraform_outputs:
   cf1_subnet_id: subnet-12345678
   cf2_subnet_id: subnet-23456781
+  cf3_subnet_id: subnet-34567812
   cell1_subnet_id: subnet-09876543
   cell2_subnet_id: subnet-98765432
   router1_subnet_id: subnet-09876543
@@ -14,6 +15,7 @@ terraform_outputs:
   region: sealand-1
   zone0: sealand-1a
   zone1: sealand-1b
+  zone2: sealand-1c
   postgres_rds_address: 127.0.0.1
   postgres_rds_port: 5432
   ssh_elb_name: stub_ssh_elb

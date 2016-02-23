@@ -3,6 +3,7 @@ RSpec.describe "networks" do
   CF_NETWORK_NAMES = %w(
     cf1
     cf2
+    cf3
     cell1
     cell2
     router1

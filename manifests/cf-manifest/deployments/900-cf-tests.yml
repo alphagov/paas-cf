@@ -13,7 +13,7 @@ jobs:
     templates:
     - name: smoke-tests
       release: (( grab meta.release.name ))
-    instances: 0
+    instances: 1
     resource_pool: small_errand
     lifecycle: errand
     networks:

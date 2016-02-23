@@ -32,7 +32,7 @@ variable "zones" {
 
 variable "zone_count" {
   description = "Number of zones to use"
-  default = 2
+  default = 3
 }
 
 variable "infra_cidrs" {
