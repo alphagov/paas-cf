@@ -101,9 +101,23 @@ jobs:
   - name: init
     serial: true
     plan:
-    - get: paas-cf
-    - put: pipeline-trigger
-      params: {bump: patch}
+      - aggregate:
+        - get: paas-cf
+        - put: pipeline-trigger
+          params: {bump: patch}
+      - task: init
+        config:
+          image: docker:///governmentpaas/curl-ssl
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+          inputs:
+          - name: paas-cf
 
   - name: bootstrap-s3-state
     serial: true
@@ -370,37 +384,15 @@ jobs:
         params:
           file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
 
-  - name: init-cloudfoundry
-    serial_groups: [ deploy ]
-    serial: true
-    plan:
-      - get: paas-cf
-        passed: ['generate-bosh-manifest']
-      - get: pipeline-trigger
-        passed: ['bosh-init']
-        trigger: true
-      - task: init
-        config:
-          image: docker:///governmentpaas/curl-ssl
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-          inputs:
-          - name: paas-cf
   - name: terraform
     serial_groups: [ deploy ]
     serial: true
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['init-cloudfoundry']
+          passed: ['generate-bosh-manifest']
         - get: pipeline-trigger
-          passed: [ 'init-cloudfoundry' ]
+          passed: [ 'generate-bosh-manifest' ]
           trigger: true
         - get: vpc-tfstate
         - get: concourse-tfstate
@@ -458,7 +450,7 @@ jobs:
       - get: paas-cf
         passed: ['terraform']
       - get: pipeline-trigger
-        passed: [ 'init-cloudfoundry' ]
+        passed: [ 'terraform' ]
         trigger: true
 
       - task: generate
