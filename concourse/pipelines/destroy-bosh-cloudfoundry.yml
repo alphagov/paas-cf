@@ -1,0 +1,247 @@
+resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: {{branch_name}}
+
+  - name: cf-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: cf.tfstate
+      region_name: {{aws_region}}
+
+  - name: bosh-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh.tfstate
+
+  - name: concourse-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: concourse.tfstate
+      region_name: {{aws_region}}
+
+  - name: bosh-init-state
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh-manifest-state.json
+
+  - name: bosh-manifest
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh-manifest.yml
+
+  - name: vpc-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: vpc.tfstate
+      region_name: {{aws_region}}
+
+  - name: pipeline-trigger
+    type: semver-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      key: {{pipeline_trigger_file}}
+
+  - name: bosh-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh-secrets.yml
+
+jobs:
+  - name: delete-deployment
+    serial_groups: [ destroy ]
+    serial: true
+    plan:
+      - aggregate:
+        - get: bosh-secrets
+        - get: paas-cf
+      - task: delete-deployment
+        config:
+          inputs:
+          - name: bosh-secrets
+          - name: paas-cf
+          image: docker:///governmentpaas/bosh-cli
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+              bosh -n delete deployment {{deploy_env}}
+      - put: pipeline-trigger
+        params: {bump: patch}
+
+  - name: terraform-destroy
+    serial_groups: [ destroy ]
+    serial: true
+    plan:
+      - aggregate:
+        - get: pipeline-trigger
+          passed: ['delete-deployment']
+          trigger: true
+        - get: paas-cf
+          passed: ['delete-deployment']
+        - get: cf-tfstate
+        - get: concourse-tfstate
+        - get: vpc-tfstate
+      - task: terraform-variables
+        config:
+          image: docker:///ruby#2.2.3-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+            - name: concourse-tfstate
+            - name: vpc-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < cf-tfstate/cf.tfstate > cf.tfvars.sh
+              ls -l cf.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
+              ls -l concourse.tfvars.sh
+              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
+              ls -l vpc.tfvars.sh
+      - task: cf-terraform-destroy
+        config:
+          image: docker:///governmentpaas/docker-terraform
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              . terraform-variables/cf.tfvars.sh
+              . terraform-variables/concourse.tfvars.sh
+              . terraform-variables/vpc.tfvars.sh
+              terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
+        ensure:
+          put: cf-tfstate
+          params:
+            file: cf-terraform-destroy/cf.tfstate
+
+  - name: init
+    serial: true
+    plan:
+    - get: pipeline-trigger
+      passed: ['delete-deployment']
+      trigger: true
+
+  - name: bosh-init-delete
+    serial: true
+    plan:
+    - get: pipeline-trigger
+      trigger: true
+      passed: [ init ]
+    - get: paas-cf
+    - get: bosh-tfstate
+    - get: bosh-secrets
+    - get: bosh-init-state
+    - get: bosh-manifest
+    - task: bosh-init-microbosh
+      config:
+        image: docker:///governmentpaas/bosh-init
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
+            bosh-init delete bosh-manifest/bosh-manifest.yml
+            # If the delete is successful, the file will be missing
+            [ -f "bosh-manifest/bosh-manifest-state.json" ] || \
+                cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-manifest/bosh-manifest-state.json
+        inputs:
+        - name: paas-cf
+        - name: bosh-manifest
+        - name: bosh-init-state
+      ensure:
+        put: bosh-init-state
+        params:
+          file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
+
+  - name: bosh-terraform-destroy
+    serial: true
+    plan:
+    - get: paas-cf
+    - get: bosh-init-state
+      passed: [ bosh-init-delete ]
+      trigger: true
+    - get: vpc-tfstate
+    - get: concourse-tfstate
+    - get: bosh-tfstate
+    - task: terraform-variables
+      config:
+        image: docker:///governmentpaas/bosh-init
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < vpc-tfstate/vpc.tfstate \
+            > terraform-variables/vpc.tfvars.sh
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < concourse-tfstate/concourse.tfstate \
+            > terraform-variables/concourse.tfvars.sh
+        inputs:
+        - name: paas-cf
+        - name: vpc-tfstate
+        - name: concourse-tfstate
+        outputs:
+        - name: terraform-variables
+    - task: terraform-destroy
+      config:
+        image: docker:///governmentpaas/docker-terraform
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
+        inputs:
+        - name: paas-cf
+        - name: terraform-variables
+        - name: bosh-tfstate
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            . terraform-variables/vpc.tfvars.sh
+            . terraform-variables/concourse.tfvars.sh
+
+            terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+              -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
+      ensure:
+        put: bosh-tfstate
+        params:
+          file: terraform-destroy/bosh.tfstate
+
