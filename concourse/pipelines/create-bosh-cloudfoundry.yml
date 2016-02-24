@@ -92,6 +92,7 @@ resources:
 
 jobs:
   - name: init
+    serial_group: [deploy]
     serial: true
     plan:
       - aggregate:
@@ -187,6 +188,7 @@ jobs:
                 file: generate/bosh-CA.tar.gz
 
   - name: terraform
+    serial_groups: [ deploy ]
     serial: true
     plan:
       - aggregate:
@@ -246,6 +248,7 @@ jobs:
             file: terraform/bosh-cf.tfstate
 
   - name: generate-bosh-manifest
+    serial_groups: [ deploy ]
     serial: true
     plan:
     - get: pipeline-trigger
