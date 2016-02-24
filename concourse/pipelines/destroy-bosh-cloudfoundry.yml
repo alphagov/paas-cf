@@ -86,48 +86,57 @@ jobs:
   - name: bosh-init-delete
     serial: true
     plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ delete-deployment ]
-    - get: paas-cf
-    - get: bosh-cf-tfstate
-    - get: bosh-secrets
-      passed: [ delete-deployment ]
-    - get: bosh-init-state
-    - get: bosh-manifest
-    - task: bosh-init-microbosh
-      config:
-        image: docker:///governmentpaas/bosh-init
-        run:
-          path: sh
-          args:
-          - -e
-          - -c
-          - |
-            cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
-            bosh-init delete bosh-manifest/bosh-manifest.yml
-            # If the delete is successful, the file will be missing
-            [ -f "bosh-manifest/bosh-manifest-state.json" ] || \
-                cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-manifest/bosh-manifest-state.json
-        inputs:
-        - name: paas-cf
-        - name: bosh-manifest
-        - name: bosh-init-state
-      ensure:
-        put: bosh-init-state
-        params:
-          file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
+      - aggregate:
+        - get: pipeline-trigger
+          trigger: true
+          passed: [ delete-deployment ]
+        - get: paas-cf
+          passed: [ delete-deployment ]
+        - get: bosh-cf-tfstate
+        - get: bosh-secrets
+          passed: [ delete-deployment ]
+        - get: bosh-init-state
+          passed: [ delete-deployment ]
+        - get: bosh-manifest
+      - task: bosh-init-microbosh
+        config:
+          image: docker:///governmentpaas/bosh-init
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
+              bosh-init delete bosh-manifest/bosh-manifest.yml
+              # If the delete is successful, the file will be missing
+              [ -f "bosh-manifest/bosh-manifest-state.json" ] || \
+                  cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-manifest/bosh-manifest-state.json
+          inputs:
+          - name: paas-cf
+          - name: bosh-manifest
+          - name: bosh-init-state
+        ensure:
+          put: bosh-init-state
+          params:
+            file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
 
   - name: bosh-terraform-destroy
     serial: true
     plan:
-    - get: paas-cf
-    - get: bosh-init-state
-      passed: [ bosh-init-delete ]
-      trigger: true
-    - get: vpc-tfstate
-    - get: concourse-tfstate
-    - get: bosh-cf-tfstate
+    - aggregate:
+      - get: pipeline-trigger
+        trigger: true
+        passed: [ bosh-init-delete ]
+      - get: paas-cf
+        passed: [ bosh-init-delete ]
+      - get: bosh-init-state
+        passed: [ bosh-init-delete ]
+        trigger: true
+      - get: vpc-tfstate
+      - get: concourse-tfstate
+      - get: bosh-cf-tfstate
+        passed: [ bosh-init-delete ]
     - task: terraform-variables
       config:
         image: docker:///ruby#2.2.3-slim
