@@ -62,11 +62,13 @@ jobs:
       - aggregate:
         - get: bosh-secrets
         - get: paas-cf
+        - get: bosh-init-state
       - task: delete-deployment
         config:
           inputs:
           - name: bosh-secrets
           - name: paas-cf
+          - name: bosh-init-state
           image: docker:///governmentpaas/bosh-cli
           run:
             path: sh
@@ -74,8 +76,10 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-              bosh -n delete deployment {{deploy_env}}
+              if  grep director_id bosh-init-state/bosh-manifest-state.json; then
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh -n delete deployment {{deploy_env}}
+              fi
       - put: pipeline-trigger
         params: {bump: patch}
 
