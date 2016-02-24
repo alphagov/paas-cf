@@ -147,19 +147,12 @@ jobs:
           params:
             file: cf-terraform-destroy/cf.tfstate
 
-  - name: init
-    serial: true
-    plan:
-    - get: pipeline-trigger
-      passed: ['delete-deployment']
-      trigger: true
-
   - name: bosh-init-delete
     serial: true
     plan:
     - get: pipeline-trigger
       trigger: true
-      passed: [ init ]
+      passed: [ terraform-destroy ]
     - get: paas-cf
     - get: bosh-tfstate
     - get: bosh-secrets
