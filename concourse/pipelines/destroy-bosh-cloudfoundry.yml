@@ -5,19 +5,12 @@ resources:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
 
-  - name: cf-tfstate
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      versioned_file: cf.tfstate
-      region_name: {{aws_region}}
-
-  - name: bosh-tfstate
+  - name: bosh-cf-tfstate
     type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      versioned_file: bosh.tfstate
+      versioned_file: bosh-cf.tfstate
 
   - name: concourse-tfstate
     type: s3-iam
@@ -86,76 +79,16 @@ jobs:
       - put: pipeline-trigger
         params: {bump: patch}
 
-  - name: terraform-destroy
-    serial_groups: [ destroy ]
-    serial: true
-    plan:
-      - aggregate:
-        - get: pipeline-trigger
-          passed: ['delete-deployment']
-          trigger: true
-        - get: paas-cf
-          passed: ['delete-deployment']
-        - get: cf-tfstate
-        - get: concourse-tfstate
-        - get: vpc-tfstate
-      - task: terraform-variables
-        config:
-          image: docker:///ruby#2.2.3-slim
-          inputs:
-            - name: paas-cf
-            - name: cf-tfstate
-            - name: concourse-tfstate
-            - name: vpc-tfstate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < cf-tfstate/cf.tfstate > cf.tfvars.sh
-              ls -l cf.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
-              ls -l concourse.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
-              ls -l vpc.tfvars.sh
-      - task: cf-terraform-destroy
-        config:
-          image: docker:///governmentpaas/docker-terraform
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-            - name: cf-tfstate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              . terraform-variables/cf.tfvars.sh
-              . terraform-variables/concourse.tfvars.sh
-              . terraform-variables/vpc.tfvars.sh
-              terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
-        ensure:
-          put: cf-tfstate
-          params:
-            file: cf-terraform-destroy/cf.tfstate
-
   - name: bosh-init-delete
     serial: true
     plan:
     - get: pipeline-trigger
       trigger: true
-      passed: [ terraform-destroy ]
+      passed: [ delete-deployment ]
     - get: paas-cf
-    - get: bosh-tfstate
+    - get: bosh-cf-tfstate
     - get: bosh-secrets
+      passed: [ delete-deployment ]
     - get: bosh-init-state
     - get: bosh-manifest
     - task: bosh-init-microbosh
@@ -190,16 +123,18 @@ jobs:
       trigger: true
     - get: vpc-tfstate
     - get: concourse-tfstate
-    - get: bosh-tfstate
+    - get: bosh-cf-tfstate
     - task: terraform-variables
       config:
-        image: docker:///governmentpaas/bosh-init
+        image: docker:///ruby#2.2.3-slim
         run:
           path: sh
           args:
           - -e
           - -c
           - |
+            ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+            < bosh-cf-tfstate/bosh-cf.tfstate > terraform-variables/bosh-cf.tfvars.sh
             ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
             < vpc-tfstate/vpc.tfstate \
             > terraform-variables/vpc.tfvars.sh
@@ -209,6 +144,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-tfstate
+        - name: bosh-cf-tfstate
         - name: concourse-tfstate
         outputs:
         - name: terraform-variables
@@ -221,7 +157,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: terraform-variables
-        - name: bosh-tfstate
+        - name: bosh-cf-tfstate
         run:
           path: sh
           args:
@@ -230,11 +166,12 @@ jobs:
           - |
             . terraform-variables/vpc.tfvars.sh
             . terraform-variables/concourse.tfvars.sh
+            . terraform-variables/bosh-cf.tfvars.sh
 
             terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-              -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
+              -state=bosh-cf-tfstate/bosh-cf.tfstate -state-out=bosh-cf.tfstate paas-cf/terraform/bosh-cloudfoundry
       ensure:
-        put: bosh-tfstate
+        put: bosh-cf-tfstate
         params:
-          file: terraform-destroy/bosh.tfstate
+          file: terraform-destroy/bosh-cf.tfstate
 
