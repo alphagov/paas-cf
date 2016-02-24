@@ -128,7 +128,7 @@ jobs:
         - name: terraform-variables
     - task: terraform-destroy
       config:
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         params:
           DEPLOY_ENV: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}

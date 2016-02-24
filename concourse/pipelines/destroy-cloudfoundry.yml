@@ -103,7 +103,7 @@ jobs:
               ls -l vpc.tfvars.sh
       - task: cf-terraform-destroy
         config:
-          image: docker:///governmentpaas/docker-terraform
+          image: docker:///governmentpaas/terraform
           params:
             AWS_DEFAULT_REGION: {{aws_region}}
           inputs:
