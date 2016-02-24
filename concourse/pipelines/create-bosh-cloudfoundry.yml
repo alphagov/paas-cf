@@ -115,7 +115,7 @@ jobs:
           inputs:
           - name: paas-cf
 
-  - name: generate-secrets
+  - name: generate-bosh-secrets
     serial: true
     plan:
     - get: pipeline-trigger
@@ -453,7 +453,7 @@ jobs:
         params:
           file: updated-cf-certs/cf-certs.tar.gz
 
-  - name: generate-manifest
+  - name: generate-cf-manifest
     serial_groups: [ deploy ]
     serial: true
     plan:
@@ -556,12 +556,12 @@ jobs:
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: [ 'generate-manifest' ]
+          passed: [ 'generate-cf-manifest' ]
           trigger: true
         - get: paas-cf
-          passed: ['generate-manifest']
+          passed: ['generate-cf-manifest']
         - get: cf-manifest
-          passed: ['generate-manifest']
+          passed: ['generate-cf-manifest']
           trigger: true
         - get: bosh-secrets
       - task: cf-deploy
