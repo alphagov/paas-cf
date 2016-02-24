@@ -10,13 +10,35 @@ resource "aws_security_group" "web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  /* FIXME: Merge these two ingress block back together once */
+  /* https://github.com/hashicorp/terraform/issues/5301 is resolved. */
   ingress {
     from_port = 80
     to_port   = 80
     protocol  = "tcp"
     cidr_blocks = [
       "${split(",", var.web_access_cidrs)}",
+      "${var.concourse_elastic_ip}/32",
+    ]
+  }
+
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+    cidr_blocks = [
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
+    ]
+  }
+
+  /* FIXME: Merge these two ingress block back together once */
+  /* https://github.com/hashicorp/terraform/issues/5301 is resolved. */
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${split(",", var.web_access_cidrs)}",
       "${var.concourse_elastic_ip}/32",
     ]
   }
@@ -26,9 +48,7 @@ resource "aws_security_group" "web" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.web_access_cidrs)}",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
-      "${var.concourse_elastic_ip}/32",
     ]
   }
 
