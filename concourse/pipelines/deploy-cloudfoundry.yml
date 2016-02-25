@@ -205,6 +205,41 @@ jobs:
           params:
             file: terraform/cf.tfstate
 
+      - task: extract-cf-terraform-outputs
+        config:
+          platform: linux
+          image: docker:///ruby#2.2.3-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              SCPATH="./paas-cf/concourse/scripts"
+              SCFILE="extract_tf_vars_from_terraform_state.rb"
+              $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf.tfstate.sh
+              ls -l cf.tfstate.sh
+
+      - task: init-db
+        config:
+          image: docker:///governmentpaas/psql
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: extract-cf-terraform-outputs
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              . terraform-variables/cf-secrets.tfvars.sh
+              . extract-cf-terraform-outputs/cf.tfstate.sh
+
+              paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
   - name: generate-cf-certs
     serial_groups: [ deploy ]
     serial: true
