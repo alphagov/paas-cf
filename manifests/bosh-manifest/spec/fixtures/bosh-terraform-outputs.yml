@@ -12,3 +12,8 @@ terraform_outputs:
   region: eu-west-1
   zone0: eu-west-1a
   zone1: eu-west-1b
+  bosh_db_address: 1.2.3.4
+  bosh_db_port: 5432
+  bosh_db_username: bosh
+  bosh_db_password: BOSH_POSTGRES_PASSWORD
+  bosh_db_dbname: bosh

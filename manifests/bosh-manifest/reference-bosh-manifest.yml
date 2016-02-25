@@ -71,9 +71,10 @@ jobs:
       db:
         adapter: postgres
         database: bosh
-        host: 127.0.0.1
+        host: 1.2.3.4
         password: BOSH_POSTGRES_PASSWORD
-        user: postgres
+        port: 5432
+        user: bosh
       disks:
         max_orphaned_age_in_days: 0
       ignore_missing_gateway: "false"
@@ -100,9 +101,10 @@ jobs:
     postgres:
       adapter: postgres
       database: bosh
-      host: 127.0.0.1
+      host: 1.2.3.4
       password: BOSH_POSTGRES_PASSWORD
-      user: postgres
+      port: 5432
+      user: bosh
     redis:
       address: 127.0.0.1
       listen_address: 127.0.0.1
@@ -111,9 +113,10 @@ jobs:
       db:
         adapter: postgres
         database: bosh
-        host: 127.0.0.1
+        host: 1.2.3.4
         password: BOSH_POSTGRES_PASSWORD
-        user: postgres
+        port: 5432
+        user: bosh
       host: 10.0.0.6
       http:
         password: BOSH_REGISTRY_PASSWORD
@@ -125,8 +128,6 @@ jobs:
   - name: nats
     release: bosh
   - name: redis
-    release: bosh
-  - name: postgres
     release: bosh
   - name: director
     release: bosh
