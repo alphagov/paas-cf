@@ -15,6 +15,7 @@ meta:
       credentials_source: env_or_profile
       default_key_name: (( grab meta.aws.common.default_key_name ))
       default_security_groups: (( grab meta.aws.common.default_security_groups ))
+      default_iam_instance_profile: bosh-managed
       region: (( grab meta.aws.common.region ))
       max_retries: 8
 

@@ -48,6 +48,7 @@ jobs:
       mbus: nats://nats:BOSH_NATS_PASSWORD@10.0.0.6:4222
     aws:
       credentials_source: env_or_profile
+      default_iam_instance_profile: bosh-managed
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
