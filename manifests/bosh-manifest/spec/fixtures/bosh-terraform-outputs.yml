@@ -4,6 +4,7 @@ terraform_outputs:
   bosh_subnet_id: subnet-bosh
   compiled_cache_bucket_host: s3-eu-west-1.amazonaws.com
   compiled_cache_bucket_name: shared-cf-bosh-blobstore-unit-test
+  bosh_blobstore_bucket_name: test-bosh-blobstore
   default_security_group: bosh_default_sg
   environment: test
   microbosh_static_private_ip: 10.0.0.6

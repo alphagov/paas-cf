@@ -55,18 +55,10 @@ jobs:
       max_retries: 8
       region: eu-west-1
     blobstore:
-      address: 10.0.0.6
-      agent:
-        password: BOSH_AGENT_PASSWORD
-        user: agent
-      director:
-        password: BOSH_BLOBSTORE_DIRECTOR_PASSWORD
-        user: director
-      options:
-        endpoint: http://194.1.2.4:25250
-        password: BOSH_AGENT_PASSWORD
-        user: agent
-      provider: dav
+      bucket_name: test-bosh-blobstore
+      credentials_source: env_or_profile
+      provider: s3
+      s3_region: eu-west-1
     compiled_package_cache:
       options:
         bucket_name: shared-cf-bosh-blobstore-unit-test
@@ -135,8 +127,6 @@ jobs:
   - name: redis
     release: bosh
   - name: postgres
-    release: bosh
-  - name: blobstore
     release: bosh
   - name: director
     release: bosh
