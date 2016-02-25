@@ -45,3 +45,23 @@ output "compiled_cache_bucket_name" {
 output "bosh_blobstore_bucket_name" {
   value = "${aws_s3_bucket.bosh-blobstore.id}"
 }
+
+output "bosh_db_address" {
+  value = "${aws_db_instance.bosh.address}"
+}
+
+output "bosh_db_port" {
+  value = "${aws_db_instance.bosh.port}"
+}
+
+output "bosh_db_username" {
+  value = "${aws_db_instance.bosh.username}"
+}
+
+output "bosh_db_password" {
+  value = "${aws_db_instance.bosh.password}"
+}
+
+output "bosh_db_dbname" {
+  value = "${aws_db_instance.bosh.name}"
+}
