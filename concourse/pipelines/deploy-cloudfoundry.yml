@@ -134,7 +134,7 @@ jobs:
               < bosh-tfstate/bosh.tfstate > bosh.tfvars.sh
       - task: terraform
         config:
-          image: docker:///governmentpaas/docker-terraform
+          image: docker:///governmentpaas/terraform
           params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}

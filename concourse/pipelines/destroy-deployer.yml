@@ -113,7 +113,7 @@ jobs:
 
     - task: destroy-concourse-terraform
       config:
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
@@ -153,7 +153,7 @@ jobs:
       passed: [destroy-concourse]
     - task: tf-destroy-vpc
       config:
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
@@ -185,7 +185,7 @@ jobs:
         passed: [destroy-vpc]
       - task: tf-destroy-init-bucket
         config:
-          image: docker:///governmentpaas/docker-terraform
+          image: docker:///governmentpaas/terraform
           params:
               TF_VAR_env: {{deploy_env}}
               AWS_DEFAULT_REGION: {{aws_region}}

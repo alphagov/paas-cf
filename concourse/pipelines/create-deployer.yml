@@ -98,7 +98,7 @@ jobs:
 
     - task: create-init-bucket
       config:
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
@@ -169,7 +169,7 @@ jobs:
     - task: deploy-vpc
       config:
         platform: linux
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         inputs:
         - name: paas-cf
         - name: vpc-terraform-state
@@ -252,7 +252,7 @@ jobs:
 
     - task: terraform-apply
       config:
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
@@ -444,7 +444,7 @@ jobs:
     - task: remove-vagrant-IP-from-ssh-SG
       config:
         platform: linux
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         inputs:
         - name: paas-cf
         - name: vpc-terraform-state
@@ -470,7 +470,7 @@ jobs:
     - task: remove-vagrant-IP-from-concourse-SG
       config:
         platform: linux
-        image: docker:///governmentpaas/docker-terraform
+        image: docker:///governmentpaas/terraform
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
