@@ -1,5 +1,24 @@
-resources:
+---
+groups:
+- name: create-microbosh
+  jobs:
+    - init
+    - terraform
+    - generate-bosh-secrets
+    - generate-CA-certs
+    - generate-bosh-manifest
+    - bosh-init
+- name: deploy-cloudfoundry
+  jobs:
+    - generate-cf-certs
+    - generate-cf-secrets
+    - generate-cf-manifest
+    - deploy
+    - smoke-tests
+    - acceptance-tests
+    - custom-acceptance-tests
 
+resources:
   - name: pipeline-trigger
     type: semver-iam
     source:
