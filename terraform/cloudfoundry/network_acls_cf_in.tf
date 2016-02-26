@@ -110,7 +110,7 @@ resource "aws_network_acl_rule" "80_etcd" {
 
 resource "aws_network_acl_rule" "90_cf_local_in" {
     network_acl_id = "${aws_network_acl.cf.id}"
-    protocol = -1
+    protocol = "all"
     rule_number = 90
     rule_action = "allow"
     cidr_block = "${var.cf_cidr_all}"
@@ -141,7 +141,7 @@ resource "aws_network_acl_rule" "110_bosh" {
 
 resource "aws_network_acl_rule" "115_router_in" {
     network_acl_id = "${aws_network_acl.cf.id}"
-    protocol = -1
+    protocol = "all"
     rule_number = 115
     rule_action = "allow"
     from_port = 1024
@@ -185,7 +185,7 @@ resource "aws_network_acl_rule" "120_local_drop" {
 
 resource "aws_network_acl_rule" "130_internet_cf_in" {
     network_acl_id = "${aws_network_acl.cf.id}"
-    protocol = -1
+    protocol = "all"
     rule_number = 130
     rule_action = "allow"
     cidr_block = "0.0.0.0/0"
