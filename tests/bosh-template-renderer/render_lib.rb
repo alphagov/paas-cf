@@ -41,6 +41,9 @@ def render_template(template, spec, manifest)
   job_spec["properties"] = manifest["properties"].clone()
   job_spec.populate_default_properties_from_spec(spec)
 
+  # Populate the network
+  job_spec["networks"] =  {"cf1" => {"ip" => "127.0.0.1"}}
+
   context = Bosh::Template::EvaluationContext.new(job_spec)
   erb = ERB.new(template)
   return erb.result(context.get_binding)

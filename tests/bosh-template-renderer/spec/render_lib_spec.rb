@@ -97,5 +97,26 @@ properties:
     result = render_template(template, YAML.load(example_spec), YAML.load(example_manifest))
     expect(result).to eq("a.b.c is foo and a.b.d is foobar")
   end
+
+  it "uses a normalised version of the manifest which allows discover external_ip" do
+    template = %q{<%
+def discover_external_ip
+  networks = spec.networks.marshal_dump
+  _, network = networks.find do |_name, network_spec|
+    network_spec.default
+  end
+  if !network
+    _, network = networks.first
+  end
+  if !network
+    raise "Could not determine IP via network spec: #{networks}"
+  end
+  network.ip
+end %>
+a.b.c is <%= p('a.b.c') %> and a.b.d is <%= p('a.b.d') %> and the ip is <%= discover_external_ip %>
+    }
+    result = render_template(template, YAML.load(example_spec), YAML.load(example_manifest))
+    expect(result).to include("a.b.c is foo and a.b.d is foobar and the ip is 127.0.0.1")
+  end
 end
 
