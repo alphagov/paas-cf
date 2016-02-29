@@ -161,13 +161,24 @@ resource "aws_network_acl_rule" "116_router_consul_in" {
     egress = false
 }
 
-resource "aws_network_acl_rule" "117_kibana" {
+resource "aws_network_acl_rule" "117_kibana_and_es" {
     network_acl_id = "${aws_network_acl.cf.id}"
     protocol = "tcp"
     rule_number = 117
     rule_action = "allow"
     from_port = 5601
-    to_port = 5601
+    to_port = 9300
+    cidr_block = "${var.infra_cidr_all}"
+    egress = false
+}
+
+resource "aws_network_acl_rule" "118_ingestor_syslog" {
+    network_acl_id = "${aws_network_acl.cf.id}"
+    protocol = "tcp"
+    rule_number = 118
+    rule_action = "allow"
+    from_port = 2514
+    to_port = 5514
     cidr_block = "${var.infra_cidr_all}"
     egress = false
 }

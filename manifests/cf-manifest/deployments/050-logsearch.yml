@@ -53,6 +53,8 @@ resource_pools:
   cloud_properties:
     availability_zone: eu-west-1a
     instance_type: t2.micro
+    elbs:
+      - (( grab terraform_outputs.ingestor_elb_name ))
 
 - name: queue
   network: cf1

@@ -49,3 +49,7 @@ output "cf_rds_client_security_group" {
 output "cf_db_address" {
   value = "${aws_db_instance.cf.address}"
 }
+
+output "ingestor_elb_name" {
+  value = "${aws_elb.ingestor_elb.name}"
+}

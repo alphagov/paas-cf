@@ -56,7 +56,6 @@ resource "aws_security_group" "web" {
     Name = "${var.env}-cf-web"
   }
 }
-
 resource "aws_security_group" "sshproxy" {
   name = "${var.env}-sshproxy-cf"
   description = "Security group for web that allows TCP/2222 for ssh-proxy from the office"
@@ -90,5 +89,40 @@ resource "aws_security_group" "cf_rds_client" {
 
   tags {
     Name = "${var.env}-cf-rds-client"
+  }
+}
+
+resource "aws_security_group" "ingestor_elb" {
+  name = "${var.env}-ingestor-cf"
+  description = "Security group for web that allows TCP/5514 for logsearch ingestor"
+  vpc_id = "${var.vpc_id}"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 2514
+    to_port   = 2514
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${var.vpc_cidr}"
+    ]
+  }
+
+  ingress {
+    from_port = 5514
+    to_port   = 5514
+    protocol  = "tcp"
+    cidr_blocks = [
+      "${var.vpc_cidr}"
+    ]
+  }
+
+  tags {
+    Name = "${var.env}-logsearch-ingestor"
   }
 }
