@@ -413,6 +413,7 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
+      passed: [concourse-prepare-deploy]
     - get: build-all-trigger
       trigger: true
       passed: [concourse-deploy]
