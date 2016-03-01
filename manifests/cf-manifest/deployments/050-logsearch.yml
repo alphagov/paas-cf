@@ -8,6 +8,17 @@ releases:
   version: 4
   sha1: c92ce357c5e1e77a4fb7944d58a1971c7aee06b0
 
+resource_pools:
+- name: ingestor_z1
+  network: cf1
+  stemcell: (( grab meta.stemcell ))
+  env: (( grab meta.default_env ))
+  cloud_properties:
+    availability_zone: eu-west-1a
+    instance_type: t2.micro
+    elbs:
+      - (( grab terraform_outputs.ingestor_elb_name ))
+
 disk_pools:
 - name: elasticsearch_master
   disk_size: 102400
@@ -91,7 +102,7 @@ jobs:
   templates:
   - {name: ingestor_syslog, release: logsearch}
   - {name: ingestor_relp, release: logsearch}
-  resource_pool: small_z1
+  resource_pool: ingestor_z1
   instances: 1
   networks:
   - name: cf1
