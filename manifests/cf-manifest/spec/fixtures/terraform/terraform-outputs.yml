@@ -19,3 +19,6 @@ terraform_outputs:
   postgres_rds_address: 127.0.0.1
   postgres_rds_port: 5432
   ssh_elb_name: stub_ssh_elb
+  default_security_group: default_sg
+  cf_rds_client_security_group: rds_client_sg
+  cf_db_address: abcd.postgres.aws

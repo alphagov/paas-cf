@@ -15,25 +15,71 @@ networks:
     - range: 10.0.16.0/24
       reserved:
         - 10.0.16.2 - 10.0.16.9
+        - 10.0.16.41 - 10.0.16.50
       static:
         - 10.0.16.10 - 10.0.16.40
+      dynamic:
+        - 10.0.16.51 - 10.0.16.255
       gateway: 10.0.16.1
       dns:
         - 10.0.0.2
       cloud_properties:
         subnet: (( grab terraform_outputs.cf1_subnet_id ))
+
+- name: cf1_rds
+  subnets:
+    - range: 10.0.16.0/24
+      reserved:
+        - 10.0.16.2 - 10.0.16.9
+        - 10.0.16.10 - 10.0.16.40
+        - 10.0.16.51 - 10.0.16.255
+      static: []
+      dynamic:
+        - 10.0.16.41 - 10.0.16.50
+      gateway: 10.0.16.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cf1_subnet_id ))
+        security_groups:
+          - (( grab terraform_outputs.default_security_group ))
+          - (( grab terraform_outputs.cf_rds_client_security_group ))
+
 - name: cf2
   subnets:
     - range: 10.0.17.0/24
       reserved:
         - 10.0.17.2 - 10.0.17.9
+        - 10.0.17.41 - 10.0.17.50
       static:
         - 10.0.17.10 - 10.0.17.40
+      dynamic:
+        - 10.0.17.51 - 10.0.17.255
       gateway: 10.0.17.1
       dns:
         - 10.0.0.2
       cloud_properties:
         subnet: (( grab terraform_outputs.cf2_subnet_id ))
+
+- name: cf2_rds
+  subnets:
+    - range: 10.0.17.0/24
+      reserved:
+        - 10.0.17.2 - 10.0.17.9
+        - 10.0.17.10 - 10.0.17.40
+        - 10.0.17.51 - 10.0.17.255
+      static: []
+      dynamic:
+        - 10.0.17.41 - 10.0.17.50
+      gateway: 10.0.17.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cf2_subnet_id ))
+        security_groups:
+          - (( grab terraform_outputs.default_security_group ))
+          - (( grab terraform_outputs.cf_rds_client_security_group ))
+
 - name: cf3
   subnets:
     - range: 10.0.18.0/24
@@ -41,11 +87,32 @@ networks:
         - 10.0.18.2 - 10.0.18.9
       static:
         - 10.0.18.10 - 10.0.18.40
+      dynamic:
+        - 10.0.18.51 - 10.0.18.255
       gateway: 10.0.18.1
       dns:
         - 10.0.0.2
       cloud_properties:
         subnet: (( grab terraform_outputs.cf3_subnet_id ))
+
+- name: cf3_rds
+  subnets:
+    - range: 10.0.18.0/24
+      reserved:
+        - 10.0.18.2 - 10.0.18.9
+        - 10.0.18.10 - 10.0.18.40
+        - 10.0.18.51 - 10.0.18.255
+      static: []
+      dynamic:
+        - 10.0.18.41 - 10.0.18.50
+      gateway: 10.0.18.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cf3_subnet_id ))
+        security_groups:
+          - (( grab terraform_outputs.default_security_group ))
+          - (( grab terraform_outputs.cf_rds_client_security_group ))
 
 - name: cell1
   subnets:
@@ -100,7 +167,6 @@ properties:
   system_domain_organization: GDS
   app_domains:
    - (( grab terraform_outputs.cf_apps_domain ))
-
   cc:
     staging_upload_user: staging_upload_user
     staging_upload_password: (( grab secrets.staging_upload_password ))
@@ -150,31 +216,29 @@ properties:
 
   ccdb:
     db_scheme: postgres
-    address: (( grab jobs.postgres_z1.networks.cf1.static_ips.[0] ))
-    port: 5524
+    address: (( grab terraform_outputs.cf_db_address ))
+    port: 5432
     roles:
       - tag: admin
-        name: ccadmin
-        password: (( grab secrets.ccadmin_password ))
+        name: api
+        password: (( grab secrets.cf_db_api_password ))
     databases:
       - tag: cc
-        name: ccdb
+        name: api
         citext: true
 
   uaadb:
     db_scheme: postgresql
-    address: (( grab jobs.postgres_z1.networks.cf1.static_ips.[0] ))
-    port: 5524
+    address: (( grab terraform_outputs.cf_db_address ))
+    port: 5432
     roles:
       - tag: admin
-        name: uaaadmin
-        password: (( grab secrets.uuadmin_password ))
+        name: uaa
+        password: (( grab secrets.cf_db_uaa_password ))
     databases:
       - tag: uaa
-        name: uaadb
+        name: uaa
         citext: true
 
-  databases:
-    address: (( grab jobs.postgres_z1.networks.cf1.static_ips.[0] ))
 # code_snippet cf-stub-aws end
 # The previous line helps maintain current documentation at http://docs.cloudfoundry.org.

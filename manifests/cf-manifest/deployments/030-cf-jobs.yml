@@ -340,7 +340,7 @@ jobs:
 
   - name: postgres_z1
     templates: (( grab meta.postgres_templates ))
-    instances: 1
+    instances: 0
     resource_pool: medium_z1
     persistent_disk: 4096
     networks:
@@ -355,7 +355,7 @@ jobs:
     instances: 1
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       consul:
         agent:
@@ -374,7 +374,7 @@ jobs:
     instances: 1
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf2_rds
     properties:
       consul:
         agent:
@@ -394,7 +394,7 @@ jobs:
     resource_pool: api_z1
     persistent_disk: 0
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       consul:
         agent:
@@ -411,7 +411,7 @@ jobs:
     resource_pool: api_z2
     persistent_disk: 0
     networks:
-      - name: cf2
+      - name: cf2_rds
     properties:
       consul:
         agent:
@@ -428,7 +428,7 @@ jobs:
     resource_pool: medium_z1
     persistent_disk: 0
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       metron_agent:
         zone: z1
@@ -439,7 +439,7 @@ jobs:
     resource_pool: api_z1
     persistent_disk: 0
     networks:
-      - name: cf1
+      - name: cf1_rds
     properties:
       metron_agent:
         zone: z1
@@ -451,7 +451,7 @@ jobs:
     resource_pool: api_z2
     persistent_disk: 0
     networks:
-      - name: cf2
+      - name: cf2_rds
     properties:
       metron_agent:
         zone: z2
@@ -843,26 +843,6 @@ properties:
   logger_endpoint: ~
 
   ha_proxy:
-
-  databases:
-     db_scheme: postgres
-     address: ~
-     port: 5524
-     roles:
-       - tag: admin
-         name: ccadmin
-         password: (( grab secrets.ccadmin_password ))
-       - tag: admin
-         name: uaaadmin
-         password: (( grab secrets.uuadmin_password ))
-     databases:
-       - tag: cc
-         name: ccdb
-         citext: true
-       - tag: uaa
-         name: uaadb
-         citext: true
-
 
   router:
     enable_ssl: true

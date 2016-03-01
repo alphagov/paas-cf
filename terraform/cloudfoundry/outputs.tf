@@ -41,3 +41,11 @@ output "cf_apps_domain" {
 output "elb_name" {
   value = "${aws_elb.router.name}"
 }
+
+output "cf_rds_client_security_group" {
+  value = "${aws_security_group.cf_rds_client.name}"
+}
+
+output "cf_db_address" {
+  value = "${aws_db_instance.cf.address}"
+}
