@@ -120,6 +120,7 @@ jobs:
   properties:
     redis:
       host: (( grab jobs.queue_z1.networks.cf1.static_ips.[0] ))
+    logstash: (( grab properties.parser_logstash ))
 
 - name: parser_z2
   release: logsearch
@@ -134,8 +135,9 @@ jobs:
   properties:
     redis:
       host: (( grab jobs.queue_z2.networks.cf2.static_ips.[0] ))
+    logstash: (( grab properties.parser_logstash ))
 
-- name: elasticsearch_master
+- name: elasticsearch_master_z1
   release: logsearch
   templates:
   - {name: elasticsearch, release: logsearch}
@@ -149,26 +151,51 @@ jobs:
     elasticsearch:
       node:
         allow_master: true
-        allow_data: false
+        allow_data: true
+      discovery:
+        minimum_master_nodes: 2
+      master_hosts: (( grab properties.elasticsearch.master_hosts ))
   update: (( grab properties.update ))
 
-- name: elasticsearch_data
+- name: elasticsearch_master_z2
   release: logsearch
   templates:
   - {name: elasticsearch, release: logsearch}
-  resource_pool: medium_z1
-  instances: 2
+  resource_pool: medium_z2
+  instances: 1
   networks:
-  - name: cf1
-    static_ips: (( static_ips(16, 17) ))
-  persistent_disk_pool: elasticsearch_data
+  - name: cf2
+    static_ips: (( static_ips(0) ))
+  persistent_disk_pool: elasticsearch_master
   properties:
     elasticsearch:
       node:
-        allow_master: false
+        allow_master: true
         allow_data: true
+      discovery:
+        minimum_master_nodes: 2
+      master_hosts: (( grab properties.elasticsearch.master_hosts ))
   update: (( grab properties.update ))
 
+- name: elasticsearch_master_z3
+  release: logsearch
+  templates:
+  - {name: elasticsearch, release: logsearch}
+  resource_pool: medium_z3
+  instances: 1
+  networks:
+  - name: cf3
+    static_ips: (( static_ips(0) ))
+  persistent_disk_pool: elasticsearch_master
+  properties:
+    elasticsearch:
+      node:
+        allow_master: true
+        allow_data: true
+      discovery:
+        minimum_master_nodes: 2
+      master_hosts: (( grab properties.elasticsearch.master_hosts ))
+  update: (( grab properties.update ))
 
 - name: maintenance_z1
   instances: 1
@@ -207,16 +234,20 @@ properties:
     address: (( grab terraform_outputs.ingestor_elb_dns_name ))
     port: 2514
     transport: relp
+  parser_logstash:
+    output:
+      elasticsearch:
+        data_hosts: (( grab properties.elasticsearch.master_hosts ))
   curator:
-    elasticsearch_host: (( grab jobs.elasticsearch_master.networks.cf1.static_ips.[0] ))
+    elasticsearch_host: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips.[0] ))
   elasticsearch:
-    master_hosts: (( grab jobs.elasticsearch_master.networks.cf1.static_ips ))
+    master_hosts: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips jobs.elasticsearch_master_z2.networks.cf2.static_ips jobs.elasticsearch_master_z3.networks.cf3.static_ips ))
     cluster_name: logsearch
   kibana:
-    elasticsearch: (( concat jobs.elasticsearch_master.networks.cf1.static_ips.[0] ":9200" ))
+    elasticsearch: (( concat jobs.elasticsearch_master_z1.networks.cf1.static_ips.[0] ":9200" ))
   elasticsearch_config:
     elasticsearch:
-      host: (( grab jobs.elasticsearch_master.networks.cf1.static_ips.[0] ))
+      host: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips.[0] ))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
   logsearch:
