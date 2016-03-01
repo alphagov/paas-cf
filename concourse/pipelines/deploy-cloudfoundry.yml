@@ -449,7 +449,6 @@ jobs:
         trigger: true
       - get: cf-release
         params:
-          depth: 1
           submodules:
           - src/smoke-tests
       - get: paas-cf
@@ -510,6 +509,10 @@ jobs:
             ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
             ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
             ln -snf /usr/local/go /var/vcap/packages/golang1.4
+            cd cf-release
+            git checkout v{{cf-release-version}}
+            git submodule update --checkout src/smoke-tests/
+            cd ..
             ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
             /var/vcap/jobs/smoke-tests/bin/run
 
@@ -518,7 +521,6 @@ jobs:
     - aggregate:
       - get: cf-release
         params:
-          depth: 1
           submodules:
           - src/github.com/cloudfoundry/cf-acceptance-tests
       - get: paas-cf
@@ -580,6 +582,10 @@ jobs:
             ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
             ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
             ln -snf /usr/local/go /var/vcap/packages/golang1.4
+            cd cf-release
+            git checkout v{{cf-release-version}}
+            git submodule update --checkout src/github.com/cloudfoundry/cf-acceptance-tests/
+            cd ..
             ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
             /var/vcap/jobs/acceptance-tests/bin/run
 
