@@ -10,12 +10,22 @@ releases:
 
 resource_pools:
 - name: ingestor_z1
-  network: cf1
+  network: (( grab resource_pools.medium_z1.network ))
   stemcell: (( grab meta.stemcell ))
   env: (( grab meta.default_env ))
   cloud_properties:
-    availability_zone: eu-west-1a
-    instance_type: t2.micro
+    availability_zone: (( grab resource_pools.medium_z1.cloud_properties.availability_zone ))
+    instance_type: (( grab resource_pools.medium_z1.cloud_properties.instance_type ))
+    elbs:
+      - (( grab terraform_outputs.ingestor_elb_name ))
+
+- name: ingestor_z2
+  network: (( grab resource_pools.medium_z2.network ))
+  stemcell: (( grab meta.stemcell ))
+  env: (( grab meta.default_env ))
+  cloud_properties:
+    availability_zone: (( grab resource_pools.medium_z2.cloud_properties.availability_zone ))
+    instance_type: (( grab resource_pools.medium_z2.cloud_properties.instance_type ))
     elbs:
       - (( grab terraform_outputs.ingestor_elb_name ))
 
@@ -41,6 +51,90 @@ disk_pools:
     type: gp2
 
 jobs:
+- name: ingestor_z1
+  release: logsearch
+  templates:
+  - {name: ingestor_syslog, release: logsearch}
+  - {name: ingestor_relp, release: logsearch}
+  resource_pool: ingestor_z1
+  instances: 1
+  networks:
+  - name: cf1
+    default: [gateway, dns]
+    static_ips: (( static_ips(2) ))
+  update: (( grab properties.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue_z1.networks.cf1.static_ips.[0] ))
+
+- name: ingestor_z2
+  release: logsearch
+  templates:
+  - {name: ingestor_syslog, release: logsearch}
+  - {name: ingestor_relp, release: logsearch}
+  resource_pool: ingestor_z2
+  instances: 1
+  networks:
+  - name: cf2
+    default: [gateway, dns]
+    static_ips: (( static_ips(2) ))
+  update: (( grab properties.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue_z2.networks.cf2.static_ips.[0] ))
+
+- name: queue_z1
+  release: logsearch
+  templates:
+  - {name: queue, release: logsearch}
+  resource_pool: small_z1
+  instances: 1
+  networks:
+  - name: cf1
+    static_ips: (( static_ips(3) ))
+  persistent_disk_pool: queue
+  update: (( grab properties.update ))
+
+- name: queue_z2
+  release: logsearch
+  templates:
+  - {name: queue, release: logsearch}
+  resource_pool: small_z2
+  instances: 1
+  networks:
+  - name: cf2
+    static_ips: (( static_ips(3) ))
+  persistent_disk_pool: queue
+  update: (( grab properties.update ))
+
+- name: parser_z1
+  release: logsearch
+  templates:
+  - {name: parser, release: logsearch}
+  resource_pool: medium_z1
+  instances: 1
+  networks:
+  - name: cf1
+    static_ips: (( static_ips(4) ))
+  update: (( grab properties.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue_z1.networks.cf1.static_ips.[0] ))
+
+- name: parser_z2
+  release: logsearch
+  templates:
+  - {name: parser, release: logsearch}
+  resource_pool: medium_z2
+  instances: 1
+  networks:
+  - name: cf2
+    static_ips: (( static_ips(4) ))
+  update: (( grab properties.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue_z2.networks.cf2.static_ips.[0] ))
+
 - name: elasticsearch_master
   release: logsearch
   templates:
@@ -75,16 +169,27 @@ jobs:
         allow_data: true
   update: (( grab properties.update ))
 
-- name: queue
+
+- name: maintenance_z1
+  instances: 1
   release: logsearch
   templates:
-  - {name: queue, release: logsearch}
+  - {name: elasticsearch_config, release: logsearch}
+  - {name: curator, release: logsearch}
   resource_pool: small_z1
-  instances: 1
   networks:
   - name: cf1
-    static_ips: (( static_ips(3) ))
-  persistent_disk_pool: queue
+  update: (( grab properties.update ))
+  
+- name: maintenance_z2
+  instances: 1
+  release: logsearch
+  templates:
+  - {name: elasticsearch_config, release: logsearch}
+  - {name: curator, release: logsearch}
+  resource_pool: small_z2
+  networks:
+  - name: cf2
   update: (( grab properties.update ))
 
 - name: kibana
@@ -97,46 +202,13 @@ jobs:
   - name: cf1
   update: (( grab properties.update ))
 
-- name: ingestor
-  release: logsearch
-  templates:
-  - {name: ingestor_syslog, release: logsearch}
-  - {name: ingestor_relp, release: logsearch}
-  resource_pool: ingestor_z1
-  instances: 1
-  networks:
-  - name: cf1
-    default: [gateway, dns]
-    static_ips: (( static_ips(2) ))
-  update: (( grab properties.update ))
-
-- name: parser
-  release: logsearch
-  templates:
-  - {name: parser, release: logsearch}
-  resource_pool: medium_z1
-  instances: 1
-  networks:
-  - name: cf1
-    static_ips: (( static_ips(4) ))
-  update: (( grab properties.update ))
-
-- name: maintenance
-  instances: 1
-  release: logsearch
-  templates:
-  - {name: elasticsearch_config, release: logsearch}
-  - {name: curator, release: logsearch}
-  resource_pool: small_z1
-  networks:
-  - name: cf1
-  update: (( grab properties.update ))
-
 properties:
+  syslog_daemon_config:
+    address: (( grab terraform_outputs.ingestor_elb_dns_name ))
+    port: 2514
+    transport: relp
   curator:
     elasticsearch_host: (( grab jobs.elasticsearch_master.networks.cf1.static_ips.[0] ))
-  redis:
-    host: (( grab jobs.queue.networks.cf1.static_ips.[0] ))
   elasticsearch:
     master_hosts: (( grab jobs.elasticsearch_master.networks.cf1.static_ips ))
     cluster_name: logsearch
@@ -147,15 +219,11 @@ properties:
       host: (( grab jobs.elasticsearch_master.networks.cf1.static_ips.[0] ))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
-  syslog_daemon_config:
-    address: (( grab jobs.ingestor.networks.cf1.static_ips.[0] ))
-    port: 2514
-    transport: relp
   logsearch:
     metrics:
       enabled: false
     logs:
-      server: (( concat jobs.ingestor.networks.cf1.static_ips.[0] ":5514" ))
+      server: (( concat terraform_outputs.ingestor_elb_dns_name ":5514" ))
   update:
     serial: false
     canaries: 1

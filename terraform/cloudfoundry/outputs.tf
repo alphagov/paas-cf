@@ -53,3 +53,7 @@ output "cf_db_address" {
 output "ingestor_elb_name" {
   value = "${aws_elb.ingestor_elb.name}"
 }
+
+output "ingestor_elb_dns_name" {
+  value = "${aws_elb.ingestor_elb.dns_name}"
+}
