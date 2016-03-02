@@ -29,6 +29,7 @@ jobs:
     - get: paas-cf
     - task: delete-deployment
       config:
+        platform: linux
         inputs:
         - name: delete-timer
         - name: bosh-secrets
