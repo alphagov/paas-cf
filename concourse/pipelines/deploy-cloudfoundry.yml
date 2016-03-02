@@ -98,6 +98,7 @@ jobs:
             - -e
             - -c
             - |
+              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
               paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
           inputs:
@@ -115,33 +116,32 @@ jobs:
         - get: pipeline-trigger
           passed: [ 'init' ]
           trigger: true
+        - get: cf-secrets
 
       - task: generate-cf-secrets
         config:
-          image: docker:///governmentpaas/mksecrets
+          platform: linux
+          image: docker:///ruby#2.2-slim
           inputs:
-            - name: paas-cf
+          - name: paas-cf
+          - name: cf-secrets
+            path: existing-cf-secrets
+          outputs:
+          - name: generated-cf-secrets
           run:
             path: sh
             args:
               - -c
               - -e
               - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.sh > cf-secrets.yml
-                ls -l cf-secrets.yml
-
-      - task: upload
-        config:
-          image: docker:///governmentpaas/curl-ssl
-          inputs:
-            - name: paas-cf
-            - name: generate-cf-secrets
-          run:
-            path: paas-cf/concourse/scripts/s3init.sh
-            args:
-              - {{state_bucket}}
-              - cf-secrets.yml
-              - generate-cf-secrets/cf-secrets.yml
+                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                  --existing-secrets existing-cf-secrets/cf-secrets.yml \
+                  > generated-cf-secrets/cf-secrets.yml
+                ls -l generated-cf-secrets
+        on_success:
+          put: cf-secrets
+          params:
+            file: generated-cf-secrets/cf-secrets.yml
 
   - name: terraform
     serial_groups: [ deploy ]
@@ -158,6 +158,7 @@ jobs:
         - get: bosh-tfstate
         - get: cf-tfstate
         - get: cf-secrets
+          passed: ['generate-secrets']
 
       - task: terraform-variables
         config:
