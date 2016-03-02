@@ -326,5 +326,7 @@ properties:
     port: 2514
     transport: relp
   logsearch:
+    metrics:
+      enabled: false
     logs:
       server: (( concat jobs.ingestor.networks.cf1.static_ips.[0] ":5514" ))
