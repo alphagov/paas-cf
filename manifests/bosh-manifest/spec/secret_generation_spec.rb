@@ -3,7 +3,7 @@ require 'tempfile'
 RSpec.describe "secret generation" do
   describe "generate-bosh-secrets" do
     let(:script) {
-      File.expand_path("../../scripts/generate-bosh-secrets.sh", __FILE__)
+      File.expand_path("../../scripts/generate-bosh-secrets.rb", __FILE__)
     }
 
     specify "it should produce lint-free YAML" do
