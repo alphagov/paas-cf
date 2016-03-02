@@ -37,7 +37,7 @@ Vagrant.configure(2) do |config|
     aws.tags = { 'Name' => (ENV['DEPLOY_ENV'] || ENV['USER']) + " concourse" }
 
     # The Concourse AMI is currently only available in us-east-1, this is v. 0.70
-    aws.ami = 'ami-5c104436'
+    aws.ami = 'ami-c6112dac'
     aws.region = 'us-east-1'
 
     # Only HVM instances with ephemeral disks can be used
