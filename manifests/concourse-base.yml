@@ -6,8 +6,8 @@ releases:
     url: https://bosh.io/d/github.com/concourse/concourse?v=0.74.0
     sha1: c99ef709e9d4468ac25cca31dd5be1444417011d
   - name: garden-linux
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.328.0
-    sha1: 539822f9f2b18ccf51e72e42e03b297f934ea3fe
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.334.0
+    sha1: 85170c5089fa4ff317f139c2f1da024860dbea85
   # When updating the version of the CPI here, the version used in the
   # bosh-init container must also be updated so that the cached CPI compile
   # will be used.
@@ -98,6 +98,7 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
+        graph_cleanup_threshold_in_mb: 3072
       groundcrew:
         tsa:
           host: 127.0.0.1
