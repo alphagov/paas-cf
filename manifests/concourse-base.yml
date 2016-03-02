@@ -3,8 +3,8 @@ name: concourse
 
 releases:
   - name: concourse
-    url: https://bosh.io/d/github.com/concourse/concourse?v=0.70.0
-    sha1: bbec7785856a5c8ba5f05b106ea79821b620bbc9
+    url: https://bosh.io/d/github.com/concourse/concourse?v=0.74.0
+    sha1: c99ef709e9d4468ac25cca31dd5be1444417011d
   - name: garden-linux
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.328.0
     sha1: 539822f9f2b18ccf51e72e42e03b297f934ea3fe
@@ -78,6 +78,7 @@ jobs:
 
     properties:
       atc:
+        external_url: ""
         basic_auth_username: admin
         basic_auth_password: (( grab secrets.concourse_atc_password ))
         postgresql:
