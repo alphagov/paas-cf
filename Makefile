@@ -1,4 +1,9 @@
-.PHONY: test spec lint_yaml lint_terraform lint_shellcheck set_aws_count set_auto_trigger disable_auto_delete check-env-vars dev ci stage prod
+.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck set_aws_count set_auto_trigger disable_auto_delete check-env-vars dev ci stage prod
+
+.DEFAULT_GOAL := help
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 SHELLCHECK=shellcheck
 YAMLLINT=yamllint
@@ -6,7 +11,7 @@ YAMLLINT=yamllint
 check-env-vars:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 
-test: spec lint_yaml lint_terraform lint_shellcheck
+test: spec lint_yaml lint_terraform lint_shellcheck ## Run linting tests
 
 spec:
 	cd manifests/bosh-manifest &&\
@@ -23,13 +28,13 @@ lint_terraform:
 lint_shellcheck:
 	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
 
-dev: check-env-vars set_aws_account_dev deploy_pipelines
+dev: check-env-vars set_aws_account_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
 
-ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines
+ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
 
-stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger deploy_pipelines
+stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Staging Environment
 
-prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger deploy_pipelines
+prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Production Environment
 
 set_aws_account_dev:
 	$(eval export AWS_ACCOUNT=dev)
