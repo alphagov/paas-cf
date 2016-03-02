@@ -12,8 +12,6 @@ addons:
       - debian-sid
     packages:
       - shellcheck
-      - pwgen
-      - whois # provides mkpasswd(1)
 
 before_install:
   - mkdir ~/bin
