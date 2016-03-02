@@ -24,3 +24,5 @@ terraform_outputs:
   cf_db_address: abcd.postgres.aws
   ingestor_elb_name: stub_ingestor_elb
   ingestor_elb_dns_name: stub_ingestor_elb_dns
+  elastic_master_elb_name: elastic_master_elb
+  elastic_master_elb_dns_name: elastic_master_elb_dns

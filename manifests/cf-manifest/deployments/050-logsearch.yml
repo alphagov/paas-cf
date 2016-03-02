@@ -9,6 +9,36 @@ releases:
   sha1: c92ce357c5e1e77a4fb7944d58a1971c7aee06b0
 
 resource_pools:
+- name: elastic_master_z1
+  network: (( grab resource_pools.medium_z1.network ))
+  stemcell: (( grab meta.stemcell ))
+  env: (( grab meta.default_env ))
+  cloud_properties:
+    availability_zone: (( grab resource_pools.medium_z1.cloud_properties.availability_zone ))
+    instance_type: (( grab resource_pools.medium_z1.cloud_properties.instance_type ))
+    elbs:
+      - (( grab terraform_outputs.elastic_master_elb_name ))
+
+- name: elastic_master_z2
+  network: (( grab resource_pools.medium_z2.network ))
+  stemcell: (( grab meta.stemcell ))
+  env: (( grab meta.default_env ))
+  cloud_properties:
+    availability_zone: (( grab resource_pools.medium_z2.cloud_properties.availability_zone ))
+    instance_type: (( grab resource_pools.medium_z2.cloud_properties.instance_type ))
+    elbs:
+      - (( grab terraform_outputs.elastic_master_elb_name ))
+
+- name: elastic_master_z3
+  network: (( grab resource_pools.medium_z3.network ))
+  stemcell: (( grab meta.stemcell ))
+  env: (( grab meta.default_env ))
+  cloud_properties:
+    availability_zone: (( grab resource_pools.medium_z3.cloud_properties.availability_zone ))
+    instance_type: (( grab resource_pools.medium_z3.cloud_properties.instance_type ))
+    elbs:
+      - (( grab terraform_outputs.elastic_master_elb_name ))
+
 - name: ingestor_z1
   network: (( grab resource_pools.medium_z1.network ))
   stemcell: (( grab meta.stemcell ))
@@ -141,7 +171,7 @@ jobs:
   release: logsearch
   templates:
   - {name: elasticsearch, release: logsearch}
-  resource_pool: medium_z1
+  resource_pool: elastic_master_z1
   instances: 1
   networks:
   - name: cf1
@@ -161,7 +191,7 @@ jobs:
   release: logsearch
   templates:
   - {name: elasticsearch, release: logsearch}
-  resource_pool: medium_z2
+  resource_pool: elastic_master_z2
   instances: 1
   networks:
   - name: cf2
@@ -181,7 +211,7 @@ jobs:
   release: logsearch
   templates:
   - {name: elasticsearch, release: logsearch}
-  resource_pool: medium_z3
+  resource_pool: elastic_master_z3
   instances: 1
   networks:
   - name: cf3
@@ -239,15 +269,15 @@ properties:
       elasticsearch:
         data_hosts: (( grab properties.elasticsearch.master_hosts ))
   curator:
-    elasticsearch_host: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips.[0] ))
+    elasticsearch_host: (( grab terraform_outputs.elastic_master_elb_dns_name ))
   elasticsearch:
     master_hosts: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips jobs.elasticsearch_master_z2.networks.cf2.static_ips jobs.elasticsearch_master_z3.networks.cf3.static_ips ))
     cluster_name: logsearch
   kibana:
-    elasticsearch: (( concat jobs.elasticsearch_master_z1.networks.cf1.static_ips.[0] ":9200" ))
+    elasticsearch: (( concat terraform_outputs.elastic_master_elb_dns_name ":9200" ))
   elasticsearch_config:
     elasticsearch:
-      host: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips.[0] ))
+      host: (( grab terraform_outputs.elastic_master_elb_dns_name ))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
   logsearch:

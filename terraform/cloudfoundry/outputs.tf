@@ -57,3 +57,11 @@ output "ingestor_elb_name" {
 output "ingestor_elb_dns_name" {
   value = "${aws_elb.ingestor_elb.dns_name}"
 }
+
+output "elastic_master_elb_name" {
+  value = "${aws_elb.es_master_elb.name}"
+}
+
+output "elastic_master_elb_dns_name" {
+  value = "${aws_elb.es_master_elb.dns_name}"
+}

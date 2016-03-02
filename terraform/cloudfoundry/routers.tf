@@ -84,3 +84,30 @@ resource "aws_elb" "ingestor_elb" {
 }
 
 
+resource "aws_elb" "es_master_elb" {
+  name = "${var.env}-cf-es-elb"
+  subnets = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout = "${var.elb_idle_timeout}"
+  cross_zone_load_balancing = "true"
+  internal = "true"
+  security_groups = [
+    "${aws_security_group.elastic_master_elb.id}",
+  ]
+
+  health_check {
+    target = "TCP:9200"
+    interval = "${var.health_check_interval}"
+    timeout = "${var.health_check_timeout}"
+    healthy_threshold = "${var.health_check_healthy}"
+    unhealthy_threshold = "${var.health_check_unhealthy}"
+  }
+  listener {
+    instance_port = 9200
+    instance_protocol = "tcp"
+    lb_port = 9200
+    lb_protocol = "tcp"
+  }
+}
+
+
+
