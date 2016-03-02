@@ -42,6 +42,11 @@ resources:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
 
+  - name: graphite-statsd-boshrelease
+    type: git
+    source:
+      uri: https://github.com/CloudCredo/graphite-statsd-boshrelease.git
+
   - name: vpc-tfstate
     type: s3-iam
     source:
@@ -680,6 +685,26 @@ jobs:
           - get: cf-manifest
             passed: ['generate-cf-config']
           - get: bosh-secrets
+          - get: graphite-statsd-boshrelease
+
+      - task: upload-releases
+        config:
+          platform: linux
+          image: docker:///governmentpaas/bosh-cli
+          inputs:
+            - name: paas-cf
+            - name: bosh-secrets
+            - name: graphite-statsd-boshrelease
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+
+                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
+                  {{cf_graphite_version}} graphite-statsd-boshrelease
 
       - task: cf-deploy
         config:
