@@ -9,6 +9,15 @@ config_autodelete="${SCRIPT_DIR}/../pipelines/autodelete-cloudfoundry.yml"
 
 [[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 
+extract_cf_version(){
+  set -u
+  manifest=$1
+  ruby -e "require 'yaml'; \
+    puts YAML.load(STDIN.read)['releases'].select { |item| item['name'] == 'cf' }.first['version']" < "$manifest"
+}
+
+cf_release_version=$(extract_cf_version "${SCRIPT_DIR}"/../../manifests/cf-manifest/deployments/000-base-cf-deployment.yml)
+
 generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
    cat <<EOF
@@ -20,6 +29,7 @@ pipeline_trigger_file: ${trigger_file}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 debug: ${DEBUG:-}
+cf-release-version: ${cf_release_version}
 EOF
 }
 
