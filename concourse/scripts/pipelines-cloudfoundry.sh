@@ -29,7 +29,7 @@ pipeline_trigger_file: ${trigger_file}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 debug: ${DEBUG:-}
-cf-release-version: ${cf_release_version}
+cf-release-version: v${cf_release_version}
 EOF
 }
 
