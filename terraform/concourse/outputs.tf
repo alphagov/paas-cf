@@ -13,3 +13,7 @@ output "concourse_security_group_id" {
 output "concourse_elb_name" {
   value = "${aws_elb.concourse.name}"
 }
+
+output "concourse_dns_name" {
+  value = "${aws_route53_record.deployer-concourse.name}"
+}

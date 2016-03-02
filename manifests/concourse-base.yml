@@ -78,7 +78,7 @@ jobs:
 
     properties:
       atc:
-        external_url: ""
+        external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
         basic_auth_username: admin
         basic_auth_password: (( grab secrets.concourse_atc_password ))
         postgresql:
