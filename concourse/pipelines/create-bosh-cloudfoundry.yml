@@ -47,6 +47,12 @@ resources:
     source:
       uri: https://github.com/CloudCredo/graphite-statsd-boshrelease.git
 
+  - name: graphite-nozzle
+    type: git
+    source:
+      uri: https://github.com/alphagov/graphite-nozzle
+      branch: 106191208-deaggregated_names
+
   - name: vpc-tfstate
     type: s3-iam
     source:
@@ -729,6 +735,109 @@ jobs:
       - put: cf-manifest
         params:
           file: updated-cf-manifest/cf-manifest.yml
+
+  - name: post-deploy
+    plan:
+    - aggregate:
+        - get: pipeline-trigger
+          passed: [ 'cf-deploy']
+          trigger: true
+        - get: paas-cf
+          passed: ['cf-deploy']
+        - get: cf-secrets
+          passed: ['generate-cf-config']
+        - get: cf-manifest
+          passed: ['cf-deploy']
+        - get: graphite-nozzle
+    - task: retrieve-config
+      config:
+        platform: linux
+        inputs:
+          - name: paas-cf
+          - name: cf-secrets
+          - name: cf-manifest
+        outputs:
+          - name: config
+        params:
+        image: docker:///ruby#2.2-slim
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+              CF_ADMIN=admin
+              CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+              FIREHOSE_USER=graphite-nozzle
+              FIREHOSE_PASS=$($VAL_FROM_YAML secrets.uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
+              API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+              UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
+              DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
+              GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite_z1.networks.cf1.static_ips.0 cf-manifest/cf-manifest.yml)
+
+              for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER; do
+                echo export "${var_name}"=\"$(eval echo \$${var_name})\"
+              done > config/config.sh
+
+    - task: deploy-graphite-nozzle
+      config:
+        platform: linux
+        inputs:
+          - name: graphite-nozzle
+          - name: config
+        params:
+        image: docker:///governmentpaas/cf-cli
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              . ./config/config.sh
+
+              cf api --skip-ssl-validation ${API_ENDPOINT}
+              echo | cf login -u ${CF_ADMIN} -p ${CF_PASS}
+              echo | cf create-org admin
+              cf create-space admin -o admin
+              cf target -o admin -s admin
+
+              cat <<EOF > graphite-nozzle.json
+              [
+                  {"protocol":"udp","destination":"${GRAPHITE_SERVER}","ports":"8125"}
+              ]
+              EOF
+              cf create-security-group graphite-nozzle graphite-nozzle.json
+              cf bind-staging-security-group graphite-nozzle
+              cf bind-running-security-group graphite-nozzle
+
+              cd graphite-nozzle
+
+              # The sleep 1 is to avoid logs being eaten if the configuration is wrong
+              # due to this bug: https://github.com/cloudfoundry/loggregator/issues/86
+              echo "web: sleep 1 && graphite-nozzle" > Procfile
+
+              cat <<EOF > manifest.yml
+              ---
+              applications:
+              - name: graphite-nozzle
+                memory: 100M
+                instances: 1
+                no-route: true
+                env:
+                  DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
+                  UAA_ENDPOINT: "${UAA_ENDPOINT}"
+                  STATSD_ENDPOINT: "${GRAPHITE_SERVER}:8125"
+                  FIREHOSE_USERNAME: "${FIREHOSE_USER}"
+                  FIREHOSE_PASSWORD: "${FIREHOSE_PASS}"
+                  SUBSCRIPTION_ID: "firehose"
+                  STATSD_PREFIX: "cfstats."
+                  SKIP_SSL_VALIDATION: "true"
+                  PREFIX_JOB: "true"
+              EOF
+
+              cf push
 
   - name: smoke-tests
     plan:
