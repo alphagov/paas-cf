@@ -74,20 +74,12 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
-    - put: pipeline-trigger
-      params: {bump: patch}
-
-  - name: bootstrap-s3-state
-    serial: true
-    plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-      passed: [init]
     - task: bootstrap-s3-state
       config:
+        platform: linux
         image: docker:///governmentpaas/curl-ssl
+        inputs:
+        - name: paas-cf
         run:
           path: sh
           args:
@@ -98,8 +90,8 @@ jobs:
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml paas-cf/concourse/init_files/zero_bytes
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-        inputs:
-        - name: paas-cf
+    - put: pipeline-trigger
+      params: {bump: patch}
 
   - name: generate-secrets
     serial: true
@@ -239,6 +231,7 @@ jobs:
     - get: paas-cf
       passed: [init]
     - get: vpc-tfstate
+      passed: [bosh-terraform]
     - get: bosh-tfstate
       passed: [bosh-terraform]
     - get: bosh-secrets
