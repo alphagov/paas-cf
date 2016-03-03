@@ -98,6 +98,13 @@ properties:
     expect(result).to eq("a.b.c is foo and a.b.d is foobar")
   end
 
+  it "does not override a false value with the default" do
+    template = "a.b.c is <%= p('a.b.c') %> and a.b.d is <%= p('a.b.d') %>"
+    example_manifest_with_false = example_manifest.sub('foo', 'false')
+    result = render_template(template, YAML.load(example_spec), YAML.load(example_manifest_with_false))
+    expect(result).to eq("a.b.c is false and a.b.d is foobar")
+  end
+
   it "uses a normalised version of the manifest which allows discover external_ip" do
     template = %q{<%
 def discover_external_ip
