@@ -299,6 +299,13 @@ properties:
         redirect-uri: /login
         scope: openid,cloud_controller.read,cloud_controller.write
         secret: ssh-proxy-secret
+      graphite-nozzle:
+        access-token-validity: 1209600
+        authorized-grant-types: authorization_code,client_credentials,refresh_token
+        override: true
+        secret: (( grab secrets.uaa_clients_firehose_password ))
+        scope: openid,oauth.approvals,doppler.firehose
+        authorities: oauth.login,doppler.firehose
 
     database: ~
 
