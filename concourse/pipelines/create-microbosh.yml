@@ -227,7 +227,10 @@ jobs:
     plan:
     - get: pipeline-trigger
       trigger: true
-      passed: [bosh-terraform]
+      passed:
+      - bosh-terraform
+      - generate-secrets
+      - generate-CA-certs
     - get: paas-cf
       passed: [init]
     - get: vpc-tfstate
