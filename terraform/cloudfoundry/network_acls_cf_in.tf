@@ -172,6 +172,17 @@ resource "aws_network_acl_rule" "117_kibana" {
     egress = false
 }
 
+resource "aws_network_acl_rule" "118_graphite" {
+    network_acl_id = "${aws_network_acl.cf.id}"
+    protocol = "tcp"
+    rule_number = 118
+    rule_action = "allow"
+    from_port = 3000
+    to_port = 3001
+    cidr_block = "${var.infra_cidr_all}"
+    egress = false
+}
+
 resource "aws_network_acl_rule" "120_local_drop" {
     network_acl_id = "${aws_network_acl.cf.id}"
     protocol = "tcp"
