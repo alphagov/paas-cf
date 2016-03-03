@@ -74,20 +74,12 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
-    - put: pipeline-trigger
-      params: {bump: patch}
-
-  - name: bootstrap-s3-state
-    serial: true
-    plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-      passed: [init]
     - task: bootstrap-s3-state
       config:
+        platform: linux
         image: docker:///governmentpaas/curl-ssl
+        inputs:
+        - name: paas-cf
         run:
           path: sh
           args:
@@ -96,9 +88,10 @@ jobs:
           - |
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml paas-cf/concourse/init_files/zero_bytes
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-        inputs:
-        - name: paas-cf
+    - put: pipeline-trigger
+      params: {bump: patch}
 
   - name: generate-secrets
     serial: true
@@ -108,33 +101,32 @@ jobs:
       passed: [ init ]
     - get: paas-cf
       passed: [init]
+    - get: bosh-secrets
 
     - task: generate
       config:
-        image: docker:///governmentpaas/mksecrets
+        platform: linux
+        image: docker:///ruby#2.2-slim
         inputs:
         - name: paas-cf
+        - name: bosh-secrets
+          path: existing-bosh-secrets
+        outputs:
+        - name: generated-bosh-secrets
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.sh > bosh-secrets.yml
-            ls -l bosh-secrets.yml
-
-    - task: upload
-      config:
-        image: docker:///governmentpaas/curl-ssl
-        inputs:
-        - name: paas-cf
-        - name: generate
-        run:
-          path: paas-cf/concourse/scripts/s3init.sh
-          args:
-          - {{state_bucket}}
-          - bosh-secrets.yml
-          - generate/bosh-secrets.yml
+            ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
+              --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
+              > generated-bosh-secrets/bosh-secrets.yml
+            ls -l generated-bosh-secrets
+      on_success:
+        put: bosh-secrets
+        params:
+          file: generated-bosh-secrets/bosh-secrets.yml
 
   - name: generate-CA-certs
     serial: true
@@ -235,13 +227,18 @@ jobs:
     plan:
     - get: pipeline-trigger
       trigger: true
-      passed: [bosh-terraform]
+      passed:
+      - bosh-terraform
+      - generate-secrets
+      - generate-CA-certs
     - get: paas-cf
       passed: [init]
     - get: vpc-tfstate
+      passed: [bosh-terraform]
     - get: bosh-tfstate
       passed: [bosh-terraform]
     - get: bosh-secrets
+      passed: [generate-secrets]
     - get: bosh-CA
       passed: [generate-CA-certs]
     - task: terraform_outputs
