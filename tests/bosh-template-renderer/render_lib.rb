@@ -28,7 +28,7 @@ class Hash
       prop_key = "properties.#{key}"
       default = val["default"]
       if not default.nil?
-        if not self.dig(prop_key)
+        if self.dig(prop_key).nil?
           self.dig_add(prop_key, default)
         end
       end
