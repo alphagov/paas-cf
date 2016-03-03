@@ -122,19 +122,22 @@ echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
 
 Run the `destroy-deployer` pipeline from your *Bootstrap Concourse*.
 
-## MicroBOSH
-
-MicroBOSH is responsible for deploying [CloudFoundry](#cloudfoundry) and
-supporting services for the platform.
+## MicroBOSH and Cloudfoundry
 
 ### Prerequisites
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-Deploy the pipeline configurations with:
+Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute: 
 ```
-./concourse/scripts/pipelines-microbosh.sh $DEPLOY_ENV
+make dev
 ```
+if you want to deploy to DEV account. `make help` will show all available options. 
+
+### MicroBOSH
+
+MicroBOSH is responsible for deploying [CloudFoundry](#cloudfoundry) and
+supporting services for the platform.
 
 ### Deploy
 
@@ -145,18 +148,6 @@ Run the `create-microbosh` pipeline.
 Run the `destroy-microbosh` pipeline.
 
 ## CloudFoundry
-
-### Prerequisites
-
-You will need a working [MicroBOSH](#microbosh).
-
-Deploy the pipeline configurations with:
-```
-./concourse/scripts/pipelines-cloudfoundry.sh $DEPLOY_ENV
-```
-
-You can optionally specify a cloudfoundry RELEASE_VERSION (defaults to 225) and
-STEMCELL_VERSION (defaults to 3104) as environment variables.
 
 ### Deploy
 
@@ -184,19 +175,18 @@ All of the pipeline scripts (including `vagrant/deploy.sh`) honour a
 used within the pipeline. This is useful for development and code review:
 
 ```
-BRANCH=$(git rev-parse --abbrev-ref HEAD) <script>.sh
+BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev
 ```
 
 ## Optionally deploy to a different AWS account
 
-By default the scripts will deploy to the dev account. To deploy to a different
-account, you'll need to export AWS access keys and secrets for the account, and
-then set the `AWS_ACCOUNT` environment variable. eg to deploy/use the trial account:
+To deploy to a different account, you'll need to export AWS access keys 
+and secrets for the account. eg to deploy/use the CI account:
 
 ```
-export AWS_ACCESS_KEY_ID=your_trial_access_key
-export AWS_SECRET_ACCESS_KEY=your_trial_secret_key
-export AWS_ACCOUNT=trial
+export AWS_ACCESS_KEY_ID=your_ci_access_key
+export AWS_SECRET_ACCESS_KEY=your_ci_secret_key
+make ci
 ```
 
 Due to the isolation between AWS accounts, when switching accounts, it's
