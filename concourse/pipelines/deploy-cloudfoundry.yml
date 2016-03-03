@@ -456,7 +456,6 @@ jobs:
         passed: ['deploy']
       - get: cf-manifest
         passed: ['deploy']
-      - get: bosh-secrets
       - get: bosh-CA
     - task: generate-test-config
       config:
@@ -493,7 +492,6 @@ jobs:
         - name: paas-cf
         - name: cf-release
         - name: cf-manifest
-        - name: bosh-secrets
         - name: test-config
         - name: bosh-CA
         image: docker:///governmentpaas/cf-acceptance-tests
@@ -529,7 +527,6 @@ jobs:
       - get: cf-manifest
         passed: ['deploy']
         trigger: true
-      - get: bosh-secrets
       - get: bosh-CA
     - task: generate-test-config
       config:
@@ -566,7 +563,6 @@ jobs:
         - name: paas-cf
         - name: cf-release
         - name: cf-manifest
-        - name: bosh-secrets
         - name: test-config
         - name: bosh-CA
         image: docker:///governmentpaas/cf-acceptance-tests
