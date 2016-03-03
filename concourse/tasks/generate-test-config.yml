@@ -1,0 +1,28 @@
+---
+inputs:
+- name: cf-release
+- name: paas-cf
+- name: cf-manifest
+outputs:
+- name: test-config
+image: docker:///governmentpaas/bosh-cli
+platform: linux
+run:
+  path: sh
+  args:
+  - -e
+  - -c
+  - |
+    ./paas-cf/tests/bosh-template-renderer/render.rb \
+      ./cf-release/jobs/smoke-tests/templates/run.erb \
+      ./cf-release/jobs/smoke-tests/spec \
+      ./cf-manifest/cf-manifest.yml \
+        > ./test-config/run
+
+    chmod +x ./test-config/run
+
+    ./paas-cf/tests/bosh-template-renderer/render.rb \
+      ./cf-release/jobs/smoke-tests/templates/config.json.erb \
+      ./cf-release/jobs/smoke-tests/spec \
+      ./cf-manifest/cf-manifest.yml \
+        > ./test-config/config.json
