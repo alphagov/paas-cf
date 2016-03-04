@@ -1,25 +1,3 @@
-jobs:
-  - name: acceptance_tests
-    templates:
-    - name: acceptance-tests
-      release: (( grab meta.release.name ))
-    instances: 1
-    resource_pool: small_errand
-    lifecycle: errand
-    networks:
-      - name: cf1
-
-  - name: smoke_tests
-    templates:
-    - name: smoke-tests
-      release: (( grab meta.release.name ))
-    instances: 1
-    resource_pool: small_errand
-    lifecycle: errand
-    networks:
-      - name: cf1
-    properties: {}
-
 properties:
   acceptance_tests:
     api: (( grab meta.api_domain ))
