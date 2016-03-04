@@ -64,14 +64,15 @@ jobs:
   - name: bosh-init-delete
     serial: true
     plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-    - get: bosh-tfstate
-    - get: bosh-secrets
-    - get: bosh-init-state
-    - get: bosh-manifest
+    - aggregate:
+        - get: pipeline-trigger
+          trigger: true
+          passed: [ init ]
+        - get: paas-cf
+        - get: bosh-tfstate
+        - get: bosh-secrets
+        - get: bosh-init-state
+        - get: bosh-manifest
     - task: bosh-init-microbosh
       config:
         platform: linux
@@ -104,14 +105,15 @@ jobs:
   - name: bosh-terraform-destroy
     serial: true
     plan:
-    - get: pipeline-trigger
-      passed: [ bosh-init-delete ]
-      trigger: true
-    - get: paas-cf
-      passed: [ bosh-init-delete ]
-    - get: vpc-tfstate
-    - get: concourse-tfstate
-    - get: bosh-tfstate
+    - aggregate:
+        - get: pipeline-trigger
+          passed: [ bosh-init-delete ]
+          trigger: true
+        - get: paas-cf
+          passed: [ bosh-init-delete ]
+        - get: vpc-tfstate
+        - get: concourse-tfstate
+        - get: bosh-tfstate
     - task: extract-terraform-variables
       config:
         platform: linux

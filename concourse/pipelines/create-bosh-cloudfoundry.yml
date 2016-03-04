@@ -163,14 +163,16 @@ jobs:
   - name: bosh-terraform
     serial: true
     plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-      passed: [init]
-    - get: vpc-tfstate
-    - get: concourse-tfstate
-    - get: bosh-tfstate
+    - aggregate:
+      - get: pipeline-trigger
+        trigger: true
+        passed: [ init ]
+      - get: paas-cf
+        passed: [init]
+      - get: vpc-tfstate
+      - get: concourse-tfstate
+      - get: bosh-tfstate
+
     - task: extract-terraform-variables
       config:
         platform: linux
@@ -350,13 +352,14 @@ jobs:
 
   - name: bosh-deploy
     plan:
-    - get: pipeline-trigger
-      passed: ['generate-bosh-config']
-      trigger: true
-    - get: bosh-manifest
-      passed: ['generate-bosh-config']
-    - get: bosh-init-state
-    - get: ssh-private-key
+    - aggregate:
+      - get: pipeline-trigger
+        passed: ['generate-bosh-config']
+        trigger: true
+      - get: bosh-manifest
+        passed: ['generate-bosh-config']
+      - get: bosh-init-state
+      - get: ssh-private-key
 
     - task: bosh-init-microbosh
       config:
