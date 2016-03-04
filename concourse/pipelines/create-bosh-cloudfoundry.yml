@@ -130,7 +130,7 @@ jobs:
     - put: pipeline-trigger
       params: {bump: patch}
 
-  - name: generate-secrets
+  - name: generate-bosh-secrets
     serial: true
     plan:
     - get: pipeline-trigger
@@ -165,7 +165,7 @@ jobs:
         params:
           file: generated-bosh-secrets/bosh-secrets.yml
 
-  - name: generate-CA-certs
+  - name: generate-bosh-CA-certs
     serial: true
     plan:
     - get: pipeline-trigger
@@ -274,8 +274,8 @@ jobs:
       trigger: true
       passed:
       - bosh-terraform
-      - generate-secrets
-      - generate-CA-certs
+      - generate-bosh-secrets
+      - generate-bosh-CA-certs
     - get: paas-cf
       passed: [init]
     - get: vpc-tfstate
@@ -283,9 +283,9 @@ jobs:
     - get: bosh-tfstate
       passed: [bosh-terraform]
     - get: bosh-secrets
-      passed: [generate-secrets]
+      passed: [generate-bosh-secrets]
     - get: bosh-CA
-      passed: [generate-CA-certs]
+      passed: [generate-bosh-CA-certs]
     - task: terraform_outputs
       config:
         platform: linux
@@ -355,7 +355,7 @@ jobs:
         params:
           file: bosh-manifest/bosh-manifest.yml
 
-  - name: bosh-init
+  - name: bosh-deploy
     plan:
     - get: pipeline-trigger
       trigger: true
@@ -401,7 +401,7 @@ jobs:
         - get: paas-cf
           passed: ['generate-bosh-manifest']
         - get: pipeline-trigger
-          passed: ['bosh-init']
+          passed: ['bosh-deploy']
           trigger: true
         - get: cf-secrets
 
@@ -430,7 +430,7 @@ jobs:
           params:
             file: generated-cf-secrets/cf-secrets.yml
 
-  - name: terraform
+  - name: cf-terraform
     serial_groups: [ deploy ]
     serial: true
     plan:
@@ -547,14 +547,14 @@ jobs:
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: [ 'terraform' ]
+          passed: [ 'cf-terraform' ]
           trigger: true
         - get: paas-cf
-          passed: ['terraform']
+          passed: ['cf-terraform']
         - get: bosh-CA
         - get: cf-certs
         - get: cf-tfstate
-          passed: ['terraform']
+          passed: ['cf-terraform']
       - task: terraform-variables
         config:
           platform: linux
@@ -604,7 +604,7 @@ jobs:
         params:
           file: updated-cf-certs/cf-certs.tar.gz
 
-  - name: generate-manifest
+  - name: generate-cf-manifest
     serial_groups: [ deploy ]
     serial: true
     plan:
@@ -711,18 +711,18 @@ jobs:
         params:
           file: generate-manifest/cf-manifest.yml
 
-  - name: deploy
+  - name: cf-deploy
     serial_groups: [ deploy ]
     serial: true
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: [ 'generate-manifest' ]
+          passed: [ 'generate-cf-manifest' ]
           trigger: true
         - get: paas-cf
-          passed: ['generate-manifest']
+          passed: ['generate-cf-manifest']
         - get: cf-manifest
-          passed: ['generate-manifest']
+          passed: ['generate-cf-manifest']
           trigger: true
         - get: bosh-secrets
       - task: cf-deploy
@@ -754,16 +754,16 @@ jobs:
     plan:
     - aggregate:
       - get: pipeline-trigger
-        passed: [ 'deploy']
+        passed: [ 'cf-deploy']
         trigger: true
       - get: cf-release
         params:
           submodules:
           - src/smoke-tests
       - get: paas-cf
-        passed: ['deploy']
+        passed: ['cf-deploy']
       - get: cf-manifest
-        passed: ['deploy']
+        passed: ['cf-deploy']
       - get: bosh-CA
     - task: generate-test-config
       config:
@@ -829,9 +829,9 @@ jobs:
           submodules:
           - src/github.com/cloudfoundry/cf-acceptance-tests
       - get: paas-cf
-        passed: ['deploy']
+        passed: ['cf-deploy']
       - get: cf-manifest
-        passed: ['deploy']
+        passed: ['cf-deploy']
         trigger: true
       - get: bosh-CA
     - task: generate-test-config
@@ -895,12 +895,12 @@ jobs:
     plan:
     - aggregate:
       - get: pipeline-trigger
-        passed: [ 'deploy']
+        passed: ['cf-deploy']
         trigger: true
       - get: paas-cf
-        passed: ['deploy']
+        passed: ['cf-deploy']
       - get: cf-manifest
-        passed: ['deploy']
+        passed: ['cf-deploy']
         trigger: true
       - get: bosh-CA
     - task: generate-test-config
