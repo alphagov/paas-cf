@@ -393,7 +393,7 @@ jobs:
         - get: paas-cf
           passed: ['generate-bosh-config']
         - get: pipeline-trigger
-          passed: ['bosh-deploy']
+          passed: ['generate-bosh-config']
           trigger: true
         - get: cf-secrets
 
@@ -663,7 +663,9 @@ jobs:
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: ['generate-cf-config']
+          passed:
+            - 'generate-cf-config'
+            - 'bosh-deploy'
           trigger: true
         - get: paas-cf
           passed: ['generate-cf-config']
