@@ -61,3 +61,4 @@ disable_auto_delete:
 deploy_pipelines:
 	concourse/scripts/pipelines-microbosh.sh
 	concourse/scripts/pipelines-cloudfoundry.sh
+	concourse/scripts/pipelines-failure-testing.sh
