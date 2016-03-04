@@ -107,6 +107,7 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
+      trigger: {{auto_deploy}}
     - task: bootstrap-s3-state
       config:
         platform: linux
@@ -123,6 +124,9 @@ jobs:
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml paas-cf/concourse/init_files/zero_bytes
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
     - put: pipeline-trigger
       params: {bump: patch}
 
@@ -389,39 +393,15 @@ jobs:
         params:
           file: bosh-init-microbosh/bosh-manifest-state.json
 
-  - name: cf-init
-    serial_groups: [ deploy ]
-    serial: true
-    plan:
-      - get: paas-cf
-        trigger: {{auto_deploy}}
-      - task: init
-        config:
-          platform: linux
-          image: docker:///governmentpaas/curl-ssl
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-              paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-          inputs:
-          - name: paas-cf
-      - put: pipeline-trigger
-        params: {bump: patch}
-
   - name: generate-cf-secrets
     serial_groups: [ deploy ]
     serial: true
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['cf-init']
+          passed: ['generate-bosh-manifest']
         - get: pipeline-trigger
-          passed: ['cf-init']
+          passed: ['bosh-init']
           trigger: true
         - get: cf-secrets
 
