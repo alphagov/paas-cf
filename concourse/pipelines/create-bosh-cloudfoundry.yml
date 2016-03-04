@@ -134,6 +134,7 @@ resources:
 
 jobs:
   - name: init
+    serial_groups: [bosh-deploy]
     serial: true
     plan:
       - get: paas-cf
@@ -161,6 +162,7 @@ jobs:
         params: {bump: patch}
 
   - name: bosh-terraform
+    serial_groups: [bosh-deploy]
     serial: true
     plan:
       - aggregate:
@@ -225,6 +227,7 @@ jobs:
             file: updated-bosh-tfstate/bosh.tfstate
 
   - name: generate-bosh-config
+    serial_groups: [bosh-deploy]
     serial: true
     plan:
       - aggregate:
@@ -351,6 +354,8 @@ jobs:
             file: bosh-manifest/bosh-manifest.yml
 
   - name: bosh-deploy
+    serial_groups: [bosh-deploy]
+    serial: true
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -389,7 +394,7 @@ jobs:
             file: updated-bosh-init-state/bosh-manifest-state.json
 
   - name: generate-cf-secrets
-    serial_groups: [ deploy ]
+    serial_groups: [cf-deploy]
     serial: true
     plan:
       - aggregate:
@@ -426,7 +431,7 @@ jobs:
             file: generated-cf-secrets/cf-secrets.yml
 
   - name: cf-terraform
-    serial_groups: [ deploy ]
+    serial_groups: [cf-deploy]
     serial: true
     plan:
       - aggregate:
@@ -538,7 +543,7 @@ jobs:
                 paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
 
   - name: generate-cf-config
-    serial_groups: [ deploy ]
+    serial_groups: [cf-deploy]
     serial: true
     plan:
       - aggregate:
@@ -661,7 +666,7 @@ jobs:
             file: cf-manifest/cf-manifest.yml
 
   - name: cf-deploy
-    serial_groups: [ deploy ]
+    serial_groups: [cf-deploy]
     serial: true
     plan:
       - aggregate:
