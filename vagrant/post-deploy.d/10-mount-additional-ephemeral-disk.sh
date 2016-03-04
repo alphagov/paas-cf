@@ -16,6 +16,8 @@ if ! mount | grep -q $gardenDir; then
 
     # Mount ephemeral storage as garden data
     mount /dev/xvdb ${gardenDir}
+    fstabline="/dev/xvdb\t${gardenDir}\tauto\tdefaults\t0\t0\n"
+    grep --silent "$(echo -e $fstabline)" /etc/fstab || echo -e $fstabline >> /etc/fstab
 
     /var/vcap/bosh/bin/monit restart garden
 fi
