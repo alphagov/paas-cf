@@ -1,0 +1,257 @@
+resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: {{branch_name}}
+
+  - name: pipeline-trigger
+    type: semver-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      key: {{pipeline_trigger_file}}
+
+  - name: bosh-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh-secrets.yml
+
+  - name: cf-release
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry/cf-release
+      tag_filter: {{cf-release-version}}
+
+  - name: cf-manifest
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: cf-manifest.yml
+
+  - name: bosh-CA
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: bosh-CA.tar.gz
+
+jobs:
+  - name: cloud-controller
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - put: pipeline-trigger
+        params: {bump: patch}
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: api_z1/0
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
+
+  - name: colocated
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: pipeline-trigger
+        passed: ['cloud-controller']
+        trigger: true
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: colocated_z1
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
+
+  - name: nats
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: pipeline-trigger
+        passed: ['colocated']
+        trigger: true
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: nats_z1
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
+
+  - name: router
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: pipeline-trigger
+        passed: ['nats']
+        trigger: true
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: router_z1
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
+
+  - name: etcd
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: pipeline-trigger
+        passed: ['router']
+        trigger: true
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: etcd_z1
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
+
+  - name: consul
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: pipeline-trigger
+        passed: ['etcd']
+        trigger: true
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: consul_z1
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
+
+  - name: cell
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-release
+        params:
+          submodules:
+          - src/smoke-tests
+      - get: paas-cf
+      - get: cf-manifest
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: pipeline-trigger
+        passed: ['consul']
+        trigger: true
+    - task: get-instance-id
+      file: paas-cf/concourse/tasks/get-instance-id.yml
+      config:
+        params:
+          VM_NAME: cell_z1
+    - task: kill-instance
+      file: paas-cf/concourse/tasks/kill-instance.yml
+    - task: generate-test-config
+      file: paas-cf/concourse/tasks/generate-test-config.yml
+    - task: run-tests
+      file: paas-cf/concourse/tasks/run-tests.yml
+      ensure:
+        task: recover
+        file: paas-cf/concourse/tasks/recover.yml
