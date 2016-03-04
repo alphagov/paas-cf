@@ -76,6 +76,12 @@ jobs:
       config:
         platform: linux
         image: docker:///governmentpaas/bosh-init
+        inputs:
+        - name: paas-cf
+        - name: bosh-manifest
+        - name: bosh-init-state
+        outputs:
+        - name: bosh-init-microbosh
         run:
           path: sh
           args:
@@ -90,12 +96,6 @@ jobs:
             else
                 cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-init-microbosh/bosh-manifest-state.json
             fi
-        inputs:
-        - name: paas-cf
-        - name: bosh-manifest
-        - name: bosh-init-state
-        outputs:
-        - name: bosh-init-microbosh
       ensure:
         put: bosh-init-state
         params:
@@ -116,6 +116,12 @@ jobs:
       config:
         platform: linux
         image: docker:///governmentpaas/bosh-init
+        inputs:
+        - name: paas-cf
+        - name: vpc-tfstate
+        - name: concourse-tfstate
+        outputs:
+        - name: terraform-variables
         run:
           path: sh
           args:
@@ -128,23 +134,19 @@ jobs:
             ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
             < concourse-tfstate/concourse.tfstate \
             > terraform-variables/concourse.tfvars.sh
-        inputs:
-        - name: paas-cf
-        - name: vpc-tfstate
-        - name: concourse-tfstate
-        outputs:
-        - name: terraform-variables
     - task: terraform-destroy
       config:
         platform: linux
         image: docker:///governmentpaas/terraform
-        params:
-          DEPLOY_ENV: {{deploy_env}}
-          AWS_DEFAULT_REGION: {{aws_region}}
         inputs:
         - name: paas-cf
         - name: terraform-variables
         - name: bosh-tfstate
+        outputs:
+        - name: terraform-destroy
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
         run:
           path: sh
           args:
@@ -156,8 +158,6 @@ jobs:
 
             terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=bosh-tfstate/bosh.tfstate -state-out=terraform-destroy/bosh.tfstate paas-cf/terraform/bosh
-        outputs:
-        - name: terraform-destroy
       ensure:
         put: bosh-tfstate
         params:

@@ -67,10 +67,10 @@ jobs:
       - task: delete-deployment
         config:
           platform: linux
+          image: docker:///governmentpaas/bosh-cli
           inputs:
           - name: bosh-secrets
           - name: paas-cf
-          image: docker:///governmentpaas/bosh-cli
           run:
             path: sh
             args:
@@ -105,6 +105,8 @@ jobs:
             - name: concourse-tfstate
             - name: vpc-tfstate
             - name: cf-secrets
+          outputs:
+            - name: terraform-variables
           run:
             path: sh
             args:
@@ -123,18 +125,18 @@ jobs:
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
               < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
               ls -l terraform-variables/cf-secrets.tfvars.sh
-          outputs:
-            - name: terraform-variables
       - task: cf-terraform-destroy
         config:
           platform: linux
           image: docker:///governmentpaas/terraform
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
           inputs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+          outputs:
+            - name: cf-terraform-destroy
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
           run:
             path: sh
             args:
@@ -148,8 +150,6 @@ jobs:
 
               terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=cf-tfstate/cf.tfstate -state-out=cf-terraform-destroy/cf.tfstate paas-cf/terraform/cloudfoundry
-          outputs:
-            - name: cf-terraform-destroy
         ensure:
           put: cf-tfstate
           params:

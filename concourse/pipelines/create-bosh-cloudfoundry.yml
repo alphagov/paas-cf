@@ -175,6 +175,12 @@ jobs:
       config:
         platform: linux
         image: docker:///ruby#2.2-slim
+        inputs:
+        - name: paas-cf
+        - name: vpc-tfstate
+        - name: concourse-tfstate
+        outputs:
+        - name: terraform-variables
         run:
           path: sh
           args:
@@ -187,23 +193,19 @@ jobs:
             ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
             < concourse-tfstate/concourse.tfstate \
             > terraform-variables/concourse.tfvars.sh
-        inputs:
-        - name: paas-cf
-        - name: vpc-tfstate
-        - name: concourse-tfstate
-        outputs:
-        - name: terraform-variables
     - task: terraform-apply
       config:
         platform: linux
         image: docker:///governmentpaas/terraform
-        params:
-          DEPLOY_ENV: {{deploy_env}}
-          AWS_DEFAULT_REGION: {{aws_region}}
         inputs:
         - name: paas-cf
         - name: terraform-variables
         - name: bosh-tfstate
+        outputs:
+        - name: terraform-apply
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+          AWS_DEFAULT_REGION: {{aws_region}}
         run:
           path: sh
           args:
@@ -215,8 +217,6 @@ jobs:
 
             terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=bosh-tfstate/bosh.tfstate -state-out=terraform-apply/bosh.tfstate paas-cf/terraform/bosh
-        outputs:
-        - name: terraform-apply
       ensure:
         put: bosh-tfstate
         params:
@@ -362,6 +362,12 @@ jobs:
       config:
         platform: linux
         image: docker:///governmentpaas/bosh-init
+        inputs:
+        - name: bosh-manifest
+        - name: bosh-init-state
+        - name: ssh-private-key
+        outputs:
+        - name: bosh-init-microbosh
         run:
           path: sh
           args:
@@ -374,12 +380,6 @@ jobs:
             cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
             bosh-init deploy bosh-manifest/bosh-manifest.yml
             cp bosh-manifest/bosh-manifest-state.json bosh-init-microbosh/bosh-manifest-state.json
-        inputs:
-        - name: bosh-manifest
-        - name: bosh-init-state
-        - name: ssh-private-key
-        outputs:
-        - name: bosh-init-microbosh
       ensure:
         put: bosh-init-state
         params:
@@ -449,6 +449,8 @@ jobs:
             - name: concourse-tfstate
             - name: bosh-tfstate
             - name: cf-secrets
+          outputs:
+            - name: terraform-variables
           run:
             path: sh
             args:
@@ -463,19 +465,19 @@ jobs:
               < bosh-tfstate/bosh.tfstate > terraform-variables/bosh.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
               < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
-          outputs:
-            - name: terraform-variables
       - task: terraform
         config:
           platform: linux
           image: docker:///governmentpaas/terraform
-          params:
-            TF_VAR_env: {{deploy_env}}
-            AWS_DEFAULT_REGION: {{aws_region}}
           inputs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+          outputs:
+            - name: terraform
+          params:
+            TF_VAR_env: {{deploy_env}}
+            AWS_DEFAULT_REGION: {{aws_region}}
           run:
             path: sh
             args:
@@ -489,8 +491,6 @@ jobs:
 
               terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                 -state=cf-tfstate/cf.tfstate -state-out=terraform/cf.tfstate paas-cf/terraform/cloudfoundry
-          outputs:
-            - name: terraform
         ensure:
           put: cf-tfstate
           params:
@@ -503,6 +503,8 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-tfstate
+          outputs:
+            - name: extract-cf-terraform-outputs
           run:
             path: sh
             args:
@@ -513,8 +515,6 @@ jobs:
               SCFILE="extract_tf_vars_from_terraform_state.rb"
               $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > extract-cf-terraform-outputs/cf.tfstate.sh
               ls -l extract-cf-terraform-outputs/cf.tfstate.sh
-          outputs:
-            - name: extract-cf-terraform-outputs
       - task: init-db
         config:
           platform: linux
@@ -715,13 +715,13 @@ jobs:
     - task: generate-test-config
       config:
         platform: linux
+        image: docker:///governmentpaas/bosh-cli
         inputs:
         - name: cf-release
         - name: paas-cf
         - name: cf-manifest
         outputs:
         - name: test-config
-        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
@@ -745,13 +745,13 @@ jobs:
     - task: run-tests
       config:
         platform: linux
+        image: docker:///governmentpaas/cf-acceptance-tests
         inputs:
         - name: paas-cf
         - name: cf-release
         - name: cf-manifest
         - name: test-config
         - name: bosh-CA
-        image: docker:///governmentpaas/cf-acceptance-tests
         run:
           path: sh
           args:
@@ -786,13 +786,13 @@ jobs:
     - task: generate-test-config
       config:
         platform: linux
+        image: docker:///governmentpaas/bosh-cli
         inputs:
         - name: cf-release
         - name: paas-cf
         - name: cf-manifest
         outputs:
         - name: test-config
-        image: docker:///governmentpaas/bosh-cli
         run:
           path: sh
           args:
@@ -816,13 +816,13 @@ jobs:
     - task: run-tests
       config:
         platform: linux
+        image: docker:///governmentpaas/cf-acceptance-tests
         inputs:
         - name: paas-cf
         - name: cf-release
         - name: cf-manifest
         - name: test-config
         - name: bosh-CA
-        image: docker:///governmentpaas/cf-acceptance-tests
         run:
           path: sh
           args:
@@ -854,12 +854,12 @@ jobs:
     - task: generate-test-config
       config:
         platform: linux
+        image: docker:///ruby#2.2-slim
         inputs:
           - name: paas-cf
           - name: cf-manifest
         outputs:
           - name: test-config
-        image: docker:///ruby#2.2-slim
         run:
           path: sh
           args:
@@ -872,11 +872,11 @@ jobs:
     - task: run-tests
       config:
         platform: linux
+        image: docker:///governmentpaas/cf-acceptance-tests
         inputs:
           - name: paas-cf
           - name: test-config
           - name: bosh-CA
-        image: docker:///governmentpaas/cf-acceptance-tests
         run:
           path: sh
           args:
