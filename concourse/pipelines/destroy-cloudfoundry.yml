@@ -48,11 +48,20 @@ resources:
       versioned_file: cf-secrets.yml
 
 jobs:
+  - name: init
+    serial: true
+    plan:
+    - put: pipeline-trigger
+      params: {bump: patch}
+
   - name: delete-deployment
     serial_groups: [ destroy ]
     serial: true
     plan:
       - aggregate:
+        - get: pipeline-trigger
+          passed: ['init']
+          trigger: true
         - get: bosh-secrets
         - get: paas-cf
       - task: delete-deployment
@@ -70,8 +79,6 @@ jobs:
             - |
               ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
               bosh -n delete deployment {{deploy_env}}
-      - put: pipeline-trigger
-        params: {bump: patch}
 
   - name: terraform-destroy
     serial_groups: [ destroy ]

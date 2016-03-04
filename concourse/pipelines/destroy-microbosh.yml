@@ -104,10 +104,11 @@ jobs:
   - name: bosh-terraform-destroy
     serial: true
     plan:
-    - get: paas-cf
-    - get: bosh-init-state
+    - get: pipeline-trigger
       passed: [ bosh-init-delete ]
       trigger: true
+    - get: paas-cf
+      passed: [ bosh-init-delete ]
     - get: vpc-tfstate
     - get: concourse-tfstate
     - get: bosh-tfstate

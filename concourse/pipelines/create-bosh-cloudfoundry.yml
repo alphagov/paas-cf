@@ -771,6 +771,9 @@ jobs:
   - name: acceptance-tests
     plan:
     - aggregate:
+      - get: pipeline-trigger
+        passed: [ 'cf-deploy']
+        trigger: true
       - get: cf-release
         params:
           submodules:
@@ -779,7 +782,6 @@ jobs:
         passed: ['cf-deploy']
       - get: cf-manifest
         passed: ['cf-deploy']
-        trigger: true
       - get: bosh-CA
     - task: generate-test-config
       config:
@@ -848,7 +850,6 @@ jobs:
         passed: ['cf-deploy']
       - get: cf-manifest
         passed: ['cf-deploy']
-        trigger: true
       - get: bosh-CA
     - task: generate-test-config
       config:
