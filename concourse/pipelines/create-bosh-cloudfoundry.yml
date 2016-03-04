@@ -503,175 +503,129 @@ jobs:
               . extract-cf-terraform-outputs/cf.tfstate.sh
 
               paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
-  - name: generate-cf-certs
+
+  - name: generate-cf-config
     serial_groups: [ deploy ]
     serial: true
     plan:
-      - aggregate:
-        - get: pipeline-trigger
-          passed: [ 'cf-terraform' ]
-          trigger: true
-        - get: paas-cf
-          passed: ['cf-terraform']
-        - get: bosh-CA
-        - get: cf-certs
-        - get: cf-tfstate
-          passed: ['cf-terraform']
-      - task: terraform-variables
-        config:
-          platform: linux
-          image: docker:///ruby#2.2-slim
-          inputs:
-            - name: paas-cf
-            - name: cf-tfstate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < cf-tfstate/cf.tfstate > terraform-variables/cf.tfvars.sh
-          outputs:
-            - name: terraform-variables
-      - task: generate-cf-certs
-        config:
-          platform: linux
-          image: docker:///governmentpaas/certstrap
-          inputs:
-          - name: bosh-CA
+    - aggregate:
+      - get: pipeline-trigger
+        passed: ['cf-terraform']
+        trigger: true
+      - get: paas-cf
+        passed: ['cf-terraform']
+      - get: bosh-CA
+      - get: cf-secrets
+        passed: ['cf-terraform']
+      - get: cf-certs
+      - get: vpc-tfstate
+      - get: concourse-tfstate
+      - get: bosh-tfstate
+      - get: cf-tfstate
+        passed: ['cf-terraform']
+
+    - task: extract-terraform-outputs
+      config:
+        platform: linux
+        image: docker:///ruby#2.2-slim
+        inputs:
           - name: paas-cf
-          - name: cf-certs
-          - name: terraform-variables
-          outputs:
-          - name: updated-cf-certs
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              . terraform-variables/cf.tfvars.sh
+          - name: vpc-tfstate
+          - name: bosh-tfstate
+          - name: concourse-tfstate
+          - name: cf-tfstate
+        outputs:
+          - name: terraform-outputs
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            for state in vpc bosh concourse cf; do
+              ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                < $state-tfstate/$state.tfstate \
+                > terraform-outputs/$state.yml
+              ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < ${state}-tfstate/${state}.tfstate \
+                > terraform-outputs/${state}.tfvars.sh
+            done
+    - task: generate-cf-certs
+      config:
+        platform: linux
+        image: docker:///governmentpaas/certstrap
+        inputs:
+        - name: bosh-CA
+        - name: paas-cf
+        - name: cf-certs
+        - name: terraform-outputs
+        outputs:
+        - name: generated-cf-certs
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            . terraform-outputs/cf.tfvars.sh
 
-              mkdir certs
-              echo "Extracting extant certs"
-              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+            mkdir certs
+            echo "Extracting extant certs"
+            tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-              ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
+            ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
 
-              cd certs
-              echo "Creating updated cert tarball"
-              tar -cvzf ../updated-cf-certs/cf-certs.tar.gz .
-      - put: cf-certs
+            echo "Creating updated cert tarball"
+            cd certs
+            tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+            cd ..
+
+            echo "Extracting certs to YAML"
+            tar -xzvf bosh-CA/bosh-CA.tar.gz -C certs
+            cd certs
+            for file in *.crt; do
+              cn=${file%.crt}
+              yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+
+              echo "Converting ${cn} certs to YAML"
+              ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key  > ../generated-cf-certs/${cn}_key.yml
+              ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt  > ../generated-cf-certs/${cn}_cert.yml
+            done
+
+            echo "Generating uaa_jwt_signing public key from private key"
+            openssl rsa -pubout -in uaa_jwt_signing.key -out uaa_jwt_verification.pem
+            ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem  > ../generated-cf-certs/uaa_jwt_verification_key.yml
+      on_success:
+        put: cf-certs
         params:
-          file: updated-cf-certs/cf-certs.tar.gz
-
-  - name: generate-cf-manifest
-    serial_groups: [ deploy ]
-    serial: true
-    plan:
-      - aggregate:
-        - get: pipeline-trigger
-          passed: [ 'generate-cf-certs' ]
-          trigger: true
-        - get: paas-cf
-          passed: ['generate-cf-certs']
-        - get: bosh-CA
-          passed: ['generate-cf-certs']
-        - get: cf-certs
-          passed: ['generate-cf-certs']
-        - get: vpc-tfstate
-        - get: bosh-tfstate
-        - get: concourse-tfstate
-        - get: cf-tfstate
-          passed: ['generate-cf-certs']
-          trigger: true
-        - get: cf-secrets
-      - task: cf-certs-yaml
-        config:
-          platform: linux
-          image: docker:///governmentpaas/certstrap
-          inputs:
-          - name: bosh-CA
+          file: generated-cf-certs/cf-certs.tar.gz
+    - task: generate-manifest
+      config:
+        platform: linux
+        image: docker:///governmentpaas/spruce
+        inputs:
           - name: paas-cf
-          - name: cf-certs
-          outputs:
-          - name: cf-certs-yaml
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              echo "Extracting CA certs"
-              tar -xzvf bosh-CA/bosh-CA.tar.gz
-              echo "Extracting CloudFoundry certs"
-              tar -xzvf cf-certs/cf-certs.tar.gz
-
-              for file in *.crt; do
-                cn=${file%.crt}
-                yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
-
-                echo "Converting ${cn} certs to YAML"
-                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key  > ${cn}_key.yml
-                paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt  > ${cn}_cert.yml
-              done
-
-              echo "Generating uaa_jwt_signing public key from private key"
-              openssl rsa -pubout -in uaa_jwt_signing.key -out uaa_jwt_verification.pem
-              paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem  > uaa_jwt_verification_key.yml
-              cp *.yml cf-certs-yaml
-
-      - task: extract-terraform-outputs
-        config:
-          platform: linux
-          image: docker:///ruby
-          inputs:
-            - name: paas-cf
-            - name: vpc-tfstate
-            - name: bosh-tfstate
-            - name: concourse-tfstate
-            - name: cf-tfstate
-          outputs:
-            - name: extract-terraform-outputs
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              SCPATH="./paas-cf/concourse/scripts"
-              SCFILE="extract_terraform_state_to_yaml.rb"
-              for state in vpc bosh concourse cf; do
-                $SCPATH/$SCFILE < $state-tfstate/$state.tfstate > extract-terraform-outputs/$state.yml
-              done
-
-      - task: generate-manifest
-        config:
-          platform: linux
-          image: docker:///governmentpaas/spruce
-          params:
-            MANIFEST_STUBS: |
-              ./extract-terraform-outputs/*.yml
-              ./cf-secrets/cf-secrets.yml
-              ./cf-certs-yaml/*.yml
-          inputs:
-            - name: paas-cf
-            - name: extract-terraform-outputs
-            - name: cf-secrets
-            - name: cf-certs-yaml
-          outputs:
-            - name: generate-manifest
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > generate-manifest/cf-manifest.yml
-      - put: cf-manifest
+          - name: terraform-outputs
+          - name: cf-secrets
+          - name: generated-cf-certs
+        outputs:
+          - name: cf-manifest
         params:
-          file: generate-manifest/cf-manifest.yml
+          MANIFEST_STUBS: |
+            ./terraform-outputs/*.yml
+            ./cf-secrets/cf-secrets.yml
+            ./generated-cf-certs/*.yml
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+      on_success:
+        put: cf-manifest
+        params:
+          file: cf-manifest/cf-manifest.yml
 
   - name: cf-deploy
     serial_groups: [ deploy ]
@@ -679,13 +633,12 @@ jobs:
     plan:
       - aggregate:
         - get: pipeline-trigger
-          passed: [ 'generate-cf-manifest' ]
+          passed: ['generate-cf-config']
           trigger: true
         - get: paas-cf
-          passed: ['generate-cf-manifest']
+          passed: ['generate-cf-config']
         - get: cf-manifest
-          passed: ['generate-cf-manifest']
-          trigger: true
+          passed: ['generate-cf-config']
         - get: bosh-secrets
       - task: cf-deploy
         config:
