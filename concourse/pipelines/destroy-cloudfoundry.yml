@@ -91,7 +91,7 @@ jobs:
       - task: terraform-variables
         config:
           platform: linux
-          image: docker:///ruby#2.2.3-slim
+          image: docker:///ruby#2.2-slim
           inputs:
             - name: paas-cf
             - name: cf-tfstate
