@@ -1,3 +1,33 @@
+groups:
+  - name: all
+    jobs:
+      - init
+      - bosh-terraform
+      - generate-bosh-config
+      - bosh-deploy
+      - generate-cf-secrets
+      - cf-terraform
+      - generate-cf-config
+      - cf-deploy
+      - smoke-tests
+      - acceptance-tests
+      - custom-acceptance-tests
+  - name: bosh
+    jobs:
+      - init
+      - bosh-terraform
+      - generate-bosh-config
+      - bosh-deploy
+  - name: cloudfoundry
+    jobs:
+      - generate-cf-secrets
+      - cf-terraform
+      - generate-cf-config
+      - cf-deploy
+      - smoke-tests
+      - acceptance-tests
+      - custom-acceptance-tests
+
 resources:
   - name: pipeline-trigger
     type: semver-iam
