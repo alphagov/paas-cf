@@ -171,7 +171,7 @@ jobs:
     - get: vpc-tfstate
     - get: concourse-tfstate
     - get: bosh-tfstate
-    - task: terraform-variables
+    - task: extract-terraform-variables
       config:
         platform: linux
         image: docker:///ruby#2.2-slim
@@ -202,7 +202,7 @@ jobs:
         - name: terraform-variables
         - name: bosh-tfstate
         outputs:
-        - name: terraform-apply
+        - name: updated-bosh-tfstate
         params:
           DEPLOY_ENV: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
@@ -216,11 +216,11 @@ jobs:
             . terraform-variables/concourse.tfvars.sh
 
             terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-              -state=bosh-tfstate/bosh.tfstate -state-out=terraform-apply/bosh.tfstate paas-cf/terraform/bosh
+              -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh
       ensure:
         put: bosh-tfstate
         params:
-          file: terraform-apply/bosh.tfstate
+          file: updated-bosh-tfstate/bosh.tfstate
 
   - name: generate-bosh-config
     serial: true
@@ -367,7 +367,7 @@ jobs:
         - name: bosh-init-state
         - name: ssh-private-key
         outputs:
-        - name: bosh-init-microbosh
+        - name: updated-bosh-init-state
         run:
           path: sh
           args:
@@ -379,11 +379,11 @@ jobs:
             chmod 400 bosh-manifest/.ssh/id_rsa
             cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
             bosh-init deploy bosh-manifest/bosh-manifest.yml
-            cp bosh-manifest/bosh-manifest-state.json bosh-init-microbosh/bosh-manifest-state.json
+            cp bosh-manifest/bosh-manifest-state.json updated-bosh-init-state/bosh-manifest-state.json
       ensure:
         put: bosh-init-state
         params:
-          file: bosh-init-microbosh/bosh-manifest-state.json
+          file: updated-bosh-init-state/bosh-manifest-state.json
 
   - name: generate-cf-secrets
     serial_groups: [ deploy ]
@@ -439,7 +439,7 @@ jobs:
         - get: cf-secrets
           passed: ['generate-cf-secrets']
 
-      - task: terraform-variables
+      - task: extract-terraform-variables
         config:
           platform: linux
           image: docker:///ruby#2.2-slim
@@ -465,7 +465,7 @@ jobs:
               < bosh-tfstate/bosh.tfstate > terraform-variables/bosh.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
               < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
-      - task: terraform
+      - task: terraform-apply
         config:
           platform: linux
           image: docker:///governmentpaas/terraform
@@ -474,7 +474,7 @@ jobs:
             - name: paas-cf
             - name: cf-tfstate
           outputs:
-            - name: terraform
+            - name: updated-tfstate
           params:
             TF_VAR_env: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
@@ -490,11 +490,11 @@ jobs:
               . terraform-variables/cf-secrets.tfvars.sh
 
               terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                -state=cf-tfstate/cf.tfstate -state-out=terraform/cf.tfstate paas-cf/terraform/cloudfoundry
+                -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
-            file: terraform/cf.tfstate
+            file: updated-tfstate/cf.tfstate
 
       - task: extract-cf-terraform-outputs
         config:
@@ -504,7 +504,7 @@ jobs:
             - name: paas-cf
             - name: cf-tfstate
           outputs:
-            - name: extract-cf-terraform-outputs
+            - name: cf-terraform-outputs
           run:
             path: sh
             args:
@@ -513,8 +513,8 @@ jobs:
             - |
               SCPATH="./paas-cf/concourse/scripts"
               SCFILE="extract_tf_vars_from_terraform_state.rb"
-              $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > extract-cf-terraform-outputs/cf.tfstate.sh
-              ls -l extract-cf-terraform-outputs/cf.tfstate.sh
+              $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
+              ls -l cf-terraform-outputs/cf.tfstate.sh
       - task: init-db
         config:
           platform: linux
@@ -522,7 +522,7 @@ jobs:
           inputs:
             - name: terraform-variables
             - name: paas-cf
-            - name: extract-cf-terraform-outputs
+            - name: cf-terraform-outputs
           run:
             path: sh
             args:
@@ -530,7 +530,7 @@ jobs:
             - -c
             - |
               . terraform-variables/cf-secrets.tfvars.sh
-              . extract-cf-terraform-outputs/cf.tfstate.sh
+              . cf-terraform-outputs/cf.tfstate.sh
 
               paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
 
@@ -681,7 +681,7 @@ jobs:
           - name: cf-manifest
           - name: bosh-secrets
           outputs:
-          - name: cf-deploy
+          - name: updated-cf-manifest
           run:
             path: sh
             args:
@@ -689,13 +689,12 @@ jobs:
             - -c
             - |
               ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-              sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-deploy/cf-manifest.yml
-              bosh deployment cf-deploy/cf-manifest.yml
+              sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
+              bosh deployment updated-cf-manifest/cf-manifest.yml
               bosh -n deploy
-
       - put: cf-manifest
         params:
-          file: cf-deploy/cf-manifest.yml
+          file: updated-cf-manifest/cf-manifest.yml
 
   - name: smoke-tests
     plan:

@@ -95,7 +95,7 @@ jobs:
         - get: vpc-tfstate
         - get: cf-secrets
 
-      - task: terraform-variables
+      - task: extract-terraform-variables
         config:
           platform: linux
           image: docker:///ruby#2.2-slim
@@ -134,7 +134,7 @@ jobs:
             - name: paas-cf
             - name: cf-tfstate
           outputs:
-            - name: cf-terraform-destroy
+            - name: updated-cf-tfstate
           params:
             AWS_DEFAULT_REGION: {{aws_region}}
           run:
@@ -149,8 +149,8 @@ jobs:
               . terraform-variables/cf-secrets.tfvars.sh
 
               terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                -state=cf-tfstate/cf.tfstate -state-out=cf-terraform-destroy/cf.tfstate paas-cf/terraform/cloudfoundry
+                -state=cf-tfstate/cf.tfstate -state-out=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
-            file: cf-terraform-destroy/cf.tfstate
+            file: updated-cf-tfstate/cf.tfstate
