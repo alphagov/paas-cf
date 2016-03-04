@@ -1,25 +1,25 @@
 ---
 inputs:
-- name: paas-cf
-- name: cf-release
-- name: cf-manifest
-- name: test-config
-- name: bosh-CA
+  - name: paas-cf
+  - name: cf-release
+  - name: cf-manifest
+  - name: test-config
+  - name: bosh-CA
 image: docker:///governmentpaas/cf-acceptance-tests
 platform: linux
 run:
   path: sh
   args:
-  - -e
-  - -c
-  - |
-    echo "Adding bosh-CA to root certificates"
-    tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-    update-ca-certificates
-    mkdir -p /var/vcap/jobs/smoke-tests/bin/ /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry
-    ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
-    ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
-    ln -snf /usr/local/go /var/vcap/packages/golang1.4
-    ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
-    /var/vcap/jobs/smoke-tests/bin/run
+    - -e
+    - -c
+    - |
+      echo "Adding bosh-CA to root certificates"
+      tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
+      update-ca-certificates
+      mkdir -p /var/vcap/jobs/smoke-tests/bin/ /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry
+      ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
+      ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
+      ln -snf /usr/local/go /var/vcap/packages/golang1.4
+      ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
+      /var/vcap/jobs/smoke-tests/bin/run
 

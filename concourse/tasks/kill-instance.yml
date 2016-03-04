@@ -1,13 +1,13 @@
 ---
 inputs:
-- name: instance-id
+  - name: instance-id
 image: docker:///governmentpaas/awscli
 platform: linux
 run:
   path: sh
   args:
-  - -e
-  - -c
-  - |
-    aws ec2 terminate-instances --region eu-west-1 --instance-ids $(cat instance-id/id)
-    sleep 30
+    - -e
+    - -c
+    - |
+      aws ec2 terminate-instances --region eu-west-1 --instance-ids $(cat instance-id/id)
+      sleep 30
