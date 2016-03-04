@@ -124,6 +124,9 @@ Run the `destroy-deployer` pipeline from your *Bootstrap Concourse*.
 
 ## MicroBOSH and Cloudfoundry
 
+MicroBOSH is responsible for deploying [CloudFoundry](#cloudfoundry) and
+supporting services for the platform.
+
 ### Prerequisites
 
 You will need a working [Deployer Concourse](#deployer-concourse).
@@ -134,31 +137,22 @@ make dev
 ```
 if you want to deploy to DEV account. `make help` will show all available options. 
 
-### MicroBOSH
-
-MicroBOSH is responsible for deploying [CloudFoundry](#cloudfoundry) and
-supporting services for the platform.
-
 ### Deploy
 
-Run the `create-microbosh` pipeline.
+Run the `create-bosh-cloudfoundry` pipeline. This will deploy MicroBOSH, and CloudFoundry.
+
+NB: The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
+overnight](#overnight-deletion-of-environments) by default.
 
 ### Destroy
 
-Run the `destroy-microbosh` pipeline.
+Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, and supporting infrastructure.
 
-## CloudFoundry
+Once CloudFoundry has been fully destroyed, run the `destroy-microbosh` pipeline to destroy MicroBOSH.
 
-### Deploy
-
-Run the `deploy-cloudfoundry` pipeline.
-
-NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
-by default.
-
-### Destroy
-
-Run the `destroy-cloudfoundry` pipeline.
+NB: If the `destroy-microbosh` pipeline is run without first cleaning up
+CloudFoundry, it will be necessary to manually clean up the CloudFoundry
+deployment.
 
 # Additional notes
 
