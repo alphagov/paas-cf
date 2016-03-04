@@ -141,9 +141,12 @@ jobs:
     - try:
         task: generate
         config:
+          platform: linux
           image: docker:///governmentpaas/certstrap
           inputs:
           - name: bosh-CA
+          outputs:
+          - name: generate
           run:
             path: sh
             args:
@@ -154,6 +157,7 @@ jobs:
                 certstrap init --passphrase "" --common-name bosh-CA
                 cd out
                 tar -cvzf ../bosh-CA.tar.gz bosh-CA.*
+                cp ../bosh-CA.tar.gz ../generate
               else
                 echo "The CA cert already exists, skipping generation..."
                 exit 1
@@ -177,6 +181,7 @@ jobs:
     - get: bosh-tfstate
     - task: terraform-variables
       config:
+        platform: linux
         image: docker:///ruby#2.2.3-slim
         run:
           path: sh
@@ -198,6 +203,7 @@ jobs:
         - name: terraform-variables
     - task: terraform-apply
       config:
+        platform: linux
         image: docker:///governmentpaas/terraform
         params:
           DEPLOY_ENV: {{deploy_env}}
@@ -216,7 +222,9 @@ jobs:
             . terraform-variables/concourse.tfvars.sh
 
             terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-              -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
+              -state=bosh-tfstate/bosh.tfstate -state-out=terraform-apply/bosh.tfstate paas-cf/terraform/bosh
+        outputs:
+        - name: terraform-apply
       ensure:
         put: bosh-tfstate
         params:
@@ -243,6 +251,7 @@ jobs:
       passed: [generate-CA-certs]
     - task: terraform_outputs
       config:
+        platform: linux
         image: docker:///ruby#2.2.3-slim
         run:
           path: sh
@@ -264,6 +273,7 @@ jobs:
         - name: terraform-outputs
     - task: bosh-cert
       config:
+        platform: linux
         image: docker:///alpine#3.3
         run:
           path: sh
@@ -272,12 +282,15 @@ jobs:
           - -c
           - |
             tar -xzf bosh-CA/bosh-CA.tar.gz
-            paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert bosh-CA.crt > bosh-ca-cert.yml
+            paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert bosh-CA.crt > bosh-cert/bosh-ca-cert.yml
         inputs:
         - name: paas-cf
         - name: bosh-CA
+        outputs:
+        - name: bosh-cert
     - task: render-manifest
       config:
+        platform: linux
         image: docker:///governmentpaas/spruce
         params:
           BOSH_MANIFEST_STUBS: |
@@ -318,6 +331,7 @@ jobs:
 
     - task: bosh-init-microbosh
       config:
+        platform: linux
         image: docker:///governmentpaas/bosh-init
         run:
           path: sh
@@ -330,11 +344,14 @@ jobs:
             chmod 400 bosh-manifest/.ssh/id_rsa
             cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
             bosh-init deploy bosh-manifest/bosh-manifest.yml
+            cp bosh-manifest/bosh-manifest-state.json bosh-init-microbosh/bosh-manifest-state.json
         inputs:
         - name: bosh-manifest
         - name: bosh-init-state
         - name: ssh-private-key
+        outputs:
+        - name: bosh-init-microbosh
       ensure:
         put: bosh-init-state
         params:
-          file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
+          file: bosh-init-microbosh/bosh-manifest-state.json

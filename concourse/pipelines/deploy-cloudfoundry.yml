@@ -91,6 +91,7 @@ jobs:
         trigger: {{auto_deploy}}
       - task: init
         config:
+          platform: linux
           image: docker:///governmentpaas/curl-ssl
           run:
             path: sh
@@ -162,6 +163,7 @@ jobs:
 
       - task: terraform-variables
         config:
+          platform: linux
           image: docker:///ruby
           inputs:
             - name: paas-cf
@@ -176,16 +178,18 @@ jobs:
             - -c
             - |
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < vpc-tfstate/vpc.tfstate > vpc.tfvars.sh
+              < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < concourse-tfstate/concourse.tfstate > concourse.tfvars.sh
+              < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < bosh-tfstate/bosh.tfstate > bosh.tfvars.sh
+              < bosh-tfstate/bosh.tfstate > terraform-variables/bosh.tfvars.sh
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
-              < cf-secrets/cf-secrets.yml > cf-secrets.tfvars.sh
-
+              < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
+          outputs:
+            - name: terraform-variables
       - task: terraform
         config:
+          platform: linux
           image: docker:///governmentpaas/terraform
           params:
             TF_VAR_env: {{deploy_env}}
@@ -206,7 +210,9 @@ jobs:
               . terraform-variables/cf-secrets.tfvars.sh
 
               terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                -state=cf-tfstate/cf.tfstate -state-out=cf.tfstate paas-cf/terraform/cloudfoundry
+                -state=cf-tfstate/cf.tfstate -state-out=terraform/cf.tfstate paas-cf/terraform/cloudfoundry
+          outputs:
+            - name: terraform
         ensure:
           put: cf-tfstate
           params:
@@ -227,11 +233,13 @@ jobs:
             - |
               SCPATH="./paas-cf/concourse/scripts"
               SCFILE="extract_tf_vars_from_terraform_state.rb"
-              $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf.tfstate.sh
-              ls -l cf.tfstate.sh
-
+              $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > extract-cf-terraform-outputs/cf.tfstate.sh
+              ls -l extract-cf-terraform-outputs/cf.tfstate.sh
+          outputs:
+            - name: extract-cf-terraform-outputs
       - task: init-db
         config:
+          platform: linux
           image: docker:///governmentpaas/psql
           inputs:
             - name: terraform-variables
@@ -263,6 +271,7 @@ jobs:
           passed: ['terraform']
       - task: terraform-variables
         config:
+          platform: linux
           image: docker:///ruby#2.2-slim
           inputs:
             - name: paas-cf
@@ -274,9 +283,12 @@ jobs:
             - -c
             - |
               ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < cf-tfstate/cf.tfstate > cf.tfvars.sh
+                < cf-tfstate/cf.tfstate > terraform-variables/cf.tfvars.sh
+          outputs:
+            - name: terraform-variables
       - task: generate-cf-certs
         config:
+          platform: linux
           image: docker:///governmentpaas/certstrap
           inputs:
           - name: bosh-CA
@@ -329,11 +341,14 @@ jobs:
         - get: cf-secrets
       - task: cf-certs-yaml
         config:
+          platform: linux
           image: docker:///governmentpaas/certstrap
           inputs:
           - name: bosh-CA
           - name: paas-cf
           - name: cf-certs
+          outputs:
+          - name: cf-certs-yaml
           run:
             path: sh
             args:
@@ -357,6 +372,7 @@ jobs:
               echo "Generating uaa_jwt_signing public key from private key"
               openssl rsa -pubout -in uaa_jwt_signing.key -out uaa_jwt_verification.pem
               paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem  > uaa_jwt_verification_key.yml
+              cp *.yml cf-certs-yaml
 
       - task: extract-terraform-outputs
         config:
@@ -368,6 +384,8 @@ jobs:
             - name: bosh-tfstate
             - name: concourse-tfstate
             - name: cf-tfstate
+          outputs:
+            - name: extract-terraform-outputs
           run:
             path: sh
             args:
@@ -377,7 +395,7 @@ jobs:
               SCPATH="./paas-cf/concourse/scripts"
               SCFILE="extract_terraform_state_to_yaml.rb"
               for state in vpc bosh concourse cf; do
-                $SCPATH/$SCFILE < $state-tfstate/$state.tfstate > $state.yml
+                $SCPATH/$SCFILE < $state-tfstate/$state.tfstate > extract-terraform-outputs/$state.yml
               done
 
       - task: generate-manifest
@@ -394,13 +412,15 @@ jobs:
             - name: extract-terraform-outputs
             - name: cf-secrets
             - name: cf-certs-yaml
+          outputs:
+            - name: generate-manifest
           run:
             path: sh
             args:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest.yml
+              ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > generate-manifest/cf-manifest.yml
       - put: cf-manifest
         params:
           file: generate-manifest/cf-manifest.yml
@@ -421,12 +441,14 @@ jobs:
         - get: bosh-secrets
       - task: cf-deploy
         config:
+          platform: linux
           image: docker:///governmentpaas/bosh-cli
           inputs:
           - name: paas-cf
           - name: cf-manifest
           - name: bosh-secrets
-          platform: linux
+          outputs:
+          - name: cf-deploy
           run:
             path: sh
             args:
@@ -434,8 +456,8 @@ jobs:
             - -c
             - |
               ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-              sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
-              bosh deployment cf-manifest.yml
+              sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-deploy/cf-manifest.yml
+              bosh deployment cf-deploy/cf-manifest.yml
               bosh -n deploy
 
       - put: cf-manifest
@@ -459,6 +481,7 @@ jobs:
       - get: bosh-CA
     - task: generate-test-config
       config:
+        platform: linux
         inputs:
         - name: cf-release
         - name: paas-cf
@@ -488,6 +511,7 @@ jobs:
 
     - task: run-tests
       config:
+        platform: linux
         inputs:
         - name: paas-cf
         - name: cf-release
@@ -508,10 +532,6 @@ jobs:
             ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
             ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
             ln -snf /usr/local/go /var/vcap/packages/golang1.4
-            cd cf-release
-            git checkout v{{cf-release-version}}
-            git submodule update --checkout src/smoke-tests/
-            cd ..
             ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
             /var/vcap/jobs/smoke-tests/bin/run
 
@@ -530,6 +550,7 @@ jobs:
       - get: bosh-CA
     - task: generate-test-config
       config:
+        platform: linux
         inputs:
         - name: cf-release
         - name: paas-cf
@@ -559,6 +580,7 @@ jobs:
 
     - task: run-tests
       config:
+        platform: linux
         inputs:
         - name: paas-cf
         - name: cf-release
@@ -579,10 +601,6 @@ jobs:
             ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
             ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
             ln -snf /usr/local/go /var/vcap/packages/golang1.4
-            cd cf-release
-            git checkout v{{cf-release-version}}
-            git submodule update --checkout src/github.com/cloudfoundry/cf-acceptance-tests/
-            cd ..
             sed -i 's/bits=@"%s"/bits=@%s/' cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/helpers/v3_helpers/v3.go
             ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
             /var/vcap/jobs/acceptance-tests/bin/run
@@ -601,6 +619,7 @@ jobs:
       - get: bosh-CA
     - task: generate-test-config
       config:
+        platform: linux
         inputs:
           - name: paas-cf
           - name: cf-manifest
@@ -618,6 +637,7 @@ jobs:
               > test-config/config.json
     - task: run-tests
       config:
+        platform: linux
         inputs:
           - name: paas-cf
           - name: test-config

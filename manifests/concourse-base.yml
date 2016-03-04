@@ -3,11 +3,11 @@ name: concourse
 
 releases:
   - name: concourse
-    url: https://bosh.io/d/github.com/concourse/concourse?v=0.70.0
-    sha1: bbec7785856a5c8ba5f05b106ea79821b620bbc9
+    url: https://bosh.io/d/github.com/concourse/concourse?v=0.74.0
+    sha1: c99ef709e9d4468ac25cca31dd5be1444417011d
   - name: garden-linux
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.328.0
-    sha1: 539822f9f2b18ccf51e72e42e03b297f934ea3fe
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.334.0
+    sha1: 85170c5089fa4ff317f139c2f1da024860dbea85
   # When updating the version of the CPI here, the version used in the
   # bosh-init container must also be updated so that the cached CPI compile
   # will be used.
@@ -19,8 +19,8 @@ resource_pools:
   - name: concourse
     network: concourse
     stemcell:
-      url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3197
-      sha1: 89a2210b8caf3884855d7db6d48b8863202c7783
+      url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3200
+      sha1: 9ec6f6affe369f3364eb0db55266a513d3298080
     cloud_properties:
       instance_type: t2.medium
       availability_zone: (( grab terraform_outputs.zone0 ))
@@ -78,6 +78,7 @@ jobs:
 
     properties:
       atc:
+        external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
         basic_auth_username: admin
         basic_auth_password: (( grab secrets.concourse_atc_password ))
         postgresql:
@@ -97,6 +98,7 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
+        graph_cleanup_threshold_in_mb: 3072
       groundcrew:
         tsa:
           host: 127.0.0.1

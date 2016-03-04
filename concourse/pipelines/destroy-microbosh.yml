@@ -74,6 +74,7 @@ jobs:
     - get: bosh-manifest
     - task: bosh-init-microbosh
       config:
+        platform: linux
         image: docker:///governmentpaas/bosh-init
         run:
           path: sh
@@ -84,16 +85,21 @@ jobs:
             cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
             bosh-init delete bosh-manifest/bosh-manifest.yml
             # If the delete is successful, the file will be missing
-            [ -f "bosh-manifest/bosh-manifest-state.json" ] || \
-                cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-manifest/bosh-manifest-state.json
+            if [ -f "bosh-manifest/bosh-manifest-state.json" ] ; then
+                cp bosh-manifest/bosh-manifest-state.json bosh-init-microbosh/bosh-manifest-state.json
+            else
+                cp paas-cf/concourse/init_files/bosh-init-state.json.tpl bosh-init-microbosh/bosh-manifest-state.json
+            fi
         inputs:
         - name: paas-cf
         - name: bosh-manifest
         - name: bosh-init-state
+        outputs:
+        - name: bosh-init-microbosh
       ensure:
         put: bosh-init-state
         params:
-          file: bosh-init-microbosh/bosh-manifest/bosh-manifest-state.json
+          file: bosh-init-microbosh/bosh-manifest-state.json
 
   - name: bosh-terraform-destroy
     serial: true
@@ -107,6 +113,7 @@ jobs:
     - get: bosh-tfstate
     - task: terraform-variables
       config:
+        platform: linux
         image: docker:///governmentpaas/bosh-init
         run:
           path: sh
@@ -128,6 +135,7 @@ jobs:
         - name: terraform-variables
     - task: terraform-destroy
       config:
+        platform: linux
         image: docker:///governmentpaas/terraform
         params:
           DEPLOY_ENV: {{deploy_env}}
@@ -146,7 +154,9 @@ jobs:
             . terraform-variables/concourse.tfvars.sh
 
             terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-              -state=bosh-tfstate/bosh.tfstate -state-out=bosh.tfstate paas-cf/terraform/bosh
+              -state=bosh-tfstate/bosh.tfstate -state-out=terraform-destroy/bosh.tfstate paas-cf/terraform/bosh
+        outputs:
+        - name: terraform-destroy
       ensure:
         put: bosh-tfstate
         params:
