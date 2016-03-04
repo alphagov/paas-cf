@@ -130,81 +130,6 @@ jobs:
     - put: pipeline-trigger
       params: {bump: patch}
 
-  - name: generate-bosh-secrets
-    serial: true
-    plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-      passed: [init]
-    - get: bosh-secrets
-
-    - task: generate
-      config:
-        platform: linux
-        image: docker:///ruby#2.2-slim
-        inputs:
-        - name: paas-cf
-        - name: bosh-secrets
-          path: existing-bosh-secrets
-        outputs:
-        - name: generated-bosh-secrets
-        run:
-          path: sh
-          args:
-          - -e
-          - -c
-          - |
-            ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
-              --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
-              > generated-bosh-secrets/bosh-secrets.yml
-            ls -l generated-bosh-secrets
-      on_success:
-        put: bosh-secrets
-        params:
-          file: generated-bosh-secrets/bosh-secrets.yml
-
-  - name: generate-bosh-CA-certs
-    serial: true
-    plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed: [ init ]
-    - get: paas-cf
-      passed: [init]
-    - get: bosh-CA
-
-    - try:
-        task: generate
-        config:
-          platform: linux
-          image: docker:///governmentpaas/certstrap
-          inputs:
-          - name: bosh-CA
-          outputs:
-          - name: generate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              if  [ -z "$(tar -tvzf bosh-CA/bosh-CA.tar.gz)" ] ; then
-                certstrap init --passphrase "" --common-name bosh-CA
-                cd out
-                tar -cvzf ../bosh-CA.tar.gz bosh-CA.*
-                cp ../bosh-CA.tar.gz ../generate
-              else
-                echo "The CA cert already exists, skipping generation..."
-                exit 1
-              fi
-        on_success:
-          do:
-            - put: bosh-CA
-              params:
-                file: generate/bosh-CA.tar.gz
-
   - name: bosh-terraform
     serial: true
     plan:
@@ -267,72 +192,117 @@ jobs:
         params:
           file: terraform-apply/bosh.tfstate
 
-  - name: generate-bosh-manifest
+  - name: generate-bosh-config
     serial: true
     plan:
-    - get: pipeline-trigger
-      trigger: true
-      passed:
-      - bosh-terraform
-      - generate-bosh-secrets
-      - generate-bosh-CA-certs
-    - get: paas-cf
-      passed: [init]
-    - get: vpc-tfstate
-      passed: [bosh-terraform]
-    - get: bosh-tfstate
-      passed: [bosh-terraform]
-    - get: bosh-secrets
-      passed: [generate-bosh-secrets]
-    - get: bosh-CA
-      passed: [generate-bosh-CA-certs]
-    - task: terraform_outputs
-      config:
-        platform: linux
-        image: docker:///ruby#2.2.3-slim
-        run:
-          path: sh
-          args:
-          - -c
-          - -e
-          - |
-            ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-              < vpc-tfstate/vpc.tfstate \
-              > terraform-outputs/vpc.terraform-outputs.yml
-            ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-              < bosh-tfstate/bosh.tfstate \
-              > terraform-outputs/bosh.terraform-outputs.yml
-        inputs:
-        - name: paas-cf
-        - name: bosh-tfstate
-        - name: vpc-tfstate
-        outputs:
-        - name: terraform-outputs
-    - task: bosh-cert
-      config:
-        platform: linux
-        image: docker:///alpine#3.3
-        run:
-          path: sh
-          args:
-          - -e
-          - -c
-          - |
-            tar -xzf bosh-CA/bosh-CA.tar.gz
-            paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert bosh-CA.crt > bosh-cert/bosh-ca-cert.yml
-        inputs:
-        - name: paas-cf
-        - name: bosh-CA
-        outputs:
-        - name: bosh-cert
+    - aggregate:
+      - get: pipeline-trigger
+        trigger: true
+        passed: ['bosh-terraform']
+      - get: paas-cf
+        passed: ['bosh-terraform']
+      - get: bosh-secrets
+      - get: bosh-CA
+      - get: vpc-tfstate
+        passed: ['bosh-terraform']
+      - get: bosh-tfstate
+        passed: ['bosh-terraform']
+
+    - aggregate:
+      - task: generate-secrets
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+          - name: paas-cf
+          - name: bosh-secrets
+            path: existing-bosh-secrets
+          outputs:
+          - name: generated-bosh-secrets
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
+                --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
+                > generated-bosh-secrets/bosh-secrets.yml
+              ls -l generated-bosh-secrets
+        on_success:
+          put: bosh-secrets
+          params:
+            file: generated-bosh-secrets/bosh-secrets.yml
+      - task: generate-bosh-CA
+        config:
+          platform: linux
+          image: docker:///governmentpaas/certstrap
+          inputs:
+          - name: paas-cf
+          - name: bosh-CA
+            path: existing-bosh-CA
+          outputs:
+          - name: generated-bosh-CA
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              if  [ -z "$(tar -tvzf existing-bosh-CA/bosh-CA.tar.gz)" ] ; then
+                certstrap init --passphrase "" --common-name bosh-CA
+                cd out
+                tar -cvzf ../generated-bosh-CA/bosh-CA.tar.gz bosh-CA.*
+                cd ..
+              else
+                echo "The CA cert already exists, skipping generation..."
+                cp existing-bosh-CA/bosh-CA.tar.gz generated-bosh-CA/bosh-CA.tar.gz
+                mkdir out
+                tar -xvzf generated-bosh-CA/bosh-CA.tar.gz -C out
+              fi
+              ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > generated-bosh-CA/bosh-ca-cert.yml
+        on_success:
+          put: bosh-CA
+          params:
+            file: generated-bosh-CA/bosh-CA.tar.gz
+      - task: extract_terraform_outputs
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+          - name: paas-cf
+          - name: vpc-tfstate
+          - name: bosh-tfstate
+          outputs:
+          - name: terraform-outputs
+          run:
+            path: sh
+            args:
+            - -c
+            - -e
+            - |
+              ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                < vpc-tfstate/vpc.tfstate \
+                > terraform-outputs/vpc.terraform-outputs.yml
+              ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                < bosh-tfstate/bosh.tfstate \
+                > terraform-outputs/bosh.terraform-outputs.yml
+
     - task: render-manifest
       config:
         platform: linux
         image: docker:///governmentpaas/spruce
+        inputs:
+        - name: paas-cf
+        - name: terraform-outputs
+        - name: generated-bosh-secrets
+        - name: generated-bosh-CA
+        outputs:
+        - name: bosh-manifest
         params:
           BOSH_MANIFEST_STUBS: |
-            ./bosh-secrets/bosh-secrets.yml
-            ./bosh-cert/bosh-ca-cert.yml
+            ./generated-bosh-secrets/bosh-secrets.yml
+            ./generated-bosh-CA/bosh-ca-cert.yml
             ./terraform-outputs/bosh.terraform-outputs.yml
             ./terraform-outputs/vpc.terraform-outputs.yml
         run:
@@ -343,13 +313,6 @@ jobs:
           - |
             ./paas-cf/manifests/bosh-manifest/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
             /bin/cat bosh-manifest/bosh-manifest.yml
-        inputs:
-        - name: paas-cf
-        - name: terraform-outputs
-        - name: bosh-secrets
-        - name: bosh-cert
-        outputs:
-        - name: bosh-manifest
       on_success:
         put: bosh-manifest
         params:
@@ -358,11 +321,10 @@ jobs:
   - name: bosh-deploy
     plan:
     - get: pipeline-trigger
+      passed: ['generate-bosh-config']
       trigger: true
-      passed: [generate-bosh-manifest]
     - get: bosh-manifest
-      trigger: true
-      passed: [generate-bosh-manifest]
+      passed: ['generate-bosh-config']
     - get: bosh-init-state
     - get: ssh-private-key
 
@@ -399,7 +361,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          passed: ['generate-bosh-manifest']
+          passed: ['generate-bosh-config']
         - get: pipeline-trigger
           passed: ['bosh-deploy']
           trigger: true
