@@ -16,6 +16,11 @@ if ! vagrant box list | grep -qe "^${VAGRANT_BOX_NAME} "; then
 fi
 
 vagrant up
+if [ ! -f .kernel-updated ]; then
+  echo 'waiting for vagrant box to reboot'
+  sleep 60
+fi
+touch .kernel-updated
 
 VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
 export VAGRANT_IP
