@@ -825,6 +825,7 @@ jobs:
                 memory: 100M
                 instances: 1
                 no-route: true
+                health-check-type: none
                 env:
                   DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
                   UAA_ENDPOINT: "${UAA_ENDPOINT}"
