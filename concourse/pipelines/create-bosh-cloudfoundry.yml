@@ -47,6 +47,11 @@ resources:
     source:
       uri: https://github.com/CloudCredo/graphite-statsd-boshrelease.git
 
+  - name: grafana-boshrelease
+    type: git
+    source:
+      uri: https://github.com/vito/grafana-boshrelease.git
+
   - name: graphite-nozzle
     type: git
     source:
@@ -692,7 +697,7 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
-
+          - get: grafana-boshrelease
       - task: upload-releases
         config:
           platform: linux
@@ -701,6 +706,7 @@ jobs:
             - name: paas-cf
             - name: bosh-secrets
             - name: graphite-statsd-boshrelease
+            - name: grafana-boshrelease
           run:
             path: sh
             args:
@@ -711,6 +717,9 @@ jobs:
 
                 paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
                   {{cf_graphite_version}} graphite-statsd-boshrelease
+
+                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
+                  {{cf_grafana_version}} grafana-boshrelease
 
       - task: cf-deploy
         config:

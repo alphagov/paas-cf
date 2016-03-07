@@ -14,6 +14,8 @@ meta:
 releases:
 - name: graphite
   version: db49809b0f339a45ae377fc162f01b0ec49c87dc
+- name: grafana
+  version: 44564533c9d4d656bdcd5633b808f0bf6fb177ae
 
 jobs:
 - name: graphite_z1
@@ -47,4 +49,9 @@ jobs:
         port: 3001
       wsgi:
         inactivity-timeout: 60
+    grafana:
+      root_url: "/"
+      admin_username: "admin"
+      admin_password: (( grab secrets.grafana_admin_password ))
+
   templates: (( grab meta.graphite_templates ))

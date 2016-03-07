@@ -10,6 +10,7 @@ env=${DEPLOY_ENV-$1}
 cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
 cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
 cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
+cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
 
 generate_vars_file() {
    set -u # Treat unset variables as an error when substituting
@@ -24,6 +25,7 @@ aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
+cf_grafana_version: ${cf_grafana_version}
 EOF
 }
 
