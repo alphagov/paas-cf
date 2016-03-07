@@ -79,7 +79,8 @@ jobs:
     - get: paas-cf
     - task: try-fetch-bucket-state
       config:
-        image: docker:///governmentpaas/awscli
+        platform: linux
+        image: docker:///ubuntu
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
         inputs:
@@ -98,6 +99,7 @@ jobs:
 
     - task: create-init-bucket
       config:
+        platform: linux
         image: docker:///governmentpaas/terraform
         params:
           TF_VAR_env: {{deploy_env}}
@@ -105,6 +107,8 @@ jobs:
         inputs:
           - name: paas-cf
           - name: bucket-state
+        outputs:
+          - name: create-init-bucket
         run:
           path: sh
           args:
@@ -113,7 +117,7 @@ jobs:
             if [ -f bucket-state/bucket.tfstate ]; then
               cp bucket-state/bucket.tfstate .
             fi
-            terraform apply -state=bucket.tfstate -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+            terraform apply -state=bucket.tfstate -state-out=create-init-bucket/bucket.tfstate -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               paas-cf/terraform/bucket
       on_success:
         put: bucket-terraform-state
@@ -121,6 +125,7 @@ jobs:
           file: create-init-bucket/bucket.tfstate
     - task: s3init-concourse
       config:
+        platform: linux
         image: docker:///governmentpaas/curl-ssl
         run:
           path: sh
@@ -150,9 +155,12 @@ jobs:
 
     - task: ssh-keygen
       config:
+        platform: linux
         image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: paas-cf
+        outputs:
+        - name: ssh-keygen
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
         run:
@@ -162,9 +170,10 @@ jobs:
           - -c
           - |
             apk add --update openssh
+            cd ssh-keygen
             ssh-keygen -t rsa -b 4096 -f generated_id_rsa -N ''
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa generated_id_rsa
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub generated_id_rsa.pub
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa generated_id_rsa
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub generated_id_rsa.pub
 
     - task: deploy-vpc
       config:
@@ -174,6 +183,8 @@ jobs:
         - name: paas-cf
         - name: vpc-terraform-state
         - name: ssh-keygen
+        outputs:
+        - name: deploy-vpc
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -187,7 +198,7 @@ jobs:
             cp ssh-keygen/id_rsa.pub paas-cf/terraform/vpc
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-              -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
+              -state=vpc-terraform-state/vpc.tfstate -state-out=deploy-vpc/vpc.tfstate paas-cf/terraform/vpc
       ensure:
         put: vpc-terraform-state
         params:
@@ -208,6 +219,7 @@ jobs:
 
     - task: vpc-terraform-outputs-to-sh
       config:
+        platform: linux
         image: docker:///ruby#2.2.3-slim
         inputs:
         - name: paas-cf
@@ -228,10 +240,13 @@ jobs:
 
     - task: generate-concourse-cert
       config:
+        platform: linux
         image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: concourse-cert
         - name: vpc-terraform-outputs
+        outputs:
+        - name: generate-concourse-cert
         run:
           path: sh
           args:
@@ -249,15 +264,19 @@ jobs:
               -out concourse.crt -days 365 -nodes -subj \
               "/C=UK/ST=London/L=London/O=GDS/CN=deployer.{{deploy_env}}.${TF_VAR_system_dns_zone_name}"
             tar czvf concourse-cert.tar.gz concourse.crt concourse.key
+            cp concourse-cert.tar.gz concourse.crt concourse.key generate-concourse-cert/
 
     - task: terraform-apply
       config:
+        platform: linux
         image: docker:///governmentpaas/terraform
         inputs:
         - name: paas-cf
         - name: vpc-terraform-outputs
         - name: concourse-terraform-state
         - name: generate-concourse-cert
+        outputs:
+          - name: terraform-apply
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -274,7 +293,7 @@ jobs:
             terraform apply ${terraform_params} \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=concourse-terraform-state/concourse.tfstate \
-              -state-out=concourse.tfstate \
+              -state-out=terraform-apply/concourse.tfstate \
               paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state
@@ -300,6 +319,7 @@ jobs:
 
     - task: terraform-outputs-to-yaml
       config:
+        platform: linux
         image: docker:///ruby#2.2.3-slim
         inputs:
         - name: paas-cf
@@ -327,6 +347,7 @@ jobs:
 
     - task: create-concourse-secrets
       config:
+        platform: linux
         params:
           concourse_atc_password: {{concourse_atc_password}}
         outputs:
@@ -346,6 +367,7 @@ jobs:
 
     - task: generate-concourse-manifest
       config:
+        platform: linux
         image: docker:///governmentpaas/spruce
         inputs:
         - name: paas-cf
@@ -384,11 +406,14 @@ jobs:
     - task: concourse-deploy
       timeout: 30m
       config:
+        platform: linux
         image: docker:///governmentpaas/bosh-init
         inputs:
         - name: concourse-manifest
         - name: concourse-bosh-state
         - name: ssh-private-key
+        outputs:
+        - name: concourse-deploy
         run:
           path: sh
           args:
@@ -404,6 +429,7 @@ jobs:
             bosh-init deploy concourse.yml
             rm concourse-manifest/concourse.yml
             rm id_rsa
+            cp concourse-state.json concourse-deploy
       ensure:
         put: concourse-bosh-state
         params:
@@ -424,6 +450,7 @@ jobs:
 
     - task: vpc-terraform-outputs-to-sh
       config:
+        platform: linux
         image: docker:///ruby#2.2.3-slim
         inputs:
         - name: paas-cf
@@ -449,6 +476,8 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-terraform-state
+        outputs:
+        - name: remove-vagrant-IP-from-ssh-SG
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
@@ -461,7 +490,7 @@ jobs:
             terraform apply -target=aws_security_group.office-access-ssh \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -target=aws_subnet.infra \
-              -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate \
+              -state=vpc-terraform-state/vpc.tfstate -state-out=remove-vagrant-IP-from-ssh-SG/vpc.tfstate \
               paas-cf/terraform/vpc
       ensure:
         put: vpc-terraform-state
@@ -476,6 +505,8 @@ jobs:
         - name: paas-cf
         - name: vpc-terraform-outputs
         - name: concourse-terraform-state
+        outputs:
+        - name: remove-vagrant-IP-from-concourse-SG
         params:
           TF_VAR_env: {{deploy_env}}
           AWS_DEFAULT_REGION: {{aws_region}}
@@ -487,7 +518,7 @@ jobs:
           - |
             . vpc-terraform-outputs/tfvars.sh
             terraform apply -target=aws_security_group.concourse \
-              -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate \
+              -state=concourse-terraform-state/concourse.tfstate -state-out=remove-vagrant-IP-from-concourse-SG/concourse.tfstate \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars paas-cf/terraform/concourse
       ensure:
         put: concourse-terraform-state

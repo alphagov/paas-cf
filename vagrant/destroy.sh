@@ -22,3 +22,4 @@ fi
 
 # 3. Destroy bootstrap concourse
 vagrant destroy -f
+rm .kernel-updated
