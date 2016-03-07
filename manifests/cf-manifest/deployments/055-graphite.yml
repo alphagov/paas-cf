@@ -13,9 +13,9 @@ meta:
 
 releases:
 - name: graphite
-  version: db49809b0f339a45ae377fc162f01b0ec49c87dc
+  version: commit-db49809b0f339a45ae377fc162f01b0ec49c87dc
 - name: grafana
-  version: 44564533c9d4d656bdcd5633b808f0bf6fb177ae
+  version: commit-44564533c9d4d656bdcd5633b808f0bf6fb177ae
 
 jobs:
 - name: graphite_z1

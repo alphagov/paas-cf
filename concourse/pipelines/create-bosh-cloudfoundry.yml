@@ -45,12 +45,14 @@ resources:
   - name: graphite-statsd-boshrelease
     type: git
     source:
-      uri: https://github.com/CloudCredo/graphite-statsd-boshrelease.git
+      uri: https://github.com/alphagov/graphite-statsd-boshrelease.git
+      tag_filter: {{cf_graphite_version}}
 
   - name: grafana-boshrelease
     type: git
     source:
-      uri: https://github.com/vito/grafana-boshrelease.git
+      uri: https://github.com/keymon/grafana-boshrelease.git
+      tag_filter: {{cf_grafana_version}}
 
   - name: graphite-nozzle
     type: git
