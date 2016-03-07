@@ -44,7 +44,7 @@ jobs:
     graphite-web:
       time_zone: Europe/London
       httpd:
-        port: 80
+        port: 3001
       wsgi:
         inactivity-timeout: 60
   templates: (( grab meta.graphite_templates ))
