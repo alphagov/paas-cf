@@ -115,7 +115,7 @@ cloud_provider:
     user: vcap
     private_key: id_rsa # Appears to be relative to working dir
 
-  mbus: (( concat "https://mbus:mbus-password@" terraform_outputs.concourse_elastic_ip ":6868" ))
+  mbus: (( concat "https://mbus:" secrets.concourse_nats_password "@" terraform_outputs.concourse_elastic_ip ":6868" ))
 
   properties:
     aws:
@@ -125,7 +125,8 @@ cloud_provider:
       - (( grab terraform_outputs.concourse_security_group ))
       - (( grab terraform_outputs.ssh_security_group ))
       region: (( grab terraform_outputs.region ))
-    agent: {mbus: "https://mbus:mbus-password@0.0.0.0:6868"}
+    agent:
+      mbus: (( concat "https://mbus:" secrets.concourse_nats_password "@0.0.0.0:6868" ))
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
     ntp: [0.pool.ntp.org, 1.pool.ntp.org]
 
