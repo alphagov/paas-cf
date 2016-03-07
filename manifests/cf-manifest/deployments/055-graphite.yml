@@ -31,21 +31,14 @@ jobs:
         blacklist:
         - stats\.counters\.cfstats\.router_.+\.[0-9]+\.http\..+\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.*
       storage_schemas:
-        - name: "my_storage_schema"
-          pattern: "^my\\.metrics\\.*" # NB: Note the double escapes - this will evaluate to "^my\.metrics\.*"
-          retentions: "60s:1d"
-        - name: "my_storage_schema_2"
-          pattern: "metrics$"
-          retentions: "15s:7d,1m:21d,15m:5y"
+        - name: "catch_all"
+          pattern: "^.*$"
+          retentions: "10s:1d,1m:7d,15m:30d,1h:1y,1d:5y"
       storage_aggregations:
-        - name: "my_storage_aggregation"
-          pattern: "^my\\.metrics\\.*" # NB: Note the double escapes - this will evaluate to "^my\.metrics\.*"
+        - name: "catch_all"
+          pattern: "^.*$"
           xFilesFactor: "0.5"
           aggregationMethod: "average"
-        - name: "my_storage_aggregation_2"
-          pattern: "metrics$"
-          xFilesFactor: "0.1"
-          aggregationMethod: "max"
       cache:
         max_creates_per_minute: 500
     graphite-web:
