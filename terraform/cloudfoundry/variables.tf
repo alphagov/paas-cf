@@ -94,6 +94,6 @@ variable "cf_db_backup_retention_period" {
   description = "CF database backup retention period"
 }
 
-variable "skip-final-snapshot" {
+variable "cf_db_skip_final_snapshot" {
   descrition = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
 }

@@ -57,7 +57,7 @@ resource "aws_db_instance" "cf" {
   multi_az = "${var.cf_db_multi_az}"
   backup_retention_period = "${var.cf_db_backup_retention_period}"
   final_snapshot_identifier = "${var.env}-cf-rds-final-snapshot"
-  skip_final_snapshot = "${var.skip-final-snapshot}"
+  skip_final_snapshot = "${var.cf_db_skip_final_snapshot}"
   vpc_security_group_ids = ["${aws_security_group.cf_rds.id}"]
 
   tags {
