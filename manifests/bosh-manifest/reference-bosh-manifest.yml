@@ -1,8 +1,8 @@
 cloud_provider:
-  mbus: https://mbus:mbus@10.0.0.6:6868
+  mbus: https://mbus:BOSH_NATS_PASSWORD@10.0.0.6:6868
   properties:
     agent:
-      mbus: https://mbus:mbus@0.0.0.0:6868
+      mbus: https://mbus:BOSH_NATS_PASSWORD@0.0.0.0:6868
     aws:
       credentials_source: env_or_profile
       default_key_name: ssh_key_pair
