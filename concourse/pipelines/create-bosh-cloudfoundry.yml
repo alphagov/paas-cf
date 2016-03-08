@@ -827,9 +827,7 @@ jobs:
 
               cd graphite-nozzle
 
-              # The sleep 1 is to avoid logs being eaten if the configuration is wrong
-              # due to this bug: https://github.com/cloudfoundry/loggregator/issues/86
-              echo "web: sleep 1 && graphite-nozzle" > Procfile
+              echo "web: graphite-nozzle" > Procfile
 
               cat <<EOF > manifest.yml
               ---
