@@ -55,7 +55,7 @@ resources:
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: concourse.yml
+      versioned_file: concourse-manifest.yml
       region_name: {{aws_region}}
 
   - name: ssh-private-key
@@ -71,6 +71,13 @@ resources:
       bucket: {{state_bucket}}
       versioned_file: concourse-cert.tar.gz
       region_name: {{aws_region}}
+
+  - name: concourse-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: generated-concourse-secrets.yml
 
 jobs:
   - name: init-bucket
@@ -132,6 +139,7 @@ jobs:
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} generated-concourse-secrets.yml paas-cf/concourse/init_files/zero_bytes
         inputs:
         - name: paas-cf
     - put: build-all-trigger
@@ -297,6 +305,7 @@ jobs:
       passed: [vpc]
     - get: concourse-terraform-state
       passed: [concourse-terraform]
+    - get: concourse-secrets
 
     - task: terraform-outputs-to-yaml
       config:
@@ -325,30 +334,60 @@ jobs:
             ls -l terraform-outputs/concourse-terraform-outputs.yml
             cat terraform-outputs/concourse-terraform-outputs.yml
 
-    - task: create-concourse-secrets
+    - task: create-predefined-concourse-secrets
       config:
         params:
           concourse_atc_password: {{concourse_atc_password}}
         outputs:
-          - name: concourse-secrets
+          - name: predefined-concourse-secrets
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            cat > concourse-secrets/concourse-secrets.yml << EOF
+            cat > predefined-concourse-secrets/predefined-concourse-secrets.yml << EOF
             ---
             secrets:
               concourse_atc_password: ${concourse_atc_password}
             EOF
-            ls -l concourse-secrets/concourse-secrets.yml
+            ls -l predefined-concourse-secrets/predefined-concourse-secrets.yml
+
+    - task: generate-concourse-secrets
+      config:
+        image: docker:///ruby#2.2-slim
+        inputs:
+        - name: paas-cf
+        - name: concourse-secrets
+        outputs:
+          - name: generated-concourse-secrets
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            ./paas-cf/manifests/concourse-manifest/scripts/generate-concourse-secrets.rb \
+              --existing-secrets concourse-secrets/generated-concourse-secrets.yml \
+              > generated-concourse-secrets/generated-concourse-secrets.yml
+            ls -l generated-concourse-secrets/generated-concourse-secrets.yml
+      on_success:
+        put: concourse-secrets
+        params:
+          file: generated-concourse-secrets/generated-concourse-secrets.yml
 
     - task: generate-concourse-manifest
       config:
         image: docker:///governmentpaas/spruce
+        params:
+          CONCOURSE_MANIFEST_STUBS: |
+            predefined-concourse-secrets/predefined-concourse-secrets.yml
+            concourse-secrets/generated-concourse-secrets.yml
+            terraform-outputs/concourse-terraform-outputs.yml
+            terraform-outputs/vpc-terraform-outputs.yml
         inputs:
         - name: paas-cf
+        - name: predefined-concourse-secrets
         - name: concourse-secrets
         - name: terraform-outputs
         outputs:
@@ -359,16 +398,13 @@ jobs:
           - -e
           - -c
           - |
-            spruce merge --prune terraform_outputs --prune secrets \
-              paas-cf/manifests/concourse-base.yml concourse-secrets/concourse-secrets.yml \
-              terraform-outputs/concourse-terraform-outputs.yml \
-              terraform-outputs/vpc-terraform-outputs.yml \
-              > concourse-manifest/concourse.yml
-            ls -l concourse-manifest/concourse.yml
+            ./paas-cf/manifests/concourse-manifest/build_manifest.sh $CONCOURSE_MANIFEST_STUBS \
+              > concourse-manifest/concourse-manifest.yml
+            ls -l concourse-manifest/concourse-manifest.yml
 
     - put: concourse-manifest
       params:
-        file: concourse-manifest/concourse.yml
+        file: concourse-manifest/concourse-manifest.yml
 
   - name: concourse-deploy
     serial: true
@@ -399,10 +435,10 @@ jobs:
             chmod 400 id_rsa
             ls -l id_rsa
             cp -v concourse-bosh-state/concourse-state.json .
-            cp -v concourse-manifest/concourse.yml .
+            cp -v concourse-manifest/concourse-manifest.yml .
             export BOSH_INIT_LOG_LEVEL={{log_level}}
-            bosh-init deploy concourse.yml
-            rm concourse-manifest/concourse.yml
+            bosh-init deploy concourse-manifest.yml
+            rm concourse-manifest/concourse-manifest.yml
             rm id_rsa
       ensure:
         put: concourse-bosh-state
