@@ -13,6 +13,7 @@ generator = SecretGenerator.new({
   "bosh_blobstore_director_password" => :simple,
   "bosh_hm_director_password" => :simple,
   "bosh_admin_password" => :simple,
+  "bosh_vcap_password" => :sha512_crypted,
 })
 
 OptionParser.new do |opts|

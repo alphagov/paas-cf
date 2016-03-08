@@ -183,6 +183,9 @@ resource_pools:
       type: gp2
     iam_instance_profile: bosh-director
     instance_type: t2.medium
+  env:  
+    bosh:
+      password: BOSH_VCAP_PASSWORD
   name: vms
   network: private
   stemcell:
