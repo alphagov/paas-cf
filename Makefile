@@ -16,6 +16,8 @@ test: spec lint_yaml lint_terraform lint_shellcheck ## Run linting tests
 spec:
 	cd manifests/shared &&\
 		bundle exec rspec
+	cd manifests/concourse-manifest &&\
+		bundle exec rspec
 	cd manifests/bosh-manifest &&\
 		bundle exec rspec
 	cd manifests/cf-manifest &&\
