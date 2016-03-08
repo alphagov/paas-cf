@@ -19,7 +19,7 @@ trap 'rm -f "${OUTPUT_FILE}"' EXIT
 
 $FLY_CMD -t "${FLY_TARGET}" \
   execute \
-  --inputs-from=deploy-cloudfoundry/deploy \
+  --inputs-from=create-bosh-cloudfoundry/cf-deploy \
   --config="${SCRIPT_DIR}/../pipelines/bosh-cli/bosh-cli.yml" \
   | tee "${OUTPUT_FILE}"
 
