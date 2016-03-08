@@ -55,7 +55,7 @@ resources:
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: concourse.yml
+      versioned_file: concourse-manifest.yml
       region_name: {{aws_region}}
 
   - name: ssh-private-key
@@ -399,12 +399,12 @@ jobs:
           - -c
           - |
             ./paas-cf/manifests/concourse-manifest/build_manifest.sh $CONCOURSE_MANIFEST_STUBS \
-              > concourse-manifest/concourse.yml
-            ls -l concourse-manifest/concourse.yml
+              > concourse-manifest/concourse-manifest.yml
+            ls -l concourse-manifest/concourse-manifest.yml
 
     - put: concourse-manifest
       params:
-        file: concourse-manifest/concourse.yml
+        file: concourse-manifest/concourse-manifest.yml
 
   - name: concourse-deploy
     serial: true
@@ -435,10 +435,10 @@ jobs:
             chmod 400 id_rsa
             ls -l id_rsa
             cp -v concourse-bosh-state/concourse-state.json .
-            cp -v concourse-manifest/concourse.yml .
+            cp -v concourse-manifest/concourse-manifest.yml .
             export BOSH_INIT_LOG_LEVEL={{log_level}}
-            bosh-init deploy concourse.yml
-            rm concourse-manifest/concourse.yml
+            bosh-init deploy concourse-manifest.yml
+            rm concourse-manifest/concourse-manifest.yml
             rm id_rsa
       ensure:
         put: concourse-bosh-state
