@@ -9,6 +9,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -24,6 +25,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
