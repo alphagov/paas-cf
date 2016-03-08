@@ -1,16 +1,16 @@
 ---
 inputs:
-- name: bosh-secrets
-- name: paas-cf
+  - name: bosh-secrets
+  - name: paas-cf
 outputs:
-- name: instance-id
+  - name: instance-id
 image: docker:///governmentpaas/bosh-cli
 platform: linux
 run:
   path: sh
   args:
-  - -e
-  - -c
-  - |
-    ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-    bosh vms --details | awk -v vmname=$VM_NAME -F'|' '$2 ~ vmname {print $7}' > instance-id/id
+    - -e
+    - -c
+    - |
+      ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+      bosh vms --details | awk -v vmname=$VM_NAME -F'|' '$2 ~ vmname {print $7}' > instance-id/id

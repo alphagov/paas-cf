@@ -48,102 +48,109 @@ resources:
       versioned_file: cf-secrets.yml
 
 jobs:
+  - name: init
+    serial: true
+    plan:
+      - put: pipeline-trigger
+        params: {bump: patch}
+
   - name: delete-deployment
     serial_groups: [ destroy ]
     serial: true
     plan:
       - aggregate:
-        - get: bosh-secrets
-        - get: paas-cf
+          - get: pipeline-trigger
+            passed: ['init']
+            trigger: true
+          - get: bosh-secrets
+          - get: paas-cf
       - task: delete-deployment
         config:
           platform: linux
-          inputs:
-          - name: bosh-secrets
-          - name: paas-cf
           image: docker:///governmentpaas/bosh-cli
+          inputs:
+            - name: bosh-secrets
+            - name: paas-cf
           run:
             path: sh
             args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-              bosh -n delete deployment {{deploy_env}}
-      - put: pipeline-trigger
-        params: {bump: patch}
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh -n delete deployment {{deploy_env}}
 
   - name: terraform-destroy
     serial_groups: [ destroy ]
     serial: true
     plan:
       - aggregate:
-        - get: pipeline-trigger
-          passed: ['delete-deployment']
-          trigger: true
-        - get: paas-cf
-          passed: ['delete-deployment']
-        - get: cf-tfstate
-        - get: concourse-tfstate
-        - get: vpc-tfstate
-        - get: cf-secrets
+          - get: pipeline-trigger
+            passed: ['delete-deployment']
+            trigger: true
+          - get: paas-cf
+            passed: ['delete-deployment']
+          - get: cf-tfstate
+          - get: concourse-tfstate
+          - get: vpc-tfstate
+          - get: cf-secrets
 
-      - task: terraform-variables
+      - task: extract-terraform-variables
         config:
           platform: linux
-          image: docker:///ruby#2.2.3-slim
+          image: docker:///ruby#2.2-slim
           inputs:
             - name: paas-cf
             - name: cf-tfstate
             - name: concourse-tfstate
             - name: vpc-tfstate
             - name: cf-secrets
+          outputs:
+            - name: terraform-variables
           run:
             path: sh
             args:
-            - -e
-            - -c
-            - |
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < cf-tfstate/cf.tfstate > terraform-variables/cf.tfvars.sh
-              ls -l terraform-variables/cf.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
-              ls -l terraform-variables/concourse.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-              < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
-              ls -l terraform-variables/vpc.tfvars.sh
-              ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
-              < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
-              ls -l terraform-variables/cf-secrets.tfvars.sh
-          outputs:
-            - name: terraform-variables
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < cf-tfstate/cf.tfstate > terraform-variables/cf.tfvars.sh
+                ls -l terraform-variables/cf.tfvars.sh
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
+                ls -l terraform-variables/concourse.tfvars.sh
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+                ls -l terraform-variables/vpc.tfvars.sh
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+                < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
+                ls -l terraform-variables/cf-secrets.tfvars.sh
       - task: cf-terraform-destroy
         config:
           platform: linux
           image: docker:///governmentpaas/terraform
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
           inputs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+          outputs:
+            - name: updated-cf-tfstate
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
           run:
             path: sh
             args:
-            - -e
-            - -c
-            - |
-              . terraform-variables/cf.tfvars.sh
-              . terraform-variables/concourse.tfvars.sh
-              . terraform-variables/vpc.tfvars.sh
-              . terraform-variables/cf-secrets.tfvars.sh
+              - -e
+              - -c
+              - |
+                . terraform-variables/cf.tfvars.sh
+                . terraform-variables/concourse.tfvars.sh
+                . terraform-variables/vpc.tfvars.sh
+                . terraform-variables/cf-secrets.tfvars.sh
 
-              terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                -state=cf-tfstate/cf.tfstate -state-out=cf-terraform-destroy/cf.tfstate paas-cf/terraform/cloudfoundry
-          outputs:
-            - name: cf-terraform-destroy
+                terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                  -state=cf-tfstate/cf.tfstate -state-out=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
-            file: cf-terraform-destroy/cf.tfstate
+            file: updated-cf-tfstate/cf.tfstate

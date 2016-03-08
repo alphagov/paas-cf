@@ -93,7 +93,7 @@ jobs:
 
     - task: vpc-terraform-outputs-to-sh
       config:
-        image: docker:///ruby#2.2.3-slim
+        image: docker:///ruby#2.2-slim
         inputs:
         - name: paas-cf
         - name: vpc-terraform-state
