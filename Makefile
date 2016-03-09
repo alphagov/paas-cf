@@ -64,15 +64,19 @@ vagrant-deploy:
 	vagrant/deploy.sh
 
 set_aws_account_dev:
+	$(eval export MAKEFILE_ENV_TARGET=dev)
 	$(eval export AWS_ACCOUNT=dev)
 
 set_aws_account_ci:
+	$(eval export MAKEFILE_ENV_TARGET=ci)
 	$(eval export AWS_ACCOUNT=ci)
 
 set_aws_account_stage:
+	$(eval export MAKEFILE_ENV_TARGET=stage)
 	$(eval export AWS_ACCOUNT=stage)
 
 set_aws_account_prod:
+	$(eval export MAKEFILE_ENV_TARGET=prod)
 	$(eval export AWS_ACCOUNT=prod)
 
 set_auto_trigger:
