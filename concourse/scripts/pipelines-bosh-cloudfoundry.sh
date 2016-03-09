@@ -19,6 +19,7 @@ cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "
 generate_vars_file() {
    cat <<EOF
 ---
+pipeline_name: ${pipeline_name}
 aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
@@ -29,6 +30,7 @@ debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
+concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 EOF
 }
 
