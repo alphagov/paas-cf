@@ -144,7 +144,7 @@ resource "aws_security_group" "elastic_master_elb" {
     to_port   = 9200
     protocol  = "tcp"
     cidr_blocks = [
-      "10.0.0.0/16"
+      "${var.vpc_cidr}"
     ]
   }
 
@@ -153,7 +153,7 @@ resource "aws_security_group" "elastic_master_elb" {
     to_port   = 9300
     protocol  = "tcp"
     cidr_blocks = [
-      "10.0.0.0/16"
+      "${var.vpc_cidr}"
     ]
   }
 
