@@ -4,11 +4,13 @@ set -u
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${DEPLOY_ENV:-$1}
+export TARGET_CONCOURSE=bootstrap
+# shellcheck disable=SC2091
+$("${SCRIPT_DIR}/environment.sh" "$@")
+
+env=${DEPLOY_ENV}
 pipeline="self-terminate"
 config="${SCRIPT_DIR}/../pipelines/concourse-lite-self-terminate.yml"
-
-[[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
 
 generate_vars_file() {
    set -u # Treat unset variables as an error when substituting

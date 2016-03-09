@@ -3,9 +3,11 @@ set -e
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${DEPLOY_ENV-$1}
+export TARGET_CONCOURSE=deployer
+# shellcheck disable=SC2091
+$("${SCRIPT_DIR}/environment.sh" "$@")
 
-[[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
+env=${DEPLOY_ENV}
 
 extract_cf_version(){
   set -u
@@ -37,4 +39,4 @@ generate_vars_file > /dev/null # Check for missing vars
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
   "${env}" "failure-testing" \
   "${SCRIPT_DIR}"/../pipelines/failure-testing.yml \
-  <(generate_vars_file) 
+  <(generate_vars_file)

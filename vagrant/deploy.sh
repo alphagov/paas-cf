@@ -1,13 +1,18 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+PROJECT_DIR=$(cd "${SCRIPT_DIR}/.." && pwd)
 cd "$SCRIPT_DIR"
 
 # Load environment variables
+export TARGET_CONCOURSE=bootstrap
 # shellcheck disable=SC2091
-$("$SCRIPT_DIR/environment.sh" "$@") || exit $?
+$("${PROJECT_DIR}/concourse/scripts/environment.sh" "$@")
+
+export VAGRANT_DEFAULT_PROVIDER="aws"
+export VAGRANT_BOX_NAME="aws_vagrant_box"
 
 # Install aws dummy box if not present
 if ! vagrant box list | grep -qe "^${VAGRANT_BOX_NAME} "; then
@@ -19,8 +24,6 @@ vagrant up
 
 VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
 export VAGRANT_IP
-export CONCOURSE_URL=http://localhost:8080
-export FLY_TARGET=${DEPLOY_ENV}-bootstrap
 
 # Try to start a SSH tunnel
 echo "Setting up SSH tunnel to concourse..."
