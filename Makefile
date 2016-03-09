@@ -92,4 +92,3 @@ disable_auto_delete:
 .PHONY: deploy_pipelines
 deploy_pipelines:
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
-	concourse/scripts/pipelines-failure-testing.sh
