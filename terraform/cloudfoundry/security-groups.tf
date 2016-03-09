@@ -123,7 +123,7 @@ resource "aws_security_group" "ingestor_elb" {
   }
 
   tags {
-    Name = "${var.env}-logsearch-elastic"
+    Name = "${var.env}-logsearch-ingestor"
   }
 }
 
@@ -158,7 +158,7 @@ resource "aws_security_group" "elastic_master_elb" {
   }
 
   tags {
-    Name = "${var.env}-logsearch-ingestor"
+    Name = "${var.env}-logsearch-elastic"
   }
 }
 
