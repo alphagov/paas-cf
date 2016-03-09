@@ -36,17 +36,8 @@ if ! curl -f -qs http://localhost:8080/login -o /dev/null; then
   echo "Failed creating SSH tunnel to remote concourse: 'vagrant ssh -- -L 8080:127.0.0.1:8080 -N'"
 fi
 
-if [ ! -x "$FLY_CMD" ]; then
-  FLY_CMD_URL="$CONCOURSE_URL/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
-  echo "Downloading fly command..."
-  curl "$FLY_CMD_URL" -o "$FLY_CMD" && chmod +x "$FLY_CMD"
-fi
-
-echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
-  $FLY_CMD login -t "${FLY_TARGET}" --concourse-url "${CONCOURSE_URL}"
-
-"${SCRIPT_DIR}"/../concourse/scripts/pipelines-deployer.sh "${DEPLOY_ENV}"
-"${SCRIPT_DIR}"/../concourse/scripts/concourse-lite-self-terminate.sh "${DEPLOY_ENV}"
+"${PROJECT_DIR}/concourse/scripts/pipelines-deployer.sh"
+"${PROJECT_DIR}/concourse/scripts/concourse-lite-self-terminate.sh"
 
 echo
 echo "Concourse auth is ${CONCOURSE_ATC_USER} : ${CONCOURSE_ATC_PASSWORD}"
