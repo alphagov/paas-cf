@@ -31,7 +31,7 @@ resources:
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: concourse.yml
+      versioned_file: concourse-manifest.yml
       region_name: {{aws_region}}
 
   - name: concourse-terraform-state
@@ -45,7 +45,7 @@ resources:
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: concourse-state.json
+      versioned_file: concourse-manifest-state.json
       region_name: {{aws_region}}
 
 jobs:
@@ -72,24 +72,24 @@ jobs:
           - -e
           - -c
           - |
-            cp -v concourse-bosh-state/concourse-state.json .
-            [ "$(cat concourse-bosh-state/concourse-state.json)" = "{}" ] \
+            cp -v concourse-bosh-state/concourse-manifest-state.json .
+            [ "$(cat concourse-bosh-state/concourse-manifest-state.json)" = "{}" ] \
               && echo Concourse bosh state empty, assuming already destroyed \
               && exit 0
             echo -n "${private_ssh_key}" > id_rsa
             chmod 400 id_rsa
             ls -l id_rsa
-            cp -v concourse-manifest/concourse.yml .
+            cp -v concourse-manifest/concourse-manifest.yml .
             export BOSH_INIT_LOG_LEVEL={{log_level}}
-            bosh-init delete concourse.yml
-            [ -f concourse-state.json ] \
-              || cp paas-cf/concourse/init_files/bosh-init-state.json.tpl concourse-state.json
-            rm concourse-manifest/concourse.yml
+            bosh-init delete concourse-manifest.yml
+            [ -f concourse-manifest-state.json ] \
+              || cp paas-cf/concourse/init_files/bosh-init-state.json.tpl concourse-manifest-state.json
+            rm concourse-manifest/concourse-manifest.yml
             rm id_rsa
       ensure:
         put: concourse-bosh-state
         params:
-          file: destroy-concourse/concourse-state.json
+          file: destroy-concourse/concourse-manifest-state.json
 
     - task: vpc-terraform-outputs-to-sh
       config:
