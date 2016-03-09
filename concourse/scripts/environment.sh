@@ -21,17 +21,18 @@ case $TARGET_CONCOURSE in
   deployer)
     CONCOURSE_URL="https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk"
     FLY_TARGET=$DEPLOY_ENV
+    FLY_CMD="${PROJECT_DIR}/bin/fly"
     ;;
   bootstrap)
     CONCOURSE_URL="http://localhost:8080"
     FLY_TARGET="${DEPLOY_ENV}-bootstrap"
+    FLY_CMD="${PROJECT_DIR}/bin/fly-bootstrap"
     ;;
   *)
     echo "Unrecognized TARGET_CONCOURSE: '${TARGET_CONCOURSE}'. Must be set to 'deployer' or 'bootstrap'" 1>&2
     exit 1
     ;;
 esac
-FLY_CMD="${PROJECT_DIR}/fly"
 
 CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER:-admin}
 if [ -z "${CONCOURSE_ATC_PASSWORD:-}" ]; then
