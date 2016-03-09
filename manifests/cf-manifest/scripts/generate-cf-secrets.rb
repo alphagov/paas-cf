@@ -29,6 +29,7 @@ generator = SecretGenerator.new({
   "uaa_clients_firehose_password" => :simple,
   "loggregator_endpoint_shared_secret" => :simple,
   "consul_encrypt_keys" => :simple_in_array,
+  "grafana_admin_password" => :simple,
 })
 
 OptionParser.new do |opts|

@@ -1,0 +1,57 @@
+meta:
+  graphite_templates:
+    - name: metron_agent
+      release: cf
+    - name: carbon
+      release: graphite
+    - name: graphite-web
+      release: graphite
+    - name: statsd
+      release: graphite
+    - name: grafana
+      release: grafana
+
+releases:
+- name: graphite
+  version: commit-db49809b0f339a45ae377fc162f01b0ec49c87dc
+- name: grafana
+  version: commit-44564533c9d4d656bdcd5633b808f0bf6fb177ae
+
+jobs:
+- name: graphite_z1
+  instances: 1
+  resource_pool: graphite_z1
+  properties:
+    metron_agent:
+      zone: z1
+    statsd:
+      deleteIdleStats: true
+    carbon:
+      prune_delay: 10
+      filter:
+        enable: true
+        blacklist:
+        - stats\.counters\.cfstats\.router_.+\.[0-9]+\.http\..+\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.*
+      storage_schemas:
+        - name: "catch_all"
+          pattern: "^.*$"
+          retentions: "10s:1d,1m:7d,15m:30d,1h:1y,1d:5y"
+      storage_aggregations:
+        - name: "catch_all"
+          pattern: "^.*$"
+          xFilesFactor: "0.5"
+          aggregationMethod: "average"
+      cache:
+        max_creates_per_minute: 500
+    graphite-web:
+      time_zone: Europe/London
+      httpd:
+        port: 3001
+      wsgi:
+        inactivity-timeout: 60
+    grafana:
+      root_url: "/"
+      admin_username: "admin"
+      admin_password: (( grab secrets.grafana_admin_password ))
+
+  templates: (( grab meta.graphite_templates ))
