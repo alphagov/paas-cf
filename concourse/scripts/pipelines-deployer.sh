@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
@@ -11,7 +11,6 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 env=${DEPLOY_ENV}
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 aws_account: ${AWS_ACCOUNT:-dev}

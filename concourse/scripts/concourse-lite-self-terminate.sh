@@ -1,6 +1,5 @@
 #!/bin/bash
-set -e
-set -u
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
@@ -14,7 +13,6 @@ pipeline="self-terminate"
 config="${SCRIPT_DIR}/../pipelines/concourse-lite-self-terminate.yml"
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 deploy_env: ${env}

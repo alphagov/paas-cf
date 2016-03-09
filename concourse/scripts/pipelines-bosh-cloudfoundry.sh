@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
@@ -16,7 +16,6 @@ cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version
 cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 aws_account: ${AWS_ACCOUNT:-dev}

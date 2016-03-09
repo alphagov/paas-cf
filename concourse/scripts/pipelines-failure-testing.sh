@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
@@ -11,7 +11,6 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 env=${DEPLOY_ENV}
 
 extract_cf_version(){
-  set -u
   manifest=$1
   ruby -e "require 'yaml'; \
     puts YAML.load(STDIN.read)['releases'].select { |item| item['name'] == 'cf' }.first['version']" < "$manifest"
@@ -20,7 +19,6 @@ extract_cf_version(){
 cf_release_version=$(extract_cf_version "${SCRIPT_DIR}"/../../manifests/cf-manifest/deployments/000-base-cf-deployment.yml)
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 aws_account: ${AWS_ACCOUNT:-dev}
