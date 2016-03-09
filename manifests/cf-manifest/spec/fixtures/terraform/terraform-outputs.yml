@@ -22,3 +22,7 @@ terraform_outputs:
   default_security_group: default_sg
   cf_rds_client_security_group: rds_client_sg
   cf_db_address: abcd.postgres.aws
+  ingestor_elb_name: stub_ingestor_elb
+  ingestor_elb_dns_name: stub_ingestor_elb_dns
+  elastic_master_elb_name: elastic_master_elb
+  elastic_master_elb_dns_name: elastic_master_elb_dns
