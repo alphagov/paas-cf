@@ -129,7 +129,7 @@ resource "aws_security_group" "ingestor_elb" {
 
 resource "aws_security_group" "elastic_master_elb" {
   name = "${var.env}-elastic-cf"
-  description = "Security group for elastic master which allows TCP/9200 and TCP/9300"
+  description = "Security group for elastic master which allows TCP/9200"
   vpc_id = "${var.vpc_id}"
 
   egress {
@@ -142,15 +142,6 @@ resource "aws_security_group" "elastic_master_elb" {
   ingress {
     from_port = 9200
     to_port   = 9200
-    protocol  = "tcp"
-    cidr_blocks = [
-      "${var.vpc_cidr}"
-    ]
-  }
-
-  ingress {
-    from_port = 9300
-    to_port   = 9300
     protocol  = "tcp"
     cidr_blocks = [
       "${var.vpc_cidr}"
