@@ -47,7 +47,10 @@ resource "aws_security_group" "concourse-elb" {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
-    cidr_blocks     = ["${split(",", var.office_cidrs)}"]
+    cidr_blocks     = [
+      "${split(",", var.office_cidrs)}",
+      "${aws_eip.concourse.public_ip}/32"
+    ]
   }
 
   tags {
