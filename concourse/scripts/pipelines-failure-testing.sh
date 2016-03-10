@@ -29,6 +29,7 @@ branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
+paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 EOF
 }
 

@@ -28,6 +28,7 @@ debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
+paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 EOF
 }
 
