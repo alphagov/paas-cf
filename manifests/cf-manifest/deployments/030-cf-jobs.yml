@@ -243,6 +243,28 @@ jobs:
       metron_agent:
         zone: z2
 
+  - name: nats_z1
+    templates: (( grab meta.nats_templates ))
+    instances: 1
+    resource_pool: medium_z1
+    networks:
+      - name: cf1
+        static_ips:
+    properties:
+      metron_agent:
+        zone: z1
+
+  - name: nats_z2
+    templates: (( grab meta.nats_templates ))
+    instances: 1
+    resource_pool: medium_z2
+    networks:
+      - name: cf2
+        static_ips:
+    properties:
+      metron_agent:
+        zone: z2
+
   - name: etcd_z1
     templates: (( grab meta.etcd_templates ))
     instances: 1
@@ -323,28 +345,6 @@ jobs:
           z2: (( grab jobs.router_z2.networks.router2.static_ips ))
       metron_agent:
         zone: z1
-
-  - name: nats_z1
-    templates: (( grab meta.nats_templates ))
-    instances: 1
-    resource_pool: medium_z1
-    networks:
-      - name: cf1
-        static_ips:
-    properties:
-      metron_agent:
-        zone: z1
-
-  - name: nats_z2
-    templates: (( grab meta.nats_templates ))
-    instances: 1
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-        static_ips:
-    properties:
-      metron_agent:
-        zone: z2
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
