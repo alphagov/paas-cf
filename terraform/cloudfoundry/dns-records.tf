@@ -21,3 +21,11 @@ resource "aws_route53_record" "apps_wildcard" {
   ttl = "60"
   records = ["${aws_elb.router.dns_name}"]
 }
+
+resource "aws_route53_record" "metrics" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "metrics.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.metrics_elb.dns_name}"]
+}
