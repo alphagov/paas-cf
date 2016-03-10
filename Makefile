@@ -38,9 +38,9 @@ dev: check-env-vars set_aws_account_dev deploy_pipelines ## Deploy Pipelines to 
 
 ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
 
-stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Staging Environment
+stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger set_stage_tag_filter deploy_pipelines  ## Deploy Pipelines to Staging Environment
 
-prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Production Environment
+prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger set_prod_tag_filter deploy_pipelines  ## Deploy Pipelines to Production Environment
 
 set_aws_account_dev:
 	$(eval export AWS_ACCOUNT=dev)
@@ -56,6 +56,12 @@ set_aws_account_prod:
 
 set_auto_trigger:
 	$(eval export ENABLE_AUTO_DEPLOY=true)
+
+set_stage_tag_filter:
+	$(eval export PAAS_CF_TAG_FILTER=stage-*)
+
+set_prod_tag_filter:
+	$(eval export PAAS_CF_TAG_FILTER=prod-*)
 
 disable_auto_delete:
 	$(eval export DISABLE_AUTODELETE=1)

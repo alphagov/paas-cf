@@ -4,6 +4,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
+      tag_filter: {{paas_cf_tag_filter}}
 
   - name: pipeline-trigger
     type: semver-iam
