@@ -12,12 +12,15 @@ psql_adm() { psql -h "${db_address}" -U dbadmin "$@"; }
 
 # Create roles
 psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'api'" \
-  | grep -q 'api' || psql_adm -d postgres \
-  -c "CREATE USER api WITH PASSWORD '${api_pass}' ROLE dbadmin"
+  | grep -q 'api' || psql_adm -d postgres -c "CREATE USER api WITH ROLE dbadmin"
+
 
 psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'uaa'" \
-  | grep -q 'uaa' || psql_adm -d postgres \
-  -c "CREATE USER uaa WITH PASSWORD '${uaa_pass}' ROLE dbadmin"
+  | grep -q 'uaa' || psql_adm -d postgres -c "CREATE USER uaa WITH ROLE dbadmin"
+
+# Always update passwords
+psql_adm -d postgres -c "ALTER USER api WITH PASSWORD '${api_pass}'"
+psql_adm -d postgres -c "ALTER USER uaa WITH PASSWORD '${uaa_pass}'"
 
 for db in api uaa; do
 
