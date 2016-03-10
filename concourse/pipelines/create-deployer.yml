@@ -48,7 +48,7 @@ resources:
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: concourse-state.json
+      versioned_file: concourse-manifest-state.json
       region_name: {{aws_region}}
 
   - name: concourse-manifest
@@ -137,7 +137,7 @@ jobs:
           - |
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} vpc.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
+            paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
             paas-cf/concourse/scripts/s3init.sh {{state_bucket}} generated-concourse-secrets.yml paas-cf/concourse/init_files/zero_bytes
         inputs:
@@ -434,7 +434,7 @@ jobs:
             cp ssh-private-key/id_rsa id_rsa
             chmod 400 id_rsa
             ls -l id_rsa
-            cp -v concourse-bosh-state/concourse-state.json .
+            cp -v concourse-bosh-state/concourse-manifest-state.json .
             cp -v concourse-manifest/concourse-manifest.yml .
             export BOSH_INIT_LOG_LEVEL={{log_level}}
             bosh-init deploy concourse-manifest.yml
@@ -443,7 +443,7 @@ jobs:
       ensure:
         put: concourse-bosh-state
         params:
-          file: concourse-deploy/concourse-state.json
+          file: concourse-deploy/concourse-manifest-state.json
 
   - name: expunge-vagrant
     serial: true
