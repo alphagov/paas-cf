@@ -36,11 +36,22 @@ lint_shellcheck:
 
 dev: check-env-vars set_aws_account_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
 
+dev-bootstrap: check-env-vars set_aws_account_dev vagrant-deploy
+
 ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
+
+ci-bootstrap: check-env-vars set_aws_account_ci vagrant-deploy
 
 stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger set_stage_tag_filter deploy_pipelines  ## Deploy Pipelines to Staging Environment
 
+stage-bootstrap: check-env-vars set_aws_account_stage set_stage_tag_filter vagrant-deploy
+
 prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger set_prod_tag_filter deploy_pipelines  ## Deploy Pipelines to Production Environment
+
+prod-bootstrap: check-env-vars set_aws_account_prod set_prod_tag_filter vagrant-deploy
+
+vagrant-deploy:
+	vagrant/deploy.sh
 
 set_aws_account_dev:
 	$(eval export AWS_ACCOUNT=dev)
