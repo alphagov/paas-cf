@@ -1,14 +1,16 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${DEPLOY_ENV-$1}
+export TARGET_CONCOURSE=deployer
+# shellcheck disable=SC2091
+$("${SCRIPT_DIR}/environment.sh" "$@")
+"${SCRIPT_DIR}/fly_sync_and_login.sh"
 
-[[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
+env=${DEPLOY_ENV}
 
 extract_cf_version(){
-  set -u
   manifest=$1
   ruby -e "require 'yaml'; \
     puts YAML.load(STDIN.read)['releases'].select { |item| item['name'] == 'cf' }.first['version']" < "$manifest"
@@ -17,7 +19,6 @@ extract_cf_version(){
 cf_release_version=$(extract_cf_version "${SCRIPT_DIR}"/../../manifests/cf-manifest/deployments/000-base-cf-deployment.yml)
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 aws_account: ${AWS_ACCOUNT:-dev}
@@ -37,4 +38,4 @@ generate_vars_file > /dev/null # Check for missing vars
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
   "${env}" "failure-testing" \
   "${SCRIPT_DIR}"/../pipelines/failure-testing.yml \
-  <(generate_vars_file) 
+  <(generate_vars_file)

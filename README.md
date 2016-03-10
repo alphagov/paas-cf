@@ -100,23 +100,10 @@ You will need a working [Bootstrap Concourse](#bootstrap-concourse).
 
 Run the `create-deployer` pipeline from your *Bootstrap Concourse*.
 
-When complete you should:
+When complete you can access the UI from a browser with the same credentials as
+your *Bootstrap Concourse* on the following URL:
 
-1. Access the UI from a browser with the same credentials as your
-  *Bootstrap Concourse*.
-
-  - `https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk/`
-
-1. Add a new target to the `fly` CLI utility:
-
-```
-DEPLOY_ENV=<deploy-env>
-
-$(./vagrant/environment.sh $DEPLOY_ENV) # get the credentials
-
-echo -e "admin\n${CONCOURSE_ATC_PASSWORD}" | \
-   ${FLY_CMD} -t ${DEPLOY_ENV} login -k -c "https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk"
-```
+`https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk/`
 
 ### Destroy
 

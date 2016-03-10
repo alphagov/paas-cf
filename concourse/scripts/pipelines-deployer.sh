@@ -1,13 +1,16 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${DEPLOY_ENV:-$1}
-[[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
+export TARGET_CONCOURSE=bootstrap
+# shellcheck disable=SC2091
+$("${SCRIPT_DIR}/environment.sh" "$@")
+"${SCRIPT_DIR}/fly_sync_and_login.sh"
+
+env=${DEPLOY_ENV}
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 aws_account: ${AWS_ACCOUNT:-dev}

@@ -1,13 +1,18 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+PROJECT_DIR=$(cd "${SCRIPT_DIR}/.." && pwd)
 cd "$SCRIPT_DIR"
 
 # Load environment variables
+export TARGET_CONCOURSE=bootstrap
 # shellcheck disable=SC2091
-$("$SCRIPT_DIR/environment.sh" "$@") || exit $?
+$("${PROJECT_DIR}/concourse/scripts/environment.sh" "$@")
+
+export VAGRANT_DEFAULT_PROVIDER="aws"
+export VAGRANT_BOX_NAME="aws_vagrant_box"
 
 # Install aws dummy box if not present
 if ! vagrant box list | grep -qe "^${VAGRANT_BOX_NAME} "; then
@@ -19,8 +24,6 @@ vagrant up
 
 VAGRANT_IP=$(vagrant ssh -- curl -qs http://169.254.169.254/latest/meta-data/public-ipv4)
 export VAGRANT_IP
-export CONCOURSE_URL=http://localhost:8080
-export FLY_TARGET=${DEPLOY_ENV}-bootstrap
 
 # Try to start a SSH tunnel
 echo "Setting up SSH tunnel to concourse..."
@@ -33,17 +36,8 @@ if ! curl -f -qs http://localhost:8080/login -o /dev/null; then
   echo "Failed creating SSH tunnel to remote concourse: 'vagrant ssh -- -L 8080:127.0.0.1:8080 -N'"
 fi
 
-if [ ! -x "$FLY_CMD" ]; then
-  FLY_CMD_URL="$CONCOURSE_URL/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
-  echo "Downloading fly command..."
-  curl "$FLY_CMD_URL" -o "$FLY_CMD" && chmod +x "$FLY_CMD"
-fi
-
-echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
-  $FLY_CMD login -t "${FLY_TARGET}" --concourse-url "${CONCOURSE_URL}"
-
-"${SCRIPT_DIR}"/../concourse/scripts/pipelines-deployer.sh "${DEPLOY_ENV}"
-"${SCRIPT_DIR}"/../concourse/scripts/concourse-lite-self-terminate.sh "${DEPLOY_ENV}"
+"${PROJECT_DIR}/concourse/scripts/pipelines-deployer.sh"
+"${PROJECT_DIR}/concourse/scripts/concourse-lite-self-terminate.sh"
 
 echo
 echo "Concourse auth is ${CONCOURSE_ATC_USER} : ${CONCOURSE_ATC_PASSWORD}"

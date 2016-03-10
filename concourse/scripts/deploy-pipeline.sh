@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT=$0
 
@@ -28,9 +28,6 @@ env=$1; shift
 pipeline=$1; shift
 config=$1; shift
 varsfile=$1; shift
-
-export FLY_TARGET=${FLY_TARGET:-$env}
-FLY_CMD=${FLY_CMD:-fly}
 
 echo "Concourse API target ${FLY_TARGET}"
 echo "Deployment ${env}"

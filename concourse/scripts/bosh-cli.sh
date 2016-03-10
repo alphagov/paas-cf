@@ -5,14 +5,10 @@ set -o pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${1-${DEPLOY_ENV-}}
-if [ -z "${env}" ]; then
-  echo "Must specify DEPLOY_ENV as \$1 or environment variable"
-  exit 1
-fi
-
-FLY_TARGET=${FLY_TARGET:-$env}
-FLY_CMD=${FLY_CMD:-fly}
+export TARGET_CONCOURSE=deployer
+# shellcheck disable=SC2091
+$("${SCRIPT_DIR}/environment.sh" "$@")
+"${SCRIPT_DIR}/fly_sync_and_login.sh"
 
 OUTPUT_FILE=$(mktemp -t bosh-cli.XXXXXX)
 trap 'rm -f "${OUTPUT_FILE}"' EXIT

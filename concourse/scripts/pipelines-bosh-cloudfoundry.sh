@@ -1,11 +1,14 @@
 #!/bin/bash
-set -e
+set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
-env=${DEPLOY_ENV-$1}
+export TARGET_CONCOURSE=deployer
+# shellcheck disable=SC2091
+$("${SCRIPT_DIR}/environment.sh" "$@")
+"${SCRIPT_DIR}/fly_sync_and_login.sh"
 
-[[ -z "${env}" ]] && echo "Must provide environment name" && exit 100
+env=${DEPLOY_ENV}
 
 cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
 cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
@@ -13,7 +16,6 @@ cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version
 cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
 
 generate_vars_file() {
-   set -u # Treat unset variables as an error when substituting
    cat <<EOF
 ---
 aws_account: ${AWS_ACCOUNT:-dev}
@@ -63,7 +65,7 @@ if [ ! "${DISABLE_AUTODELETE:-}" ]; then
   echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
   echo "         To disable it, set DISABLE_AUTODELETE=1 or pause the pipeline."
 else
-  yes y | ${FLY_CMD:-fly} -t "${FLY_TARGET:-$env}" destroy-pipeline --pipeline "${pipeline_name}" || true
+  yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
 
   echo
   echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
