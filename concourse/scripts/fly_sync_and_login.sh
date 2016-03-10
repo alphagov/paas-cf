@@ -15,8 +15,12 @@ if [ ! -x "$FLY_CMD" ]; then
   chmod +x "$FLY_CMD"
 fi
 
-echo "Doing fly login & sync"
+echo "Doing fly login"
 echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
   $FLY_CMD -t "${FLY_TARGET}" login -k --concourse-url "${CONCOURSE_URL}"
 
-$FLY_CMD -t "${FLY_TARGET}" sync
+# Sync if the file is older than 1 day (1440 mins)
+if [ -z "$(find "${FLY_CMD}" -mmin -1440)" ]; then
+  echo "Doing fly sync"
+  $FLY_CMD -t "${FLY_TARGET}" sync
+fi
