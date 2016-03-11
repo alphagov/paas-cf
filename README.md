@@ -189,7 +189,7 @@ The password will be different to the ones used previously. Ask a friendly colle
 where you can find it.
 
 If you do not have valid certificates for your PaaS environment you can use the
-`--skip-ssl-validation` switch to bypass the warnings`.
+`--skip-ssl-validation` switch to bypass the warnings.
 
 
 # Additional notes
