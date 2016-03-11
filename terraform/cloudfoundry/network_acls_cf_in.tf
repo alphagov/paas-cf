@@ -166,6 +166,8 @@ resource "aws_network_acl_rule" "119_allow_all_from_infra" {
     protocol = "tcp"
     rule_number = 118
     rule_action = "allow"
+    from_port = 0
+    to_port = 65535
     cidr_block = "${var.infra_cidr_all}"
     egress = false
 }
