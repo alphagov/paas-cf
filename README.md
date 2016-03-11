@@ -23,15 +23,15 @@ the bootstrap concourse UI from your web browser.
 2. Inside the bootstrap-concourse web UI, there are a number of 'pipelines' that
 you may run. Specifically, the `create-deplyer` pipeline is used that will then
 create a new "deployer-concourse" into that AWS environment. Once this is complete,
-you will be given the URL, username and password you can use to log into then
+you will be given the URL, username and password you can use to log into the
 'deployer concourse' web UI.
 
 3. Through the "deployet-concourse" Web UI, a number of new pipelines exist that
-you can run. Use the "create-bosh-cloudfoundry" pipeline to deploy BOSH and then
-cloudfoundry environment into the AWS environment.
+you can run. Use the "create-bosh-cloudfoundry" pipeline to deploy BOSH and the
+cloudfoundry environments into the AWS environment.
 
 Note: Overnight, both the "bootstrap-concourse" and the cloudfoundry environment
-will delete itself to save unnecessary AWS costs. THis will require re running then
+will auto delete itself to save unnecessary AWS costs. You will need to re running the
 "create-bosh-cloudfoundry" pipeline each day.
 
 
@@ -149,7 +149,8 @@ make dev
 ```
 if you want to deploy to DEV account. `make help` will show all available options.
 
-When you want to re deploy inside the deployment concourse
+When you want to re deploy inside the deployment-concourse, you may wish to update
+its pipelines. re run the `make dev` command to do this.
 
 ### Deploy
 
