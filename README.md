@@ -62,11 +62,12 @@ state files).
 
 ### Deploy
 
-Run the following script with the name of your environment:
+Create the bootstrap Concourse with `make`. Select the target based on which AWS account you want to work with. For instance for a DEV bootstrap:
 
 ```
-./vagrant/deploy.sh <deploy_env>
+make dev-bootstrap
 ```
+`make help` will show all available options.
 
 NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
 by default.
@@ -122,7 +123,7 @@ Deploy the pipeline configurations with `make`. Select the target based on which
 ```
 make dev
 ```
-if you want to deploy to DEV account. `make help` will show all available options. 
+if you want to deploy to DEV account.
 
 ### Deploy
 
