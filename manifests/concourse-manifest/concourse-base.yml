@@ -30,6 +30,9 @@ resource_pools:
       ephemeral_disk:
         size: 50240
         type: gp2
+    env:
+      bosh:
+        password: (( grab secrets.concourse_vcap_password ))
 
 disk_pools:
   - name: db
@@ -129,4 +132,3 @@ cloud_provider:
       mbus: (( concat "https://mbus:" secrets.concourse_nats_password "@0.0.0.0:6868" ))
     blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
     ntp: [0.pool.ntp.org, 1.pool.ntp.org]
-

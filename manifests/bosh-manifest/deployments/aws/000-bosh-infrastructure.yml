@@ -10,7 +10,9 @@ resource_pools:
     ephemeral_disk: {size: 40_000, type: gp2}
     availability_zone: (( grab terraform_outputs.zone0 ))
     iam_instance_profile: bosh-director
-
+  env:
+    bosh:
+      password: (( grab secrets.bosh_vcap_password ))
 disk_pools:
 - name: disks
   cloud_properties:
@@ -29,5 +31,3 @@ networks:
       - (( grab terraform_outputs.bosh_security_group ))
 - name: public
   type: vip
-
-
