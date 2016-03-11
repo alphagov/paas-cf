@@ -12,7 +12,31 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 
 ## Overview
 
-The following components needs to be deployed in order. They should be
+The high level process for deploying the PaaS environment is as follows. For a
+step by step guide, follow the more detailed instructions further down.
+
+1. Use the vagrant AWS plugin to deploy the "bootstrap-concourse" into your
+AWS environment. Once its deployed, vagrant will port forward access to the
+web UI for the bootstrap concourse to localhost over SSH. Use this to log into
+the bootstrap concourse UI from your web browser.
+
+2. Inside the bootstrap-concourse web UI, there are a number of 'pipelines' that
+you may run. Specifically, the `create-deplyer` pipeline is used that will then
+create a new "deployer-concourse" into that AWS environment. Once this is complete,
+you will be given the URL, username and password you can use to log into the
+'deployer concourse' web UI.
+
+3. Through the "deployet-concourse" Web UI, a number of new pipelines exist that
+you can run. Use the "create-bosh-cloudfoundry" pipeline to deploy BOSH and the
+cloudfoundry environments into the AWS environment.
+
+Note: Overnight, both the "bootstrap-concourse" and the cloudfoundry environment
+will auto delete itself to save unnecessary AWS costs. You will need to re running the
+"create-bosh-cloudfoundry" pipeline each day.
+
+
+
+In summary, the following components needs to be deployed in order. They should be
 destroyed in reverse order so as not to leave any orphaned resources:
 
 1. [Bootstrap Concourse](#bootstrap-concourse)
@@ -118,11 +142,15 @@ supporting services for the platform.
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute: 
+Deploy the pipeline configurations with `make`. Select the target based on which
+AWS account you want to work with. For instance, execute:
 ```
 make dev
 ```
-if you want to deploy to DEV account. `make help` will show all available options. 
+if you want to deploy to DEV account. `make help` will show all available options.
+
+When you want to re deploy inside the deployment-concourse, you may wish to update
+its pipelines. re run the `make dev` command to do this.
 
 ### Deploy
 
@@ -140,6 +168,32 @@ Once CloudFoundry has been fully destroyed, run the `destroy-microbosh` pipeline
 NB: If the `destroy-microbosh` pipeline is run without first cleaning up
 CloudFoundry, it will be necessary to manually clean up the CloudFoundry
 deployment.
+
+### Connecting to your environment
+
+Your PaaS environment is accessed via the cloudfoundry command line tool. This can be
+downloaded from https://github.com/cloudfoundry/cli/releases. The cloudfoundry
+web interface is disabled.
+
+Log into your newly configured environment by running the `cf` command:
+
+```
+cf -a <url of environment> -u admin
+```
+
+The url will be the same that was given to you when you created the deployer-concourse,
+the only difference being the subdomain will be "http://api.yourdomain" instead of
+"http://deployer.yourdomain.
+
+The password will be different to the ones used previously. Ask a friendly colleague
+where you can find it.
+
+If you do not have valid certificates for your PaaS environment you can use the
+`--skip-ssl-validation` switch to bypass the warnings.
+
+Also to note, it takes a while for deployer-concourse to create your environment.
+You can still log in and make use of it while the tests take place.
+
 
 # Additional notes
 
@@ -161,7 +215,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev
 
 ## Optionally deploy to a different AWS account
 
-To deploy to a different account, you'll need to export AWS access keys 
+To deploy to a different account, you'll need to export AWS access keys
 and secrets for the account. eg to deploy/use the CI account:
 
 ```
