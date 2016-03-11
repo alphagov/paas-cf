@@ -153,8 +153,8 @@ resource "aws_security_group" "elastic_master_elb" {
   }
 }
 
-resource "aws_security_group" "grafana_elb" {
-  name = "${var.env}-grafana"
+resource "aws_security_group" "metrics_elb" {
+  name = "${var.env}-metrics"
   description = "Security group for graphite/grafana ELB"
   vpc_id = "${var.vpc_id}"
 
@@ -170,7 +170,7 @@ resource "aws_security_group" "grafana_elb" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${var.vpc_cidr}"
+      "${split(",", var.office_cidrs)}"
     ]
   }
 
@@ -179,12 +179,12 @@ resource "aws_security_group" "grafana_elb" {
     to_port   = 3001
     protocol  = "tcp"
     cidr_blocks = [
-      "${var.vpc_cidr}"
+      "${split(",", var.office_cidrs)}"
     ]
   }
 
   tags {
-    Name = "${var.env}-grafana_elb"
+    Name = "${var.env}-metrics_elb"
   }
 }
 
