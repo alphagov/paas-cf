@@ -191,6 +191,9 @@ where you can find it.
 If you do not have valid certificates for your PaaS environment you can use the
 `--skip-ssl-validation` switch to bypass the warnings.
 
+Also to note, it takes a while for deployer-concourse to create your environment.
+You can still log in and make use of it while the tests take place.
+
 
 # Additional notes
 
