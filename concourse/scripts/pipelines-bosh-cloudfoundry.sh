@@ -16,22 +16,61 @@ cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_
 cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
 cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
 
-generate_vars_file() {
+
+generate_base_vars_file() {
    cat <<EOF
 ---
-pipeline_name: ${pipeline_name}
-aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
+branch_name: ${BRANCH:-master}
+environment_class: ${ENVIRONMENT_CLASS}
+EOF
+}
+
+generate_generic_vars_file() {
+   cat <<EOF
+---
+debug: ${DEBUG:-}
+pipeline_name: ${pipeline_name}
 state_bucket: ${env}-state
 pipeline_trigger_file: ${pipeline_name}.trigger
-branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
-debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
-concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 EOF
+}
+
+generate_env_vars_file() {
+  case ${ENVIRONMENT_CLASS} in
+    dev)
+     cat <<EOF
+---
+aws_account: ${AWS_ACCOUNT:-dev}
+self_update_pipeline: ${SELF_UPDATE_PIPELINE:-false}
+EOF
+    ;;
+    ci)
+     cat <<EOF
+---
+aws_account: ${AWS_ACCOUNT:-ci}
+self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
+EOF
+    ;;
+    stage)
+     cat <<EOF
+---
+aws_account: ${AWS_ACCOUNT:-stage}
+self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
+EOF
+    ;;
+    prod)
+     cat <<EOF
+---
+aws_account: ${AWS_ACCOUNT:-prod}
+self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
+EOF
+    ;;
+  esac
 }
 
 generate_manifest_file() {
@@ -43,20 +82,27 @@ generate_manifest_file() {
 
 update_pipeline() {
   pipeline_name=$1
+  generate_base_vars_file > /dev/null # Check for missing vars
+  generate_generic_vars_file > /dev/null # Check for missing vars
+  generate_env_vars_file > /dev/null # Check for missing vars
+
   case $pipeline_name in
     create-bosh-cloudfoundry|destroy-microbosh|destroy-cloudfoundry)
-      generate_vars_file > /dev/null # Check for missing vars
       bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
 	"${env}" "${pipeline_name}" \
-	<(generate_manifest_file) \
-	<(generate_vars_file)
+          <(generate_manifest_file) \
+	  <(generate_base_vars_file) \
+	  <(generate_generic_vars_file) \
+	  <(generate_env_vars_file)
     ;;
     autodelete-cloudfoundry)
       if [ ! "${DISABLE_AUTODELETE:-}" ]; then
 	bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-		"${env}" "${pipeline_name}" \
+	  "${env}" "${pipeline_name}" \
 	  "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml" \
-	  <(generate_vars_file)
+	  <(generate_base_vars_file) \
+	  <(generate_generic_vars_file) \
+	  <(generate_env_vars_file)
 
 	echo
 	echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
