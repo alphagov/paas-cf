@@ -36,25 +36,25 @@ lint_terraform:
 lint_shellcheck:
 	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
 
-dev: check-env-vars set_aws_account_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
+dev: check-env-vars set_env_class_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
 
-ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
+ci: check-env-vars set_env_class_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
 
-stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Staging Environment
+stage: check-env-vars set_env_class_stage disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Staging Environment
 
-prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Production Environment
+prod: check-env-vars set_env_class_prod disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Production Environment
 
-set_aws_account_dev:
-	$(eval export AWS_ACCOUNT=dev)
+set_env_class_dev:
+	$(eval export ENVIRONMENT_CLASS=dev)
 
-set_aws_account_ci:
-	$(eval export AWS_ACCOUNT=ci)
+set_env_class_ci:
+	$(eval export ENVIRONMENT_CLASS=ci)
 
-set_aws_account_stage:
-	$(eval export AWS_ACCOUNT=stage)
+set_env_class_stage:
+	$(eval export ENVIRONMENT_CLASS=stage)
 
-set_aws_account_prod:
-	$(eval export AWS_ACCOUNT=prod)
+set_env_class_prod:
+	$(eval export ENVIRONMENT_CLASS=prod)
 
 set_auto_trigger:
 	$(eval export ENABLE_AUTO_DEPLOY=true)
