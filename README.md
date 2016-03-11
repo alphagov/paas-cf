@@ -169,6 +169,29 @@ NB: If the `destroy-microbosh` pipeline is run without first cleaning up
 CloudFoundry, it will be necessary to manually clean up the CloudFoundry
 deployment.
 
+### Connecting to your environment.
+
+PaaS currently is accessed via the cloudfoundry command line tool which can be
+downloaded from https://github.com/cloudfoundry/cli. PaaS currently has the web
+UI disabled.
+
+Log into your newly configured environment by running the `cf` command:
+
+```
+cf -a <url of environment> -u admin
+```
+
+The url will be the same that was given to you when you created the deployer-concourse,
+the only difference being the subdomain will be "http://api.<domain>"" instead of
+"http://deployer.<domain>"".
+
+The password will be different and is saved in a specific location. Ask a colleague
+where you can find it.
+
+If you do not have valid certificates for your PaaS environment you can use the
+`--skip-ssl-validation` switch to bypass the warnings`. 
+
+
 # Additional notes
 
 ## Running tests locally
