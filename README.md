@@ -12,7 +12,31 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 
 ## Overview
 
-The following components needs to be deployed in order. They should be
+The high level process for deploying the PaaS environment is as follows. For a
+step by step guide, follow the more detailed instructions further down.
+
+1. Use the vagrant AWS plugin to deploy the "bootstrap-concourse" into your
+AWS environment. Once its deployed, vagrant will port forward access to the
+web UI for the bootstrap concourse to localhost over SSH. Use this to log into
+the bootstrap concourse UI from your web browser.
+
+2. Inside the bootstrap-concourse web UI, there are a number of 'pipelines' that
+you may run. Specifically, the `create-deplyer` pipeline is used that will then
+create a new "deployer-concourse" into that AWS environment. Once this is complete,
+you will be given the URL, username and password you can use to log into then
+'deployer concourse' web UI.
+
+3. Through the "deployet-concourse" Web UI, a number of new pipelines exist that
+you can run. Use the "create-bosh-cloudfoundry" pipeline to deploy BOSH and then
+cloudfoundry environment into the AWS environment.
+
+Note: Overnight, both the "bootstrap-concourse" and the cloudfoundry environment
+will delete itself to save unnecessary AWS costs. THis will require re running then
+"create-bosh-cloudfoundry" pipeline each day.
+
+
+
+In summary, the following components needs to be deployed in order. They should be
 destroyed in reverse order so as not to leave any orphaned resources:
 
 1. [Bootstrap Concourse](#bootstrap-concourse)
@@ -118,11 +142,14 @@ supporting services for the platform.
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute: 
+Deploy the pipeline configurations with `make`. Select the target based on which
+AWS account you want to work with. For instance, execute:
 ```
 make dev
 ```
-if you want to deploy to DEV account. `make help` will show all available options. 
+if you want to deploy to DEV account. `make help` will show all available options.
+
+When you want to re deploy inside the deployment concourse
 
 ### Deploy
 
@@ -161,7 +188,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev
 
 ## Optionally deploy to a different AWS account
 
-To deploy to a different account, you'll need to export AWS access keys 
+To deploy to a different account, you'll need to export AWS access keys
 and secrets for the account. eg to deploy/use the CI account:
 
 ```
