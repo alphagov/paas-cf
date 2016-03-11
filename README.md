@@ -172,7 +172,7 @@ deployment.
 ### Connecting to your environment
 
 Your PaaS environment is accessed via the cloudfoundry command line tool. This can be
-downloaded from hhttps://github.com/cloudfoundry/cli/releases. The cloudfoundry
+downloaded from https://github.com/cloudfoundry/cli/releases. The cloudfoundry
 web interface is disabled.
 
 Log into your newly configured environment by running the `cf` command:
