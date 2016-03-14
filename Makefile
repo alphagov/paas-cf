@@ -36,62 +36,60 @@ lint_terraform:
 lint_shellcheck:
 	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
 
-dev: check-env-vars set_aws_account_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
+.PHONY: dev
+dev: check-env-vars set_env_class_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
 
 .PHONY: dev-bootstrap
-dev-bootstrap: check-env-vars set_aws_account_dev vagrant-deploy ## Start DEV bootsrap
+dev-bootstrap: check-env-vars set_env_class_dev vagrant-deploy ## Start DEV bootsrap
 
 .PHONY: ci
-ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
+ci: check-env-vars set_env_class_ci deploy_pipelines  ## Deploy Pipelines to CI Environment
 
 .PHONY: ci-bootstrap
-ci-bootstrap: check-env-vars set_aws_account_ci vagrant-deploy ## Start CI bootsrap
+ci-bootstrap: check-env-vars set_env_class_ci vagrant-deploy  ## Start CI bootsrap
 
 .PHONY: stage
-stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger set_stage_tag_filter deploy_pipelines  ## Deploy Pipelines to Staging Environment
+stage: check-env-vars set_env_class_stage deploy_pipelines  ## Deploy Pipelines to Staging Environment
 
 .PHONY: stage-bootstrap
-stage-bootstrap: check-env-vars set_aws_account_stage set_stage_tag_filter vagrant-deploy ## Start Staging bootsrap
+stage-bootstrap: check-env-vars set_env_class_stage vagrant-deploy  ## Start Staging bootsrap
 
 .PHONY: prod
-prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger set_prod_tag_filter deploy_pipelines  ## Deploy Pipelines to Production Environment
+prod: check-env-vars set_env_class_prod deploy_pipelines  ## Deploy Pipelines to Production Environment
 
 .PHONY: prod-bootstrap
-prod-bootstrap: check-env-vars set_aws_account_prod set_prod_tag_filter vagrant-deploy ## Start Production bootsrap
+prod-bootstrap: check-env-vars set_env_class_prod vagrant-deploy  ## Start Production bootsrap
+
+.PHONY: set_env_class_dev
+set_env_class_dev:
+	$(eval export MAKEFILE_ENV_TARGET=dev)
+	$(eval export AWS_ACCOUNT=dev)
+
+.PHONY: set_env_class_ci
+set_env_class_ci:
+	$(eval export MAKEFILE_ENV_TARGET=ci)
+	$(eval export AWS_ACCOUNT=ci)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export DISABLE_AUTODELETE=1)
+
+.PHONY: set_env_class_stage
+set_env_class_stage:
+	$(eval export MAKEFILE_ENV_TARGET=stage)
+	$(eval export AWS_ACCOUNT=stage)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export DISABLE_AUTODELETE=1)
+	$(eval export PAAS_CF_TAG_FILTER=stage-*)
+
+.PHONY: set_env_class_prod
+set_env_class_prod:
+	$(eval export MAKEFILE_ENV_TARGET=prod)
+	$(eval export AWS_ACCOUNT=prod)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export PAAS_CF_TAG_FILTER=prod-*)
 
 .PHONY: vagrant-deploy
 vagrant-deploy:
 	vagrant/deploy.sh
-
-set_aws_account_dev:
-	$(eval export MAKEFILE_ENV_TARGET=dev)
-	$(eval export AWS_ACCOUNT=dev)
-
-set_aws_account_ci:
-	$(eval export MAKEFILE_ENV_TARGET=ci)
-	$(eval export AWS_ACCOUNT=ci)
-
-set_aws_account_stage:
-	$(eval export MAKEFILE_ENV_TARGET=stage)
-	$(eval export AWS_ACCOUNT=stage)
-
-set_aws_account_prod:
-	$(eval export MAKEFILE_ENV_TARGET=prod)
-	$(eval export AWS_ACCOUNT=prod)
-
-set_auto_trigger:
-	$(eval export ENABLE_AUTO_DEPLOY=true)
-
-.PHONY: set_stage_tag_filter
-set_stage_tag_filter:
-	$(eval export PAAS_CF_TAG_FILTER=stage-*)
-
-.PHONY: set_prod_tag_filter
-set_prod_tag_filter:
-	$(eval export PAAS_CF_TAG_FILTER=prod-*)
-
-disable_auto_delete:
-	$(eval export DISABLE_AUTODELETE=1)
 
 .PHONY: deploy_pipelines
 deploy_pipelines:
