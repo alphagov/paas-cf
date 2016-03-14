@@ -15,5 +15,5 @@ output "concourse_elb_name" {
 }
 
 output "concourse_dns_name" {
-  value = "${aws_route53_record.deployer-concourse.name}"
+  value = "${aws_route53_record.deployer-concourse.fqdn}"
 }
