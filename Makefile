@@ -1,4 +1,4 @@
-.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck set_aws_count set_auto_trigger disable_auto_delete check-env-vars dev ci stage prod
+.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck set_aws_count set_auto_trigger disable_auto_delete check-env-vars
 
 .DEFAULT_GOAL := help
 
@@ -38,11 +38,30 @@ lint_shellcheck:
 
 dev: check-env-vars set_aws_account_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
 
+.PHONY: dev-bootstrap
+dev-bootstrap: check-env-vars set_aws_account_dev vagrant-deploy ## Start DEV bootsrap
+
+.PHONY: ci
 ci: check-env-vars set_aws_account_ci set_auto_trigger disable_auto_delete deploy_pipelines  ## Deploy Pipelines to CI Environment
 
-stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Staging Environment
+.PHONY: ci-bootstrap
+ci-bootstrap: check-env-vars set_aws_account_ci vagrant-deploy ## Start CI bootsrap
 
-prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger deploy_pipelines  ## Deploy Pipelines to Production Environment
+.PHONY: stage
+stage: check-env-vars set_aws_account_stage disable_auto_delete set_auto_trigger set_stage_tag_filter deploy_pipelines  ## Deploy Pipelines to Staging Environment
+
+.PHONY: stage-bootstrap
+stage-bootstrap: check-env-vars set_aws_account_stage set_stage_tag_filter vagrant-deploy ## Start Staging bootsrap
+
+.PHONY: prod
+prod: check-env-vars set_aws_account_prod disable_auto_delete set_auto_trigger set_prod_tag_filter deploy_pipelines  ## Deploy Pipelines to Production Environment
+
+.PHONY: prod-bootstrap
+prod-bootstrap: check-env-vars set_aws_account_prod set_prod_tag_filter vagrant-deploy ## Start Production bootsrap
+
+.PHONY: vagrant-deploy
+vagrant-deploy:
+	vagrant/deploy.sh
 
 set_aws_account_dev:
 	$(eval export AWS_ACCOUNT=dev)
@@ -59,9 +78,18 @@ set_aws_account_prod:
 set_auto_trigger:
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 
+.PHONY: set_stage_tag_filter
+set_stage_tag_filter:
+	$(eval export PAAS_CF_TAG_FILTER=stage-*)
+
+.PHONY: set_prod_tag_filter
+set_prod_tag_filter:
+	$(eval export PAAS_CF_TAG_FILTER=prod-*)
+
 disable_auto_delete:
 	$(eval export DISABLE_AUTODELETE=1)
 
+.PHONY: deploy_pipelines
 deploy_pipelines:
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
 	concourse/scripts/pipelines-failure-testing.sh

@@ -5,6 +5,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-cf
       branch: {{branch_name}}
+      tag_filter: {{paas_cf_tag_filter}}
 
   - name: bucket-terraform-state
     type: s3-iam
