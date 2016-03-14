@@ -33,7 +33,7 @@ or destroyed.
 
 ### Prerequisites
 
-You will need a recent version of [Vagrant installed][]. The exact version
+* You will need a recent version of [Vagrant installed][]. The exact version
 requirements are listed in the [`Vagrantfile`](vagrant/Vagrantfile).
 
 [Vagrant installed]: https://docs.vagrantup.com/v2/installation/index.html
@@ -44,7 +44,7 @@ Install the AWS plugin for Vagrant:
 vagrant plugin install vagrant-aws
 ```
 
-You must provide AWS access keys as environment variables:
+* You must provide AWS access keys as environment variables:
 
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
@@ -59,6 +59,12 @@ state files).
 
 [instance profiles]: http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
 [aws-account-wide-terraform]: https://github.gds/government-paas/aws-account-wide-terraform
+
+* Declare you environment name using the variable DEPLOY_ENV. It must be 18 characters maximum and contain only alphanumeric characters and hyphens.
+
+```
+$ export DEPLOY_ENV=environment-name
+```
 
 ### Deploy
 
@@ -80,10 +86,10 @@ use to login.
 
 ### Destroy
 
-Run the following script, with the name of your existing environment:
+Run the following script:
 
 ```
-./vagrant/destroy.sh <deploy_env>
+./vagrant/destroy.sh
 ```
 
 ## Deployer Concourse
@@ -210,7 +216,7 @@ There's a script that starts an interactive session on the deployer concourse
 to allow running bosh CLI commands targeting MicroBOSH:
 
 ```
-./concourse/scripts/bosh-cli.sh $DEPLOY_ENV
+./concourse/scripts/bosh-cli.sh
 ```
 
 This connects you to a one-off task in concourse that's already logged into
@@ -258,9 +264,11 @@ based on the AWS credentials, the environment name and the application name.
 These credentials will also be used by the *Deployer Concourse*.
 
 If you are the owner of the environment with the original AWS credentials,
-run `./vagrant/environment.sh <deploy_env>` to get them again.
+run `TARGET_CONCOURSE=bootstrap ./concourse/scripts/environment.sh` to get them again.
 
-If not, you can learn the credentials from the `atc` process arguments:
+If not, it can be found in the `basic_auth_password` property of `concourse-manifest.yml` in the state bucket.
+
+You can also learn the credentials from the `atc` process arguments:
 
  1. SSH to the Concourse server:
     * For *Bootstrap Concourse*: `cd vagrant && vagrant ssh`
