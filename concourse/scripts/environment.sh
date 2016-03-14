@@ -23,13 +23,13 @@ AWS_ACCOUNT=${AWS_ACCOUNT:-dev}
 
 case $TARGET_CONCOURSE in
   deployer)
-    CONCOURSE_URL="https://deployer.${DEPLOY_ENV}.$(fetch_system_dns_zone)"
-    FLY_TARGET=$DEPLOY_ENV
+    CONCOURSE_URL="${CONCOURSE_URL:-https://deployer.${DEPLOY_ENV}.$(fetch_system_dns_zone)}"
+    FLY_TARGET=${FLY_TARGET:-$DEPLOY_ENV}
     FLY_CMD="${PROJECT_DIR}/bin/fly"
     ;;
   bootstrap)
-    CONCOURSE_URL="http://localhost:8080"
-    FLY_TARGET="${DEPLOY_ENV}-bootstrap"
+    CONCOURSE_URL="${CONCOURSE_URL:-http://localhost:8080}"
+    FLY_TARGET="${FLY_TARGET:-${DEPLOY_ENV}-bootstrap}"
     FLY_CMD="${PROJECT_DIR}/bin/fly-bootstrap"
     ;;
   *)
