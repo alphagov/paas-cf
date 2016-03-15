@@ -13,6 +13,7 @@ groups:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
+      - tag-release
   - name: bosh
     jobs:
       - init
@@ -29,6 +30,14 @@ groups:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
+      - tag-release
+  - name: release
+    jobs:
+      - generate-git-keys
+      - show-release-version
+      - bump-minor-version
+      - bump-major-version
+      - bump-patch-version
 
 resources:
   - name: pipeline-trigger
@@ -160,6 +169,21 @@ resources:
       uri: https://github.com/cloudfoundry/cf-release
       tag_filter: {{cf-release-version}}
 
+  - name: git-keys
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: git-keys.tar.gz
+
+  - name: release-version
+    type: semver-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      key: release-version
+      initial_version: 0.0.0
+
 jobs:
   - name: init
     serial_groups: [bosh-deploy]
@@ -203,6 +227,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
       - put: pipeline-trigger
         params: {bump: patch}
 
@@ -1070,3 +1095,92 @@ jobs:
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
                 ./paas-cf/tests/acceptance-tests/run_tests.sh
+
+  - name: tag-release
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['post-deploy', 'smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
+            trigger: true
+          - get: paas-cf
+            passed: ['post-deploy', 'smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
+          - get: git-keys
+
+      - put: release-version
+        params: {bump: patch}
+
+      - task: tag-release
+        config:
+          image: docker:///governmentpaas/git-ssh
+          platform: linux
+          params:
+            aws_account: {{aws_account}}
+            deploy_env: {{deploy_env}}
+            TAG_PREFIX: {{TAG_PREFIX}}
+          inputs:
+          - name: paas-cf
+          - name: release-version
+          - name: git-keys
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              if [ -z "${TAG_PREFIX}" ]; then
+                echo \$TAG_PREFIX not set, skipping
+                exit 0
+              fi
+              paas-cf/concourse/scripts/tag-release.sh \
+                ${TAG_PREFIX} ${aws_account} ${deploy_env}
+
+  - name: generate-git-keys
+    plan:
+      - task: ssh-keygen
+        config:
+          image: docker:///governmentpaas/git-ssh
+          platform: linux
+          outputs:
+          - name: generated-git-keys
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              ssh-keygen -t rsa -b 4096 -f git-key -N ''
+              tar -cvzf generated-git-keys/git-keys.tar.gz ./git-key ./git-key.pub
+              cat ./git-key.pub
+        on_success:
+          put: git-keys
+          params:
+            file: generated-git-keys/git-keys.tar.gz
+
+  - name: bump-major-version
+    plan:
+      - put: release-version
+        params: {bump: major}
+
+  - name: bump-minor-version
+    plan:
+      - put: release-version
+        params: {bump: minor}
+
+  - name: bump-patch-version
+    plan:
+      - put: release-version
+        params: {bump: patch}
+
+  - name: show-release-version
+    plan:
+      - get: release-version
+
+      - task: show-release-version
+        config:
+          platform: linux
+          inputs:
+            - name: release-version
+          run:
+            path: cat
+            args:
+            - release-version/number
