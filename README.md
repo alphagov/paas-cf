@@ -110,7 +110,7 @@ Run the `create-deployer` pipeline from your *Bootstrap Concourse*.
 When complete you can access the UI from a browser with the same credentials as
 your *Bootstrap Concourse* on the following URL:
 
-`https://deployer.${DEPLOY_ENV}.dev.paas.alphagov.co.uk/`
+`https://deployer.${DEPLOY_ENV}.dev.cloudpipeline.digital/`
 
 ### Destroy
 
