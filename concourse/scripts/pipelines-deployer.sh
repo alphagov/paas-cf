@@ -23,6 +23,7 @@ aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 log_level: ${LOG_LEVEL:-}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
+system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 EOF
 }
 
