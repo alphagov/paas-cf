@@ -1,8 +1,6 @@
 aws_account = "dev"
 system_dns_zone_id = "Z1QGLFML8EG6G7"
-system_dns_zone_name = "dev.cloudpipeline.digital"
 apps_dns_zone_id = "Z3R6XFWUT4YZHB"
-apps_dns_zone_name = "dev.cloudpipelineapps.digital"
 cf_db_multi_az = "false"
 cf_db_backup_retention_period = "0"
 cf_db_skip_final_snapshot = "true"

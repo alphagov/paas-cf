@@ -34,6 +34,8 @@ cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
+system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
+apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 EOF
 }
 

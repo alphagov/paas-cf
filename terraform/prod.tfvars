@@ -1,8 +1,6 @@
 aws_account = "prod"
 system_dns_zone_id = "Z39UURGVWSYTHL"
-system_dns_zone_name = "cloud.service.gov.uk"
 apps_dns_zone_id = "Z29K8LQNCFDZ1T"
-apps_dns_zone_name = "cloudapps.digital"
 cf_db_multi_az = "true"
 cf_db_backup_retention_period = "35"
 cf_db_skip_final_snapshot = "false"
