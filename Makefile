@@ -30,7 +30,9 @@ spec:
 lint_yaml:
 	$(YAMLLINT) -c yamllint.yml .
 
-lint_terraform:
+lint_terraform: set_env_class_dev
+	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
+	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
 	find terraform -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -n 1 -t terraform graph > /dev/null
 
 lint_shellcheck:
@@ -64,6 +66,8 @@ prod-bootstrap: check-env-vars set_env_class_prod vagrant-deploy  ## Start Produ
 set_env_class_dev:
 	$(eval export MAKEFILE_ENV_TARGET=dev)
 	$(eval export AWS_ACCOUNT=dev)
+	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
+	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 
 .PHONY: set_env_class_ci
 set_env_class_ci:
@@ -72,6 +76,8 @@ set_env_class_ci:
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export DISABLE_AUTODELETE=1)
 	$(eval export TAG_PREFIX=stage-)
+	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
+	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
 
 .PHONY: set_env_class_stage
 set_env_class_stage:
@@ -81,6 +87,8 @@ set_env_class_stage:
 	$(eval export DISABLE_AUTODELETE=1)
 	$(eval export PAAS_CF_TAG_FILTER=stage-*)
 	$(eval export TAG_PREFIX=prod-)
+	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
+	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
 
 .PHONY: set_env_class_prod
 set_env_class_prod:
@@ -88,6 +96,8 @@ set_env_class_prod:
 	$(eval export AWS_ACCOUNT=prod)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
+	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
+	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
 
 .PHONY: vagrant-deploy
 vagrant-deploy:
