@@ -1,4 +1,4 @@
-.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck set_aws_count set_auto_trigger disable_auto_delete check-env-vars
+.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck check-env-vars
 
 .DEFAULT_GOAL := help
 
