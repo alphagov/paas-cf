@@ -110,6 +110,12 @@ resource "aws_elb" "es_master_elb" {
 
 
 
+resource "aws_iam_server_certificate" "metrics" {
+  name = "${var.env}-metrics"
+  certificate_body = "${file("metrics.crt")}"
+  private_key = "${file("metrics.key")}"
+}
+
 resource "aws_elb" "metrics_elb" {
   name = "${var.env}-metrics-elb"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
@@ -128,16 +134,17 @@ resource "aws_elb" "metrics_elb" {
   }
   listener {
     instance_port = 3000
-    instance_protocol = "tcp"
+    instance_protocol = "http"
     lb_port = 443
-    lb_protocol = "tcp"
+    lb_protocol = "https"
+    ssl_certificate_id = "${aws_iam_server_certificate.metrics.arn}"
   }
 
   listener {
     instance_port = 3001
-    instance_protocol = "tcp"
-    lb_port = 3001 
-    lb_protocol = "tcp"
+    instance_protocol = "http"
+    lb_port = 3001
+    lb_protocol = "https"
+    ssl_certificate_id = "${aws_iam_server_certificate.metrics.arn}"
   }
 }
-

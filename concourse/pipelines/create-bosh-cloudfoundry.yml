@@ -525,6 +525,7 @@ jobs:
             - name: paas-cf
             - name: cf-secrets
               path: existing-cf-secrets
+            - name: bosh-tfstate
           outputs:
             - name: generated-cf-secrets
           run:
@@ -556,6 +557,7 @@ jobs:
           - get: concourse-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
+          - get: metrics-cert
           - get: cf-secrets
             passed: ['generate-cf-secrets']
 
@@ -593,6 +595,8 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+            - name: metrics-cert
+
           outputs:
             - name: updated-tfstate
           params:
@@ -610,6 +614,7 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
+                tar xzvf metrics-cert/metrics-cert.tar.gz -C .
 
                 terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
