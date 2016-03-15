@@ -48,10 +48,34 @@ resources:
       region_name: {{aws_region}}
       versioned_file: cf-secrets.yml
 
+  - name: concourse-manifest
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: concourse-manifest.yml
+
 jobs:
   - name: init
     serial: true
     plan:
+      - get: paas-cf
+      - get: concourse-manifest
+      - task: self-update-pipeline
+        config:
+          platform: linux
+          image: docker:///governmentpaas/self-update-pipelines
+          inputs:
+            - name: paas-cf
+            - name: concourse-manifest
+          params:
+            DEPLOY_ENV: {{deploy_env}}
+            BRANCH: {{branch_name}}
+            MAKEFILE_ENV_TARGET: {{makefile_env_target}}
+            SELF_UPDATE_PIPELINE: {{self_update_pipeline}}
+            PIPELINES_TO_UPDATE: {{pipeline_name}}
+          run:
+            path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
         params: {bump: patch}
 

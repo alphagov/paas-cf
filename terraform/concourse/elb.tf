@@ -43,11 +43,21 @@ resource "aws_security_group" "concourse-elb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+
+  /* FIXME: Merge these two ingress block back together once */
+  /* https://github.com/hashicorp/terraform/issues/5301 is resolved. */
   ingress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     cidr_blocks     = ["${split(",", var.office_cidrs)}"]
+  }
+
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    cidr_blocks     = ["${aws_eip.concourse.public_ip}/32"]
   }
 
   tags {
