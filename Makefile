@@ -71,6 +71,7 @@ set_env_class_ci:
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export DISABLE_AUTODELETE=1)
+	$(eval export TAG_PREFIX=stage-)
 
 .PHONY: set_env_class_stage
 set_env_class_stage:
@@ -79,6 +80,7 @@ set_env_class_stage:
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export DISABLE_AUTODELETE=1)
 	$(eval export PAAS_CF_TAG_FILTER=stage-*)
+	$(eval export TAG_PREFIX=prod-)
 
 .PHONY: set_env_class_prod
 set_env_class_prod:
