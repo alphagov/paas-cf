@@ -101,8 +101,8 @@ properties:
     internal_api_user: "internal_user"
     internal_api_password: (( grab properties.cc.bulk_api_password ))
 
-    logging_level: debug2
-    db_logging_level: debug2
+    logging_level: info
+    db_logging_level: debug
 
     directories: ~
 
