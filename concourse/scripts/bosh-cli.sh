@@ -7,7 +7,7 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 export TARGET_CONCOURSE=deployer
 # shellcheck disable=SC2091
-$("${SCRIPT_DIR}/environment.sh" "$@")
+$("${SCRIPT_DIR}/environment.sh")
 "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
 OUTPUT_FILE=$(mktemp -t bosh-cli.XXXXXX)
@@ -25,4 +25,4 @@ $FLY_CMD -t "${FLY_TARGET}" \
   intercept \
   --build="${BUILD_NUMBER}"\
   --step=one-off \
-  sh
+  "${@:-sh}"
