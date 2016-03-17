@@ -555,6 +555,8 @@ jobs:
             - name: updated-tfstate
           params:
             TF_VAR_env: {{deploy_env}}
+            TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
+            TF_VAR_apps_dns_zone_name: {{apps_dns_zone_name}}
             AWS_DEFAULT_REGION: {{aws_region}}
           run:
             path: sh

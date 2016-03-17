@@ -9,10 +9,6 @@ hashed_password() {
   echo "$1" | shasum -a 256 | base64 | head -c 32
 }
 
-fetch_system_dns_zone(){
-  awk -F' *= *|"' '$1=="system_dns_zone_name" { print $3}' "${PROJECT_DIR}/terraform/${AWS_ACCOUNT}.tfvars"
-}
-
 DEPLOY_ENV=${1:-${DEPLOY_ENV:-}}
 if [ -z "${DEPLOY_ENV}" ]; then
   echo "Must specify DEPLOY_ENV as \$1 or environment variable" 1>&2
@@ -23,7 +19,7 @@ AWS_ACCOUNT=${AWS_ACCOUNT:-dev}
 
 case $TARGET_CONCOURSE in
   deployer)
-    CONCOURSE_URL="${CONCOURSE_URL:-https://deployer.${DEPLOY_ENV}.$(fetch_system_dns_zone)}"
+    CONCOURSE_URL="${CONCOURSE_URL:-https://deployer.${SYSTEM_DNS_ZONE_NAME}}"
     FLY_TARGET=${FLY_TARGET:-$DEPLOY_ENV}
     FLY_CMD="${PROJECT_DIR}/bin/fly"
     ;;

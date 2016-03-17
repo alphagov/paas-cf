@@ -9,7 +9,6 @@ terraform_outputs:
   router2_subnet_id: subnet-98765432
   cf_root_domain: unit-test.dev.paas.example.com
   cf_apps_domain: unit-test.dev-apps.paas.example.com
-  system_dns_zone_name: dev.paas.example.com
   elb_name: unit-test-cf-router-elb
   environment: unit-test
   region: sealand-1

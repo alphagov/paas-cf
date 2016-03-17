@@ -240,7 +240,8 @@ jobs:
         image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: concourse-cert
-        - name: vpc-terraform-outputs
+        params:
+          SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
         run:
           path: sh
           args:
@@ -253,10 +254,9 @@ jobs:
               cp concourse-cert/concourse-cert.tar.gz .
               exit 0
             fi
-            . vpc-terraform-outputs/tfvars.sh
             openssl req -x509 -newkey rsa:2048 -keyout concourse.key \
               -out concourse.crt -days 365 -nodes -subj \
-              "/C=UK/ST=London/L=London/O=GDS/CN=deployer.{{deploy_env}}.${TF_VAR_system_dns_zone_name}"
+              "/C=UK/ST=London/L=London/O=GDS/CN=deployer.${SYSTEM_DNS_ZONE_NAME}"
             tar czvf concourse-cert.tar.gz concourse.crt concourse.key
 
     - task: terraform-apply
@@ -270,6 +270,7 @@ jobs:
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
+          TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
           AWS_DEFAULT_REGION: {{aws_region}}
         run:
           path: sh
@@ -515,6 +516,7 @@ jobs:
         - name: concourse-terraform-state
         params:
           TF_VAR_env: {{deploy_env}}
+          TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
           AWS_DEFAULT_REGION: {{aws_region}}
         run:
           path: sh

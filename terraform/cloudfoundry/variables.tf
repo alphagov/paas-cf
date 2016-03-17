@@ -97,3 +97,19 @@ variable "cf_db_backup_retention_period" {
 variable "cf_db_skip_final_snapshot" {
   descrition = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
 }
+
+variable "system_dns_zone_id" {
+  description = "Amazon Route53 DNS zone identifier for the system components. Different per account."
+}
+
+variable "system_dns_zone_name" {
+  description = "Amazon Route53 DNS zone name for the provisioned environment."
+}
+
+variable "apps_dns_zone_id" {
+  description = "Amazon Route53 DNS zone identifier for hosted apps. Different per account."
+}
+
+variable "apps_dns_zone_name" {
+  description = "Amazon Route53 DNS zone name for hosted apps. Differs per account."
+}
