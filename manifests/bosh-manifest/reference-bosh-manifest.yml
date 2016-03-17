@@ -81,6 +81,8 @@ jobs:
         host: 127.0.0.1
         password: BOSH_POSTGRES_PASSWORD
         user: postgres
+      disks:
+        max_orphaned_age_in_days: 0
       ignore_missing_gateway: "false"
       name: my-bosh
       user_management:

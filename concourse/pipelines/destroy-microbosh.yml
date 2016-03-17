@@ -98,6 +98,22 @@ jobs:
           - get: bosh-secrets
           - get: bosh-init-state
           - get: bosh-manifest
+      - task: cleanup-orphaned-disks
+        config:
+          platform: linux
+          image: docker:///governmentpaas/bosh-cli
+          inputs:
+            - name: paas-cf
+            - name: bosh-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+
+                bosh cleanup --all
       - task: bosh-init-microbosh
         config:
           platform: linux
