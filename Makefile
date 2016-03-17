@@ -66,6 +66,7 @@ prod-bootstrap: check-env-vars set_env_class_prod vagrant-deploy  ## Start Produ
 set_env_class_dev:
 	$(eval export MAKEFILE_ENV_TARGET=dev)
 	$(eval export AWS_ACCOUNT=dev)
+	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 
@@ -74,7 +75,6 @@ set_env_class_ci:
 	$(eval export MAKEFILE_ENV_TARGET=ci)
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export DISABLE_AUTODELETE=1)
 	$(eval export TAG_PREFIX=stage-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
@@ -84,9 +84,7 @@ set_env_class_stage:
 	$(eval export MAKEFILE_ENV_TARGET=stage)
 	$(eval export AWS_ACCOUNT=stage)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export DISABLE_AUTODELETE=1)
 	$(eval export PAAS_CF_TAG_FILTER=stage-*)
-	$(eval export TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
 
