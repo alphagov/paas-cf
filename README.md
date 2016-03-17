@@ -71,7 +71,7 @@ $ export DEPLOY_ENV=environment-name
 Create the bootstrap Concourse with `make`. Select the target based on which AWS account you want to work with. For instance for a DEV bootstrap:
 
 ```
-make dev-bootstrap
+make dev bootstrap
 ```
 `make help` will show all available options.
 
@@ -89,7 +89,7 @@ use to login.
 Run the following script:
 
 ```
-./vagrant/destroy.sh
+make dev bootstrap-destroy
 ```
 
 ## Deployer Concourse
@@ -110,7 +110,9 @@ Run the `create-deployer` pipeline from your *Bootstrap Concourse*.
 When complete you can access the UI from a browser with the same credentials as
 your *Bootstrap Concourse* on the following URL:
 
-`https://deployer.${DEPLOY_ENV}.dev.cloudpipeline.digital/`
+```
+https://deployer.${DEPLOY_ENV}.dev.cloudpipeline.digital/
+```
 
 ### Destroy
 
@@ -127,7 +129,7 @@ You will need a working [Deployer Concourse](#deployer-concourse).
 
 Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute: 
 ```
-make dev
+make dev pipelines
 ```
 if you want to deploy to DEV account.
 
@@ -163,12 +165,26 @@ All of the pipeline scripts (including `vagrant/deploy.sh`) honour a
 used within the pipeline. This is useful for development and code review:
 
 ```
-BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev
+BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev pipelines
 ```
 
 ## Optionally deploy to a different AWS account
 
 See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
+To deploy to a different account, you'll need to export AWS access keys 
+and secrets for the account. eg to deploy/use the CI account:
+
+```
+export AWS_ACCESS_KEY_ID=your_ci_access_key
+export AWS_SECRET_ACCESS_KEY=your_ci_secret_key
+make ci pipelines
+```
+
+Due to the isolation between AWS accounts, when switching accounts, it's
+necessary to start with a comletely new deployment.
+
+**Note:** Different AWS accounts use different DNS names, so it'll be necessary
+to adjust some of the instructions above accordingly.
 
 ## Sharing your Bootstrap Concourse
 
@@ -199,12 +215,14 @@ ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
 
 ## Using the bosh cli and `bosh ssh`
 
-There's a script that starts an interactive session on the deployer concourse
+There's a Makefile target that starts an interactive session on the deployer concourse
 to allow running bosh CLI commands targeting MicroBOSH:
 
 ```
-./concourse/scripts/bosh-cli.sh
+make dev bosh-cli
 ```
+
+You can use any environment supported by Makefile.
 
 This connects you to a one-off task in concourse that's already logged into
 bosh and has the deployment set using the CF manifest.
