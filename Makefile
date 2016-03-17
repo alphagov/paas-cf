@@ -39,28 +39,28 @@ lint_shellcheck:
 	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
 
 .PHONY: dev
-dev: check-env-vars set_env_class_dev deploy_pipelines ## Deploy Pipelines to Dev Environment
-
-.PHONY: dev-bootstrap
-dev-bootstrap: check-env-vars set_env_class_dev vagrant-deploy ## Start DEV bootsrap
+dev: check-env-vars set_env_class_dev ## Set environment to DEV
 
 .PHONY: ci
-ci: check-env-vars set_env_class_ci deploy_pipelines  ## Deploy Pipelines to CI Environment
-
-.PHONY: ci-bootstrap
-ci-bootstrap: check-env-vars set_env_class_ci vagrant-deploy  ## Start CI bootsrap
+ci: check-env-vars set_env_class_ci ## Set environment to CI
 
 .PHONY: stage
-stage: check-env-vars set_env_class_stage deploy_pipelines  ## Deploy Pipelines to Staging Environment
-
-.PHONY: stage-bootstrap
-stage-bootstrap: check-env-vars set_env_class_stage vagrant-deploy  ## Start Staging bootsrap
+stage: check-env-vars set_env_class_stage  ## Set Envirnoment to Staging
 
 .PHONY: prod
-prod: check-env-vars set_env_class_prod deploy_pipelines  ## Deploy Pipelines to Production Environment
+prod: check-env-vars set_env_class_prod ## Set Envirnoment to Production 
 
-.PHONY: prod-bootstrap
-prod-bootstrap: check-env-vars set_env_class_prod vagrant-deploy  ## Start Production bootsrap
+.PHONY: bootstrap
+bootstrap: ## Start bootsrap 
+	vagrant/deploy.sh
+
+.PHONY: bootstrap-destroy
+bootstrap-destroy: ## Destroy bootsrap 
+	./vagrant/destroy.sh
+
+.PHONY: bosh-cli
+bosh-cli: ## Create interactive connnection to BOSH container
+	concourse/scripts/bosh-cli.sh $(DEPLOY_ENV)
 
 .PHONY: set_env_class_dev
 set_env_class_dev:
@@ -97,10 +97,6 @@ set_env_class_prod:
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
 
-.PHONY: vagrant-deploy
-vagrant-deploy:
-	vagrant/deploy.sh
-
-.PHONY: deploy_pipelines
-deploy_pipelines:
+.PHONY: pipelines
+pipelines: ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
