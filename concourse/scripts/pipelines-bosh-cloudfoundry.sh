@@ -57,7 +57,7 @@ update_pipeline() {
         <(generate_vars_file)
     ;;
     autodelete-cloudfoundry)
-      if [ ! "${DISABLE_AUTODELETE:-}" ]; then
+      if [ -n "${ENABLE_AUTODELETE:-}" ]; then
         bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
           "${env}" "${pipeline_name}" \
           "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml" \
@@ -65,12 +65,13 @@ update_pipeline() {
 
         echo
         echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
-        echo "         To disable it, set DISABLE_AUTODELETE=1 or pause the pipeline."
+        echo "         To disable it, unset ENABLE_AUTODELETE or pause the pipeline."
       else
         yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
 
         echo
         echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
+        echo "         To enable it, set ENABLE_AUTODELETE=true"
       fi
     ;;
     *)
