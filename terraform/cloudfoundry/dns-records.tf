@@ -29,3 +29,12 @@ resource "aws_route53_record" "metrics" {
   ttl = "60"
   records = ["${aws_elb.metrics_elb.dns_name}"]
 }
+
+resource "aws_route53_record" "logsearch" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "logsearch.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.logsearch_elb.dns_name}"]
+}
+

@@ -108,7 +108,37 @@ resource "aws_elb" "es_master_elb" {
   }
 }
 
+resource "aws_iam_server_certificate" "logsearch" {
+  name = "${var.env}-logsearch"
+  certificate_body = "${file("logsearch.crt")}"
+  private_key = "${file("logsearch.key")}"
+}
 
+resource "aws_elb" "logsearch_elb" {
+  name = "${var.env}-logsearch-elb"
+  subnets = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout = "${var.elb_idle_timeout}"
+  cross_zone_load_balancing = "true"
+  security_groups = [
+    "${aws_security_group.logsearch_elb.id}",
+  ]
+
+  health_check {
+    target = "TCP:5601"
+    interval = "${var.health_check_interval}"
+    timeout = "${var.health_check_timeout}"
+    healthy_threshold = "${var.health_check_healthy}"
+    unhealthy_threshold = "${var.health_check_unhealthy}"
+  }
+
+  listener {
+    instance_port = 5601
+    instance_protocol = "http"
+    lb_port = 443
+    lb_protocol = "https"
+    ssl_certificate_id = "${aws_iam_server_certificate.logsearch.arn}"
+  }
+}
 
 resource "aws_iam_server_certificate" "metrics" {
   name = "${var.env}-metrics"

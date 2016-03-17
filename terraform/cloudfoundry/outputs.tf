@@ -70,3 +70,7 @@ output "metrics_elb_name" {
   value = "${aws_elb.metrics_elb.name}"
 }
 
+output "logsearch_elb_name" {
+  value = "${aws_elb.logsearch_elb.name}"
+}
+
