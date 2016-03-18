@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eu -o pipefail
 
 TAG_PREFIX=$1
 AWS_ACCOUNT=$2
@@ -20,17 +20,22 @@ Host github.com
   IdentityFile $(pwd)/git-key
 EOF
 
-version=$(cat release-version/number)
-tag="${TAG_PREFIX}${version}"
+cd paas-cf
+if git tag -l --contains HEAD | grep -E -q 'stage-\d\.\d\.\d'
+then 
+  tag="$(git tag -l --contains HEAD | sed 's/stage/prod/')"
+else
+  version=$(cat ../release-version-$AWS_ACCOUNT/number)
+  tag="${TAG_PREFIX}${version}"
+fi
 
 echo Configure Git
-cd paas-cf
 git config --global user.email "${GIT_EMAIL}"
 git config --global user.name "${GIT_USER}"
 git remote add ssh "${GIT_REPO_URL}"
 
 echo "Create tag ${tag}"
-git tag -a "${tag}" -m "Version ${version} passed ${AWS_ACCOUNT} \
+git tag -a "${tag}" -m "Tag ${tag} passed ${AWS_ACCOUNT} \
 in environment ${DEPLOY_ENV}"
 
 echo "Push tag ${tag}"
