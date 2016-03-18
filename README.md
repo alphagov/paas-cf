@@ -168,20 +168,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev
 
 ## Optionally deploy to a different AWS account
 
-To deploy to a different account, you'll need to export AWS access keys 
-and secrets for the account. eg to deploy/use the CI account:
-
-```
-export AWS_ACCESS_KEY_ID=your_ci_access_key
-export AWS_SECRET_ACCESS_KEY=your_ci_secret_key
-make ci
-```
-
-Due to the isolation between AWS accounts, when switching accounts, it's
-necessary to start with a comletely new deployment.
-
-**Note:** Different AWS accounts use different DNS names, so it'll be necessary
-to adjust some of the instructions above accordingly.
+See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 
 ## Sharing your Bootstrap Concourse
 
