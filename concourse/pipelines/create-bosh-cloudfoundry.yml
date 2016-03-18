@@ -114,6 +114,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: concourse-manifest.yml
 
+  - name: metrics-cert
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: metrics-cert.tar.gz
+
   - name: bosh-manifest
     type: s3-iam
     source:
@@ -224,6 +231,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} metrics-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
@@ -474,7 +482,41 @@ jobs:
             passed: ['generate-bosh-config']
             trigger: true
           - get: cf-secrets
-
+          - get: metrics-cert
+          - get: vpc-tfstate
+          - get: concourse-tfstate
+          - get: bosh-tfstate
+      - task: generate-metrics-certificates
+        config:
+          platform: linux
+          image: docker:///governmentpaas/curl-ssl
+          inputs:
+            - name: metrics-cert
+              path: existing-metrics-cert
+          outputs:
+            - name: generated-metrics-cert
+          params:
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                tar xzvf existing-metrics-cert/metrics-cert.tar.gz
+                if [ -f metrics.crt ] && [ -f metrics.key ]; then
+                  echo Certificate and private key already created, nothing to do
+                  cp existing-metrics-cert/metrics-cert.tar.gz generated-metrics-cert/.
+                  exit 0
+                fi
+                openssl req -x509 -newkey rsa:2048 -keyout metrics.key \
+                  -out metrics.crt -days 365 -nodes -subj \
+                  "/C=UK/ST=London/L=London/O=GDS/CN=metrics.{{deploy_env}}.${SYSTEM_DNS_ZONE_NAME}"
+                tar czvf generated-metrics-cert/metrics-cert.tar.gz metrics.crt metrics.key
+        on_success:
+          put: metrics-cert
+          params:
+            file: generated-metrics-cert/metrics-cert.tar.gz
       - task: generate-cf-secrets
         config:
           platform: linux
@@ -483,6 +525,7 @@ jobs:
             - name: paas-cf
             - name: cf-secrets
               path: existing-cf-secrets
+            - name: bosh-tfstate
           outputs:
             - name: generated-cf-secrets
           run:
@@ -514,6 +557,7 @@ jobs:
           - get: concourse-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
+          - get: metrics-cert
           - get: cf-secrets
             passed: ['generate-cf-secrets']
 
@@ -551,6 +595,8 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+            - name: metrics-cert
+
           outputs:
             - name: updated-tfstate
           params:
@@ -568,6 +614,7 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
+                tar xzvf metrics-cert/metrics-cert.tar.gz -C .
 
                 terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
@@ -633,7 +680,6 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
-
       - task: extract-terraform-outputs
         config:
           platform: linux

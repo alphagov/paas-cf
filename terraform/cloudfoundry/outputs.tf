@@ -65,3 +65,8 @@ output "elastic_master_elb_name" {
 output "elastic_master_elb_dns_name" {
   value = "${aws_elb.es_master_elb.dns_name}"
 }
+
+output "metrics_elb_name" {
+  value = "${aws_elb.metrics_elb.name}"
+}
+

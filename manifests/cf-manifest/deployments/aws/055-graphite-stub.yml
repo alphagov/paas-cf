@@ -14,6 +14,8 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.metrics_elb_name ))
 
 jobs:
   - name: graphite_z1
