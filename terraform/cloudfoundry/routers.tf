@@ -124,7 +124,7 @@ resource "aws_elb" "logsearch_elb" {
   ]
 
   health_check {
-    target = "TCP:5601"
+    target = "TCP:5602"
     interval = "${var.health_check_interval}"
     timeout = "${var.health_check_timeout}"
     healthy_threshold = "${var.health_check_healthy}"
@@ -132,7 +132,7 @@ resource "aws_elb" "logsearch_elb" {
   }
 
   listener {
-    instance_port = 5601
+    instance_port = 5602
     instance_protocol = "http"
     lb_port = 443
     lb_protocol = "https"

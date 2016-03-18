@@ -264,6 +264,7 @@ jobs:
   release: logsearch
   templates:
   - {name: kibana, release: logsearch}
+  - {name: haproxy, release: logsearch}
   resource_pool: kibana_z1
   instances: 1
   networks:
@@ -286,6 +287,10 @@ properties:
     cluster_name: logsearch
   kibana:
     elasticsearch: (( concat terraform_outputs.elastic_master_elb_dns_name ":9200" ))
+  haproxy:
+    inbound_port: 5602
+    backend_servers: ["localhost"]
+    backend_port: 5601
   elasticsearch_config:
     elasticsearch:
       host: (( grab terraform_outputs.elastic_master_elb_dns_name ))
