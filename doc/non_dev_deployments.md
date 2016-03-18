@@ -44,6 +44,18 @@ make tasks (eg for production use `make prod bootstrap`)
 Once the deployer-concourse has been created, the bootstrap-concourse should be
 destroyed.
 
+### Environments that create tags in git.
+
+Some deployments create release tags in git (eg the ci master deployment, and
+the staging deployment). These therefore need write access to the git repo.
+This is done as follows:
+
+* Run the `generate-git-keys` job on the deployer concourse (found in the
+  `release` group of the `create-bosh-cloudfoundry` pipeline)
+* Grab the generated ssh public key from the output of that job.
+* Add this as a deploy key to the repo. Set the title to the FQDN of the
+  deployer concourse, and give it write access.
+
 ## Recording credentials etc.
 
 Once deployed, concourse password should be recorded in the credentials store
