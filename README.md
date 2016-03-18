@@ -245,16 +245,16 @@ ssh -o ProxyCommand="ssh -W%h:%p %r@<deployer_concourse_ip>" vcap@10.0.0.6
 
 ## Concourse credentials
 
-The environment setup script generates the concourse ATC password for the admin
-user, based on the AWS credentials, the environment name and the application
-name.
+By default, the environment setup script generates the concourse ATC password
+for the admin user, based on the AWS credentials, the environment name and the
+application name. If the `CONCOURSE_ATC_PASSWORD` environment variable is set,
+this will be used instead. These credentials are output by all of the pipeline
+deployment tasks.
 
 These credentials will also be used by the *Deployer Concourse*.
 
-If you are the owner of the environment with the original AWS credentials,
-run `TARGET_CONCOURSE=bootstrap ./concourse/scripts/environment.sh` to get them again.
-
-If not, it can be found in the `basic_auth_password` property of `concourse-manifest.yml` in the state bucket.
+If necessary, the concourse password can be found in the `basic_auth_password`
+property of `concourse-manifest.yml` in the state bucket.
 
 You can also learn the credentials from the `atc` process arguments:
 

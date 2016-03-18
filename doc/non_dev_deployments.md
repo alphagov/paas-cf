@@ -49,3 +49,11 @@ destroyed.
 Once deployed, concourse password should be recorded in the credentials store
 so that other team members can access the environment. This should be done in a
 way that makes it clear what the `DEPLOY_ENV` is for the deployment.
+
+## Accessing an existing deployment
+
+In order to operate on an existing deployment that was created with a different
+AWS key to your own, it's necessary to export the concourse password:
+```
+export CONCOURSE_ATC_PASSWORD=the_password
+```
