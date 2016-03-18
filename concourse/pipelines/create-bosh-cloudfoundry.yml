@@ -1227,7 +1227,6 @@ jobs:
               export CONCOURSE_ATC_PASSWORD
               ./paas-cf/concourse/scripts/bosh-cli.sh bosh status
 
-
   - name: tag-release
     plan:
       - aggregate:
