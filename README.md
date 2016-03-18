@@ -258,8 +258,9 @@ ssh -o ProxyCommand="ssh -W%h:%p %r@<deployer_concourse_ip>" vcap@10.0.0.6
 
 ## Concourse credentials
 
-`./vagrant/deploy.sh` generates the concourse ATC password for the admin user,
-based on the AWS credentials, the environment name and the application name.
+The environment setup script generates the concourse ATC password for the admin
+user, based on the AWS credentials, the environment name and the application
+name.
 
 These credentials will also be used by the *Deployer Concourse*.
 
