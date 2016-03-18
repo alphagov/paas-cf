@@ -168,20 +168,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev
 
 ## Optionally deploy to a different AWS account
 
-To deploy to a different account, you'll need to export AWS access keys 
-and secrets for the account. eg to deploy/use the CI account:
-
-```
-export AWS_ACCESS_KEY_ID=your_ci_access_key
-export AWS_SECRET_ACCESS_KEY=your_ci_secret_key
-make ci
-```
-
-Due to the isolation between AWS accounts, when switching accounts, it's
-necessary to start with a comletely new deployment.
-
-**Note:** Different AWS accounts use different DNS names, so it'll be necessary
-to adjust some of the instructions above accordingly.
+See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 
 ## Sharing your Bootstrap Concourse
 
@@ -258,15 +245,16 @@ ssh -o ProxyCommand="ssh -W%h:%p %r@<deployer_concourse_ip>" vcap@10.0.0.6
 
 ## Concourse credentials
 
-`./vagrant/deploy.sh` generates the concourse ATC password for the admin user,
-based on the AWS credentials, the environment name and the application name.
+By default, the environment setup script generates the concourse ATC password
+for the admin user, based on the AWS credentials, the environment name and the
+application name. If the `CONCOURSE_ATC_PASSWORD` environment variable is set,
+this will be used instead. These credentials are output by all of the pipeline
+deployment tasks.
 
 These credentials will also be used by the *Deployer Concourse*.
 
-If you are the owner of the environment with the original AWS credentials,
-run `TARGET_CONCOURSE=bootstrap ./concourse/scripts/environment.sh` to get them again.
-
-If not, it can be found in the `basic_auth_password` property of `concourse-manifest.yml` in the state bucket.
+If necessary, the concourse password can be found in the `basic_auth_password`
+property of `concourse-manifest.yml` in the state bucket.
 
 You can also learn the credentials from the `atc` process arguments:
 
