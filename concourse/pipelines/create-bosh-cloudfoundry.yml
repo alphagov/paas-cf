@@ -107,6 +107,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-CA.tar.gz
 
+  - name: logsearch-cert
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: logsearch-cert.tar.gz
+
   - name: concourse-manifest
     type: s3-iam
     source:
@@ -232,6 +239,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} metrics-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} logsearch-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
@@ -483,6 +491,7 @@ jobs:
             trigger: true
           - get: cf-secrets
           - get: metrics-cert
+          - get: logsearch-cert
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
@@ -511,12 +520,13 @@ jobs:
                 fi
                 openssl req -x509 -newkey rsa:2048 -keyout metrics.key \
                   -out metrics.crt -days 365 -nodes -subj \
-                  "/C=UK/ST=London/L=London/O=GDS/CN=metrics.{{deploy_env}}.${SYSTEM_DNS_ZONE_NAME}"
+                  "/C=UK/ST=London/L=London/O=GDS/CN=metrics.${SYSTEM_DNS_ZONE_NAME}"
                 tar czvf generated-metrics-cert/metrics-cert.tar.gz metrics.crt metrics.key
         on_success:
           put: metrics-cert
           params:
             file: generated-metrics-cert/metrics-cert.tar.gz
+
       - task: generate-cf-secrets
         config:
           platform: linux
@@ -543,6 +553,38 @@ jobs:
           params:
             file: generated-cf-secrets/cf-secrets.yml
 
+      - task: generate-logsearch-certificates
+        config:
+          platform: linux
+          image: docker:///governmentpaas/curl-ssl
+          inputs:
+            - name: logsearch-cert
+              path: existing-logsearch-cert
+          outputs:
+            - name: generated-logsearch-cert
+          params:
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                tar xzvf existing-logsearch-cert/logsearch-cert.tar.gz
+                if [ -f logsearch.crt ] && [ -f logsearch.key ]; then
+                  echo Certificate and private key already created, nothing to do
+                  cp existing-logsearch-cert/logsearch-cert.tar.gz generated-logsearch-cert/.
+                  exit 0
+                fi
+                openssl req -x509 -newkey rsa:2048 -keyout logsearch.key \
+                  -out logsearch.crt -days 365 -nodes -subj \
+                  "/C=UK/ST=London/L=London/O=GDS/CN=logsearch.${SYSTEM_DNS_ZONE_NAME}"
+                tar czvf generated-logsearch-cert/logsearch-cert.tar.gz logsearch.crt logsearch.key
+        on_success:
+          put: logsearch-cert
+          params:
+            file: generated-logsearch-cert/logsearch-cert.tar.gz
+
   - name: cf-terraform
     serial_groups: [cf-deploy]
     serial: true
@@ -558,6 +600,8 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
           - get: metrics-cert
+          - get: logsearch-cert
+            passed: ['generate-cf-secrets']
           - get: cf-secrets
             passed: ['generate-cf-secrets']
 
@@ -596,7 +640,7 @@ jobs:
             - name: paas-cf
             - name: cf-tfstate
             - name: metrics-cert
-
+            - name: logsearch-cert
           outputs:
             - name: updated-tfstate
           params:
@@ -615,6 +659,7 @@ jobs:
                 . terraform-variables/bosh.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
                 tar xzvf metrics-cert/metrics-cert.tar.gz -C .
+                tar xzvf logsearch-cert/logsearch-cert.tar.gz -C .
 
                 terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry

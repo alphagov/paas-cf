@@ -26,3 +26,5 @@ terraform_outputs:
   elastic_master_elb_name: elastic_master_elb
   elastic_master_elb_dns_name: elastic_master_elb_dns
   metrics_elb_name: metrics_elb_name
+  logsearch_elb_name: logsearch_elb_name
+

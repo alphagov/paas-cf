@@ -59,6 +59,17 @@ resource_pools:
     elbs:
       - (( grab terraform_outputs.ingestor_elb_name ))
 
+- name: kibana_z1
+  network: (( grab resource_pools.small_z1.network ))
+  stemcell: (( grab meta.stemcell ))
+  env: (( grab meta.default_env ))
+  cloud_properties:
+    availability_zone: (( grab meta.zones.z1 ))
+    instance_type: (( grab resource_pools.small_z1.cloud_properties.instance_type ))
+    ephemeral_disk: (( grab resource_pools.small_z1.cloud_properties.ephemeral_disk ))
+    elbs:
+      - (( grab terraform_outputs.logsearch_elb_name ))
+
 disk_pools:
 - name: elasticsearch_master
   disk_size: 102400
@@ -253,7 +264,8 @@ jobs:
   release: logsearch
   templates:
   - {name: kibana, release: logsearch}
-  resource_pool: small_z1
+  - {name: haproxy, release: logsearch}
+  resource_pool: kibana_z1
   instances: 1
   networks:
   - name: cf1
@@ -275,6 +287,10 @@ properties:
     cluster_name: logsearch
   kibana:
     elasticsearch: (( concat terraform_outputs.elastic_master_elb_dns_name ":9200" ))
+  haproxy:
+    inbound_port: 5602
+    backend_servers: ["localhost"]
+    backend_port: 5601
   elasticsearch_config:
     elasticsearch:
       host: (( grab terraform_outputs.elastic_master_elb_dns_name ))
