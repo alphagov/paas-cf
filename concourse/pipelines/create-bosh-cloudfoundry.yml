@@ -520,7 +520,7 @@ jobs:
                 fi
                 openssl req -x509 -newkey rsa:2048 -keyout metrics.key \
                   -out metrics.crt -days 365 -nodes -subj \
-                  "/C=UK/ST=London/L=London/O=GDS/CN=metrics.{{deploy_env}}.${SYSTEM_DNS_ZONE_NAME}"
+                  "/C=UK/ST=London/L=London/O=GDS/CN=metrics.${SYSTEM_DNS_ZONE_NAME}"
                 tar czvf generated-metrics-cert/metrics-cert.tar.gz metrics.crt metrics.key
         on_success:
           put: metrics-cert
