@@ -84,6 +84,7 @@ set_env_class_stage:
 	$(eval export MAKEFILE_ENV_TARGET=stage)
 	$(eval export AWS_ACCOUNT=stage)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export TAG_PREFIX=prod-)
 	$(eval export PAAS_CF_TAG_FILTER=stage-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
