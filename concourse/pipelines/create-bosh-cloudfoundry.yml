@@ -203,7 +203,7 @@ resources:
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      key: release-version
+      key: release-version-{{aws_account}}
       initial_version: 0.0.0
 
 jobs:
