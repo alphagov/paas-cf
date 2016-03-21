@@ -60,7 +60,7 @@ bootstrap-destroy: ## Destroy bootsrap
 
 .PHONY: bosh-cli
 bosh-cli: ## Create interactive connnection to BOSH container
-	concourse/scripts/bosh-cli.sh $(DEPLOY_ENV)
+	concourse/scripts/bosh-cli.sh
 
 .PHONY: set_env_class_dev
 set_env_class_dev:
