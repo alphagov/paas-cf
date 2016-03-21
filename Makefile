@@ -1,5 +1,6 @@
 .PHONY: help test spec lint_yaml lint_terraform lint_shellcheck check-env-vars
 
+
 .DEFAULT_GOAL := help
 
 help:
