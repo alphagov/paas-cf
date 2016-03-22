@@ -1,6 +1,7 @@
 groups:
   - name: all
     jobs:
+      - pipeline-lock
       - init
       - bosh-terraform
       - generate-bosh-config
@@ -15,6 +16,7 @@ groups:
       - custom-acceptance-tests
       - bosh-cli-test
       - tag-release
+      - pipeline-unlock
   - name: bosh
     jobs:
       - init
@@ -33,6 +35,7 @@ groups:
       - custom-acceptance-tests
       - bosh-cli-test
       - tag-release
+      - pipeline-unlock
   - name: release
     jobs:
       - generate-git-keys
@@ -215,12 +218,24 @@ resources:
       private_key: {{pipeline_lock_git_private_key}}
 
 jobs:
+  - name: pipeline-lock
+    serial: true
+    plan:
+      - put: pipeline-pool
+        params:
+          claim: lock
+      - put: pipeline-trigger
+        params: {bump: patch}
+
   - name: init
     serial_groups: [bosh-deploy]
     serial: true
     plan:
+      - get: pipeline-trigger
+        trigger: true
+        passed: [pipeline-lock]
       - get: paas-cf
-        trigger: {{auto_deploy}}
+        passed: [pipeline-lock]
       - get: concourse-manifest
       - task: self-update-pipeline
         config:
@@ -1274,6 +1289,17 @@ jobs:
               fi
               paas-cf/concourse/scripts/tag-release.sh \
                 ${TAG_PREFIX} ${aws_account} ${deploy_env} ${TAG_FILTER}
+
+  - name: pipeline-unlock
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        passed: ['tag-release']
+        trigger: true
+      - get: pipeline-pool
+      - put: pipeline-pool
+        params:
+          release: pipeline-pool
 
   - name: generate-git-keys
     plan:
