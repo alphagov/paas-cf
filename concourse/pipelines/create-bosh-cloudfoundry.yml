@@ -233,7 +233,7 @@ jobs:
       - task: verify-tag
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image: docker:///governmentpaas/git-ssh
           inputs:
             - name: paas-cf
           run: 
