@@ -1,0 +1,2 @@
+awscli>=1.10.16
+yamllint>=1.0.0

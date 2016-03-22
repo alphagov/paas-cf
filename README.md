@@ -33,7 +33,13 @@ or destroyed.
 
 ### Prerequisites
 
-* You will need a recent version of [Vagrant installed][]. The exact version
+In order to use this repository you will need:
+
+* [AWS Command Line tool (`awscli`)](https://aws.amazon.com/cli/). You can
+install it using [any of the official methods](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
+or by using [`virtualenv`](https://virtualenv.pypa.io/en/latest/) and pip `pip install -r requirements.txt`
+
+* a recent version of [Vagrant installed][]. The exact version
 requirements are listed in the [`Vagrantfile`](vagrant/Vagrantfile).
 
 [Vagrant installed]: https://docs.vagrantup.com/v2/installation/index.html
@@ -44,7 +50,7 @@ Install the AWS plugin for Vagrant:
 vagrant plugin install vagrant-aws
 ```
 
-* You must provide AWS access keys as environment variables:
+* provide AWS access keys as environment variables:
 
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
@@ -127,7 +133,7 @@ supporting services for the platform.
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute: 
+Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute:
 ```
 make dev pipelines
 ```

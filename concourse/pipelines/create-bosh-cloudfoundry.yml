@@ -41,7 +41,7 @@ groups:
       - bump-major-version
       - bump-patch-version
   - name: tests
-    jobs: 
+    jobs:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -205,6 +205,14 @@ resources:
       region_name: {{aws_region}}
       key: release-version
       initial_version: 0.0.0
+
+  - name: pipeline-pool
+    type: pool
+    source:
+      uri: {{git_concourse_pool_clone_full_url_ssh}}
+      branch: master
+      pool: {{pipeline_name}}
+      private_key: {{pipeline_lock_git_private_key}}
 
 jobs:
   - name: init
