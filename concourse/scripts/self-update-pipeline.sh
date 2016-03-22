@@ -26,5 +26,5 @@ else
   CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.properties.atc.basic_auth_password concourse-manifest/concourse-manifest.yml)
   export CONCOURSE_ATC_PASSWORD
 
-  make -C ./paas-cf "${MAKEFILE_ENV_TARGET}"
+  make -C ./paas-cf "${MAKEFILE_ENV_TARGET}" pipelines
 fi
