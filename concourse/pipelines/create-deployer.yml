@@ -291,6 +291,22 @@ jobs:
         params:
           file: terraform-apply/concourse.tfstate
 
+    # Temporary task to add the git-${DEPLOY_ENV} user to git group
+    - task: add-git-user-to-group
+      config:
+        image: docker:///governmentpaas/awscli
+        inputs:
+        - name: paas-cf
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            aws iam add-user-to-group --user-name git-${DEPLOY_ENV} --group-name concourse-pool-git-rw
+
     - put: concourse-cert
       params:
         file: generate-concourse-cert/concourse-cert.tar.gz
