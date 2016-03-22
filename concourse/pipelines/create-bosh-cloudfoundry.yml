@@ -230,6 +230,20 @@ jobs:
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
 
+      - task: verify-tag
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+            - name: paas-cf
+          run: 
+            path: sh
+            args: 
+              - -c
+              - |
+                cd paas-cf
+                git verify-tag stage-0.0.9
+
       - task: bootstrap-s3-state
         config:
           platform: linux
