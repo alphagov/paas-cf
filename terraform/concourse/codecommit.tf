@@ -31,3 +31,9 @@ resource "aws_iam_user" "git" {
 #    ]
 #    append = true
 #}
+
+resource "aws_iam_user_ssh_key" "git" {
+  username = "${aws_iam_user.git.name}"
+  encoding = "PEM"
+  public_key = "${var.git_rsa_id_pub}"
+}
