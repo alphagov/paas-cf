@@ -36,13 +36,15 @@ groups:
       - bosh-cli-test
       - tag-release
       - pipeline-unlock
-  - name: release
+  - name: operator
     jobs:
       - generate-git-keys
       - show-release-version
       - bump-minor-version
       - bump-major-version
       - bump-patch-version
+      - pipeline-check-lock
+      - pipeline-release-lock
   - name: tests
     jobs:
       - smoke-tests
@@ -1331,6 +1333,47 @@ jobs:
       - get: pipeline-trigger
         passed: ['tag-release']
         trigger: true
+      - get: pipeline-pool
+      - put: pipeline-pool
+        params:
+          release: pipeline-pool
+
+  - name: pipeline-check-lock
+    plan:
+      - get: pipeline-pool
+      - task: print-pipeline-lock-state
+        config:
+          image: docker:///governmentpaas/git-ssh
+          platform: linux
+          inputs:
+          - name: pipeline-pool
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              if [ -f pipeline-pool/{{pipeline_name}}/claimed/lock ]; then
+                current_status_message="LOCKED"
+              elif [ -f pipeline-pool/{{pipeline_name}}/unclaimed/lock ]; then
+                current_status_message="UNLOCKED"
+              else
+                echo "Error: Cannot find lock in pool: pipeline-pool/{{pipeline_name}}/{un,}claimed/lock"
+                exit 1
+              fi
+
+              cd pipeline-pool
+              export GIT_PAGER="cat"
+              git log -1 --pretty=format:"
+              Lock status is: ${current_status_message}
+
+              Last commit change:
+               - %cr at %ci
+               - %s
+              "
+
+  - name: pipeline-release-lock
+    plan:
       - get: pipeline-pool
       - put: pipeline-pool
         params:
