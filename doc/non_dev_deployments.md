@@ -33,7 +33,7 @@ bucket names have to be gloablly unique)
 
 For staging and production a `DEPLOY_ENV` is required even though it's not used
 in domain names. Staging should use a `DEPLOY_ENV` of "staging", and production
-should use "production".
+should use "prod".
 
 ## Deployment process
 
