@@ -2,22 +2,49 @@
 set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-
 export TARGET_CONCOURSE=deployer
 # shellcheck disable=SC2091
 $("${SCRIPT_DIR}/environment.sh" "$@")
-"${SCRIPT_DIR}/fly_sync_and_login.sh"
 
-env="${DEPLOY_ENV}"
-pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
+download_git_id_rsa() {
+  git_id_rsa_file=$(mktemp)
 
-cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
-cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
-cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
-cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
+  aws s3 cp "s3://${env}-state/git_id_rsa" "${git_id_rsa_file}"
+
+  git_id_rsa=$(cat "${git_id_rsa_file}")
+
+  rm -f "${git_id_rsa_file}"
+}
+
+get_git_concourse_pool_clone_full_url_ssh() {
+  tfstate_file=$(mktemp)
+
+  aws s3 cp "s3://${env}-state/concourse.tfstate" "${tfstate_file}"
+
+  git_concourse_pool_clone_full_url_ssh=$(awk -F '"' '/git_concourse_pool_clone_full_url_ssh/ {print $4}' "${tfstate_file}")
+
+  rm -f "${tfstate_file}"
+}
+
+prepare_environment() {
+  "${SCRIPT_DIR}/fly_sync_and_login.sh"
+
+  env="${DEPLOY_ENV}"
+  export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
+
+  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
+
+  cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
+  cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
+  cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
+  cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
+
+  download_git_id_rsa
+  get_git_concourse_pool_clone_full_url_ssh
+}
 
 generate_vars_file() {
-   cat <<EOF
+  cat <<EOF
 ---
 pipeline_name: ${pipeline_name}
 makefile_env_target: ${MAKEFILE_ENV_TARGET:-dev}
@@ -27,7 +54,7 @@ deploy_env: ${env}
 state_bucket: ${env}-state
 pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
-aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
+aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
@@ -36,7 +63,9 @@ paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
+git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
 EOF
+  echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
 
 generate_manifest_file() {
@@ -81,6 +110,7 @@ update_pipeline() {
   esac
 }
 
+prepare_environment
 for p in $pipelines_to_update; do
   update_pipeline "$p"
 done

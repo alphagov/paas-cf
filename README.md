@@ -33,7 +33,13 @@ or destroyed.
 
 ### Prerequisites
 
-* You will need a recent version of [Vagrant installed][]. The exact version
+In order to use this repository you will need:
+
+* [AWS Command Line tool (`awscli`)](https://aws.amazon.com/cli/). You can
+install it using [any of the official methods](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
+or by using [`virtualenv`](https://virtualenv.pypa.io/en/latest/) and pip `pip install -r requirements.txt`
+
+* a recent version of [Vagrant installed][]. The exact version
 requirements are listed in the [`Vagrantfile`](vagrant/Vagrantfile).
 
 [Vagrant installed]: https://docs.vagrantup.com/v2/installation/index.html
@@ -44,7 +50,7 @@ Install the AWS plugin for Vagrant:
 vagrant plugin install vagrant-aws
 ```
 
-* You must provide AWS access keys as environment variables:
+* provide AWS access keys as environment variables:
 
 ```
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
@@ -127,7 +133,7 @@ supporting services for the platform.
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-Deploy the pipeline configurations with `make`. Select the target based on which AWS accout you want to work with. For instance, execute: 
+Deploy the pipeline configurations with `make`. Select the target based on which AWS account you want to work with. For instance, execute:
 ```
 make dev pipelines
 ```
@@ -138,6 +144,10 @@ if you want to deploy to DEV account.
 Run the `create-bosh-cloudfoundry` pipeline. This will deploy MicroBOSH, and CloudFoundry.
 
 Run `make dev showenv` to show environment information such as system URLs and Concourse password.
+
+This pipeline implements locking, to prevent two executions of the
+same pipelines to happen at the same time. More details
+in [Additional Notes](#check-and-release-pipeline-locking).
 
 NB: The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
 overnight](#overnight-deletion-of-environments) by default.
@@ -159,6 +169,19 @@ deployment.
 You will need to install some dependencies to run the unit tests on your own
 machine. The most up-to-date reference for these is the Travis CI
 configuration in [`.travis.yml`](.travis.yml).
+
+## Check and release pipeline locking
+
+the `create-bosh-cloudfoundry` pipeline implements pipeline locking using
+[the concourse pool resource](https://github.com/concourse/pool-resource).
+
+This lock is acquired at the beginning and released the end of all the
+pipeline if it finishes successfully.
+
+In occasions it might be required to check the state or force the release
+of the lock. For that you can manually trigger the jobs `pipeline-check-lock`
+and `pipeline-release-lock` in the job group `Operator`.
+
 
 ## Optionally override the branch used by pipelines
 

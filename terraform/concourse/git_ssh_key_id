@@ -1,0 +1,1 @@
+Empty file git_ssh_key_id to avoid terraform fail during the first run.

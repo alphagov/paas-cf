@@ -1,6 +1,7 @@
 groups:
   - name: all
     jobs:
+      - pipeline-lock
       - init
       - bosh-terraform
       - generate-bosh-config
@@ -15,6 +16,7 @@ groups:
       - custom-acceptance-tests
       - bosh-cli-test
       - tag-release
+      - pipeline-unlock
   - name: bosh
     jobs:
       - init
@@ -33,15 +35,18 @@ groups:
       - custom-acceptance-tests
       - bosh-cli-test
       - tag-release
-  - name: release
+      - pipeline-unlock
+  - name: operator
     jobs:
       - generate-git-keys
       - show-release-version
       - bump-minor-version
       - bump-major-version
       - bump-patch-version
+      - pipeline-check-lock
+      - pipeline-release-lock
   - name: tests
-    jobs: 
+    jobs:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -157,6 +162,13 @@ resources:
       versioned_file: id_rsa
       region_name: {{aws_region}}
 
+  - name: git-ssh-private-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: git_id_rsa
+      region_name: {{aws_region}}
+
   - name: cf-tfstate
     type: s3-iam
     source:
@@ -206,13 +218,61 @@ resources:
       key: release-version
       initial_version: 0.0.0
 
+  - name: pipeline-pool
+    type: pool
+    source:
+      uri: {{git_concourse_pool_clone_full_url_ssh}}
+      branch: master
+      pool: {{pipeline_name}}
+      private_key: {{pipeline_lock_git_private_key}}
+
 jobs:
-  - name: init
-    serial_groups: [bosh-deploy]
+  - name: pipeline-lock
     serial: true
     plan:
       - get: paas-cf
         trigger: {{auto_deploy}}
+      - get: git-ssh-private-key
+      - task: init-pipeline-pool
+        config:
+          platform: linux
+          image: docker:///governmentpaas/git-ssh
+          inputs:
+            - name: paas-cf
+            - name: git-ssh-private-key
+          params:
+            DEPLOY_ENV: {{deploy_env}}
+            AWS_ACCOUNT: {{aws_account}}
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              chmod 600 git-ssh-private-key/git_id_rsa
+              git config --global push.default simple
+              git config --global user.email "concourse@${DEPLOY_ENV}.${AWS_ACCOUNT}"
+              git config --global user.name "Concourse server ${DEPLOY_ENV} in ${AWS_ACCOUNT}"
+
+              ./paas-cf/concourse/scripts/create_pool_lock.sh \
+                {{git_concourse_pool_clone_full_url_ssh}} \
+                $(pwd)/git-ssh-private-key/git_id_rsa \
+                {{pipeline_name}} lock
+      - put: pipeline-pool
+        params:
+          claim: lock
+      - put: pipeline-trigger
+        params: {bump: patch}
+
+  - name: init
+    serial_groups: [bosh-deploy]
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        trigger: true
+        passed: [pipeline-lock]
+      - get: paas-cf
+        passed: [pipeline-lock]
       - get: concourse-manifest
       - task: self-update-pipeline
         config:
@@ -1266,6 +1326,58 @@ jobs:
               fi
               paas-cf/concourse/scripts/tag-release.sh \
                 ${TAG_PREFIX} ${aws_account} ${deploy_env} ${TAG_FILTER}
+
+  - name: pipeline-unlock
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        passed: ['tag-release']
+        trigger: true
+      - get: pipeline-pool
+      - put: pipeline-pool
+        params:
+          release: pipeline-pool
+
+  - name: pipeline-check-lock
+    plan:
+      - get: pipeline-pool
+      - task: print-pipeline-lock-state
+        config:
+          image: docker:///governmentpaas/git-ssh
+          platform: linux
+          inputs:
+          - name: pipeline-pool
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              if [ -f pipeline-pool/{{pipeline_name}}/claimed/lock ]; then
+                current_status_message="LOCKED"
+              elif [ -f pipeline-pool/{{pipeline_name}}/unclaimed/lock ]; then
+                current_status_message="UNLOCKED"
+              else
+                echo "Error: Cannot find lock in pool: pipeline-pool/{{pipeline_name}}/{un,}claimed/lock"
+                exit 1
+              fi
+
+              cd pipeline-pool
+              export GIT_PAGER="cat"
+              git log -1 --pretty=format:"
+              Lock status is: ${current_status_message}
+
+              Last commit change:
+               - %cr at %ci
+               - %s
+              "
+
+  - name: pipeline-release-lock
+    plan:
+      - get: pipeline-pool
+      - put: pipeline-pool
+        params:
+          release: pipeline-pool
 
   - name: generate-git-keys
     plan:

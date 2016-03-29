@@ -39,27 +39,27 @@ lint_shellcheck:
 	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
 
 .PHONY: dev
-dev: check-env-vars set_env_class_dev ## Set environment to DEV
+dev: check-env-vars set_env_class_dev ## Set Environment to DEV
 	@true
 
 .PHONY: ci
-ci: check-env-vars set_env_class_ci ## Set environment to CI
+ci: check-env-vars set_env_class_ci ## Set Environment to CI
 	@true
 
 .PHONY: stage
-stage: check-env-vars set_env_class_stage  ## Set Envirnoment to Staging
+stage: check-env-vars set_env_class_stage  ## Set Environment to Staging
 	@true
 
 .PHONY: prod
-prod: check-env-vars set_env_class_prod ## Set Envirnoment to Production 
+prod: check-env-vars set_env_class_prod ## Set Environment to Production
 	@true
 
 .PHONY: bootstrap
-bootstrap: ## Start bootsrap 
+bootstrap: ## Start bootstrap
 	vagrant/deploy.sh
 
 .PHONY: bootstrap-destroy
-bootstrap-destroy: ## Destroy bootsrap 
+bootstrap-destroy: ## Destroy bootstrap
 	./vagrant/destroy.sh
 
 .PHONY: bosh-cli
