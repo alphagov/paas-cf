@@ -40,15 +40,19 @@ lint_shellcheck:
 
 .PHONY: dev
 dev: check-env-vars set_env_class_dev ## Set environment to DEV
+	@true
 
 .PHONY: ci
 ci: check-env-vars set_env_class_ci ## Set environment to CI
+	@true
 
 .PHONY: stage
 stage: check-env-vars set_env_class_stage  ## Set Envirnoment to Staging
+	@true
 
 .PHONY: prod
 prod: check-env-vars set_env_class_prod ## Set Envirnoment to Production 
+	@true
 
 .PHONY: bootstrap
 bootstrap: ## Start bootsrap 
