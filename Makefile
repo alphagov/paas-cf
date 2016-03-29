@@ -101,3 +101,8 @@ set_env_class_prod:
 .PHONY: pipelines
 pipelines: ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
+
+.PHONY: showenv
+showenv: ## Display environment information
+	$(eval export TARGET_CONCOURSE=deployer)
+	@concourse/scripts/environment.sh
