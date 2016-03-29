@@ -137,6 +137,8 @@ if you want to deploy to DEV account.
 
 Run the `create-bosh-cloudfoundry` pipeline. This will deploy MicroBOSH, and CloudFoundry.
 
+Run `make dev showenv` to show environment information such as system URLs and Concourse password.
+
 NB: The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
 overnight](#overnight-deletion-of-environments) by default.
 

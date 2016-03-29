@@ -47,6 +47,10 @@ export CONCOURSE_ATC_PASSWORD=${CONCOURSE_ATC_PASSWORD}
 export CONCOURSE_URL=${CONCOURSE_URL}
 export FLY_CMD=${FLY_CMD}
 export FLY_TARGET=${FLY_TARGET}
+export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME}
+export LOGSEARCH_URL=https://logsearch.${SYSTEM_DNS_ZONE_NAME}
+export GRAFANA_URL=https://metrics.${SYSTEM_DNS_ZONE_NAME}
+export GRAPHITE_URL=https://metrics.${SYSTEM_DNS_ZONE_NAME}:3001
 EOF
 
 echo "Deploy environment name: $DEPLOY_ENV" 1>&2
