@@ -270,6 +270,41 @@ jobs:
               "/C=UK/ST=London/L=London/O=GDS/CN=deployer.${SYSTEM_DNS_ZONE_NAME}"
             tar czvf concourse-cert.tar.gz concourse.crt concourse.key
 
+    # Temporary task to retrieve the codecommit default branch if it exists
+    - task: get-codecommit-default-branch
+      config:
+        image: docker:///governmentpaas/awscli
+        inputs:
+        - name: paas-cf
+        outputs:
+        - name: codecommit-default-branch
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+        run:
+          path: sh
+          args:
+          - -c
+          - |
+            aws codecommit get-repository \
+              --region us-east-1 \
+              --repository-name concourse-pool-${DEPLOY_ENV} \
+              --query 'repositoryMetadata.defaultBranch' \
+              --output text > output.txt 2>&1
+            RET=$?
+
+            if [ "$RET" == "0" ]; then
+              if [ "$(cat output.txt)" == "None" ]; then
+                echo "" > codecommit-default-branch/default_branch.txt
+              else
+                cat output.txt > codecommit-default-branch/default_branch.txt
+              fi
+            elif grep -q RepositoryDoesNotExistException output.txt; then
+              echo "" > codecommit-default-branch/default_branch.txt
+            else
+              cat output.txt
+              exit 1
+            fi
+
     - task: terraform-apply
       config:
         image: docker:///governmentpaas/terraform
@@ -279,6 +314,7 @@ jobs:
         - name: concourse-terraform-state
         - name: generate-concourse-cert
         - name: git-ssh-public-key
+        - name: codecommit-default-branch
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -292,7 +328,10 @@ jobs:
           - |
             cp generate-concourse-cert/concourse.crt generate-concourse-cert/concourse.key .
             . vpc-terraform-outputs/tfvars.sh
+
             export TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
+            export TF_VAR_git_default_branch_workaround=$(cat codecommit-default-branch/default_branch.txt)
+
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
