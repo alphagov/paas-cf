@@ -1002,61 +1002,11 @@ jobs:
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
-      - task: generate-test-config
-        config:
-          platform: linux
-          image: docker:///governmentpaas/bosh-cli
-          inputs:
-            - name: cf-release
-            - name: paas-cf
-            - name: cf-manifest
-          outputs:
-            - name: test-config
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ./paas-cf/tests/bosh-template-renderer/render.rb \
-                  ./cf-release/jobs/smoke-tests/templates/run.erb \
-                  ./cf-release/jobs/smoke-tests/spec \
-                  ./cf-manifest/cf-manifest.yml \
-                    > ./test-config/run
+      - task: smoke-tests-config
+        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
 
-                chmod +x ./test-config/run
-
-                ./paas-cf/tests/bosh-template-renderer/render.rb \
-                  ./cf-release/jobs/smoke-tests/templates/config.json.erb \
-                  ./cf-release/jobs/smoke-tests/spec \
-                  ./cf-manifest/cf-manifest.yml \
-                    > ./test-config/config.json
-
-      - task: run-tests
-        config:
-          platform: linux
-          image: docker:///governmentpaas/cf-acceptance-tests
-          inputs:
-            - name: paas-cf
-            - name: cf-release
-            - name: cf-manifest
-            - name: test-config
-            - name: bosh-CA
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
-                mkdir -p /var/vcap/jobs/smoke-tests/bin/ /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry
-                ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
-                ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
-                ln -snf /usr/local/go /var/vcap/packages/golang1.4
-                ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
-                /var/vcap/jobs/smoke-tests/bin/run
+      - task: smoke-tests-run
+        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
 
   - name: acceptance-tests
     plan:
