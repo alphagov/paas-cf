@@ -20,6 +20,7 @@ consul_server,server.dc1.cf.internal,server.dc2.cf.internal
 consul_agent,
 logsearch,logsearch.${SYSTEM_DNS_ZONE_NAME}
 metrics,metrics.${SYSTEM_DNS_ZONE_NAME}
+router_external,${ROUTER_DOMAINS}
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"
