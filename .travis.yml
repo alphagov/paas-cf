@@ -5,6 +5,7 @@ env:
   global:
     - TF_VERSION="0.6.12"
     - SPRUCE_VERSION="0.13.0"
+    - DEPLOY_ENV="travis"
 
 addons:
   apt:
