@@ -64,6 +64,7 @@ TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
+ALERT_EMAIL_ADDRESS: ${ALERT_EMAIL_ADDRESS:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
@@ -71,7 +72,9 @@ EOF
 generate_manifest_file() {
   # This exists because concourse does not support boolean value interpolation by design
   enable_auto_deploy=$([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
+  continuous_smoke_tests_trigger=$([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
   sed -e "s/{{auto_deploy}}/${enable_auto_deploy}/" \
+    -e "s/{{continuous_smoke_tests_trigger}}/${continuous_smoke_tests_trigger}/" \
     < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 

@@ -1327,7 +1327,7 @@ jobs:
         passed: ['cf-deploy']
       - get: bosh-CA
       - get: smoke-tests-timer
-        trigger: true
+        trigger: {{continuous_smoke_tests_trigger}}
 
       - task: smoke-tests-config
         file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
@@ -1343,6 +1343,7 @@ jobs:
               AWS_DEFAULT_REGION: {{aws_region}}
               DEPLOY_ENV: {{deploy_env}}
               SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+              ALERT_EMAIL_ADDRESS: {{ALERT_EMAIL_ADDRESS}}
             inputs:
               - name: paas-cf
               - name: smoke-tests-log
@@ -1352,4 +1353,5 @@ jobs:
               - -e
               - -c
               - |
-                paas-cf/concourse/scripts/smoke_tests_email.sh ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME}
+                paas-cf/concourse/scripts/smoke_tests_email.sh \
+                  ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}

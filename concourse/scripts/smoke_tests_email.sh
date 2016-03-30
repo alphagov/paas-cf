@@ -4,9 +4,10 @@ set -eu
 
 DEPLOY_ENV=$1
 SYSTEM_DNS_ZONE_NAME=$2
+ALERT_EMAIL_ADDRESS=$3
 
-TO=the-multi-cloud-paas-team@digital.cabinet-office.gov.uk
-FROM=the-multi-cloud-paas-team@digital.cabinet-office.gov.uk
+TO="${ALERT_EMAIL_ADDRESS}"
+FROM="${ALERT_EMAIL_ADDRESS}"
 SMOKE_TEST_LOG=./smoke-tests-log/smoke-tests.log
 LAST_COMMIT_LOG=./smoke-tests-log/last-commit.log
 
