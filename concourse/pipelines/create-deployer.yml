@@ -524,9 +524,7 @@ jobs:
       trigger: true
       passed: [concourse-deploy]
     - get: vpc-terraform-state
-      passed: [vpc]
     - get: concourse-terraform-state
-      passed: [concourse-terraform]
     - get: git-ssh-public-key
       passed: [concourse-terraform]
 
