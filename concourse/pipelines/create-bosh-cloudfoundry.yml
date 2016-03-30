@@ -51,6 +51,9 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-cli-test
+  - name: health
+    jobs:
+      - continuous-smoke-tests
 
 resources:
   - name: pipeline-trigger
@@ -211,6 +214,11 @@ resources:
       branch: master
       pool: {{pipeline_name}}
       private_key: {{pipeline_lock_git_private_key}}
+
+  - name: smoke-tests-timer
+    type: time
+    source:
+      interval: 5m
 
 jobs:
   - name: pipeline-lock
@@ -988,6 +996,7 @@ jobs:
               cf push
 
   - name: smoke-tests
+    serial_groups: [smoke-tests]
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -1304,3 +1313,43 @@ jobs:
             path: cat
             args:
             - release-version/number
+
+  - name: continuous-smoke-tests
+    serial_groups: [smoke-tests]
+    plan:
+      - get: cf-release
+        params:
+          submodules:
+            - src/smoke-tests
+      - get: paas-cf
+        passed: ['cf-deploy']
+      - get: cf-manifest
+        passed: ['cf-deploy']
+      - get: bosh-CA
+      - get: smoke-tests-timer
+        trigger: true
+
+      - task: smoke-tests-config
+        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+
+      - task: smoke-tests-run
+        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        on_failure:
+          task: alert
+          config:
+            platform: linux
+            image: docker:///governmentpaas/awscli
+            params:
+              AWS_DEFAULT_REGION: {{aws_region}}
+              DEPLOY_ENV: {{deploy_env}}
+              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            inputs:
+              - name: paas-cf
+              - name: smoke-tests-log
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                paas-cf/concourse/scripts/smoke_tests_email.sh ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME}
