@@ -1,7 +1,10 @@
 resource "aws_iam_server_certificate" "concourse" {
-  name = "${var.env}-concourse"
+  name_prefix = "${var.env}-concourse-"
   certificate_body = "${file("concourse.crt")}"
   private_key = "${file("concourse.key")}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elb" "concourse" {

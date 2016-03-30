@@ -103,9 +103,12 @@ resource "aws_elb" "es_master_elb" {
 }
 
 resource "aws_iam_server_certificate" "logsearch" {
-  name = "${var.env}-logsearch"
-  certificate_body = "${file("logsearch.crt")}"
-  private_key = "${file("logsearch.key")}"
+  name_prefix = "${var.env}-logsearch-"
+  certificate_body = "${file("generated-certificates/logsearch.crt")}"
+  private_key = "${file("generated-certificates/logsearch.key")}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elb" "logsearch_elb" {
@@ -135,9 +138,12 @@ resource "aws_elb" "logsearch_elb" {
 }
 
 resource "aws_iam_server_certificate" "metrics" {
-  name = "${var.env}-metrics"
-  certificate_body = "${file("metrics.crt")}"
-  private_key = "${file("metrics.key")}"
+  name_prefix = "${var.env}-metrics-"
+  certificate_body = "${file("generated-certificates/metrics.crt")}"
+  private_key = "${file("generated-certificates/metrics.key")}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elb" "metrics_elb" {
