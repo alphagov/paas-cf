@@ -7,7 +7,7 @@ export TARGET_CONCOURSE=deployer
 $("${SCRIPT_DIR}/environment.sh" "$@")
 
 download_git_id_rsa() {
-  git_id_rsa_file=$(mktemp)
+  git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
   aws s3 cp "s3://${env}-state/git_id_rsa" "${git_id_rsa_file}"
 
@@ -17,7 +17,7 @@ download_git_id_rsa() {
 }
 
 get_git_concourse_pool_clone_full_url_ssh() {
-  tfstate_file=$(mktemp)
+  tfstate_file=$(mktemp -t tfstate.XXXXXX)
 
   aws s3 cp "s3://${env}-state/concourse.tfstate" "${tfstate_file}"
 
