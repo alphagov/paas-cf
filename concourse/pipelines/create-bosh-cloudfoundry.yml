@@ -312,8 +312,6 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-      - put: pipeline-trigger
-        params: {bump: patch}
 
   - name: bosh-terraform
     serial_groups: [bosh-deploy]
