@@ -17,7 +17,7 @@ destroyed in reverse order so as not to leave any orphaned resources:
 
 1. [Bootstrap Concourse](#bootstrap-concourse)
 1. [Deployer Concourse](#deployer-concourse)
-1. [MicroBOSH](#microbosh)
+1. [MicroBOSH](#microbosh-and-cloudfoundry)
 1. [CloudFoundry](#cloudfoundry)
 
 The word *environment* is used herein to describe a single Cloud Foundry
@@ -101,7 +101,7 @@ make dev bootstrap-destroy
 ## Deployer Concourse
 
 This runs within an environment and is responsible for deploying everything
-else to that environment, such as [MicroBOSH](#microbosh) and
+else to that environment, such as [MicroBOSH](#microbosh-and-cloudfoundry) and
 [CloudFoundry](#cloudfoundry). It should be kept running while that
 environment exists.
 
