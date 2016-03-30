@@ -9,15 +9,18 @@ CA_NAME="bosh-CA"
 
 # shellcheck disable=SC2154
 # Allow referencing unassigned variables (set -u catches problems)
-ROUTER_DOMAINS="*.${TF_VAR_cf_root_domain},*.${TF_VAR_cf_apps_domain}"
+ROUTER_DOMAINS="*.${APPS_DNS_ZONE_NAME},*.${SYSTEM_DNS_ZONE_NAME}"
 
 CERTS_TO_GENERATE="
 bbs_server,bbs.service.cf.internal
 bbs_client,
-router_ssl,${ROUTER_DOMAINS}
+router_internal,${ROUTER_DOMAINS}
 uaa_jwt_signing,
 consul_server,server.dc1.cf.internal,server.dc2.cf.internal
 consul_agent,
+logsearch,logsearch.${SYSTEM_DNS_ZONE_NAME}
+metrics,metrics.${SYSTEM_DNS_ZONE_NAME}
+router_external,${ROUTER_DOMAINS}
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"

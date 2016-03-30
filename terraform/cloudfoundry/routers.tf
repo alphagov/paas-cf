@@ -1,3 +1,11 @@
+resource "aws_iam_server_certificate" "router" {
+  name_prefix = "${var.env}-router-"
+  certificate_body = "${file("generated-certificates/router_external.crt")}"
+  private_key = "${file("generated-certificates/router_external.key")}"
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 resource "aws_elb" "router" {
   name = "${var.env}-cf-router-elb"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
@@ -16,9 +24,10 @@ resource "aws_elb" "router" {
   }
   listener {
     instance_port = 443
-    instance_protocol = "tcp"
+    instance_protocol = "ssl"
     lb_port = 443
-    lb_protocol = "tcp"
+    lb_protocol = "ssl"
+    ssl_certificate_id = "${aws_iam_server_certificate.router.arn}"
   }
 }
 
@@ -103,9 +112,12 @@ resource "aws_elb" "es_master_elb" {
 }
 
 resource "aws_iam_server_certificate" "logsearch" {
-  name = "${var.env}-logsearch"
-  certificate_body = "${file("logsearch.crt")}"
-  private_key = "${file("logsearch.key")}"
+  name_prefix = "${var.env}-logsearch-"
+  certificate_body = "${file("generated-certificates/logsearch.crt")}"
+  private_key = "${file("generated-certificates/logsearch.key")}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elb" "logsearch_elb" {
@@ -127,17 +139,20 @@ resource "aws_elb" "logsearch_elb" {
 
   listener {
     instance_port = 5602
-    instance_protocol = "http"
+    instance_protocol = "tcp"
     lb_port = 443
-    lb_protocol = "https"
+    lb_protocol = "ssl"
     ssl_certificate_id = "${aws_iam_server_certificate.logsearch.arn}"
   }
 }
 
 resource "aws_iam_server_certificate" "metrics" {
-  name = "${var.env}-metrics"
-  certificate_body = "${file("metrics.crt")}"
-  private_key = "${file("metrics.key")}"
+  name_prefix = "${var.env}-metrics-"
+  certificate_body = "${file("generated-certificates/metrics.crt")}"
+  private_key = "${file("generated-certificates/metrics.key")}"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_elb" "metrics_elb" {
@@ -158,17 +173,17 @@ resource "aws_elb" "metrics_elb" {
   }
   listener {
     instance_port = 3000
-    instance_protocol = "http"
+    instance_protocol = "tcp"
     lb_port = 443
-    lb_protocol = "https"
+    lb_protocol = "ssl"
     ssl_certificate_id = "${aws_iam_server_certificate.metrics.arn}"
   }
 
   listener {
     instance_port = 3001
-    instance_protocol = "http"
+    instance_protocol = "tcp"
     lb_port = 3001
-    lb_protocol = "https"
+    lb_protocol = "ssl"
     ssl_certificate_id = "${aws_iam_server_certificate.metrics.arn}"
   }
 }

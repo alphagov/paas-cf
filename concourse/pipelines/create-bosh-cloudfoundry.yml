@@ -120,26 +120,12 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-CA.tar.gz
 
-  - name: logsearch-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: logsearch-cert.tar.gz
-
   - name: concourse-manifest
     type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
       versioned_file: concourse-manifest.yml
-
-  - name: metrics-cert
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: metrics-cert.tar.gz
 
   - name: bosh-manifest
     type: s3-iam
@@ -306,8 +292,6 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-manifest-state.json paas-cf/concourse/init_files/bosh-init-state.json.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} metrics-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} logsearch-cert.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
@@ -555,43 +539,12 @@ jobs:
           - get: pipeline-trigger
             passed: ['generate-bosh-config']
             trigger: true
+          - get: bosh-CA
+          - get: cf-certs
           - get: cf-secrets
-          - get: metrics-cert
-          - get: logsearch-cert
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
-      - task: generate-metrics-certificates
-        config:
-          platform: linux
-          image: docker:///governmentpaas/curl-ssl
-          inputs:
-            - name: metrics-cert
-              path: existing-metrics-cert
-          outputs:
-            - name: generated-metrics-cert
-          params:
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                tar xzvf existing-metrics-cert/metrics-cert.tar.gz
-                if [ -f metrics.crt ] && [ -f metrics.key ]; then
-                  echo Certificate and private key already created, nothing to do
-                  cp existing-metrics-cert/metrics-cert.tar.gz generated-metrics-cert/.
-                  exit 0
-                fi
-                openssl req -x509 -newkey rsa:2048 -keyout metrics.key \
-                  -out metrics.crt -days 365 -nodes -subj \
-                  "/C=UK/ST=London/L=London/O=GDS/CN=metrics.${SYSTEM_DNS_ZONE_NAME}"
-                tar czvf generated-metrics-cert/metrics-cert.tar.gz metrics.crt metrics.key
-        on_success:
-          put: metrics-cert
-          params:
-            file: generated-metrics-cert/metrics-cert.tar.gz
 
       - task: generate-cf-secrets
         config:
@@ -619,37 +572,41 @@ jobs:
           params:
             file: generated-cf-secrets/cf-secrets.yml
 
-      - task: generate-logsearch-certificates
+      - task: generate-cf-certs
         config:
           platform: linux
-          image: docker:///governmentpaas/curl-ssl
+          image: docker:///governmentpaas/certstrap
           inputs:
-            - name: logsearch-cert
-              path: existing-logsearch-cert
+            - name: bosh-CA
+            - name: paas-cf
+            - name: cf-certs
           outputs:
-            - name: generated-logsearch-cert
+            - name: generated-cf-certs
           params:
             SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                tar xzvf existing-logsearch-cert/logsearch-cert.tar.gz
-                if [ -f logsearch.crt ] && [ -f logsearch.key ]; then
-                  echo Certificate and private key already created, nothing to do
-                  cp existing-logsearch-cert/logsearch-cert.tar.gz generated-logsearch-cert/.
-                  exit 0
-                fi
-                openssl req -x509 -newkey rsa:2048 -keyout logsearch.key \
-                  -out logsearch.crt -days 365 -nodes -subj \
-                  "/C=UK/ST=London/L=London/O=GDS/CN=logsearch.${SYSTEM_DNS_ZONE_NAME}"
-                tar czvf generated-logsearch-cert/logsearch-cert.tar.gz logsearch.crt logsearch.key
+                mkdir certs
+                echo "Extracting extant certs"
+                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
+
+                echo "Generating uaa_jwt_signing public key from private key"
+                openssl rsa -pubout -in certs/uaa_jwt_signing.key -out certs/uaa_jwt_verification.pem
+
+                echo "Creating updated cert tarball"
+                cd certs
+                tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
         on_success:
-          put: logsearch-cert
+          put: cf-certs
           params:
-            file: generated-logsearch-cert/logsearch-cert.tar.gz
+            file: generated-cf-certs/cf-certs.tar.gz
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
@@ -665,8 +622,7 @@ jobs:
           - get: concourse-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
-          - get: metrics-cert
-          - get: logsearch-cert
+          - get: cf-certs
             passed: ['generate-cf-secrets']
           - get: cf-secrets
             passed: ['generate-cf-secrets']
@@ -705,8 +661,7 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
-            - name: metrics-cert
-            - name: logsearch-cert
+            - name: cf-certs
           outputs:
             - name: updated-tfstate
           params:
@@ -724,8 +679,9 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
-                tar xzvf metrics-cert/metrics-cert.tar.gz -C .
-                tar xzvf logsearch-cert/logsearch-cert.tar.gz -C .
+
+                mkdir generated-certificates
+                tar xzvf cf-certs/cf-certs.tar.gz -C generated-certificates
 
                 terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
@@ -817,55 +773,6 @@ jobs:
                     < ${state}-tfstate/${state}.tfstate \
                     > terraform-outputs/${state}.tfvars.sh
                 done
-      - task: generate-cf-certs
-        config:
-          platform: linux
-          image: docker:///governmentpaas/certstrap
-          inputs:
-            - name: bosh-CA
-            - name: paas-cf
-            - name: cf-certs
-            - name: terraform-outputs
-          outputs:
-            - name: generated-cf-certs
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-outputs/cf.tfvars.sh
-
-                mkdir certs
-                echo "Extracting extant certs"
-                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
-
-                echo "Creating updated cert tarball"
-                cd certs
-                tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
-                cd ..
-
-                echo "Extracting certs to YAML"
-                tar -xzvf bosh-CA/bosh-CA.tar.gz -C certs
-                cd certs
-                for file in *.crt; do
-                  cn=${file%.crt}
-                  yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
-
-                  echo "Converting ${cn} certs to YAML"
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key  > ../generated-cf-certs/${cn}_key.yml
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt  > ../generated-cf-certs/${cn}_cert.yml
-                done
-
-                echo "Generating uaa_jwt_signing public key from private key"
-                openssl rsa -pubout -in uaa_jwt_signing.key -out uaa_jwt_verification.pem
-                ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem  > ../generated-cf-certs/uaa_jwt_verification_key.yml
-        on_success:
-          put: cf-certs
-          params:
-            file: generated-cf-certs/cf-certs.tar.gz
       - task: generate-manifest
         config:
           platform: linux
@@ -874,20 +781,40 @@ jobs:
             - name: paas-cf
             - name: terraform-outputs
             - name: cf-secrets
-            - name: generated-cf-certs
+            - name: cf-certs
+            - name: bosh-CA
           outputs:
             - name: cf-manifest
           params:
             MANIFEST_STUBS: |
               ./terraform-outputs/*.yml
               ./cf-secrets/cf-secrets.yml
-              ./generated-cf-certs/*.yml
+              ./certs/*.yml
           run:
             path: sh
             args:
               - -e
               - -c
               - |
+                mkdir certs
+                echo "Extracting extant certs"
+                tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
+                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+                cd certs
+                for file in *.crt; do
+                  cn=${file%.crt}
+                  yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+
+                  echo "Converting ${cn} certs to YAML"
+                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
+                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
+                done
+
+                ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
+                cd ..
+
+                echo "Generating manifests"
                 ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
         on_success:
           put: cf-manifest
