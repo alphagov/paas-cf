@@ -48,6 +48,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: cf-secrets.yml
 
+  - name: cf-certs
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: cf-certs.tar.gz
+
   - name: concourse-manifest
     type: s3-iam
     source:
@@ -119,6 +126,7 @@ jobs:
           - get: concourse-tfstate
           - get: vpc-tfstate
           - get: cf-secrets
+          - get: cf-certs
 
       - task: extract-terraform-variables
         config:
@@ -158,6 +166,7 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+            - name: cf-certs
           outputs:
             - name: updated-cf-tfstate
           params:
@@ -174,6 +183,9 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
+
+                mkdir generated-certificates
+                tar xzvf cf-certs/cf-certs.tar.gz -C generated-certificates
 
                 terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
