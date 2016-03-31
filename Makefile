@@ -108,6 +108,7 @@ showenv: ## Display environment information
 	@concourse/scripts/environment.sh
 
 .PHONY: manually_upload_certs
+CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
 manually_upload_certs: ## Manually upload to AWS the SSL certificates for public facing endpoints
 	# check password store and if varables are accesible
 	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
