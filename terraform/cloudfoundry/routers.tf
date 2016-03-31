@@ -1,11 +1,3 @@
-resource "aws_iam_server_certificate" "router" {
-  name_prefix = "${var.env}-router-"
-  certificate_body = "${file("generated-certificates/router_external.crt")}"
-  private_key = "${file("generated-certificates/router_external.key")}"
-  lifecycle {
-    create_before_destroy = true
-  }
-}
 resource "aws_elb" "router" {
   name = "${var.env}-cf-router-elb"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
@@ -27,7 +19,7 @@ resource "aws_elb" "router" {
     instance_protocol = "ssl"
     lb_port = 443
     lb_protocol = "ssl"
-    ssl_certificate_id = "${aws_iam_server_certificate.router.arn}"
+    ssl_certificate_id = "${var.router_external_cert_arn}"
   }
 }
 
