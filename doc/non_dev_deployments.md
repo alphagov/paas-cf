@@ -35,6 +35,35 @@ For staging and production a `DEPLOY_ENV` is required even though it's not used
 in domain names. Staging should use a `DEPLOY_ENV` of "staging", and production
 should use "prod".
 
+## Manual upload of SSL certificates
+
+For some environments (e.g. prod) we want to use purchased valid certificates
+for the public facing endpoints, instead of using self signed certificates.
+
+In that case, the operator must manually upload the certificates:
+
+ 1. Store the certificates in the `credentials-high` password store, using
+    this naming convention for the key: `certs/${DEPLOY_ENV}/${CERT_NAME}.crt`
+    and `certs/${DEPLOY_ENV}/${CERT_NAME}.key`.
+
+ 2. After deploying the deployer with `create-deployer`, execute the make task
+    `manually_upload_certs`. You indicate the
+    [password store](https://www.passwordstore.org/) directory to read
+    the certificates from by passing the variable `CERT_PASSWORD_STORE_DIR`
+
+    For example: `make prod manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass`
+
+    This will upload the certificates and update the `cf-certs.tfstate` with
+    the information of the aws server certificates.
+
+ 3. Continue with the standard procedure to deploy cloudfoundry.
+
+Currently it applies for these certificates:
+
+  * External public router endpoints `router_external`:
+	* `certs/${DEPLOY_ENV}/router_external.crt`
+	* `certs/${DEPLOY_ENV}/router_external.key`
+
 ## Deployment process
 
 With the above in mind, the deployment process is the same as for a dev

@@ -49,6 +49,7 @@ generate_vars_file() {
 pipeline_name: ${pipeline_name}
 makefile_env_target: ${MAKEFILE_ENV_TARGET:-dev}
 self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
+skip_upload_generated_certs: ${SKIP_UPLOAD_GENERATED_CERTS:-false}
 aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
