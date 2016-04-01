@@ -55,6 +55,7 @@ ci: check-env-vars ## Set Environment to CI
 	$(eval export TAG_PREFIX=stage-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
 	@true
 
 .PHONY: stage
@@ -66,6 +67,7 @@ stage: check-env-vars ## Set Environment to Staging
 	$(eval export PAAS_CF_TAG_FILTER=stage-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stage@digital.cabinet-office.gov.uk)
 	@true
 
 .PHONY: prod
@@ -76,6 +78,7 @@ prod: check-env-vars ## Set Environment to Production
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk)
 	@true
 
 .PHONY: bootstrap
