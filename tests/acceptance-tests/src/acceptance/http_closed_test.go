@@ -24,7 +24,7 @@ var _ = Describe("Http is closed", func() {
 			"push", appName,
 			"--no-start",
 			"-b", config.StaticFileBuildpackName,
-			"-p", "../../example_apps/static_app",
+			"-p", "../../apps/static_app",
 			"-d", config.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 		Expect(cf.Cf("start", appName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
