@@ -1,3 +1,9 @@
+resource_types:
+- name: alpine-git
+  type: docker-image
+  source:
+    repository: keymon/concourse-git-resource
+
 groups:
   - name: all
     jobs:
@@ -64,7 +70,7 @@ resources:
       key: {{pipeline_trigger_file}}
 
   - name: paas-cf
-    type: git
+    type: alpine-git
     source:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
