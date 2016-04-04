@@ -76,7 +76,6 @@ resources:
       branch: {{branch_name}}
       tag_verification_key_ids: 
       - 77AACBC2
-
       tag_filter: {{paas_cf_tag_filter}}
         
 
