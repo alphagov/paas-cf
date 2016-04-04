@@ -1,5 +1,5 @@
 resource_types:
-- name: alpine-git
+- name: git-gpg
   type: docker-image
   source:
     repository: keymon/concourse-git-resource
@@ -70,11 +70,15 @@ resources:
       key: {{pipeline_trigger_file}}
 
   - name: paas-cf
-    type: alpine-git
+    type: git-gpg
     source:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
+      tag_verification_key_ids: 
+      - 77AACBC2
+
       tag_filter: {{paas_cf_tag_filter}}
+        
 
   - name: graphite-statsd-boshrelease
     type: git
