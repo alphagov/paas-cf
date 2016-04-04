@@ -1,0 +1,21 @@
+{
+  "name": "Concourse monitor mode",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "permissions": [
+    "https://*.cloudpipeline.digital/*",
+    "https://deployer.cloud.service.gov.uk/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.cloudpipeline.digital/*",
+        "https://deployer.cloud.service.gov.uk/*"
+      ],
+      "js": [
+        "src/inject/inject.js"
+      ],
+      "all_frames": true
+    }
+  ]
+}
