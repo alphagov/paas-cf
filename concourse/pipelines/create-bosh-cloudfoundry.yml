@@ -1016,6 +1016,30 @@ jobs:
                 echo export "${var_name}"=\"$(eval echo \$${var_name})\"
               done > config/config.sh
 
+    - task: deploy-healthcheck-app
+      config:
+        platform: linux
+        image: docker:///governmentpaas/cf-cli
+        inputs:
+          - name: paas-cf
+          - name: config
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              . ./config/config.sh
+              cf api --skip-ssl-validation ${API_ENDPOINT}
+              echo | cf login -u ${CF_ADMIN} -p ${CF_PASS}
+              echo | cf create-org testers
+              cf create-space healthcheck -o testers
+              cf target -o testers -s healthcheck
+
+              cd paas-cf/tests/example-apps/healthcheck-app
+
+              cf push
+
     - task: deploy-graphite-nozzle
       config:
         platform: linux
