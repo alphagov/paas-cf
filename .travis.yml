@@ -18,16 +18,19 @@ before_install:
   - mkdir ~/bin
   - export PATH=~/bin:$PATH
   - |
+    echo "Fetching Terraform"
+    set -e
     wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
     unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
     rm terraform_${TF_VERSION}_linux_amd64.zip
   - |
+    echo "Fetching Spruce"
+    set -e
     wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
     tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
     mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
     rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
-  - |
-    pip install --user yamllint
+  - pip install --user yamllint
 
 script:
   - make test
