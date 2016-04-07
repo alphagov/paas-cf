@@ -7,6 +7,8 @@ AWS_ACCOUNT="${2}"
 DEPLOY_ENV="${3}"
 TAG_FILTER="${4:-""}"
 
+GIT_PUSH="${GIT_PUSH:-true}" # Push the repo at the end or not
+
 GIT_EMAIL="the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk"
 GIT_USER="gov-paas-${AWS_ACCOUNT}"
 GIT_REPO_URL="git@github.com:alphagov/paas-cf.git"
@@ -67,5 +69,7 @@ fi
 git tag -a "${tag}" -m "Tag ${tag} passed ${AWS_ACCOUNT} \
 in environment ${DEPLOY_ENV}"
 
-echo "Push tag ${tag}"
-git push ssh "${tag}"
+if [ "${GIT_PUSH}" = "true" ]; then
+  echo "Push tag ${tag}"
+  git push ssh "${tag}"
+fi
