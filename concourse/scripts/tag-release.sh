@@ -22,8 +22,8 @@ Host github.com
 EOF
 
 get_tag(){
-  tag_filter=${1}
-  git tag -l --contains HEAD | grep "${tag_filter}"
+  tag_filter="${1}"
+  git tag -l --contains HEAD --sort=version:refname "${tag_filter}" | tail -n 1
 }
 
 promote_existing_tag(){
@@ -44,7 +44,7 @@ git remote add ssh "${GIT_REPO_URL}"
 
 if [ -n "${TAG_FILTER}" ]
 then
-  latest_tag=$(get_tag "${TAG_FILTER%?}")
+  latest_tag=$(get_tag "${TAG_FILTER}")
   tag=$(promote_existing_tag "${latest_tag}")
   echo "Promote ${latest_tag} to ${tag}"
 else
