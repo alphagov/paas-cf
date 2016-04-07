@@ -15,6 +15,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-cli-test
+      - performance-tests
       - tag-release
       - pipeline-unlock
   - name: bosh
@@ -34,6 +35,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-cli-test
+      - performance-tests
       - tag-release
       - pipeline-unlock
   - name: operator
@@ -1222,8 +1224,7 @@ jobs:
               export CONCOURSE_ATC_PASSWORD
               ./paas-cf/concourse/scripts/bosh-cli.sh bosh status
 
-
-  - name: tag-release
+  - name: performance-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -1231,6 +1232,60 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['post-deploy', 'smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-cli-test']
+          - get: cf-manifest
+            passed: ['post-deploy', 'smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
+          - get: bosh-CA
+      - task: generate-test-config
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-manifest
+          outputs:
+            - name: test-config
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                export CF_MANIFEST=cf-manifest/cf-manifest.yml
+                ./paas-cf/tests/generate_test_config.rb \
+                  > test-config/config.json
+
+      - task: run-tests
+        config:
+          platform: linux
+          image: docker:///governmentpaas/cf-acceptance-tests
+          inputs:
+            - name: paas-cf
+            - name: test-config
+            - name: bosh-CA
+          outputs:
+            - name: tests-results
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo "Adding bosh-CA to root certificates"
+                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
+                update-ca-certificates
+
+                echo "Running tests"
+                export CONFIG="$(pwd)/test-config/config.json"
+                ./paas-cf/tests/run_tests.sh ./paas-cf/tests/performance-tests/src/performance/
+
+  - name: tag-release
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['performance-tests']
+            trigger: true
+          - get: paas-cf
+            passed: ['performance-tests']
           - get: git-keys
 
       - put: release-version
