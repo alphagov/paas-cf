@@ -18,4 +18,10 @@ Installing
 2. Open [chrome://extensions](chrome://extensions)
 3. Tick the "Developer mode" checkbox in the top right
 4. Click "Load unpacked extention..." and select this directory
-5. Refresh your concourse tabs, and they shall lack cruft.
+5. Refresh your concourse tabs, and they shall lack cruft
+
+For Firefox or Chrome with a greasemonkey extension
+===================================================
+1. Click [src/inject.user.js](src/inject.user.js) and your browser _should_ auto-install it
+3. If not, drag it onto the browser
+4. Refresh your concourse tabs, and they shall lack cruft
