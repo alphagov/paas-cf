@@ -44,8 +44,8 @@ In that case, the operator must manually upload the certificates:
 
  1. Store the certificates in the `credentials-high` password store, using this
     naming convention for the key:
-    `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.crt` and
-    `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.key`.
+    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.crt`
+    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.key`
 
  2. After deploying the deployer with `create-deployer`, execute the make task
     `manually_upload_certs`. You indicate the
