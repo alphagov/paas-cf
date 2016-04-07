@@ -21,6 +21,16 @@ Host github.com
   IdentityFile $(pwd)/git-key
 EOF
 
+check_already_tagged() {
+  tag_prefix="${1}"
+  previous_tags="$(git tag -l --contains HEAD "${tag_prefix}*")"
+  if [ -n "${previous_tags}" ] ; then
+    echo "WARNING: already tagged to current commit for environment ${DEPLOY_ENV}. Skipping."
+    echo "Tags: ${previous_tags}"
+    exit 0
+  fi
+}
+
 get_tag(){
   tag_filter="${1}"
   git tag -l --contains HEAD --sort=version:refname "${tag_filter}" | tail -n 1
@@ -37,6 +47,8 @@ create_new_tag(){
 }
 
 cd paas-cf
+check_already_tagged "${TAG_PREFIX}"
+
 echo Configure Git
 git config --global user.email "${GIT_EMAIL}"
 git config --global user.name "${GIT_USER}"
