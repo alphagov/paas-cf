@@ -7,6 +7,8 @@ AWS_ACCOUNT="${2}"
 DEPLOY_ENV="${3}"
 TAG_FILTER="${4:-""}"
 
+GIT_PUSH="${GIT_PUSH:-true}" # Push the repo at the end or not
+
 GIT_EMAIL="the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk"
 GIT_USER="gov-paas-${AWS_ACCOUNT}"
 GIT_REPO_URL="git@github.com:alphagov/paas-cf.git"
@@ -21,9 +23,19 @@ Host github.com
   IdentityFile $(pwd)/git-key
 EOF
 
+check_already_tagged() {
+  tag_prefix="${1}"
+  previous_tags="$(git tag -l --contains HEAD "${tag_prefix}*")"
+  if [ -n "${previous_tags}" ] ; then
+    echo "WARNING: already tagged to current commit for environment ${DEPLOY_ENV}. Skipping."
+    echo "Tags: ${previous_tags}"
+    exit 0
+  fi
+}
+
 get_tag(){
-  tag_filter=${1}
-  git tag -l --contains HEAD | grep "${tag_filter}"
+  tag_filter="${1}"
+  git tag -l --contains HEAD --sort=version:refname "${tag_filter}" | tail -n 1
 }
 
 promote_existing_tag(){
@@ -37,6 +49,8 @@ create_new_tag(){
 }
 
 cd paas-cf
+check_already_tagged "${TAG_PREFIX}"
+
 echo Configure Git
 git config --global user.email "${GIT_EMAIL}"
 git config --global user.name "${GIT_USER}"
@@ -44,7 +58,7 @@ git remote add ssh "${GIT_REPO_URL}"
 
 if [ -n "${TAG_FILTER}" ]
 then
-  latest_tag=$(get_tag "${TAG_FILTER%?}")
+  latest_tag=$(get_tag "${TAG_FILTER}")
   tag=$(promote_existing_tag "${latest_tag}")
   echo "Promote ${latest_tag} to ${tag}"
 else
@@ -55,5 +69,7 @@ fi
 git tag -a "${tag}" -m "Tag ${tag} passed ${AWS_ACCOUNT} \
 in environment ${DEPLOY_ENV}"
 
-echo "Push tag ${tag}"
-git push ssh "${tag}"
+if [ "${GIT_PUSH}" = "true" ]; then
+  echo "Push tag ${tag}"
+  git push ssh "${tag}"
+fi
