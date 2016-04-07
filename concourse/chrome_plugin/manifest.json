@@ -13,7 +13,7 @@
         "https://deployer.cloud.service.gov.uk/*"
       ],
       "js": [
-        "src/inject/inject.js"
+        "src/inject.user.js"
       ],
       "all_frames": true
     }
