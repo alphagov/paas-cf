@@ -42,9 +42,12 @@ for the public facing endpoints, instead of using self signed certificates.
 
 In that case, the operator must manually upload the certificates:
 
- 1. Store the certificates in the `credentials-high` password store, using
-    this naming convention for the key: `certs/${DEPLOY_ENV}/${CERT_NAME}.crt`
-    and `certs/${DEPLOY_ENV}/${CERT_NAME}.key`.
+ 1. Store the certificates in the [credentials-high][] password store, using
+    this naming convention for the key:
+    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.crt`
+    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.key`
+
+[credentials-high]: https://github.gds/government-paas/credentials-high
 
  2. After deploying the deployer with `create-deployer`, execute the make task
     `manually_upload_certs`. You indicate the
@@ -61,8 +64,8 @@ In that case, the operator must manually upload the certificates:
 Currently it applies for these certificates:
 
   * External public router endpoints `router_external`:
-	* `certs/${DEPLOY_ENV}/router_external.crt`
-	* `certs/${DEPLOY_ENV}/router_external.key`
+    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.crt`
+    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.key`
 
 ## Deployment process
 
