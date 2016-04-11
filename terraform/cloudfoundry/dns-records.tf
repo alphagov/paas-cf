@@ -14,7 +14,7 @@ resource "aws_route53_record" "cf_cc" {
   records = ["${aws_elb.cf_cc.dns_name}"]
 }
 
-resource "aws_route53_record" "sshproxy" {
+resource "aws_route53_record" "cf_ssh_proxy" {
   zone_id = "${var.system_dns_zone_id}"
   name = "ssh.${var.system_dns_zone_name}."
   type = "CNAME"

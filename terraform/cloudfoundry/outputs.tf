@@ -26,10 +26,6 @@ output "router2_subnet_id" {
   value = "${aws_subnet.router.1.id}"
 }
 
-output "ssh_elb_name" {
-  value = "${aws_elb.ssh_proxy.name}"
-}
-
 output "cf_root_domain" {
   value = "${var.system_dns_zone_name}"
 }
@@ -38,16 +34,24 @@ output "cf_apps_domain" {
   value = "${var.apps_dns_zone_name}"
 }
 
-output "elb_name" {
-  value = "${aws_elb.router.name}"
-}
-
 output "cf_rds_client_security_group" {
   value = "${aws_security_group.cf_rds_client.name}"
 }
 
 output "cf_db_address" {
   value = "${aws_db_instance.cf.address}"
+}
+
+output "elb_name" {
+  value = "${aws_elb.router.name}"
+}
+
+output "cf_cc_elb_name" {
+  value = "${aws_elb.cf_cc.name}"
+}
+
+output "cf_ssh_proxy_elb_name" {
+  value = "${aws_elb.ssh_proxy.name}"
 }
 
 output "logsearch_ingestor_elb_name" {
@@ -66,10 +70,10 @@ output "logsearch_elastic_master_elb_dns_name" {
   value = "${aws_elb.logsearch_es_master.dns_name}"
 }
 
-output "metrics_elb_name" {
-  value = "${aws_elb.metrics.name}"
-}
-
 output "logsearch_elb_name" {
   value = "${aws_elb.logsearch_kibana.name}"
+}
+
+output "metrics_elb_name" {
+  value = "${aws_elb.metrics.name}"
 }
