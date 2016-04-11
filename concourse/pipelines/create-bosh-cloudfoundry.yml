@@ -1168,7 +1168,7 @@ jobs:
               - -c
               - |
                 export CF_MANIFEST=cf-manifest/cf-manifest.yml
-                ./paas-cf/tests/acceptance-tests/generate_test_config.rb \
+                ./paas-cf/tests/generate_test_config.rb \
                   > test-config/config.json
       - task: run-tests
         config:
@@ -1190,7 +1190,7 @@ jobs:
 
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
-                ./paas-cf/tests/acceptance-tests/run_tests.sh
+                ./paas-cf/tests/run_tests.sh ./paas-cf/tests/acceptance-tests/src/acceptance/
 
   - name: bosh-cli-test
     plan:
