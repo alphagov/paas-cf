@@ -50,19 +50,19 @@ output "cf_db_address" {
   value = "${aws_db_instance.cf.address}"
 }
 
-output "ingestor_elb_name" {
+output "logsearch_ingestor_elb_name" {
   value = "${aws_elb.logsearch_ingestor.name}"
 }
 
-output "ingestor_elb_dns_name" {
+output "logsearch_ingestor_elb_dns_name" {
   value = "${aws_elb.logsearch_ingestor.dns_name}"
 }
 
-output "elastic_master_elb_name" {
+output "logsearch_elastic_master_elb_name" {
   value = "${aws_elb.logsearch_es_master.name}"
 }
 
-output "elastic_master_elb_dns_name" {
+output "logsearch_elastic_master_elb_dns_name" {
   value = "${aws_elb.logsearch_es_master.dns_name}"
 }
 
