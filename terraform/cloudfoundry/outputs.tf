@@ -54,6 +54,14 @@ output "cf_uaa_elb_name" {
   value = "${aws_elb.cf_uaa.name}"
 }
 
+output "cf_loggregator_elb_name" {
+  value = "${aws_elb.cf_loggregator.name}"
+}
+
+output "cf_doppler_elb_name" {
+  value = "${aws_elb.cf_doppler.name}"
+}
+
 output "cf_ssh_proxy_elb_name" {
   value = "${aws_elb.ssh_proxy.name}"
 }

@@ -538,7 +538,7 @@ jobs:
   - name: loggregator_trafficcontroller_z1
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
-    resource_pool: small_z1
+    resource_pool: loggregator_trafficcontroller_z1
     networks:
       - name: cf1
     properties:
@@ -552,7 +552,7 @@ jobs:
   - name: loggregator_trafficcontroller_z2
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
-    resource_pool: small_z2
+    resource_pool: loggregator_trafficcontroller_z2
     networks:
       - name: cf2
     properties:
