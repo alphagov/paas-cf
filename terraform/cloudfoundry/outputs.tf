@@ -50,6 +50,10 @@ output "cf_cc_elb_name" {
   value = "${aws_elb.cf_cc.name}"
 }
 
+output "cf_uaa_elb_name" {
+  value = "${aws_elb.cf_uaa.name}"
+}
+
 output "cf_ssh_proxy_elb_name" {
   value = "${aws_elb.ssh_proxy.name}"
 }

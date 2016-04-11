@@ -383,7 +383,7 @@ jobs:
   - name: uaa_z1
     templates: (( grab meta.uaa_templates ))
     instances: 1
-    resource_pool: medium_z1
+    resource_pool: uaa_z1
     networks:
       - name: cf1_rds
     properties:
@@ -402,7 +402,7 @@ jobs:
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
     instances: 1
-    resource_pool: medium_z2
+    resource_pool: uaa_z2
     networks:
       - name: cf2_rds
     properties:

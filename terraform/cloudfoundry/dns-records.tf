@@ -14,6 +14,22 @@ resource "aws_route53_record" "cf_cc" {
   records = ["${aws_elb.cf_cc.dns_name}"]
 }
 
+resource "aws_route53_record" "cf_uaa" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "uaa.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.cf_uaa.dns_name}"]
+}
+
+resource "aws_route53_record" "cf_login" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "login.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.cf_uaa.dns_name}"]
+}
+
 resource "aws_route53_record" "cf_ssh_proxy" {
   zone_id = "${var.system_dns_zone_id}"
   name = "ssh.${var.system_dns_zone_name}."
