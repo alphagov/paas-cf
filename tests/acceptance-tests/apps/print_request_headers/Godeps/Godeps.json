@@ -1,0 +1,5 @@
+{
+	"ImportPath": "debug_app",
+	"GoVersion": "go1.5.2",
+	"Deps": []
+}
