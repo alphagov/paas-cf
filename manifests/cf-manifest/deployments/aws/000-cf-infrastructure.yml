@@ -122,6 +122,8 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
 
   - name: api_z2
     cloud_properties:
@@ -131,6 +133,9 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
+
   - name: api_worker_z1
     cloud_properties:
       instance_type: m3.medium
