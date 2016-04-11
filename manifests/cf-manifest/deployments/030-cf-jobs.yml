@@ -23,14 +23,6 @@ meta:
     allow_from_entries: (( grab meta.nfs_client_ranges ))
     share: ~
 
-  api_routes:
-  - name: api
-    tags:
-      component: CloudController
-    port: (( grab properties.cc.external_port ))
-    uris:
-    - (( grab meta.api_domain ))
-
   api_consul_services:
     cloud_controller_ng: {}
 
@@ -44,8 +36,6 @@ meta:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
-    release: (( grab meta.release.name ))
-  - name: route_registrar
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
@@ -112,23 +102,10 @@ meta:
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
-  loggregator_trafficcontroller_routes:
-  - name: doppler
-    port: (( grab properties.loggregator.outgoing_dropsonde_port ))
-    uris:
-    - (( concat "doppler." properties.domain ))
-  - name: loggregator
-    port: (( grab properties.traffic_controller.outgoing_port ))
-    uris:
-    - (( concat "loggregator." properties.domain ))
-
-
   loggregator_trafficcontroller_templates:
   - name: loggregator_trafficcontroller
     release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: route_registrar
     release: (( grab meta.release.name ))
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -185,17 +162,6 @@ meta:
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
-  uaa_routes:
-  - name: uaa
-    port: (( grab properties.uaa.port ))
-    tags:
-      component: uaa
-    uris:
-    - (( concat "uaa." properties.domain ))
-    - (( concat "*.uaa." properties.domain ))
-    - (( concat "login." properties.domain ))
-    - (( concat "*.login." properties.domain ))
-
   uaa_templates:
   - name: uaa
     release: (( grab meta.release.name ))
@@ -203,8 +169,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: route_registrar
-    release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
@@ -393,8 +357,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: z1
-      route_registrar:
-        routes: (( grab meta.uaa_routes ))
       uaa:
         proxy:
           servers: (( grab jobs.router_z1.networks.router1.static_ips jobs.router_z2.networks.router2.static_ips ))
@@ -412,8 +374,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: z2
-      route_registrar:
-        routes: (( grab meta.uaa_routes ))
       uaa:
         proxy:
           servers: (( grab jobs.router_z1.networks.router1.static_ips jobs.router_z2.networks.router2.static_ips ))
@@ -431,8 +391,6 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z1
-      route_registrar:
-        routes: (( grab meta.api_routes ))
       nfs_server: (( grab meta.nfs_server ))
 
   - name: api_z2
@@ -448,8 +406,6 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z2
-      route_registrar:
-        routes: (( grab meta.api_routes ))
       nfs_server: (( grab meta.nfs_server ))
 
   - name: clock_global
@@ -546,8 +502,6 @@ jobs:
         zone: z1
       metron_agent:
         zone: z1
-      route_registrar:
-        routes: (( grab meta.loggregator_trafficcontroller_routes ))
 
   - name: loggregator_trafficcontroller_z2
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
@@ -560,8 +514,6 @@ jobs:
         zone: z2
       metron_agent:
         zone: z2
-      route_registrar:
-        routes: (( grab meta.loggregator_trafficcontroller_routes ))
 
   - name: router_z1
     templates: (( grab meta.router_templates ))
