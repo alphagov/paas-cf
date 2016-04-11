@@ -357,9 +357,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: z1
-      uaa:
-        proxy:
-          servers: (( grab jobs.router_z1.networks.router1.static_ips jobs.router_z2.networks.router2.static_ips ))
 
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
@@ -374,9 +371,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: z2
-      uaa:
-        proxy:
-          servers: (( grab jobs.router_z1.networks.router1.static_ips jobs.router_z2.networks.router2.static_ips ))
 
   - name: api_z1
     templates: (( grab meta.api_templates ))
