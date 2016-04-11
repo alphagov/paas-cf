@@ -21,7 +21,7 @@ properties:
     dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
     tls:
-      ca: ~
+      ca_cert: ~
 
   doppler:
     maxRetainedLogMessages: 100
@@ -29,11 +29,11 @@ properties:
     blacklisted_syslog_ranges: ~
     unmarshaller_count: 5
     port: 443
-    enable_tls_transport: ~
-    tls_server:
-      cert: ~
+    tls:
+      enable: ~
+      server_cert: ~
       port: ~
-      key: ~
+      server_key: ~
 
   metron_agent:
     deployment: (( grab meta.environment ))
@@ -41,9 +41,9 @@ properties:
     enable_buffer: ~
     buffer_size: ~
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
-    tls_client:
-      cert: ~
-      key: ~
+    tls:
+      client_cert: ~
+      client_key: ~
 
   traffic_controller:
     outgoing_port: 8080
@@ -153,21 +153,21 @@ properties:
     system_buildpacks: (( grab properties.cc.default_buildpacks ))
     default_buildpacks:
       - name: staticfile_buildpack
-        package: buildpack_staticfile
+        package: staticfile-buildpack
       - name: java_buildpack
         package: buildpack_java
       - name: ruby_buildpack
-        package: buildpack_ruby
+        package: ruby-buildpack
       - name: nodejs_buildpack
-        package: buildpack_nodejs
+        package: nodejs-buildpack
       - name: go_buildpack
-        package: buildpack_go
+        package: go-buildpack
       - name: python_buildpack
-        package: buildpack_python
+        package: python-buildpack
       - name: php_buildpack
-        package: buildpack_php
+        package: php-buildpack
       - name: binary_buildpack
-        package: buildpack_binary
+        package: binary-buildpack
 
     install_buildpacks: (( grab properties.cc.system_buildpacks properties.cc.user_buildpacks ))
 
