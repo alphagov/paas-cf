@@ -172,8 +172,8 @@ properties:
       -----END RSA PRIVATE KEY-----
 releases:
 - name: bosh
-  sha1: 940956a23b642af3bb24b3cac37c4da746d6f9a9
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=253
+  sha1: 6b12652650b87810dcef1be1f6a6d23f1c0c13a7
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=255.8
 - name: bosh-aws-cpi
   sha1: a1fe03071e8b9bf1fa97a4022151081bf144c8bc
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=44
