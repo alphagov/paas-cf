@@ -1,11 +1,11 @@
-resource "aws_elb" "ingestor_elb" {
-  name = "${var.env}-ingestor-elb"
+resource "aws_elb" "logsearch_ingestor" {
+  name = "${var.env}-logsearch-ingestor"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"
   internal = "true"
   security_groups = [
-    "${aws_security_group.ingestor_elb.id}",
+    "${aws_security_group.logsearch_ingestor_elb.id}",
   ]
 
   health_check {
@@ -29,14 +29,14 @@ resource "aws_elb" "ingestor_elb" {
   }
 }
 
-resource "aws_elb" "es_master_elb" {
-  name = "${var.env}-cf-es-elb"
+resource "aws_elb" "logsearch_es_master" {
+  name = "${var.env}-logsearch-es-master"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"
   internal = "true"
   security_groups = [
-    "${aws_security_group.elastic_master_elb.id}",
+    "${aws_security_group.logsearch_elastic_master_elb.id}",
   ]
 
   health_check {
@@ -63,8 +63,8 @@ resource "aws_iam_server_certificate" "logsearch" {
   }
 }
 
-resource "aws_elb" "logsearch_elb" {
-  name = "${var.env}-logsearch-elb"
+resource "aws_elb" "logsearch_kibana" {
+  name = "${var.env}-logsearch-kibana"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"

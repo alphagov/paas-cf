@@ -7,8 +7,8 @@ resource "aws_iam_server_certificate" "metrics" {
   }
 }
 
-resource "aws_elb" "metrics_elb" {
-  name = "${var.env}-metrics-elb"
+resource "aws_elb" "metrics" {
+  name = "${var.env}-metrics"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"

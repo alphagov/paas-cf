@@ -71,8 +71,8 @@ resource "aws_security_group" "cf_rds_client" {
   }
 }
 
-resource "aws_security_group" "ingestor_elb" {
-  name = "${var.env}-ingestor-cf"
+resource "aws_security_group" "logsearch_ingestor_elb" {
+  name = "${var.env}-logsearch-ingestor-elb"
   description = "Security group for web that allows TCP/5514 for logsearch ingestor"
   vpc_id = "${var.vpc_id}"
 
@@ -106,8 +106,8 @@ resource "aws_security_group" "ingestor_elb" {
   }
 }
 
-resource "aws_security_group" "elastic_master_elb" {
-  name = "${var.env}-elastic-cf"
+resource "aws_security_group" "logsearch_elastic_master_elb" {
+  name = "${var.env}-logsearch-elastic-master-elb"
   description = "Security group for elastic master which allows TCP/9200"
   vpc_id = "${var.vpc_id}"
 
@@ -128,7 +128,7 @@ resource "aws_security_group" "elastic_master_elb" {
   }
 
   tags {
-    Name = "${var.env}-logsearch-elastic"
+    Name = "${var.env}-logsearch-elastic-master-elb"
   }
 }
 

@@ -1,5 +1,5 @@
-resource "aws_elb" "ssh-proxy-router" {
-  name = "${var.env}-ssh-proxy-elb"
+resource "aws_elb" "ssh_proxy" {
+  name = "${var.env}-ssh-proxy"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"

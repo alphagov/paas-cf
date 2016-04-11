@@ -11,7 +11,7 @@ resource "aws_route53_record" "sshproxy" {
   name = "ssh.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.ssh-proxy-router.dns_name}"]
+  records = ["${aws_elb.ssh_proxy.dns_name}"]
 }
 
 resource "aws_route53_record" "apps_wildcard" {
@@ -27,7 +27,7 @@ resource "aws_route53_record" "metrics" {
   name = "metrics.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.metrics_elb.dns_name}"]
+  records = ["${aws_elb.metrics.dns_name}"]
 }
 
 resource "aws_route53_record" "logsearch" {
@@ -35,6 +35,6 @@ resource "aws_route53_record" "logsearch" {
   name = "logsearch.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.logsearch_elb.dns_name}"]
+  records = ["${aws_elb.logsearch_kibana.dns_name}"]
 }
 

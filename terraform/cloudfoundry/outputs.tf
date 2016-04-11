@@ -27,7 +27,7 @@ output "router2_subnet_id" {
 }
 
 output "ssh_elb_name" {
-  value = "${aws_elb.ssh-proxy-router.name}"
+  value = "${aws_elb.ssh_proxy.name}"
 }
 
 output "cf_root_domain" {
@@ -51,26 +51,25 @@ output "cf_db_address" {
 }
 
 output "ingestor_elb_name" {
-  value = "${aws_elb.ingestor_elb.name}"
+  value = "${aws_elb.logsearch_ingestor.name}"
 }
 
 output "ingestor_elb_dns_name" {
-  value = "${aws_elb.ingestor_elb.dns_name}"
+  value = "${aws_elb.logsearch_ingestor.dns_name}"
 }
 
 output "elastic_master_elb_name" {
-  value = "${aws_elb.es_master_elb.name}"
+  value = "${aws_elb.logsearch_es_master.name}"
 }
 
 output "elastic_master_elb_dns_name" {
-  value = "${aws_elb.es_master_elb.dns_name}"
+  value = "${aws_elb.logsearch_es_master.dns_name}"
 }
 
 output "metrics_elb_name" {
-  value = "${aws_elb.metrics_elb.name}"
+  value = "${aws_elb.metrics.name}"
 }
 
 output "logsearch_elb_name" {
-  value = "${aws_elb.logsearch_elb.name}"
+  value = "${aws_elb.logsearch_kibana.name}"
 }
-
