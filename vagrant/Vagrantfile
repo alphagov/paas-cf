@@ -13,7 +13,7 @@ AWS_ACCOUNT_DATA = {
     :subnet_id => "subnet-68bb7e30", # us-east-1a in default VPC, 172.31.16.0/20 range
     :security_group => "sg-23e1c15a", # "Bootstrap Concourse" security group
   },
-  "stage" => {
+  "staging" => {
     :subnet_id => "subnet-9034fbc8", # us-east-1c in default VPC, 172.31.16.0/20 range
     :security_group => "sg-87e1c1fe", # "Bootstrap Concourse" security group
   },

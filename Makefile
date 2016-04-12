@@ -67,7 +67,7 @@ ci: globals check-env-vars ## Set Environment to CI
 .PHONY: staging
 staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export MAKEFILE_ENV_TARGET=staging)
-	$(eval export AWS_ACCOUNT=stage)
+	$(eval export AWS_ACCOUNT=staging)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=prod-)
