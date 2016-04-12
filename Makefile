@@ -64,9 +64,9 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
 	@true
 
-.PHONY: stage
-stage: globals check-env-vars ## Set Environment to Staging
-	$(eval export MAKEFILE_ENV_TARGET=stage)
+.PHONY: staging
+staging: globals check-env-vars ## Set Environment to Staging
+	$(eval export MAKEFILE_ENV_TARGET=staging)
 	$(eval export AWS_ACCOUNT=stage)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
