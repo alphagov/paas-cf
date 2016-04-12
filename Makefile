@@ -74,7 +74,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export PAAS_CF_TAG_FILTER=staging-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stage@digital.cabinet-office.gov.uk)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
 	@true
 
 .PHONY: prod
