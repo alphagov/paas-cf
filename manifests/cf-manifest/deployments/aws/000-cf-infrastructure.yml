@@ -122,6 +122,8 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
 
   - name: api_z2
     cloud_properties:
@@ -131,6 +133,68 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
+
+  - name: api_worker_z1
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+
+  - name: api_worker_z2
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+
+  - name: uaa_z1
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_uaa_elb_name ))
+
+  - name: uaa_z2
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_uaa_elb_name ))
+
+  - name: loggregator_trafficcontroller_z1
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - (( grab terraform_outputs.cf_loggregator_elb_name ))
+
+  - name: loggregator_trafficcontroller_z2
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - (( grab terraform_outputs.cf_loggregator_elb_name ))
 
   - name: router_z1
     cloud_properties:
@@ -140,7 +204,7 @@ resource_pools:
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
-        - (( grab terraform_outputs.elb_name ))
+        - (( grab terraform_outputs.cf_router_elb_name ))
 
   - name: router_z2
     cloud_properties:
@@ -150,7 +214,7 @@ resource_pools:
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
-        - (( grab terraform_outputs.elb_name ))
+        - (( grab terraform_outputs.cf_router_elb_name ))
 
   - name: small_errand
     cloud_properties:
@@ -171,14 +235,14 @@ resource_pools:
       instance_type: m3.medium
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
-        - (( grab terraform_outputs.ssh_elb_name ))
+        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
 
   - name: access_z2
     cloud_properties:
       instance_type: m3.medium
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
-        - (( grab terraform_outputs.ssh_elb_name ))
+        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
 
   - name: brain_z1
     cloud_properties:

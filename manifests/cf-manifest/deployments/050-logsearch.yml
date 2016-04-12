@@ -17,7 +17,7 @@ resource_pools:
     availability_zone: (( grab resource_pools.medium_z1.cloud_properties.availability_zone ))
     instance_type: (( grab resource_pools.medium_z1.cloud_properties.instance_type ))
     elbs:
-      - (( grab terraform_outputs.elastic_master_elb_name ))
+      - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
 
 - name: elastic_master_z2
   network: (( grab resource_pools.medium_z2.network ))
@@ -27,7 +27,7 @@ resource_pools:
     availability_zone: (( grab resource_pools.medium_z2.cloud_properties.availability_zone ))
     instance_type: (( grab resource_pools.medium_z2.cloud_properties.instance_type ))
     elbs:
-      - (( grab terraform_outputs.elastic_master_elb_name ))
+      - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
 
 - name: elastic_master_z3
   network: (( grab resource_pools.medium_z3.network ))
@@ -37,7 +37,7 @@ resource_pools:
     availability_zone: (( grab resource_pools.medium_z3.cloud_properties.availability_zone ))
     instance_type: (( grab resource_pools.medium_z3.cloud_properties.instance_type ))
     elbs:
-      - (( grab terraform_outputs.elastic_master_elb_name ))
+      - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
 
 - name: ingestor_z1
   network: (( grab resource_pools.medium_z1.network ))
@@ -47,7 +47,7 @@ resource_pools:
     availability_zone: (( grab resource_pools.medium_z1.cloud_properties.availability_zone ))
     instance_type: (( grab resource_pools.medium_z1.cloud_properties.instance_type ))
     elbs:
-      - (( grab terraform_outputs.ingestor_elb_name ))
+      - (( grab terraform_outputs.logsearch_ingestor_elb_name ))
 
 - name: ingestor_z2
   network: (( grab resource_pools.medium_z2.network ))
@@ -57,7 +57,7 @@ resource_pools:
     availability_zone: (( grab resource_pools.medium_z2.cloud_properties.availability_zone ))
     instance_type: (( grab resource_pools.medium_z2.cloud_properties.instance_type ))
     elbs:
-      - (( grab terraform_outputs.ingestor_elb_name ))
+      - (( grab terraform_outputs.logsearch_ingestor_elb_name ))
 
 - name: kibana_z1
   network: (( grab resource_pools.small_z1.network ))
@@ -273,7 +273,7 @@ jobs:
 
 properties:
   syslog_daemon_config:
-    address: (( grab terraform_outputs.ingestor_elb_dns_name ))
+    address: (( grab terraform_outputs.logsearch_ingestor_elb_dns_name ))
     port: 2514
     transport: relp
   parser_logstash:
@@ -281,26 +281,26 @@ properties:
       elasticsearch:
         data_hosts: (( grab properties.elasticsearch.master_hosts ))
   curator:
-    elasticsearch_host: (( grab terraform_outputs.elastic_master_elb_dns_name ))
+    elasticsearch_host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
   elasticsearch:
     master_hosts: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips jobs.elasticsearch_master_z2.networks.cf2.static_ips jobs.elasticsearch_master_z3.networks.cf3.static_ips ))
     cluster_name: logsearch
   kibana:
-    elasticsearch: (( concat terraform_outputs.elastic_master_elb_dns_name ":9200" ))
+    elasticsearch: (( concat terraform_outputs.logsearch_elastic_master_elb_dns_name ":9200" ))
   haproxy:
     inbound_port: 5602
     backend_servers: ["localhost"]
     backend_port: 5601
   elasticsearch_config:
     elasticsearch:
-      host: (( grab terraform_outputs.elastic_master_elb_dns_name ))
+      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
   logsearch:
     metrics:
       enabled: false
     logs:
-      server: (( concat terraform_outputs.ingestor_elb_dns_name ":5514" ))
+      server: (( concat terraform_outputs.logsearch_ingestor_elb_dns_name ":5514" ))
   update:
     serial: false
     canaries: 1

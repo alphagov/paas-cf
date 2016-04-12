@@ -1,17 +1,49 @@
-resource "aws_route53_record" "system_wildcard" {
+resource "aws_route53_record" "cf_cc" {
   zone_id = "${var.system_dns_zone_id}"
-  name = "*.${var.system_dns_zone_name}."
+  name = "api.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.router.dns_name}"]
+  records = ["${aws_elb.cf_cc.dns_name}"]
 }
 
-resource "aws_route53_record" "sshproxy" {
+resource "aws_route53_record" "cf_uaa" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "uaa.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.cf_uaa.dns_name}"]
+}
+
+resource "aws_route53_record" "cf_login" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "login.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.cf_uaa.dns_name}"]
+}
+
+resource "aws_route53_record" "cf_loggregator" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "loggregator.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.cf_loggregator.dns_name}"]
+}
+
+resource "aws_route53_record" "cf_doppler" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "doppler.${var.system_dns_zone_name}."
+  type = "CNAME"
+  ttl = "60"
+  records = ["${aws_elb.cf_doppler.dns_name}"]
+}
+
+resource "aws_route53_record" "cf_ssh_proxy" {
   zone_id = "${var.system_dns_zone_id}"
   name = "ssh.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.ssh-proxy-router.dns_name}"]
+  records = ["${aws_elb.ssh_proxy.dns_name}"]
 }
 
 resource "aws_route53_record" "apps_wildcard" {
@@ -19,7 +51,7 @@ resource "aws_route53_record" "apps_wildcard" {
   name = "*.${var.apps_dns_zone_name}"
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.router.dns_name}"]
+  records = ["${aws_elb.cf_router.dns_name}"]
 }
 
 resource "aws_route53_record" "metrics" {
@@ -27,7 +59,7 @@ resource "aws_route53_record" "metrics" {
   name = "metrics.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.metrics_elb.dns_name}"]
+  records = ["${aws_elb.metrics.dns_name}"]
 }
 
 resource "aws_route53_record" "logsearch" {
@@ -35,6 +67,6 @@ resource "aws_route53_record" "logsearch" {
   name = "logsearch.${var.system_dns_zone_name}."
   type = "CNAME"
   ttl = "60"
-  records = ["${aws_elb.logsearch_elb.dns_name}"]
+  records = ["${aws_elb.logsearch_kibana.dns_name}"]
 }
 

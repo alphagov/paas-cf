@@ -49,6 +49,36 @@ resource_pools:
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
 
+  - name: api_worker_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: api_worker_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: uaa_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: uaa_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: loggregator_trafficcontroller_z1
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
+  - name: loggregator_trafficcontroller_z2
+    network: cf2
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+
   - name: router_z1
     network: "router1"
     stemcell: (( grab meta.stemcell ))

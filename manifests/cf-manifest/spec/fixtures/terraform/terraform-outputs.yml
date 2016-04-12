@@ -9,7 +9,6 @@ terraform_outputs:
   router2_subnet_id: subnet-98765432
   cf_root_domain: unit-test.dev.paas.example.com
   cf_apps_domain: unit-test.dev-apps.paas.example.com
-  elb_name: unit-test-cf-router-elb
   environment: unit-test
   region: sealand-1
   zone0: sealand-1a
@@ -17,14 +16,19 @@ terraform_outputs:
   zone2: sealand-1c
   postgres_rds_address: 127.0.0.1
   postgres_rds_port: 5432
-  ssh_elb_name: stub_ssh_elb
   default_security_group: default_sg
   cf_rds_client_security_group: rds_client_sg
   cf_db_address: abcd.postgres.aws
-  ingestor_elb_name: stub_ingestor_elb
-  ingestor_elb_dns_name: stub_ingestor_elb_dns
-  elastic_master_elb_name: elastic_master_elb
-  elastic_master_elb_dns_name: elastic_master_elb_dns
-  metrics_elb_name: metrics_elb_name
+  cf_router_elb_name: unit-test-cf-router-elb
+  cf_cc_elb_name: stub_cf_cc_elb
+  cf_uaa_elb_name: stub_cf_uaa_elb
+  cf_loggregator_elb_name: stub_cf_loggregator_elb
+  cf_doppler_elb_name: stub_cf_doppler_elb
+  cf_ssh_proxy_elb_name: stub_cf_ssh_proxy_elb
+  logsearch_ingestor_elb_name: stub_ingestor_elb
+  logsearch_ingestor_elb_dns_name: stub_ingestor_elb_dns
+  logsearch_elastic_master_elb_name: elastic_master_elb
+  logsearch_elastic_master_elb_dns_name: elastic_master_elb_dns
   logsearch_elb_name: logsearch_elb_name
+  metrics_elb_name: metrics_elb_name
 
