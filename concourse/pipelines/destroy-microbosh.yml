@@ -94,7 +94,6 @@ jobs:
             trigger: true
             passed: [ init ]
           - get: paas-cf
-          - get: bosh-tfstate
           - get: bosh-secrets
           - get: bosh-init-state
           - get: bosh-manifest
