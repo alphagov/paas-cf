@@ -319,3 +319,11 @@ providing them to the interactive configure command.
 [Homebrew]: http://brew.sh/
 [variety of other methods]: http://docs.aws.amazon.com/cli/latest/userguide/installing.html
 [access keys using environment variables]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-environment
+
+## Pingdom checks
+
+There is a make target to add some pingdom checks for a static app that is
+deployed as part of the pipeline. This requires paas-pass to be setup, and
+installation of an additional terraform provider - instructions for this are
+documented when running the make target for the first time.
+

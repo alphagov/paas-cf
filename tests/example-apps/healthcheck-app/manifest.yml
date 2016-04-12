@@ -1,0 +1,5 @@
+---
+applications:
+- name: healthcheck-app
+  memory: 64M
+  instances: 2

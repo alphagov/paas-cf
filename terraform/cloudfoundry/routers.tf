@@ -5,6 +5,9 @@ resource "aws_elb" "router" {
   cross_zone_load_balancing = "true"
   security_groups = [
     "${aws_security_group.web.id}",
+    "${aws_security_group.pingdom-probes-0.id}",
+    "${aws_security_group.pingdom-probes-1.id}",
+    "${aws_security_group.pingdom-probes-2.id}",
   ]
 
   health_check {

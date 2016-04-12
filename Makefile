@@ -33,7 +33,7 @@ lint_yaml:
 lint_terraform: dev
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
 	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
-	find terraform -mindepth 1 -maxdepth 1 -type d -print0 | xargs -0 -n 1 -t terraform graph > /dev/null
+	find terraform -mindepth 1 -maxdepth 1 -type d -not -path 'terraform/providers' -not -path 'terraform/scripts' -print0 | xargs -0 -n 1 -t terraform graph > /dev/null
 
 lint_shellcheck:
 	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
@@ -134,3 +134,8 @@ manually_upload_certs: ## Manually upload to AWS the SSL certificates for public
 
 	@aws s3 cp cf-certs.tfstate s3://${DEPLOY_ENV}-state/cf-certs.tfstate
 	@rm -f cf-certs.tfstate
+
+.PHONY: pingdom
+pingdom: ## Use custom Terraform provider to set up Pingdom check
+	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
+	@terraform/scripts/set-up-pingdom.sh
