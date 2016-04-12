@@ -1016,6 +1016,34 @@ jobs:
                 echo export "${var_name}"=\"$(eval echo \$${var_name})\"
               done > config/config.sh
 
+              CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb > config/quota_settings.sh
+
+    - task: update-default-quota
+      config:
+        platform: linux
+        inputs:
+          - name: config
+        params:
+        image: docker:///governmentpaas/cf-cli
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              . ./config/config.sh
+              cf api --skip-ssl-validation ${API_ENDPOINT}
+              echo | cf login -u ${CF_ADMIN} -p ${CF_PASS}
+
+              . ./config/quota_settings.sh
+              ${QUOTA_non_basic_services_allowed} || prefix="dis"
+
+              cf update-quota "${QUOTA_DEFAULT}" \
+                -m "${QUOTA_memory_limit}"M \
+                -r "${QUOTA_total_routes}" \
+                -s "${QUOTA_total_services}" \
+                --${prefix}allow-paid-service-plans
+
     - task: deploy-healthcheck-app
       config:
         platform: linux

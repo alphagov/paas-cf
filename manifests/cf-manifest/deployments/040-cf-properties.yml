@@ -2,9 +2,9 @@ meta:
   environment: ~
   default_quota_definitions:
     default:
-       memory_limit: 10240
-       total_services: 100
-       non_basic_services_allowed: true
+       memory_limit: 2048
+       total_services: 10
+       non_basic_services_allowed: false
        total_routes: 1000
   secrets:
     consul_ca_cert: (( grab secrets.bosh_ca_cert ))
