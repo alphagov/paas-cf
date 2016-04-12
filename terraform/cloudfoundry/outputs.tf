@@ -42,8 +42,8 @@ output "cf_db_address" {
   value = "${aws_db_instance.cf.address}"
 }
 
-output "elb_name" {
-  value = "${aws_elb.router.name}"
+output "cf_router_elb_name" {
+  value = "${aws_elb.cf_router.name}"
 }
 
 output "cf_cc_elb_name" {

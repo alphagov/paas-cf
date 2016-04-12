@@ -1,4 +1,4 @@
-resource "aws_elb" "router" {
+resource "aws_elb" "cf_router" {
   name = "${var.env}-cf-router"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout = "${var.elb_idle_timeout}"
