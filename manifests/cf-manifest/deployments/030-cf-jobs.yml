@@ -39,6 +39,24 @@ meta:
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
+  - name: java-buildpack
+    release: (( grab meta.release.name ))
+  - name: java-offline-buildpack
+    release: (( grab meta.release.name ))
+  - name: go-buildpack
+    release: (( grab meta.release.name ))
+  - name: binary-buildpack
+    release: (( grab meta.release.name ))
+  - name: nodejs-buildpack
+    release: (( grab meta.release.name ))
+  - name: ruby-buildpack
+    release: (( grab meta.release.name ))
+  - name: php-buildpack
+    release: (( grab meta.release.name ))
+  - name: python-buildpack
+    release: (( grab meta.release.name ))
+  - name: staticfile-buildpack
+    release: (( grab meta.release.name ))
 
   api_worker_templates:
   - name: cloud_controller_worker
