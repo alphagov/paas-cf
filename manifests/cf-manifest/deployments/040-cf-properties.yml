@@ -316,6 +316,7 @@ properties:
   diego:
     ssl:
       skip_cert_verify: true
+      starting_container_weight: 0.25
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
