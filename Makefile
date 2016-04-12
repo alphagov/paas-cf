@@ -58,23 +58,23 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
-	$(eval export TAG_PREFIX=stage-)
+	$(eval export TAG_PREFIX=staging-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
 	@true
 
-.PHONY: stage
-stage: globals check-env-vars ## Set Environment to Staging
-	$(eval export MAKEFILE_ENV_TARGET=stage)
-	$(eval export AWS_ACCOUNT=stage)
+.PHONY: staging
+staging: globals check-env-vars ## Set Environment to Staging
+	$(eval export MAKEFILE_ENV_TARGET=staging)
+	$(eval export AWS_ACCOUNT=staging)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=prod-)
-	$(eval export PAAS_CF_TAG_FILTER=stage-*)
+	$(eval export PAAS_CF_TAG_FILTER=staging-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stage@digital.cabinet-office.gov.uk)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
 	@true
 
 .PHONY: prod

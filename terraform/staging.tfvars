@@ -1,4 +1,4 @@
-aws_account = "stage"
+aws_account = "staging"
 system_dns_zone_id = "ZPFAUK62IO6DS"
 apps_dns_zone_id = "Z32JRRSU1CAFE8"
 cf_db_multi_az = "true"
