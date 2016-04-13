@@ -73,3 +73,22 @@ RSpec.describe "the jobs definitions block" do
 
 
 end
+
+RSpec.describe "the job definitions" do
+
+  let(:jobs) { manifest_with_defaults["jobs"] }
+
+  it "should list consul_agent first if present" do
+    jobs_with_consul = jobs.select{ |j|
+      not j["templates"].select{ |t|
+        t["name"] == "consul_agent"
+      }.empty?
+    }
+
+    jobs_with_consul.each{ |j|
+      expect(j["templates"].first["name"]).to eq("consul_agent"),
+        "expected '#{j["name"]}' job to list 'consul_agent' first"
+    }
+  end
+
+end

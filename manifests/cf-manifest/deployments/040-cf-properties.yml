@@ -459,10 +459,10 @@ base_job_templates:
     - name: metron_agent
       release: cf
   cell:
-    - name: rep
-      release: diego
     - name: consul_agent
       release: cf
+    - name: rep
+      release: diego
     - name: garden
       release: garden-linux
     - name: rootfses
@@ -470,6 +470,8 @@ base_job_templates:
     - name: metron_agent
       release: cf
   cc_bridge:
+    - name: consul_agent
+      release: cf
     - name: stager
       release: diego
     - name: nsync
@@ -478,34 +480,34 @@ base_job_templates:
       release: diego
     - name: cc_uploader
       release: diego
-    - name: consul_agent
-      release: cf
     - name: metron_agent
       release: cf
   route_emitter:
-    - name: route_emitter
-      release: diego
     - name: consul_agent
       release: cf
+    - name: route_emitter
+      release: diego
     - name: metron_agent
       release: cf
   access:
-    - name: ssh_proxy
-      release: diego
     - name: consul_agent
       release: cf
+    - name: ssh_proxy
+      release: diego
     - name: metron_agent
       release: cf
     - name: file_server
       release: diego
   database:
-    - name: bbs
-      release: diego
     - name: consul_agent
       release: cf
+    - name: bbs
+      release: diego
     - name: metron_agent
       release: cf
   colocated:
+    - name: consul_agent
+      release: cf
     - name: auctioneer
       release: diego
     - name: bbs
@@ -514,8 +516,6 @@ base_job_templates:
       release: diego
     - name: converger
       release: diego
-    - name: consul_agent
-      release: cf
     - name: file_server
       release: diego
     - name: metron_agent
