@@ -570,11 +570,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-      consul:
-        agent:
-          services:
-            file_server: {}
-            ssh_proxy: {}
 
   - name: access_z2
     templates: (( grab base_job_templates.access ))
@@ -585,11 +580,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-      consul:
-        agent:
-          services:
-            file_server: {}
-            ssh_proxy: {}
 
   - name: brain_z1
     templates: (( grab base_job_templates.brain ))
@@ -598,10 +588,6 @@ jobs:
     networks:
       - name: cf1
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
       metron_agent:
         zone: z1
 
@@ -612,10 +598,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
       metron_agent:
         zone: z2
 
@@ -628,13 +610,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-      consul:
-        agent:
-          services:
-            cc_uploader: {}
-            nsync: {}
-            stager: {}
-            tps: {}
 
   - name: cc_bridge_z2
     templates: (( grab base_job_templates.cc_bridge ))
@@ -645,13 +620,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-      consul:
-        agent:
-          services:
-            cc_uploader: {}
-            nsync: {}
-            stager: {}
-            tps: {}
 
   - name: cell_z1
     templates: (( grab base_job_templates.cell ))
@@ -687,17 +655,6 @@ jobs:
     networks:
       - name: cf1
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
-            bbs: {}
-            cc_uploader: {}
-            file_server: {}
-            nsync: {}
-            ssh_proxy: {}
-            stager: {}
-            tps: {}
       diego:
         rep:
           zone: z1
@@ -712,17 +669,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
-            bbs: {}
-            cc_uploader: {}
-            file_server: {}
-            nsync: {}
-            ssh_proxy: {}
-            stager: {}
-            tps: {}
       diego:
         rep:
           zone: z2
@@ -737,10 +683,6 @@ jobs:
     networks:
       - name: cf1
     properties:
-      consul:
-        agent:
-          services:
-            bbs: {}
       metron_agent:
         zone: z1
 
@@ -752,10 +694,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      consul:
-        agent:
-          services:
-            bbs: {}
       metron_agent:
         zone: z2
 
