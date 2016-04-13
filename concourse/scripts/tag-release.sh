@@ -35,7 +35,7 @@ check_already_tagged() {
 
 get_tag(){
   tag_filter="${1}"
-  git tag -l --contains HEAD --sort=version:refname "${tag_filter}" | tail -n 1
+  git tag -l --points-at HEAD --sort=version:refname "${tag_filter}" | tail -n 1
 }
 
 promote_existing_tag(){
