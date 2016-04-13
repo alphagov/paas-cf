@@ -25,7 +25,7 @@ EOF
 
 check_already_tagged() {
   tag_prefix="${1}"
-  previous_tags="$(git tag -l --contains HEAD "${tag_prefix}*")"
+  previous_tags="$(git tag -l --points-at HEAD "${tag_prefix}*")"
   if [ -n "${previous_tags}" ] ; then
     echo "WARNING: already tagged to current commit for environment ${DEPLOY_ENV}. Skipping."
     echo "Tags: ${previous_tags}"
@@ -35,7 +35,7 @@ check_already_tagged() {
 
 get_tag(){
   tag_filter="${1}"
-  git tag -l --contains HEAD --sort=version:refname "${tag_filter}" | tail -n 1
+  git tag -l --points-at HEAD --sort=version:refname "${tag_filter}" | tail -n 1
 }
 
 promote_existing_tag(){
