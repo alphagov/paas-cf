@@ -48,6 +48,8 @@ resource "aws_db_instance" "bosh" {
 
   multi_az = "${var.bosh_db_multi_az}"
   backup_retention_period = "${var.bosh_db_backup_retention_period}"
+  final_snapshot_identifier = "${var.env}-bosh-rds-final-snapshot"
+  skip_final_snapshot = "${var.bosh_db_skip_final_snapshot}"
 
   vpc_security_group_ids = ["${aws_security_group.bosh_rds.id}"]
 
