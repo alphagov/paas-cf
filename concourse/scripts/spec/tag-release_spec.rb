@@ -2,6 +2,18 @@ require 'fileutils'
 
 RSpec.describe "tag-release.sh", :type => :aruba do
   before(:each) do
+    # check the version of the git command
+    run_simple("git --version")
+
+    if last_command_started.output =~ /.*([0-9]+\.[0-9]+\.[0-9]+).*/
+      git_version = $1
+    else
+      raise Exception.new("Cannot get the version of git")
+    end
+    expect(Gem::Version.new(git_version)).to be > Gem::Version.new('2.0.0')
+  end
+
+  before(:each) do
     prepare_ssh_keys()
     config_git_email_and_name()
     setup_cloned_repository()
