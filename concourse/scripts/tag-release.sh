@@ -39,7 +39,9 @@ get_tag(){
 
 promote_existing_tag(){
   existing_tag=${1}
-  echo "${existing_tag}" | sed s/"${TAG_FILTER%?}"/"${TAG_PREFIX}"/
+  # Replace the prefix ${TAG_FILTER}, but without the final *
+  # with the new prefix ${TAG_PREFIX}
+  echo "${existing_tag/${TAG_FILTER%?}/${TAG_PREFIX}}"
 }
 
 create_new_tag(){
