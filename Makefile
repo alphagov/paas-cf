@@ -28,7 +28,7 @@ spec:
 		bundle exec rspec
 
 lint_yaml:
-	$(YAMLLINT) -c yamllint.yml .
+	find . -name '*.yml' -not -path './vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
 
 lint_terraform: dev
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
@@ -36,7 +36,7 @@ lint_terraform: dev
 	find terraform -mindepth 1 -maxdepth 1 -type d -not -path 'terraform/providers' -not -path 'terraform/scripts' -print0 | xargs -0 -n 1 -t terraform graph > /dev/null
 
 lint_shellcheck:
-	find . -name '*.sh' -print0 | xargs -0 $(SHELLCHECK)
+	find . -name '*.sh' -not -path './vendor/*' | xargs $(SHELLCHECK)
 
 .PHONY: globals
 globals:
