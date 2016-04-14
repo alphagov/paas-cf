@@ -17,8 +17,7 @@ destroyed in reverse order so as not to leave any orphaned resources:
 
 1. [Bootstrap Concourse](#bootstrap-concourse)
 1. [Deployer Concourse](#deployer-concourse)
-1. [MicroBOSH](#microbosh-and-cloudfoundry)
-1. [CloudFoundry](#cloudfoundry)
+1. [MicroBOSH and CloudFoundry](#microbosh-and-cloudfoundry)
 
 The word *environment* is used herein to describe a single Cloud Foundry
 installation and its supporting infrastructure.
