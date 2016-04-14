@@ -42,7 +42,7 @@ resource "aws_db_instance" "bosh" {
   engine_version = "9.4.5"
   instance_class = "db.t2.medium"
   username = "dbadmin"
-  password = "${var.secrets_bosh_db_master_password}"
+  password = "${var.secrets_bosh_postgres_password}"
   db_subnet_group_name = "${aws_db_subnet_group.bosh_rds.name}"
   parameter_group_name = "${aws_db_parameter_group.default.id}"
 
