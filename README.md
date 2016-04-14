@@ -164,6 +164,19 @@ deployment.
 
 # Additional notes
 
+## Accessing CloudFoundry
+
+To interact with a CloudFoundry environment you will need the following:
+
+- the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
+- `API_ENDPOINT` from `make dev showenv`
+- `uaa_admin_password` from `cf-secrets.yml` in the state bucket
+
+Then you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login).
+
+You will need to supply the `--skip-ssl-validation` argument if you are
+using a development environment.
+
 ## Running tests locally
 
 You will need to install some dependencies to run the unit tests on your own
