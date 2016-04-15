@@ -1,0 +1,68 @@
+---
+inputs:
+ - name: config
+ - name: scan-targets
+ - name: paas-cf
+image: docker:///governmentpaas/cf-cli
+platform: linux
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      APP=${TYPE}
+      . ./config/config.sh
+      cf api --skip-ssl-validation ${API_ENDPOINT} >/dev/null
+      echo | cf login -u ${CF_ADMIN} -p ${CF_PASS} >/dev/null
+      cf target -o admin -s admin >/dev/null
+
+      cp -R paas-cf/tests/example-apps/port-scan .
+      cp scan-targets/IPs port-scan
+      cd port-scan
+
+      if [ "${TYPE}" = "staging-scan" ] ; then
+          echo "scan.sh" >> bin/post_compile
+          cf push ${APP} -c "python exec.py"
+
+      elif [ "${TYPE}" = "runtime-scan" ] ; then
+          cf push ${APP}
+
+          echo -n "Waiting for scan to finish"
+          status=$(curl -sk https://${APP}.${APP_DOMAIN}/exec/$(echo '[ -f scan_done ] && echo FINISHED' | base64 -w0))
+          while [ "${status}" != "FINISHED" ] ; do
+              sleep 15
+              echo -n .
+              status=$(curl -sk https://${APP}.${APP_DOMAIN}/exec/$(echo '[ -f scan_done ] && echo FINISHED' | base64 -w0))
+          done
+          echo
+
+      else
+          echo "Unsupported scan type ${TYPE}"
+          exit 3
+      fi
+
+
+      errors=$(curl -sk https://${APP}.${APP_DOMAIN}/exec/$(echo 'cat errors | grep -v Warning:' | base64 -w0))
+
+      if [ -n "${errors}" ] ; then
+         echo "Scan finished with errors:"
+         echo "${errors}"
+         exit 1
+      fi
+
+      curl -sk https://${APP}.${APP_DOMAIN}/exec/$(echo 'cat results' | base64 -w0) > results
+
+      cf delete --f --r ${APP}
+
+      ${SHOW_RESULTS} && cat results
+
+      set +e
+      open="$(grep open results)"
+      if [ -n "${open}" ] ; then
+         echo "Scan found these ports open:"
+         echo "${open}"
+         exit 2
+      fi
+
+      echo "Finished scanning, no open ports found."
