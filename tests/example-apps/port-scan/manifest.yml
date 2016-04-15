@@ -1,0 +1,8 @@
+---
+applications:
+- name: port-scan
+  memory: 256MB
+  disk_quota: 256MB
+  random-route: false
+  buildpack: python_buildpack
+  command: /bin/bash ~/run.sh
