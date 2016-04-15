@@ -339,3 +339,5 @@ deployed as part of the pipeline. This requires paas-pass to be setup, and
 installation of an additional terraform provider - instructions for this are
 documented when running the make target for the first time.
 
+Make sure you are using the correct AWS credentials for the environment you are setting up checks for. For those developers with AWS CLI config files, the [AWS CLI Documentation](http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#id1) states environment variables have the highest precedence.
+
