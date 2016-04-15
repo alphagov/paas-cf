@@ -263,16 +263,19 @@ forward some ports to the agent of the new VM.
 Both public and private keys are also uploaded to S3 to be consumed by
 other jobs in the pipelines as resources and/or by us for troubleshooting.
 
-To manually ssh to the *Deployer Concourse*, learn its IP via AWS console and
-download the `id_rsa` file from the s3 state bucket. You will need
-[aws-cli](#aws-cli), to do this:
+To manually ssh to the *Deployer Concourse*, you will need its IP and `id_rsa` key.
+You can get both from command line. You will need [aws-cli](#aws-cli), to do this:
 
 ```
+export CONCOURSE_IP=$(aws ec2 describe-instances \
+--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_key_pair" \
+--query 'Reservations[].Instances[].PublicIpAddress' --output text)
+
 aws s3 cp "s3://${DEPLOY_ENV}-state/id_rsa" . && \
 chmod 400 id_rsa && \
 ssh-add $(pwd)/id_rsa
 
-ssh vcap@<deployer_concourse_ip>
+ssh vcap@$CONCOURSE_IP
 ```
 
 If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
@@ -281,7 +284,7 @@ MicroBOSH is deployed to use the same SSH key, although is not publicly
 accessible. But you can use the *Deployer Concourse* as a jumpbox:
 
 ```
-ssh -o ProxyCommand="ssh -W%h:%p %r@<deployer_concourse_ip>" vcap@10.0.0.6
+ssh -o ProxyCommand="ssh -W%h:%p %r@$CONCOURSE_IP" vcap@10.0.0.6
 ```
 
 ## Concourse credentials
