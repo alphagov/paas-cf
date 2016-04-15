@@ -33,7 +33,7 @@ PINGDOM_ACCOUNT_EMAIL=$(pass pingdom.com/account_email)
 
 # Check bucket for Terraform state file
 cd terraform/pingdom
-declare -r STATEFILE=${MAKEFILE_ENV_TARGET}.tfstate
+declare -r STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
 if ! aws s3 ls "s3://${DEPLOY_ENV}-state/${STATEFILE}" --summarize | grep -q "Total Objects: 0";
 	then aws s3 cp "s3://${DEPLOY_ENV}-state/${STATEFILE}" "${STATEFILE}"
 else
