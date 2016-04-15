@@ -1209,9 +1209,8 @@ jobs:
               - -e
               - -c
               - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
                 mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
                 ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
                 ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
@@ -1263,9 +1262,7 @@ jobs:
               - -e
               - -c
               - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
@@ -1347,9 +1344,7 @@ jobs:
               - -e
               - -c
               - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
