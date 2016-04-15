@@ -11,8 +11,10 @@ addons:
   apt:
     sources:
       - debian-sid
+      - git-core
     packages:
       - shellcheck
+      - git
 
 before_install:
   - mkdir ~/bin
