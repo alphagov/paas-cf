@@ -37,9 +37,6 @@ properties:
     buildpacks:
       fog_connection: (( grab meta.fog_config ))
 
-  uaa:
-    catalina_opts: -Xmx768m -XX:MaxPermSize=256m
-
 compilation:
   cloud_properties:
     instance_type: c3.large
