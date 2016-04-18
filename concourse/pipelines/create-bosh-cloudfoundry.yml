@@ -983,6 +983,7 @@ jobs:
           passed: ['generate-cf-config']
         - get: cf-manifest
           passed: ['cf-deploy']
+        - get: bosh-CA
         - get: graphite-nozzle
     - task: retrieve-config
       config:
@@ -1022,7 +1023,9 @@ jobs:
       config:
         platform: linux
         inputs:
+          - name: paas-cf
           - name: config
+          - name: bosh-CA
         params:
         image: docker:///governmentpaas/cf-cli
         run:
@@ -1031,9 +1034,10 @@ jobs:
             - -e
             - -c
             - |
+              ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
               . ./config/config.sh
-              cf api --skip-ssl-validation ${API_ENDPOINT}
-              echo | cf login -u ${CF_ADMIN} -p ${CF_PASS}
+              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
               . ./config/quota_settings.sh
               ${QUOTA_non_basic_services_allowed} || prefix="dis"
@@ -1051,15 +1055,17 @@ jobs:
         inputs:
           - name: paas-cf
           - name: config
+          - name: bosh-CA
         run:
           path: sh
           args:
             - -e
             - -c
             - |
+              ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
               . ./config/config.sh
-              cf api --skip-ssl-validation ${API_ENDPOINT}
-              echo | cf login -u ${CF_ADMIN} -p ${CF_PASS}
+              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
               echo | cf create-org testers
               cf create-space healthcheck -o testers
               cf target -o testers -s healthcheck
@@ -1072,8 +1078,10 @@ jobs:
       config:
         platform: linux
         inputs:
+          - name: paas-cf
           - name: graphite-nozzle
           - name: config
+          - name: bosh-CA
         params:
         image: docker:///governmentpaas/cf-cli
         run:
@@ -1082,10 +1090,10 @@ jobs:
             - -e
             - -c
             - |
-              . ./config/config.sh
+              ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-              cf api --skip-ssl-validation ${API_ENDPOINT}
-              echo | cf login -u ${CF_ADMIN} -p ${CF_PASS}
+              . ./config/config.sh
+              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
               echo | cf create-org admin
               cf create-space admin -o admin
               cf target -o admin -s admin
@@ -1209,9 +1217,8 @@ jobs:
               - -e
               - -c
               - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
                 mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
                 ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
                 ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
@@ -1263,9 +1270,7 @@ jobs:
               - -e
               - -c
               - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
@@ -1347,9 +1352,7 @@ jobs:
               - -e
               - -c
               - |
-                echo "Adding bosh-CA to root certificates"
-                tar -xf bosh-CA/bosh-CA.tar.gz -C /usr/local/share/ca-certificates bosh-CA.crt
-                update-ca-certificates
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
