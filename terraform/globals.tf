@@ -70,6 +70,7 @@ variable "microbosh_static_private_ip" {
   default     = "10.0.0.6"
 }
 
+/* Note: This is overridden in prod.tfvars and staging.tfvars to allow world access */
 variable "web_access_cidrs" {
   description = "CSV of CIDR addresses for which we allow web access"
   default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
