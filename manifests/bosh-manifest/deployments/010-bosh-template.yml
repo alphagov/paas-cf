@@ -2,13 +2,6 @@
 meta:
   environment: (( grab terraform_outputs.environment ))
 
-  postgres:
-    host: 127.0.0.1
-    user: postgres
-    password: (( grab secrets.bosh_postgres_password ))
-    database: bosh
-    adapter: postgres
-
   default_dns:
     address: (( grab meta.bosh_public_ip ))
     domain_name: microbosh
@@ -37,8 +30,6 @@ jobs:
   templates:
   - {name: nats, release: bosh}
   - {name: redis, release: bosh}
-  - {name: postgres, release: bosh}
-  - {name: blobstore, release: bosh}
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
 
@@ -66,20 +57,6 @@ jobs:
       password: (( grab secrets.bosh_redis_password ))
 
     postgres: (( grab meta.postgres ))
-
-    blobstore:
-      address: (( grab meta.bosh_service_ip ))
-      provider: dav
-      director:
-        user: director
-        password: (( grab secrets.bosh_blobstore_director_password ))
-      agent:
-        user: agent
-        password: (( grab secrets.bosh_agent_password ))
-      options:
-        endpoint: (( concat "http://" meta.bosh_public_ip ":25250" ))
-        user: agent
-        password: (( grab secrets.bosh_agent_password ))
 
     director:
       address: 127.0.0.1

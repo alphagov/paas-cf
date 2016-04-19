@@ -94,7 +94,6 @@ jobs:
             trigger: true
             passed: [ init ]
           - get: paas-cf
-          - get: bosh-tfstate
           - get: bosh-secrets
           - get: bosh-init-state
           - get: bosh-manifest
@@ -155,6 +154,7 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
+          - get: bosh-secrets
       - task: extract-terraform-variables
         config:
           platform: linux
@@ -163,6 +163,7 @@ jobs:
             - name: paas-cf
             - name: vpc-tfstate
             - name: concourse-tfstate
+            - name: bosh-secrets
           outputs:
             - name: terraform-variables
           run:
@@ -172,11 +173,11 @@ jobs:
               - -c
               - |
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < vpc-tfstate/vpc.tfstate \
-                > terraform-variables/vpc.tfvars.sh
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < concourse-tfstate/concourse.tfstate \
-                > terraform-variables/concourse.tfvars.sh
+                < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+                < bosh-secrets/bosh-secrets.yml > terraform-variables/bosh-secrets.tfvars.sh
       - task: terraform-destroy
         config:
           platform: linux
@@ -198,6 +199,7 @@ jobs:
               - |
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
+                . terraform-variables/bosh-secrets.tfvars.sh
 
                 terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh

@@ -48,24 +48,17 @@ jobs:
       mbus: nats://nats:BOSH_NATS_PASSWORD@10.0.0.6:4222
     aws:
       credentials_source: env_or_profile
+      default_iam_instance_profile: bosh-managed
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
       max_retries: 8
       region: eu-west-1
     blobstore:
-      address: 10.0.0.6
-      agent:
-        password: BOSH_AGENT_PASSWORD
-        user: agent
-      director:
-        password: BOSH_BLOBSTORE_DIRECTOR_PASSWORD
-        user: director
-      options:
-        endpoint: http://194.1.2.4:25250
-        password: BOSH_AGENT_PASSWORD
-        user: agent
-      provider: dav
+      bucket_name: test-bosh-blobstore
+      credentials_source: env_or_profile
+      provider: s3
+      s3_region: eu-west-1
     compiled_package_cache:
       options:
         bucket_name: shared-cf-bosh-blobstore-unit-test
@@ -78,9 +71,10 @@ jobs:
       db:
         adapter: postgres
         database: bosh
-        host: 127.0.0.1
+        host: 1.2.3.4
         password: BOSH_POSTGRES_PASSWORD
-        user: postgres
+        port: 5432
+        user: bosh
       disks:
         max_orphaned_age_in_days: 0
       ignore_missing_gateway: "false"
@@ -107,9 +101,10 @@ jobs:
     postgres:
       adapter: postgres
       database: bosh
-      host: 127.0.0.1
+      host: 1.2.3.4
       password: BOSH_POSTGRES_PASSWORD
-      user: postgres
+      port: 5432
+      user: bosh
     redis:
       address: 127.0.0.1
       listen_address: 127.0.0.1
@@ -118,9 +113,10 @@ jobs:
       db:
         adapter: postgres
         database: bosh
-        host: 127.0.0.1
+        host: 1.2.3.4
         password: BOSH_POSTGRES_PASSWORD
-        user: postgres
+        port: 5432
+        user: bosh
       host: 10.0.0.6
       http:
         password: BOSH_REGISTRY_PASSWORD
@@ -132,10 +128,6 @@ jobs:
   - name: nats
     release: bosh
   - name: redis
-    release: bosh
-  - name: postgres
-    release: bosh
-  - name: blobstore
     release: bosh
   - name: director
     release: bosh

@@ -6,7 +6,7 @@ groups:
       - bosh-terraform
       - generate-bosh-config
       - bosh-deploy
-      - generate-cf-secrets
+      - generate-secrets
       - cf-terraform
       - generate-cf-config
       - cf-deploy
@@ -26,7 +26,7 @@ groups:
       - bosh-deploy
   - name: cloudfoundry
     jobs:
-      - generate-cf-secrets
+      - generate-secrets
       - cf-terraform
       - generate-cf-config
       - cf-deploy
@@ -315,6 +315,140 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
 
+  - name: generate-secrets
+    serial_groups: [cf-deploy]
+    serial: true
+    plan:
+      - aggregate:
+          - get: paas-cf
+            passed: ['init']
+          - get: pipeline-trigger
+            passed: ['init']
+            trigger: true
+          - get: bosh-CA
+          - get: bosh-secrets
+          - get: cf-certs
+          - get: cf-secrets
+
+      - task: generate-bosh-CA
+        config:
+          platform: linux
+          image: docker:///governmentpaas/certstrap
+          inputs:
+            - name: paas-cf
+            - name: bosh-CA
+              path: existing-bosh-CA
+          outputs:
+            - name: generated-bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                if  [ -z "$(tar -tvzf existing-bosh-CA/bosh-CA.tar.gz)" ] ; then
+                  certstrap init --passphrase "" --common-name bosh-CA
+                  cd out
+                  tar -cvzf ../generated-bosh-CA/bosh-CA.tar.gz bosh-CA.*
+                  cd ..
+                else
+                  echo "The CA cert already exists, skipping generation..."
+                  cp existing-bosh-CA/bosh-CA.tar.gz generated-bosh-CA/bosh-CA.tar.gz
+                  mkdir out
+                  tar -xvzf generated-bosh-CA/bosh-CA.tar.gz -C out
+                fi
+                ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > generated-bosh-CA/bosh-ca-cert.yml
+        on_success:
+          put: bosh-CA
+          params:
+            file: generated-bosh-CA/bosh-CA.tar.gz
+
+      - task: generate-bosh-secrets
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: bosh-secrets
+              path: existing-bosh-secrets
+          outputs:
+            - name: generated-bosh-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
+                  --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
+                  > generated-bosh-secrets/bosh-secrets.yml
+                ls -l generated-bosh-secrets
+        on_success:
+          put: bosh-secrets
+          params:
+            file: generated-bosh-secrets/bosh-secrets.yml
+
+      - task: generate-cf-certs
+        config:
+          platform: linux
+          image: docker:///governmentpaas/certstrap
+          inputs:
+            - name: bosh-CA
+            - name: paas-cf
+            - name: cf-certs
+          outputs:
+            - name: generated-cf-certs
+          params:
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                mkdir certs
+                echo "Extracting extant certs"
+                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
+
+                echo "Generating uaa_jwt_signing public key from private key"
+                openssl rsa -pubout -in certs/uaa_jwt_signing.key -out certs/uaa_jwt_verification.pem
+
+                echo "Creating updated cert tarball"
+                cd certs
+                tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+        on_success:
+          put: cf-certs
+          params:
+            file: generated-cf-certs/cf-certs.tar.gz
+
+      - task: generate-cf-secrets
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+              path: existing-cf-secrets
+          outputs:
+            - name: generated-cf-secrets
+          run:
+            path: sh
+            args:
+              - -c
+              - -e
+              - |
+                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                  --existing-secrets existing-cf-secrets/cf-secrets.yml \
+                  > generated-cf-secrets/cf-secrets.yml
+                ls -l generated-cf-secrets
+        on_success:
+          put: cf-secrets
+          params:
+            file: generated-cf-secrets/cf-secrets.yml
+
   - name: bosh-terraform
     serial_groups: [bosh-deploy]
     serial: true
@@ -322,12 +456,13 @@ jobs:
       - aggregate:
           - get: pipeline-trigger
             trigger: true
-            passed: [ init ]
+            passed: [ generate-secrets ]
           - get: paas-cf
-            passed: [init]
+            passed: [ generate-secrets ]
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
+          - get: bosh-secrets
 
       - task: extract-terraform-variables
         config:
@@ -337,6 +472,7 @@ jobs:
             - name: paas-cf
             - name: vpc-tfstate
             - name: concourse-tfstate
+            - name: bosh-secrets
           outputs:
             - name: terraform-variables
           run:
@@ -346,11 +482,12 @@ jobs:
               - -c
               - |
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < vpc-tfstate/vpc.tfstate \
-                > terraform-variables/vpc.tfvars.sh
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < concourse-tfstate/concourse.tfstate \
-                > terraform-variables/concourse.tfvars.sh
+                < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+                < bosh-secrets/bosh-secrets.yml > terraform-variables/bosh-secrets.tfvars.sh
+
       - task: terraform-apply
         config:
           platform: linux
@@ -372,6 +509,7 @@ jobs:
               - |
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
+                . terraform-variables/bosh-secrets.tfvars.sh
 
                 terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh
@@ -397,85 +535,48 @@ jobs:
           - get: bosh-tfstate
             passed: ['bosh-terraform']
 
-      - aggregate:
-          - task: generate-secrets
-            config:
-              platform: linux
-              image: docker:///ruby#2.2-slim
-              inputs:
-                - name: paas-cf
-                - name: bosh-secrets
-                  path: existing-bosh-secrets
-              outputs:
-                - name: generated-bosh-secrets
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
-                      --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
-                      > generated-bosh-secrets/bosh-secrets.yml
-                    ls -l generated-bosh-secrets
-            on_success:
-              put: bosh-secrets
-              params:
-                file: generated-bosh-secrets/bosh-secrets.yml
-          - task: generate-bosh-CA
-            config:
-              platform: linux
-              image: docker:///governmentpaas/certstrap
-              inputs:
-                - name: paas-cf
-                - name: bosh-CA
-                  path: existing-bosh-CA
-              outputs:
-                - name: generated-bosh-CA
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    if  [ -z "$(tar -tvzf existing-bosh-CA/bosh-CA.tar.gz)" ] ; then
-                      certstrap init --passphrase "" --common-name bosh-CA
-                      cd out
-                      tar -cvzf ../generated-bosh-CA/bosh-CA.tar.gz bosh-CA.*
-                      cd ..
-                    else
-                      echo "The CA cert already exists, skipping generation..."
-                      cp existing-bosh-CA/bosh-CA.tar.gz generated-bosh-CA/bosh-CA.tar.gz
-                      mkdir out
-                      tar -xvzf generated-bosh-CA/bosh-CA.tar.gz -C out
-                    fi
-                    ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > generated-bosh-CA/bosh-ca-cert.yml
-            on_success:
-              put: bosh-CA
-              params:
-                file: generated-bosh-CA/bosh-CA.tar.gz
-          - task: extract_terraform_outputs
-            config:
-              platform: linux
-              image: docker:///ruby#2.2-slim
-              inputs:
-                - name: paas-cf
-                - name: vpc-tfstate
-                - name: bosh-tfstate
-              outputs:
-                - name: terraform-outputs
-              run:
-                path: sh
-                args:
-                  - -c
-                  - -e
-                  - |
-                    ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-                      < vpc-tfstate/vpc.tfstate \
-                      > terraform-outputs/vpc.terraform-outputs.yml
-                    ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-                      < bosh-tfstate/bosh.tfstate \
-                      > terraform-outputs/bosh.terraform-outputs.yml
+      - task: extract_terraform_outputs
+        config:
+          platform: linux
+          image: docker:///ruby#2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+            - name: bosh-tfstate
+          outputs:
+            - name: terraform-outputs
+          run:
+            path: sh
+            args:
+              - -c
+              - -e
+              - |
+                ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                  < vpc-tfstate/vpc.tfstate \
+                  > terraform-outputs/vpc.terraform-outputs.yml
+                ruby paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                  < bosh-tfstate/bosh.tfstate \
+                  > terraform-outputs/bosh.terraform-outputs.yml
+
+      - task: extract-bosh-CA
+        config:
+          platform: linux
+          image: docker:///governmentpaas/certstrap
+          inputs:
+            - name: paas-cf
+            - name: bosh-CA
+          outputs:
+            - name: bosh-CA-yml
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo "The CA cert already exists, skipping generation..."
+                mkdir out
+                tar -xvzf bosh-CA/bosh-CA.tar.gz -C out
+                ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > bosh-CA-yml/bosh-ca-cert.yml
 
       - task: render-manifest
         config:
@@ -484,14 +585,14 @@ jobs:
           inputs:
             - name: paas-cf
             - name: terraform-outputs
-            - name: generated-bosh-secrets
-            - name: generated-bosh-CA
+            - name: bosh-secrets
+            - name: bosh-CA-yml
           outputs:
             - name: bosh-manifest
           params:
             BOSH_MANIFEST_STUBS: |
-              ./generated-bosh-secrets/bosh-secrets.yml
-              ./generated-bosh-CA/bosh-ca-cert.yml
+              ./bosh-secrets/bosh-secrets.yml
+              ./bosh-CA-yml/bosh-ca-cert.yml
               ./terraform-outputs/bosh.terraform-outputs.yml
               ./terraform-outputs/vpc.terraform-outputs.yml
           run:
@@ -547,94 +648,15 @@ jobs:
           params:
             file: updated-bosh-init-state/bosh-manifest-state.json
 
-  - name: generate-cf-secrets
-    serial_groups: [cf-deploy]
-    serial: true
-    plan:
-      - aggregate:
-          - get: paas-cf
-            passed: ['generate-bosh-config']
-          - get: pipeline-trigger
-            passed: ['generate-bosh-config']
-            trigger: true
-          - get: bosh-CA
-          - get: cf-certs
-          - get: cf-secrets
-          - get: vpc-tfstate
-          - get: concourse-tfstate
-          - get: bosh-tfstate
-
-      - task: generate-cf-secrets
-        config:
-          platform: linux
-          image: docker:///ruby#2.2-slim
-          inputs:
-            - name: paas-cf
-            - name: cf-secrets
-              path: existing-cf-secrets
-            - name: bosh-tfstate
-          outputs:
-            - name: generated-cf-secrets
-          run:
-            path: sh
-            args:
-              - -c
-              - -e
-              - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                  --existing-secrets existing-cf-secrets/cf-secrets.yml \
-                  > generated-cf-secrets/cf-secrets.yml
-                ls -l generated-cf-secrets
-        on_success:
-          put: cf-secrets
-          params:
-            file: generated-cf-secrets/cf-secrets.yml
-
-      - task: generate-cf-certs
-        config:
-          platform: linux
-          image: docker:///governmentpaas/certstrap
-          inputs:
-            - name: bosh-CA
-            - name: paas-cf
-            - name: cf-certs
-          outputs:
-            - name: generated-cf-certs
-          params:
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                mkdir certs
-                echo "Extracting extant certs"
-                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
-
-                echo "Generating uaa_jwt_signing public key from private key"
-                openssl rsa -pubout -in certs/uaa_jwt_signing.key -out certs/uaa_jwt_verification.pem
-
-                echo "Creating updated cert tarball"
-                cd certs
-                tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
-        on_success:
-          put: cf-certs
-          params:
-            file: generated-cf-certs/cf-certs.tar.gz
-
   - name: cf-terraform
     serial_groups: [cf-deploy]
     serial: true
     plan:
       - aggregate:
           - get: paas-cf
-            passed: ['generate-cf-secrets']
+            passed: ['generate-secrets']
           - get: pipeline-trigger
-            passed: [ 'generate-cf-secrets' ]
+            passed: [ 'generate-secrets' ]
             trigger: true
           - get: vpc-tfstate
           - get: concourse-tfstate
@@ -642,9 +664,9 @@ jobs:
           - get: cf-tfstate
           - get: cf-certs-tfstate
           - get: cf-certs
-            passed: ['generate-cf-secrets']
+            passed: ['generate-secrets']
           - get: cf-secrets
-            passed: ['generate-cf-secrets']
+            passed: ['generate-secrets']
 
       - task: upload-certs-to-aws
         config:
@@ -1344,8 +1366,6 @@ jobs:
             - name: paas-cf
             - name: test-config
             - name: bosh-CA
-          outputs:
-            - name: tests-results
           run:
             path: sh
             args:

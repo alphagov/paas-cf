@@ -1,0 +1,10 @@
+---
+meta:
+  postgres:
+    host: (( grab terraform_outputs.bosh_db_address ))
+    port: (( grab terraform_outputs.bosh_db_port ))
+    user: (( grab terraform_outputs.bosh_db_username ))
+    password: (( grab terraform_outputs.bosh_db_password ))
+    database: (( grab terraform_outputs.bosh_db_dbname ))
+    adapter: postgres
+

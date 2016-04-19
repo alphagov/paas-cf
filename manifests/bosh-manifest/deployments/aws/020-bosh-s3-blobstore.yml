@@ -1,0 +1,9 @@
+---
+jobs:
+- name: bosh
+  properties:
+    blobstore:
+      provider: s3
+      credentials_source: env_or_profile
+      bucket_name: (( grab terraform_outputs.bosh_blobstore_bucket_name ))
+      s3_region: (( grab terraform_outputs.region ))
