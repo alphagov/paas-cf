@@ -43,17 +43,21 @@ RSpec.describe "the jobs definitions block" do
     end
   end
 
-  describe "in order to start one etcd master for consensus" do
+  describe "in order to start/upgrade etcd cluster while maintaining consensus" do
     it "has etcd_z1 serial" do
       expect(is_serial("etcd_z1")).to be true
+    end
+
+    it "has etcd_z2 serial" do
+      expect(is_serial("etcd_z2")).to be true
     end
 
     it "has etcd_z1 before etcd_z2" do
       expect(ordered("etcd_z1", "etcd_z2")).to be true
     end
 
-    it "has etcd_z1 before etcd_z3" do
-      expect(ordered("etcd_z1", "etcd_z3")).to be true
+    it "has etcd_z2 before etcd_z3" do
+      expect(ordered("etcd_z2", "etcd_z3")).to be true
     end
   end
 
