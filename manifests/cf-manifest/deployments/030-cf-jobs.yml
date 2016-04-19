@@ -247,6 +247,24 @@ jobs:
           services:
             etcd: {}
 
+  - name: etcd_z2
+    templates: (( grab meta.etcd_templates ))
+    instances: 1
+    persistent_disk: 10024
+    resource_pool: medium_z2
+    networks:
+      - name: cf2
+        static_ips:
+    update:
+      serial: true
+    properties:
+      metron_agent:
+        zone: z2
+      consul:
+        agent:
+          services:
+            etcd: {}
+
   - name: consul_z3
     templates: (( grab meta.consul_templates ))
     instances: 1
@@ -261,22 +279,6 @@ jobs:
           mode: server
       metron_agent:
         zone: z3
-
-  - name: etcd_z2
-    templates: (( grab meta.etcd_templates ))
-    instances: 1
-    persistent_disk: 10024
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-        static_ips:
-    properties:
-      metron_agent:
-        zone: z2
-      consul:
-        agent:
-          services:
-            etcd: {}
 
   - name: etcd_z3
     templates: (( grab meta.etcd_templates ))
