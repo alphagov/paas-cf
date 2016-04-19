@@ -169,6 +169,8 @@ jobs:
         image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: paas-cf
+        outputs:
+        - name: ssh-keygen
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
         run:
@@ -251,6 +253,8 @@ jobs:
         image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: concourse-cert
+        outputs:
+        - name: generate-concourse-cert
         params:
           SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
         run:
