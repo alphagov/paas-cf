@@ -1,4 +1,4 @@
-.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck check-env-vars
+.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck lint_concourse check-env-vars
 
 .DEFAULT_GOAL := help
 
@@ -11,7 +11,7 @@ YAMLLINT=yamllint
 check-env-vars:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 
-test: spec lint_yaml lint_terraform lint_shellcheck ## Run linting tests
+test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse ## Run linting tests
 
 spec:
 	cd concourse/scripts &&\
@@ -37,6 +37,9 @@ lint_terraform: dev
 
 lint_shellcheck:
 	find . -name '*.sh' -not -path './vendor/*' | xargs $(SHELLCHECK)
+
+lint_concourse:
+	cd .. && python paas-cf/concourse/scripts/pipecleaner.py paas-cf/concourse/pipelines/*.yml
 
 .PHONY: globals
 globals:
