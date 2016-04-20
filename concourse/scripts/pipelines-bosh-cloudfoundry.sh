@@ -36,6 +36,7 @@ prepare_environment() {
 
   cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
   cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
+  cf_paas_haproxy_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.paas-haproxy.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
   cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
   cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
 
@@ -58,6 +59,7 @@ branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
+cf-paas-haproxy-release-version: ${cf_paas_haproxy_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}

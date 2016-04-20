@@ -72,6 +72,14 @@ resources:
       branch: {{branch_name}}
       tag_filter: {{paas_cf_tag_filter}}
 
+  - name: paas-haproxy-release
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-haproxy-release.git
+      branch: 115931361-extend-haproxy-release
+      # TODO: Un-comment tag_filter and remove branch once release is tagged
+      # tag_filter: {{cf-paas-haproxy-release-version}}
+
   - name: graphite-statsd-boshrelease
     type: git
     source:
@@ -944,6 +952,7 @@ jobs:
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
           - get: grafana-boshrelease
+          - get: paas-haproxy-release
       - task: upload-releases
         config:
           platform: linux
@@ -953,6 +962,7 @@ jobs:
             - name: bosh-secrets
             - name: graphite-statsd-boshrelease
             - name: grafana-boshrelease
+            - name: paas-haproxy-release
           run:
             path: sh
             args:
@@ -966,6 +976,9 @@ jobs:
 
                 paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
                   {{cf_grafana_version}} grafana-boshrelease
+
+                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
+                  {{cf-paas-haproxy-release-version}} paas-haproxy-release
 
       - task: cf-deploy
         config:

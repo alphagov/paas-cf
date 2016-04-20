@@ -175,6 +175,8 @@ meta:
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
+  - name: haproxy
+    release: paas-haproxy
 
   stats_templates:
   - name: consul_agent
@@ -799,15 +801,16 @@ properties:
   logger_endpoint: ~
 
   ha_proxy:
+    ssl_pem: (( concat secrets.router_internal_cert secrets.router_internal_key ))
+    disable_http: true
+    go_router:
+      servers: [ "127.0.0.1" ]
+      port: 80
 
   router:
-    enable_ssl: true
-    ssl_cert: (( grab secrets.router_internal_cert ))
-    ssl_key: (( grab secrets.router_internal_key ))
-    cipher_suites: TLS_RSA_WITH_AES_128_CBC_SHA:TLS_RSA_WITH_AES_256_CBC_SHA
+    enable_ssl: false
     requested_route_registration_interval_in_seconds:
     ssl_skip_validation:
-    port:
     status:
       port:
     secure_cookies:
