@@ -658,11 +658,10 @@ jobs:
           - get: paas-cf
             passed: ['generate-secrets']
           - get: pipeline-trigger
-            passed: [ 'generate-secrets' ]
+            passed: ['generate-secrets']
             trigger: true
           - get: vpc-tfstate
           - get: concourse-tfstate
-          - get: bosh-tfstate
           - get: cf-tfstate
           - get: cf-certs-tfstate
           - get: cf-certs
@@ -738,7 +737,6 @@ jobs:
             - name: paas-cf
             - name: vpc-tfstate
             - name: concourse-tfstate
-            - name: bosh-tfstate
             - name: cf-secrets
             - name: cf-certs-tfstate
           outputs:
@@ -753,8 +751,6 @@ jobs:
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < bosh-tfstate/bosh.tfstate > terraform-variables/bosh.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < cf-certs-tfstate/cf-certs.tfstate > terraform-variables/cf-certs.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
@@ -784,7 +780,6 @@ jobs:
               - |
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
-                . terraform-variables/bosh.tfvars.sh
                 . terraform-variables/cf-certs.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
 
@@ -855,6 +850,7 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
+            passed: ['bosh-terraform']
           - get: cf-tfstate
             passed: ['cf-terraform']
       - task: extract-terraform-outputs
