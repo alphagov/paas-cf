@@ -164,13 +164,13 @@ jobs:
       passed: [init-bucket]
     - get: vpc-terraform-state
 
-    - task: ssh-keygen
+    - task: generate-ssh-keys
       config:
         image: docker:///governmentpaas/curl-ssl
         inputs:
         - name: paas-cf
         outputs:
-        - name: ssh-keygen
+        - name: ssh-keys
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
         run:
@@ -180,12 +180,13 @@ jobs:
           - -c
           - |
             apk add --update openssh
+            cd ssh-keys
             ssh-keygen -t rsa -b 4096 -f generated_id_rsa -N ''
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa generated_id_rsa
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub generated_id_rsa.pub
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa generated_id_rsa
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub generated_id_rsa.pub
             ssh-keygen -t rsa -b 4096 -f generated_git_id_rsa -N ''
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git_id_rsa generated_git_id_rsa
-            ./paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git_id_rsa.pub generated_git_id_rsa.pub
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git_id_rsa generated_git_id_rsa
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git_id_rsa.pub generated_git_id_rsa.pub
 
     - task: deploy-vpc
       config:
@@ -194,7 +195,7 @@ jobs:
         inputs:
         - name: paas-cf
         - name: vpc-terraform-state
-        - name: ssh-keygen
+        - name: ssh-keys
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -205,7 +206,7 @@ jobs:
           - -e
           - -c
           - |
-            cp ssh-keygen/id_rsa.pub paas-cf/terraform/vpc
+            cp ssh-keys/id_rsa.pub paas-cf/terraform/vpc
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc
@@ -254,7 +255,7 @@ jobs:
         inputs:
         - name: concourse-cert
         outputs:
-        - name: generate-concourse-cert
+        - name: generated-concourse-cert
         params:
           SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
         run:
@@ -266,13 +267,17 @@ jobs:
             tar xzvf concourse-cert/concourse-cert.tar.gz
             if [ -f concourse.crt ] && [ -f concourse.key ]; then
               echo Certificate and private key already created, nothing to do
-              cp concourse-cert/concourse-cert.tar.gz .
+              cp concourse-cert/concourse-cert.tar.gz generated-concourse-cert/
               exit 0
             fi
             openssl req -x509 -newkey rsa:2048 -keyout concourse.key \
               -out concourse.crt -days 365 -nodes -subj \
               "/C=UK/ST=London/L=London/O=GDS/CN=deployer.${SYSTEM_DNS_ZONE_NAME}"
-            tar czvf concourse-cert.tar.gz concourse.crt concourse.key
+            tar czvf generated-concourse-cert/concourse-cert.tar.gz concourse.crt concourse.key
+      on_success:
+        put: concourse-cert
+        params:
+          file: generated-concourse-cert/concourse-cert.tar.gz
 
     # Temporary task to retrieve the codecommit default branch if it exists
     - task: get-codecommit-default-branch
@@ -316,7 +321,7 @@ jobs:
         - name: paas-cf
         - name: vpc-terraform-outputs
         - name: concourse-terraform-state
-        - name: generate-concourse-cert
+        - name: generated-concourse-cert
         - name: git-ssh-public-key
         - name: codecommit-default-branch
         params:
@@ -330,7 +335,7 @@ jobs:
           - -e
           - -c
           - |
-            cp generate-concourse-cert/concourse.crt generate-concourse-cert/concourse.key .
+            tar xzvf generated-concourse-cert/concourse-cert.tar.gz
             . vpc-terraform-outputs/tfvars.sh
 
             export TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
@@ -363,9 +368,6 @@ jobs:
           - |
             aws iam add-user-to-group --user-name git-${DEPLOY_ENV} --group-name concourse-pool-git-rw
 
-    - put: concourse-cert
-      params:
-        file: generate-concourse-cert/concourse-cert.tar.gz
 
   - name: concourse-prepare-deploy
     serial: true
