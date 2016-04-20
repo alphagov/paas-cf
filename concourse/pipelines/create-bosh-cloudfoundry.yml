@@ -463,6 +463,7 @@ jobs:
           - get: concourse-tfstate
           - get: bosh-tfstate
           - get: bosh-secrets
+            passed: [ generate-secrets ]
 
       - task: extract-terraform-variables
         config:
@@ -529,6 +530,7 @@ jobs:
           - get: paas-cf
             passed: ['bosh-terraform']
           - get: bosh-secrets
+            passed: ['bosh-terraform']
           - get: bosh-CA
           - get: vpc-tfstate
             passed: ['bosh-terraform']
