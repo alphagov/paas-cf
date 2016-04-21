@@ -806,6 +806,9 @@ properties:
     go_router:
       servers: [ "127.0.0.1" ]
       port: 80
+    additional_frontend_config: |
+      capture response header strict-transport-security len 128
+      http-response add-header Strict-Transport-Security max-age=31536000 unless { capture.res.hdr(0) -m found }
 
   router:
     enable_ssl: false
