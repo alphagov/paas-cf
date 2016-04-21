@@ -13,9 +13,9 @@ meta:
 
   default_stemcell:
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: 3197
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3197
-    sha1: 89a2210b8caf3884855d7db6d48b8863202c7783
+    version: 3215
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3215
+    sha1: 84c51fed6342d5eb7cd59728c7d691c75b6c1de8
 
 properties:
 
@@ -36,9 +36,6 @@ properties:
       fog_connection: (( grab meta.fog_config ))
     buildpacks:
       fog_connection: (( grab meta.fog_config ))
-
-  uaa:
-    catalina_opts: -Xmx768m -XX:MaxPermSize=256m
 
 compilation:
   cloud_properties:

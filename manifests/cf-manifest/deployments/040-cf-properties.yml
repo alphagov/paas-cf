@@ -21,7 +21,7 @@ properties:
     dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
     tls:
-      ca: ~
+      ca_cert: ~
 
   doppler:
     maxRetainedLogMessages: 100
@@ -29,11 +29,11 @@ properties:
     blacklisted_syslog_ranges: ~
     unmarshaller_count: 5
     port: 443
-    enable_tls_transport: ~
-    tls_server:
-      cert: ~
+    tls:
+      enable: ~
+      server_cert: ~
       port: ~
-      key: ~
+      server_key: ~
 
   metron_agent:
     deployment: (( grab meta.environment ))
@@ -41,9 +41,9 @@ properties:
     enable_buffer: ~
     buffer_size: ~
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
-    tls_client:
-      cert: ~
-      key: ~
+    tls:
+      client_cert: ~
+      client_key: ~
 
   traffic_controller:
     outgoing_port: 8080
@@ -80,7 +80,7 @@ properties:
     audit_events:
       cutoff_age_in_days: 31
 
-    users_can_select_backend: false
+    users_can_select_backend: true
     default_to_diego_backend: true
     allow_app_ssh_access: true
     default_app_memory: 1024
@@ -153,21 +153,21 @@ properties:
     system_buildpacks: (( grab properties.cc.default_buildpacks ))
     default_buildpacks:
       - name: staticfile_buildpack
-        package: buildpack_staticfile
+        package: staticfile-buildpack
       - name: java_buildpack
         package: buildpack_java
       - name: ruby_buildpack
-        package: buildpack_ruby
+        package: ruby-buildpack
       - name: nodejs_buildpack
-        package: buildpack_nodejs
+        package: nodejs-buildpack
       - name: go_buildpack
-        package: buildpack_go
+        package: go-buildpack
       - name: python_buildpack
-        package: buildpack_python
+        package: python-buildpack
       - name: php_buildpack
-        package: buildpack_php
+        package: php-buildpack
       - name: binary_buildpack
-        package: buildpack_binary
+        package: binary-buildpack
 
     install_buildpacks: (( grab properties.cc.system_buildpacks properties.cc.user_buildpacks ))
 
@@ -266,7 +266,7 @@ properties:
       cf:
         id: cf
         override: true
-        authorized-grant-types: implicit,password,refresh_token
+        authorized-grant-types: password,refresh_token
         scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read
         authorities: uaa.none
         access-token-validity: 600
@@ -287,10 +287,10 @@ properties:
         authorities: routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
       tcp_emitter:
-        authorities: routing.routes.write,routing.routes.read
+        authorities: routing.routes.write,routing.routes.read,routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
       tcp_router:
-        authorities: routing.routes.read
+        authorities: routing.routes.read,routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
       ssh-proxy:
         authorized-grant-types: authorization_code
@@ -316,6 +316,7 @@ properties:
   diego:
     ssl:
       skip_cert_verify: true
+      starting_container_weight: 0.25
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -458,10 +459,10 @@ base_job_templates:
     - name: metron_agent
       release: cf
   cell:
-    - name: rep
-      release: diego
     - name: consul_agent
       release: cf
+    - name: rep
+      release: diego
     - name: garden
       release: garden-linux
     - name: rootfses
@@ -469,6 +470,8 @@ base_job_templates:
     - name: metron_agent
       release: cf
   cc_bridge:
+    - name: consul_agent
+      release: cf
     - name: stager
       release: diego
     - name: nsync
@@ -477,34 +480,34 @@ base_job_templates:
       release: diego
     - name: cc_uploader
       release: diego
-    - name: consul_agent
-      release: cf
     - name: metron_agent
       release: cf
   route_emitter:
-    - name: route_emitter
-      release: diego
     - name: consul_agent
       release: cf
+    - name: route_emitter
+      release: diego
     - name: metron_agent
       release: cf
   access:
-    - name: ssh_proxy
-      release: diego
     - name: consul_agent
       release: cf
+    - name: ssh_proxy
+      release: diego
     - name: metron_agent
       release: cf
     - name: file_server
       release: diego
   database:
-    - name: bbs
-      release: diego
     - name: consul_agent
       release: cf
+    - name: bbs
+      release: diego
     - name: metron_agent
       release: cf
   colocated:
+    - name: consul_agent
+      release: cf
     - name: auctioneer
       release: diego
     - name: bbs
@@ -513,8 +516,6 @@ base_job_templates:
       release: diego
     - name: converger
       release: diego
-    - name: consul_agent
-      release: cf
     - name: file_server
       release: diego
     - name: metron_agent

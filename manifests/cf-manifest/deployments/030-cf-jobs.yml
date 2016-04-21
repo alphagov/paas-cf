@@ -26,27 +26,48 @@ meta:
   api_consul_services:
     cloud_controller_ng: {}
 
+  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   api_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: cloud_controller_ng
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
+    release: (( grab meta.release.name ))
+  - name: route_registrar
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
+  - name: java-buildpack
+    release: (( grab meta.release.name ))
+  - name: java-offline-buildpack
+    release: (( grab meta.release.name ))
+  - name: go-buildpack
+    release: (( grab meta.release.name ))
+  - name: binary-buildpack
+    release: (( grab meta.release.name ))
+  - name: nodejs-buildpack
+    release: (( grab meta.release.name ))
+  - name: ruby-buildpack
+    release: (( grab meta.release.name ))
+  - name: php-buildpack
+    release: (( grab meta.release.name ))
+  - name: python-buildpack
+    release: (( grab meta.release.name ))
+  - name: staticfile-buildpack
+    release: (( grab meta.release.name ))
 
   api_worker_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: cloud_controller_worker
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nfs_mounter
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
@@ -69,106 +90,112 @@ meta:
     name: (( grab meta.logsearch_shipper.release.name ))
 
   etcd_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
   - name: etcd
     release: etcd
   - name: etcd_metrics_server
     release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
   ha_proxy_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: haproxy
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
   loggregator_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: doppler
     release: (( grab meta.release.name ))
   - name: syslog_drain_binder
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
+  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   loggregator_trafficcontroller_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: loggregator_trafficcontroller
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: route_registrar
+    release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
   nats_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: nats
     release: (( grab meta.release.name ))
   - name: nats_stream_forwarder
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
 
   nfs_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: debian_nfs_server
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
   postgres_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: postgres
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
   router_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: gorouter
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
   stats_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: collector
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
   - release: "logsearch-shipper"
     name: (( grab meta.logsearch_shipper.release.name ))
 
+  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   uaa_templates:
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
   - name: uaa
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: route_registrar
+    release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
   - release: "logsearch-shipper"
@@ -346,6 +373,7 @@ jobs:
       metron_agent:
         zone: z1
 
+  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   - name: uaa_z1
     templates: (( grab meta.uaa_templates ))
     instances: 1
@@ -359,6 +387,8 @@ jobs:
             uaa: {}
       metron_agent:
         zone: z1
+      route_registrar:
+        routes: []
 
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
@@ -373,6 +403,8 @@ jobs:
             uaa: {}
       metron_agent:
         zone: z2
+      route_registrar:
+        routes: []
 
   - name: api_z1
     templates: (( grab meta.api_templates ))
@@ -387,6 +419,8 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z1
+      route_registrar:
+        routes: []
       nfs_server: (( grab meta.nfs_server ))
 
   - name: api_z2
@@ -402,6 +436,8 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: z2
+      route_registrar:
+        routes: []
       nfs_server: (( grab meta.nfs_server ))
 
   - name: clock_global
@@ -498,6 +534,8 @@ jobs:
         zone: z1
       metron_agent:
         zone: z1
+      route_registrar:
+        routes: []
 
   - name: loggregator_trafficcontroller_z2
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
@@ -510,6 +548,8 @@ jobs:
         zone: z2
       metron_agent:
         zone: z2
+      route_registrar:
+        routes: []
 
   - name: router_z1
     templates: (( grab meta.router_templates ))
@@ -552,11 +592,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-      consul:
-        agent:
-          services:
-            file_server: {}
-            ssh_proxy: {}
 
   - name: access_z2
     templates: (( grab base_job_templates.access ))
@@ -567,11 +602,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-      consul:
-        agent:
-          services:
-            file_server: {}
-            ssh_proxy: {}
 
   - name: brain_z1
     templates: (( grab base_job_templates.brain ))
@@ -580,10 +610,6 @@ jobs:
     networks:
       - name: cf1
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
       metron_agent:
         zone: z1
 
@@ -594,10 +620,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
       metron_agent:
         zone: z2
 
@@ -610,13 +632,6 @@ jobs:
     properties:
       metron_agent:
         zone: z1
-      consul:
-        agent:
-          services:
-            cc_uploader: {}
-            nsync: {}
-            stager: {}
-            tps: {}
 
   - name: cc_bridge_z2
     templates: (( grab base_job_templates.cc_bridge ))
@@ -627,13 +642,6 @@ jobs:
     properties:
       metron_agent:
         zone: z2
-      consul:
-        agent:
-          services:
-            cc_uploader: {}
-            nsync: {}
-            stager: {}
-            tps: {}
 
   - name: cell_z1
     templates: (( grab base_job_templates.cell ))
@@ -669,17 +677,6 @@ jobs:
     networks:
       - name: cf1
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
-            bbs: {}
-            cc_uploader: {}
-            file_server: {}
-            nsync: {}
-            ssh_proxy: {}
-            stager: {}
-            tps: {}
       diego:
         rep:
           zone: z1
@@ -694,17 +691,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      consul:
-        agent:
-          services:
-            auctioneer: {}
-            bbs: {}
-            cc_uploader: {}
-            file_server: {}
-            nsync: {}
-            ssh_proxy: {}
-            stager: {}
-            tps: {}
       diego:
         rep:
           zone: z2
@@ -719,10 +705,6 @@ jobs:
     networks:
       - name: cf1
     properties:
-      consul:
-        agent:
-          services:
-            bbs: {}
       metron_agent:
         zone: z1
 
@@ -734,10 +716,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      consul:
-        agent:
-          services:
-            bbs: {}
       metron_agent:
         zone: z2
 
