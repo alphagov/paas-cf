@@ -1055,8 +1055,10 @@ jobs:
               UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
               DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
               GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite_z1.networks.cf1.static_ips.0 cf-manifest/cf-manifest.yml)
+              RDS_BROKER_SERVER=$($VAL_FROM_YAML jobs.rds_broker_z1.networks.cf1.static_ips.0 cf-manifest/cf-manifest.yml)
+              RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
 
-              for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER; do
+              for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS; do
                 echo export "${var_name}"=\"$(eval echo \$${var_name})\"
               done > config/config.sh
 
@@ -1116,6 +1118,27 @@ jobs:
               cd paas-cf/tests/example-apps/healthcheck-app
 
               cf push
+
+    - task: register-rds-broker
+      config:
+        platform: linux
+        image: docker:///governmentpaas/cf-cli
+        inputs:
+          - name: paas-cf
+          - name: config
+          - name: bosh-CA
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/concourse/scripts/import_bosh_ca.sh
+              . ./config/config.sh
+              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+              if cf service-brokers | grep rds; then exit 0;fi
+              cf create-service-broker rds rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+              cf enable-service-access rds
 
     - task: deploy-graphite-nozzle
       config:
