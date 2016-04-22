@@ -1063,141 +1063,141 @@ jobs:
               done > config/config.sh
 
               CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb > config/quota_settings.sh
+    - aggregate:
+      - task: update-default-quota
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          params:
+          image: docker:///governmentpaas/cf-cli
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-    - task: update-default-quota
-      config:
-        platform: linux
-        inputs:
-          - name: paas-cf
-          - name: config
-          - name: bosh-CA
-        params:
-        image: docker:///governmentpaas/cf-cli
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
-              . ./config/config.sh
-              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                . ./config/quota_settings.sh
+                ${QUOTA_non_basic_services_allowed} || prefix="dis"
 
-              . ./config/quota_settings.sh
-              ${QUOTA_non_basic_services_allowed} || prefix="dis"
+                cf update-quota "${QUOTA_DEFAULT}" \
+                  -m "${QUOTA_memory_limit}"M \
+                  -r "${QUOTA_total_routes}" \
+                  -s "${QUOTA_total_services}" \
+                  --${prefix}allow-paid-service-plans
 
-              cf update-quota "${QUOTA_DEFAULT}" \
-                -m "${QUOTA_memory_limit}"M \
-                -r "${QUOTA_total_routes}" \
-                -s "${QUOTA_total_services}" \
-                --${prefix}allow-paid-service-plans
+      - task: deploy-healthcheck-app
+        config:
+          platform: linux
+          image: docker:///governmentpaas/cf-cli
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-    - task: deploy-healthcheck-app
-      config:
-        platform: linux
-        image: docker:///governmentpaas/cf-cli
-        inputs:
-          - name: paas-cf
-          - name: config
-          - name: bosh-CA
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                echo | cf create-org testers
+                cf create-space healthcheck -o testers
+                cf target -o testers -s healthcheck
 
-              . ./config/config.sh
-              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-              echo | cf create-org testers
-              cf create-space healthcheck -o testers
-              cf target -o testers -s healthcheck
+                cd paas-cf/tests/example-apps/healthcheck-app
 
-              cd paas-cf/tests/example-apps/healthcheck-app
+                cf push
 
-              cf push
+      - task: register-rds-broker
+        config:
+          platform: linux
+          image: docker:///governmentpaas/cf-cli
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                if cf service-brokers | grep rds; then exit 0;fi
+                cf create-service-broker rds rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                cf enable-service-access rds
 
-    - task: register-rds-broker
-      config:
-        platform: linux
-        image: docker:///governmentpaas/cf-cli
-        inputs:
-          - name: paas-cf
-          - name: config
-          - name: bosh-CA
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/concourse/scripts/import_bosh_ca.sh
-              . ./config/config.sh
-              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-              if cf service-brokers | grep rds; then exit 0;fi
-              cf create-service-broker rds rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
-              cf enable-service-access rds
+      - task: deploy-graphite-nozzle
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: graphite-nozzle
+            - name: config
+            - name: bosh-CA
+          params:
+          image: docker:///governmentpaas/cf-cli
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-    - task: deploy-graphite-nozzle
-      config:
-        platform: linux
-        inputs:
-          - name: paas-cf
-          - name: graphite-nozzle
-          - name: config
-          - name: bosh-CA
-        params:
-        image: docker:///governmentpaas/cf-cli
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                echo | cf create-org admin
+                cf create-space admin -o admin
+                cf target -o admin -s admin
 
-              . ./config/config.sh
-              echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-              echo | cf create-org admin
-              cf create-space admin -o admin
-              cf target -o admin -s admin
+                cat <<EOF > graphite-nozzle.json
+                [
+                    {"protocol":"udp","destination":"${GRAPHITE_SERVER}","ports":"8125"}
+                ]
+                EOF
+                cf create-security-group graphite-nozzle graphite-nozzle.json
+                cf bind-staging-security-group graphite-nozzle
+                cf bind-running-security-group graphite-nozzle
 
-              cat <<EOF > graphite-nozzle.json
-              [
-                  {"protocol":"udp","destination":"${GRAPHITE_SERVER}","ports":"8125"}
-              ]
-              EOF
-              cf create-security-group graphite-nozzle graphite-nozzle.json
-              cf bind-staging-security-group graphite-nozzle
-              cf bind-running-security-group graphite-nozzle
+                cd graphite-nozzle
 
-              cd graphite-nozzle
+                echo "web: graphite-nozzle" > Procfile
 
-              echo "web: graphite-nozzle" > Procfile
+                cat <<EOF > manifest.yml
+                ---
+                applications:
+                - name: graphite-nozzle
+                  memory: 100M
+                  instances: 1
+                  no-route: true
+                  health-check-type: none
+                  env:
+                    DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
+                    UAA_ENDPOINT: "${UAA_ENDPOINT}"
+                    STATSD_ENDPOINT: "${GRAPHITE_SERVER}:8125"
+                    FIREHOSE_USERNAME: "${FIREHOSE_USER}"
+                    FIREHOSE_PASSWORD: "${FIREHOSE_PASS}"
+                    SUBSCRIPTION_ID: "firehose"
+                    STATSD_PREFIX: "cfstats."
+                    SKIP_SSL_VALIDATION: "true"
+                    PREFIX_JOB: "true"
+                EOF
 
-              cat <<EOF > manifest.yml
-              ---
-              applications:
-              - name: graphite-nozzle
-                memory: 100M
-                instances: 1
-                no-route: true
-                health-check-type: none
-                env:
-                  DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
-                  UAA_ENDPOINT: "${UAA_ENDPOINT}"
-                  STATSD_ENDPOINT: "${GRAPHITE_SERVER}:8125"
-                  FIREHOSE_USERNAME: "${FIREHOSE_USER}"
-                  FIREHOSE_PASSWORD: "${FIREHOSE_PASS}"
-                  SUBSCRIPTION_ID: "firehose"
-                  STATSD_PREFIX: "cfstats."
-                  SKIP_SSL_VALIDATION: "true"
-                  PREFIX_JOB: "true"
-              EOF
-
-              cf push
+                cf push
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
