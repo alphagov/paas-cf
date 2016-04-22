@@ -39,6 +39,12 @@ prepare_environment() {
   cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
   cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
 
+  if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
+    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
+  else
+    gpg_ids="[]"
+  fi
+
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
 }
@@ -75,7 +81,8 @@ generate_manifest_file() {
   enable_auto_deploy=$([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
   continuous_smoke_tests_trigger=$([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
   sed -e "s/{{auto_deploy}}/${enable_auto_deploy}/" \
-    -e "s/{{continuous_smoke_tests_trigger}}/${continuous_smoke_tests_trigger}/" \
+      -e "s/{{continuous_smoke_tests_trigger}}/${continuous_smoke_tests_trigger}/" \
+      -e "s/{{gpg_ids}}/${gpg_ids}/" \
     < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 
@@ -93,7 +100,7 @@ update_pipeline() {
       if [ -n "${ENABLE_AUTODELETE:-}" ]; then
         bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
           "${env}" "${pipeline_name}" \
-          "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml" \
+          <(generate_manifest_file) \
           <(generate_vars_file)
 
         echo

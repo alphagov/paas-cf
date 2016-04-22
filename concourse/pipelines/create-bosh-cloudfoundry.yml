@@ -66,11 +66,12 @@ resources:
       key: {{pipeline_trigger_file}}
 
   - name: paas-cf
-    type: git
+    type: git-gpg
     source:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
       tag_filter: {{paas_cf_tag_filter}}
+      commit_verification_key_ids: {{gpg_ids}}
 
   - name: graphite-statsd-boshrelease
     type: git

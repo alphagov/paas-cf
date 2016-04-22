@@ -29,9 +29,20 @@ EOF
 
 generate_vars_file > /dev/null # Check for missing vars
 
+generate_manifest_file() {
+  if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
+    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
+  else
+    gpg_ids="[]"
+  fi
+
+  # This exists because concourse does not support multiline value interpolation by design
+  sed -e "s/{{gpg_ids}}/${gpg_ids}/" < "${SCRIPT_DIR}/../pipelines/${ACTION}-deployer.yml"
+}
+
 for ACTION in create destroy; do
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
     "${env}" "${ACTION}-deployer" \
-    "${SCRIPT_DIR}/../pipelines/${ACTION}-deployer.yml" \
+    <(generate_manifest_file) \
     <(generate_vars_file)
 done
