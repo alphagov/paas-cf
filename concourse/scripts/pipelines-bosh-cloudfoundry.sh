@@ -81,9 +81,9 @@ generate_manifest_file() {
 
 update_pipeline() {
   pipeline_name=$1
+
   case $pipeline_name in
     create-bosh-cloudfoundry|destroy-microbosh|destroy-cloudfoundry|failure-testing)
-      generate_vars_file > /dev/null # Check for missing vars
       bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
         "${env}" "${pipeline_name}" \
         <(generate_manifest_file) \
@@ -115,6 +115,11 @@ update_pipeline() {
 }
 
 prepare_environment
+
+pipeline_name="test"
+generate_vars_file > /dev/null # Check for missing vars
+pipeline_name=
+
 for p in $pipelines_to_update; do
   update_pipeline "$p"
 done
