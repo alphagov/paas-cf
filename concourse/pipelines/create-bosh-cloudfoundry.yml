@@ -76,9 +76,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-haproxy-release.git
-      branch: 115931361-extend-haproxy-release
-      # TODO: Un-comment tag_filter and remove branch once release is tagged
-      # tag_filter: {{cf-paas-haproxy-release-version}}
+      tag_filter: {{cf-paas-haproxy-release-version}}
 
   - name: graphite-statsd-boshrelease
     type: git
