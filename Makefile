@@ -14,6 +14,8 @@ check-env-vars:
 test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse ## Run linting tests
 
 spec:
+	cd scripts &&\
+		bundle exec rspec
 	cd concourse/scripts &&\
 		bundle exec rspec
 	cd manifests/shared &&\
