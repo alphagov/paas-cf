@@ -7,6 +7,8 @@ RSpec.describe PullRequest do
   let(:pr_commit_id) { "12345678901234567890" }
 
   before :each do
+    allow_any_instance_of(PullRequest).to receive(:info) # silence logging
+
     allow_any_instance_of(PullRequest).to receive(:`).with('git remote -v') do
       system("exit 0") # setup $?
       "origin\tgit@github.com:#{repo} (fetch)\norigin\tgit@github.com:#{repo} (push)\n"

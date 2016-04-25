@@ -54,11 +54,20 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
       raise "Working directory is not clean. Aborting..."
     end
 
+    info "Checking out and updating #{target_branch}"
     execute_command("git checkout #{target_branch}")
     execute_command("git pull --ff-only origin #{target_branch}")
+
+    info "Merging PR with commit message:\n#{commit_message}"
     execute_command('git', 'merge', '--no-ff', '-S', '-m', commit_message, head_commit_id)
+
+    info "Pushing to origin"
     execute_command("git push origin #{target_branch}")
+
+    info "Deleting remote branch #{head_ref}"
     execute_command("git push origin :#{head_ref}")
+
+    info "Done."
   end
 
   private
@@ -116,6 +125,14 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
     Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
       request = Net::HTTP::Get.new(uri.request_uri)
       return http.request(request)
+    end
+  end
+
+  def info(message)
+    if $stdout.isatty
+      puts "\e[36m#{message}\e[0m"
+    else
+      puts message
     end
   end
 end
