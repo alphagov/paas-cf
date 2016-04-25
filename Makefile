@@ -147,4 +147,4 @@ pingdom: ## Use custom Terraform provider to set up Pingdom check
 
 merge_pr:
 	$(if ${PR},,$(error Must pass PR=<number>))
-	./scripts/merge_pr.rb --repo alphagov/paas-cf --pr ${PR}
+	./scripts/merge_pr.rb --pr ${PR}

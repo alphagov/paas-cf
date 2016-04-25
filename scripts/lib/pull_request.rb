@@ -4,9 +4,12 @@ require 'json'
 class PullRequest
   BASE_URL = 'https://api.github.com/repos'
 
-  def initialize(repo, pr_number)
-    @repo = repo
+  def initialize(pr_number)
     @pr_number = pr_number
+  end
+
+  def repo
+    @repo ||= read_repo_from_git
   end
 
   def open?
@@ -52,6 +55,23 @@ Merge pull request ##{@pr_number} from #{head.fetch("user").fetch("login")}/#{he
 
   private
 
+  def read_repo_from_git
+    details = `git remote -v`
+    unless $?.success?
+      raise "Error reading git remotes: exit status #{$?.exitstatus}."
+    end
+    details.each_line do |line|
+      line.strip!
+      if line =~ /\Aorigin\t(\S+)\s+\(fetch\)\z/
+        url = $1
+        if url =~ /\A(?:https:\/\/|git@)github\.com[\/:](\S+?)(?:\.git)?\z/
+          return $1
+        end
+      end
+    end
+    raise "origin is not a Github URL"
+  end
+
   def execute_command(*args)
     unless Kernel.system(*args)
       raise "Error: command '#{args.join(' ')}' exited #{$?.exitstatus}."
@@ -59,11 +79,11 @@ Merge pull request ##{@pr_number} from #{head.fetch("user").fetch("login")}/#{he
   end
 
   def details
-    @_details ||= get_json("#{BASE_URL}/#{@repo}/pulls/#{@pr_number}")
+    @_details ||= get_json("#{BASE_URL}/#{repo}/pulls/#{@pr_number}")
   end
 
   def status
-    url = "#{BASE_URL}/#{@repo}/commits/#{head_commit_id}/status"
+    url = "#{BASE_URL}/#{repo}/commits/#{head_commit_id}/status"
     @_status ||= get_json(url)
   end
 

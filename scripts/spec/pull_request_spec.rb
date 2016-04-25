@@ -3,8 +3,15 @@ require 'pull_request'
 
 RSpec.describe PullRequest do
   let(:repo) { "example/test-repo" }
-  let(:pull_request) { PullRequest.new("example/test-repo", 1) }
+  let(:pull_request) { PullRequest.new(1) }
   let(:pr_commit_id) { "12345678901234567890" }
+
+  before :each do
+    allow_any_instance_of(PullRequest).to receive(:`).with('git remote -v') do
+      system("exit 0") # setup $?
+      "origin\tgit@github.com:#{repo} (fetch)\norigin\tgit@github.com:#{repo} (push)\n"
+    end
+  end
 
   def stub_pr_details(details, options = {})
     url = "#{PullRequest::BASE_URL}/#{repo}/pulls/1"
@@ -48,6 +55,58 @@ RSpec.describe PullRequest do
       expect(stub_with_token).to have_been_requested
       expect(stub_without_token).not_to have_been_requested
     end
+  end
+
+  describe "parsing the github repo from git remotes" do
+    [
+      'https://github.com/user/repo',
+      'https://github.com/user/repo.git',
+      'git@github.com:user/repo',
+      'git@github.com:user/repo.git',
+    ].each do |url|
+      it "correctly parses URLs of the form '#{url}'" do
+        allow(pull_request).to receive(:`).with('git remote -v') do
+          system("exit 0") # setup $?
+          "origin\t#{url} (fetch)\norigin\t#{url} (push)\n"
+        end
+
+        expect(pull_request.repo).to eq("user/repo")
+      end
+    end
+
+    it "ignores non-origin remotes in the list" do
+      allow(pull_request).to receive(:`).with('git remote -v') do
+        system("exit 0") # setup $?
+        output = ""
+        output << "mine\thttps://github.com/mine/repo (fetch)\nmine\thttps://github.com/mine/repo (push)\n"
+        output << "origin\thttps://github.com/user/repo (fetch)\norigin\thttps://github.com/user/repo (push)\n"
+        output << "upstream\thttps://github.com/upstream/repo (fetch)\nupstream\thttps://github.com/upstream/repo (push)\n"
+        output
+      end
+
+      expect(pull_request.repo).to eq("user/repo")
+    end
+
+    it "raises an error when running `git remote` fails" do
+      allow(pull_request).to receive(:`).with('git remote -v') do
+        system("exit 2")
+      end
+      expect {
+        pull_request.repo
+      }.to raise_error(/Error reading git remotes/)
+    end
+
+    it "raises an error when origin is not a github remote" do
+      allow(pull_request).to receive(:`).with('git remote -v') do
+        system("exit 0") # setup $?
+        "origin\thttps://somewhere.com/user/repo (fetch)\norigin\thttps://somewhere.com/user/repo (push)\n"
+      end
+
+      expect {
+        pull_request.repo
+      }.to raise_error(/origin is not a Github URL/)
+    end
+
   end
 
   describe "open?" do
