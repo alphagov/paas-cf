@@ -144,3 +144,7 @@ manually_upload_certs: ## Manually upload to AWS the SSL certificates for public
 pingdom: ## Use custom Terraform provider to set up Pingdom check
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	@terraform/scripts/set-up-pingdom.sh
+
+merge_pr:
+	$(if ${PR},,$(error Must pass PR=<number>))
+	./scripts/merge_pr.rb --repo alphagov/paas-cf --pr ${PR}
