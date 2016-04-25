@@ -24,6 +24,10 @@ class PullRequest
     status.fetch("state") == "success" || status.fetch("statuses").empty?
   end
 
+  def target_branch
+    details.fetch("base").fetch("ref")
+  end
+
   def head_commit_id
     details.fetch("head").fetch("sha")
   end
@@ -50,10 +54,10 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
       raise "Working directory is not clean. Aborting..."
     end
 
-    execute_command('git checkout master')
-    execute_command('git pull --ff-only origin master')
+    execute_command("git checkout #{target_branch}")
+    execute_command("git pull --ff-only origin #{target_branch}")
     execute_command('git', 'merge', '--no-ff', '-S', '-m', commit_message, head_commit_id)
-    execute_command('git push origin master')
+    execute_command("git push origin #{target_branch}")
     execute_command("git push origin :#{head_ref}")
   end
 

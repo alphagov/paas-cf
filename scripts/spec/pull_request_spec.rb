@@ -182,6 +182,19 @@ RSpec.describe PullRequest do
     end
   end
 
+  describe "target_branch" do
+    it "returns the target branch from the PR details" do
+      stub_pr_details({
+        "title" => "[#1234] A nice PR",
+        "base" => {
+          "ref" => "target_branch",
+        },
+      })
+
+      expect(pull_request.target_branch).to eq("target_branch")
+    end
+  end
+
   describe "merge commit message" do
     it "should populate the commit message with details from the PR" do
       stub_pr_details({
@@ -230,6 +243,7 @@ Merge pull request #1 from example/nice_pr
         :open? => true,
         :mergeable? => true,
         :status_checks_passed? => true,
+        :target_branch => "master",
         :head_commit_id => pr_commit_id,
         :head_ref => "pr_branch",
         :commit_message => "Dummy commit message\n\nWith multiple lines\n",
@@ -273,6 +287,22 @@ Merge pull request #1 from example/nice_pr
       expect_command('git push origin :pr_branch')
 
       pull_request.merge!
+    end
+
+    context "when the target branch isn't master" do
+      before :each do
+        allow(pull_request).to receive_messages(:target_branch => "another_branch")
+      end
+
+      it "switches to the target_branch, and merges the relevant commit" do
+        expect_command('git checkout another_branch')
+        expect_command('git pull --ff-only origin another_branch')
+        expect_command('git', 'merge', '--no-ff', '-S', '-m', "Dummy commit message\n\nWith multiple lines\n", pr_commit_id)
+        expect_command('git push origin another_branch')
+        expect_command('git push origin :pr_branch')
+
+        pull_request.merge!
+      end
     end
 
     it "raises an error if one of the git commands errors" do
