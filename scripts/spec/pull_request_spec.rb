@@ -184,6 +184,45 @@ RSpec.describe PullRequest do
     end
   end
 
+  describe "external_pr?" do
+
+    it "is false when the head and the base reference the same repo" do
+      stub_pr_details({
+        "title" => "[#1234] A nice PR",
+        "head" => {
+          "repo" => {
+            "full_name" => repo,
+          },
+        },
+        "base" => {
+          "repo" => {
+            "full_name" => repo,
+          },
+        },
+      })
+
+      expect(pull_request.external_pr?).to eq(false)
+    end
+
+    it "is true otherwise" do
+      stub_pr_details({
+        "title" => "[#1234] A nice PR",
+        "head" => {
+          "repo" => {
+            "full_name" => "elsewhere/test",
+          },
+        },
+        "base" => {
+          "repo" => {
+            "full_name" => repo,
+          },
+        },
+      })
+
+      expect(pull_request.external_pr?).to eq(true)
+    end
+  end
+
   describe "target_branch" do
     it "returns the target branch from the PR details" do
       stub_pr_details({
@@ -237,6 +276,9 @@ Merge pull request #1 from example/nice_pr
     def expect_command(*command)
       expect(Kernel).to receive(:system).with(*command).and_return(true)
     end
+    def refute_command(*command)
+      expect(Kernel).not_to receive(:system).with(*command)
+    end
 
     before(:each) do
       allow_command('git diff --quiet --exit-code HEAD')
@@ -245,6 +287,7 @@ Merge pull request #1 from example/nice_pr
         :open? => true,
         :mergeable? => true,
         :status_checks_passed? => true,
+        :external_pr? => false,
         :target_branch => "master",
         :head_commit_id => pr_commit_id,
         :head_ref => "pr_branch",
@@ -302,6 +345,24 @@ Merge pull request #1 from example/nice_pr
         expect_command('git', 'merge', '--no-ff', '-S', '-m', "Dummy commit message\n\nWith multiple lines\n", pr_commit_id)
         expect_command('git push origin another_branch')
         expect_command('git push origin :pr_branch')
+
+        pull_request.merge!
+      end
+    end
+
+    context "a PR from a different fork of our repo" do
+      before :each do
+        allow(pull_request).to receive_messages(:external_pr? => true)
+      end
+
+      it "fetches the commits for the PR and doesn't delete the remote branch" do
+        expect_command('git checkout master')
+        expect_command('git pull --ff-only origin master')
+        expect_command('git fetch origin refs/pull/1/head')
+        expect_command('git', 'merge', '--no-ff', '-S', '-m', "Dummy commit message\n\nWith multiple lines\n", pr_commit_id)
+        expect_command('git push origin master')
+
+        refute_command('git push origin :pr_branch')
 
         pull_request.merge!
       end

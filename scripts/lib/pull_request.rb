@@ -24,6 +24,11 @@ class PullRequest
     status.fetch("state") == "success" || status.fetch("statuses").empty?
   end
 
+  def external_pr?
+    details.fetch("base").fetch("repo").fetch("full_name") !=
+      details.fetch("head").fetch("repo").fetch("full_name")
+  end
+
   def target_branch
     details.fetch("base").fetch("ref")
   end
@@ -58,14 +63,21 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
     execute_command("git checkout #{target_branch}")
     execute_command("git pull --ff-only origin #{target_branch}")
 
+    if external_pr?
+      info "Fetching commits from PR #{@pr_number}"
+      execute_command("git fetch origin refs/pull/#{@pr_number}/head")
+    end
+
     info "Merging PR with commit message:\n#{commit_message}"
     execute_command('git', 'merge', '--no-ff', '-S', '-m', commit_message, head_commit_id)
 
     info "Pushing to origin"
     execute_command("git push origin #{target_branch}")
 
-    info "Deleting remote branch #{head_ref}"
-    execute_command("git push origin :#{head_ref}")
+    unless external_pr?
+      info "Deleting remote branch #{head_ref}"
+      execute_command("git push origin :#{head_ref}")
+    end
 
     info "Done."
   end
