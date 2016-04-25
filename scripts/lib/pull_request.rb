@@ -28,10 +28,13 @@ class PullRequest
     details.fetch("head").fetch("sha")
   end
 
+  def head_ref
+    details.fetch("head").fetch("ref")
+  end
+
   def commit_message
-    head = details.fetch("head")
     <<-EOT
-Merge pull request ##{@pr_number} from #{head.fetch("user").fetch("login")}/#{head.fetch("ref")}
+Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fetch("login")}/#{head_ref}
 
 #{details.fetch("title")}
     EOT
@@ -51,6 +54,7 @@ Merge pull request ##{@pr_number} from #{head.fetch("user").fetch("login")}/#{he
     execute_command('git pull --ff-only origin master')
     execute_command('git', 'merge', '--no-ff', '-S', '-m', commit_message, head_commit_id)
     execute_command('git push origin master')
+    execute_command("git push origin :#{head_ref}")
   end
 
   private

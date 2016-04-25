@@ -231,6 +231,7 @@ Merge pull request #1 from example/nice_pr
         :mergeable? => true,
         :status_checks_passed? => true,
         :head_commit_id => pr_commit_id,
+        :head_ref => "pr_branch",
         :commit_message => "Dummy commit message\n\nWith multiple lines\n",
       )
     end
@@ -269,6 +270,7 @@ Merge pull request #1 from example/nice_pr
       expect_command('git pull --ff-only origin master')
       expect_command('git', 'merge', '--no-ff', '-S', '-m', "Dummy commit message\n\nWith multiple lines\n", pr_commit_id)
       expect_command('git push origin master')
+      expect_command('git push origin :pr_branch')
 
       pull_request.merge!
     end
