@@ -6,12 +6,48 @@ RSpec.describe PullRequest do
   let(:pull_request) { PullRequest.new("example/test-repo", 1) }
   let(:pr_commit_id) { "12345678901234567890" }
 
-  def stub_pr_details(details)
-    WebMock.stub_request(:get, "#{PullRequest::BASE_URL}/#{repo}/pulls/1")
+  def stub_pr_details(details, options = {})
+    url = "#{PullRequest::BASE_URL}/#{repo}/pulls/1"
+    url << "?access_token=#{options[:token]}" if options[:token]
+    WebMock.stub_request(:get, url)
       .to_return(
         :headers => {"Content-Type" => "application/json"},
         :body => details.to_json,
       )
+  end
+
+  it "outputs a useful error message when the API rate limit is hit" do
+    WebMock.stub_request(:get, "#{PullRequest::BASE_URL}/#{repo}/pulls/1")
+      .to_return(
+        :status => 403,
+        :headers => {"Content-Type" => "application/json"},
+        :body => {
+          "message" => "API rate limit exceeded for 192.0.2.#{rand(1..254)}. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)",
+        }.to_json,
+      )
+
+    expect {
+      pull_request.open?
+    }.to raise_error(/Github rate-limit exceeded/)
+  end
+
+  describe "Using authenticated requests when configured" do
+    before :each do
+      ENV["GITHUB_API_TOKEN"] = "1234567890"
+    end
+    after :each do
+      ENV.delete("GITHUB_API_TOKEN")
+    end
+
+    it "should add an access token to API requests" do
+      stub_without_token = stub_pr_details({"state" => "open"})
+      stub_with_token = stub_pr_details({"state" => "open"}, :token => "1234567890")
+
+      pull_request.open?
+
+      expect(stub_with_token).to have_been_requested
+      expect(stub_without_token).not_to have_been_requested
+    end
   end
 
   describe "open?" do

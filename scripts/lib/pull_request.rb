@@ -69,6 +69,10 @@ Merge pull request ##{@pr_number} from #{head.fetch("user").fetch("login")}/#{he
 
   def get_json(url)
     response = http_get(url)
+    if response.is_a?(Net::HTTPForbidden) and response.body =~ /API rate limit exceeded for/
+      raise "Github rate-limit exceeded. To avoid this create a Github API token with public access and put it in GITHUB_API_TOKEN env var."
+    end
+
     unless response.is_a?(Net::HTTPSuccess)
       raise "Failed to fetch PR details.\nGot #{response.code} fetching '#{url}':\n#{response.body}"
     end
@@ -78,6 +82,9 @@ Merge pull request ##{@pr_number} from #{head.fetch("user").fetch("login")}/#{he
 
   def http_get(url)
     uri = URI.parse(url)
+    if ENV["GITHUB_API_TOKEN"]
+      uri.query = [uri.query, "access_token=#{ENV["GITHUB_API_TOKEN"]}"].compact.join('&')
+    end
     Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
       request = Net::HTTP::Get.new(uri.request_uri)
       return http.request(request)
