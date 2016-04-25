@@ -28,6 +28,8 @@ releases:
     version: 38
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=38
     sha1: c7d303c1b733e77c5c5f3dedfe4dbf75997f30bc
+  - name: paas-haproxy
+    version: 0.0.1
 
 compilation:
   workers: 6

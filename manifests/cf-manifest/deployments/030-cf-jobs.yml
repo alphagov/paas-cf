@@ -40,8 +40,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: route_registrar
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
   - name: java-buildpack
     release: (( grab meta.release.name ))
   - name: java-offline-buildpack
@@ -70,24 +70,24 @@ meta:
     release: (( grab meta.release.name ))
   - name: nfs_mounter
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   clock_templates:
   - name: cloud_controller_clock
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   consul_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   etcd_templates:
   - name: consul_agent
@@ -98,8 +98,8 @@ meta:
     release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   ha_proxy_templates:
   - name: consul_agent
@@ -108,8 +108,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   loggregator_templates:
   - name: consul_agent
@@ -120,8 +120,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   loggregator_trafficcontroller_templates:
@@ -133,8 +133,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: route_registrar
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   nats_templates:
   - name: consul_agent
@@ -153,8 +153,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   postgres_templates:
   - name: consul_agent
@@ -163,8 +163,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   router_templates:
   - name: consul_agent
@@ -173,8 +173,10 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
+  - name: haproxy
+    release: paas-haproxy
 
   stats_templates:
   - name: consul_agent
@@ -183,8 +185,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
   # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   uaa_templates:
@@ -198,8 +200,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
-  - release: "logsearch-shipper"
-    name: (( grab meta.logsearch_shipper.release.name ))
+  - name: logsearch-shipper
+    release: (( grab meta.logsearch_shipper.release.name ))
 
 jobs:
   - name: consul_z1
@@ -799,15 +801,19 @@ properties:
   logger_endpoint: ~
 
   ha_proxy:
+    ssl_pem: (( concat secrets.router_internal_cert secrets.router_internal_key ))
+    disable_http: true
+    go_router:
+      servers: [ "127.0.0.1" ]
+      port: 80
+    additional_frontend_config: |
+      capture response header strict-transport-security len 128
+      http-response add-header Strict-Transport-Security max-age=31536000 unless { capture.res.hdr(0) -m found }
 
   router:
-    enable_ssl: true
-    ssl_cert: (( grab secrets.router_internal_cert ))
-    ssl_key: (( grab secrets.router_internal_key ))
-    cipher_suites: TLS_RSA_WITH_AES_128_CBC_SHA:TLS_RSA_WITH_AES_256_CBC_SHA
+    enable_ssl: false
     requested_route_registration_interval_in_seconds:
     ssl_skip_validation:
-    port:
     status:
       port:
     secure_cookies:
