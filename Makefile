@@ -14,6 +14,8 @@ check-env-vars:
 test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse ## Run linting tests
 
 spec:
+	cd scripts &&\
+		bundle exec rspec
 	cd concourse/scripts &&\
 		bundle exec rspec
 	cd manifests/shared &&\
@@ -142,3 +144,7 @@ manually_upload_certs: ## Manually upload to AWS the SSL certificates for public
 pingdom: ## Use custom Terraform provider to set up Pingdom check
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	@terraform/scripts/set-up-pingdom.sh
+
+merge_pr:
+	$(if ${PR},,$(error Must pass PR=<number>))
+	./scripts/merge_pr.rb --pr ${PR}
