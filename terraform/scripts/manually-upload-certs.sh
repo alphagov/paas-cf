@@ -10,6 +10,7 @@ pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key" > /dev/null
 
 WORKING_DIR=$(mktemp -d cf-certs.XXXXXX)
+trap 'rm -r "${WORKING_DIR}"' EXIT
 
 if ! aws s3 ls "s3://${DEPLOY_ENV}-state/cf-certs.tfstate" --summarize | grep -q "Total Objects: 0"; then
   aws s3 cp "s3://${DEPLOY_ENV}-state/cf-certs.tfstate" "${WORKING_DIR}/cf-certs.tfstate"
@@ -17,6 +18,7 @@ else
   echo "No previous cf-certs.tfstate file found in s3://${DEPLOY_ENV}-state/. Assuming first run."
 fi
 
+set +e
 terraform apply -var env="${DEPLOY_ENV}" \
   -var-file="terraform/${AWS_ACCOUNT}.tfvars" \
   -state="${WORKING_DIR}/cf-certs.tfstate" \
@@ -25,6 +27,9 @@ terraform apply -var env="${DEPLOY_ENV}" \
   -var apps_domain_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.crt")" \
   -var apps_domain_key="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key")" \
   terraform/cf-certs
+exit_status=$?
+set -e
 
 aws s3 cp "${WORKING_DIR}/cf-certs.tfstate" "s3://${DEPLOY_ENV}-state/cf-certs.tfstate"
-rm -r "${WORKING_DIR}"
+
+exit $exit_status
