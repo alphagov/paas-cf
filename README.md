@@ -205,6 +205,14 @@ used within the pipeline. This is useful for development and code review:
 BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev pipelines
 ```
 
+## Optionally override pipeline self updating
+
+In case you want to prevent pipelines to self update, for example because you
+want to upload and test changes that you have made while developing, but not
+yet pushed to the branch pipeline is currently configured to pull from, you
+can use SELF_UPDATE_PIPELINE environment variable, set to false (true is default):
+`SELF_UPDATE_PIPELINE=false make dev pipelines`
+
 ## Optionally deploy to a different AWS account
 
 See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
