@@ -30,6 +30,7 @@ generator = SecretGenerator.new({
   "loggregator_endpoint_shared_secret" => :simple,
   "consul_encrypt_keys" => :simple_in_array,
   "grafana_admin_password" => :simple,
+  "rds_broker_admin_password" => :simple,
 })
 
 OptionParser.new do |opts|

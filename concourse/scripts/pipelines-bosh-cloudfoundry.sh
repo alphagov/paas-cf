@@ -39,6 +39,7 @@ prepare_environment() {
   cf_paas_haproxy_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.paas-haproxy.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
   cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
   cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
+  cf_aws_broker_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.aws-broker.version "${cf_manifest_dir}/060-aws-broker.yml")
 
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
@@ -62,6 +63,7 @@ cf-release-version: v${cf_release_version}
 cf-paas-haproxy-release-version: ${cf_paas_haproxy_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
+cf_aws_broker_version: ${cf_aws_broker_version}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
