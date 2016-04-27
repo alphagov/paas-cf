@@ -6,8 +6,10 @@ export PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR}
 
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.key" > /dev/null
+pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain_intermediate_crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key" > /dev/null
+pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate_crt" > /dev/null
 
 WORKING_DIR=$(mktemp -d cf-certs.XXXXXX)
 trap 'rm -r "${WORKING_DIR}"' EXIT
@@ -24,8 +26,10 @@ terraform apply -var env="${DEPLOY_ENV}" \
   -state="${WORKING_DIR}/cf-certs.tfstate" \
   -var system_domain_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.crt")" \
   -var system_domain_key="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.key")" \
+  -var system_domain_intermediate_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain_intermediate.crt")" \
   -var apps_domain_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.crt")" \
   -var apps_domain_key="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key")" \
+  -var apps_domain_intermediate_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate.crt")" \
   terraform/cf-certs
 exit_status=$?
 set -e

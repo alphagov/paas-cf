@@ -674,6 +674,8 @@ jobs:
           - get: concourse-tfstate
           - get: cf-tfstate
           - get: cf-certs-tfstate
+          - get: bosh-CA
+            passed: ['generate-secrets']
           - get: cf-certs
             passed: ['generate-secrets']
           - get: cf-secrets
@@ -686,6 +688,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-certs-tfstate
+            - name: bosh-CA
             - name: cf-certs
           outputs:
             - name: updated-tfstate
@@ -704,12 +707,15 @@ jobs:
                 else
                   mkdir generated-certificates
                   tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
+                  tar xzf bosh-CA/bosh-CA.tar.gz
 
                   terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                     -var system_domain_crt="$(cat generated-certificates/system_domain.crt)" \
                     -var system_domain_key="$(cat generated-certificates/system_domain.key)" \
+                    -var system_domain_intermediate_crt="$(cat bosh-CA.crt)" \
                     -var apps_domain_crt="$(cat generated-certificates/apps_domain.crt)" \
                     -var apps_domain_key="$(cat generated-certificates/apps_domain.key)" \
+                    -var apps_domain_intermediate_crt="$(cat bosh-CA.crt)" \
                     -state=cf-certs-tfstate/cf-certs.tfstate \
                     -state-out=updated-tfstate/cf-certs.tfstate \
                     paas-cf/terraform/cf-certs
