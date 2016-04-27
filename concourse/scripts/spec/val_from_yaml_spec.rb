@@ -23,15 +23,15 @@ val2: b
     EOF
   end
 
-  it "returns nil for non existing properties" do
+  it "exits non-zero with no output for non existing properties" do
     run_with_fixture("x.y.z")
-    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started).to have_exit_status(1)
     expect(last_command_started.output).to be_empty
   end
 
-  it "returns nil when trasversing simple values" do
+  it "exits non-zero with no output when traversing simple values" do
     run_with_fixture("foo.var.val1.nothing_to_see_here")
-    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started).to have_exit_status(1)
     expect(last_command_started.output).to be_empty
   end
 
@@ -43,15 +43,15 @@ array1_item1_value
     EOF
   end
 
-  it "returns nil for non existing array item indexed by name" do
+  it "exits non-zero with no output for non existing array item indexed by name" do
     run_with_fixture("foo.array1.item3.val")
-    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started).to have_exit_status(1)
     expect(last_command_started.output).to be_empty
   end
 
-  it "returns nil for non existing key in a array item indexed by name" do
+  it "exits non-zero with no output for non existing key in a array item indexed by name" do
     run_with_fixture("foo.array1.item1.other_val")
-    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started).to have_exit_status(1)
     expect(last_command_started.output).to be_empty
   end
 
