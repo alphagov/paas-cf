@@ -344,3 +344,15 @@ documented when running the make target for the first time.
 
 Make sure you are using the correct AWS credentials for the environment you are setting up checks for. For those developers with AWS CLI config files, the [AWS CLI Documentation](http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#id1) states environment variables have the highest precedence.
 
+## Creating Organisations and Organisation Managers
+
+Once you got the OK from the Product and Delivery managers to create
+an organisations with a user, you can use the script `./scripts/create-tenant.sh`
+to automatically create them:
+
+```
+./scripts/create-tenant.sh -o orgname -e email@example.com
+```
+
+Run `./scripts/create-tenant.sh` for detailed help.
+
