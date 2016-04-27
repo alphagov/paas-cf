@@ -104,6 +104,8 @@ jobs:
         listen_address: 0.0.0.0:7777
         graph_cleanup_threshold_in_mb: 3072
       groundcrew:
+        baggageclaim:
+          url: "http://127.0.0.1:7788"
         tsa:
           host: 127.0.0.1
         additional_resource_types:
