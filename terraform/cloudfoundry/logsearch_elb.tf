@@ -54,15 +54,6 @@ resource "aws_elb" "logsearch_es_master" {
   }
 }
 
-resource "aws_iam_server_certificate" "logsearch" {
-  name_prefix = "${var.env}-logsearch-"
-  certificate_body = "${file("generated-certificates/logsearch.crt")}"
-  private_key = "${file("generated-certificates/logsearch.key")}"
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_elb" "logsearch_kibana" {
   name = "${var.env}-logsearch-kibana"
   subnets = ["${split(",", var.infra_subnet_ids)}"]
@@ -85,6 +76,6 @@ resource "aws_elb" "logsearch_kibana" {
     instance_protocol = "tcp"
     lb_port = 443
     lb_protocol = "ssl"
-    ssl_certificate_id = "${aws_iam_server_certificate.logsearch.arn}"
+    ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
 }

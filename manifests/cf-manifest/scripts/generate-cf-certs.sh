@@ -19,8 +19,6 @@ router_internal,${APPS_DOMAINS}
 uaa_jwt_signing,
 consul_server,server.dc1.cf.internal,server.dc2.cf.internal
 consul_agent,
-logsearch,logsearch.${SYSTEM_DNS_ZONE_NAME}
-metrics,metrics.${SYSTEM_DNS_ZONE_NAME}
 apps_domain,${APPS_DOMAINS}
 system_domain,${SYSTEM_DOMAINS}
 "
@@ -53,6 +51,8 @@ done
 # FIXME: Remove this section once it's been cleaned up everywhere.
 CERTS_TO_CLEANUP="
 router_external
+logsearch
+metrics
 "
 
 for cert_name in ${CERTS_TO_CLEANUP}; do
