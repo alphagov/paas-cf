@@ -92,7 +92,6 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aws-broker-boshrelease.git
-      branch: 117512347_rds_service_broker
       tag_filter: {{cf_aws_broker_version}}
 
   - name: graphite-nozzle
