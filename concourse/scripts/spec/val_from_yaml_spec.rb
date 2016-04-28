@@ -1,52 +1,73 @@
-require File.join(File.dirname(__FILE__), '..', 'val_from_yaml.rb')
+RSpec.describe "val_from_yaml.rb", :type => :aruba do
+  FIXTURE = File.expand_path("../fixtures/val_from_yaml.yml", __FILE__)
 
-RSpec.describe "PropertyTreeHelper" do
-  let(:test_property_tree) {
-    property_yaml = %q{
----
-foo:
- bar:
-  val1: a
-  val2: b
- array1:
- - name: item1
-   val: array1_item1_value
- - name: item2
-   val: array1_item2_value
- array2:
- - array2_value1
- - array2_value2
- - array2_value3
-}
-    PropertyTree.load_yaml(property_yaml)
-  }
+  def run_with_fixture(arg)
+    run("./val_from_yaml.rb #{arg} #{FIXTURE}")
+  end
+
   it "retrieves a simple value" do
-    expect(test_property_tree['foo.bar.val1']).to eq('a')
+    run_with_fixture("foo.bar.val1")
+    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started.output).to eq <<-EOF
+a
+    EOF
   end
+
   it "retrieves a full data structure" do
-    val = test_property_tree['foo.bar']
-    expect(val).to be_a(Hash)
-    expect(val).to include('val1', 'val2')
+    run_with_fixture("foo.bar")
+    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started.output).to eq <<-EOF
+---
+val1: a
+val2: b
+    EOF
   end
-  it "returns nil for non existing properties" do
-    expect(test_property_tree['x.y.z']).to be_nil
+
+  it "exits non-zero with no output for non existing properties" do
+    run_with_fixture("x.y.z")
+    expect(last_command_started).to have_exit_status(1)
+    expect(last_command_started.output).to be_empty
   end
-  it "returns nil when trasversing simple values" do
-    expect(test_property_tree['foo.var.val1.nothing_to_see_here']).to be_nil
+
+  it "exits non-zero with no output when traversing simple values" do
+    run_with_fixture("foo.var.val1.nothing_to_see_here")
+    expect(last_command_started).to have_exit_status(1)
+    expect(last_command_started.output).to be_empty
   end
+
   it "retrieves a value from an array indexed by name" do
-    expect(test_property_tree['foo.array1.item1.val']).to eq('array1_item1_value')
+    run_with_fixture("foo.array1.item1.val")
+    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started.output).to eq <<-EOF
+array1_item1_value
+    EOF
   end
-  it "returns nil for non existing array item indexed by name" do
-    expect(test_property_tree['foo.array1.item3.val']).to be_nil
+
+  it "exits non-zero with no output for non existing array item indexed by name" do
+    run_with_fixture("foo.array1.item3.val")
+    expect(last_command_started).to have_exit_status(1)
+    expect(last_command_started.output).to be_empty
   end
-  it "returns nil for non existing key in a array item indexed by name" do
-    expect(test_property_tree['foo.array1.item1.other_val']).to be_nil
+
+  it "exits non-zero with no output for non existing key in a array item indexed by name" do
+    run_with_fixture("foo.array1.item1.other_val")
+    expect(last_command_started).to have_exit_status(1)
+    expect(last_command_started.output).to be_empty
   end
+
   it "retrieves a value from an array indexed by index" do
-    expect(test_property_tree['foo.array2.0']).to eq('array2_value1')
+    run_with_fixture("foo.array2.0")
+    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started.output).to eq <<-EOF
+array2_value1
+    EOF
   end
+
   it "retrieves a value from an array of hashes indexed by index" do
-    expect(test_property_tree['foo.array1.0.val']).to eq('array1_item1_value')
+    run_with_fixture("foo.array1.0.val")
+    expect(last_command_started).to have_exit_status(0)
+    expect(last_command_started.output).to eq <<-EOF
+array1_item1_value
+    EOF
   end
 end
