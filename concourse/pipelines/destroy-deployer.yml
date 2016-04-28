@@ -1,11 +1,12 @@
 ---
 resources:
   - name: paas-cf
-    type: git
+    type: git-gpg
     source:
-      uri: https://github.com/alphagov/paas-cf
+      uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
       tag_filter: {{paas_cf_tag_filter}}
+      commit_verification_key_ids: {{gpg_ids}}
 
   - name: bucket-terraform-state
     type: s3-iam

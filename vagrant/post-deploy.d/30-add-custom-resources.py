@@ -9,7 +9,8 @@ with open(config_file,'r') as f:
 
     config["resource_types"].extend([
         { "type": "s3-iam", "image": "docker:///governmentpaas/s3-resource" },
-        { "type": "semver-iam", "image": "docker:///governmentpaas/semver-resource" }
+        { "type": "semver-iam", "image": "docker:///governmentpaas/semver-resource" },
+        { "type": "git-gpg", "image": "docker:///governmentpaas/git-resource" }
     ])
 
     # Remove any duplicates hashing by type. via http://stackoverflow.com/a/11092590

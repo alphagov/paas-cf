@@ -111,6 +111,7 @@ jobs:
         additional_resource_types:
           - { type: s3-iam, image: "docker:///governmentpaas/s3-resource" }
           - { type: semver-iam, image: "docker:///governmentpaas/semver-resource" }
+          - { type: git-gpg, image: "docker:///governmentpaas/git-resource" }
 
 cloud_provider:
   template: {name: aws_cpi, release: bosh-aws-cpi}
