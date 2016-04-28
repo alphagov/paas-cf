@@ -89,6 +89,12 @@ properties:
   a:
     b:
       c: foo
+  d: x
+jobs:
+- instances: 1
+  name: job1
+  properties:
+    d: y
     }
   }
 
@@ -124,6 +130,12 @@ a.b.c is <%= p('a.b.c') %> and a.b.d is <%= p('a.b.d') %> and the ip is <%= disc
     }
     result = render_template(template, YAML.load(example_spec), YAML.load(example_manifest))
     expect(result).to include("a.b.c is foo and a.b.d is foobar and the ip is 127.0.0.1")
+  end
+
+  it "renders from a template with overriding job properties" do
+    template = "d is <%= p('d') %>"
+    result = render_template(template, YAML.load(example_spec), YAML.load(example_manifest), "job1")
+    expect(result).to eq("d is y")
   end
 end
 
