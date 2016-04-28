@@ -36,9 +36,19 @@ class Hash
   end
 end
 
-def render_template(template, spec, manifest)
+def render_template(template, spec, manifest, job = nil)
   job_spec = {}
-  job_spec["properties"] = manifest["properties"].clone()
+  job_spec["properties"] = {}
+
+  if manifest["properties"]
+    job_spec["properties"] = manifest["properties"].clone()
+  end
+
+  if job
+    job_properties = manifest["jobs"].select{ |j| j["name"] == job }.first["properties"].clone()
+    job_spec["properties"].merge!(job_properties)
+  end
+
   job_spec.populate_default_properties_from_spec(spec)
 
   # Populate the network
