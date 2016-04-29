@@ -20,3 +20,16 @@ variable "bosh_db_skip_final_snapshot" {
   description = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
   default = "true"
 }
+
+variable "bosh_az" {
+  description = "A zone used to provision bosh"
+  default = "eu-west-1a"
+}
+
+variable "system_dns_zone_id" {
+  description = "Amazon Route53 DNS zone identifier for the system components. Different per account."
+}
+
+variable "system_dns_zone_name" {
+  description = "Amazon Route53 DNS zone name for the provisioned environment."
+}
