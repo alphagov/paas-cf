@@ -6,10 +6,10 @@ export PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR}
 
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.key" > /dev/null
-pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain_intermediate_crt" > /dev/null
+pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain_intermediate.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key" > /dev/null
-pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate_crt" > /dev/null
+pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate.crt" > /dev/null
 
 WORKING_DIR=$(mktemp -d cf-certs.XXXXXX)
 trap 'rm -r "${WORKING_DIR}"' EXIT
