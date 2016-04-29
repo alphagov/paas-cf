@@ -9,18 +9,18 @@ CA_NAME="bosh-CA"
 
 # shellcheck disable=SC2154
 # Allow referencing unassigned variables (set -u catches problems)
-ROUTER_DOMAINS="*.${APPS_DNS_ZONE_NAME},*.${SYSTEM_DNS_ZONE_NAME}"
+APPS_DOMAINS="*.${APPS_DNS_ZONE_NAME},${APPS_DNS_ZONE_NAME}"
+SYSTEM_DOMAINS="*.${SYSTEM_DNS_ZONE_NAME},${SYSTEM_DNS_ZONE_NAME}"
 
 CERTS_TO_GENERATE="
 bbs_server,bbs.service.cf.internal
 bbs_client,
-router_internal,${ROUTER_DOMAINS}
+router_internal,${APPS_DOMAINS}
 uaa_jwt_signing,
 consul_server,server.dc1.cf.internal,server.dc2.cf.internal
 consul_agent,
-logsearch,logsearch.${SYSTEM_DNS_ZONE_NAME}
-metrics,metrics.${SYSTEM_DNS_ZONE_NAME}
-router_external,${ROUTER_DOMAINS}
+apps_domain,${APPS_DOMAINS}
+system_domain,${SYSTEM_DOMAINS}
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"
@@ -46,4 +46,19 @@ for cert_entry in ${CERTS_TO_GENERATE}; do
     mv "out/${cn}.csr" "${CERTS_DIR}/"
     mv "out/${cn}.crt" "${CERTS_DIR}/"
   fi
+done
+
+# FIXME: Remove this section once it's been cleaned up everywhere.
+CERTS_TO_CLEANUP="
+router_external
+logsearch
+metrics
+"
+
+for cert_name in ${CERTS_TO_CLEANUP}; do
+  for ext in csr crt key; do
+    if [ -f "${CERTS_DIR}/${cert_name}.${ext}" ]; then
+      rm "${CERTS_DIR}/${cert_name}.${ext}"
+    fi
+  done
 done

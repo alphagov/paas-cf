@@ -22,6 +22,6 @@ resource "aws_elb" "cf_router" {
     instance_protocol = "ssl"
     lb_port = 443
     lb_protocol = "ssl"
-    ssl_certificate_id = "${var.router_external_cert_arn}"
+    ssl_certificate_id = "${var.apps_domain_cert_arn}"
   }
 }

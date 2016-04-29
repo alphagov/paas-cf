@@ -114,6 +114,10 @@ variable "apps_dns_zone_name" {
   description = "Amazon Route53 DNS zone name for hosted apps. Differs per account."
 }
 
-variable "router_external_cert_arn" {
-  description = "Amazon ARN for the public facing certificate to be used on the router"
+variable "system_domain_cert_arn" {
+  description = "Amazon ARN for the public facing certificate to be used for the system components"
+}
+
+variable "apps_domain_cert_arn" {
+  description = "Amazon ARN for the public facing certificate to be used for apps"
 }

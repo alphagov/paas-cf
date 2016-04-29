@@ -228,8 +228,12 @@ jobs:
               - -c
               - |
                 terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                  -var router_external_crt="irrelevant" \
-                  -var router_external_key="irrelevant" \
+                  -var system_domain_crt="irrelevant" \
+                  -var system_domain_key="irrelevant" \
+                  -var system_domain_intermediate_crt="irrelevant" \
+                  -var apps_domain_crt="irrelevant" \
+                  -var apps_domain_key="irrelevant" \
+                  -var apps_domain_intermediate_crt="irrelevant" \
                   -state=cf-certs-tfstate/cf-certs.tfstate \
                   -state-out=updated-tfstate/cf-certs.tfstate \
                   paas-cf/terraform/cf-certs

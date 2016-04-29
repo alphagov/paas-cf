@@ -126,24 +126,7 @@ manually_upload_certs: ## Manually upload to AWS the SSL certificates for public
 	# check password store and if varables are accesible
 	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${CERT_PASSWORD_STORE_DIR}),,$(error Password store ${CERT_PASSWORD_STORE_DIR} does not exist))
-	@PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR} pass certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.crt > /dev/null
-	@PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR} pass certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.key > /dev/null
-
-	@if ! aws s3 ls s3://${DEPLOY_ENV}-state/cf-certs.tfstate --summarize | grep -q "Total Objects: 0"; then \
-		aws s3 cp s3://${DEPLOY_ENV}-state/cf-certs.tfstate cf-certs.tfstate; \
-	else \
-		echo "No previous cf-certs.tfstate file found in s3://${DEPLOY_ENV}-state/. Assuming first run."; \
-	fi
-
-	@terraform apply -var env=${DEPLOY_ENV} \
-		-var-file=terraform/${AWS_ACCOUNT}.tfvars \
-		-state=cf-certs.tfstate \
-		-var router_external_crt="$$(PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR} pass certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.crt)" \
-		-var router_external_key="$$(PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR} pass certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.key)" \
-		terraform/cf-certs
-
-	@aws s3 cp cf-certs.tfstate s3://${DEPLOY_ENV}-state/cf-certs.tfstate
-	@rm -f cf-certs.tfstate
+	@terraform/scripts/manually-upload-certs.sh
 
 .PHONY: pingdom
 pingdom: ## Use custom Terraform provider to set up Pingdom check
