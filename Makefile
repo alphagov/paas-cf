@@ -118,6 +118,9 @@ pipelines: ## Upload pipelines to Concourse
 .PHONY: showenv
 showenv: ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
+	@echo CONCOURSE_IP=$$(aws ec2 describe-instances \
+		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_key_pair" \
+		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 	@concourse/scripts/environment.sh
 
 .PHONY: manually_upload_certs

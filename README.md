@@ -275,9 +275,7 @@ To manually ssh to the *Deployer Concourse*, you will need its IP and `id_rsa` k
 You can get both from command line. You will need [aws-cli](#aws-cli), to do this:
 
 ```
-export CONCOURSE_IP=$(aws ec2 describe-instances \
---filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_key_pair" \
---query 'Reservations[].Instances[].PublicIpAddress' --output text)
+eval $(make dev showenv | grep CONCOURSE_IP=)
 
 aws s3 cp "s3://${DEPLOY_ENV}-state/id_rsa" . && \
 chmod 400 id_rsa && \
