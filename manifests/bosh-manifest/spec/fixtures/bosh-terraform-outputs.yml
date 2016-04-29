@@ -17,3 +17,7 @@ terraform_outputs:
   bosh_db_username: bosh
   bosh_db_password: BOSH_POSTGRES_PASSWORD
   bosh_db_dbname: bosh
+  bosh_fqdn: bosh.example.com
+  bosh_az: eu-west-1a
+  bosh_default_gw: 10.0.0.1
+  bosh_subnet_cidr: 10.0.0.0/24

@@ -1,5 +1,5 @@
 cloud_provider:
-  mbus: https://mbus:BOSH_NATS_PASSWORD@10.0.0.6:6868
+  mbus: https://mbus:BOSH_NATS_PASSWORD@bosh.example.com:6868
   properties:
     agent:
       mbus: https://mbus:BOSH_NATS_PASSWORD@0.0.0.0:6868
@@ -17,7 +17,7 @@ cloud_provider:
     - 0.pool.ntp.org
     - 1.pool.ntp.org
   ssh_tunnel:
-    host: 10.0.0.6
+    host: bosh.example.com
     port: 22
     private_key: .ssh/id_rsa
     user: vcap
@@ -45,7 +45,7 @@ jobs:
   persistent_disk_pool: disks
   properties:
     agent:
-      mbus: nats://nats:BOSH_NATS_PASSWORD@10.0.0.6:4222
+      mbus: nats://nats:BOSH_NATS_PASSWORD@bosh.example.com:4222
     aws:
       credentials_source: env_or_profile
       default_iam_instance_profile: bosh-managed
@@ -117,7 +117,7 @@ jobs:
         password: BOSH_POSTGRES_PASSWORD
         port: 5432
         user: bosh
-      host: 10.0.0.6
+      host: bosh.example.com
       http:
         password: BOSH_REGISTRY_PASSWORD
         user: admin
@@ -177,7 +177,7 @@ resource_pools:
       type: gp2
     iam_instance_profile: bosh-director
     instance_type: t2.medium
-  env:  
+  env:
     bosh:
       password: BOSH_VCAP_PASSWORD
   name: vms
