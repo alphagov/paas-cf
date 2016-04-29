@@ -586,7 +586,7 @@ jobs:
 # Diego
 
   - name: access_z1
-    templates: (( grab base_job_templates.access ))
+    templates: (( grab meta.diego_job_templates.access ))
     instances: 0
     resource_pool: access_z1
     networks:
@@ -596,7 +596,7 @@ jobs:
         zone: z1
 
   - name: access_z2
-    templates: (( grab base_job_templates.access ))
+    templates: (( grab meta.diego_job_templates.access ))
     instances: 0
     resource_pool: access_z2
     networks:
@@ -606,7 +606,7 @@ jobs:
         zone: z2
 
   - name: brain_z1
-    templates: (( grab base_job_templates.brain ))
+    templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
     resource_pool: brain_z1
     networks:
@@ -616,7 +616,7 @@ jobs:
         zone: z1
 
   - name: brain_z2
-    templates: (( grab base_job_templates.brain ))
+    templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
     resource_pool: brain_z2
     networks:
@@ -626,7 +626,7 @@ jobs:
         zone: z2
 
   - name: cc_bridge_z1
-    templates: (( grab base_job_templates.cc_bridge ))
+    templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
     resource_pool: cc_bridge_z1
     networks:
@@ -636,7 +636,7 @@ jobs:
         zone: z1
 
   - name: cc_bridge_z2
-    templates: (( grab base_job_templates.cc_bridge ))
+    templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
     resource_pool: cc_bridge_z2
     networks:
@@ -646,7 +646,7 @@ jobs:
         zone: z2
 
   - name: cell_z1
-    templates: (( grab base_job_templates.cell ))
+    templates: (( grab meta.diego_job_templates.cell ))
     instances: 1
     resource_pool: cell_z1
     networks:
@@ -659,7 +659,7 @@ jobs:
           zone: z1
 
   - name: cell_z2
-    templates: (( grab base_job_templates.cell ))
+    templates: (( grab meta.diego_job_templates.cell ))
     instances: 1
     resource_pool: cell_z2
     networks:
@@ -672,7 +672,7 @@ jobs:
           zone: z2
 
   - name: colocated_z1
-    templates: (( grab base_job_templates.colocated ))
+    templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
     persistent_disk_pool: database_disks
     resource_pool: colocated_z1
@@ -686,7 +686,7 @@ jobs:
         zone: z1
 
   - name: colocated_z2
-    templates: (( grab base_job_templates.colocated ))
+    templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
     persistent_disk_pool: database_disks
     resource_pool: colocated_z2
@@ -700,7 +700,7 @@ jobs:
         zone: z2
 
   - name: database_z1
-    templates: (( grab base_job_templates.database ))
+    templates: (( grab meta.diego_job_templates.database ))
     instances: 0
     persistent_disk_pool: database_disks
     resource_pool: database_z1
@@ -711,7 +711,7 @@ jobs:
         zone: z1
 
   - name: database_z2
-    templates: (( grab base_job_templates.database ))
+    templates: (( grab meta.diego_job_templates.database ))
     instances: 0
     persistent_disk_pool: database_disks
     resource_pool: database_z2
@@ -722,7 +722,7 @@ jobs:
         zone: z2
 
   - name: route_emitter_z1
-    templates: (( grab  base_job_templates.route_emitter ))
+    templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
     resource_pool: route_emitter_z1
     networks:
@@ -732,7 +732,7 @@ jobs:
         zone: z1
 
   - name: route_emitter_z2
-    templates: (( grab base_job_templates.route_emitter ))
+    templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
     resource_pool: route_emitter_z2
     networks:
