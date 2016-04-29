@@ -63,7 +63,6 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export MAKEFILE_ENV_TARGET=ci)
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=staging-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
