@@ -9,8 +9,3 @@ variable "system_dns_zone_name" {
 variable "git_rsa_id_pub" {
   description = "Public SSH key for the git user"
 }
-
-variable "git_default_branch_workaround" {
-  description = "Value of current default branch for codecommit git repo. Temporary workaround."
-  default     = ""
-}

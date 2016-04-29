@@ -2,7 +2,7 @@ resource "aws_codecommit_repository" "concourse-pool" {
   provider = "aws.codecommit"
   repository_name = "concourse-pool-${var.env}"
   description = "Git repository to keep concourse pool resource locks"
-  default_branch = "${var.git_default_branch_workaround}"
+  default_branch = "master"
 }
 
 resource "aws_iam_user" "git" {
