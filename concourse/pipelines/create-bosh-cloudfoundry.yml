@@ -1211,11 +1211,23 @@ jobs:
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: smoketest-user
+
       - task: smoke-tests-config
         file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
 
       - task: smoke-tests-run
         file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
 
   - name: acceptance-tests
     plan:
