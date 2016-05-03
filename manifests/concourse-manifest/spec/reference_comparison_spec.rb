@@ -4,7 +4,7 @@ def merge_fixtures(fixtures)
   final = {}
   fixtures.each do |fixture|
     new_fixture = YAML.load_file(File.expand_path(fixture, __FILE__))
-    final.merge!(new_fixture) { |key, a_val, b_val| a_val.merge b_val }
+    final.merge!(new_fixture) { |_key, a_val, b_val| a_val.merge b_val }
   end
   final
 end

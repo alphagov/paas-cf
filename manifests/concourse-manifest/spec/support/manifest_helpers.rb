@@ -28,7 +28,7 @@ module ManifestHelpers
   def deep_freeze(object)
     case object
     when Hash
-      object.each { |k,v| deep_freeze(v) }
+      object.each { |_k,v| deep_freeze(v) }
     when Array
       object.each { |v| deep_freeze(v) }
     end
