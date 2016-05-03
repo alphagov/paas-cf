@@ -513,6 +513,7 @@ jobs:
           params:
             DEPLOY_ENV: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
+            TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
           run:
             path: sh
             args:
@@ -986,7 +987,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
                 paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
                   {{cf_graphite_version}} graphite-statsd-boshrelease
@@ -1016,7 +1017,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
                 bosh deployment updated-cf-manifest/cf-manifest.yml
                 bosh -n deploy
