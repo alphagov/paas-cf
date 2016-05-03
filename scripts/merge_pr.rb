@@ -12,4 +12,4 @@ end.parse!
 
 abort "Must specify PR number" unless pr_number > 0
 
-pull_request = PullRequest.new(pr_number).merge!
+PullRequest.new(pr_number).merge!
