@@ -10,31 +10,32 @@ class PropertyTree
     PropertyTree.new(YAML.load(yaml_string))
   end
 
-  def get(key)
-    def self.recursive_get(tree, key_array)
-      return tree if key_array.empty?
-      current_key, *next_keys = key_array
+  def recursive_get(tree, key_array)
+    return tree if key_array.empty?
+    current_key, *next_keys = key_array
 
-      case tree
-      when Hash
-        next_level = tree[current_key]
-      when Array
-        if /\A[-+]?\d+\z/ === current_key # If the key is an int, access by index
-          next_level = tree[current_key.to_i]
-        else # if not, search for a element with `name: current_key`
-          next_level = tree.select {|x| x.is_a? Hash and x['name'] == current_key}.first
-        end
-      else
-        next_level = nil
+    case tree
+    when Hash
+      next_level = tree[current_key]
+    when Array
+      if /\A[-+]?\d+\z/ === current_key # If the key is an int, access by index
+        next_level = tree[current_key.to_i]
+      else # if not, search for a element with `name: current_key`
+        next_level = tree.select {|x| x.is_a? Hash and x['name'] == current_key}.first
       end
-      if not next_level.nil?
-        recursive_get(next_level, next_keys)
-      else
-        nil
-      end
+    else
+      next_level = nil
     end
+    if not next_level.nil?
+      recursive_get(next_level, next_keys)
+    else
+      nil
+    end
+  end
+
+  def get(key)
     key_array = key.split('.')
-    val = recursive_get(@tree, key_array)
+    self.recursive_get(@tree, key_array)
   end
 
   def [](key)
