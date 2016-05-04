@@ -1333,6 +1333,15 @@ jobs:
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: custom-acceptance-test-user
+
       - task: generate-test-config
         config:
           platform: linux
@@ -1340,6 +1349,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
+            - name: admin-creds
           outputs:
             - name: test-config
           run:
@@ -1351,6 +1361,7 @@ jobs:
                 export CF_MANIFEST=cf-manifest/cf-manifest.yml
                 ./paas-cf/tests/generate_test_config.rb \
                   > test-config/config.json
+
       - task: run-tests
         config:
           platform: linux
@@ -1370,6 +1381,9 @@ jobs:
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
                 ./paas-cf/tests/run_tests.sh ./paas-cf/tests/acceptance-tests/src/acceptance/
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
 
   - name: bosh-cli-test
     plan:
@@ -1412,6 +1426,15 @@ jobs:
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: performance-tests-user
+
       - task: generate-test-config
         config:
           platform: linux
@@ -1419,6 +1442,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
+            - name: admin-creds
           outputs:
             - name: test-config
           run:
@@ -1450,6 +1474,9 @@ jobs:
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
                 ./paas-cf/tests/run_tests.sh ./paas-cf/tests/performance-tests/src/performance/
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
 
   - name: tag-release
     plan:
