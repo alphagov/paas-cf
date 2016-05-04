@@ -30,6 +30,15 @@ variable "zones" {
   }
 }
 
+variable "zone_index" {
+  description = "AWS availability zone indices"
+  default     = {
+    eu-west-1a = "0"
+    eu-west-1b = "1"
+    eu-west-1c = "2"
+  }
+}
+
 variable "zone_count" {
   description = "Number of zones to use"
   default = 3
@@ -41,6 +50,24 @@ variable "infra_cidrs" {
     zone0 = "10.0.0.0/24"
     zone1 = "10.0.1.0/24"
     zone2 = "10.0.2.0/24"
+  }
+}
+
+variable "infra_gws" {
+  description = "GW per CIDR"
+  default     = {
+    "10.0.0.0/24" = "10.0.0.1"
+    "10.0.1.0/24" = "10.0.1.1"
+    "10.0.2.0/24" = "10.0.2.1"
+  }
+}
+
+variable "microbosh_ips" {
+  description = "MicroBOSH IPs per zone"
+  default     = {
+    eu-west-1a = "10.0.0.6"
+    eu-west-1b = "10.0.1.6"
+    eu-west-1c = "10.0.2.6"
   }
 }
 

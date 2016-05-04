@@ -117,7 +117,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 bosh -n delete deployment {{deploy_env}}
 
   - name: terraform-destroy

@@ -8,7 +8,7 @@ resource_pools:
   cloud_properties:
     instance_type: t2.medium
     ephemeral_disk: {size: 40_000, type: gp2}
-    availability_zone: (( grab terraform_outputs.zone0 ))
+    availability_zone: (( grab terraform_outputs.bosh_az ))
     iam_instance_profile: bosh-director
   env:
     bosh:
@@ -22,8 +22,8 @@ networks:
 - name: private
   type: manual
   subnets:
-  - range: 10.0.0.0/24
-    gateway: 10.0.0.1
+  - range: (( grab terraform_outputs.bosh_subnet_cidr ))
+    gateway: (( grab terraform_outputs.bosh_default_gw ))
     dns: [10.0.0.2]
     cloud_properties:
       subnet: (( grab terraform_outputs.bosh_subnet_id ))

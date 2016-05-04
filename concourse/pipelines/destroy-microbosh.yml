@@ -111,7 +111,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
                 bosh cleanup --all
       - task: bosh-init-microbosh
@@ -192,6 +192,7 @@ jobs:
           params:
             DEPLOY_ENV: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
+            TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
           run:
             path: sh
             args:

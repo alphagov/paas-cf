@@ -9,7 +9,7 @@ meta:
     recursor: 8.8.8.8
 
   default_agent:
-    mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" meta.bosh_service_ip ":4222" ))
+    mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
 name: bosh
 
@@ -81,10 +81,10 @@ jobs:
     ntp: (( grab meta.ntp ))
 
     agent:
-      mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" meta.bosh_service_ip ":4222" ))
+      mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
     registry:
-      host: (( grab meta.bosh_service_ip ))
+      host: (( grab terraform_outputs.bosh_fqdn ))
       db: (( grab meta.postgres ))
       http:
         # Variables used by official job release
