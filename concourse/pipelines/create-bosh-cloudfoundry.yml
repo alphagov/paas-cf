@@ -51,6 +51,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-cli-test
+      - performance-tests
   - name: health
     jobs:
       - continuous-smoke-tests
