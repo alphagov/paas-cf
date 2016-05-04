@@ -4,7 +4,6 @@ image: docker:///governmentpaas/cf-acceptance-tests
 inputs:
   - name: paas-cf
   - name: cf-release
-  - name: cf-manifest
   - name: test-config
   - name: bosh-CA
 outputs:
