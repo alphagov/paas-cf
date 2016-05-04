@@ -1634,6 +1634,14 @@ jobs:
       - get: bosh-CA
       - get: smoke-tests-timer
         trigger: {{continuous_smoke_tests_trigger}}
+      - get: cf-secrets
+        passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: continuous-smoketest-user
 
       - task: smoke-tests-config
         file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
@@ -1661,3 +1669,6 @@ jobs:
               - |
                 paas-cf/concourse/scripts/smoke_tests_email.sh \
                   ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
