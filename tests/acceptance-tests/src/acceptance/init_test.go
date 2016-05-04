@@ -1,6 +1,8 @@
 package acceptance_test
 
 import (
+	"crypto/tls"
+	"net/http"
 	"testing"
 	"time"
 
@@ -17,8 +19,9 @@ var (
 	CF_JAVA_TIMEOUT      = 10 * time.Minute
 	DEFAULT_MEMORY_LIMIT = "256M"
 
-	context helpers.SuiteContext
-	config  helpers.Config
+	context    helpers.SuiteContext
+	config     helpers.Config
+	httpClient *http.Client
 )
 
 func TestSuite(t *testing.T) {
@@ -34,6 +37,12 @@ func TestSuite(t *testing.T) {
 	}
 	if config.LongCurlTimeout > 0 {
 		LONG_CURL_TIMEOUT = config.LongCurlTimeout * time.Second
+	}
+
+	httpClient = &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: config.SkipSSLValidation},
+		},
 	}
 
 	context = helpers.NewContext(config)
