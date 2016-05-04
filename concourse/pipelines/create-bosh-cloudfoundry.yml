@@ -1216,19 +1216,19 @@ jobs:
             passed: ['cf-deploy']
 
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: smoketest-user
 
       - task: smoke-tests-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
 
       - task: smoke-tests-run
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           task: remove-temp-user
-          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: acceptance-tests
     plan:
@@ -1249,7 +1249,7 @@ jobs:
             passed: ['cf-deploy']
 
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: acceptance-test-user
@@ -1321,7 +1321,7 @@ jobs:
                 /var/vcap/jobs/acceptance-tests/bin/run
         ensure:
           task: remove-temp-user
-          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: custom-acceptance-tests
     plan:
@@ -1338,7 +1338,7 @@ jobs:
             passed: ['cf-deploy']
 
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: custom-acceptance-test-user
@@ -1384,7 +1384,7 @@ jobs:
                 ./paas-cf/tests/run_tests.sh ./paas-cf/tests/acceptance-tests/src/acceptance/
         ensure:
           task: remove-temp-user
-          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: bosh-cli-test
     plan:
@@ -1431,7 +1431,7 @@ jobs:
             passed: ['cf-deploy']
 
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: performance-tests-user
@@ -1477,7 +1477,7 @@ jobs:
                 ./paas-cf/tests/run_tests.sh ./paas-cf/tests/performance-tests/src/performance/
         ensure:
           task: remove-temp-user
-          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: tag-release
     plan:
@@ -1639,16 +1639,16 @@ jobs:
         passed: ['cf-deploy']
 
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: continuous-smoketest-user
 
       - task: smoke-tests-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
 
       - task: smoke-tests-run
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         on_failure:
           task: alert
           config:
@@ -1672,4 +1672,4 @@ jobs:
                   ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}
         ensure:
           task: remove-temp-user
-          file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_admin.yml

@@ -104,20 +104,20 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: controller-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: colocated
     serial_groups: [ failure ]
@@ -144,20 +144,20 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: colocated-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: nats
     serial_groups: [ failure ]
@@ -184,20 +184,20 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: nats-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: router
     serial_groups: [ failure ]
@@ -224,20 +224,20 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: router-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: etcd
     serial_groups: [ failure ]
@@ -264,20 +264,20 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: etcd-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: consul
     serial_groups: [ failure ]
@@ -304,20 +304,20 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: consul-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: cell
     serial_groups: [ failure ]
@@ -344,17 +344,17 @@ jobs:
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
-        file: paas-cf/concourse/pipelines/tasks/create_admin.yml
+        file: paas-cf/concourse/tasks/create_admin.yml
         config:
           params:
             PREFIX: cell-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
             - task: remove-temp-user
-              file: paas-cf/concourse/pipelines/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_admin.yml
