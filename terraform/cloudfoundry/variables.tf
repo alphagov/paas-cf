@@ -25,6 +25,15 @@ variable "router_cidrs" {
   }
 }
 
+variable "aws_backing_service_cidrs" {
+  description = "CIDR for AWS backing service subnets indexed by AZ"
+  default     = {
+    zone0 = "10.0.52.0/24"
+    zone1 = "10.0.53.0/24"
+    zone2 = "10.0.54.0/24"
+  }
+}
+
 variable "cell_cidr_all" {
   description = "CIDR for all cell subnets"
   default     = "10.0.32.0/20"
