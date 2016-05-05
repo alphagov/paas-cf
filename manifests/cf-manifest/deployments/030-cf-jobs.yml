@@ -647,7 +647,7 @@ jobs:
 
   - name: cell_z1
     templates: (( grab meta.diego_job_templates.cell ))
-    instances: 1
+    instances: (( grab meta.cell_z1.instances ))
     resource_pool: cell_z1
     networks:
       - name: cell1
@@ -660,7 +660,7 @@ jobs:
 
   - name: cell_z2
     templates: (( grab meta.diego_job_templates.cell ))
-    instances: 1
+    instances: (( grab meta.cell_z2.instances ))
     resource_pool: cell_z2
     networks:
       - name: cell2
