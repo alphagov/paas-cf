@@ -55,7 +55,8 @@ jobs:
                     publicly_accessible: false
                     copy_tags_to_snapshot: true
                     skip_final_snapshot: false
-                    db_subnet_group_name: ""
-                    vpc_security_group_ids: []
+                    db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+                    vpc_security_group_ids:
+                      - (( grab terraform_outputs.rds_broker_dbs_security_group ))
                     db_security_groups: []
 

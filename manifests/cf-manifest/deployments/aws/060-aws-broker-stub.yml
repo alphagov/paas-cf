@@ -9,6 +9,9 @@ resource_pools:
         size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))
 
 jobs:
   - name: rds_broker_z1
