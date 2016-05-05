@@ -179,6 +179,8 @@ properties:
     server_key: (( grab secrets.consul_server_key ))
     agent_cert: (( grab secrets.consul_agent_cert ))
     agent_key: (( grab secrets.consul_agent_key ))
+    agent:
+      domain: cf.internal
   loggregator_endpoint:
     shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
   nats:
