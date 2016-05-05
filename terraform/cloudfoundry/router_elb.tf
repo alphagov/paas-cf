@@ -11,17 +11,22 @@ resource "aws_elb" "cf_router" {
   ]
 
   health_check {
-    target = "TCP:443"
+    target = "TCP:81"
     interval = "${var.health_check_interval}"
     timeout = "${var.health_check_timeout}"
     healthy_threshold = "${var.health_check_healthy}"
     unhealthy_threshold = "${var.health_check_unhealthy}"
   }
   listener {
-    instance_port = 443
-    instance_protocol = "ssl"
+    instance_port = 81
+    instance_protocol = "tcp"
     lb_port = 443
     lb_protocol = "ssl"
     ssl_certificate_id = "${var.apps_domain_cert_arn}"
   }
+}
+
+resource "aws_proxy_protocol_policy" "http_haproxy" {
+  load_balancer = "${aws_elb.cf_router.name}"
+  instance_ports = ["81"]
 }
