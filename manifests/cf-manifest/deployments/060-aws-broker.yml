@@ -36,6 +36,7 @@ jobs:
                 - id: "5b8282cf-a669-4ffc-b426-c169a7bbfc71"
                   name: "9.4-medium"
                   description: "RDS Postgres"
+                  free: true
                   metadata:
                     costs:
                       - amount:
