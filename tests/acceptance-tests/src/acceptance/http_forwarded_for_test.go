@@ -14,26 +14,23 @@ import (
 	"strings"
 )
 
-type Headers struct {
-	X_Forwarded_For   []string `json:"X-Forwarded-For"`
-	X_Forwarded_Proto []string `json:"X-Forwarded-Proto"`
-}
-
-var _ = PDescribe("X-Forwarded headers", func() {
-	var headers Headers
+var _ = Describe("X-Forwarded headers", func() {
+	var headers struct {
+		X_Forwarded_For []string `json:"X-Forwarded-For"`
+	}
 
 	var _ = BeforeEach(func() {
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", config.GoBuildpackName,
-			"-p", "../../example_apps/print_request_headers",
+			"-p", "../../apps/print_request_headers",
 			"-d", config.AppsDomain,
 			"-c", "./bin/debug_app; sleep 1; echo 'done'",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
-		jsonData := helpers.CurlAppRoot(appName)
-		headers = Headers{}
+		curlArgs := []string{"-f", "-H", "X-Forwarded-For: 1.2.3.4"}
+		jsonData := helpers.CurlApp(appName, "/", curlArgs...)
 
 		err := json.Unmarshal([]byte(jsonData), &headers)
 		Expect(err).NotTo(HaveOccurred())
@@ -41,17 +38,26 @@ var _ = PDescribe("X-Forwarded headers", func() {
 
 	It("should have an upstream IP that is not on our network", func() {
 		Expect(headers.X_Forwarded_For).Should(HaveLen(1))
+		remoteIP := strings.Split(headers.X_Forwarded_For[0], ",")[1]
 
-		remoteIP := strings.Split(headers.X_Forwarded_For[0], ",")[0]
-		parsedRemoteIP := net.ParseIP(remoteIP)
+		parsedRemoteIP := net.ParseIP(strings.TrimSpace(remoteIP))
+
+		Expect(parsedRemoteIP).ToNot(BeNil())
+
 		_, infra_cidr, _ := net.ParseCIDR("10.0.0.0/8")
 
 		Expect(infra_cidr.Contains(parsedRemoteIP)).To(BeFalse())
 	})
 
-	It("should indicate that the user connection was encrypted", func() {
-		Expect(headers.X_Forwarded_Proto).Should(HaveLen(1))
-		Expect(headers.X_Forwarded_Proto[0]).To(Equal("https"))
+	It("should append to existing X-Forwarded-For header", func() {
+		Expect(headers.X_Forwarded_For).Should(HaveLen(1))
+
+		remoteIP := strings.Split(headers.X_Forwarded_For[0], ",")[0]
+		parsedRemoteIP := net.ParseIP(remoteIP)
+
+		Expect(parsedRemoteIP).ToNot(BeNil())
+
+		Expect(parsedRemoteIP).To(Equal(net.ParseIP("1.2.3.4")))
 	})
 
 })
