@@ -15,6 +15,7 @@ jobs:
         aws_secret_access_key: ""
         aws_region: "eu-west-1"
         password: (( grab secrets.rds_broker_admin_password ))
+        db_prefix: "rdsbroker"
         catalog:
           services:
             - id: "ce71b484-d542-40f7-9dd4-5526e38c81ba"
