@@ -17,7 +17,7 @@ resource "aws_security_group" "cf_api_elb" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.office_cidrs)}",
+      "${compact(split("\n", replace(file("${path.root}/../${var.tenant_cidrs_file}"), "/ *#.*/", "")))}",
       "${var.concourse_elastic_ip}/32",
     ]
   }
