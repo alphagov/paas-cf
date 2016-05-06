@@ -5,6 +5,7 @@ inputs:
   - name: paas-cf
   - name: cf-secrets
   - name: cf-manifest
+  - name: bosh-CA
 outputs:
   - name: admin-creds
 run:

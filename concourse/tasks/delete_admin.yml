@@ -6,6 +6,7 @@ inputs:
   - name: cf-secrets
   - name: cf-manifest
   - name: admin-creds
+  - name: bosh-CA
 run:
   path: sh
   args:
