@@ -13,7 +13,7 @@ meta:
 
 releases:
 - name: graphite
-  version: commit-db49809b0f339a45ae377fc162f01b0ec49c87dc
+  version: commit-ccc206f3ba21fe5ba4f3e617bb7dca3e66a652ad
 - name: grafana
   version: commit-44564533c9d4d656bdcd5633b808f0bf6fb177ae
 

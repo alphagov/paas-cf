@@ -83,6 +83,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-graphite-statsd-boshrelease.git
       tag_filter: {{cf_graphite_version}}
+      branch: gds_master
 
   - name: grafana-boshrelease
     type: git
