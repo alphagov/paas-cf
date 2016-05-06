@@ -56,7 +56,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
-	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-dev.yml)
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	@true
 
 .PHONY: ci
@@ -68,7 +68,7 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
-	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-ci.yml)
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	@true
 
 .PHONY: staging
@@ -82,7 +82,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
-	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-staging.yml)
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	@true
 
 .PHONY: prod

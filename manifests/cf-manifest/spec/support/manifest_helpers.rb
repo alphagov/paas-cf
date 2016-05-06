@@ -14,7 +14,7 @@ module ManifestHelpers
 
   private
 
-  def load_default_manifest(environment = "dev")
+  def load_default_manifest(environment = "default")
     arg_list = [
         File.expand_path("../../../build_manifest.sh", __FILE__),
         File.expand_path("../../fixtures/terraform/*.yml", __FILE__),
