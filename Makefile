@@ -139,6 +139,6 @@ pingdom: ## Use custom Terraform provider to set up Pingdom check
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	@terraform/scripts/set-up-pingdom.sh
 
-merge_pr:
+merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))
 	./scripts/merge_pr.rb --pr ${PR}
