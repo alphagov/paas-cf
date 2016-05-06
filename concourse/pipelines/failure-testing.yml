@@ -48,6 +48,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: concourse-manifest.yml
 
+  - name: cf-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: cf-secrets.yml
+
 jobs:
   - name: init
     serial: true
@@ -83,6 +90,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -95,13 +103,21 @@ jobs:
             VM_NAME: api_z1/0
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: controller-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: colocated
     serial_groups: [ failure ]
@@ -114,6 +130,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -126,13 +143,21 @@ jobs:
             VM_NAME: colocated_z1
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: colocated-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: nats
     serial_groups: [ failure ]
@@ -145,6 +170,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -157,13 +183,21 @@ jobs:
             VM_NAME: nats_z1
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: nats-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: router
     serial_groups: [ failure ]
@@ -176,6 +210,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -188,13 +223,21 @@ jobs:
             VM_NAME: router_z1
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: router-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: etcd
     serial_groups: [ failure ]
@@ -207,6 +250,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -219,13 +263,21 @@ jobs:
             VM_NAME: etcd_z1
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: etcd-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: consul
     serial_groups: [ failure ]
@@ -238,6 +290,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -250,13 +303,21 @@ jobs:
             VM_NAME: consul_z1
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: consul-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: cell
     serial_groups: [ failure ]
@@ -269,6 +330,7 @@ jobs:
                 - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
+          - get: cf-secrets
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
@@ -281,10 +343,18 @@ jobs:
             VM_NAME: cell_z1
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: cell-smoketest-user
       - task: generate-test-config
-        file: paas-cf/concourse/tasks/generate-test-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
       - task: run-tests
-        file: paas-cf/concourse/tasks/run-tests.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
-          task: recover
-          file: paas-cf/concourse/tasks/recover.yml
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml

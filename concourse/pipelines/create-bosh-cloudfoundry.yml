@@ -51,6 +51,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-cli-test
+      - performance-tests
   - name: health
     jobs:
       - continuous-smoke-tests
@@ -1215,11 +1216,23 @@ jobs:
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: smoketest-user
+
       - task: smoke-tests-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
 
       - task: smoke-tests-run
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: acceptance-tests
     plan:
@@ -1236,6 +1249,14 @@ jobs:
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: acceptance-test-user
 
       - task: generate-test-config
         config:
@@ -1245,6 +1266,7 @@ jobs:
             - name: cf-release
             - name: paas-cf
             - name: cf-manifest
+            - name: admin-creds
           outputs:
             - name: test-config
           run:
@@ -1253,10 +1275,19 @@ jobs:
               - -e
               - -c
               - |
+                ruby -e "require 'yaml'
+
+                my = {'properties' => {'acceptance_tests' => YAML.load_file('cf-manifest/cf-manifest.yml')['properties']['acceptance_tests']}}
+                my['properties']['acceptance_tests']['user'] = File.read('admin-creds/username').strip()
+                my['properties']['acceptance_tests']['password'] = File.read('admin-creds/password').strip()
+
+                puts YAML.dump(my)" > acceptance_test_properties.yml
+                cat acceptance_test_properties.yml
+
                 ./paas-cf/tests/bosh-template-renderer/render.rb \
                   ./cf-release/jobs/acceptance-tests/templates/run.erb \
                   ./cf-release/jobs/acceptance-tests/spec \
-                  ./cf-manifest/cf-manifest.yml \
+                  acceptance_test_properties.yml \
                     > ./test-config/run
 
                 chmod +x ./test-config/run
@@ -1264,7 +1295,7 @@ jobs:
                 ./paas-cf/tests/bosh-template-renderer/render.rb \
                   ./cf-release/jobs/acceptance-tests/templates/config.json.erb \
                   ./cf-release/jobs/acceptance-tests/spec \
-                  ./cf-manifest/cf-manifest.yml \
+                  acceptance_test_properties.yml \
                     > ./test-config/config.json
 
       - task: run-tests
@@ -1292,6 +1323,9 @@ jobs:
                 sed -i 's/bits=@"%s"/bits=@%s/' cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/helpers/v3_helpers/v3.go
                 ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
                 /var/vcap/jobs/acceptance-tests/bin/run
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: custom-acceptance-tests
     plan:
@@ -1304,6 +1338,15 @@ jobs:
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: custom-acceptance-test-user
+
       - task: generate-test-config
         config:
           platform: linux
@@ -1311,6 +1354,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
+            - name: admin-creds
           outputs:
             - name: test-config
           run:
@@ -1322,6 +1366,7 @@ jobs:
                 export CF_MANIFEST=cf-manifest/cf-manifest.yml
                 ./paas-cf/tests/generate_test_config.rb \
                   > test-config/config.json
+
       - task: run-tests
         config:
           platform: linux
@@ -1341,6 +1386,9 @@ jobs:
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
                 ./paas-cf/tests/run_tests.sh ./paas-cf/tests/acceptance-tests/src/acceptance/
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: bosh-cli-test
     plan:
@@ -1383,6 +1431,15 @@ jobs:
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
           - get: bosh-CA
+          - get: cf-secrets
+            passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: performance-tests-user
+
       - task: generate-test-config
         config:
           platform: linux
@@ -1390,6 +1447,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
+            - name: admin-creds
           outputs:
             - name: test-config
           run:
@@ -1421,6 +1479,9 @@ jobs:
                 echo "Running tests"
                 export CONFIG="$(pwd)/test-config/config.json"
                 ./paas-cf/tests/run_tests.sh ./paas-cf/tests/performance-tests/src/performance/
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: tag-release
     plan:
@@ -1578,12 +1639,20 @@ jobs:
       - get: bosh-CA
       - get: smoke-tests-timer
         trigger: {{continuous_smoke_tests_trigger}}
+      - get: cf-secrets
+        passed: ['cf-deploy']
+
+      - task: create-temp-user
+        file: paas-cf/concourse/tasks/create_admin.yml
+        config:
+          params:
+            PREFIX: continuous-smoketest-user
 
       - task: smoke-tests-config
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-config.yml
+        file: paas-cf/concourse/tasks/smoke-tests-config.yml
 
       - task: smoke-tests-run
-        file: paas-cf/concourse/pipelines/tasks/smoke-tests-run.yml
+        file: paas-cf/concourse/tasks/smoke-tests-run.yml
         on_failure:
           task: alert
           config:
@@ -1605,3 +1674,6 @@ jobs:
               - |
                 paas-cf/concourse/scripts/smoke_tests_email.sh \
                   ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/tasks/delete_admin.yml

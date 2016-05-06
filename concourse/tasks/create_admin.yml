@@ -1,0 +1,39 @@
+---
+platform: linux
+image: docker:///governmentpaas/cf-uaac
+inputs:
+  - name: paas-cf
+  - name: cf-secrets
+  - name: cf-manifest
+outputs:
+  - name: admin-creds
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      [ -z "${PREFIX}" ] && echo "You need to specify \$PREFIX" && exit 1
+      ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+      SUFFIX=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c10)
+      PASSWORD=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c32 )
+      NAME=${PREFIX}-${SUFFIX}
+
+      VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+      UAA_ADMIN_CLIENT_PASS=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+      UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
+
+      echo "Creating user ${NAME}"
+      uaac target "${UAA_ENDPOINT}"
+      uaac token client get admin -s "${UAA_ADMIN_CLIENT_PASS}"
+      uaac user add "${NAME}" -p "${PASSWORD}" --emails ignored
+
+      uaac member add cloud_controller.admin "${NAME}"
+      uaac member add uaa.admin "${NAME}"
+      uaac member add scim.read "${NAME}"
+      uaac member add scim.write "${NAME}"
+      uaac member add doppler.firehose "${NAME}"
+
+      echo "${NAME}" >admin-creds/username
+      echo "${PASSWORD}" >admin-creds/password

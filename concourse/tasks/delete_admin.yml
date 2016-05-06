@@ -1,0 +1,26 @@
+---
+platform: linux
+image: docker:///governmentpaas/cf-uaac
+inputs:
+  - name: paas-cf
+  - name: cf-secrets
+  - name: cf-manifest
+  - name: admin-creds
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      NAME=$(cat admin-creds/username)
+      ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+      VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+      UAA_ADMIN_CLIENT_PASS=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+      UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
+
+      echo "Removing user ${NAME}"
+      uaac target "${UAA_ENDPOINT}"
+      uaac token client get admin -s "${UAA_ADMIN_CLIENT_PASS}"
+      
+      uaac user delete "${NAME}"
