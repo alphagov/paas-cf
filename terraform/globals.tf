@@ -100,5 +100,11 @@ variable "microbosh_static_private_ip" {
 /* Note: This is overridden in prod.tfvars and staging.tfvars to allow world access */
 variable "web_access_cidrs" {
   description = "CSV of CIDR addresses for which we allow web access"
-  default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
+  default     = ""
+}
+
+/* Note: Production envirnoment overrides this to allow different set of access restrictions. */
+variable "tenant_cidrs_file" {
+  description = "File with the list of CIDR addresses for the tenants with access to API and web."
+  default     = "tenant-cidrs-default.txt"
 }

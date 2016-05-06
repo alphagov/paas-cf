@@ -18,6 +18,7 @@ resource "aws_security_group" "web" {
     protocol  = "tcp"
     cidr_blocks = [
       "${split(",", var.web_access_cidrs)}",
+      "${compact(split("\n", replace(file("${path.root}/../${var.tenant_cidrs_file}"), "/ *#.*/", "")))}",
       "${var.concourse_elastic_ip}/32",
     ]
   }
