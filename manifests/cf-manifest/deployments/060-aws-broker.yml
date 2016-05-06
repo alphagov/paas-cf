@@ -34,7 +34,7 @@ jobs:
               plan_updateable: true
               plans:
                 - id: "5b8282cf-a669-4ffc-b426-c169a7bbfc71"
-                  name: "9.4-medium"
+                  name: "temporary-test-plan"
                   description: "RDS Postgres"
                   free: true
                   metadata:
@@ -43,21 +43,21 @@ jobs:
                           usd: 0.180
                         unit: "HOUR"
                     bullets:
-                      - "Dedicated Postgres 9.4.5 server"
-                      - "Postgres 9.4.5"
+                      - "Dedicated Postgres 9.4 server"
+                      - "Postgres 9.4"
                       - "AWS RDS"
                   rds_properties:
                     db_instance_class: "db.m3.medium"
                     engine: "postgres"
-                    engine_version: "9.4.5"
+                    engine_version: "9.4.7"
+                    storage_type: "gp2"
                     allocated_storage: 10
                     auto_minor_version_upgrade: true
                     multi_az: false
                     publicly_accessible: false
                     copy_tags_to_snapshot: true
-                    skip_final_snapshot: false
+                    skip_final_snapshot: true
+                    backup_retention_period: 0
                     db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
                     vpc_security_group_ids:
                       - (( grab terraform_outputs.rds_broker_dbs_security_group ))
-                    db_security_groups: []
-
