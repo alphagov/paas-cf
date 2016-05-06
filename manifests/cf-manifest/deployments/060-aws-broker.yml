@@ -62,3 +62,19 @@ jobs:
                     db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
                     vpc_security_group_ids:
                       - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
+
+properties:
+  cc:
+    security_group_definitions:
+      - name: rds_broker_instances
+        rules:
+          - protocol: tcp
+            destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
+            ports: '5432'
+
+    default_running_security_groups:
+      - (( append ))
+      - "rds_broker_instances"
+    default_staging_security_groups:
+      - (( append ))
+      - "rds_broker_instances"

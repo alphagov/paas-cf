@@ -34,6 +34,11 @@ variable "aws_backing_service_cidrs" {
   }
 }
 
+variable "aws_backing_service_cidr_all" {
+  description = "CIDR for all aws_backing_service subnets"
+  default     = "10.0.52.0/22"
+}
+
 variable "health_check_interval" {
   description = "Interval between requests for load balancer health checks"
   default     = 5
