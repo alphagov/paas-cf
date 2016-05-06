@@ -1,0 +1,3 @@
+---
+  command: "./bin/db-healthcheck; sleep 1; echo 'done'"
+  buildpack: go_buildpack
