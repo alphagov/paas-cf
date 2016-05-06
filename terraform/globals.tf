@@ -71,11 +71,6 @@ variable "microbosh_ips" {
   }
 }
 
-variable "infra_cidr_all" {
-  description = "CIDR for all infrastructure subnets"
-  default     = "10.0.0.0/20"
-}
-
 variable "infra_subnet_ids" {
   description = "A comma separated list of infrastructure subnets"
   default     = ""
