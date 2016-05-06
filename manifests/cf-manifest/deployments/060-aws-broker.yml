@@ -61,4 +61,4 @@ jobs:
                     backup_retention_period: 0
                     db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
                     vpc_security_group_ids:
-                      - (( grab terraform_outputs.rds_broker_dbs_security_group ))
+                      - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))

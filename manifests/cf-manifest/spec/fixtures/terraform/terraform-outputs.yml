@@ -32,6 +32,6 @@ terraform_outputs:
   logsearch_elb_name: logsearch_elb_name
   metrics_elb_name: metrics_elb_name
   rds_broker_db_clients_security_group: rds_broker_db_clients_security_group
-  rds_broker_dbs_security_group: rds_broker_dbs_security_group
+  rds_broker_dbs_security_group_id: rds_broker_dbs_security_group_id
   rds_broker_dbs_subnet_group: rds_broker_dbs_subnet_group
 
