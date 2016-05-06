@@ -70,6 +70,7 @@ cf-paas-haproxy-release-version: ${cf_paas_haproxy_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
 cf_aws_broker_version: ${cf_aws_broker_version}
+cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}

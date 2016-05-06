@@ -916,6 +916,7 @@ jobs:
               ./terraform-outputs/*.yml
               ./cf-secrets/cf-secrets.yml
               ./certs/*.yml
+              ./paas-cf/manifests/cf-manifest/deployments/env-specific/{{cf_env_specific_manifest}}
           run:
             path: sh
             args:
@@ -941,7 +942,9 @@ jobs:
                 cd ..
 
                 echo "Generating manifests"
-                ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+
+                # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
+                eval ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
         on_success:
           put: cf-manifest
           params:

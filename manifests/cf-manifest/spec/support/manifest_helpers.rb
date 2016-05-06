@@ -14,15 +14,15 @@ module ManifestHelpers
 
   private
 
-  def load_default_manifest
-    output, error, status = Open3.capture3(
-      [
+  def load_default_manifest(environment = "default")
+    arg_list = [
         File.expand_path("../../../build_manifest.sh", __FILE__),
         File.expand_path("../../fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
         File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
-      ].join(' ')
-    )
+        File.expand_path("../../../deployments/env-specific/cf-#{environment}.yml", __FILE__),
+    ]
+    output, error, status = Open3.capture3(arg_list.join(' '))
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     # Deep freeze the object so that it's safe to use across multiple examples
