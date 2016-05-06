@@ -801,7 +801,7 @@ properties:
   logger_endpoint: ~
 
   ha_proxy:
-    ssl_pem: (( concat secrets.router_internal_cert secrets.router_internal_key ))
+    enable_proxy_protocol: true
     disable_http: true
     go_router:
       servers: [ "127.0.0.1" ]
