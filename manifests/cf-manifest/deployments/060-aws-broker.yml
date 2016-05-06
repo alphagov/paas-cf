@@ -32,7 +32,7 @@ jobs:
                 providerDisplayName: "Amazon Web Services"
                 documentationUrl: "https://aws.amazon.com/documentation/rds/"
                 supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
-              plan_updateable: true
+              plan_updateable: false
               plans:
                 - id: "5b8282cf-a669-4ffc-b426-c169a7bbfc71"
                   name: "temporary-test-plan"
