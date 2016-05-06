@@ -11,7 +11,7 @@ YAMLLINT=yamllint
 check-env-vars:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 
-test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse ## Run linting tests
+test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby ## Run linting tests
 
 spec:
 	cd scripts &&\
@@ -42,6 +42,10 @@ lint_shellcheck:
 
 lint_concourse:
 	cd .. && python paas-cf/concourse/scripts/pipecleaner.py paas-cf/concourse/pipelines/*.yml
+
+.PHONY: lint_ruby
+lint_ruby:
+	bundle exec rubocop -l
 
 .PHONY: globals
 globals:

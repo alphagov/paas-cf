@@ -67,7 +67,7 @@ RSpec.describe "Hash" do
 end
 
 RSpec.describe "render_template" do
-  let (:example_spec) {
+  let(:example_spec) {
     %Q{
 ---
 properties:
@@ -82,7 +82,7 @@ properties:
     }
   }
 
-  let (:example_manifest) {
+  let(:example_manifest) {
     %Q{
 ---
 properties:

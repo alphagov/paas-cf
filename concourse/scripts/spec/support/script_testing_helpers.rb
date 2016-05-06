@@ -4,7 +4,7 @@ require "tempfile"
 # Find the directory of the current git repo
 def find_git_repository_path()
   path = `git rev-parse --show-toplevel`.strip
-  if not File.exists?(path)
+  if not File.exist?(path)
     raise "Cannot find a git repository parent of #{File.dirname(__FILE__)}"
   end
   return path
