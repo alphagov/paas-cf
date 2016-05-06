@@ -5,6 +5,7 @@ resource_pools:
     env: (( grab meta.default_env ))
     cloud_properties:
       instance_type: m3.medium
+      iam_instance_profile: rds-broker
       ephemeral_disk:
         size: 10240
         type: gp2
