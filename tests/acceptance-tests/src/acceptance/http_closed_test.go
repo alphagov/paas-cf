@@ -12,13 +12,13 @@ import (
 	"time"
 )
 
-var _ = Describe("Http is closed", func() {
+var _ = Describe("Http client", func() {
 
 	var (
 		CONNECTION_TIMEOUT = 11 * time.Second
 	)
 
-	It("for apps", func() {
+	It("that tries to connect to apps", func() {
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
 			"push", appName,
@@ -31,13 +31,15 @@ var _ = Describe("Http is closed", func() {
 
 		uri := appName + "." + config.AppsDomain + ":80"
 		_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
-		Expect(err.(net.Error).Timeout()).To(BeTrue())
+		Expect(err).ToNot(BeNil(), "should not connect")
+		Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
 	})
 
-	It("for api", func() {
+	It("that tries to connect to api", func() {
 		uri := "api." + config.SystemDomain + ":80"
 		_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
-		Expect(err.(net.Error).Timeout()).To(BeTrue())
+		Expect(err).ToNot(BeNil(), "should not connect")
+		Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
 
 	})
 
