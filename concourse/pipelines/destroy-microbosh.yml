@@ -159,7 +159,7 @@ jobs:
       - task: extract-terraform-variables
         config:
           platform: linux
-          image: docker:///governmentpaas/bosh-init
+          image: docker:///ruby#2.2-slim
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
