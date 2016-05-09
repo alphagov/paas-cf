@@ -38,7 +38,7 @@ usage() {
   cat <<EOF
 Usage:
 
-  $SCRIPT [-r] -e <email> -o <orgname>
+  $SCRIPT [-r] [-m] -e <email> -o <orgname>
 
 $SCRIPT will create a user and organisation in the CF service where you
 are currently logged in and send an email to the user if the password changes.
@@ -56,6 +56,8 @@ Requirements:
 Where:
   -r           Delete/recreate the user. The user will be recreated
                and the password reset.
+
+  -m           Make the user an Org Manager
 
   -e <email>   User email to add and configure as organization and
                space manager. If the user is created or recreated,
@@ -143,9 +145,11 @@ create_user() {
 }
 
 set_user_roles() {
-  cf set-org-role "${EMAIL}" "${ORG}" OrgManager
+  if [[ "${ORG_MANAGER}" == "true" ]]; then
+    cf set-org-role "${EMAIL}" "${ORG}" OrgManager
+    cf set-space-role "${EMAIL}" "${ORG}" "${DEFAULT_SPACE}" SpaceManager
+  fi
   cf set-space-role "${EMAIL}" "${ORG}" "${DEFAULT_SPACE}" SpaceDeveloper
-  cf set-space-role "${EMAIL}" "${ORG}" "${DEFAULT_SPACE}" SpaceManager
 }
 
 # Expand variables from subject, escaping quotes
@@ -196,6 +200,7 @@ trap 'rm -f "${TMP_OUTPUT}"' EXIT
 
 RESET_USER=false
 SEND_EMAIL=false
+ORG_MANAGER=false
 
 while [[ $# -gt 0 ]]; do
   key="$1"
@@ -210,6 +215,9 @@ while [[ $# -gt 0 ]]; do
     ;;
       -r|--reset-user)
       RESET_USER=true
+    ;;
+      -m|--manager)
+      ORG_MANAGER=true
     ;;
     *)
       # unknown option
