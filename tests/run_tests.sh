@@ -7,6 +7,6 @@ TESTS_DIR="${1}"
 
 cd "${TESTS_DIR}"
 export GOPATH
-GOPATH="${GOPATH}:$(pwd)}"
+GOPATH="${GOPATH}:$(pwd)"
 godep restore
-go test -ginkgo.v
+go test
