@@ -101,6 +101,7 @@ jobs:
         config:
           params:
             VM_NAME: api_z1/0
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -116,6 +117,9 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -141,6 +145,7 @@ jobs:
         config:
           params:
             VM_NAME: colocated_z1
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -156,6 +161,9 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -181,6 +189,7 @@ jobs:
         config:
           params:
             VM_NAME: nats_z1
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -196,6 +205,9 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -221,6 +233,7 @@ jobs:
         config:
           params:
             VM_NAME: router_z1
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -236,6 +249,9 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -261,6 +277,7 @@ jobs:
         config:
           params:
             VM_NAME: etcd_z1
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -276,6 +293,9 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -301,6 +321,7 @@ jobs:
         config:
           params:
             VM_NAME: consul_z1
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -316,6 +337,9 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -341,6 +365,7 @@ jobs:
         config:
           params:
             VM_NAME: cell_z1
+            BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - task: create-temp-user
@@ -356,5 +381,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml

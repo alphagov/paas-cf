@@ -12,5 +12,5 @@ run:
     - -e
     - -c
     - |
-      ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+      ./paas-cf/concourse/scripts/bosh_login.sh $BOSH_FQDN bosh-secrets/bosh-secrets.yml
       bosh vms --details | awk -v vmname=$VM_NAME -F'|' '$2 ~ vmname {print $7}' > instance-id/id
