@@ -17,8 +17,10 @@ resource "aws_security_group" "web" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.web_access_cidrs)}",
-      "${var.concourse_elastic_ip}/32",
+      "${compact(split(",", var.admin_cidrs))}",
+      "${compact(split(",", var.tenant_cidrs))}",
+      "${compact(split(",", var.web_access_cidrs))}",
+      "${var.concourse_elastic_ip}/32"
     ]
   }
 
