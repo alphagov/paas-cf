@@ -442,9 +442,6 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
-      # Override because this is wrong in diego version 0.1441.0
-      watcher:
-        debug_addr: 0.0.0.0:17015
 
 meta:
   environment: ~
