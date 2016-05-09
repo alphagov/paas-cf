@@ -26,6 +26,7 @@ fi
 
 # Get Pingdom credentials
 export PASSWORD_STORE_DIR=~/.paas-pass
+echo "Using password store: ${PASSWORD_STORE_DIR}"
 PINGDOM_USER=$(pass pingdom.com/username)
 PINGDOM_PASSWORD=$(pass pingdom.com/password)
 PINGDOM_API_KEY=$(pass pingdom.com/api_key)

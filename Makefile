@@ -127,16 +127,11 @@ showenv: ## Display environment information
 	@concourse/scripts/environment.sh
 
 .PHONY: manually_upload_certs
-CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
 manually_upload_certs: ## Manually upload to AWS the SSL certificates for public facing endpoints
-	# check password store and if varables are accesible
-	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
-	$(if $(wildcard ${CERT_PASSWORD_STORE_DIR}),,$(error Password store ${CERT_PASSWORD_STORE_DIR} does not exist))
 	@terraform/scripts/manually-upload-certs.sh
 
 .PHONY: pingdom
 pingdom: ## Use custom Terraform provider to set up Pingdom check
-	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	@terraform/scripts/set-up-pingdom.sh
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.

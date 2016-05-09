@@ -50,11 +50,9 @@ In that case, the operator must manually upload the certificates:
 [credentials-high]: https://github.gds/government-paas/credentials-high
 
  2. After deploying the deployer with `create-deployer`, execute the make task
-    `manually_upload_certs`. You indicate the
-    [password store](https://www.passwordstore.org/) directory to read
-    the certificates from by passing the variable `CERT_PASSWORD_STORE_DIR`
+    `manually_upload_certs`.
 
-    For example: `make prod manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass`
+    For example: `make prod manually_upload_certs`
 
     This will upload the certificates and update the `cf-certs.tfstate` with
     the information of the aws server certificates.
