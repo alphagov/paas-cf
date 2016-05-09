@@ -134,7 +134,17 @@ properties:
       buildpack_directory_key: (( concat meta.environment "-cf-buildpacks" ))
       fog_connection: ~
       cdn: ~
-    quota_definitions: (( grab meta.default_quota_definitions ))
+    quota_definitions:
+      default:
+        memory_limit: 2048
+        total_services: 10
+        non_basic_services_allowed: false
+        total_routes: 1000
+      trade_tariff:
+        memory_limit: 61440
+        total_services: 10
+        non_basic_services_allowed: false
+        total_routes: 1000
     default_quota_definition: default
 
     user_buildpacks: []
@@ -438,12 +448,6 @@ properties:
 
 meta:
   environment: ~
-  default_quota_definitions:
-    default:
-       memory_limit: 2048
-       total_services: 10
-       non_basic_services_allowed: false
-       total_routes: 1000
   secrets:
     consul_ca_cert: (( grab secrets.bosh_ca_cert ))
     bbs_ca_cert: (( grab secrets.bosh_ca_cert ))
