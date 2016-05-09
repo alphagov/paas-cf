@@ -62,15 +62,23 @@ class Pipecleaner(object):
 
             while plan:
                 item = plan.pop(0)
-                # Flatten aggregate blocks as we don't care
-                if 'aggregate' in item:
-                    plan = item['aggregate'] + plan
-                    continue
+                discovered_blocks = []
 
-                # Flatten blocks we don't care about
+                # Flatten array blocks as we don't care
+                for block_type in ('aggregate', 'do'):
+                    if block_type in item:
+                        discovered_blocks.extend(item[block_type])
+                        del item[block_type]
+
+                # Flatten single blocks we don't care about
                 for block_type in ('on_success', 'on_failure', 'ensure'):
                     if block_type in item:
-                        plan = [item[block_type]] + plan
+                        discovered_blocks.append(item[block_type])
+                        del item[block_type]
+
+                if discovered_blocks:
+                    plan = [item] + discovered_blocks + plan
+                    continue
 
                 if 'get' in item:
                     get_resources.add(item['get'])
