@@ -1333,7 +1333,7 @@ jobs:
                   mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
                   ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
                   ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
-                  ln -snf /usr/local/go /var/vcap/packages/golang1.4
+                  ln -snf /usr/local/go /var/vcap/packages/golang1.6
                   sed -i 's/bits=@"%s"/bits=@%s/' cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/helpers/v3_helpers/v3.go
                   ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
                   /var/vcap/jobs/acceptance-tests/bin/run

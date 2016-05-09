@@ -19,7 +19,7 @@ run:
       mkdir -p /var/vcap/jobs/smoke-tests/bin/ /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry
       ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
       ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
-      ln -snf /usr/local/go /var/vcap/packages/golang1.4
+      ln -snf /usr/local/go /var/vcap/packages/golang1.6
       ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
       set -o pipefail
       git --git-dir paas-cf/.git log -1 > smoke-tests-log/last-commit.log
