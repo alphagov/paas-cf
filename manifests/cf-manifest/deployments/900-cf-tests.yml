@@ -10,7 +10,7 @@ properties:
     client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
     skip_diego_unsupported_tests: true
     include_tasks: false
-    include_v3: true
+    include_v3: false
     include_security_groups: true
     include_routing: true
     skip_regex: 'routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|uses\sa\sbuildpack\sfrom\sa\sgit\surl'
