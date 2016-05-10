@@ -104,15 +104,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: controller-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: controller-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
@@ -148,15 +149,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: colocated-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: colocated-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
@@ -192,15 +194,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: nats-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: nats-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
@@ -236,15 +239,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: router-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: router-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
@@ -280,15 +284,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: etcd-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: etcd-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
@@ -324,15 +329,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: consul-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: consul-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
@@ -368,15 +374,16 @@ jobs:
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
-      - task: create-temp-user
-        file: paas-cf/concourse/tasks/create_admin.yml
-        config:
-          params:
-            PREFIX: cell-smoketest-user
-      - task: generate-test-config
-        file: paas-cf/concourse/tasks/smoke-tests-config.yml
-      - task: run-tests
-        file: paas-cf/concourse/tasks/smoke-tests-run.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: cell-smoketest-user
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+        - task: run-tests
+          file: paas-cf/concourse/tasks/smoke-tests-run.yml
         ensure:
           aggregate:
             - task: recover
