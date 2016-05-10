@@ -1403,7 +1403,7 @@ jobs:
 
                   echo "Running tests"
                   export CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/acceptance-tests/src/acceptance/
+                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/acceptance/
 
         ensure:
           task: remove-temp-user
@@ -1498,7 +1498,7 @@ jobs:
 
                   echo "Running tests"
                   export CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/performance-tests/src/performance/
+                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/performance/
 
         ensure:
           task: remove-temp-user

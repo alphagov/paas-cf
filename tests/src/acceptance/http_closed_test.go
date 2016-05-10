@@ -25,7 +25,7 @@ var _ = Describe("Http client", func() {
 			"push", appName,
 			"--no-start",
 			"-b", config.StaticFileBuildpackName,
-			"-p", "../../../example-apps/static-app",
+			"-p", "../../example-apps/static-app",
 			"-d", config.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 		Expect(cf.Cf("start", appName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))

@@ -73,8 +73,8 @@ var _ = Describe("RDS broker", func() {
 				"push", appName,
 				"--no-start",
 				"-b", config.GoBuildpackName,
-				"-p", "../../../example-apps/db-healthcheck",
-				"-f", "../../../example-apps/db-healthcheck/manifest.yml",
+				"-p", "../../example-apps/db-healthcheck",
+				"-f", "../../example-apps/db-healthcheck/manifest.yml",
 				"-d", config.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 

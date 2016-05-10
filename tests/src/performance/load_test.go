@@ -59,7 +59,7 @@ var _ = Describe("Load performance", func() {
 			"--no-start",
 			"-b", config.StaticFileBuildpackName,
 			"-m", DEFAULT_MEMORY_LIMIT,
-			"-p", "../../apps/static_app/",
+			"-p", "../../example-apps/static-app/",
 			"-d", config.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
