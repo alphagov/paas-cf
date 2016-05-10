@@ -15,7 +15,7 @@ resource "aws_security_group" "metrics_elb" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.office_cidrs)}"
+      "${compact(split(",", var.admin_cidrs))}"
     ]
   }
 
@@ -24,7 +24,7 @@ resource "aws_security_group" "metrics_elb" {
     to_port   = 3001
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.office_cidrs)}"
+      "${compact(split(",", var.admin_cidrs))}"
     ]
   }
 

@@ -76,7 +76,7 @@ resource "aws_security_group" "logsearch_elb" {
     to_port   = 443
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.office_cidrs)}"
+      "${compact(split(",", var.admin_cidrs))}"
     ]
   }
 

@@ -81,12 +81,6 @@ variable "infra_subnet_ids" {
   default     = ""
 }
 
-/* see https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
-variable "office_cidrs" {
-  description = "CSV of CIDR addresses for our office which will be trusted"
-  default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
-}
-
 variable "vagrant_cidr" {
   description = "IP address of the AWS Vagrant bootstrap concourse"
   default     = ""
@@ -97,8 +91,21 @@ variable "microbosh_static_private_ip" {
   default     = "10.0.0.6"
 }
 
-/* Note: This is overridden in prod.tfvars and staging.tfvars to allow world access */
-variable "web_access_cidrs" {
-  description = "CSV of CIDR addresses for which we allow web access"
+
+/* Operators will mainly be from the office. See https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
+variable "admin_cidrs" {
+  description = "CSV of CIDR addresses with access to operator/admin endpoints"
   default     = "80.194.77.90/32,80.194.77.100/32,85.133.67.244/32"
+}
+
+/* Note: This is overridden in prod.tfvars to allow specific tenant access */
+variable "tenant_cidrs" {
+  description = "CSV of CIDR addresses of tenants with access to CloudFoundry API"
+  default     = ""
+}
+
+/* Note: This is overridden in prod.tfvars to allow world access */
+variable "web_access_cidrs" {
+  description = "CSV of CIDR addresses with access to "
+  default     = ""
 }

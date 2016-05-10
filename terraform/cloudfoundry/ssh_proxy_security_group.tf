@@ -15,7 +15,8 @@ resource "aws_security_group" "sshproxy" {
     to_port   = 2222
     protocol  = "tcp"
     cidr_blocks = [
-      "${split(",", var.office_cidrs)}"
+      "${compact(split(",", var.admin_cidrs))}",
+      "${compact(split(",", var.tenant_cidrs))}"
     ]
   }
 
