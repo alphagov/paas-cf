@@ -2,6 +2,7 @@ package acceptance_test
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os/exec"
 	"time"
 
@@ -86,7 +87,9 @@ var _ = Describe("RDS broker", func() {
 			fmt.Fprintln(GinkgoWriter, "Sending request to DB Healthcheck app")
 			resp, err := httpClient.Get(helpers.AppRootUri(appName))
 			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(200))
+			body, err := ioutil.ReadAll(resp.Body)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 		})
 	})
 })
