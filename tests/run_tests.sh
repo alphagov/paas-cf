@@ -12,4 +12,8 @@ cd "${TESTS_DIR}"
 
 godep restore
 
-go test
+if [ -x ./run_tests.sh ]; then
+  ./run_tests.sh
+else
+  go test
+fi
