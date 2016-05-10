@@ -350,7 +350,7 @@ documented when running the make target for the first time.
 
 Make sure you are using the correct AWS credentials for the environment you are setting up checks for. For those developers with AWS CLI config files, the [AWS CLI Documentation](http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#id1) states environment variables have the highest precedence.
 
-## Creating Organisations and Organisation Managers
+## Creating Users
 
 Once you got the OK from the Product and Delivery managers to create
 an organisations with a user, you can use the script `./scripts/create-tenant.sh`
@@ -361,4 +361,19 @@ to automatically create them:
 ```
 
 Run `./scripts/create-tenant.sh` for detailed help.
+
+The script will create the organisation if it doesnt exist, create the user and
+email them the password. You must have the aws cli and cf cli installed, and be
+logged into the cf environment you want to create users for
+
+### Creating Org managers
+
+By default, the script creates an unprivileged users. To create an org manager,
+pass the `-m` option to the script
+
+### Verifying email address
+
+To run the above script, you need to verify your email address with [AWS SES](https://aws.amazon.com/ses/)
+To do this, run `aws ses verify-email-identity --email-address youremail@example.com --region eu-west-1`
+and click on the link in the resulting email
 
