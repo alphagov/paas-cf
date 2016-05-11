@@ -1063,9 +1063,9 @@ jobs:
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
 
-                CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb > config/quota_settings.sh
+                CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb config
       - aggregate:
-        - task: update-default-quota
+        - task: update-quotas
           config:
             platform: linux
             inputs:
@@ -1078,22 +1078,32 @@ jobs:
               path: sh
               args:
                 - -e
+                - -u
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
-                  . ./config/quota_settings.sh
-                  ${QUOTA_non_basic_services_allowed} || prefix="dis"
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  cf update-quota "${QUOTA_DEFAULT}" \
-                    -m "${QUOTA_memory_limit}"M \
-                    -r "${QUOTA_total_routes}" \
-                    -s "${QUOTA_total_services}" \
-                    --${prefix}allow-paid-service-plans
+                  for quota_file in config/*_quota.sh; do
+                    # Run in a subshell to make sure the variables are not kept
+                    (
+                    . "${quota_file}"
 
+                    if [ "${QUOTA_non_basic_services_allowed}" = "true" ]; then
+                      extra_options="--allow-paid-service-plans"
+                    else
+                      extra_options="--disallow-paid-service-plans"
+                    fi
+
+                    cf update-quota "${QUOTA_name}" \
+                      -m "${QUOTA_memory_limit}"M \
+                      -r "${QUOTA_total_routes}" \
+                      -s "${QUOTA_total_services}" \
+                      ${extra_options}
+                    )
+                  done
         - task: deploy-healthcheck-app
           config:
             platform: linux
