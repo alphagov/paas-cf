@@ -1065,7 +1065,30 @@ jobs:
                 done > config/config.sh
 
                 CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb config
+
       - aggregate:
+        - task: set-security-groups-from-manifest
+          config:
+            platform: linux
+            inputs:
+              - name: paas-cf
+              - name: bosh-CA
+              - name: config
+              - name: cf-manifest
+            params:
+            image: docker:///governmentpaas/cf-cli
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                  ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
+
         - task: update-quotas
           config:
             platform: linux
