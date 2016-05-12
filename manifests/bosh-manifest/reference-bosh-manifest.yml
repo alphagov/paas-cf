@@ -8,7 +8,6 @@ cloud_provider:
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
-      max_retries: 8
       region: eu-west-1
     blobstore:
       path: /var/vcap/micro_bosh/data/cache
@@ -52,7 +51,6 @@ jobs:
       default_key_name: ssh_key_pair
       default_security_groups:
       - bosh_default_sg
-      max_retries: 8
       region: eu-west-1
     blobstore:
       bucket_name: test-bosh-blobstore
