@@ -219,7 +219,7 @@ jobs:
         agent:
           mode: server
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: consul_z2
     templates: (( grab meta.consul_templates ))
@@ -234,7 +234,7 @@ jobs:
         agent:
           mode: server
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: nats_z1
     templates: (( grab meta.nats_templates ))
@@ -245,7 +245,7 @@ jobs:
         static_ips:
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: nats_z2
     templates: (( grab meta.nats_templates ))
@@ -256,7 +256,7 @@ jobs:
         static_ips:
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: etcd_z1
     templates: (( grab meta.etcd_templates ))
@@ -270,7 +270,7 @@ jobs:
       serial: true
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
       consul:
         agent:
           services:
@@ -288,7 +288,7 @@ jobs:
       serial: true
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
       consul:
         agent:
           services:
@@ -307,7 +307,7 @@ jobs:
         agent:
           mode: server
       metron_agent:
-        zone: z3
+        zone: ""
 
   - name: etcd_z3
     templates: (( grab meta.etcd_templates ))
@@ -319,7 +319,7 @@ jobs:
         static_ips:
     properties:
       metron_agent:
-        zone: z3
+        zone: ""
       consul:
         agent:
           services:
@@ -339,7 +339,7 @@ jobs:
           z1: (( grab jobs.router_z1.networks.router1.static_ips ))
           z2: (( grab jobs.router_z2.networks.router2.static_ips ))
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
@@ -349,7 +349,7 @@ jobs:
       - name: cf1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: nfs_z1
     templates: (( grab meta.nfs_templates ))
@@ -361,7 +361,7 @@ jobs:
         static_ips: ~
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: postgres_z1
     templates: (( grab meta.postgres_templates ))
@@ -373,7 +373,7 @@ jobs:
       static_ips: ~
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   - name: uaa_z1
@@ -388,7 +388,7 @@ jobs:
           services:
             uaa: {}
       metron_agent:
-        zone: z1
+        zone: ""
       route_registrar:
         routes: []
 
@@ -404,7 +404,7 @@ jobs:
           services:
             uaa: {}
       metron_agent:
-        zone: z2
+        zone: ""
       route_registrar:
         routes: []
 
@@ -420,7 +420,7 @@ jobs:
         agent:
           services: (( grab meta.api_consul_services ))
       metron_agent:
-        zone: z1
+        zone: ""
       route_registrar:
         routes: []
       nfs_server: (( grab meta.nfs_server ))
@@ -437,7 +437,7 @@ jobs:
         agent:
           services: (( grab meta.api_consul_services ))
       metron_agent:
-        zone: z2
+        zone: ""
       route_registrar:
         routes: []
       nfs_server: (( grab meta.nfs_server ))
@@ -451,7 +451,7 @@ jobs:
       - name: cf1_rds
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: api_worker_z1
     templates: (( grab meta.api_worker_templates ))
@@ -462,7 +462,7 @@ jobs:
       - name: cf1_rds
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
       nfs_server: (( grab meta.nfs_server ))
 
   - name: api_worker_z2
@@ -474,7 +474,7 @@ jobs:
       - name: cf2_rds
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
       nfs_server: (( grab meta.nfs_server ))
 
   - name: loggregator_z1
@@ -487,7 +487,7 @@ jobs:
       doppler:
         zone: z1
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: loggregator_z2
     templates: (( grab meta.loggregator_templates ))
@@ -499,7 +499,7 @@ jobs:
       doppler:
         zone: z2
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: doppler_z1
     templates: (( grab meta.loggregator_templates ))
@@ -511,7 +511,7 @@ jobs:
       doppler:
         zone: z1
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: doppler_z2
     templates: (( grab meta.loggregator_templates ))
@@ -523,7 +523,7 @@ jobs:
       doppler:
         zone: z2
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: loggregator_trafficcontroller_z1
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
@@ -535,7 +535,7 @@ jobs:
       traffic_controller:
         zone: z1
       metron_agent:
-        zone: z1
+        zone: ""
       route_registrar:
         routes: []
 
@@ -549,7 +549,7 @@ jobs:
       traffic_controller:
         zone: z2
       metron_agent:
-        zone: z2
+        zone: ""
       route_registrar:
         routes: []
 
@@ -566,7 +566,7 @@ jobs:
           services:
             gorouter: {}
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: router_z2
     templates: (( grab meta.router_templates ))
@@ -581,7 +581,7 @@ jobs:
           services:
             gorouter: {}
       metron_agent:
-        zone: z2
+        zone: ""
 
 # Diego
 
@@ -593,7 +593,7 @@ jobs:
       - name: cf1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: access_z2
     templates: (( grab meta.diego_job_templates.access ))
@@ -603,7 +603,7 @@ jobs:
       - name: cf2
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: brain_z1
     templates: (( grab meta.diego_job_templates.brain ))
@@ -613,7 +613,7 @@ jobs:
       - name: cf1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: brain_z2
     templates: (( grab meta.diego_job_templates.brain ))
@@ -623,7 +623,7 @@ jobs:
       - name: cf2
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: cc_bridge_z1
     templates: (( grab meta.diego_job_templates.cc_bridge ))
@@ -633,7 +633,7 @@ jobs:
       - name: cf1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: cc_bridge_z2
     templates: (( grab meta.diego_job_templates.cc_bridge ))
@@ -643,7 +643,7 @@ jobs:
       - name: cf2
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: cell_z1
     templates: (( grab meta.diego_job_templates.cell ))
@@ -653,7 +653,7 @@ jobs:
       - name: cell1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
       diego:
         rep:
           zone: z1
@@ -666,7 +666,7 @@ jobs:
       - name: cell2
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
       diego:
         rep:
           zone: z2
@@ -683,7 +683,7 @@ jobs:
         rep:
           zone: z1
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: colocated_z2
     templates: (( grab meta.diego_job_templates.colocated ))
@@ -697,7 +697,7 @@ jobs:
         rep:
           zone: z2
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: database_z1
     templates: (( grab meta.diego_job_templates.database ))
@@ -708,7 +708,7 @@ jobs:
       - name: cf1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: database_z2
     templates: (( grab meta.diego_job_templates.database ))
@@ -719,7 +719,7 @@ jobs:
       - name: cf2
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
 
   - name: route_emitter_z1
     templates: (( grab meta.diego_job_templates.route_emitter ))
@@ -729,7 +729,7 @@ jobs:
       - name: cf1
     properties:
       metron_agent:
-        zone: z1
+        zone: ""
 
   - name: route_emitter_z2
     templates: (( grab meta.diego_job_templates.route_emitter ))
@@ -739,7 +739,7 @@ jobs:
       - name: cf2
     properties:
       metron_agent:
-        zone: z2
+        zone: ""
 
 
 
