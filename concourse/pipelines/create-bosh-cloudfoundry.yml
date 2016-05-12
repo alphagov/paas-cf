@@ -1665,7 +1665,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           config:
             params:
-              PREFIX: continuous-smoketest-user
+              PREFIX: cont-smoketest-user
 
         - task: smoke-tests-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
