@@ -353,14 +353,14 @@ Make sure you are using the correct AWS credentials for the environment you are 
 ## Creating Users
 
 Once you got the OK from the Product and Delivery managers to create
-an organisations with a user, you can use the script `./scripts/create-tenant.sh`
+an organisations with a user, you can use the script `./scripts/create-user.sh`
 to automatically create them:
 
 ```
-./scripts/create-tenant.sh -o orgname -e email@example.com
+./scripts/create-user.sh -o orgname -e email@example.com
 ```
 
-Run `./scripts/create-tenant.sh` for detailed help.
+Run `./scripts/create-user.sh` for detailed help.
 
 The script will create the organisation if it doesnt exist, create the user and
 email them the password. You must have the aws cli and cf cli installed, and be

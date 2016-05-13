@@ -21,7 +21,7 @@ Your organisation is \"${ORG}\" and your login and password:
 To begin using the PaaS you will need to install the cf command line client
 and execute the following commands.
 
-cf target https://api.cloud.service.gov.uk
+cf api https://api.cloud.service.gov.uk
 cf login
 
 Further documentation on the cf command line client is available from
