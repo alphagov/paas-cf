@@ -376,4 +376,3 @@ pass the `-m` option to the script
 To run the above script, you need to verify your email address with [AWS SES](https://aws.amazon.com/ses/)
 To do this, run `aws ses verify-email-identity --email-address youremail@example.com --region eu-west-1`
 and click on the link in the resulting email
-
