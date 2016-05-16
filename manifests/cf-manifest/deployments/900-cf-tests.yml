@@ -1,6 +1,6 @@
 properties:
   acceptance_tests:
-    api: (( concat "https://" meta.api_domain ))
+    api: (( grab meta.api_domain ))
     apps_domain: (( grab properties.app_domains[0] ))
     system_domain: (( grab properties.system_domain ))
     admin_user: "admin"
