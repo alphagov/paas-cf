@@ -23,7 +23,6 @@ variable "bosh_db_skip_final_snapshot" {
 
 variable "bosh_az" {
   description = "A zone used to provision bosh"
-  default = "eu-west-1a"
 }
 
 variable "system_dns_zone_id" {

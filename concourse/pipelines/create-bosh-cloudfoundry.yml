@@ -303,6 +303,7 @@ jobs:
             MAKEFILE_ENV_TARGET: {{makefile_env_target}}
             SELF_UPDATE_PIPELINE: {{self_update_pipeline}}
             PIPELINES_TO_UPDATE: {{pipeline_name}}
+            BOSH_AZ: {{bosh_az}}
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
 
@@ -515,6 +516,7 @@ jobs:
           params:
             DEPLOY_ENV: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
+            BOSH_AZ: {{bosh_az}}
             TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
           run:
             path: sh
@@ -525,6 +527,7 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh-secrets.tfvars.sh
+                export TF_VAR_bosh_az="${BOSH_AZ}"
 
                 terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh
