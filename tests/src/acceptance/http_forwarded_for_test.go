@@ -24,7 +24,7 @@ var _ = Describe("X-Forwarded headers", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", config.GoBuildpackName,
-			"-p", "../../apps/print_request_headers",
+			"-p", "../../example-apps/print_request_headers",
 			"-d", config.AppsDomain,
 			"-c", "./bin/debug_app; sleep 1; echo 'done'",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))

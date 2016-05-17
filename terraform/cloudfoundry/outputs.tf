@@ -89,3 +89,19 @@ output "logsearch_elb_name" {
 output "metrics_elb_name" {
   value = "${aws_elb.metrics.name}"
 }
+
+output "aws_backing_service_cidr_all" {
+  value = "${var.aws_backing_service_cidr_all}"
+}
+
+output "rds_broker_db_clients_security_group" {
+  value = "${aws_security_group.rds_broker_db_clients.name}"
+}
+
+output "rds_broker_dbs_security_group_id" {
+  value = "${aws_security_group.rds_broker_dbs.id}"
+}
+
+output "rds_broker_dbs_subnet_group" {
+  value = "${aws_db_subnet_group.rds_broker.name}"
+}

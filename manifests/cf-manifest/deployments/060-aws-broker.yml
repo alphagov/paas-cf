@@ -1,6 +1,6 @@
 releases:
   - name: aws-broker
-    version: 0.0.1
+    version: 0.0.2
 
 jobs:
   - name: rds_broker_z1
@@ -15,6 +15,7 @@ jobs:
         aws_secret_access_key: ""
         aws_region: "eu-west-1"
         password: (( grab secrets.rds_broker_admin_password ))
+        db_prefix: "rdsbroker"
         catalog:
           services:
             - id: "ce71b484-d542-40f7-9dd4-5526e38c81ba"
@@ -31,31 +32,49 @@ jobs:
                 providerDisplayName: "Amazon Web Services"
                 documentationUrl: "https://aws.amazon.com/documentation/rds/"
                 supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
-              plan_updateable: true
+              plan_updateable: false
               plans:
                 - id: "5b8282cf-a669-4ffc-b426-c169a7bbfc71"
-                  name: "9.4-medium"
+                  name: "temporary-test-plan"
                   description: "RDS Postgres"
+                  free: true
                   metadata:
                     costs:
                       - amount:
                           usd: 0.180
                         unit: "HOUR"
                     bullets:
-                      - "Dedicated Postgres 9.4.5 server"
-                      - "Postgres 9.4.5"
+                      - "Dedicated Postgres 9.4 server"
+                      - "Postgres 9.4"
                       - "AWS RDS"
                   rds_properties:
                     db_instance_class: "db.m3.medium"
                     engine: "postgres"
-                    engine_version: "9.4.5"
+                    engine_version: "9.4.7"
+                    storage_type: "gp2"
                     allocated_storage: 10
                     auto_minor_version_upgrade: true
                     multi_az: false
                     publicly_accessible: false
                     copy_tags_to_snapshot: true
-                    skip_final_snapshot: false
-                    db_subnet_group_name: ""
-                    vpc_security_group_ids: []
-                    db_security_groups: []
+                    skip_final_snapshot: true
+                    backup_retention_period: 0
+                    db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+                    vpc_security_group_ids:
+                      - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
 
+properties:
+  cc:
+    security_group_definitions:
+      - name: rds_broker_instances
+        rules:
+          - protocol: tcp
+            destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
+            ports: '5432'
+
+    default_running_security_groups:
+      - (( append ))
+      - "rds_broker_instances"
+    default_staging_security_groups:
+      - (( append ))
+      - "rds_broker_instances"

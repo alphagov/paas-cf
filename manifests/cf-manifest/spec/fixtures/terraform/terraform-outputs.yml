@@ -31,4 +31,8 @@ terraform_outputs:
   logsearch_elastic_master_elb_dns_name: elastic_master_elb_dns
   logsearch_elb_name: logsearch_elb_name
   metrics_elb_name: metrics_elb_name
+  aws_backing_service_cidr_all: "10.0.100.0/22"
+  rds_broker_db_clients_security_group: rds_broker_db_clients_security_group
+  rds_broker_dbs_security_group_id: rds_broker_dbs_security_group_id
+  rds_broker_dbs_subnet_group: rds_broker_dbs_subnet_group
 

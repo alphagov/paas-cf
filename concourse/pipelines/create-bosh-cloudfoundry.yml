@@ -1065,7 +1065,30 @@ jobs:
                 done > config/config.sh
 
                 CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb config
+
       - aggregate:
+        - task: set-security-groups-from-manifest
+          config:
+            platform: linux
+            inputs:
+              - name: paas-cf
+              - name: bosh-CA
+              - name: config
+              - name: cf-manifest
+            params:
+            image: docker:///governmentpaas/cf-cli
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                  ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
+
         - task: update-quotas
           config:
             platform: linux
@@ -1148,8 +1171,11 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  if cf service-brokers | grep "postgres\s*http://$RDS_BROKER_SERVER"; then exit 0;fi
-                  cf create-service-broker postgres rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                  if cf service-brokers | grep "postgres\s*http://$RDS_BROKER_SERVER"; then
+                    cf update-service-broker postgres rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                  else
+                    cf create-service-broker postgres rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                  fi
                   cf enable-service-access postgres
 
         - task: deploy-graphite-nozzle
@@ -1400,7 +1426,7 @@ jobs:
 
                   echo "Running tests"
                   export CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/acceptance-tests/src/acceptance/
+                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/acceptance/
 
         ensure:
           task: remove-temp-user
@@ -1495,7 +1521,7 @@ jobs:
 
                   echo "Running tests"
                   export CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/performance-tests/src/performance/
+                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/performance/
 
         ensure:
           task: remove-temp-user

@@ -3,10 +3,17 @@
 set -e
 set -u
 
-TESTS_DIR="${1}"
-
-cd "${TESTS_DIR}"
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+GOPATH="${GOPATH}:${SCRIPT_DIR}"
 export GOPATH
-GOPATH="${GOPATH}:$(pwd)"
+
+TESTS_DIR="${1}"
+cd "${TESTS_DIR}"
+
 godep restore
-go test
+
+if [ -x ./run_tests.sh ]; then
+  ./run_tests.sh
+else
+  go test
+fi

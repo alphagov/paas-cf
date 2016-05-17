@@ -118,7 +118,7 @@ jobs:
               - -c
               - |
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-                bosh -n delete deployment {{deploy_env}}
+                bosh -n delete deployment --force {{deploy_env}}
 
   - name: terraform-destroy
     serial_groups: [ destroy ]

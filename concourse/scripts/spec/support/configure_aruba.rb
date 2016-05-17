@@ -26,7 +26,7 @@ RSpec.configure do |rspec_config|
   rspec_config.after(:each) do |example|
     # Small hack to get the output of the last command in the rspec
     # failure report. If anybody knows a better solution, please propose it.
-    if example.exception != nil and last_command_started and last_command_started.exit_status != 0
+    if example.exception != nil and defined?(last_command_started) and last_command_started.exit_status != 0
       raise Exception.new("Last command output: " + last_command_started.output)
     end
   end

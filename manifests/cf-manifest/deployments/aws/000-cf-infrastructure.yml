@@ -266,11 +266,17 @@ resource_pools:
     cloud_properties:
       instance_type: r3.xlarge
       availability_zone: (( grab meta.zones.z1 ))
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))
 
   - name: cell_z2
     cloud_properties:
       instance_type: r3.xlarge
       availability_zone: (( grab meta.zones.z2 ))
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))
 
   - name: database_z1
     cloud_properties:
