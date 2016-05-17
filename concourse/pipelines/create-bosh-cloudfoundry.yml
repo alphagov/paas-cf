@@ -13,7 +13,7 @@ groups:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
-      - bosh-cli-test
+      - bosh-tests
       - performance-tests
       - tag-release
       - pipeline-unlock
@@ -32,7 +32,7 @@ groups:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
-      - bosh-cli-test
+      - bosh-tests
       - performance-tests
       - tag-release
       - pipeline-unlock
@@ -50,7 +50,7 @@ groups:
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
-      - bosh-cli-test
+      - bosh-tests
       - performance-tests
   - name: health
     jobs:
@@ -1437,7 +1437,7 @@ jobs:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
 
-  - name: bosh-cli-test
+  - name: bosh-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -1446,7 +1446,7 @@ jobs:
           - get: paas-cf
             passed: ['cf-deploy']
           - get: concourse-manifest
-      - task: connect-to-bosh-cli
+      - task: test-bosh-vms-via-bosh-cli
         config:
           platform: linux
           image: docker:///ruby#2.2-slim
@@ -1465,16 +1465,18 @@ jobs:
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
               CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.properties.atc.basic_auth_password concourse-manifest/concourse-manifest.yml)
               export CONCOURSE_ATC_PASSWORD
-              ./paas-cf/concourse/scripts/bosh-cli.sh bosh status
+              echo Looking for non running VMs
+              ./paas-cf/concourse/scripts/bosh-cli.sh bosh vms | tee vms.txt
+              [ $(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)") -eq 0 ]
 
   - name: performance-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-cli-test']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
             trigger: true
           - get: paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-cli-test']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
           - get: bosh-CA
