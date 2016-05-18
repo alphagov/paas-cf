@@ -1171,10 +1171,16 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+
+                  # FIXME: Remove this once it's been renamed everywhere.
                   if cf service-brokers | grep "postgres\s*http://$RDS_BROKER_SERVER"; then
-                    cf update-service-broker postgres rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                    cf rename-service-broker postgres rds-broker
+                  fi
+
+                  if cf service-brokers | grep "rds-broker\s*http://$RDS_BROKER_SERVER"; then
+                    cf update-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
                   else
-                    cf create-service-broker postgres rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                    cf create-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
                   fi
                   cf enable-service-access postgres
 

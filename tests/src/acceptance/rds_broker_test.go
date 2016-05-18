@@ -17,14 +17,14 @@ import (
 
 var _ = Describe("RDS broker", func() {
 	const (
-		brokerName   = "postgres"
+		serviceName  = "postgres"
 		testPlanName = "temporary-test-plan"
 	)
 
 	It("should be registered", func() {
 		plans := cf.Cf("marketplace").Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
-		Expect(plans).To(Say(brokerName))
+		Expect(plans).To(Say(serviceName))
 	})
 
 	Context("creating a database instance", func() {
@@ -42,7 +42,7 @@ var _ = Describe("RDS broker", func() {
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName("CATS-APP-")
 			dbInstanceName = generator.PrefixedRandomName("test-db-")
-			Expect(cf.Cf("create-service", brokerName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			fmt.Fprint(GinkgoWriter, "Polling for RDS creation to complete")
 			Eventually(func() *Buffer {
