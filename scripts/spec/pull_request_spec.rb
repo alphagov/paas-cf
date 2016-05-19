@@ -6,6 +6,11 @@ RSpec.describe PullRequest do
   let(:pull_request) { PullRequest.new(1) }
   let(:pr_commit_id) { "12345678901234567890" }
 
+  before :all do
+    # Clear any value set in a user's global environment (eg from .bashrc etc).
+    ENV.delete("GITHUB_API_TOKEN")
+  end
+
   before :each do
     allow_any_instance_of(PullRequest).to receive(:info) # silence logging
 
