@@ -3,171 +3,362 @@ resource_pools:
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: small_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: small_z3
     network: cf3
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z3 ))
 
   - name: medium_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: medium_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: medium_z3
     network: cf3
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z3 ))
 
   - name: large_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: large_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: api_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
 
   - name: api_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
 
   - name: api_worker_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: api_worker_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65_536
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: uaa_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_uaa_elb_name ))
 
   - name: uaa_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_uaa_elb_name ))
 
   - name: loggregator_trafficcontroller_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - (( grab terraform_outputs.cf_loggregator_elb_name ))
 
   - name: loggregator_trafficcontroller_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - (( grab terraform_outputs.cf_loggregator_elb_name ))
 
   - name: router_z1
     network: "router1"
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: c3.large
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_router_elb_name ))
 
   - name: router_z2
     network: "router2"
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: c3.large
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_router_elb_name ))
 
   - name: small_errand
     network: cf1
     stemcell: (( grab meta.stemcell ))
     cloud_properties: (( grab resource_pools.small_z1.cloud_properties ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: xlarge_errand
     network: cf1
     stemcell: (( grab meta.stemcell ))
     cloud_properties: (( grab resource_pools.large_z1.cloud_properties ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: c3.xlarge
+      availability_zone: (( grab meta.zones.z1 ))
 
 # Diego below
   - name: access_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
+      elbs:
+        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
 
   - name: access_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
+      elbs:
+        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
 
   - name: brain_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: brain_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: cc_bridge_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: cc_bridge_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: cell_z1
     network: cell1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: r3.xlarge
+      availability_zone: (( grab meta.zones.z1 ))
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))
 
   - name: cell_z2
     network: cell2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: r3.xlarge
+      availability_zone: (( grab meta.zones.z2 ))
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))
 
   - name: database_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.large
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: database_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.large
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: route_emitter_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: route_emitter_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
 
   - name: colocated_z1
     network: cf1
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z1 ))
 
   - name: colocated_z2
     network: cf2
     stemcell: (( grab meta.stemcell ))
     env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      availability_zone: (( grab meta.zones.z2 ))
