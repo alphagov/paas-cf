@@ -33,6 +33,7 @@ prepare_environment() {
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
   pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
+  bosh_az=${BOSH_AZ:-eu-west-1a}
 
   cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
   cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
@@ -77,6 +78,8 @@ system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
 ALERT_EMAIL_ADDRESS: ${ALERT_EMAIL_ADDRESS:-}
+bosh_az: ${bosh_az}
+bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"

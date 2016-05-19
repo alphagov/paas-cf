@@ -26,7 +26,7 @@ resources:
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
-      versioned_file: bosh-manifest-state.json
+      versioned_file: {{bosh_manifest_state}}
 
   - name: bosh-manifest
     type: s3-iam
@@ -122,6 +122,8 @@ jobs:
             - name: paas-cf
             - name: bosh-manifest
             - name: bosh-init-state
+          params:
+            BOSH_MANIFEST_STATE: {{bosh_manifest_state}}
           outputs:
             - name: updated-bosh-init-state
           run:
@@ -130,18 +132,18 @@ jobs:
               - -e
               - -c
               - |
-                cp bosh-init-state/bosh-manifest-state.json bosh-manifest/bosh-manifest-state.json
+                cp bosh-init-state/"${BOSH_MANIFEST_STATE}" bosh-manifest/bosh-manifest-state.json
                 bosh-init delete bosh-manifest/bosh-manifest.yml
                 # If the delete is successful, the file will be missing
-                if [ -f "bosh-manifest/bosh-manifest-state.json" ] ; then
-                  cp bosh-manifest/bosh-manifest-state.json updated-bosh-init/bosh-manifest-state.json
+                if [ -f bosh-manifest/bosh-manifest-state.json ] ; then
+                  cp bosh-manifest/bosh-manifest-state.json updated-bosh-init/"${BOSH_MANIFEST_STATE}"
                 else
-                  cp paas-cf/concourse/init_files/bosh-init-state.json.tpl updated-bosh-init-state/bosh-manifest-state.json
+                  cp paas-cf/concourse/init_files/bosh-init-state.json.tpl updated-bosh-init-state/"${BOSH_MANIFEST_STATE}"
                 fi
         ensure:
           put: bosh-init-state
           params:
-            file: updated-bosh-init-state/bosh-manifest-state.json
+            file: "updated-bosh-init-state/bosh-manifest-state-*.json"
 
   - name: bosh-terraform-destroy
     serial: true
