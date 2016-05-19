@@ -381,7 +381,7 @@ jobs:
     instances: 1
     resource_pool: uaa_z1
     networks:
-      - name: cf1_rds
+      - name: cf1
     properties:
       consul:
         agent:
@@ -397,7 +397,7 @@ jobs:
     instances: 1
     resource_pool: uaa_z2
     networks:
-      - name: cf2_rds
+      - name: cf2
     properties:
       consul:
         agent:
@@ -414,7 +414,7 @@ jobs:
     resource_pool: api_z1
     persistent_disk: 0
     networks:
-      - name: cf1_rds
+      - name: cf1
     properties:
       consul:
         agent:
@@ -431,7 +431,7 @@ jobs:
     resource_pool: api_z2
     persistent_disk: 0
     networks:
-      - name: cf2_rds
+      - name: cf2
     properties:
       consul:
         agent:
@@ -445,10 +445,10 @@ jobs:
   - name: clock_global
     templates: (( grab meta.clock_templates ))
     instances: 1
-    resource_pool: medium_z1
+    resource_pool: clock_global
     persistent_disk: 0
     networks:
-      - name: cf1_rds
+      - name: cf1
     properties:
       metron_agent:
         zone: ""
@@ -459,7 +459,7 @@ jobs:
     resource_pool: api_worker_z1
     persistent_disk: 0
     networks:
-      - name: cf1_rds
+      - name: cf1
     properties:
       metron_agent:
         zone: ""
@@ -471,7 +471,7 @@ jobs:
     resource_pool: api_worker_z2
     persistent_disk: 0
     networks:
-      - name: cf2_rds
+      - name: cf2
     properties:
       metron_agent:
         zone: ""

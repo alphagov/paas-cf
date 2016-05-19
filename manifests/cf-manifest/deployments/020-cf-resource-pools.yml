@@ -100,6 +100,9 @@ resource_pools:
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
         - (( grab terraform_outputs.cf_cc_elb_name ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
 
   - name: api_z2
     network: cf2
@@ -114,6 +117,23 @@ resource_pools:
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
         - (( grab terraform_outputs.cf_cc_elb_name ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
+
+  - name: clock_global
+    network: cf1
+    stemcell: (( grab meta.stemcell ))
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10_240
+        type: gp2
+      availability_zone: (( grab meta.zones.z1 ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
 
   - name: api_worker_z1
     network: cf1
@@ -126,6 +146,9 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
 
   - name: api_worker_z2
     network: cf2
@@ -138,6 +161,9 @@ resource_pools:
         size: 65_536
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
 
   - name: uaa_z1
     network: cf1
@@ -151,6 +177,9 @@ resource_pools:
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
         - (( grab terraform_outputs.cf_uaa_elb_name ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
 
   - name: uaa_z2
     network: cf2
@@ -164,6 +193,9 @@ resource_pools:
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
         - (( grab terraform_outputs.cf_uaa_elb_name ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
 
   - name: loggregator_trafficcontroller_z1
     network: cf1
@@ -222,7 +254,6 @@ resource_pools:
   - name: small_errand
     network: cf1
     stemcell: (( grab meta.stemcell ))
-    cloud_properties: (( grab resource_pools.small_z1.cloud_properties ))
     env: (( grab meta.default_env ))
     cloud_properties:
       instance_type: m3.medium
@@ -234,7 +265,6 @@ resource_pools:
   - name: xlarge_errand
     network: cf1
     stemcell: (( grab meta.stemcell ))
-    cloud_properties: (( grab resource_pools.large_z1.cloud_properties ))
     env: (( grab meta.default_env ))
     cloud_properties:
       instance_type: c3.xlarge
