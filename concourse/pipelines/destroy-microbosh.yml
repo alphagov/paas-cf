@@ -195,6 +195,7 @@ jobs:
             DEPLOY_ENV: {{deploy_env}}
             AWS_DEFAULT_REGION: {{aws_region}}
             TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
+            TF_VAR_bosh_az: {{bosh_az}}
           run:
             path: sh
             args:
