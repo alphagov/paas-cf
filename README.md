@@ -369,7 +369,7 @@ logged into the cf environment you want to create users for
 ### Creating Org managers
 
 By default, the script creates an unprivileged users. To create an org manager,
-pass the `-m` option to the script
+pass the `-m` option to the script.
 
 ### Verifying email address
 
