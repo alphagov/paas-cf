@@ -6,7 +6,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
 
@@ -17,7 +17,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
 
@@ -28,7 +28,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z3 ))
 
@@ -39,7 +39,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
 
@@ -50,7 +50,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
 
@@ -61,7 +61,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z3 ))
 
@@ -72,7 +72,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
 
@@ -83,7 +83,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
 
@@ -95,7 +95,7 @@ resource_pools:
       instance_type: m3.medium
       iam_instance_profile: cf-cloudcontroller
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
@@ -112,7 +112,7 @@ resource_pools:
       instance_type: m3.medium
       iam_instance_profile: cf-cloudcontroller
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
@@ -128,7 +128,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       security_groups:
@@ -143,7 +143,7 @@ resource_pools:
       instance_type: m3.medium
       iam_instance_profile: cf-cloudcontroller
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       security_groups:
@@ -158,7 +158,7 @@ resource_pools:
       instance_type: m3.medium
       iam_instance_profile: cf-cloudcontroller
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
       security_groups:
@@ -172,7 +172,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
@@ -188,7 +188,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
@@ -204,7 +204,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
@@ -218,7 +218,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
@@ -232,7 +232,7 @@ resource_pools:
     cloud_properties:
       instance_type: c3.large
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
@@ -245,7 +245,7 @@ resource_pools:
     cloud_properties:
       instance_type: c3.large
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z2 ))
       elbs:
@@ -258,7 +258,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
-        size: 10_240
+        size: 10240
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
 
