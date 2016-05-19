@@ -763,7 +763,7 @@ properties:
   support_address: "http://support.cloudfoundry.com"
   description: null
   ssl:
-    skip_cert_verify: true
+    skip_cert_verify: false
 
   disk_quota_enabled: true
 
