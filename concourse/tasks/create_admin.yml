@@ -29,12 +29,11 @@ run:
       uaac target "${UAA_ENDPOINT}"
       uaac token client get admin -s "${UAA_ADMIN_CLIENT_PASS}"
       uaac user add "${NAME}" -p "${PASSWORD}" --emails ignored
+      echo "${NAME}" >admin-creds/username
+      echo "${PASSWORD}" >admin-creds/password
 
       uaac member add cloud_controller.admin "${NAME}"
       uaac member add uaa.admin "${NAME}"
       uaac member add scim.read "${NAME}"
       uaac member add scim.write "${NAME}"
       uaac member add doppler.firehose "${NAME}"
-
-      echo "${NAME}" >admin-creds/username
-      echo "${PASSWORD}" >admin-creds/password
