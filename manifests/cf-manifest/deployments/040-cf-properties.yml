@@ -143,7 +143,7 @@ properties:
       trade_tariff:
         memory_limit: 61440
         total_services: 10
-        non_basic_services_allowed: false
+        non_basic_services_allowed: true
         total_routes: 1000
       paas_demo:
         memory_limit: 10240
