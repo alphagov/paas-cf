@@ -62,6 +62,33 @@ jobs:
                     db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
                     vpc_security_group_ids:
                       - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
+                - id: "9b882524-ab58-4c18-b501-d2a3f4619104"
+                  name: "M-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, 20 Concurrent Connections. Postgres Version 9.5"
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.201
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    db_instance_class: "db.m4.large"
+                    engine: "postgres"
+                    engine_version: "9.5.2"
+                    storage_type: "gp2"
+                    allocated_storage: 20
+                    auto_minor_version_upgrade: true
+                    multi_az: false
+                    publicly_accessible: false
+                    copy_tags_to_snapshot: true
+                    skip_final_snapshot: true
+                    backup_retention_period: 0
+                    db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+                    vpc_security_group_ids:
+                      - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
 
 properties:
   cc:

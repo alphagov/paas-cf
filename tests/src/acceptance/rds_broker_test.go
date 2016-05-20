@@ -17,14 +17,22 @@ import (
 
 var _ = Describe("RDS broker", func() {
 	const (
-		serviceName  = "postgres"
-		testPlanName = "temporary-test-plan"
+		serviceName = "postgres"
 	)
 
-	It("should be registered", func() {
+	It("should have registered the postgres service", func() {
 		plans := cf.Cf("marketplace").Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
 		Expect(plans).To(Say(serviceName))
+	})
+
+	Context("available service plans", func() {
+
+		It("has the M-dedicated-9.5 plan available", func() {
+			plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
+			Expect(plans).To(Exit(0))
+			Expect(plans).To(Say("M-dedicated-9.5"))
+		})
 	})
 
 	Context("creating a database instance", func() {
@@ -33,6 +41,7 @@ var _ = Describe("RDS broker", func() {
 
 		const (
 			DB_CREATE_TIMEOUT = 15 * time.Minute
+			testPlanName      = "temporary-test-plan"
 		)
 
 		var (
