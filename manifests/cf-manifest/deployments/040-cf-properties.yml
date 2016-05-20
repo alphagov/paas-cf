@@ -318,7 +318,7 @@ properties:
 
   diego:
     ssl:
-      skip_cert_verify: true
+      skip_cert_verify: false
       starting_container_weight: 0.25
     auctioneer:
       bbs:
