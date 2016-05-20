@@ -53,7 +53,7 @@ if __FILE__ == $0 # Only execute if called directly as command
   end
 
   val = property_tree[key]
-  abort if val.nil?
+  abort "Unable to find key: #{key}" if val.nil?
 
   if val.is_a? Array or val.is_a? Hash
     puts YAML.dump(val)
