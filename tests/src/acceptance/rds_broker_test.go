@@ -41,7 +41,7 @@ var _ = Describe("RDS broker", func() {
 
 		const (
 			DB_CREATE_TIMEOUT = 15 * time.Minute
-			testPlanName      = "temporary-test-plan"
+			testPlanName      = "M-dedicated-9.5"
 		)
 
 		var (
