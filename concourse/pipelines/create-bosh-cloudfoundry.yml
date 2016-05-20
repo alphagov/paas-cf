@@ -1084,6 +1084,7 @@ jobs:
               path: sh
               args:
                 - -e
+                - -u
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
@@ -1128,6 +1129,7 @@ jobs:
               path: sh
               args:
                 - -e
+                - -u
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
@@ -1154,6 +1156,7 @@ jobs:
               path: sh
               args:
                 - -e
+                - -u
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
@@ -1186,6 +1189,7 @@ jobs:
               path: sh
               args:
                 - -e
+                - -u
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
