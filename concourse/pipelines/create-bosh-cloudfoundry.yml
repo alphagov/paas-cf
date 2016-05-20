@@ -1069,8 +1069,6 @@ jobs:
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
 
-                CF_MANIFEST=cf-manifest/cf-manifest.yml $(pwd)/paas-cf/concourse/scripts/extract_quota_settings.rb config
-
       - aggregate:
         - task: set-security-groups-from-manifest
           config:
@@ -1094,13 +1092,14 @@ jobs:
 
                   ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
 
-        - task: update-quotas
+        - task: set-quotas-from-manifest
           config:
             platform: linux
             inputs:
               - name: paas-cf
-              - name: config
               - name: bosh-CA
+              - name: config
+              - name: cf-manifest
             params:
             image: docker:///governmentpaas/cf-cli
             run:
@@ -1115,24 +1114,8 @@ jobs:
 
                   echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  for quota_file in config/*_quota.sh; do
-                    # Run in a subshell to make sure the variables are not kept
-                    (
-                    . "${quota_file}"
+                  ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
-                    if [ "${QUOTA_non_basic_services_allowed}" = "true" ]; then
-                      extra_options="--allow-paid-service-plans"
-                    else
-                      extra_options="--disallow-paid-service-plans"
-                    fi
-
-                    cf update-quota "${QUOTA_name}" \
-                      -m "${QUOTA_memory_limit}"M \
-                      -r "${QUOTA_total_routes}" \
-                      -s "${QUOTA_total_services}" \
-                      ${extra_options}
-                    )
-                  done
         - task: deploy-healthcheck-app
           config:
             platform: linux
