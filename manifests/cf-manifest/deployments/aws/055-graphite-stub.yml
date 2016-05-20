@@ -11,7 +11,7 @@ resource_pools:
     cloud_properties:
       instance_type: m3.large
       ephemeral_disk:
-        size: 65_536
+        size: 65536
         type: gp2
       availability_zone: (( grab meta.zones.z1 ))
       elbs:
