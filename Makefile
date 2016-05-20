@@ -15,7 +15,7 @@ test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby ## 
 
 spec:
 	cd scripts &&\
-		bundle exec rspec
+		BUNDLE_GEMFILE=Gemfile bundle exec rspec
 	cd concourse/scripts &&\
 		bundle exec rspec
 	cd manifests/shared &&\
@@ -30,7 +30,7 @@ spec:
 		bundle exec rspec
 
 lint_yaml:
-	find . -name '*.yml' -not -path './vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
+	find . -name '*.yml' -not -path '*/vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
 
 lint_terraform: dev
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
@@ -38,14 +38,14 @@ lint_terraform: dev
 	find terraform -mindepth 1 -maxdepth 1 -type d -not -path 'terraform/providers' -not -path 'terraform/scripts' -print0 | xargs -0 -n 1 -t terraform graph > /dev/null
 
 lint_shellcheck:
-	find . -name '*.sh' -not -path './vendor/*' | xargs $(SHELLCHECK)
+	find . -name '*.sh' -not -path '*/vendor/*' | xargs $(SHELLCHECK)
 
 lint_concourse:
 	cd .. && python paas-cf/concourse/scripts/pipecleaner.py paas-cf/concourse/pipelines/*.yml
 
 .PHONY: lint_ruby
 lint_ruby:
-	bundle exec rubocop -l
+	bundle exec rubocop -l --config rubocop.yml
 
 .PHONY: globals
 globals:

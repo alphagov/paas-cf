@@ -13,6 +13,7 @@ addons:
       - git-core
     packages:
       - git
+      - gnupg
 
 before_install:
   - |
@@ -36,6 +37,7 @@ before_install:
     mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
     rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
   - pip install --user yamllint
+  - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
 
 script:
   - make test
