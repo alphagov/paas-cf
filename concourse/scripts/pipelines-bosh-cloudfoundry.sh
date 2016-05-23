@@ -89,9 +89,11 @@ generate_manifest_file() {
   # This exists because concourse does not support boolean value interpolation by design
   enable_auto_deploy=$([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
   continuous_smoke_tests_trigger=$([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
+  disable_user_creation=$([ "${DISABLE_USER_CREATION:-}" ] && echo "true" || echo "false")
   sed -e "s/{{auto_deploy}}/${enable_auto_deploy}/" \
       -e "s/{{continuous_smoke_tests_trigger}}/${continuous_smoke_tests_trigger}/" \
       -e "s/{{gpg_ids}}/${gpg_ids}/" \
+      -e "s/{{disable_user_creation}}/${disable_user_creation}/" \
     < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 
