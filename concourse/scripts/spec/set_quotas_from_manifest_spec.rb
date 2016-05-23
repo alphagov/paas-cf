@@ -11,13 +11,6 @@ RSpec.describe QuotasSetter do
   }}
   subject { described_class.new(manifest) }
 
-  before :each do
-    allow(subject).to receive(:`).with('cf quotas') do
-      system("exit 0") # setup $?
-      ""
-    end
-  end
-
   describe "creating/updating quotas" do
     before :each do
       allow(subject).to receive(:system).with("cf", /^(create|update)-quota$/, any_args) do
