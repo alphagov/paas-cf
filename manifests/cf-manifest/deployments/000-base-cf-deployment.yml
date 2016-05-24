@@ -32,6 +32,10 @@ compilation:
   workers: 6
   network: cf1
   reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: c3.large
+    availability_zone: (( grab meta.zones.z1 ))
+    iam_instance_profile: bosh-director
 
 update:
   canaries: 0

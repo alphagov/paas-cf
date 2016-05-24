@@ -1,6 +1,0 @@
-
-compilation:
-  cloud_properties:
-    instance_type: c3.large
-    availability_zone: (( grab meta.zones.z1 ))
-    iam_instance_profile: bosh-director
