@@ -280,6 +280,10 @@ meta:
       - name: tps
         release: diego
 
+disk_pools:
+  - name: database_disks
+    disk_size: 1024
+
 jobs:
   - name: consul_z1
     templates: (( grab meta.consul_templates ))
@@ -288,7 +292,7 @@ jobs:
     resource_pool: small_z1
     networks:
       - name: cf1
-        static_ips:
+        static_ips: (( static_ips(27, 28, 29) ))
     update:
       serial: true
     properties:
@@ -305,7 +309,7 @@ jobs:
     resource_pool: small_z2
     networks:
       - name: cf2
-        static_ips:
+        static_ips: (( static_ips(27, 28, 29) ))
     properties:
       consul:
         agent:
@@ -319,7 +323,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-        static_ips:
+        static_ips: (( static_ips(1) ))
     properties:
       metron_agent:
         zone: ""
@@ -330,7 +334,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-        static_ips:
+        static_ips: (( static_ips(1) ))
     properties:
       metron_agent:
         zone: ""
@@ -342,7 +346,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-        static_ips:
+        static_ips: (( static_ips(9) ))
     update:
       serial: true
     properties:
@@ -360,7 +364,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-        static_ips:
+        static_ips: (( static_ips(9) ))
     update:
       serial: true
     properties:
@@ -378,7 +382,7 @@ jobs:
     resource_pool: small_z3
     networks:
       - name: cf3
-        static_ips:
+        static_ips: (( static_ips(27, 28, 29) ))
     properties:
       consul:
         agent:
@@ -393,7 +397,7 @@ jobs:
     resource_pool: medium_z3
     networks:
       - name: cf3
-        static_ips:
+        static_ips: (( static_ips(9) ))
     properties:
       metron_agent:
         zone: ""
@@ -446,8 +450,8 @@ jobs:
     resource_pool: medium_z1
     persistent_disk: 4096
     networks:
-    - name: cf1
-      static_ips: ~
+      - name: cf1
+        static_ips: (( static_ips(7) ))
     properties:
       metron_agent:
         zone: ""
@@ -636,7 +640,7 @@ jobs:
     resource_pool: router_z1
     networks:
       - name: router1
-        static_ips: ~
+        static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
     properties:
       consul:
         agent:
@@ -651,7 +655,7 @@ jobs:
     resource_pool: router_z2
     networks:
       - name: router2
-        static_ips: ~
+        static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
     properties:
       consul:
         agent:
