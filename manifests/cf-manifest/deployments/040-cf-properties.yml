@@ -1,3 +1,92 @@
+---
+meta:
+  environment: ~
+  secrets:
+    consul_ca_cert: (( grab secrets.bosh_ca_cert ))
+    bbs_ca_cert: (( grab secrets.bosh_ca_cert ))
+  diego_job_templates:
+    brain:
+      - name: consul_agent
+        release: cf
+      - name: auctioneer
+        release: diego
+      - name: converger
+        release: diego
+      - name: metron_agent
+        release: cf
+    cell:
+      - name: consul_agent
+        release: cf
+      - name: rep
+        release: diego
+      - name: garden
+        release: garden-linux
+      - name: rootfses
+        release: diego
+      - name: metron_agent
+        release: cf
+    cc_bridge:
+      - name: consul_agent
+        release: cf
+      - name: stager
+        release: diego
+      - name: nsync
+        release: diego
+      - name: tps
+        release: diego
+      - name: cc_uploader
+        release: diego
+      - name: metron_agent
+        release: cf
+    route_emitter:
+      - name: consul_agent
+        release: cf
+      - name: route_emitter
+        release: diego
+      - name: metron_agent
+        release: cf
+    access:
+      - name: consul_agent
+        release: cf
+      - name: ssh_proxy
+        release: diego
+      - name: metron_agent
+        release: cf
+      - name: file_server
+        release: diego
+    database:
+      - name: consul_agent
+        release: cf
+      - name: bbs
+        release: diego
+      - name: metron_agent
+        release: cf
+    colocated:
+      - name: consul_agent
+        release: cf
+      - name: auctioneer
+        release: diego
+      - name: bbs
+        release: diego
+      - name: cc_uploader
+        release: diego
+      - name: converger
+        release: diego
+      - name: file_server
+        release: diego
+      - name: metron_agent
+        release: cf
+      - name: nsync
+        release: diego
+      - name: route_emitter
+        release: diego
+      - name: ssh_proxy
+        release: diego
+      - name: stager
+        release: diego
+      - name: tps
+        release: diego
+
 properties:
   app_ssh: ~
 
@@ -447,91 +536,3 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
-
-meta:
-  environment: ~
-  secrets:
-    consul_ca_cert: (( grab secrets.bosh_ca_cert ))
-    bbs_ca_cert: (( grab secrets.bosh_ca_cert ))
-  diego_job_templates:
-    brain:
-      - name: consul_agent
-        release: cf
-      - name: auctioneer
-        release: diego
-      - name: converger
-        release: diego
-      - name: metron_agent
-        release: cf
-    cell:
-      - name: consul_agent
-        release: cf
-      - name: rep
-        release: diego
-      - name: garden
-        release: garden-linux
-      - name: rootfses
-        release: diego
-      - name: metron_agent
-        release: cf
-    cc_bridge:
-      - name: consul_agent
-        release: cf
-      - name: stager
-        release: diego
-      - name: nsync
-        release: diego
-      - name: tps
-        release: diego
-      - name: cc_uploader
-        release: diego
-      - name: metron_agent
-        release: cf
-    route_emitter:
-      - name: consul_agent
-        release: cf
-      - name: route_emitter
-        release: diego
-      - name: metron_agent
-        release: cf
-    access:
-      - name: consul_agent
-        release: cf
-      - name: ssh_proxy
-        release: diego
-      - name: metron_agent
-        release: cf
-      - name: file_server
-        release: diego
-    database:
-      - name: consul_agent
-        release: cf
-      - name: bbs
-        release: diego
-      - name: metron_agent
-        release: cf
-    colocated:
-      - name: consul_agent
-        release: cf
-      - name: auctioneer
-        release: diego
-      - name: bbs
-        release: diego
-      - name: cc_uploader
-        release: diego
-      - name: converger
-        release: diego
-      - name: file_server
-        release: diego
-      - name: metron_agent
-        release: cf
-      - name: nsync
-        release: diego
-      - name: route_emitter
-        release: diego
-      - name: ssh_proxy
-        release: diego
-      - name: stager
-        release: diego
-      - name: tps
-        release: diego
