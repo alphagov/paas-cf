@@ -1,22 +1,3 @@
-properties:
-
-  logger_endpoint:
-    port: 443
-
-  loggregator:
-    blacklisted_syslog_ranges:
-    - start: 10.10.0.0
-      end: 10.10.255.255
-
-  cc:
-    resource_pool:
-      fog_connection: (( grab meta.fog_config ))
-    packages:
-      fog_connection: (( grab meta.fog_config ))
-    droplets:
-      fog_connection: (( grab meta.fog_config ))
-    buildpacks:
-      fog_connection: (( grab meta.fog_config ))
 
 compilation:
   cloud_properties:

@@ -13,6 +13,12 @@ meta:
   etcd_consul_service: ["etcd.service.cf.internal"]
 
 properties:
+  domain: (( grab terraform_outputs.cf_root_domain ))
+  system_domain: (( grab terraform_outputs.cf_root_domain ))
+  system_domain_organization: GDS
+  app_domains:
+   - (( grab terraform_outputs.cf_apps_domain ))
+
   app_ssh: ~
 
   support_address: "http://support.cloudfoundry.com"
@@ -26,16 +32,17 @@ properties:
 
   consul:
     agent:
+      domain: cf.internal
       log_level:
       servers:
         lan: (( grab meta.consul_servers ))
-    ca_cert:
-    agent_cert:
-    agent_key:
-    encrypt_keys: []
+    ca_cert: (( grab meta.secrets.consul_ca_cert ))
+    agent_cert: (( grab secrets.consul_agent_cert ))
+    agent_key: (( grab secrets.consul_agent_key ))
+    encrypt_keys: (( grab secrets.consul_encrypt_keys ))
     require_ssl:
-    server_cert:
-    server_key:
+    server_cert: (( grab secrets.consul_server_cert ))
+    server_key: (( grab secrets.consul_server_key ))
 
   dropsonde:
     enabled: true
@@ -47,6 +54,8 @@ properties:
     trace: false
     monitor_port: 0
     prof_port: 0
+    user: nats_user
+    password: (( grab secrets.nats_password ))
 
   etcd:
     machines: (( grab jobs.etcd_z1.networks.cf1.static_ips jobs.etcd_z2.networks.cf2.static_ips jobs.etcd_z3.networks.cf3.static_ips ))
@@ -62,7 +71,9 @@ properties:
   loggregator:
     maxRetainedLogMessages: 100
     debug: false
-    blacklisted_syslog_ranges: ~
+    blacklisted_syslog_ranges:
+      - start: 10.10.0.0
+        end: 10.10.255.255
     outgoing_dropsonde_port: 8081
     dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
@@ -71,7 +82,11 @@ properties:
     etcd:
       machines: (( grab meta.etcd_consul_service ))
 
-  logger_endpoint: ~
+  loggregator_endpoint:
+    shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
+
+  logger_endpoint:
+    port: 443
   syslog_daemon_config: ~
 
   nfs_server: (( grab meta.nfs_server ))
@@ -125,6 +140,8 @@ properties:
     ssl_skip_validation:
     status:
       port:
+      user: router_user
+      password: (( grab secrets.router_password ))
     secure_cookies:
     route_services_secret:
     route_services_secret_decrypt_only:
@@ -184,8 +201,14 @@ properties:
     external_port: 9022
     srv_api_uri: (( concat "https://" properties.cc.external_host "." properties.domain ))
 
+    bulk_api_password: (( grab secrets.bulk_api_password ))
     internal_api_user: "internal_user"
     internal_api_password: (( grab properties.cc.bulk_api_password ))
+
+    staging_upload_user: staging_upload_user
+    staging_upload_password: (( grab secrets.staging_upload_password ))
+
+    db_encryption_key: (( grab secrets.cc_db_encryption_key ))
 
     logging_level: info
     db_logging_level: debug
@@ -200,19 +223,19 @@ properties:
 
     resource_pool:
       resource_directory_key: (( concat meta.environment "-cf-resources" ))
-      fog_connection: ~
+      fog_connection: (( grab meta.fog_config ))
       cdn: ~
 
     packages:
       app_package_directory_key: (( concat meta.environment "-cf-packages" ))
-      fog_connection: ~
+      fog_connection: (( grab meta.fog_config ))
       cdn: ~
       max_package_size: 1073741824
       max_valid_packages_stored: ~
 
     droplets:
       droplet_directory_key: (( concat meta.environment "-cf-droplets" ))
-      fog_connection: ~
+      fog_connection: (( grab meta.fog_config ))
       cdn: ~
       max_staged_droplets_stored: ~
 
@@ -230,7 +253,7 @@ properties:
 
     buildpacks:
       buildpack_directory_key: (( concat meta.environment "-cf-buildpacks" ))
-      fog_connection: ~
+      fog_connection: (( grab meta.fog_config ))
       cdn: ~
     quota_definitions:
       default:
@@ -286,6 +309,20 @@ properties:
         restart_if_above_mb: ~
     external_protocol: ~
 
+  ccdb:
+    db_scheme: postgres
+    address: (( grab terraform_outputs.cf_db_address ))
+    port: 5432
+    roles:
+      - tag: admin
+        name: api
+        password: (( grab secrets.cf_db_api_password ))
+    databases:
+      - tag: cc
+        name: api
+        citext: true
+
+
   login:
     enabled: true
     analytics:
@@ -337,6 +374,8 @@ properties:
       userids_enabled: true
       external_groups: ~
       groups: ~
+      users:
+        - (( concat "admin|" secrets.uaa_admin_password "|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose" ))
 
     ssl:
       port: -1
@@ -357,6 +396,15 @@ properties:
 
     user: ~
 
+    admin:
+      client_secret: (( grab secrets.uaa_admin_client_secret ))
+    cc:
+      client_secret: (( grab secrets.uaa_cc_client_secret ))
+
+    jwt:
+      verification_key: (( grab secrets.uaa_jwt_verification_key ))
+      signing_key: (( grab secrets.uaa_jwt_signing_key ))
+
     clients:
       login:
         override: true
@@ -364,6 +412,7 @@ properties:
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
         authorized-grant-types: authorization_code,client_credentials,refresh_token
         redirect-uri: (( concat "https://login." properties.domain ))
+        secret: (( grab secrets.uaa_clients_login_secret ))
       cf:
         id: cf
         override: true
@@ -375,18 +424,23 @@ properties:
       notifications:
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials
+        secret: (( grab secrets.uaa_clients_notifications_secret ))
       doppler:
         override: true
         authorities: uaa.resource
+        secret: (( grab secrets.uaa_clients_doppler_secret ))
       cloud_controller_username_lookup:
         authorities: scim.userids
         authorized-grant-types: client_credentials
+        secret: (( grab secrets.uaa_clients_cloud_controller_username_lookup_secret ))
       cc_routing:
         authorities: routing.router_groups.read
         authorized-grant-types: client_credentials
+        secret: (( grab secrets.uaa_cc_routing_secret ))
       gorouter:
         authorities: routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
+        secret: (( grab secrets.uaa_clients_gorouter_secret ))
       tcp_emitter:
         authorities: routing.routes.write,routing.routes.read,routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
@@ -413,6 +467,19 @@ properties:
     restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
 
     zones:
+
+  uaadb:
+    db_scheme: postgresql
+    address: (( grab terraform_outputs.cf_db_address ))
+    port: 5432
+    roles:
+      - tag: admin
+        name: uaa
+        password: (( grab secrets.cf_db_uaa_password ))
+    databases:
+      - tag: uaa
+        name: uaa
+        citext: true
 
   diego:
     ssl:
