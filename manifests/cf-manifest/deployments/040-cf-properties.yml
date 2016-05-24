@@ -89,8 +89,6 @@ properties:
     port: 443
   syslog_daemon_config: ~
 
-  nfs_server: (( grab meta.nfs_server ))
-
   collector:
 
   doppler:
