@@ -1,6 +1,9 @@
 ---
 meta:
-  environment: ~
+  fog_config:
+    provider: AWS
+    use_iam_profile: true
+    region: (( grab terraform_outputs.region ))
   secrets:
     consul_ca_cert: (( grab secrets.bosh_ca_cert ))
     bbs_ca_cert: (( grab secrets.bosh_ca_cert ))

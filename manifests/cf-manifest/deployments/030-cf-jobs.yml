@@ -1,6 +1,4 @@
 meta:
-  environment: ~
-
   api_domain: (( concat "api." properties.domain ))
 
   release:
