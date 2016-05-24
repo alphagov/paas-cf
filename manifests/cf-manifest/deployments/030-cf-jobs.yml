@@ -82,16 +82,6 @@ meta:
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
 
-  ha_proxy_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: haproxy
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
-
   loggregator_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -126,16 +116,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-
-  postgres_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: postgres
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   router_templates:
   - name: consul_agent
@@ -383,40 +363,12 @@ jobs:
           services:
             etcd: {}
 
-  - name: ha_proxy_z1
-    templates: (( grab meta.ha_proxy_templates ))
-    instances: 0
-    resource_pool: router_z1
-    networks:
-      - name: cf1
-        static_ips: ~
-    properties:
-      ha_proxy:
-      router:
-        servers:
-          z1: (( grab jobs.router_z1.networks.router1.static_ips ))
-          z2: (( grab jobs.router_z2.networks.router2.static_ips ))
-      metron_agent:
-        zone: ""
-
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
     instances: 1
     resource_pool: small_z1
     networks:
       - name: cf1
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: postgres_z1
-    templates: (( grab meta.postgres_templates ))
-    instances: 0
-    resource_pool: medium_z1
-    persistent_disk: 4096
-    networks:
-      - name: cf1
-        static_ips: (( static_ips(7) ))
     properties:
       metron_agent:
         zone: ""
@@ -516,30 +468,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      metron_agent:
-        zone: ""
-
-  - name: loggregator_z1
-    templates: (( grab meta.loggregator_templates ))
-    instances: 0
-    resource_pool: medium_z1
-    networks:
-      - name: cf1
-    properties:
-      doppler:
-        zone: z1
-      metron_agent:
-        zone: ""
-
-  - name: loggregator_z2
-    templates: (( grab meta.loggregator_templates ))
-    instances: 0
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-    properties:
-      doppler:
-        zone: z2
       metron_agent:
         zone: ""
 
