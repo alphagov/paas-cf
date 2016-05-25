@@ -15,13 +15,20 @@ import (
 func main() {
 	addr := ":" + os.Getenv("PORT")
 	fmt.Println("Listening on", addr)
-	err := http.ListenAndServe(addr, http.HandlerFunc(handler))
+	http.HandleFunc("/", staticHandler)
+	http.HandleFunc("/db", dbHandler)
+	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func staticHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "max-age=0,no-store,no-cache")
+	http.ServeFile(w, r, "static/"+r.URL.Path[1:])
+}
+
+func dbHandler(w http.ResponseWriter, r *http.Request) {
 	err := testDBConnection()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -39,6 +46,7 @@ func writeJson(w http.ResponseWriter, data interface{}) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Cache-Control", "max-age=0,no-store,no-cache")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
