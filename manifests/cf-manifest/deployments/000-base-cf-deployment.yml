@@ -9,10 +9,6 @@ releases:
     version: 235
     url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=235
     sha1: a4ab2d7a2912b8c700ef4b8a45e7f688127930b6
-  - name: nginx
-    version: 2
-    url: https://s3.amazonaws.com/nginx-release/nginx-2.tgz
-    sha1: 667cc1a0f9117bdb4b217ee2b76dc20e61371c02
   - name: diego
     version: 0.1467.0
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1467.0

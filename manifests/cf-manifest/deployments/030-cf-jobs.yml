@@ -8,19 +8,9 @@ meta:
     release:
       name: "logsearch-shipper"
 
-  nfs_client_ranges:
-    - (( grab networks.cf1.subnets.[0].range || nil ))
-    - (( grab networks.cf2.subnets.[0].range || nil ))
-
-  nfs_server:
-    address: (( grab jobs.nfs_z1.networks.cf1.static_ips.[0] || nil ))
-    allow_from_entries: (( grab meta.nfs_client_ranges ))
-    share: ~
-
   api_consul_services:
     cloud_controller_ng: {}
 
-  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   api_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -29,10 +19,6 @@ meta:
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd-injector
-    release: (( grab meta.release.name ))
-  - name: nfs_mounter
-    release: (( grab meta.release.name ))
-  - name: route_registrar
     release: (( grab meta.release.name ))
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
@@ -61,8 +47,6 @@ meta:
   - name: cloud_controller_worker
     release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: nfs_mounter
     release: (( grab meta.release.name ))
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
@@ -95,16 +79,6 @@ meta:
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
 
-  ha_proxy_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: haproxy
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
-
   loggregator_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -117,15 +91,12 @@ meta:
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
 
-  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   loggregator_trafficcontroller_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: loggregator_trafficcontroller
     release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: route_registrar
     release: (( grab meta.release.name ))
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
@@ -139,26 +110,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-
-  nfs_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: debian_nfs_server
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
-
-  postgres_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: postgres
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   router_templates:
   - name: consul_agent
@@ -182,15 +133,12 @@ meta:
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
 
-  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   uaa_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: uaa
     release: (( grab meta.release.name ))
   - name: metron_agent
-    release: (( grab meta.release.name ))
-  - name: route_registrar
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
@@ -406,22 +354,6 @@ jobs:
           services:
             etcd: {}
 
-  - name: ha_proxy_z1
-    templates: (( grab meta.ha_proxy_templates ))
-    instances: 0
-    resource_pool: router_z1
-    networks:
-      - name: cf1
-        static_ips: ~
-    properties:
-      ha_proxy:
-      router:
-        servers:
-          z1: (( grab jobs.router_z1.networks.router1.static_ips ))
-          z2: (( grab jobs.router_z2.networks.router2.static_ips ))
-      metron_agent:
-        zone: ""
-
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
     instances: 1
@@ -432,31 +364,6 @@ jobs:
       metron_agent:
         zone: ""
 
-  - name: nfs_z1
-    templates: (( grab meta.nfs_templates ))
-    instances: 0
-    resource_pool: medium_z1
-    persistent_disk: 102400
-    networks:
-      - name: cf1
-        static_ips: ~
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: postgres_z1
-    templates: (( grab meta.postgres_templates ))
-    instances: 0
-    resource_pool: medium_z1
-    persistent_disk: 4096
-    networks:
-      - name: cf1
-        static_ips: (( static_ips(7) ))
-    properties:
-      metron_agent:
-        zone: ""
-
-  # FIXME: Remove route_registrar (https://github.com/cloudfoundry/cf-release/issues/950)
   - name: uaa_z1
     templates: (( grab meta.uaa_templates ))
     instances: 1
@@ -470,8 +377,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: ""
-      route_registrar:
-        routes: []
 
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
@@ -486,8 +391,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: ""
-      route_registrar:
-        routes: []
 
   - name: api_z1
     templates: (( grab meta.api_templates ))
@@ -502,9 +405,6 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: ""
-      route_registrar:
-        routes: []
-      nfs_server: (( grab meta.nfs_server ))
 
   - name: api_z2
     templates: (( grab meta.api_templates ))
@@ -519,9 +419,6 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: ""
-      route_registrar:
-        routes: []
-      nfs_server: (( grab meta.nfs_server ))
 
   - name: clock_global
     templates: (( grab meta.clock_templates ))
@@ -544,7 +441,6 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-      nfs_server: (( grab meta.nfs_server ))
 
   - name: api_worker_z2
     templates: (( grab meta.api_worker_templates ))
@@ -554,31 +450,6 @@ jobs:
     networks:
       - name: cf2
     properties:
-      metron_agent:
-        zone: ""
-      nfs_server: (( grab meta.nfs_server ))
-
-  - name: loggregator_z1
-    templates: (( grab meta.loggregator_templates ))
-    instances: 0
-    resource_pool: medium_z1
-    networks:
-      - name: cf1
-    properties:
-      doppler:
-        zone: z1
-      metron_agent:
-        zone: ""
-
-  - name: loggregator_z2
-    templates: (( grab meta.loggregator_templates ))
-    instances: 0
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-    properties:
-      doppler:
-        zone: z2
       metron_agent:
         zone: ""
 
@@ -617,8 +488,6 @@ jobs:
         zone: z1
       metron_agent:
         zone: ""
-      route_registrar:
-        routes: []
 
   - name: loggregator_trafficcontroller_z2
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
@@ -631,8 +500,6 @@ jobs:
         zone: z2
       metron_agent:
         zone: ""
-      route_registrar:
-        routes: []
 
   - name: router_z1
     templates: (( grab meta.router_templates ))
