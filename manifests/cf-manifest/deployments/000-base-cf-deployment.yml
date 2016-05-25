@@ -1,11 +1,8 @@
 meta:
-  # override this in your stub to set the environment name,
-  # which is used for the deployment name
-  #
-  # i.e. cf-tabasco
-  environment: ~
+  environment: (( grab terraform_outputs.environment ))
 
 name: (( grab meta.environment ))
+director_uuid: ~
 
 releases:
   - name: cf
@@ -35,6 +32,10 @@ compilation:
   workers: 6
   network: cf1
   reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: c3.large
+    availability_zone: (( grab meta.zones.z1 ))
+    iam_instance_profile: bosh-director
 
 update:
   canaries: 0

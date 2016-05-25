@@ -1,6 +1,4 @@
 meta:
-  environment: ~
-
   api_domain: (( concat "api." properties.domain ))
 
   release:
@@ -9,10 +7,6 @@ meta:
   logsearch_shipper:
     release:
       name: "logsearch-shipper"
-
-  etcd_consul_service: ["etcd.service.cf.internal"]
-
-  consul_servers: (( grab jobs.consul_z1.networks.cf1.static_ips jobs.consul_z2.networks.cf2.static_ips jobs.consul_z3.networks.cf3.static_ips ))
 
   nfs_client_ranges:
     - (( grab networks.cf1.subnets.[0].range || nil ))
@@ -203,6 +197,93 @@ meta:
   - name: logsearch-shipper
     release: (( grab meta.logsearch_shipper.release.name ))
 
+  diego_job_templates:
+    brain:
+      - name: consul_agent
+        release: cf
+      - name: auctioneer
+        release: diego
+      - name: converger
+        release: diego
+      - name: metron_agent
+        release: cf
+    cell:
+      - name: consul_agent
+        release: cf
+      - name: rep
+        release: diego
+      - name: garden
+        release: garden-linux
+      - name: rootfses
+        release: diego
+      - name: metron_agent
+        release: cf
+    cc_bridge:
+      - name: consul_agent
+        release: cf
+      - name: stager
+        release: diego
+      - name: nsync
+        release: diego
+      - name: tps
+        release: diego
+      - name: cc_uploader
+        release: diego
+      - name: metron_agent
+        release: cf
+    route_emitter:
+      - name: consul_agent
+        release: cf
+      - name: route_emitter
+        release: diego
+      - name: metron_agent
+        release: cf
+    access:
+      - name: consul_agent
+        release: cf
+      - name: ssh_proxy
+        release: diego
+      - name: metron_agent
+        release: cf
+      - name: file_server
+        release: diego
+    database:
+      - name: consul_agent
+        release: cf
+      - name: bbs
+        release: diego
+      - name: metron_agent
+        release: cf
+    colocated:
+      - name: consul_agent
+        release: cf
+      - name: auctioneer
+        release: diego
+      - name: bbs
+        release: diego
+      - name: cc_uploader
+        release: diego
+      - name: converger
+        release: diego
+      - name: file_server
+        release: diego
+      - name: metron_agent
+        release: cf
+      - name: nsync
+        release: diego
+      - name: route_emitter
+        release: diego
+      - name: ssh_proxy
+        release: diego
+      - name: stager
+        release: diego
+      - name: tps
+        release: diego
+
+disk_pools:
+  - name: database_disks
+    disk_size: 1024
+
 jobs:
   - name: consul_z1
     templates: (( grab meta.consul_templates ))
@@ -211,7 +292,7 @@ jobs:
     resource_pool: small_z1
     networks:
       - name: cf1
-        static_ips:
+        static_ips: (( static_ips(27, 28, 29) ))
     update:
       serial: true
     properties:
@@ -228,7 +309,7 @@ jobs:
     resource_pool: small_z2
     networks:
       - name: cf2
-        static_ips:
+        static_ips: (( static_ips(27, 28, 29) ))
     properties:
       consul:
         agent:
@@ -242,7 +323,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-        static_ips:
+        static_ips: (( static_ips(1) ))
     properties:
       metron_agent:
         zone: ""
@@ -253,7 +334,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-        static_ips:
+        static_ips: (( static_ips(1) ))
     properties:
       metron_agent:
         zone: ""
@@ -265,7 +346,7 @@ jobs:
     resource_pool: medium_z1
     networks:
       - name: cf1
-        static_ips:
+        static_ips: (( static_ips(9) ))
     update:
       serial: true
     properties:
@@ -283,7 +364,7 @@ jobs:
     resource_pool: medium_z2
     networks:
       - name: cf2
-        static_ips:
+        static_ips: (( static_ips(9) ))
     update:
       serial: true
     properties:
@@ -301,7 +382,7 @@ jobs:
     resource_pool: small_z3
     networks:
       - name: cf3
-        static_ips:
+        static_ips: (( static_ips(27, 28, 29) ))
     properties:
       consul:
         agent:
@@ -316,7 +397,7 @@ jobs:
     resource_pool: medium_z3
     networks:
       - name: cf3
-        static_ips:
+        static_ips: (( static_ips(9) ))
     properties:
       metron_agent:
         zone: ""
@@ -369,8 +450,8 @@ jobs:
     resource_pool: medium_z1
     persistent_disk: 4096
     networks:
-    - name: cf1
-      static_ips: ~
+      - name: cf1
+        static_ips: (( static_ips(7) ))
     properties:
       metron_agent:
         zone: ""
@@ -559,7 +640,7 @@ jobs:
     resource_pool: router_z1
     networks:
       - name: router1
-        static_ips: ~
+        static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
     properties:
       consul:
         agent:
@@ -574,7 +655,7 @@ jobs:
     resource_pool: router_z2
     networks:
       - name: router2
-        static_ips: ~
+        static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
     properties:
       consul:
         agent:
@@ -740,93 +821,3 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-
-
-
-properties:
-  consul:
-    agent:
-      log_level:
-      servers:
-        lan: (( grab meta.consul_servers ))
-    ca_cert:
-    agent_cert:
-    agent_key:
-    encrypt_keys: []
-    require_ssl:
-    server_cert:
-    server_key:
-
-  dropsonde:
-    enabled: true
-
-  support_address: "http://support.cloudfoundry.com"
-  description: null
-  ssl:
-    skip_cert_verify: false
-
-  disk_quota_enabled: true
-
-  request_timeout_in_seconds: 900
-
-  nats:
-    port: 4222
-    machines: (( grab jobs.nats_z1.networks.cf1.static_ips jobs.nats_z2.networks.cf2.static_ips ))
-    debug: false
-    trace: false
-    monitor_port: 0
-    prof_port: 0
-
-  etcd:
-    machines: (( grab jobs.etcd_z1.networks.cf1.static_ips jobs.etcd_z2.networks.cf2.static_ips jobs.etcd_z3.networks.cf3.static_ips ))
-    require_ssl: false
-    peer_require_ssl: false
-
-  etcd_metrics_server:
-    nats:
-      machines: (( grab properties.nats.machines ))
-      username: (( grab properties.nats.user ))
-      password: (( grab properties.nats.password ))
-
-  loggregator:
-    etcd:
-      machines: (( grab meta.etcd_consul_service ))
-
-  doppler_endpoint:
-    shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
-
-  metron_endpoint:
-    shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
-
-  logger_endpoint: ~
-
-  ha_proxy:
-    enable_proxy_protocol: true
-    disable_http: true
-    go_router:
-      servers: [ "127.0.0.1" ]
-      port: 80
-    additional_frontend_config: |
-      capture response header strict-transport-security len 128
-      http-response add-header Strict-Transport-Security max-age=31536000 unless { capture.res.hdr(0) -m found }
-
-  router:
-    enable_ssl: false
-    requested_route_registration_interval_in_seconds:
-    ssl_skip_validation:
-    status:
-      port:
-    secure_cookies:
-    route_services_secret:
-    route_services_secret_decrypt_only:
-    route_services_timeout:
-    logrotate:
-    extra_headers_to_log:
-    debug_addr:
-    enable_routing_api:
-
-  syslog_daemon_config: ~
-
-  nfs_server: (( grab meta.nfs_server ))
-
-  collector:

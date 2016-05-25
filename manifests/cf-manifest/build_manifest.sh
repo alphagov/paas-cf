@@ -9,5 +9,4 @@ spruce merge \
   --prune secrets \
   --prune terraform_outputs \
   "${DEPLOYMENT_DIR}"/*.yml \
-  "${DEPLOYMENT_DIR}"/aws/*.yml \
   "$@"

@@ -1,3 +1,19 @@
+---
+meta:
+  default_env:
+    bosh:
+      password: (( grab secrets.vcap_password ))
+  stemcell:
+    name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+    version: 3232.4
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.4
+    sha1: ac920cae17c7159dee3bf1ebac727ce2d01564e9
+  zones:
+    z1: (( grab terraform_outputs.zone0 ))
+    z2: (( grab terraform_outputs.zone1 ))
+    z3: (( grab terraform_outputs.zone2 ))
+
+
 resource_pools:
   - name: small_z1
     network: cf1
