@@ -5,13 +5,8 @@ RSpec.describe "resource_pools" do
   POOL_BASE_NAMES = %w(
     small
     medium
-    large
     api
     router
-  )
-  ERRAND_POOL_NAMES = %w(
-    small_errand
-    xlarge_errand
   )
   ZONE_KEYS = {
     "z1" => :zone0,
@@ -26,16 +21,6 @@ RSpec.describe "resource_pools" do
         it "should specify the correct AWS AZ" do
           expect(pool["cloud_properties"]["availability_zone"]).to eq(terraform_fixture(ZONE_KEYS[zone_suffix]))
         end
-      end
-    end
-  end
-
-  ERRAND_POOL_NAMES.each do |pool_name|
-    describe pool_name do
-      let(:pool) { resource_pools.find {|p| p["name"] == pool_name } }
-
-      it "should specify the correct AWS AZ" do
-        expect(pool["cloud_properties"]["availability_zone"]).to eq(terraform_fixture(:zone0))
       end
     end
   end
