@@ -1144,6 +1144,34 @@ jobs:
 
                   cf push
 
+        - task: sync-admin-users
+          config:
+            platform: linux
+            image: docker:///ruby#2.2
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: cf-secrets
+              - name: cf-manifest
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  {{disable_user_creation}} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
+
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  export UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+                  cd paas-cf
+                  bundle
+                  scripts/sync-admin-users.rb ${API_ENDPOINT} config/admin_users.yml
+
         - task: register-rds-broker
           config:
             platform: linux
