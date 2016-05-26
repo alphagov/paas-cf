@@ -73,7 +73,7 @@ jobs:
               plans:
                 - id: "9b882524-ab58-4c18-b501-d2a3f4619104"
                   name: "M-dedicated-9.5"
-                  description: "20GB Storage, Dedicated Instance, 20 Concurrent Connections. Postgres Version 9.5"
+                  description: "20GB Storage, Dedicated Instance, Max 500 Concurrent Connections. Postgres Version 9.5"
                   free: false
                   metadata:
                     costs:
@@ -88,7 +88,7 @@ jobs:
 
                 - id: "bf5b99c2-7990-4b66-b341-1bb83566d76e"
                   name: "M-HA-dedicated-9.5"
-                  description: "20GB Storage, Dedicated Instance, Highly Available, 20 Concurrent Connections. Postgres Version 9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Max 500 Concurrent Connections. Postgres Version 9.5"
                   free: false
                   metadata:
                     costs:
