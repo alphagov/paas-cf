@@ -1,5 +1,5 @@
 
-RSpec.describe "AWS broker properties" do
+RSpec.describe "RDS broker properties" do
   let(:manifest) { manifest_with_defaults }
   let(:properties) { manifest.fetch("properties") }
 
