@@ -1,0 +1,23 @@
+---
+platform: linux
+image: docker:///ruby#2.2-slim
+inputs:
+  - name: paas-cf
+  - name: cf-secrets
+  - name: cf-manifest
+outputs:
+  - name: config
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+      CF_ADMIN=admin
+      CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+      API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+
+      for var_name in CF_ADMIN CF_PASS API_ENDPOINT; do
+        echo export "${var_name}"=\"$(eval echo \$${var_name})\"
+      done > config/config.sh
