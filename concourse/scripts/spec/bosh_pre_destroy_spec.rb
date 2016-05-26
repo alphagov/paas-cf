@@ -3,13 +3,14 @@ require 'mimic'
 
 RSpec.describe "bosh_pre_destroy.rb", :type => :aruba do
   before(:each) do
+    bosh_host = "127.0.0.1"
     bosh_port = 25555
 
-    @fake_bosh = Mimic.mimic(:port => bosh_port) do
+    @fake_bosh = Mimic.mimic(:hostname => bosh_host, :port => bosh_port) do
       get("/info").returning('{}', 200)
     end
 
-    bosh_config = {'target' => "http://localhost:#{bosh_port}"}
+    bosh_config = {'target' => "http://#{bosh_host}:#{bosh_port}"}
     bosh_config_file = Tempfile.new('bosh_config')
     bosh_config_file.write(bosh_config.to_yaml)
     bosh_config_file.close
