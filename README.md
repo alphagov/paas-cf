@@ -343,12 +343,15 @@ providing them to the interactive configure command.
 
 ## Pingdom checks
 
-There is a make target to add some pingdom checks for a static app that is
-deployed as part of the pipeline. This requires paas-pass to be setup, and
-installation of an additional terraform provider - instructions for this are
-documented when running the make target for the first time.
+### Requirements
 
-Make sure you are using the correct AWS credentials for the environment you are setting up checks for. For those developers with AWS CLI config files, the [AWS CLI Documentation](http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#id1) states environment variables have the highest precedence.
+* The credential store set up (paas-pass).
+* Installation of the Pingdom Terraform provider. Instructions for this are documented when running the make target for the first time.
+* Correct AWS credentials for the environment you are setting up checks for. For those developers with AWS CLI config files, the [AWS CLI Documentation](http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#id1) states environment variables have the highest precedence.
+
+### Setting up the checks
+
+Run `make ENV pingdom` to set up the Pingdom checks.
 
 ## Creating Users
 
