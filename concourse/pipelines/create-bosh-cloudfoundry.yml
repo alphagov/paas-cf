@@ -1255,6 +1255,8 @@ jobs:
                 cf set-quota testers test_apps
                 cf create-space healthcheck -o testers
                 cf target -o testers -s healthcheck
+                # FIXME remove this after https://github.com/alphagov/paas-cf/pull/295 is accepted and in prod
+                cf delete healthcheck-app -f -r
 
                 cd paas-cf/tests/example-apps/healthcheck
                 cf push --no-start
