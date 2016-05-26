@@ -1,5 +1,5 @@
 {
-	"ImportPath": "db-healthcheck",
+	"ImportPath": "healthcheck",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v60",
 	"Packages": [

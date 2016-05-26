@@ -15,6 +15,6 @@ provider "pingdom" {
 resource "pingdom_check" "paas_http_healthcheck" {
     type = "http"
     name = "PaaS HTTP - ${var.env}"
-    host = "healthcheck-app.${var.apps_dns_zone_name}"
+    host = "healthcheck.${var.apps_dns_zone_name}"
     resolution = 5
 }

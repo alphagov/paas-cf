@@ -41,7 +41,7 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeJson(w http.ResponseWriter, data interface{}) {
-	output, err := json.MarshalIndent(data, "  ", "")
+	output, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

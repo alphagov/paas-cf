@@ -1117,7 +1117,7 @@ jobs:
 
                   ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
-        - task: deploy-healthcheck-app
+        - task: deploy-healthcheck
           config:
             platform: linux
             image: docker:///governmentpaas/cf-cli
@@ -1140,7 +1140,7 @@ jobs:
                   cf create-space healthcheck -o testers
                   cf target -o testers -s healthcheck
 
-                  cd paas-cf/tests/example-apps/healthcheck-app
+                  cd paas-cf/tests/example-apps/healthcheck
 
                   cf push
 
