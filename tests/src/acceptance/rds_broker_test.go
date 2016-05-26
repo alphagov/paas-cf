@@ -26,13 +26,11 @@ var _ = Describe("RDS broker", func() {
 		Expect(plans).To(Say(serviceName))
 	})
 
-	Context("available service plans", func() {
-
-		It("has the M-dedicated-9.5 plan available", func() {
-			plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
-			Expect(plans).To(Exit(0))
-			Expect(plans).To(Say("M-dedicated-9.5"))
-		})
+	It("has the expected plans available", func() {
+		plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
+		Expect(plans).To(Exit(0))
+		Expect(plans).To(Say("M-dedicated-9.5"))
+		Expect(plans).To(Say("M-HA-dedicated-9.5"))
 	})
 
 	Context("creating a database instance", func() {
