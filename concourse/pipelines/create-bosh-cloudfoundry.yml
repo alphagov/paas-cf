@@ -1168,9 +1168,9 @@ jobs:
 
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   export UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-                  cd paas-cf
+                  cd paas-cf/scripts
                   bundle
-                  scripts/sync-admin-users.rb ${API_ENDPOINT} config/admin_users.yml
+                  bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml
 
         - task: register-rds-broker
           config:
