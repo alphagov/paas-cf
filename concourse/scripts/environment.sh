@@ -52,7 +52,3 @@ export LOGSEARCH_URL=https://logsearch.${SYSTEM_DNS_ZONE_NAME}
 export GRAFANA_URL=https://metrics.${SYSTEM_DNS_ZONE_NAME}
 export GRAPHITE_URL=https://metrics.${SYSTEM_DNS_ZONE_NAME}:3001
 EOF
-
-echo "Deploy environment name: $DEPLOY_ENV" 1>&2
-echo "Concourse URL is ${CONCOURSE_URL}" 1>&2
-echo "Concourse auth is ${CONCOURSE_ATC_USER} : ${CONCOURSE_ATC_PASSWORD}" 1>&2
