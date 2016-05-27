@@ -210,6 +210,8 @@ jobs:
           params:
             TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
             TF_VAR_apps_dns_zone_name: {{apps_dns_zone_name}}
+            TF_VAR_system_domain_cert_arn: ""
+            TF_VAR_apps_domain_cert_arn: ""
             AWS_DEFAULT_REGION: {{aws_region}}
           run:
             path: sh
