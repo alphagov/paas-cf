@@ -97,6 +97,12 @@ resources:
       uri: https://github.com/alphagov/paas-aws-broker-boshrelease.git
       tag_filter: {{cf_aws_broker_version}}
 
+  - name: os-conf-boshrelease
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-os-conf-release.git
+      tag_filter: {{cf_os_conf_version}}
+
   - name: graphite-nozzle
     type: git
     source:
@@ -976,6 +982,7 @@ jobs:
           - get: grafana-boshrelease
           - get: paas-haproxy-release
           - get: aws-broker-boshrelease
+          - get: os-conf-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
           - get: bosh-CA
@@ -991,6 +998,7 @@ jobs:
             - name: grafana-boshrelease
             - name: paas-haproxy-release
             - name: aws-broker-boshrelease
+            - name: os-conf-boshrelease
           run:
             path: sh
             args:
@@ -1011,6 +1019,9 @@ jobs:
                 paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
                 {{cf_aws_broker_version}} aws-broker-boshrelease
 
+                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
+                  {{cf_os_conf_version}} os-conf-boshrelease
+
       - task: cf-deploy
         config:
           platform: linux
@@ -1030,6 +1041,7 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
                 bosh deployment updated-cf-manifest/cf-manifest.yml
+                bosh update runtime-config paas-cf/manifests/cf-manifest/deployments/runtime/runtime.yml
                 bosh -n deploy
       - put: cf-manifest
         params:
