@@ -228,10 +228,6 @@ meta:
       - name: tps
         release: diego
 
-disk_pools:
-  - name: database_disks
-    disk_size: 1024
-
 jobs:
   - name: consul_z1
     templates: (( grab meta.consul_templates ))
@@ -617,7 +613,6 @@ jobs:
   - name: colocated_z1
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    persistent_disk_pool: database_disks
     resource_pool: colocated_z1
     networks:
       - name: cf1
@@ -631,7 +626,6 @@ jobs:
   - name: colocated_z2
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    persistent_disk_pool: database_disks
     resource_pool: colocated_z2
     networks:
       - name: cf2
@@ -645,7 +639,6 @@ jobs:
   - name: database_z1
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
-    persistent_disk_pool: database_disks
     resource_pool: database_z1
     networks:
       - name: cf1
@@ -656,7 +649,6 @@ jobs:
   - name: database_z2
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
-    persistent_disk_pool: database_disks
     resource_pool: database_z2
     networks:
       - name: cf2
