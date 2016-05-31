@@ -8,7 +8,6 @@ require 'gpgme'
 
 module EmailCredentialsHelper
 
-  DEFAULT_SOURCE_ADDRESS = "the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
   DEFAULT_REGION = "eu-west-1"
 
   def self.encrypt_message_to(message, key)
@@ -50,9 +49,7 @@ module EmailCredentialsHelper
     })
   end
 
-  def self.send_admin_credentials(api_url, user, source_address=nil)
-    source_address ||= DEFAULT_SOURCE_ADDRESS
-
+  def self.send_admin_credentials(api_url, user, source_address)
     attachment_source = encrypt_message_to(user[:password], user[:gpg_key])
 
     send_email(

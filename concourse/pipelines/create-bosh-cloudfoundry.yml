@@ -1144,7 +1144,7 @@ jobs:
                   export UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
                   cd paas-cf/scripts
                   bundle
-                  bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml
+                  bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "{{NEW_ACCOUNT_EMAIL_ADDRESS}}"
 
         - task: register-rds-broker
           config:
