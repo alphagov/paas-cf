@@ -35,4 +35,4 @@ terraform_outputs:
   rds_broker_db_clients_security_group: stub_rds_broker_db_clients_security_group
   rds_broker_dbs_security_group_id: stub_rds_broker_dbs_security_group_id
   rds_broker_dbs_subnet_group: stub_rds_broker_dbs_subnet_group
-
+  rds_broker_postgres95_db_parameter_group: stub_rds_broker_postgres95_db_parameter_group
