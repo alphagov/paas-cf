@@ -14,7 +14,17 @@ provider "pingdom" {
 
 resource "pingdom_check" "paas_http_healthcheck" {
     type = "http"
-    name = "PaaS HTTP - ${var.env}"
-    host = "healthcheck-app.${var.apps_dns_zone_name}"
+    name = "PaaS HTTPS - ${var.env}"
+    host = "healthcheck.${var.apps_dns_zone_name}"
+    encryption = true
+    resolution = 5
+}
+
+resource "pingdom_check" "paas_db_healthcheck" {
+    type = "http"
+    name = "PaaS DB - ${var.env}"
+    host = "healthcheck.${var.apps_dns_zone_name}"
+    url  = "/db"
+    encryption = true
     resolution = 5
 }

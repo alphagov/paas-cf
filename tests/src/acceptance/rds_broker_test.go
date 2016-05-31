@@ -81,8 +81,8 @@ var _ = Describe("RDS broker", func() {
 				"push", appName,
 				"--no-start",
 				"-b", config.GoBuildpackName,
-				"-p", "../../example-apps/db-healthcheck",
-				"-f", "../../example-apps/db-healthcheck/manifest.yml",
+				"-p", "../../example-apps/healthcheck",
+				"-f", "../../example-apps/healthcheck/manifest.yml",
 				"-d", config.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
@@ -92,7 +92,7 @@ var _ = Describe("RDS broker", func() {
 
 			// Hit app endpoint to verify functionality.
 			fmt.Fprintln(GinkgoWriter, "Sending request to DB Healthcheck app")
-			resp, err := httpClient.Get(helpers.AppRootUri(appName))
+			resp, err := httpClient.Get(helpers.AppUri(appName, "/db"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
