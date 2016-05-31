@@ -21,7 +21,7 @@ properties:
 
   app_ssh: ~
 
-  support_address: "http://support.cloudfoundry.com"
+  support_address: "https://government-paas-developer-docs.readthedocs.io/"
   description: null
   ssl:
     skip_cert_verify: false
