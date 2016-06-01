@@ -34,6 +34,7 @@ end
 
 api_url = ARGV[0] || raise("You must pass API endpoint as first argument")
 users_filename = ARGV[1] || raise("You must pass a file of users as second argument")
+source_address = ARGV[2] || raise("You must pass an SES-validated address as third argument")
 
 admin_user = ENV['UAA_CLIENT'] || "admin"
 admin_password = ENV['UAA_CLIENT_SECRET'] || raise("Must set $UAA_CLIENT_SECRET env var")
@@ -52,7 +53,7 @@ created_users, deleted_users = uaa_sync_admin_users.update_admin_users(users)
 
 created_users.each { |user|
   puts "Sending credentials to new user #{user[:username]}"
-  EmailCredentialsHelper.send_admin_credentials(api_url, user)
+  EmailCredentialsHelper.send_admin_credentials(api_url, user, source_address)
 }
 
 puts "Created users: #{created_users.length}"

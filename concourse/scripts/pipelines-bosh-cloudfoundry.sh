@@ -80,6 +80,7 @@ system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
 ALERT_EMAIL_ADDRESS: ${ALERT_EMAIL_ADDRESS:-}
+NEW_ACCOUNT_EMAIL_ADDRESS: ${NEW_ACCOUNT_EMAIL_ADDRESS:-}
 bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
@@ -91,7 +92,7 @@ generate_manifest_file() {
   # This exists because concourse does not support boolean value interpolation by design
   enable_auto_deploy=$([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
   continuous_smoke_tests_trigger=$([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
-  disable_user_creation=$([ "${DISABLE_USER_CREATION:-}" ] && echo "true" || echo "false")
+  disable_user_creation=$([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
   sed -e "s/{{auto_deploy}}/${enable_auto_deploy}/" \
       -e "s/{{continuous_smoke_tests_trigger}}/${continuous_smoke_tests_trigger}/" \
       -e "s/{{gpg_ids}}/${gpg_ids}/" \
