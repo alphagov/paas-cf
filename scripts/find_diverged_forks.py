@@ -2,6 +2,9 @@
 import argparse
 from github import Github
 
+BOLD = '\033[1m'
+ENDC = '\033[0m'
+
 class ForkChecker(object):
     def __init__(self, github_token):
         self.github_token = github_token
@@ -10,7 +13,10 @@ class ForkChecker(object):
         g = Github(self.github_token)
         for repo in g.get_organization(organization).get_repos(type='fork'):
             if repo.name.startswith(prefix) or repo.name in extra_repos:
-                comparison = repo.compare(repo.owner.login + ':master', repo.parent.owner.login + ':master')
+                comparison = repo.compare(
+                    repo.owner.login + ':' + repo.default_branch,
+                    repo.parent.owner.login + ':' + repo.parent.default_branch
+                )
 
                 open_prs = []
                 for pull in repo.parent.get_pulls():
@@ -18,13 +24,13 @@ class ForkChecker(object):
                         open_prs.append(pull)
 
                 if comparison.ahead_by or open_prs:
-                    print "\n%s/%s:" % (organization, repo.name)
+                    print (BOLD + "\n== %s/%s ==" + ENDC) % (organization, repo.name)
 
                 if comparison.ahead_by:
-                    print " * Upstream ahead by %s commits: %s" % (comparison.ahead_by, comparison.html_url)
+                    print "\033[91m * " + ENDC + "Upstream ahead by %s commits: %s" % (comparison.ahead_by, comparison.html_url)
 
                 for pull in open_prs:
-                    print " * Open pull request: %s" % pull.html_url
+                    print "\033[93m * " + ENDC + "Open pull request: %s" % pull.html_url
         print
 
 
