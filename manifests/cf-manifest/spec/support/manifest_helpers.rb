@@ -20,7 +20,7 @@ module ManifestHelpers
         File.expand_path("../../fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
         File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
-        File.expand_path("../../../deployments/env-specific/cf-#{environment}.yml", __FILE__),
+        File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
     ]
     output, error, status = Open3.capture3(arg_list.join(' '))
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"

@@ -930,7 +930,7 @@ jobs:
               ./terraform-outputs/*.yml
               ./cf-secrets/cf-secrets.yml
               ./certs/*.yml
-              ./paas-cf/manifests/cf-manifest/deployments/env-specific/{{cf_env_specific_manifest}}
+              ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
           run:
             path: sh
             args:
@@ -1042,7 +1042,7 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
                 bosh deployment updated-cf-manifest/cf-manifest.yml
-                bosh update runtime-config paas-cf/manifests/cf-manifest/deployments/runtime/runtime.yml
+                bosh update runtime-config paas-cf/manifests/cf-manifest/manifest/runtime/runtime.yml
                 bosh -n deploy
       - put: cf-manifest
         params:
