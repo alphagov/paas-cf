@@ -29,7 +29,9 @@ func staticHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
-	err := testDBConnection()
+	ssl := r.FormValue("ssl") != "false"
+
+	err := testDBConnection(ssl)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -51,10 +53,15 @@ func writeJson(w http.ResponseWriter, data interface{}) {
 	w.Write(output)
 }
 
-func testDBConnection() error {
+func testDBConnection(ssl bool) error {
 	dbURL, err := url.Parse(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		return err
+	}
+	if ssl {
+		dbURL.RawQuery = dbURL.RawQuery + "&sslmode=verify-full"
+	} else {
+		dbURL.RawQuery = dbURL.RawQuery + "&sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", dbURL.String())
