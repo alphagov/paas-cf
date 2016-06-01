@@ -1,0 +1,17 @@
+---
+disk_types:
+  - name: graphite_data
+    disk_size: 204800
+    cloud_properties: {type: gp2}
+
+vm_types:
+  - name: graphite
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.large
+      ephemeral_disk:
+        size: 65536
+        type: gp2
+      elbs:
+        - (( grab terraform_outputs.metrics_elb_name ))
