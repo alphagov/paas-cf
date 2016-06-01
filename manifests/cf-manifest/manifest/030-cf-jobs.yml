@@ -230,6 +230,7 @@ meta:
 
 jobs:
   - name: consul
+    azs: [z1, z2, z3]
     templates: (( grab meta.consul_templates ))
     instances: 3
     persistent_disk: 1024
@@ -247,6 +248,7 @@ jobs:
         zone: ""
 
   - name: nats
+    azs: [z1, z2]
     templates: (( grab meta.nats_templates ))
     instances: 2
     vm_type: medium
@@ -261,6 +263,7 @@ jobs:
       - {name: nats_z2, az: z2}
 
   - name: etcd
+    azs: [z1, z2, z3]
     templates: (( grab meta.etcd_templates ))
     instances: 3
     persistent_disk: 10024
@@ -283,6 +286,7 @@ jobs:
       - {name: etcd_z3, az: z3}
 
   - name: stats
+    azs: [z1]
     templates: (( grab meta.stats_templates ))
     instances: 1
     vm_type: small
@@ -293,6 +297,7 @@ jobs:
         zone: ""
 
   - name: uaa
+    azs: [z1, z2]
     templates: (( grab meta.uaa_templates ))
     instances: 2
     vm_type: uaa
@@ -307,6 +312,7 @@ jobs:
         zone: ""
 
   - name: api
+    azs: [z1, z2]
     templates: (( grab meta.api_templates ))
     instances: 2
     vm_type: api
@@ -320,6 +326,7 @@ jobs:
         zone: ""
 
   - name: clock_global
+    azs: [z1]
     templates: (( grab meta.clock_templates ))
     instances: 1
     vm_type: clock_global
@@ -330,6 +337,7 @@ jobs:
         zone: ""
 
   - name: api_worker
+    azs: [z1, z2]
     templates: (( grab meta.api_worker_templates ))
     instances: 2
     vm_type: api_worker
@@ -340,6 +348,7 @@ jobs:
         zone: ""
 
   - name: doppler
+    azs: [z1, z2]
     templates: (( grab meta.loggregator_templates ))
     instances: 2
     vm_type: medium
@@ -352,6 +361,7 @@ jobs:
         zone: ""
 
   - name: loggregator_trafficcontroller
+    azs: [z1, z2]
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 2
     vm_type: loggregator_trafficcontroller
@@ -364,6 +374,7 @@ jobs:
         zone: ""
 
   - name: router
+    azs: [z1, z2]
     templates: (( grab meta.router_templates ))
     instances: 2
     vm_type: router
@@ -383,6 +394,7 @@ jobs:
 # Diego
 
   - name: access
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.access ))
     instances: 0
     vm_type: access
@@ -393,6 +405,7 @@ jobs:
         zone: ""
 
   - name: brain
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
     vm_type: medium
@@ -403,6 +416,7 @@ jobs:
         zone: ""
 
   - name: cc_bridge
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
     vm_type: medium
@@ -413,6 +427,7 @@ jobs:
         zone: ""
 
   - name: cell_z1
+    azs: [z1]
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z1.instances ))
     vm_type: cell
@@ -426,6 +441,7 @@ jobs:
           zone: z1
 
   - name: cell_z2
+    azs: [z2]
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z2.instances ))
     vm_type: cell
@@ -439,6 +455,7 @@ jobs:
           zone: z2
 
   - name: colocated_z1
+    azs: [z1]
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
     vm_type: medium
@@ -452,6 +469,7 @@ jobs:
         zone: ""
 
   - name: colocated_z2
+    azs: [z2]
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
     vm_type: medium
@@ -465,6 +483,7 @@ jobs:
         zone: ""
 
   - name: database
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
     vm_type: database
@@ -475,6 +494,7 @@ jobs:
         zone: ""
 
   - name: route_emitter
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
     vm_type: medium
