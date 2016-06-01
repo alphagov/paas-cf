@@ -235,7 +235,7 @@ jobs:
     persistent_disk: 1024
     resource_pool: small_z1
     networks:
-      - name: cf1
+      - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
     update:
       serial: true
@@ -252,7 +252,7 @@ jobs:
     persistent_disk: 1024
     resource_pool: small_z2
     networks:
-      - name: cf2
+      - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
     properties:
       consul:
@@ -266,7 +266,7 @@ jobs:
     instances: 1
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
         static_ips: (( static_ips(1) ))
     properties:
       metron_agent:
@@ -277,7 +277,7 @@ jobs:
     instances: 1
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
         static_ips: (( static_ips(1) ))
     properties:
       metron_agent:
@@ -289,7 +289,7 @@ jobs:
     persistent_disk: 10024
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
         static_ips: (( static_ips(9) ))
     update:
       serial: true
@@ -307,7 +307,7 @@ jobs:
     persistent_disk: 10024
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
         static_ips: (( static_ips(9) ))
     update:
       serial: true
@@ -325,7 +325,7 @@ jobs:
     persistent_disk: 1024
     resource_pool: small_z3
     networks:
-      - name: cf3
+      - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
     properties:
       consul:
@@ -340,7 +340,7 @@ jobs:
     persistent_disk: 10024
     resource_pool: medium_z3
     networks:
-      - name: cf3
+      - name: cf
         static_ips: (( static_ips(9) ))
     properties:
       metron_agent:
@@ -355,7 +355,7 @@ jobs:
     instances: 1
     resource_pool: small_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -365,7 +365,7 @@ jobs:
     instances: 1
     resource_pool: uaa_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       consul:
         agent:
@@ -379,7 +379,7 @@ jobs:
     instances: 1
     resource_pool: uaa_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       consul:
         agent:
@@ -393,7 +393,7 @@ jobs:
     instances: 1
     resource_pool: api_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       consul:
         agent:
@@ -406,7 +406,7 @@ jobs:
     instances: 1
     resource_pool: api_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       consul:
         agent:
@@ -419,7 +419,7 @@ jobs:
     instances: 1
     resource_pool: clock_global
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -429,7 +429,7 @@ jobs:
     instances: 1
     resource_pool: api_worker_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -439,7 +439,7 @@ jobs:
     instances: 1
     resource_pool: api_worker_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -449,7 +449,7 @@ jobs:
     instances: 1
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       doppler:
         zone: z1
@@ -461,7 +461,7 @@ jobs:
     instances: 1
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       doppler:
         zone: z2
@@ -473,7 +473,7 @@ jobs:
     instances: 1
     resource_pool: loggregator_trafficcontroller_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       traffic_controller:
         zone: z1
@@ -485,7 +485,7 @@ jobs:
     instances: 1
     resource_pool: loggregator_trafficcontroller_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       traffic_controller:
         zone: z2
@@ -497,7 +497,7 @@ jobs:
     instances: 1
     resource_pool: router_z1
     networks:
-      - name: router1
+      - name: router
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
     properties:
       consul:
@@ -512,7 +512,7 @@ jobs:
     instances: 1
     resource_pool: router_z2
     networks:
-      - name: router2
+      - name: router
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
     properties:
       consul:
@@ -529,7 +529,7 @@ jobs:
     instances: 0
     resource_pool: access_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -539,7 +539,7 @@ jobs:
     instances: 0
     resource_pool: access_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -549,7 +549,7 @@ jobs:
     instances: 0
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -559,7 +559,7 @@ jobs:
     instances: 0
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -569,7 +569,7 @@ jobs:
     instances: 0
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -579,7 +579,7 @@ jobs:
     instances: 0
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -589,7 +589,7 @@ jobs:
     instances: (( grab meta.cell_z1.instances ))
     resource_pool: cell_z1
     networks:
-      - name: cell1
+      - name: cell
     properties:
       metron_agent:
         zone: ""
@@ -602,7 +602,7 @@ jobs:
     instances: (( grab meta.cell_z2.instances ))
     resource_pool: cell_z2
     networks:
-      - name: cell2
+      - name: cell
     properties:
       metron_agent:
         zone: ""
@@ -615,7 +615,7 @@ jobs:
     instances: 1
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       diego:
         rep:
@@ -628,7 +628,7 @@ jobs:
     instances: 1
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       diego:
         rep:
@@ -641,7 +641,7 @@ jobs:
     instances: 0
     resource_pool: database_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -651,7 +651,7 @@ jobs:
     instances: 0
     resource_pool: database_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -661,7 +661,7 @@ jobs:
     instances: 0
     resource_pool: medium_z1
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
@@ -671,7 +671,7 @@ jobs:
     instances: 0
     resource_pool: medium_z2
     networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
