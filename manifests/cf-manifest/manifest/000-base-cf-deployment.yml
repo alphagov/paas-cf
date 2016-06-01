@@ -24,6 +24,11 @@ releases:
   - name: paas-haproxy
     version: 0.0.2
 
+stemcells:
+  - alias: default
+    name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+    version: 3232.4
+
 update:
   canaries: 0
   max_in_flight: 2
