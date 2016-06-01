@@ -233,7 +233,7 @@ jobs:
     templates: (( grab meta.consul_templates ))
     instances: 1
     persistent_disk: 1024
-    resource_pool: small_z1
+    vm_type: small
     networks:
       - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
@@ -250,7 +250,7 @@ jobs:
     templates: (( grab meta.consul_templates ))
     instances: 1
     persistent_disk: 1024
-    resource_pool: small_z2
+    vm_type: small
     networks:
       - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
@@ -264,7 +264,7 @@ jobs:
   - name: nats_z1
     templates: (( grab meta.nats_templates ))
     instances: 1
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
         static_ips: (( static_ips(1) ))
@@ -275,7 +275,7 @@ jobs:
   - name: nats_z2
     templates: (( grab meta.nats_templates ))
     instances: 1
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
         static_ips: (( static_ips(1) ))
@@ -287,7 +287,7 @@ jobs:
     templates: (( grab meta.etcd_templates ))
     instances: 1
     persistent_disk: 10024
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
         static_ips: (( static_ips(9) ))
@@ -305,7 +305,7 @@ jobs:
     templates: (( grab meta.etcd_templates ))
     instances: 1
     persistent_disk: 10024
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
         static_ips: (( static_ips(9) ))
@@ -323,7 +323,7 @@ jobs:
     templates: (( grab meta.consul_templates ))
     instances: 1
     persistent_disk: 1024
-    resource_pool: small_z3
+    vm_type: small
     networks:
       - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
@@ -338,7 +338,7 @@ jobs:
     templates: (( grab meta.etcd_templates ))
     instances: 1
     persistent_disk: 10024
-    resource_pool: medium_z3
+    vm_type: medium
     networks:
       - name: cf
         static_ips: (( static_ips(9) ))
@@ -353,7 +353,7 @@ jobs:
   - name: stats_z1
     templates: (( grab meta.stats_templates ))
     instances: 1
-    resource_pool: small_z1
+    vm_type: small
     networks:
       - name: cf
     properties:
@@ -363,7 +363,7 @@ jobs:
   - name: uaa_z1
     templates: (( grab meta.uaa_templates ))
     instances: 1
-    resource_pool: uaa_z1
+    vm_type: uaa
     networks:
       - name: cf
     properties:
@@ -377,7 +377,7 @@ jobs:
   - name: uaa_z2
     templates: (( grab meta.uaa_templates ))
     instances: 1
-    resource_pool: uaa_z2
+    vm_type: uaa
     networks:
       - name: cf
     properties:
@@ -391,7 +391,7 @@ jobs:
   - name: api_z1
     templates: (( grab meta.api_templates ))
     instances: 1
-    resource_pool: api_z1
+    vm_type: api
     networks:
       - name: cf
     properties:
@@ -404,7 +404,7 @@ jobs:
   - name: api_z2
     templates: (( grab meta.api_templates ))
     instances: 1
-    resource_pool: api_z2
+    vm_type: api
     networks:
       - name: cf
     properties:
@@ -417,7 +417,7 @@ jobs:
   - name: clock_global
     templates: (( grab meta.clock_templates ))
     instances: 1
-    resource_pool: clock_global
+    vm_type: clock_global
     networks:
       - name: cf
     properties:
@@ -427,7 +427,7 @@ jobs:
   - name: api_worker_z1
     templates: (( grab meta.api_worker_templates ))
     instances: 1
-    resource_pool: api_worker_z1
+    vm_type: api_worker
     networks:
       - name: cf
     properties:
@@ -437,7 +437,7 @@ jobs:
   - name: api_worker_z2
     templates: (( grab meta.api_worker_templates ))
     instances: 1
-    resource_pool: api_worker_z2
+    vm_type: api_worker
     networks:
       - name: cf
     properties:
@@ -447,7 +447,7 @@ jobs:
   - name: doppler_z1
     templates: (( grab meta.loggregator_templates ))
     instances: 1
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -459,7 +459,7 @@ jobs:
   - name: doppler_z2
     templates: (( grab meta.loggregator_templates ))
     instances: 1
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -471,7 +471,7 @@ jobs:
   - name: loggregator_trafficcontroller_z1
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
-    resource_pool: loggregator_trafficcontroller_z1
+    vm_type: loggregator_trafficcontroller
     networks:
       - name: cf
     properties:
@@ -483,7 +483,7 @@ jobs:
   - name: loggregator_trafficcontroller_z2
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 1
-    resource_pool: loggregator_trafficcontroller_z2
+    vm_type: loggregator_trafficcontroller
     networks:
       - name: cf
     properties:
@@ -495,7 +495,7 @@ jobs:
   - name: router_z1
     templates: (( grab meta.router_templates ))
     instances: 1
-    resource_pool: router_z1
+    vm_type: router
     networks:
       - name: router
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
@@ -510,7 +510,7 @@ jobs:
   - name: router_z2
     templates: (( grab meta.router_templates ))
     instances: 1
-    resource_pool: router_z2
+    vm_type: router
     networks:
       - name: router
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
@@ -527,7 +527,7 @@ jobs:
   - name: access_z1
     templates: (( grab meta.diego_job_templates.access ))
     instances: 0
-    resource_pool: access_z1
+    vm_type: access
     networks:
       - name: cf
     properties:
@@ -537,7 +537,7 @@ jobs:
   - name: access_z2
     templates: (( grab meta.diego_job_templates.access ))
     instances: 0
-    resource_pool: access_z2
+    vm_type: access
     networks:
       - name: cf
     properties:
@@ -547,7 +547,7 @@ jobs:
   - name: brain_z1
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -557,7 +557,7 @@ jobs:
   - name: brain_z2
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -567,7 +567,7 @@ jobs:
   - name: cc_bridge_z1
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -577,7 +577,7 @@ jobs:
   - name: cc_bridge_z2
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -587,7 +587,7 @@ jobs:
   - name: cell_z1
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z1.instances ))
-    resource_pool: cell_z1
+    vm_type: cell
     networks:
       - name: cell
     properties:
@@ -600,7 +600,7 @@ jobs:
   - name: cell_z2
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z2.instances ))
-    resource_pool: cell_z2
+    vm_type: cell
     networks:
       - name: cell
     properties:
@@ -613,7 +613,7 @@ jobs:
   - name: colocated_z1
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -626,7 +626,7 @@ jobs:
   - name: colocated_z2
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -639,7 +639,7 @@ jobs:
   - name: database_z1
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
-    resource_pool: database_z1
+    vm_type: database
     networks:
       - name: cf
     properties:
@@ -649,7 +649,7 @@ jobs:
   - name: database_z2
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
-    resource_pool: database_z2
+    vm_type: database
     networks:
       - name: cf
     properties:
@@ -659,7 +659,7 @@ jobs:
   - name: route_emitter_z1
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
-    resource_pool: medium_z1
+    vm_type: medium
     networks:
       - name: cf
     properties:
@@ -669,7 +669,7 @@ jobs:
   - name: route_emitter_z2
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
-    resource_pool: medium_z2
+    vm_type: medium
     networks:
       - name: cf
     properties:
