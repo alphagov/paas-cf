@@ -419,6 +419,7 @@ jobs:
         image: docker:///governmentpaas/spruce
         params:
           CONCOURSE_MANIFEST_STUBS: |
+            ./paas-cf/manifests/concourse-manifest/concourse-base.yml
             predefined-concourse-secrets/predefined-concourse-secrets.yml
             concourse-secrets/generated-concourse-secrets.yml
             terraform-outputs/concourse-terraform-outputs.yml
@@ -436,7 +437,7 @@ jobs:
           - -e
           - -c
           - |
-            ./paas-cf/manifests/concourse-manifest/build_manifest.sh $CONCOURSE_MANIFEST_STUBS \
+            ./paas-cf/manifests/shared/build_manifest.sh $CONCOURSE_MANIFEST_STUBS \
               > concourse-manifest/concourse-manifest.yml
             ls -l concourse-manifest/concourse-manifest.yml
 

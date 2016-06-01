@@ -617,6 +617,8 @@ jobs:
             - name: bosh-manifest
           params:
             BOSH_MANIFEST_STUBS: |
+              ./paas-cf/manifests/bosh-manifest/deployments/*.yml
+              ./paas-cf/manifests/bosh-manifest/deployments/aws/*.yml
               ./bosh-secrets/bosh-secrets.yml
               ./bosh-CA-yml/bosh-ca-cert.yml
               ./terraform-outputs/bosh.terraform-outputs.yml
@@ -627,7 +629,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/manifests/bosh-manifest/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
+                ./paas-cf/manifests/shared/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
                 /bin/cat bosh-manifest/bosh-manifest.yml
         on_success:
           put: bosh-manifest
@@ -927,6 +929,8 @@ jobs:
             - name: cf-manifest
           params:
             MANIFEST_STUBS: |
+              ./paas-cf/manifests/cf-manifest/manifest/*.yml
+              ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
               ./terraform-outputs/*.yml
               ./cf-secrets/cf-secrets.yml
               ./certs/*.yml
@@ -958,7 +962,7 @@ jobs:
                 echo "Generating manifests"
 
                 # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                eval ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+                eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
         on_success:
           put: cf-manifest
           params:

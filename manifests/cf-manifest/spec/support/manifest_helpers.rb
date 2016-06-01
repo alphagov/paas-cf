@@ -16,7 +16,8 @@ module ManifestHelpers
 
   def load_default_manifest(environment = "default")
     arg_list = [
-        File.expand_path("../../../build_manifest.sh", __FILE__),
+        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
+        File.expand_path("../../../manifest/*.yml", __FILE__),
         File.expand_path("../../fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
         File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
