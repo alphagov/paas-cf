@@ -1,0 +1,125 @@
+---
+meta:
+  default_env:
+    bosh:
+      password: (( grab secrets.vcap_password ))
+
+vm_types:
+  - name: small
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+
+  - name: medium
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+
+  - name: api
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65536
+        type: gp2
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
+
+  - name: clock_global
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
+
+  - name: api_worker
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: cf-cloudcontroller
+      ephemeral_disk:
+        size: 65536
+        type: gp2
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
+
+  - name: uaa
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      elbs:
+        - (( grab terraform_outputs.cf_uaa_elb_name ))
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
+
+  - name: loggregator_trafficcontroller
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      elbs:
+        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - (( grab terraform_outputs.cf_loggregator_elb_name ))
+
+  - name: router
+    network: router
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: c3.large
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      elbs:
+        - (( grab terraform_outputs.cf_router_elb_name ))
+
+# Diego below
+  - name: access
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      elbs:
+        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
+
+  - name: cell
+    network: cell
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: r3.xlarge
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))
+
+  - name: database
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.large
