@@ -24,15 +24,6 @@ releases:
   - name: paas-haproxy
     version: 0.0.2
 
-compilation:
-  workers: 6
-  network: cf1
-  reuse_compilation_vms: true
-  cloud_properties:
-    instance_type: c3.large
-    availability_zone: (( grab meta.zones.z1 ))
-    iam_instance_profile: bosh-director
-
 update:
   canaries: 0
   max_in_flight: 2
