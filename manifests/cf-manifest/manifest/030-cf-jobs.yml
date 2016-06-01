@@ -235,6 +235,7 @@ jobs:
     instances: 3
     persistent_disk: 1024
     vm_type: small
+    stemcell: default
     networks:
       - name: cf
         static_ips: (( static_ips(27, 28, 29) ))
@@ -252,6 +253,7 @@ jobs:
     templates: (( grab meta.nats_templates ))
     instances: 2
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
         static_ips: (( static_ips(1) ))
@@ -268,6 +270,7 @@ jobs:
     instances: 3
     persistent_disk: 10024
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
         static_ips: (( static_ips(9) ))
@@ -290,6 +293,7 @@ jobs:
     templates: (( grab meta.stats_templates ))
     instances: 1
     vm_type: small
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -301,6 +305,7 @@ jobs:
     templates: (( grab meta.uaa_templates ))
     instances: 2
     vm_type: uaa
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -316,6 +321,7 @@ jobs:
     templates: (( grab meta.api_templates ))
     instances: 2
     vm_type: api
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -330,6 +336,7 @@ jobs:
     templates: (( grab meta.clock_templates ))
     instances: 1
     vm_type: clock_global
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -341,6 +348,7 @@ jobs:
     templates: (( grab meta.api_worker_templates ))
     instances: 2
     vm_type: api_worker
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -352,6 +360,7 @@ jobs:
     templates: (( grab meta.loggregator_templates ))
     instances: 2
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -365,6 +374,7 @@ jobs:
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 2
     vm_type: loggregator_trafficcontroller
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -378,6 +388,7 @@ jobs:
     templates: (( grab meta.router_templates ))
     instances: 2
     vm_type: router
+    stemcell: default
     networks:
       - name: router
         static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
@@ -398,6 +409,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.access ))
     instances: 0
     vm_type: access
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -409,6 +421,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -420,6 +433,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -431,6 +445,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z1.instances ))
     vm_type: cell
+    stemcell: default
     networks:
       - name: cell
     properties:
@@ -445,6 +460,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z2.instances ))
     vm_type: cell
+    stemcell: default
     networks:
       - name: cell
     properties:
@@ -459,6 +475,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -473,6 +490,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -487,6 +505,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
     vm_type: database
+    stemcell: default
     networks:
       - name: cf
     properties:
@@ -498,6 +517,7 @@ jobs:
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
     vm_type: medium
+    stemcell: default
     networks:
       - name: cf
     properties:
