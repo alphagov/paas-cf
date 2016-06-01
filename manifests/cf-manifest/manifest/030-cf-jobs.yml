@@ -339,51 +339,27 @@ jobs:
       metron_agent:
         zone: ""
 
-  - name: doppler_z1
+  - name: doppler
     templates: (( grab meta.loggregator_templates ))
-    instances: 1
+    instances: 2
     vm_type: medium
     networks:
       - name: cf
     properties:
       doppler:
-        zone: z1
+        zone: ""
       metron_agent:
         zone: ""
 
-  - name: doppler_z2
-    templates: (( grab meta.loggregator_templates ))
-    instances: 1
-    vm_type: medium
-    networks:
-      - name: cf
-    properties:
-      doppler:
-        zone: z2
-      metron_agent:
-        zone: ""
-
-  - name: loggregator_trafficcontroller_z1
+  - name: loggregator_trafficcontroller
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
-    instances: 1
+    instances: 2
     vm_type: loggregator_trafficcontroller
     networks:
       - name: cf
     properties:
       traffic_controller:
-        zone: z1
-      metron_agent:
         zone: ""
-
-  - name: loggregator_trafficcontroller_z2
-    templates: (( grab meta.loggregator_trafficcontroller_templates ))
-    instances: 1
-    vm_type: loggregator_trafficcontroller
-    networks:
-      - name: cf
-    properties:
-      traffic_controller:
-        zone: z2
       metron_agent:
         zone: ""
 
