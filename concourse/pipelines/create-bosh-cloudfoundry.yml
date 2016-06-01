@@ -102,6 +102,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-os-conf-release.git
       tag_filter: {{cf_os_conf_version}}
+      branch: gds_master
 
   - name: graphite-nozzle
     type: git
