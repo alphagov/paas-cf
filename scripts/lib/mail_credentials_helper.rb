@@ -28,21 +28,21 @@ module EmailCredentialsHelper
     region = opts.fetch(:region, DEFAULT_REGION)
     ses = Aws::SES::Client.new(:region => region)
     mail = Mail.new do
-      from    opts[:source_address]
-      to      opts[:email]
-      subject opts[:subject]
+      from    opts.fetch(:source_address)
+      to      opts.fetch(:email)
+      subject opts.fetch(:subject)
 
       text_part do
-        body opts[:message]
+        body opts.fetch(:message)
       end
     end
-    opts[:attachments].each { | name, value |
+    opts.fetch(:attachments, {}).each { | name, value |
       mail.attachments[name] = value
     }
 
     ses.send_raw_email({
-      source: opts[:from],
-      destinations: [opts[:to]],
+      source: opts.fetch(:from),
+      destinations: [opts.fetch(:to)],
       raw_message: {
         data: mail.to_s,
       },
@@ -50,11 +50,11 @@ module EmailCredentialsHelper
   end
 
   def self.send_admin_credentials(api_url, user, source_address)
-    attachment_source = encrypt_message_to(user[:password], user[:gpg_key])
+    attachment_source = encrypt_message_to(user.fetch(:password), user.fetch(:gpg_key))
 
     send_email(
       :from           => source_address,
-      :to             => user[:email],
+      :to             => user.fetch(:email),
       :subject        => "PaaS admin account credentials",
       :message        => %Q{
 Hello,
@@ -62,8 +62,8 @@ Hello,
 A CF admin user has been created for you with the following details:
 
  - API url: #{api_url}
- - Login: #{user[:username]}
- - Password: Attached as a GPG encrypted file with key ID #{user[:gpg_key]}
+ - Login: #{user.fetch(:username)}
+ - Password: Attached as a GPG encrypted file with key ID #{user.fetch(:gpg_key)}
 
 You can decrypt the password attachment using:
 
@@ -71,7 +71,7 @@ You can decrypt the password attachment using:
 
 You can login and change your password by executing:
 
-  cf login -a #{api_url} -u #{user[:username]}
+  cf login -a #{api_url} -u #{user.fetch(:username)}
   cf passwd
 
 Regards,

@@ -18,14 +18,14 @@ def get_uaa_target(api_url)
     raise "Error connecting to API endpoint #{uri}: #{response}"
   end
   api_info = JSON.load(response.body)
-  api_info["token_endpoint"]
+  api_info.fetch("token_endpoint")
 end
 
 def load_admin_user_list(filename)
   users = YAML.load_file(filename)
   users.each_with_index.map { |u, i|
     {
-      username: u["username"] || u["email"],
+      username: u.fetch("username", u.fetch("email")),
       email: u["email"] || raise("User #{i} defined in file #{filename} is missing email"),
       gpg_key: u["gpg_key"] || raise("User #{i} defined in file #{filename} is missing gpg_key"),
     }
@@ -36,7 +36,7 @@ api_url = ARGV[0] || raise("You must pass API endpoint as first argument")
 users_filename = ARGV[1] || raise("You must pass a file of users as second argument")
 source_address = ARGV[2] || raise("You must pass an SES-validated address as third argument")
 
-admin_user = ENV['UAA_CLIENT'] || "admin"
+admin_user = ENV.fetch('UAA_CLIENT', "admin")
 admin_password = ENV['UAA_CLIENT_SECRET'] || raise("Must set $UAA_CLIENT_SECRET env var")
 
 puts "Syncing Admin users in #{api_url}..."
@@ -52,16 +52,16 @@ uaa_sync_admin_users.request_token()
 created_users, deleted_users = uaa_sync_admin_users.update_admin_users(users)
 
 created_users.each { |user|
-  puts "Sending credentials to new user #{user[:username]}"
+  puts "Sending credentials to new user #{user.fetch(:username)}"
   EmailCredentialsHelper.send_admin_credentials(api_url, user, source_address)
 }
 
 puts "Created users: #{created_users.length}"
 created_users.each { |u|
-  puts " - #{u[:username]}"
+  puts " - #{u.fetch(:username)}"
 }
 puts "Deleted users: #{deleted_users.length}"
 deleted_users.each { |u|
-  puts " - #{u[:username]}"
+  puts " - #{u.fetch(:username)}"
 }
 
