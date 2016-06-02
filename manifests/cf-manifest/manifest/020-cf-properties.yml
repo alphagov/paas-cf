@@ -368,7 +368,6 @@ properties:
   uaa:
     url: (( concat "https://uaa." properties.system_domain ))
     issuer: (( grab properties.uaa.url ))
-    ssh_proxy_client_secret: (( grab secrets.uaa_admin_client_secret ))
     token_url: (( concat properties.uaa.url "/oauth/token" ))
 
     no_ssl: ~
@@ -459,7 +458,7 @@ properties:
         override: true
         redirect-uri: /login
         scope: openid,cloud_controller.read,cloud_controller.write
-        secret: ssh-proxy-secret
+        secret: (( grab secrets.uaa_clients_ssh_proxy_secret ))
       graphite-nozzle:
         access-token-validity: 1209600
         authorized-grant-types: authorization_code,client_credentials,refresh_token
@@ -566,7 +565,7 @@ properties:
         require_ssl: true
       host_key: (( grab secrets.consul_server_key ))
 
-      uaa_secret: (( grab properties.uaa.ssh_proxy_client_secret ))
+      uaa_secret: (( grab properties.uaa.clients.ssh-proxy.secret ))
       uaa_token_url: (( grab properties.uaa.token_url ))
 
   capi:
