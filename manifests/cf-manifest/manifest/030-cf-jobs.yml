@@ -514,7 +514,7 @@ jobs:
     azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
-    vm_type: database
+    vm_type: medium
     stemcell: default
     networks:
       - name: cf

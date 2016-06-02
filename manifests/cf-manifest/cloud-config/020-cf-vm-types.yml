@@ -117,9 +117,3 @@ vm_types:
       security_groups:
         - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
         - (( grab terraform_outputs.default_security_group ))
-
-  - name: database
-    network: cf
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.large
