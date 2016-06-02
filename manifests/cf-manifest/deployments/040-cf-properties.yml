@@ -615,3 +615,5 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
+    rootfs_cflinuxfs2:
+      trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))

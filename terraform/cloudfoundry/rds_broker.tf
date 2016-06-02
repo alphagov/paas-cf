@@ -1,4 +1,3 @@
-
 resource "aws_db_subnet_group" "rds_broker" {
   name = "rdsbroker-${var.env}"
   description = "Subnet group for RDS broker managed instances"
@@ -35,5 +34,23 @@ resource "aws_security_group" "rds_broker_dbs" {
 
   tags {
     Name = "${var.env}-rds-broker-dbs"
+  }
+}
+
+resource "aws_db_parameter_group" "rds_broker_postgres95" {
+  name = "rdsbroker-postgres95-${var.env}"
+  family = "postgres9.5"
+  description = "RDS Broker Postgres 9.5 parameter group"
+
+  parameter {
+    apply_method = "pending-reboot"
+    name = "rds.force_ssl"
+    value = "1"
+  }
+
+  parameter {
+    apply_method = "pending-reboot"
+    name = "ssl"
+    value = "1"
   }
 }

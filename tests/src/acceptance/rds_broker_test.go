@@ -59,6 +59,19 @@ var _ = Describe("RDS broker", func() {
 				return command.Out
 			}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
 			fmt.Fprint(GinkgoWriter, "done\n")
+
+			Expect(cf.Cf(
+				"push", appName,
+				"--no-start",
+				"-b", config.GoBuildpackName,
+				"-p", "../../example-apps/healthcheck",
+				"-f", "../../example-apps/healthcheck/manifest.yml",
+				"-d", config.AppsDomain,
+			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+
+			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+
+			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 		})
 
 		AfterEach(func() {
@@ -76,27 +89,21 @@ var _ = Describe("RDS broker", func() {
 			fmt.Fprint(GinkgoWriter, "done\n")
 		})
 
-		It("can be used from an app", func() {
-			Expect(cf.Cf(
-				"push", appName,
-				"--no-start",
-				"-b", config.GoBuildpackName,
-				"-p", "../../example-apps/healthcheck",
-				"-f", "../../example-apps/healthcheck/manifest.yml",
-				"-d", config.AppsDomain,
-			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
-
-			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
-
-			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
-
-			// Hit app endpoint to verify functionality.
-			fmt.Fprintln(GinkgoWriter, "Sending request to DB Healthcheck app")
+		It("can connect to the DB instance from the app", func() {
+			By("Sending request to DB Healthcheck app")
 			resp, err := httpClient.Get(helpers.AppUri(appName, "/db"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+
+			By("Sending request to DB Healthcheck app without TLS")
+			resp, err = httpClient.Get(helpers.AppUri(appName, "/db?ssl=false"))
+			Expect(err).NotTo(HaveOccurred())
+			body, err = ioutil.ReadAll(resp.Body)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(resp.StatusCode).NotTo(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+			Expect(body).To(MatchRegexp("no pg_hba.conf entry for .* SSL off"), "Connection without TLS did not report a TLS error")
 		})
 	})
 })

@@ -105,3 +105,7 @@ output "rds_broker_dbs_security_group_id" {
 output "rds_broker_dbs_subnet_group" {
   value = "${aws_db_subnet_group.rds_broker.name}"
 }
+
+output "rds_broker_postgres95_db_parameter_group" {
+  value = "${aws_db_parameter_group.rds_broker_postgres95.id}"
+}
