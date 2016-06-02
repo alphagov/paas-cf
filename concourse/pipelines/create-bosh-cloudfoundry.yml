@@ -604,7 +604,7 @@ jobs:
                 tar -xvzf bosh-CA/bosh-CA.tar.gz -C out
                 ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > bosh-CA-yml/bosh-ca-cert.yml
 
-      - task: render-manifest
+      - task: render-bosh-manifest
         config:
           platform: linux
           image: docker:///governmentpaas/spruce
@@ -915,7 +915,7 @@ jobs:
                     < ${state}-tfstate/${state}.tfstate \
                     > terraform-outputs/${state}.tfvars.sh
                 done
-      - task: generate-manifest
+      - task: generate-cf-manifest
         config:
           platform: linux
           image: docker:///governmentpaas/spruce
