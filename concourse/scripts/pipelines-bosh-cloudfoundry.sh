@@ -42,6 +42,7 @@ prepare_environment() {
   cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/040-graphite.yml")
   cf_aws_broker_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.aws-broker.version "${cf_manifest_dir}/050-rds-broker.yml")
   cf_os_conf_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.os-conf.version "${cf_manifest_dir}/runtime/runtime.yml")
+  stemcell_version=$("${SCRIPT_DIR}"/val_from_yaml.rb stemcells.0.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
 
   if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
     gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
@@ -74,6 +75,7 @@ cf_grafana_version: ${cf_grafana_version}
 cf_aws_broker_version: ${cf_aws_broker_version}
 cf_os_conf_version: ${cf_os_conf_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
+stemcell_version: ${stemcell_version}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}

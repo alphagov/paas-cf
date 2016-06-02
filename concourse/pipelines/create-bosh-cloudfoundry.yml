@@ -1063,6 +1063,23 @@ jobs:
                 paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
                   {{cf_os_conf_version}} os-conf-boshrelease
 
+      - task: get-and-upload-stemcell
+        config:
+          platform: linux
+          image: docker:///governmentpaas/bosh-cli
+          inputs:
+            - name: bosh-secrets
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                wget https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v={{stemcell_version}} -O stemcell.tgz
+                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                bosh upload stemcell stemcell.tgz --skip-if-exists
+
       - task: cf-deploy
         config:
           platform: linux
