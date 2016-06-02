@@ -8,176 +8,123 @@ releases:
   version: 4
   sha1: c92ce357c5e1e77a4fb7944d58a1971c7aee06b0
 
-resource_pools:
-- name: elastic_master_z1
-  network: (( grab resource_pools.medium_z1.network ))
-  stemcell: (( grab meta.stemcell ))
-  env: (( grab meta.default_env ))
-  cloud_properties:
-    availability_zone: (( grab resource_pools.medium_z1.cloud_properties.availability_zone ))
-    instance_type: (( grab resource_pools.medium_z1.cloud_properties.instance_type ))
-    elbs:
-      - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
-
-- name: elastic_master_z2
-  network: (( grab resource_pools.medium_z2.network ))
-  stemcell: (( grab meta.stemcell ))
-  env: (( grab meta.default_env ))
-  cloud_properties:
-    availability_zone: (( grab resource_pools.medium_z2.cloud_properties.availability_zone ))
-    instance_type: (( grab resource_pools.medium_z2.cloud_properties.instance_type ))
-    elbs:
-      - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
-
-- name: elastic_master_z3
-  network: (( grab resource_pools.medium_z3.network ))
-  stemcell: (( grab meta.stemcell ))
-  env: (( grab meta.default_env ))
-  cloud_properties:
-    availability_zone: (( grab resource_pools.medium_z3.cloud_properties.availability_zone ))
-    instance_type: (( grab resource_pools.medium_z3.cloud_properties.instance_type ))
-    elbs:
-      - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
-
-- name: ingestor_z1
-  network: (( grab resource_pools.medium_z1.network ))
-  stemcell: (( grab meta.stemcell ))
-  env: (( grab meta.default_env ))
-  cloud_properties:
-    availability_zone: (( grab resource_pools.medium_z1.cloud_properties.availability_zone ))
-    instance_type: (( grab resource_pools.medium_z1.cloud_properties.instance_type ))
-    elbs:
-      - (( grab terraform_outputs.logsearch_ingestor_elb_name ))
-
-- name: ingestor_z2
-  network: (( grab resource_pools.medium_z2.network ))
-  stemcell: (( grab meta.stemcell ))
-  env: (( grab meta.default_env ))
-  cloud_properties:
-    availability_zone: (( grab resource_pools.medium_z2.cloud_properties.availability_zone ))
-    instance_type: (( grab resource_pools.medium_z2.cloud_properties.instance_type ))
-    elbs:
-      - (( grab terraform_outputs.logsearch_ingestor_elb_name ))
-
-- name: kibana_z1
-  network: (( grab resource_pools.small_z1.network ))
-  stemcell: (( grab meta.stemcell ))
-  env: (( grab meta.default_env ))
-  cloud_properties:
-    availability_zone: (( grab meta.zones.z1 ))
-    instance_type: (( grab resource_pools.small_z1.cloud_properties.instance_type ))
-    ephemeral_disk: (( grab resource_pools.small_z1.cloud_properties.ephemeral_disk ))
-    elbs:
-      - (( grab terraform_outputs.logsearch_elb_name ))
-
-disk_pools:
-- name: elasticsearch_master
-  disk_size: 102400
-  cloud_properties:
-    type: gp2
-
-- name: queue
-  disk_size: 102400
-  cloud_properties:
-    type: gp2
-
 jobs:
 - name: ingestor_z1
   release: logsearch
+  azs: [z1]
   templates:
   - {name: ingestor_syslog, release: logsearch}
   - {name: ingestor_relp, release: logsearch}
-  resource_pool: ingestor_z1
+  vm_type: ingestor
+  stemcell: default
   instances: 1
   networks:
-  - name: cf1
+  - name: cf
     default: [gateway, dns]
-    static_ips: (( static_ips(2) ))
+    static_ips:
+      - 10.0.16.12
   update: (( grab properties.update ))
   properties:
     redis:
-      host: (( grab jobs.queue_z1.networks.cf1.static_ips.[0] ))
+      host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
+  migrated_from:
+    - {name: ingestor_z1, az: z1}
 
 - name: ingestor_z2
   release: logsearch
+  azs: [z2]
   templates:
   - {name: ingestor_syslog, release: logsearch}
   - {name: ingestor_relp, release: logsearch}
-  resource_pool: ingestor_z2
+  vm_type: ingestor
+  stemcell: default
   instances: 1
   networks:
-  - name: cf2
+  - name: cf
     default: [gateway, dns]
-    static_ips: (( static_ips(2) ))
+    static_ips:
+      - 10.0.17.12
   update: (( grab properties.update ))
   properties:
     redis:
-      host: (( grab jobs.queue_z2.networks.cf2.static_ips.[0] ))
+      host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
+  migrated_from:
+    - {name: ingestor_z2, az: z2}
 
-- name: queue_z1
+- name: queue
   release: logsearch
+  azs: [z1, z2]
   templates:
   - {name: queue, release: logsearch}
-  resource_pool: small_z1
-  instances: 1
+  vm_type: small
+  stemcell: default
+  instances: 2
   networks:
-  - name: cf1
-    static_ips: (( static_ips(3) ))
-  persistent_disk_pool: queue
+  - name: cf
+    static_ips:
+      - 10.0.16.13
+      - 10.0.17.13
+  disk_type: queue
   update: (( grab properties.update ))
-
-- name: queue_z2
-  release: logsearch
-  templates:
-  - {name: queue, release: logsearch}
-  resource_pool: small_z2
-  instances: 1
-  networks:
-  - name: cf2
-    static_ips: (( static_ips(3) ))
-  persistent_disk_pool: queue
-  update: (( grab properties.update ))
+  migrated_from:
+    - {name: queue_z1, az: z1}
+    - {name: queue_z2, az: z2}
 
 - name: parser_z1
   release: logsearch
+  azs: [z1]
   templates:
   - {name: parser, release: logsearch}
-  resource_pool: medium_z1
+  vm_type: medium
+  stemcell: default
   instances: 1
   networks:
-  - name: cf1
-    static_ips: (( static_ips(4) ))
+  - name: cf
+    static_ips:
+      - 10.0.16.14
   update: (( grab properties.update ))
   properties:
     redis:
-      host: (( grab jobs.queue_z1.networks.cf1.static_ips.[0] ))
+      host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
     logstash: (( grab properties.parser_logstash ))
+  migrated_from:
+    - {name: parser_z1, az: z1}
 
 - name: parser_z2
   release: logsearch
+  azs: [z2]
   templates:
   - {name: parser, release: logsearch}
-  resource_pool: medium_z2
+  vm_type: medium
+  stemcell: default
   instances: 1
   networks:
-  - name: cf2
-    static_ips: (( static_ips(4) ))
+  - name: cf
+    static_ips:
+      - 10.0.17.14
   update: (( grab properties.update ))
   properties:
     redis:
-      host: (( grab jobs.queue_z2.networks.cf2.static_ips.[0] ))
+      host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
     logstash: (( grab properties.parser_logstash ))
+  migrated_from:
+    - {name: parser_z2, az: z2}
 
-- name: elasticsearch_master_z1
+- name: elasticsearch_master
   release: logsearch
+  azs: [z1, z2, z3]
   templates:
   - {name: elasticsearch, release: logsearch}
-  resource_pool: elastic_master_z1
-  instances: 1
+  vm_type: elasticsearch_master
+  stemcell: default
+  instances: 3
   networks:
-  - name: cf1
-    static_ips: (( static_ips(0) ))
-  persistent_disk_pool: elasticsearch_master
+  - name: cf
+    static_ips:
+      - 10.0.16.10
+      - 10.0.17.10
+      - 10.0.18.10
+  persistent_disk_type: elasticsearch_master
   properties:
     elasticsearch:
       node:
@@ -187,78 +134,35 @@ jobs:
         minimum_master_nodes: 2
       master_hosts: (( grab properties.elasticsearch.master_hosts ))
   update: (( grab properties.update ))
+  migrated_from:
+    - {name: elasticsearch_master_z1, az: z1}
+    - {name: elasticsearch_master_z2, az: z2}
+    - {name: elasticsearch_master_z3, az: z3}
 
-- name: elasticsearch_master_z2
-  release: logsearch
-  templates:
-  - {name: elasticsearch, release: logsearch}
-  resource_pool: elastic_master_z2
-  instances: 1
-  networks:
-  - name: cf2
-    static_ips: (( static_ips(0) ))
-  persistent_disk_pool: elasticsearch_master
-  properties:
-    elasticsearch:
-      node:
-        allow_master: true
-        allow_data: true
-      discovery:
-        minimum_master_nodes: 2
-      master_hosts: (( grab properties.elasticsearch.master_hosts ))
-  update: (( grab properties.update ))
-
-- name: elasticsearch_master_z3
-  release: logsearch
-  templates:
-  - {name: elasticsearch, release: logsearch}
-  resource_pool: elastic_master_z3
-  instances: 1
-  networks:
-  - name: cf3
-    static_ips: (( static_ips(0) ))
-  persistent_disk_pool: elasticsearch_master
-  properties:
-    elasticsearch:
-      node:
-        allow_master: true
-        allow_data: true
-      discovery:
-        minimum_master_nodes: 2
-      master_hosts: (( grab properties.elasticsearch.master_hosts ))
-  update: (( grab properties.update ))
-
-- name: maintenance_z1
+- name: maintenance
   instances: 1
   release: logsearch
+  azs: [z1, z2]
   templates:
   - {name: elasticsearch_config, release: logsearch}
   - {name: curator, release: logsearch}
-  resource_pool: small_z1
+  vm_type: small
+  stemcell: default
   networks:
-  - name: cf1
-  update: (( grab properties.update ))
-  
-- name: maintenance_z2
-  instances: 1
-  release: logsearch
-  templates:
-  - {name: elasticsearch_config, release: logsearch}
-  - {name: curator, release: logsearch}
-  resource_pool: small_z2
-  networks:
-  - name: cf2
+  - name: cf
   update: (( grab properties.update ))
 
 - name: kibana
   release: logsearch
+  azs: [z1, z2]
   templates:
   - {name: kibana, release: logsearch}
   - {name: haproxy, release: logsearch}
-  resource_pool: kibana_z1
+  vm_type: kibana
+  stemcell: default
   instances: 1
   networks:
-  - name: cf1
+  - name: cf
   update: (( grab properties.update ))
 
 properties:
@@ -273,7 +177,7 @@ properties:
   curator:
     elasticsearch_host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
   elasticsearch:
-    master_hosts: (( grab jobs.elasticsearch_master_z1.networks.cf1.static_ips jobs.elasticsearch_master_z2.networks.cf2.static_ips jobs.elasticsearch_master_z3.networks.cf3.static_ips ))
+    master_hosts: (( grab jobs.elasticsearch_master.networks.cf.static_ips[0] jobs.elasticsearch_master.networks.cf.static_ips[1] jobs.elasticsearch_master.networks.cf.static_ips[2] ))
     cluster_name: logsearch
   kibana:
     elasticsearch: (( concat terraform_outputs.logsearch_elastic_master_elb_dns_name ":9200" ))

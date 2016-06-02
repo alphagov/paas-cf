@@ -1,0 +1,34 @@
+---
+vm_types:
+  - name: kibana
+    network: (( grab vm_types.small.network ))
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: (( grab vm_types.small.cloud_properties.instance_type ))
+      ephemeral_disk: (( grab vm_types.small.cloud_properties.ephemeral_disk ))
+      elbs:
+        - (( grab terraform_outputs.logsearch_elb_name ))
+
+  - name: ingestor
+    network: (( grab vm_types.medium.network ))
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: (( grab vm_types.medium.cloud_properties.instance_type ))
+      elbs:
+        - (( grab terraform_outputs.logsearch_ingestor_elb_name ))
+
+  - name: elasticsearch_master
+    network: (( grab vm_types.medium.network ))
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: (( grab vm_types.medium.cloud_properties.instance_type ))
+      elbs:
+        - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
+
+disk_types:
+  - name: elasticsearch_master
+    disk_size: 102400
+    cloud_properties: {type: gp2}
+  - name: queue
+    disk_size: 102400
+    cloud_properties: {type: gp2}
