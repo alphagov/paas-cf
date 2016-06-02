@@ -1030,74 +1030,76 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-CA
           - get: graphite-nozzle
-      - task: upload-releases
-        config:
-          platform: linux
-          image: docker:///governmentpaas/bosh-cli
-          inputs:
-            - name: paas-cf
-            - name: bosh-secrets
-            - name: graphite-statsd-boshrelease
-            - name: grafana-boshrelease
-            - name: paas-haproxy-release
-            - name: aws-broker-boshrelease
-            - name: os-conf-boshrelease
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
-                  {{cf_graphite_version}} graphite-statsd-boshrelease
+      - aggregate:
+        - task: upload-releases
+          config:
+            platform: linux
+            image: docker:///governmentpaas/bosh-cli
+            inputs:
+              - name: paas-cf
+              - name: bosh-secrets
+              - name: graphite-statsd-boshrelease
+              - name: grafana-boshrelease
+              - name: paas-haproxy-release
+              - name: aws-broker-boshrelease
+              - name: os-conf-boshrelease
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
-                  {{cf_grafana_version}} grafana-boshrelease
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
+                    {{cf_graphite_version}} graphite-statsd-boshrelease
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
-                  {{cf-paas-haproxy-release-version}} paas-haproxy-release
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
+                    {{cf_grafana_version}} grafana-boshrelease
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
-                {{cf_aws_broker_version}} aws-broker-boshrelease
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
+                    {{cf-paas-haproxy-release-version}} paas-haproxy-release
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
-                  {{cf_os_conf_version}} os-conf-boshrelease
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
+                    {{cf_os_conf_version}} os-conf-boshrelease
 
-      - task: get-and-upload-stemcell
-        config:
-          platform: linux
-          image: docker:///governmentpaas/bosh-cli
-          inputs:
-            - name: bosh-secrets
-            - name: paas-cf
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                wget https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v={{stemcell_version}} -O stemcell.tgz
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-                bosh upload stemcell stemcell.tgz --skip-if-exists
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
+                    {{cf_aws_broker_version}} aws-broker-boshrelease
 
-      - task: update-cloud-config
-        config:
-          platform: linux
-          image: docker:///governmentpaas/bosh-cli
-          inputs:
-            - name: cloud-config
-            - name: bosh-secrets
-            - name: paas-cf
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-                bosh update cloud-config cloud-config/cloud-config.yml
+        - task: get-and-upload-stemcell
+          config:
+            platform: linux
+            image: docker:///governmentpaas/bosh-cli
+            inputs:
+              - name: bosh-secrets
+              - name: paas-cf
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  wget https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v={{stemcell_version}} -O stemcell.tgz
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  bosh upload stemcell stemcell.tgz --skip-if-exists
+
+        - task: update-cloud-config
+          config:
+            platform: linux
+            image: docker:///governmentpaas/bosh-cli
+            inputs:
+              - name: cloud-config
+              - name: bosh-secrets
+              - name: paas-cf
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  bosh update cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
         config:
