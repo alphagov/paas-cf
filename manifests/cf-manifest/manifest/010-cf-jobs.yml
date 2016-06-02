@@ -361,7 +361,7 @@ jobs:
     azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 2
-    vm_type: medium
+    vm_type: colocated
     stemcell: default
     networks:
       - name: cf
