@@ -11,8 +11,6 @@
   gpg_key: "F894D40022652456"
 - email: "alex.tomlins@digital.cabinet-office.gov.uk"
   gpg_key: "14491C3B34141441"
-- email: "jim.conner@digital.cabinet-office.gov.uk"
-  gpg_key: "935B477C77AACBC2"
 - email: "hector.rivas.gandara@digital.cabinet-office.gov.uk"
   gpg_key: "52B75DB594450C1F"
 - email: "piotr.komborski@digital.cabinet-office.gov.uk"
