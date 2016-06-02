@@ -215,6 +215,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: cf-manifest.yml
 
+  - name: cloud-config
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: cloud-config.yml
+
   - name: cf-release
     type: git
     source:
@@ -915,6 +922,35 @@ jobs:
                     < ${state}-tfstate/${state}.tfstate \
                     > terraform-outputs/${state}.tfvars.sh
                 done
+      - task: generate-cloud-config
+        config:
+          platform: linux
+          image: docker:///governmentpaas/spruce
+          inputs:
+            - name: paas-cf
+            - name: terraform-outputs
+            - name: cf-secrets
+          outputs:
+            - name: cloud-config
+          params:
+            MANIFEST_STUBS: |
+              ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
+              ./terraform-outputs/*.yml
+              ./cf-secrets/cf-secrets.yml
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo "Generating cloud config..."
+
+                ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+        on_success:
+          put: cloud-config
+          params:
+            file: cloud-config/cloud-config.yml
+
       - task: generate-cf-manifest
         config:
           platform: linux
