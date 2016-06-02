@@ -180,7 +180,7 @@ class UaaSyncAdminUsers
       end
 
       if Time.parse(user_info.fetch("meta").fetch("created")) < (Time.now - HOURS_TO_KEEP_TEST_USERS * 60 * 60)
-        get_logger.info("Deleting admin user #{user_info.fetch("userName")} which is not in the list.")
+        get_logger.info("Deleting admin user #{user_info.fetch("username")} which is not in the list.")
         ua.delete(:user, user_id)
         deleted_users << { username: user_info.fetch("username"), email: user_info.fetch("emails").fetch(0).fetch("value") }
       else
