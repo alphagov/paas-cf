@@ -50,6 +50,7 @@ create_new_tag(){
 }
 
 cd paas-cf
+git fetch --tags
 check_already_tagged "${TAG_PREFIX}"
 
 echo Configure Git
