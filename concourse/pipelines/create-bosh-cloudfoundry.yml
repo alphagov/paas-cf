@@ -1016,6 +1016,8 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['generate-cf-config']
+          - get: cloud-config
+            passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
           - get: bosh-secrets
@@ -1079,6 +1081,23 @@ jobs:
                 wget https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v={{stemcell_version}} -O stemcell.tgz
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 bosh upload stemcell stemcell.tgz --skip-if-exists
+
+      - task: update-cloud-config
+        config:
+          platform: linux
+          image: docker:///governmentpaas/bosh-cli
+          inputs:
+            - name: cloud-config
+            - name: bosh-secrets
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                bosh update cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
         config:
