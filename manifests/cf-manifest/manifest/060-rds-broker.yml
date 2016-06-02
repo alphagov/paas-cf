@@ -21,32 +21,19 @@ releases:
   - name: aws-broker
     version: 0.0.3
 
-resource_pools:
-  - name: rds_broker_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      iam_instance_profile: rds-broker
-      ephemeral_disk:
-        size: 10240
-        type: gp2
-      availability_zone: (( grab meta.zones.z1 ))
-      security_groups:
-        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
-        - (( grab terraform_outputs.default_security_group ))
-
 jobs:
-  - name: rds_broker_z1
+  - name: rds_broker
+    azs: [z1]
     instances: 1
-    resource_pool: rds_broker_z1
+    vm_type: rds_broker
+    stemcell: default
     templates:
       - name: rds-broker
         release: aws-broker
     networks:
-      - name: cf1
-        static_ips: (( static_ips(15) ))
+      - name: cf
+        static_ips:
+          - 10.0.16.25
     properties:
       rds-broker:
         aws_access_key_id: ""
