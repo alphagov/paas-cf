@@ -922,87 +922,89 @@ jobs:
                     < ${state}-tfstate/${state}.tfstate \
                     > terraform-outputs/${state}.tfvars.sh
                 done
-      - task: generate-cloud-config
-        config:
-          platform: linux
-          image: docker:///governmentpaas/spruce
-          inputs:
-            - name: paas-cf
-            - name: terraform-outputs
-            - name: cf-secrets
-          outputs:
-            - name: cloud-config
-          params:
-            MANIFEST_STUBS: |
-              ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
-              ./terraform-outputs/*.yml
-              ./cf-secrets/cf-secrets.yml
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo "Generating cloud config..."
 
-                ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
-        on_success:
-          put: cloud-config
-          params:
-            file: cloud-config/cloud-config.yml
+      - aggregate:
+        - task: generate-cloud-config
+          config:
+            platform: linux
+            image: docker:///governmentpaas/spruce
+            inputs:
+              - name: paas-cf
+              - name: terraform-outputs
+              - name: cf-secrets
+            outputs:
+              - name: cloud-config
+            params:
+              MANIFEST_STUBS: |
+                ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
+                ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  echo "Generating cloud config..."
 
-      - task: generate-cf-manifest
-        config:
-          platform: linux
-          image: docker:///governmentpaas/spruce
-          inputs:
-            - name: paas-cf
-            - name: terraform-outputs
-            - name: cf-secrets
-            - name: cf-certs
-            - name: bosh-CA
-          outputs:
-            - name: cf-manifest
-          params:
-            MANIFEST_STUBS: |
-              ./paas-cf/manifests/cf-manifest/manifest/*.yml
-              ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
-              ./terraform-outputs/*.yml
-              ./cf-secrets/cf-secrets.yml
-              ./certs/*.yml
-              ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                mkdir certs
-                echo "Extracting extant certs"
-                tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
-                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+          on_success:
+            put: cloud-config
+            params:
+              file: cloud-config/cloud-config.yml
 
-                cd certs
-                for file in *.crt; do
-                  cn=${file%.crt}
-                  yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+        - task: generate-cf-manifest
+          config:
+            platform: linux
+            image: docker:///governmentpaas/spruce
+            inputs:
+              - name: paas-cf
+              - name: terraform-outputs
+              - name: cf-secrets
+              - name: cf-certs
+              - name: bosh-CA
+            outputs:
+              - name: cf-manifest
+            params:
+              MANIFEST_STUBS: |
+                ./paas-cf/manifests/cf-manifest/manifest/*.yml
+                ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
+                ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
+                ./certs/*.yml
+                ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  mkdir certs
+                  echo "Extracting extant certs"
+                  tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
+                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-                  echo "Converting ${cn} certs to YAML"
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
-                done
+                  cd certs
+                  for file in *.crt; do
+                    cn=${file%.crt}
+                    yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
 
-                ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
-                cd ..
+                    echo "Converting ${cn} certs to YAML"
+                    ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
+                    ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
+                  done
 
-                echo "Generating manifests"
+                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
+                  cd ..
 
-                # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
-        on_success:
-          put: cf-manifest
-          params:
-            file: cf-manifest/cf-manifest.yml
+                  echo "Generating manifests"
+
+                  # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
+                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+          on_success:
+            put: cf-manifest
+            params:
+              file: cf-manifest/cf-manifest.yml
 
   - name: cf-deploy
     serial_groups: [cf-deploy]
