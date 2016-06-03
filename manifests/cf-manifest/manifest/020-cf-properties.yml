@@ -18,7 +18,8 @@ properties:
   app_domains:
    - (( grab terraform_outputs.cf_apps_domain ))
 
-  app_ssh: ~
+  app_ssh:
+    host_key_fingerprint: (( grab secrets.ssh_proxy_host_key.public_fingerprint ))
 
   support_address: "https://government-paas-developer-docs.readthedocs.io/"
   description: null
@@ -563,7 +564,7 @@ properties:
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
-      host_key: (( grab secrets.consul_server_key ))
+      host_key: (( grab secrets.ssh_proxy_host_key.private_key ))
       enable_cf_auth: true
       enable_diego_auth: false
       diego_credentials: ""
