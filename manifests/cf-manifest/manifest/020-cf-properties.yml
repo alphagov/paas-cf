@@ -564,7 +564,9 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       host_key: (( grab secrets.consul_server_key ))
-
+      enable_cf_auth: true
+      enable_diego_auth: false
+      diego_credentials: ""
       uaa_secret: (( grab properties.uaa.clients.ssh-proxy.secret ))
       uaa_token_url: (( grab properties.uaa.token_url ))
 
