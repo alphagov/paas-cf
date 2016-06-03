@@ -72,6 +72,24 @@ RSpec.describe "tag-release.sh", :type => :aruba do
         expect(last_command_started).not_to have_output include_output_string "next-0.0.3"
       end
     end
+
+    context("when I use cached git resouce in concurse and the origin has changed") do
+      before(:each) do
+        clone_repository("paas-cf")
+        bash_block("cd paas-cf && git checkout previous-0.0.3")
+        bash_block("cd origin_repo && git tag next-0.0.3 && cd ..")
+      end
+
+      it("should skip and not fail while promoting tag to 'next-*'") do
+        run("./tag-release.sh next- test_aws_account test_env \"previous-*\"")
+        expect(last_command_started).to have_exit_status(0)
+        last_command_output = last_command_started.output.strip
+          
+        expect(last_command_output).to include("WARNING: already tagged to current commit for environment")
+        bash_block("cd paas-cf && git tag -l \"next-*\" --sort version:refname | tail -n 1", :quiet => true)
+        expect(last_command_started.output).to include("next-0.0.3")
+      end
+    end
   end
 end
 
