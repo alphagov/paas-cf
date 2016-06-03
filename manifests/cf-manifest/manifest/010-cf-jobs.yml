@@ -460,21 +460,6 @@ jobs:
         rep:
           zone: z1
 
-  - name: cell_z2
-    azs: [z2]
-    templates: (( grab meta.diego_job_templates.cell ))
-    instances: (( grab meta.cell_z2.instances ))
-    vm_type: cell
-    stemcell: default
-    networks:
-      - name: cell
-    properties:
-      metron_agent:
-        zone: ""
-      diego:
-        rep:
-          zone: z2
-
   - name: colocated_z1
     azs: [z1]
     templates: (( grab meta.diego_job_templates.colocated ))
@@ -489,6 +474,8 @@ jobs:
           zone: z1
       metron_agent:
         zone: ""
+    update:
+      serial: true
 
   - name: colocated_z2
     azs: [z2]
@@ -504,6 +491,21 @@ jobs:
           zone: z2
       metron_agent:
         zone: ""
+
+  - name: cell_z2
+    azs: [z2]
+    templates: (( grab meta.diego_job_templates.cell ))
+    instances: (( grab meta.cell_z2.instances ))
+    vm_type: cell
+    stemcell: default
+    networks:
+      - name: cell
+    properties:
+      metron_agent:
+        zone: ""
+      diego:
+        rep:
+          zone: z2
 
   - name: database
     azs: [z1, z2]
