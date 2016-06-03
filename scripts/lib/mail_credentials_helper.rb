@@ -28,8 +28,8 @@ module EmailCredentialsHelper
     region = opts.fetch(:region, DEFAULT_REGION)
     ses = Aws::SES::Client.new(:region => region)
     mail = Mail.new do
-      from    opts.fetch(:source_address)
-      to      opts.fetch(:email)
+      from    opts.fetch(:from)
+      to      opts.fetch(:to)
       subject opts.fetch(:subject)
 
       text_part do
