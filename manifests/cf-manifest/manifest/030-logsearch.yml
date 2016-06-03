@@ -1,3 +1,9 @@
+meta:
+  update:
+    serial: false
+    canaries: 1
+    max_in_flight: 1
+
 releases:
 - name: logsearch
   url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=200.0.0
@@ -23,7 +29,7 @@ jobs:
     default: [gateway, dns]
     static_ips:
       - 10.0.16.12
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
@@ -44,7 +50,7 @@ jobs:
     default: [gateway, dns]
     static_ips:
       - 10.0.17.12
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
@@ -65,7 +71,7 @@ jobs:
       - 10.0.16.13
       - 10.0.17.13
   disk_type: queue
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
   migrated_from:
     - {name: queue_z1, az: z1}
     - {name: queue_z2, az: z2}
@@ -82,7 +88,7 @@ jobs:
   - name: cf
     static_ips:
       - 10.0.16.14
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
@@ -102,7 +108,7 @@ jobs:
   - name: cf
     static_ips:
       - 10.0.17.14
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
@@ -133,7 +139,7 @@ jobs:
       discovery:
         minimum_master_nodes: 2
       master_hosts: (( grab properties.elasticsearch.master_hosts ))
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
   migrated_from:
     - {name: elasticsearch_master_z1, az: z1}
     - {name: elasticsearch_master_z2, az: z2}
@@ -150,7 +156,7 @@ jobs:
   stemcell: default
   networks:
   - name: cf
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
 
 - name: kibana
   release: logsearch
@@ -163,7 +169,7 @@ jobs:
   instances: 1
   networks:
   - name: cf
-  update: (( grab properties.update ))
+  update: (( grab meta.update ))
 
 properties:
   syslog_daemon_config:
@@ -195,7 +201,3 @@ properties:
       enabled: false
     logs:
       server: (( concat terraform_outputs.logsearch_ingestor_elb_dns_name ":5514" ))
-  update:
-    serial: false
-    canaries: 1
-    max_in_flight: 1
