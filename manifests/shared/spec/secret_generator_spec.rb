@@ -38,6 +38,31 @@ RSpec.describe SecretGenerator do
     end
   end
 
+  describe "ssh key generation" do
+    let(:ssh_key_fixture) {
+      fixture_file = File.expand_path("../fixtures/sample_key", __FILE__)
+      OpenSSL::PKey::RSA.new(File.read(fixture_file))
+    }
+    before(:each) do
+      allow(OpenSSL::PKey::RSA).to receive(:new).and_return(ssh_key_fixture)
+    end
+
+    let(:generated_key) { SecretGenerator.generate_ssh_key }
+
+    it "should return a PEM encoded private SSH key" do
+      expect(generated_key).to include(
+        "private_key" => ssh_key_fixture.to_pem,
+      )
+    end
+
+    it "should return the fingerprint of the public key" do
+      # expected fingerprint generated with `ssh-keygen -lf fixtures/sample_key.pub`
+      expect(generated_key).to include(
+        "public_fingerprint" => "ce:f2:03:7f:22:3e:c5:ec:18:b8:c0:70:b5:42:91:e7",
+      )
+    end
+  end
+
   describe "generating required passwords" do
 
     it "generates the requested simple passwords" do
@@ -62,6 +87,17 @@ RSpec.describe SecretGenerator do
       expect(results["consul_encrypt_keys"]).to be_a(Array)
       expect(results["consul_encrypt_keys"].size).to eq(1)
       expect(results["consul_encrypt_keys"].first).to match(SIMPLE_PASSWORD_REGEX)
+    end
+
+    it "generates ssh keys when requested" do
+      required_secrets = {
+        "test_host_key" => :ssh_key,
+      }
+      results = SecretGenerator.new(required_secrets).generate
+
+      expect(results["test_host_key"]).to be_a(Hash)
+      expect(results["test_host_key"].keys).to match_array(%w(private_key public_fingerprint))
+      expect(results["test_host_key"]["private_key"]).to include("-----BEGIN RSA PRIVATE KEY-----")
     end
 
     it "errors when given an unrecognized password type" do
@@ -99,10 +135,11 @@ RSpec.describe SecretGenerator do
         "array" => :simple_in_array,
         "crypted" => :sha512_crypted,
         "simple3" => :simple,
+        "host_key" => :ssh_key,
       }
       results = SecretGenerator.new(required_secrets).generate
 
-      expect(results.keys).to match_array(%w(simple1 simple2 simple3 array crypted crypted_orig))
+      expect(results.keys).to match_array(%w(simple1 simple2 simple3 array crypted crypted_orig host_key))
     end
   end
 
@@ -112,6 +149,7 @@ RSpec.describe SecretGenerator do
       "simple2" => :simple,
       "array" => :simple_in_array,
       "crypted" => :sha512_crypted,
+      "host_key" => :ssh_key,
     }}
     let(:generator) { SecretGenerator.new(required_secrets) }
 
@@ -142,6 +180,16 @@ RSpec.describe SecretGenerator do
 
       expect(results["crypted"]).to eq("something_crypted")
       expect(results["crypted_orig"]).to eq("something")
+    end
+
+    it "keeps ssh keys from the existing set" do
+      generator.existing_secrets = {
+        "host_key" => {"private_key" => "1234", "public_fingerprint" => "2345"},
+      }
+      results = generator.generate
+
+      expect(results["host_key"]["private_key"]).to eq("1234")
+      expect(results["host_key"]["public_fingerprint"]).to eq("2345")
     end
 
     it "ignores passwords in the existing set that aren't in the requested set" do
