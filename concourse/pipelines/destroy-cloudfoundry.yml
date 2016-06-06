@@ -103,6 +103,7 @@ jobs:
             MAKEFILE_ENV_TARGET: {{makefile_env_target}}
             SELF_UPDATE_PIPELINE: {{self_update_pipeline}}
             PIPELINES_TO_UPDATE: {{pipeline_name}}
+            ENABLE_DESTROY: {{enable_destroy}}
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
