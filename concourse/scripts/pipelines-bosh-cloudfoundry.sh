@@ -57,6 +57,7 @@ generate_vars_file() {
   cat <<EOF
 ---
 pipeline_name: ${pipeline_name}
+enable_destroy: ${ENABLE_DESTROY:-}
 makefile_env_target: ${MAKEFILE_ENV_TARGET:-dev}
 self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
 skip_upload_generated_certs: ${SKIP_UPLOAD_GENERATED_CERTS:-false}
@@ -104,11 +105,21 @@ update_pipeline() {
   pipeline_name=$1
 
   case $pipeline_name in
-    create-bosh-cloudfoundry|destroy-microbosh|destroy-cloudfoundry|failure-testing)
+    create-bosh-cloudfoundry|failure-testing)
       bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
         "${env}" "${pipeline_name}" \
         <(generate_manifest_file) \
         <(generate_vars_file)
+    ;;
+    destroy-*)
+      if [ -n "${ENABLE_DESTROY:-}" ]; then
+        bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+          "${env}" "${pipeline_name}" \
+          <(generate_manifest_file) \
+          <(generate_vars_file)
+      else
+        yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+      fi
     ;;
     autodelete-cloudfoundry)
       if [ -n "${ENABLE_AUTODELETE:-}" ]; then

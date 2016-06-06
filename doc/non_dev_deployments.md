@@ -102,3 +102,12 @@ AWS key to your own, it's necessary to export the concourse password:
 ```
 export CONCOURSE_ATC_PASSWORD=the_password
 ```
+
+## Destroying an existing environment
+
+The pipelines to destroy Cloud Foundry and MicroBOSH are not setup
+automatically on non-development environments in order to prevent accidental
+deletion. They can be setup if you do need them by running:
+```
+ENABLE_DESTROY=true make <env> pipelines
+```
