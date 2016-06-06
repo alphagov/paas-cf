@@ -3,7 +3,7 @@ require 'tempfile'
 RSpec.describe "secret generation" do
   describe "generate-cf-secrets" do
     let(:script) {
-      File.expand_path("../../scripts/generate-cf-secrets.rb", __FILE__)
+      File.expand_path("../../../scripts/generate-cf-secrets.rb", __FILE__)
     }
 
     specify "it should produce lint-free YAML" do
@@ -19,7 +19,7 @@ RSpec.describe "secret generation" do
         output, status = Open3.capture2e(
           [
             'yamllint',
-            '-c', File.expand_path("../../../../yamllint.yml", __FILE__),
+            '-c', File.expand_path("../../../../../yamllint.yml", __FILE__),
             tempfile.path,
           ].join(' ')
         )

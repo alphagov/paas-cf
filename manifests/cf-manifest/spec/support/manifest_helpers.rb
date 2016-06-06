@@ -14,25 +14,38 @@ module ManifestHelpers
 
   private
 
-  def load_default_manifest(environment = "default")
-    arg_list = [
-        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
-        File.expand_path("../../../manifest/*.yml", __FILE__),
-        File.expand_path("../../fixtures/terraform/*.yml", __FILE__),
-        File.expand_path("../../fixtures/cf-secrets.yml", __FILE__),
-        File.expand_path("../../fixtures/cf-ssl-certificates.yml", __FILE__),
-        File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
-    ]
+  def render(arg_list)
     output, error, status = Open3.capture3(arg_list.join(' '))
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
+    output
+  end
+
+  def load_default_manifest(environment = "default")
+    manifest = render([
+        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
+        File.expand_path("../../../manifest/*.yml", __FILE__),
+        File.expand_path("../../../manifest/data/*.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+        File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
+    ])
+
+    cloud_config = render([
+        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
+        File.expand_path("../../../cloud-config/*.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+    ])
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
-    deep_freeze(YAML.load(output))
+    deep_freeze(YAML.load(manifest + cloud_config))
   end
 
   def load_terraform_fixture
-    data = YAML.load_file(File.expand_path("../../fixtures/terraform/terraform-outputs.yml", __FILE__))
+    data = YAML.load_file(File.expand_path("../../../../shared/spec/fixtures/terraform/terraform-outputs.yml", __FILE__))
     deep_freeze(data)
   end
 

@@ -30,44 +30,28 @@ RSpec.describe "the jobs definitions block" do
   end
 
   describe "in order to enforce etcd dependency on NATS" do
-    it "has etcd_z1 serial" do
-      expect(is_serial("etcd_z1")).to be true
+    it "has etcd serial" do
+      expect(is_serial("etcd")).to be true
     end
 
-    it "has nats_z1 before etcd_z1" do
-      expect(ordered("nats_z1", "etcd_z1")).to be true
-    end
-
-    it "has nats_z2 before etcd_z1" do
-      expect(ordered("nats_z2", "etcd_z1")).to be true
+    it "has nats before etcd" do
+      expect(ordered("nats", "etcd")).to be true
     end
   end
 
   describe "in order to start/upgrade etcd cluster while maintaining consensus" do
-    it "has etcd_z1 serial" do
-      expect(is_serial("etcd_z1")).to be true
-    end
-
-    it "has etcd_z2 serial" do
-      expect(is_serial("etcd_z2")).to be true
-    end
-
-    it "has etcd_z1 before etcd_z2" do
-      expect(ordered("etcd_z1", "etcd_z2")).to be true
-    end
-
-    it "has etcd_z2 before etcd_z3" do
-      expect(ordered("etcd_z2", "etcd_z3")).to be true
+    it "has etcd serial" do
+      expect(is_serial("etcd")).to be true
     end
   end
 
   describe "in order to start one consul master for consensus" do
-    it "has consul_z1 serial" do
-      expect(is_serial("consul_z1")).to be true
+    it "has consul serial" do
+      expect(is_serial("consul")).to be true
     end
 
-    specify "has consul_z1 first" do
-      expect(jobs[0]["name"]).to eq("consul_z1")
+    specify "has consul first" do
+      expect(jobs[0]["name"]).to eq("consul")
     end
   end
 
