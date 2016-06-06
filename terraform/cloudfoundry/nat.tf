@@ -14,7 +14,7 @@ resource "aws_route_table" "internet" {
   count = "${var.zone_count}"
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${element(aws_nat_gateway.cf.*.id, count.index)}"
+    nat_gateway_id = "${element(aws_nat_gateway.cf.*.id, count.index)}"
   }
 }
 
