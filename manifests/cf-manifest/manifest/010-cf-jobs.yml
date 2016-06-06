@@ -399,9 +399,6 @@ jobs:
     stemcell: default
     networks:
       - name: router
-        static_ips:
-          - 10.0.48.5
-          - 10.0.49.5
     properties:
       consul:
         agent:
@@ -409,9 +406,7 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: router_z1, az: z1}
-      - {name: router_z2, az: z2}
+
 # Diego
 
   - name: access
