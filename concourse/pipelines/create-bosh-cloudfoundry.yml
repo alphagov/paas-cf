@@ -95,7 +95,8 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aws-broker-boshrelease.git
-      tag_filter: {{cf_aws_broker_version}}
+      branch: seed_master_passwords_118479861
+      #tag_filter: {{cf_aws_broker_version}}
 
   - name: os-conf-boshrelease
     type: git
