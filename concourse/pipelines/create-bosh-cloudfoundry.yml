@@ -1246,6 +1246,27 @@ jobs:
 
                   cf push
 
+      # FIXME: Delete this once https://github.com/alphagov/paas-cf/pull/314 is
+      # deployed in prod
+      - task: temp-update-rds-broker-master-password
+        config:
+          platform: linux
+          image: docker:///governmentpaas/awscli
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
+            DEPLOY_ENV: {{deploy_env}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/scripts/update-rds-broker-passwords.sh
+
       - task: deploy-healthcheck
         config:
           platform: linux
