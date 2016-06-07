@@ -350,6 +350,8 @@ jobs:
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: clock_global, az: z1}
 
   - name: api_worker
     azs: [z1, z2]
@@ -459,6 +461,8 @@ jobs:
       diego:
         rep:
           zone: z1
+    migrated_from:
+      - {name: cell_z1, az: z1}
 
   - name: colocated_z1
     azs: [z1]
@@ -476,6 +480,8 @@ jobs:
         zone: ""
     update:
       serial: true
+    migrated_from:
+      - {name: colocated_z1, az: z1}
 
   - name: colocated_z2
     azs: [z2]
@@ -491,6 +497,8 @@ jobs:
           zone: z2
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: colocated_z2, az: z2}
 
   - name: cell_z2
     azs: [z2]
@@ -506,6 +514,8 @@ jobs:
       diego:
         rep:
           zone: z2
+    migrated_from:
+      - {name: cell_z2, az: z2}
 
   - name: database
     azs: [z1, z2]

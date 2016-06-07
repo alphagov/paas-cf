@@ -170,6 +170,8 @@ jobs:
   networks:
   - name: cf
   update: (( grab meta.update ))
+  migrated_from:
+    - {name: kibana, az: z1}
 
 properties:
   syslog_daemon_config:
