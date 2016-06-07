@@ -12,7 +12,7 @@
 set -u
 set -e
 
-if [ ! -d "./paas-cf" -o ! -f "concourse-manifest/concourse-manifest.yml" ]; then
+if [ ! -d "./paas-cf" ] || [ ! -f "concourse-manifest/concourse-manifest.yml" ]; then
   echo "Resources paas-cf and concourse-manifest must be checkout"
   exit 1
 fi
