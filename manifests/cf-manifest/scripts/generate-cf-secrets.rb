@@ -31,6 +31,7 @@ generator = SecretGenerator.new({
   "consul_encrypt_keys" => :simple_in_array,
   "grafana_admin_password" => :simple,
   "rds_broker_admin_password" => :simple,
+  "rds_broker_master_password_seed" => :simple,
 })
 
 OptionParser.new do |opts|
