@@ -18,15 +18,8 @@ Your organisation is \"${ORG}\" and your login and password:
  - login: ${EMAIL}
  - password: ${PASSWORD}
 
-To begin using the PaaS you will need to install the cf command line client
-and execute the following commands.
-
-cf api https://api.cloud.service.gov.uk
-cf login
-
-Further documentation on the cf command line client is available from
-http://docs.cloudfoundry.org/cf-cli/install-go-cli.html
-
+To get started you can follow our Quick Setup Guide:
+https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/quick_setup_guide/
 
 Regards,
 Government PaaS team.
