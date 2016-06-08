@@ -266,38 +266,6 @@ resource_pools:
       elbs:
         - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
 
-  - name: brain_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z1 ))
-
-  - name: brain_z2
-    network: cf2
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z2 ))
-
-  - name: cc_bridge_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z1 ))
-
-  - name: cc_bridge_z2
-    network: cf2
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z2 ))
-
   - name: cell_z1
     network: cell1
     stemcell: (( grab meta.stemcell ))
@@ -336,34 +304,3 @@ resource_pools:
       instance_type: m3.large
       availability_zone: (( grab meta.zones.z2 ))
 
-  - name: route_emitter_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z1 ))
-
-  - name: route_emitter_z2
-    network: cf2
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z2 ))
-
-  - name: colocated_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z1 ))
-
-  - name: colocated_z2
-    network: cf2
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      availability_zone: (( grab meta.zones.z2 ))

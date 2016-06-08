@@ -547,7 +547,7 @@ jobs:
   - name: brain_z1
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
-    resource_pool: brain_z1
+    resource_pool: medium_z1
     networks:
       - name: cf1
     properties:
@@ -557,7 +557,7 @@ jobs:
   - name: brain_z2
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
-    resource_pool: brain_z2
+    resource_pool: medium_z2
     networks:
       - name: cf2
     properties:
@@ -567,7 +567,7 @@ jobs:
   - name: cc_bridge_z1
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
-    resource_pool: cc_bridge_z1
+    resource_pool: medium_z1
     networks:
       - name: cf1
     properties:
@@ -577,7 +577,7 @@ jobs:
   - name: cc_bridge_z2
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
-    resource_pool: cc_bridge_z2
+    resource_pool: medium_z2
     networks:
       - name: cf2
     properties:
@@ -613,7 +613,7 @@ jobs:
   - name: colocated_z1
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    resource_pool: colocated_z1
+    resource_pool: medium_z1
     networks:
       - name: cf1
     properties:
@@ -626,7 +626,7 @@ jobs:
   - name: colocated_z2
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    resource_pool: colocated_z2
+    resource_pool: medium_z2
     networks:
       - name: cf2
     properties:
@@ -659,7 +659,7 @@ jobs:
   - name: route_emitter_z1
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
-    resource_pool: route_emitter_z1
+    resource_pool: medium_z1
     networks:
       - name: cf1
     properties:
@@ -669,7 +669,7 @@ jobs:
   - name: route_emitter_z2
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
-    resource_pool: route_emitter_z2
+    resource_pool: medium_z2
     networks:
       - name: cf2
     properties:
