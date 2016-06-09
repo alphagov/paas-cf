@@ -1082,7 +1082,12 @@ jobs:
                 - -e
                 - -c
                 - |
-                  wget https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v={{stemcell_version}} -O stemcell.tgz
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                  STEMCELL_VERSION=$($VAL_FROM_YAML stemcells.0.version paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml)
+                  STEMCELL_NAME=$($VAL_FROM_YAML stemcells.0.name paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml)
+
+                  wget https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION} -O stemcell.tgz
                   ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                   bosh upload stemcell stemcell.tgz --skip-if-exists
 
