@@ -265,9 +265,6 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: nats_z1, az: z1}
-      - {name: nats_z2, az: z2}
 
   - name: etcd
     azs: [z1, z2, z3]
@@ -291,10 +288,6 @@ jobs:
         agent:
           services:
             etcd: {}
-    migrated_from:
-      - {name: etcd_z1, az: z1}
-      - {name: etcd_z2, az: z2}
-      - {name: etcd_z3, az: z3}
 
   - name: stats
     azs: [z1]
@@ -307,8 +300,6 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: stats_z1, az: z1}
 
 
   - name: uaa
@@ -326,9 +317,6 @@ jobs:
             uaa: {}
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: uaa_z1, az: z1}
-      - {name: uaa_z2, az: z2}
 
   - name: api
     azs: [z1, z2]
@@ -344,9 +332,6 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: api_z1, az: z1}
-      - {name: api_z2, az: z2}
 
   - name: clock_global
     azs: [z1]
@@ -359,8 +344,6 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: clock_global, az: z1}
 
   - name: api_worker
     azs: [z1, z2]
@@ -373,9 +356,6 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: api_worker_z1, az: z1}
-      - {name: api_worker_z2, az: z2}
 
 
   - name: doppler
@@ -391,9 +371,6 @@ jobs:
         zone: ""
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: doppler_z1, az: z1}
-      - {name: doppler_z2, az: z2}
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
@@ -408,9 +385,6 @@ jobs:
         zone: ""
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: loggregator_trafficcontroller_z1, az: z1}
-      - {name: loggregator_trafficcontroller_z2, az: z2}
 
   - name: router
     azs: [z1, z2]
@@ -427,9 +401,6 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: router_z1, az: z1}
-      - {name: router_z2, az: z2}
 
 # Diego
 
@@ -483,8 +454,6 @@ jobs:
       diego:
         rep:
           zone: z1
-    migrated_from:
-      - {name: cell_z1, az: z1}
 
   - name: colocated_z1
     azs: [z1]
@@ -502,8 +471,6 @@ jobs:
         zone: ""
     update:
       serial: true
-    migrated_from:
-      - {name: colocated_z1, az: z1}
 
   - name: colocated_z2
     azs: [z2]
@@ -519,8 +486,6 @@ jobs:
           zone: z2
       metron_agent:
         zone: ""
-    migrated_from:
-      - {name: colocated_z2, az: z2}
 
   - name: cell_z2
     azs: [z2]
@@ -536,8 +501,6 @@ jobs:
       diego:
         rep:
           zone: z2
-    migrated_from:
-      - {name: cell_z2, az: z2}
 
   - name: database
     azs: [z1, z2]
