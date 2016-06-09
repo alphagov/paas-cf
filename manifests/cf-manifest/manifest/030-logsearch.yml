@@ -157,6 +157,8 @@ jobs:
   networks:
   - name: cf
   update: (( grab meta.update ))
+  migrated_from:
+    - {name: maintenance_z1, az: z1}
 
 - name: kibana
   release: logsearch

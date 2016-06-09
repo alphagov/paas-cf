@@ -307,6 +307,9 @@ jobs:
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: stats_z1, az: z1}
+
 
   - name: uaa
     azs: [z1, z2]
@@ -323,6 +326,9 @@ jobs:
             uaa: {}
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: uaa_z1, az: z1}
+      - {name: uaa_z2, az: z2}
 
   - name: api
     azs: [z1, z2]
@@ -338,6 +344,9 @@ jobs:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: api_z1, az: z1}
+      - {name: api_z2, az: z2}
 
   - name: clock_global
     azs: [z1]
@@ -364,6 +373,10 @@ jobs:
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: api_worker_z1, az: z1}
+      - {name: api_worker_z2, az: z2}
+
 
   - name: doppler
     azs: [z1, z2]
@@ -378,6 +391,9 @@ jobs:
         zone: ""
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: doppler_z1, az: z1}
+      - {name: doppler_z2, az: z2}
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
@@ -392,6 +408,9 @@ jobs:
         zone: ""
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: loggregator_trafficcontroller_z1, az: z1}
+      - {name: loggregator_trafficcontroller_z2, az: z2}
 
   - name: router
     azs: [z1, z2]
@@ -408,6 +427,9 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: router_z1, az: z1}
+      - {name: router_z2, az: z2}
 
 # Diego
 
