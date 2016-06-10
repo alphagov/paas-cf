@@ -31,7 +31,7 @@ usage() {
   cat <<EOF
 Usage:
 
-  $SCRIPT [-r] [-m] -e <email> -o <orgname>
+  $SCRIPT [-r] [-m] -e <email> -c <email> -o <orgname>
 
 $SCRIPT will create a user and organisation in the CF service where you
 are currently logged in and send an email to the user if the password changes.
@@ -55,6 +55,8 @@ Where:
   -e <email>   User email to add and configure as organization and
                space manager. If the user is created or recreated,
                they will receive a mail with the new password.
+
+  -c <email>   The email addresses of copy recipients
 
   -o <orgname> Organisation to create and add the user to. If the
                organisation already exists the script will carry on.
@@ -173,13 +175,13 @@ send_mail() {
       }
     }
     "
-
-    aws ses send-email \
-      --destination "ToAddresses=${EMAIL}" \
-      --message "${MESSAGE_JSON}"\
-      --from "${FROM_ADDRESS}"  \
-      --region eu-west-1 \
-      --output text > /dev/null
+    AWS=$(which aws)
+    AWSSES="$AWS ses send-email --to ${EMAIL}"
+    if "${SEND_CC_EMAIL}"; then
+      AWSSES="${AWSSES} --cc ${CC_EMAIL}"
+    fi
+    AWSSES="$AWSSES --from ${FROM_ADDRESS} --region eu-west-1 --output text --message"
+    ${AWSSES} "${MESSAGE_JSON}"
 
     echo "An email has been sent to ${EMAIL} with their new credentials."
   else
@@ -194,6 +196,7 @@ trap 'rm -f "${TMP_OUTPUT}"' EXIT
 RESET_USER=false
 SEND_EMAIL=false
 ORG_MANAGER=false
+SEND_CC_EMAIL=false
 
 while [[ $# -gt 0 ]]; do
   key="$1"
@@ -204,6 +207,11 @@ while [[ $# -gt 0 ]]; do
     ;;
     -e|--email)
       EMAIL="$2"
+      shift # past argument
+    ;;
+    -c|--cc)
+      CC_EMAIL="$2"
+      SEND_CC_EMAIL=true
       shift # past argument
     ;;
       -r|--reset-user)
