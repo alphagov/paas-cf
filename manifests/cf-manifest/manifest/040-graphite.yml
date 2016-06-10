@@ -17,36 +17,22 @@ releases:
 - name: grafana
   version: commit-44564533c9d4d656bdcd5633b808f0bf6fb177ae
 
-disk_pools:
-  - name: graphite_data
-    disk_size: 204800
-    cloud_properties: {type: gp2}
-
-resource_pools:
-  - name: graphite_z1
-    network: cf1
-    stemcell: (( grab meta.stemcell ))
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.large
-      ephemeral_disk:
-        size: 65536
-        type: gp2
-      availability_zone: (( grab meta.zones.z1 ))
-      elbs:
-        - (( grab terraform_outputs.metrics_elb_name ))
-
 jobs:
-- name: graphite_z1
+- name: graphite
+  azs: [z1]
   instances: 1
-  resource_pool: graphite_z1
-  persistent_disk_pool: graphite_data
+  vm_type: graphite
+  stemcell: default
+  persistent_disk_type: graphite_data
   networks:
-    - name: cf1
-      static_ips: (( static_ips(10) ))
+    - name: cf
+      static_ips:
+        - 10.0.16.20
+  migrated_from:
+    - {name: graphite_z1, az: z1}
   properties:
     metron_agent:
-      zone: z1
+      zone: ""
     statsd:
       deleteIdleStats: true
     carbon:

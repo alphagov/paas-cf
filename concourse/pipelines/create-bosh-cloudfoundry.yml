@@ -215,6 +215,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: cf-manifest.yml
 
+  - name: cloud-config
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: cloud-config.yml
+
   - name: cf-release
     type: git
     source:
@@ -604,7 +611,7 @@ jobs:
                 tar -xvzf bosh-CA/bosh-CA.tar.gz -C out
                 ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > bosh-CA-yml/bosh-ca-cert.yml
 
-      - task: render-manifest
+      - task: render-bosh-manifest
         config:
           platform: linux
           image: docker:///governmentpaas/spruce
@@ -617,6 +624,8 @@ jobs:
             - name: bosh-manifest
           params:
             BOSH_MANIFEST_STUBS: |
+              ./paas-cf/manifests/bosh-manifest/deployments/*.yml
+              ./paas-cf/manifests/bosh-manifest/deployments/aws/*.yml
               ./bosh-secrets/bosh-secrets.yml
               ./bosh-CA-yml/bosh-ca-cert.yml
               ./terraform-outputs/bosh.terraform-outputs.yml
@@ -627,7 +636,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/manifests/bosh-manifest/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
+                ./paas-cf/manifests/shared/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
                 /bin/cat bosh-manifest/bosh-manifest.yml
         on_success:
           put: bosh-manifest
@@ -913,56 +922,89 @@ jobs:
                     < ${state}-tfstate/${state}.tfstate \
                     > terraform-outputs/${state}.tfvars.sh
                 done
-      - task: generate-manifest
-        config:
-          platform: linux
-          image: docker:///governmentpaas/spruce
-          inputs:
-            - name: paas-cf
-            - name: terraform-outputs
-            - name: cf-secrets
-            - name: cf-certs
-            - name: bosh-CA
-          outputs:
-            - name: cf-manifest
-          params:
-            MANIFEST_STUBS: |
-              ./terraform-outputs/*.yml
-              ./cf-secrets/cf-secrets.yml
-              ./certs/*.yml
-              ./paas-cf/manifests/cf-manifest/deployments/env-specific/{{cf_env_specific_manifest}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                mkdir certs
-                echo "Extracting extant certs"
-                tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
-                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-                cd certs
-                for file in *.crt; do
-                  cn=${file%.crt}
-                  yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+      - aggregate:
+        - task: generate-cloud-config
+          config:
+            platform: linux
+            image: docker:///governmentpaas/spruce
+            inputs:
+              - name: paas-cf
+              - name: terraform-outputs
+              - name: cf-secrets
+            outputs:
+              - name: cloud-config
+            params:
+              MANIFEST_STUBS: |
+                ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
+                ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  echo "Generating cloud config..."
 
-                  echo "Converting ${cn} certs to YAML"
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
-                done
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+          on_success:
+            put: cloud-config
+            params:
+              file: cloud-config/cloud-config.yml
 
-                ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
-                cd ..
+        - task: generate-cf-manifest
+          config:
+            platform: linux
+            image: docker:///governmentpaas/spruce
+            inputs:
+              - name: paas-cf
+              - name: terraform-outputs
+              - name: cf-secrets
+              - name: cf-certs
+              - name: bosh-CA
+            outputs:
+              - name: cf-manifest
+            params:
+              MANIFEST_STUBS: |
+                ./paas-cf/manifests/cf-manifest/manifest/*.yml
+                ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
+                ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
+                ./certs/*.yml
+                ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  mkdir certs
+                  echo "Extracting extant certs"
+                  tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
+                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-                echo "Generating manifests"
+                  cd certs
+                  for file in *.crt; do
+                    cn=${file%.crt}
+                    yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
 
-                # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                eval ./paas-cf/manifests/cf-manifest/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
-        on_success:
-          put: cf-manifest
-          params:
-            file: cf-manifest/cf-manifest.yml
+                    echo "Converting ${cn} certs to YAML"
+                    ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
+                    ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
+                  done
+
+                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
+                  cd ..
+
+                  echo "Generating manifests"
+
+                  # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
+                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+          on_success:
+            put: cf-manifest
+            params:
+              file: cf-manifest/cf-manifest.yml
 
   - name: cf-deploy
     serial_groups: [cf-deploy]
@@ -976,6 +1018,8 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['generate-cf-config']
+          - get: cloud-config
+            passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
           - get: bosh-secrets
@@ -988,40 +1032,81 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-CA
           - get: graphite-nozzle
-      - task: upload-releases
-        config:
-          platform: linux
-          image: docker:///governmentpaas/bosh-cli
-          inputs:
-            - name: paas-cf
-            - name: bosh-secrets
-            - name: graphite-statsd-boshrelease
-            - name: grafana-boshrelease
-            - name: paas-haproxy-release
-            - name: aws-broker-boshrelease
-            - name: os-conf-boshrelease
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
-                  {{cf_graphite_version}} graphite-statsd-boshrelease
+      - aggregate:
+        - task: upload-releases
+          config:
+            platform: linux
+            image: docker:///governmentpaas/bosh-cli
+            inputs:
+              - name: paas-cf
+              - name: bosh-secrets
+              - name: graphite-statsd-boshrelease
+              - name: grafana-boshrelease
+              - name: paas-haproxy-release
+              - name: aws-broker-boshrelease
+              - name: os-conf-boshrelease
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
-                  {{cf_grafana_version}} grafana-boshrelease
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
+                    {{cf_graphite_version}} graphite-statsd-boshrelease
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
-                  {{cf-paas-haproxy-release-version}} paas-haproxy-release
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
+                    {{cf_grafana_version}} grafana-boshrelease
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
-                {{cf_aws_broker_version}} aws-broker-boshrelease
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
+                    {{cf-paas-haproxy-release-version}} paas-haproxy-release
 
-                paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
-                  {{cf_os_conf_version}} os-conf-boshrelease
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
+                    {{cf_os_conf_version}} os-conf-boshrelease
+
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
+                    {{cf_aws_broker_version}} aws-broker-boshrelease
+
+        - task: get-and-upload-stemcell
+          config:
+            platform: linux
+            image: docker:///governmentpaas/bosh-cli
+            inputs:
+              - name: bosh-secrets
+              - name: paas-cf
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                  STEMCELL_VERSION=$($VAL_FROM_YAML stemcells.0.version paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml)
+                  STEMCELL_NAME=$($VAL_FROM_YAML stemcells.0.name paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml)
+
+                  wget https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION} -O stemcell.tgz
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  bosh upload stemcell stemcell.tgz --skip-if-exists
+
+        - task: update-cloud-config
+          config:
+            platform: linux
+            image: docker:///governmentpaas/bosh-cli
+            inputs:
+              - name: cloud-config
+              - name: bosh-secrets
+              - name: paas-cf
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  bosh update cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
         config:
@@ -1042,7 +1127,7 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
                 bosh deployment updated-cf-manifest/cf-manifest.yml
-                bosh update runtime-config paas-cf/manifests/cf-manifest/deployments/runtime/runtime.yml
+                bosh update runtime-config paas-cf/manifests/cf-manifest/manifest/runtime/runtime.yml
                 bosh -n deploy
       - put: cf-manifest
         params:
@@ -1074,8 +1159,8 @@ jobs:
                 API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
                 UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
                 DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
-                GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite_z1.networks.cf1.static_ips.0 cf-manifest/cf-manifest.yml)
-                RDS_BROKER_SERVER=$($VAL_FROM_YAML jobs.rds_broker_z1.networks.cf1.static_ips.0 cf-manifest/cf-manifest.yml)
+                GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
+                RDS_BROKER_SERVER=$($VAL_FROM_YAML jobs.rds_broker.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
                 RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
 
                 for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS; do

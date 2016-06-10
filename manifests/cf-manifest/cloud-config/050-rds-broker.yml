@@ -1,0 +1,14 @@
+---
+vm_types:
+  - name: rds_broker
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: m3.medium
+      iam_instance_profile: rds-broker
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      security_groups:
+        - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.default_security_group ))

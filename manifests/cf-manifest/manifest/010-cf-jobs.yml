@@ -228,19 +228,20 @@ meta:
       - name: tps
         release: diego
 
-disk_pools:
-  - name: database_disks
-    disk_size: 1024
-
 jobs:
-  - name: consul_z1
+  - name: consul
+    azs: [z1, z2, z3]
     templates: (( grab meta.consul_templates ))
-    instances: 1
+    instances: 3
     persistent_disk: 1024
-    resource_pool: small_z1
+    vm_type: small
+    stemcell: default
     networks:
-      - name: cf1
-        static_ips: (( static_ips(27, 28, 29) ))
+      - name: cf
+        static_ips:
+          - 10.0.16.37
+          - 10.0.17.37
+          - 10.0.18.37
     update:
       serial: true
     properties:
@@ -250,51 +251,37 @@ jobs:
       metron_agent:
         zone: ""
 
-  - name: consul_z2
-    templates: (( grab meta.consul_templates ))
-    instances: 1
-    persistent_disk: 1024
-    resource_pool: small_z2
-    networks:
-      - name: cf2
-        static_ips: (( static_ips(27, 28, 29) ))
-    properties:
-      consul:
-        agent:
-          mode: server
-      metron_agent:
-        zone: ""
-
-  - name: nats_z1
+  - name: nats
+    azs: [z1, z2]
     templates: (( grab meta.nats_templates ))
-    instances: 1
-    resource_pool: medium_z1
+    instances: 2
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
-        static_ips: (( static_ips(1) ))
+      - name: cf
+        static_ips:
+          - 10.0.16.11
+          - 10.0.17.11
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: nats_z1, az: z1}
+      - {name: nats_z2, az: z2}
 
-  - name: nats_z2
-    templates: (( grab meta.nats_templates ))
-    instances: 1
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-        static_ips: (( static_ips(1) ))
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: etcd_z1
+  - name: etcd
+    azs: [z1, z2, z3]
     templates: (( grab meta.etcd_templates ))
-    instances: 1
+    instances: 3
     persistent_disk: 10024
-    resource_pool: medium_z1
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
-        static_ips: (( static_ips(9) ))
+      - name: cf
+        static_ips:
+          - 10.0.16.19
+          - 10.0.17.19
+          - 10.0.18.19
     update:
       serial: true
     properties:
@@ -304,72 +291,34 @@ jobs:
         agent:
           services:
             etcd: {}
+    migrated_from:
+      - {name: etcd_z1, az: z1}
+      - {name: etcd_z2, az: z2}
+      - {name: etcd_z3, az: z3}
 
-  - name: etcd_z2
-    templates: (( grab meta.etcd_templates ))
-    instances: 1
-    persistent_disk: 10024
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-        static_ips: (( static_ips(9) ))
-    update:
-      serial: true
-    properties:
-      metron_agent:
-        zone: ""
-      consul:
-        agent:
-          services:
-            etcd: {}
-
-  - name: consul_z3
-    templates: (( grab meta.consul_templates ))
-    instances: 1
-    persistent_disk: 1024
-    resource_pool: small_z3
-    networks:
-      - name: cf3
-        static_ips: (( static_ips(27, 28, 29) ))
-    properties:
-      consul:
-        agent:
-          mode: server
-      metron_agent:
-        zone: ""
-
-  - name: etcd_z3
-    templates: (( grab meta.etcd_templates ))
-    instances: 1
-    persistent_disk: 10024
-    resource_pool: medium_z3
-    networks:
-      - name: cf3
-        static_ips: (( static_ips(9) ))
-    properties:
-      metron_agent:
-        zone: ""
-      consul:
-        agent:
-          services:
-            etcd: {}
-
-  - name: stats_z1
+  - name: stats
+    azs: [z1]
     templates: (( grab meta.stats_templates ))
     instances: 1
-    resource_pool: small_z1
+    vm_type: small
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: stats_z1, az: z1}
 
-  - name: uaa_z1
+
+  - name: uaa
+    azs: [z1, z2]
     templates: (( grab meta.uaa_templates ))
-    instances: 1
-    resource_pool: uaa_z1
+    instances: 2
+    vm_type: uaa
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       consul:
         agent:
@@ -377,137 +326,100 @@ jobs:
             uaa: {}
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: uaa_z1, az: z1}
+      - {name: uaa_z2, az: z2}
 
-  - name: uaa_z2
-    templates: (( grab meta.uaa_templates ))
-    instances: 1
-    resource_pool: uaa_z2
-    networks:
-      - name: cf2
-    properties:
-      consul:
-        agent:
-          services:
-            uaa: {}
-      metron_agent:
-        zone: ""
-
-  - name: api_z1
+  - name: api
+    azs: [z1, z2]
     templates: (( grab meta.api_templates ))
-    instances: 1
-    resource_pool: api_z1
-    persistent_disk: 0
+    instances: 2
+    vm_type: api
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
       metron_agent:
         zone: ""
-
-  - name: api_z2
-    templates: (( grab meta.api_templates ))
-    instances: 1
-    resource_pool: api_z2
-    persistent_disk: 0
-    networks:
-      - name: cf2
-    properties:
-      consul:
-        agent:
-          services: (( grab meta.api_consul_services ))
-      metron_agent:
-        zone: ""
+    migrated_from:
+      - {name: api_z1, az: z1}
+      - {name: api_z2, az: z2}
 
   - name: clock_global
+    azs: [z1]
     templates: (( grab meta.clock_templates ))
     instances: 1
-    resource_pool: clock_global
-    persistent_disk: 0
+    vm_type: clock_global
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: clock_global, az: z1}
 
-  - name: api_worker_z1
+  - name: api_worker
+    azs: [z1, z2]
     templates: (( grab meta.api_worker_templates ))
-    instances: 1
-    resource_pool: api_worker_z1
-    persistent_disk: 0
+    instances: 2
+    vm_type: api_worker
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: api_worker_z1, az: z1}
+      - {name: api_worker_z2, az: z2}
 
-  - name: api_worker_z2
-    templates: (( grab meta.api_worker_templates ))
-    instances: 1
-    resource_pool: api_worker_z2
-    persistent_disk: 0
-    networks:
-      - name: cf2
-    properties:
-      metron_agent:
-        zone: ""
 
-  - name: doppler_z1
+  - name: doppler
+    azs: [z1, z2]
     templates: (( grab meta.loggregator_templates ))
-    instances: 1
-    resource_pool: medium_z1
+    instances: 2
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       doppler:
-        zone: z1
+        zone: ""
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: doppler_z1, az: z1}
+      - {name: doppler_z2, az: z2}
 
-  - name: doppler_z2
-    templates: (( grab meta.loggregator_templates ))
-    instances: 1
-    resource_pool: medium_z2
-    networks:
-      - name: cf2
-    properties:
-      doppler:
-        zone: z2
-      metron_agent:
-        zone: ""
-
-  - name: loggregator_trafficcontroller_z1
+  - name: loggregator_trafficcontroller
+    azs: [z1, z2]
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
-    instances: 1
-    resource_pool: loggregator_trafficcontroller_z1
+    instances: 2
+    vm_type: loggregator_trafficcontroller
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       traffic_controller:
-        zone: z1
+        zone: ""
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: loggregator_trafficcontroller_z1, az: z1}
+      - {name: loggregator_trafficcontroller_z2, az: z2}
 
-  - name: loggregator_trafficcontroller_z2
-    templates: (( grab meta.loggregator_trafficcontroller_templates ))
-    instances: 1
-    resource_pool: loggregator_trafficcontroller_z2
-    networks:
-      - name: cf2
-    properties:
-      traffic_controller:
-        zone: z2
-      metron_agent:
-        zone: ""
-
-  - name: router_z1
+  - name: router
+    azs: [z1, z2]
     templates: (( grab meta.router_templates ))
-    instances: 1
-    resource_pool: router_z1
+    instances: 2
+    vm_type: router
+    stemcell: default
     networks:
-      - name: router1
-        static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
+      - name: router
     properties:
       consul:
         agent:
@@ -515,176 +427,138 @@ jobs:
             gorouter: {}
       metron_agent:
         zone: ""
-
-  - name: router_z2
-    templates: (( grab meta.router_templates ))
-    instances: 1
-    resource_pool: router_z2
-    networks:
-      - name: router2
-        static_ips: (( static_ips(1, 2 ,3 ,4, 5, 6, 7, 8) ))
-    properties:
-      consul:
-        agent:
-          services:
-            gorouter: {}
-      metron_agent:
-        zone: ""
+    migrated_from:
+      - {name: router_z1, az: z1}
+      - {name: router_z2, az: z2}
 
 # Diego
 
-  - name: access_z1
+  - name: access
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.access ))
     instances: 0
-    resource_pool: access_z1
+    vm_type: access
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
 
-  - name: access_z2
-    templates: (( grab meta.diego_job_templates.access ))
-    instances: 0
-    resource_pool: access_z2
-    networks:
-      - name: cf2
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: brain_z1
+  - name: brain
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.brain ))
     instances: 0
-    resource_pool: brain_z1
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
 
-  - name: brain_z2
-    templates: (( grab meta.diego_job_templates.brain ))
-    instances: 0
-    resource_pool: brain_z2
-    networks:
-      - name: cf2
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: cc_bridge_z1
+  - name: cc_bridge
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.cc_bridge ))
     instances: 0
-    resource_pool: cc_bridge_z1
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: cc_bridge_z2
-    templates: (( grab meta.diego_job_templates.cc_bridge ))
-    instances: 0
-    resource_pool: cc_bridge_z2
-    networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""
 
   - name: cell_z1
+    azs: [z1]
     templates: (( grab meta.diego_job_templates.cell ))
     instances: (( grab meta.cell_z1.instances ))
-    resource_pool: cell_z1
+    vm_type: cell
+    stemcell: default
     networks:
-      - name: cell1
+      - name: cell
     properties:
       metron_agent:
         zone: ""
       diego:
         rep:
           zone: z1
-
-  - name: cell_z2
-    templates: (( grab meta.diego_job_templates.cell ))
-    instances: (( grab meta.cell_z2.instances ))
-    resource_pool: cell_z2
-    networks:
-      - name: cell2
-    properties:
-      metron_agent:
-        zone: ""
-      diego:
-        rep:
-          zone: z2
+    migrated_from:
+      - {name: cell_z1, az: z1}
 
   - name: colocated_z1
+    azs: [z1]
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    persistent_disk_pool: database_disks
-    resource_pool: colocated_z1
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       diego:
         rep:
           zone: z1
       metron_agent:
         zone: ""
+    update:
+      serial: true
+    migrated_from:
+      - {name: colocated_z1, az: z1}
 
   - name: colocated_z2
+    azs: [z2]
     templates: (( grab meta.diego_job_templates.colocated ))
     instances: 1
-    persistent_disk_pool: database_disks
-    resource_pool: colocated_z2
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf2
+      - name: cf
     properties:
       diego:
         rep:
           zone: z2
       metron_agent:
         zone: ""
+    migrated_from:
+      - {name: colocated_z2, az: z2}
 
-  - name: database_z1
+  - name: cell_z2
+    azs: [z2]
+    templates: (( grab meta.diego_job_templates.cell ))
+    instances: (( grab meta.cell_z2.instances ))
+    vm_type: cell
+    stemcell: default
+    networks:
+      - name: cell
+    properties:
+      metron_agent:
+        zone: ""
+      diego:
+        rep:
+          zone: z2
+    migrated_from:
+      - {name: cell_z2, az: z2}
+
+  - name: database
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.database ))
     instances: 0
-    persistent_disk_pool: database_disks
-    resource_pool: database_z1
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
+      - name: cf
     properties:
       metron_agent:
         zone: ""
 
-  - name: database_z2
-    templates: (( grab meta.diego_job_templates.database ))
-    instances: 0
-    persistent_disk_pool: database_disks
-    resource_pool: database_z2
-    networks:
-      - name: cf2
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: route_emitter_z1
+  - name: route_emitter
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
-    resource_pool: route_emitter_z1
+    vm_type: medium
+    stemcell: default
     networks:
-      - name: cf1
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: route_emitter_z2
-    templates: (( grab meta.diego_job_templates.route_emitter ))
-    instances: 0
-    resource_pool: route_emitter_z2
-    networks:
-      - name: cf2
+      - name: cf
     properties:
       metron_agent:
         zone: ""

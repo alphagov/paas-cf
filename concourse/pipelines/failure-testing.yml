@@ -100,7 +100,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: api_z1/0
+            VM_NAME: api/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -145,7 +145,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: colocated_z1
+            VM_NAME: colocated_z1/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -190,7 +190,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: nats_z1
+            VM_NAME: nats/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -235,7 +235,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: router_z1
+            VM_NAME: router/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -280,7 +280,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: etcd_z1
+            VM_NAME: etcd/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -325,7 +325,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: consul_z1
+            VM_NAME: consul/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -370,7 +370,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: cell_z1
+            VM_NAME: cell_z1/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml

@@ -35,12 +35,12 @@ prepare_environment() {
   pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
   bosh_az=${BOSH_AZ:-eu-west-1a}
 
-  cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/deployments"
+  cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/manifest"
   cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
   cf_paas_haproxy_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.paas-haproxy.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
-  cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/055-graphite.yml")
-  cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/055-graphite.yml")
-  cf_aws_broker_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.aws-broker.version "${cf_manifest_dir}/060-rds-broker.yml")
+  cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/040-graphite.yml")
+  cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/040-graphite.yml")
+  cf_aws_broker_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.aws-broker.version "${cf_manifest_dir}/050-rds-broker.yml")
   cf_os_conf_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.os-conf.version "${cf_manifest_dir}/runtime/runtime.yml")
 
   if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then

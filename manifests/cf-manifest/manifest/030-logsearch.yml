@@ -1,0 +1,207 @@
+meta:
+  update:
+    serial: false
+    canaries: 1
+    max_in_flight: 1
+
+releases:
+- name: logsearch
+  url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=200.0.0
+  version: 200.0.0
+  sha1: 527c35db31cd66810accf128ceffee4f5fde80c3
+- name: logsearch-shipper
+  url: https://bosh.io/d/github.com/logsearch/logsearch-shipper-boshrelease?v=4
+  version: 4
+  sha1: c92ce357c5e1e77a4fb7944d58a1971c7aee06b0
+
+jobs:
+- name: ingestor_z1
+  release: logsearch
+  azs: [z1]
+  templates:
+  - {name: ingestor_syslog, release: logsearch}
+  - {name: ingestor_relp, release: logsearch}
+  vm_type: ingestor
+  stemcell: default
+  instances: 1
+  networks:
+  - name: cf
+    default: [gateway, dns]
+    static_ips:
+      - 10.0.16.12
+  update: (( grab meta.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
+  migrated_from:
+    - {name: ingestor_z1, az: z1}
+
+- name: ingestor_z2
+  release: logsearch
+  azs: [z2]
+  templates:
+  - {name: ingestor_syslog, release: logsearch}
+  - {name: ingestor_relp, release: logsearch}
+  vm_type: ingestor
+  stemcell: default
+  instances: 1
+  networks:
+  - name: cf
+    default: [gateway, dns]
+    static_ips:
+      - 10.0.17.12
+  update: (( grab meta.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
+  migrated_from:
+    - {name: ingestor_z2, az: z2}
+
+- name: queue
+  release: logsearch
+  azs: [z1, z2]
+  templates:
+  - {name: queue, release: logsearch}
+  vm_type: small
+  stemcell: default
+  instances: 2
+  networks:
+  - name: cf
+    static_ips:
+      - 10.0.16.13
+      - 10.0.17.13
+  disk_type: queue
+  update: (( grab meta.update ))
+  migrated_from:
+    - {name: queue_z1, az: z1}
+    - {name: queue_z2, az: z2}
+
+- name: parser_z1
+  release: logsearch
+  azs: [z1]
+  templates:
+  - {name: parser, release: logsearch}
+  vm_type: medium
+  stemcell: default
+  instances: 1
+  networks:
+  - name: cf
+    static_ips:
+      - 10.0.16.14
+  update: (( grab meta.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
+    logstash: (( grab properties.parser_logstash ))
+  migrated_from:
+    - {name: parser_z1, az: z1}
+
+- name: parser_z2
+  release: logsearch
+  azs: [z2]
+  templates:
+  - {name: parser, release: logsearch}
+  vm_type: medium
+  stemcell: default
+  instances: 1
+  networks:
+  - name: cf
+    static_ips:
+      - 10.0.17.14
+  update: (( grab meta.update ))
+  properties:
+    redis:
+      host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
+    logstash: (( grab properties.parser_logstash ))
+  migrated_from:
+    - {name: parser_z2, az: z2}
+
+- name: elasticsearch_master
+  release: logsearch
+  azs: [z1, z2, z3]
+  templates:
+  - {name: elasticsearch, release: logsearch}
+  vm_type: elasticsearch_master
+  stemcell: default
+  instances: 3
+  networks:
+  - name: cf
+    static_ips:
+      - 10.0.16.10
+      - 10.0.17.10
+      - 10.0.18.10
+  persistent_disk_type: elasticsearch_master
+  properties:
+    elasticsearch:
+      node:
+        allow_master: true
+        allow_data: true
+      discovery:
+        minimum_master_nodes: 2
+      master_hosts: (( grab properties.elasticsearch.master_hosts ))
+  update: (( grab meta.update ))
+  migrated_from:
+    - {name: elasticsearch_master_z1, az: z1}
+    - {name: elasticsearch_master_z2, az: z2}
+    - {name: elasticsearch_master_z3, az: z3}
+
+- name: maintenance
+  instances: 1
+  release: logsearch
+  azs: [z1, z2]
+  templates:
+  - {name: elasticsearch_config, release: logsearch}
+  - {name: curator, release: logsearch}
+  vm_type: small
+  stemcell: default
+  networks:
+  - name: cf
+  update: (( grab meta.update ))
+  migrated_from:
+    - {name: maintenance_z1, az: z1}
+
+- name: kibana
+  release: logsearch
+  azs: [z1, z2]
+  templates:
+  - {name: kibana, release: logsearch}
+  - {name: haproxy, release: logsearch}
+  vm_type: kibana
+  stemcell: default
+  instances: 1
+  networks:
+  - name: cf
+  update: (( grab meta.update ))
+  migrated_from:
+    - {name: kibana, az: z1}
+
+properties:
+  syslog_daemon_config:
+    address: (( grab terraform_outputs.logsearch_ingestor_elb_dns_name ))
+    port: 2514
+    transport: relp
+  parser_logstash:
+    output:
+      elasticsearch:
+        data_hosts: (( grab properties.elasticsearch.master_hosts ))
+  curator:
+    elasticsearch_host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+  elasticsearch:
+    master_hosts: (( grab jobs.elasticsearch_master.networks.cf.static_ips[0] jobs.elasticsearch_master.networks.cf.static_ips[1] jobs.elasticsearch_master.networks.cf.static_ips[2] ))
+    cluster_name: logsearch
+  kibana:
+    elasticsearch: (( concat terraform_outputs.logsearch_elastic_master_elb_dns_name ":9200" ))
+  haproxy:
+    inbound_port: 5602
+    backend_servers: ["localhost"]
+    backend_port: 5601
+  elasticsearch_config:
+    elasticsearch:
+      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+    templates:
+      - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
+  logsearch:
+    metrics:
+      enabled: false
+    logs:
+      server: (( concat terraform_outputs.logsearch_ingestor_elb_dns_name ":5514" ))

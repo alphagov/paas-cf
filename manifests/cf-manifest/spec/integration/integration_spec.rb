@@ -14,7 +14,7 @@ RSpec.describe "generic manifest validations" do
       jobs
       networks
       releases
-      resource_pools
+      vm_types
     ).each do |resource_type|
       specify "all #{resource_type} have a unique name" do
         all_resource_names = manifest.fetch(resource_type, []).map {|r| r["name"]}
@@ -40,12 +40,33 @@ RSpec.describe "generic manifest validations" do
   end
 
   describe "jobs cross-references" do
-    specify "all jobs reference resource_pools that exist" do
-      resource_pool_names = manifest["resource_pools"].map {|r| r["name"]}
-
+    specify "all jobs reference vm_types that exist" do
+      vm_type_names = manifest["vm_types"].map {|r| r["name"]}
       manifest["jobs"].each do |job|
-        expect(resource_pool_names).to include(job["resource_pool"]),
-          "resource_pool #{job["resource_pool"]} not found for job #{job["name"]}"
+        expect(vm_type_names).to include(job["vm_type"]),
+          "vm_type #{job["vm_type"]} not found for job #{job["name"]}"
+      end
+    end
+
+    specify "all jobs reference stemcells that exist" do
+      stemcell_names = manifest["stemcells"].map {|r| r["alias"]}
+      manifest["jobs"].each do |job|
+        expect(job.has_key? "stemcell").to be(true),
+          "No stemcell defined for job #{job["name"]}. You must add a stemcell to this job."
+        expect(stemcell_names).to include(job["stemcell"]),
+          "stemcell #{job["stemcell"]} not found for job #{job["name"]}. This value should correspond to `stemcells.*.alias`."
+      end
+    end
+
+    specify "all jobs reference availability zones that exist" do
+      azs_names = manifest["azs"].map {|r| r["name"]}
+      manifest["jobs"].each do |job|
+        expect(job.has_key? "azs").to be(true),
+          "No azs key defined for job #{job["name"]}. You must add some availability zones."
+        job["azs"].each do |az|
+          expect(azs_names).to include(az),
+            "AZ #{az} not found for job #{job["name"]}. Check this az exists in the Cloud Config."
+        end
       end
     end
 
@@ -106,33 +127,15 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    specify "all jobs reference disk_pools that exist" do
-      disk_pool_names = manifest.fetch("disk_pools", {}).map {|p| p["name"]}
+    specify "all jobs reference disk_types that exist" do
+      disk_type_names = manifest.fetch("disk_types", {}).map {|p| p["name"]}
 
       manifest["jobs"].each do |job|
-        next unless job["persistent_disk_pool"]
+        next unless job["persistent_disk_type"]
 
-        expect(disk_pool_names).to include(job["persistent_disk_pool"]),
+        expect(disk_type_names).to include(job["persistent_disk_type"]),
           "disk_pool #{job["persistent_disk_pool"]} not found for job #{job["name"]}"
       end
-    end
-  end
-
-  describe "resource_pools cross-references" do
-    specify "all resource_pools reference networks that exist" do
-      network_names = manifest["networks"].map {|n| n["name"]}
-
-      manifest["resource_pools"].each do |pool|
-        expect(network_names).to include(pool["network"]),
-          "network #{pool["network"]} not found for resource_pool #{pool["name"]}"
-      end
-    end
-
-    specify "the compilation pool references a network that exists" do
-      network_names = manifest["networks"].map {|n| n["name"]}
-
-      expect(network_names).to include(manifest["compilation"]["network"]),
-        "network #{manifest["compilation"]["network"]} not found for compilation resource_pool"
     end
   end
 end

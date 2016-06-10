@@ -11,7 +11,9 @@ module ManifestHelpers
   def load_default_manifest
     output, error, status = Open3.capture3(
       [
-        File.expand_path("../../../build_manifest.sh", __FILE__),
+        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
+        File.expand_path("../../../deployments/*.yml", __FILE__),
+        File.expand_path("../../../deployments/aws/*.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-secrets.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-ssl-certificates.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-terraform-outputs.yml", __FILE__),
