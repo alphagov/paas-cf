@@ -13,6 +13,7 @@ func main() {
 	fmt.Println("Listening on", addr)
 	http.HandleFunc("/", staticHandler)
 	http.HandleFunc("/db", dbHandler)
+	http.HandleFunc("/db/permissions-check", dbPermissionsCheckHandler)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal(err)
