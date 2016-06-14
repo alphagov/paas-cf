@@ -373,6 +373,8 @@ properties:
     no_ssl: ~
     require_https: false
 
+    logging_level: INFO
+
     scim:
       userids_enabled: true
       external_groups: ~
