@@ -28,8 +28,6 @@ jobs:
     - name: cf
       static_ips:
         - 10.0.16.20
-  migrated_from:
-    - {name: graphite_z1, az: z1}
   properties:
     metron_agent:
       zone: ""

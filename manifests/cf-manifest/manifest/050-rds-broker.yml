@@ -34,8 +34,6 @@ jobs:
       - name: cf
         static_ips:
           - 10.0.16.25
-    migrated_from:
-      - {name: rds_broker_z1, az: z1}
     properties:
       rds-broker:
         aws_access_key_id: ""
