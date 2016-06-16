@@ -309,9 +309,9 @@ jobs:
     plan:
       - get: pipeline-trigger
         trigger: true
-        passed: [pipeline-lock]
+        passed: ['pipeline-lock']
       - get: paas-cf
-        passed: [pipeline-lock]
+        passed: ['pipeline-lock']
       - get: concourse-manifest
       - task: self-update-pipeline
         config:
@@ -595,7 +595,7 @@ jobs:
           - get: concourse-tfstate
           - get: bosh-tfstate
           - get: bosh-secrets
-            passed: [ generate-secrets ]
+            passed: ['generate-secrets']
 
       - task: extract-terraform-variables
         config:
@@ -1116,9 +1116,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed:
-              - 'generate-cf-config'
-              - 'bosh-deploy'
+            passed: ['generate-cf-config', 'bosh-deploy']
             trigger: true
           - get: paas-cf
             passed: ['generate-cf-config']
