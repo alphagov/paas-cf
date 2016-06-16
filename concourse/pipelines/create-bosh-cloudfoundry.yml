@@ -4,6 +4,7 @@ groups:
     jobs:
       - pipeline-lock
       - init
+      - pre-deploy
       - bosh-terraform
       - generate-bosh-config
       - bosh-deploy
@@ -23,11 +24,13 @@ groups:
   - name: bosh
     jobs:
       - init
+      - pre-deploy
       - bosh-terraform
       - generate-bosh-config
       - bosh-deploy
   - name: cloudfoundry
     jobs:
+      - pre-deploy
       - generate-secrets
       - availability-tests
       - cf-terraform
@@ -483,6 +486,59 @@ jobs:
           params:
             file: generated-cf-secrets/cf-secrets.yml
 
+
+  - name: pre-deploy
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['generate-secrets']
+            trigger: true
+          - get: paas-cf
+            passed: ['generate-secrets']
+          - get: cf-secrets
+            passed: ['generate-secrets']
+          - get: bosh-CA
+            passed: ['generate-secrets']
+      - try:
+          task: wait-for-availability-test
+          config:
+            platform: linux
+            inputs:
+              - name: bosh-CA
+              - name: paas-cf
+              - name: cf-secrets
+              - name: pipeline-trigger
+            params:
+              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+              CF_ADMIN: admin
+            image: docker:///governmentpaas/cf-cli
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                  API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                  PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} > /dev/null
+                  cf target -o testers -s healthcheck > /dev/null
+
+                  echo "Waiting two minutes for availability test to start:"
+                  for i in $(seq 24); do
+                    if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
+                      echo "Request detected"
+                      break
+                    fi
+                    printf "."
+                    sleep 5
+                  done
+
+
   - name: availability-tests
     plan:
       - aggregate:
@@ -532,9 +588,9 @@ jobs:
       - aggregate:
           - get: pipeline-trigger
             trigger: true
-            passed: [ generate-secrets ]
+            passed: ['pre-deploy']
           - get: paas-cf
-            passed: [ generate-secrets ]
+            passed: ['pre-deploy']
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
@@ -739,9 +795,9 @@ jobs:
     plan:
       - aggregate:
           - get: paas-cf
-            passed: ['generate-secrets']
+            passed: ['pre-deploy']
           - get: pipeline-trigger
-            passed: ['generate-secrets']
+            passed: ['pre-deploy']
             trigger: true
           - get: vpc-tfstate
           - get: concourse-tfstate
