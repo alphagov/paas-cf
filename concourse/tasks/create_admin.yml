@@ -18,7 +18,7 @@ run:
       ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
       SUFFIX=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c10)
-      PASSWORD=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c32 )
+      PASSWORD=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c32)
       NAME=${PREFIX}-${SUFFIX}
 
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
@@ -29,11 +29,22 @@ run:
       uaac target "${UAA_ENDPOINT}"
       uaac token client get admin -s "${UAA_ADMIN_CLIENT_PASS}"
       uaac user add "${NAME}" -p "${PASSWORD}" --emails ignored
+      USERID=$(uaac user get "${NAME}" -a id | awk '{print $2}')
       echo "${NAME}" >admin-creds/username
       echo "${PASSWORD}" >admin-creds/password
+      echo "UserID is ${USERID}"
 
-      uaac member add cloud_controller.admin "${NAME}"
-      uaac member add uaa.admin "${NAME}"
-      uaac member add scim.read "${NAME}"
-      uaac member add scim.write "${NAME}"
-      uaac member add doppler.firehose "${NAME}"
+      set +e
+      add_member(){
+        GID=$(uaac group get $1 -a id | awk '{print $2}')
+        uaac curl -k "/Groups/${GID}/members" -XPOST -H'Content-Type: application/json' \
+                  -d'{"origin":"uaa","type":"USER","value":"'${2}'"}' | tee result | grep -q '201 Created'
+        [ $? != 0 ] && cat result && exit 1
+        echo "Added $2 to $1"
+      }
+
+      add_member cloud_controller.admin "${USERID}"
+      add_member uaa.admin "${USERID}"
+      add_member scim.read "${USERID}"
+      add_member scim.write "${USERID}"
+      add_member doppler.firehose "${USERID}"
