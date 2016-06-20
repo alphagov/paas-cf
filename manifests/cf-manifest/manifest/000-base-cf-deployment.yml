@@ -10,9 +10,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=237
     sha1: 8996122278b03b6ba21ec673812d2075c37f1097
   - name: diego
-    version: 0.1467.0
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1467.0
-    sha1: 64af2b1b99f0ff771e3e60daacbe5fd3b48d2ddc
+    version: 0.1472.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1472.0
+    sha1: a143e9e850ee794beb27bcd9ee9425406beb2987
   - name: garden-linux
     version: 0.337.0
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.337.0
