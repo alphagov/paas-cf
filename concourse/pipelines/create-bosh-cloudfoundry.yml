@@ -1107,6 +1107,25 @@ jobs:
                 - |
                   ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                   bosh update cloud-config cloud-config/cloud-config.yml
+        # FIXME: Remove after https://github.com/alphagov/paas-cf/pull/314 deployed in prod
+        - task: add-tags-to-RDS-instances
+          config:
+            platform: linux
+            image: docker:///governmentpaas/awscli
+            inputs:
+              - name: paas-cf
+              - name: cf-secrets
+            params:
+              AWS_DEFAULT_REGION: {{aws_region}}
+              DEPLOY_ENV: {{deploy_env}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/scripts/tag-rds-instances.sh
 
       - task: cf-deploy
         config:
