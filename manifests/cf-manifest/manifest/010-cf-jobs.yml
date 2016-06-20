@@ -162,8 +162,8 @@ meta:
         release: diego
       - name: garden
         release: garden-linux
-      - name: rootfses
-        release: diego
+      - name: cflinuxfs2-rootfs-setup
+        release: cflinuxfs2-rootfs
       - name: metron_agent
         release: cf
     cc_bridge:

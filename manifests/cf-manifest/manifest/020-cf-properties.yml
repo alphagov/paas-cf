@@ -559,6 +559,8 @@ properties:
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
+      preloaded_rootfses:
+        - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
 
     route_emitter:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
@@ -615,5 +617,5 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
-    rootfs_cflinuxfs2:
-      trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
+  cflinuxfs2-rootfs:
+    trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
