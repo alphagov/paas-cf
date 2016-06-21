@@ -107,8 +107,8 @@ resources:
   - name: graphite-nozzle
     type: git
     source:
-      uri: https://github.com/alphagov/graphite-nozzle
-      branch: 106191208-deaggregated_names
+      uri: https://github.com/alphagov/paas-graphite-nozzle
+      branch: upgrade_go
 
   - name: vpc-tfstate
     type: s3-iam
@@ -1335,6 +1335,7 @@ jobs:
                     instances: 1
                     no-route: true
                     health-check-type: none
+                    buildpack: go_buildpack
                     env:
                       DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
                       UAA_ENDPOINT: "${UAA_ENDPOINT}"
