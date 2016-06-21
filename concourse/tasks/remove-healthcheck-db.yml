@@ -13,11 +13,17 @@ run:
     - |
       ./paas-cf/concourse/scripts/import_bosh_ca.sh
       . ./config/config.sh
-      if curl -I -f $API_ENDPOINT/info; then
-        echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-        cf target -o testers -s healthcheck
-        cf delete healthcheck -f -r
-        if cf services | grep -q healthcheck-db; then
-          cf delete-service healthcheck-db -f
-        fi
+      if ! curl -I -f $API_ENDPOINT/info; then
+        echo "CF API unavailable. Skipping..."
+        exit 0
+      fi
+      echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+      if ! cf org testers > /dev/null; then
+        echo "Org 'testers' not found. Skipping..."
+        exit 0
+      fi
+      cf target -o testers -s healthcheck
+      cf delete healthcheck -f -r
+      if cf services | grep -q healthcheck-db; then
+        cf delete-service healthcheck-db -f
       fi
