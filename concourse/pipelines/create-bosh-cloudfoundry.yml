@@ -1,3 +1,4 @@
+---
 groups:
   - name: all
     jobs:
@@ -7,9 +8,11 @@ groups:
       - generate-bosh-config
       - bosh-deploy
       - generate-secrets
+      - availability-tests
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -26,9 +29,11 @@ groups:
   - name: cloudfoundry
     jobs:
       - generate-secrets
+      - availability-tests
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -47,6 +52,7 @@ groups:
       - pipeline-release-lock
   - name: tests
     jobs:
+      - availability-tests
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -476,6 +482,48 @@ jobs:
           put: cf-secrets
           params:
             file: generated-cf-secrets/cf-secrets.yml
+
+  - name: availability-tests
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['generate-secrets']
+            trigger: true
+          - get: paas-cf
+            passed: ['generate-secrets']
+          - get: bosh-CA
+          - get: concourse-manifest
+      - task: run-tests
+        config:
+          platform: linux
+          image: docker:///governmentpaas/cf-acceptance-tests
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+            - name: concourse-manifest
+            - name: bosh-CA
+          params:
+            SKIP_SSL_VALIDATION: true
+            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            CONCOURSE_ATC_USERNAME: admin
+            DEPLOY_ENV: {{deploy_env}}
+            BRANCH: {{branch_name}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                export CONCOURSE_ATC_PASSWORD=$(awk '/basic_auth_password/ { print $2 }' concourse-manifest/concourse-manifest.yml | tr -d '"')
+                export CONCOURSE_ATC_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+                export PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+
+                echo "Running tests"
+                ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/availability
+
 
   - name: bosh-terraform
     serial_groups: [bosh-deploy]
