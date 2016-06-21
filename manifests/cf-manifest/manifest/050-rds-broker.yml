@@ -19,7 +19,7 @@ meta:
 
 releases:
   - name: aws-broker
-    version: 0.0.4
+    version: 0.0.5
 
 jobs:
   - name: rds_broker
@@ -40,6 +40,7 @@ jobs:
         aws_secret_access_key: ""
         aws_region: "eu-west-1"
         password: (( grab secrets.rds_broker_admin_password ))
+        state_encryption_key: (( grab secrets.rds_broker_state_encryption_key ))
         db_prefix: "rdsbroker"
         master_password_seed: (( grab secrets.rds_broker_master_password_seed ))
         broker_name: "(( grab terraform_outputs.environment ))"
