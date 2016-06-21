@@ -1200,6 +1200,7 @@ jobs:
         params:
           file: updated-cf-manifest/cf-manifest.yml
 
+
       - task: retrieve-config
         config:
           platform: linux
@@ -1398,6 +1399,47 @@ jobs:
 
                   cf push
 
+  - name: post-deploy
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['cf-deploy']
+            trigger: true
+          - get: paas-cf
+            passed: ['cf-deploy']
+          - get: cf-manifest
+            passed: ['generate-cf-config']
+          - get: cf-secrets
+            passed: ['generate-cf-config']
+          - get: bosh-CA
+
+      - task: retrieve-config
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+            - name: cf-manifest
+          outputs:
+            - name: config
+          params:
+          image: docker:///ruby#2.2-slim
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                CF_ADMIN=admin
+                CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+                API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+
+                for var_name in CF_ADMIN CF_PASS API_ENDPOINT; do 
+                  echo export "${var_name}"=\"$(eval echo \$${var_name})\"
+                done > config/config.sh
+
       - task: deploy-healthcheck
         config:
           platform: linux
@@ -1421,7 +1463,6 @@ jobs:
                 cf set-quota testers test_apps
                 cf create-space healthcheck -o testers
                 cf target -o testers -s healthcheck
-
                 cd paas-cf/tests/example-apps/healthcheck
                 cf push --no-start
 
@@ -1439,14 +1480,14 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: [ 'cf-deploy']
+            passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
             params:
               submodules:
                 - src/smoke-tests
           - get: paas-cf
-            passed: ['cf-deploy']
+            passed: ['post-deploy','availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -1474,14 +1515,14 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: [ 'cf-deploy']
+            passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
             params:
               submodules:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
           - get: paas-cf
-            passed: ['cf-deploy']
+            passed: ['post-deploy','availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -1568,10 +1609,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy']
+            passed: ['post-deploy','availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy']
+            passed: ['post-deploy','availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -1633,10 +1674,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy']
+            passed: ['post-deploy','availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy']
+            passed: ['post-deploy','availability-tests']
           - get: concourse-manifest
           - get: cf-manifest
           - get: bosh-secrets
