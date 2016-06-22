@@ -167,8 +167,6 @@ properties:
         timeout_in_seconds: ~
       droplet_upload:
         timeout_in_seconds: ~
-      model_deletion:
-        timeout_in_seconds: ~
       generic:
         number_of_workers: ~
 
@@ -530,29 +528,6 @@ properties:
     file_server:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
-    cc_uploader:
-      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-      cc:
-        base_url: (( grab properties.cc.srv_api_uri ))
-        basic_auth_password: (( grab properties.cc.internal_api_password ))
-        staging_upload_user: (( grab properties.cc.staging_upload_user ))
-        staging_upload_password: (( grab properties.cc.staging_upload_password ))
-
-    nsync:
-      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-      bbs:
-        api_location: bbs.service.cf.internal:8889
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
-        client_cert: (( grab secrets.bbs_client_cert  ))
-        client_key: (( grab secrets.bbs_client_key  ))
-        require_ssl: true
-
-      cc:
-        base_url:  (( grab properties.cc.srv_api_uri ))
-        basic_auth_password: (( grab properties.cc.internal_api_password ))
-        staging_upload_user: (( grab properties.cc.staging_upload_user ))
-        staging_upload_password: (( grab properties.cc.staging_upload_password ))
-
     rep:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
@@ -561,6 +536,8 @@ properties:
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
+      preloaded_rootfses:
+        - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
 
     route_emitter:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
@@ -588,6 +565,30 @@ properties:
 
       uaa_secret: (( grab properties.uaa.ssh_proxy_client_secret ))
       uaa_token_url: (( grab properties.uaa.token_url ))
+
+  capi:
+    cc_uploader:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      cc:
+        base_url: (( grab properties.cc.srv_api_uri ))
+        basic_auth_password: (( grab properties.cc.internal_api_password ))
+        staging_upload_user: (( grab properties.cc.staging_upload_user ))
+        staging_upload_password: (( grab properties.cc.staging_upload_password ))
+
+    nsync:
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      bbs:
+        api_location: bbs.service.cf.internal:8889
+        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        client_cert: (( grab secrets.bbs_client_cert  ))
+        client_key: (( grab secrets.bbs_client_key  ))
+        require_ssl: true
+
+      cc:
+        base_url:  (( grab properties.cc.srv_api_uri ))
+        basic_auth_password: (( grab properties.cc.internal_api_password ))
+        staging_upload_user: (( grab properties.cc.staging_upload_user ))
+        staging_upload_password: (( grab properties.cc.staging_upload_password ))
 
     stager:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
@@ -617,5 +618,5 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
-    rootfs_cflinuxfs2:
-      trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
+  cflinuxfs2-rootfs:
+    trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))

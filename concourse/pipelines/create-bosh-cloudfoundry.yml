@@ -107,8 +107,8 @@ resources:
   - name: graphite-nozzle
     type: git
     source:
-      uri: https://github.com/alphagov/graphite-nozzle
-      branch: 106191208-deaggregated_names
+      uri: https://github.com/alphagov/paas-graphite-nozzle
+      branch: upgrade_go
 
   - name: vpc-tfstate
     type: s3-iam
@@ -1335,6 +1335,7 @@ jobs:
                     instances: 1
                     no-route: true
                     health-check-type: none
+                    buildpack: go_buildpack
                     env:
                       DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
                       UAA_ENDPOINT: "${UAA_ENDPOINT}"
@@ -1372,8 +1373,6 @@ jobs:
                 cf set-quota testers test_apps
                 cf create-space healthcheck -o testers
                 cf target -o testers -s healthcheck
-                # FIXME remove this after https://github.com/alphagov/paas-cf/pull/295 is accepted and in prod
-                cf delete healthcheck-app -f -r
 
                 cd paas-cf/tests/example-apps/healthcheck
                 cf push --no-start

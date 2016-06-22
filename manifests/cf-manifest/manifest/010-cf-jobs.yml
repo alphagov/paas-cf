@@ -162,21 +162,21 @@ meta:
         release: diego
       - name: garden
         release: garden-linux
-      - name: rootfses
-        release: diego
+      - name: cflinuxfs2-rootfs-setup
+        release: cflinuxfs2-rootfs
       - name: metron_agent
         release: cf
     cc_bridge:
       - name: consul_agent
         release: cf
       - name: stager
-        release: diego
+        release: cf
       - name: nsync
-        release: diego
+        release: cf
       - name: tps
-        release: diego
+        release: cf
       - name: cc_uploader
-        release: diego
+        release: cf
       - name: metron_agent
         release: cf
     route_emitter:
@@ -210,7 +210,7 @@ meta:
       - name: bbs
         release: diego
       - name: cc_uploader
-        release: diego
+        release: cf
       - name: converger
         release: diego
       - name: file_server
@@ -218,15 +218,15 @@ meta:
       - name: metron_agent
         release: cf
       - name: nsync
-        release: diego
+        release: cf
       - name: route_emitter
         release: diego
       - name: ssh_proxy
         release: diego
       - name: stager
-        release: diego
+        release: cf
       - name: tps
-        release: diego
+        release: cf
 
 jobs:
   - name: consul
