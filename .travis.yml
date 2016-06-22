@@ -4,7 +4,7 @@ rvm:
 env:
   global:
     - TF_VERSION="0.6.15"
-    - SPRUCE_VERSION="0.13.0"
+    - SPRUCE_VERSION="1.5.0"
     - DEPLOY_ENV="travis"
 
 addons:
@@ -32,10 +32,8 @@ before_install:
   - |
     echo "Fetching Spruce"
     set -e
-    wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-    tar -xvzf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz
-    mv spruce_${SPRUCE_VERSION}_linux_amd64/spruce ~/bin && chmod +x ~/bin/spruce
-    rm -rf spruce_${SPRUCE_VERSION}_linux_amd64.tar.gz spruce_${SPRUCE_VERSION}_linux_amd64
+    wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64
+    mv spruce-linux-amd64 ~/bin/spruce && chmod +x ~/bin/spruce
   - pip install --user yamllint
   - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
 
