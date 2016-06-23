@@ -217,6 +217,21 @@ can use SELF_UPDATE_PIPELINE environment variable, set to false (true is default
 
 See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 
+## Optionally run specific job in the create-bosh-cloudfoundry pipeline
+
+`create-bosh-cloudfoundry` is our main pipeline. When we are making changes or
+adding new features to our deployment we many times wish to test only the
+specific changes we have just made. To do that, it's many times enough to run
+only the job that is applying the change. In order to do that, you can use
+`run_job` makefile target. Specify the job name you want to execute by setting
+the `JOB` variable. You also have to specify your environment type, e.g.
+`JOB=performance-tests make dev run_job`.
+
+This will not only tigger the job, but before that it will modify the pipeline
+to remove `passed` dependencies for `paas-cf` in the specified job. This means
+that your job will pick the latest changes to `paas-cf` directly, without the
+need to run the pipeline from start in order to bring the changes forward.
+
 ## Sharing your Bootstrap Concourse
 
 If you need to share access to your *Bootstrap Concourse* with a colleague
