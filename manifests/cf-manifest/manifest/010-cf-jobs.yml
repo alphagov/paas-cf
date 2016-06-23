@@ -391,7 +391,7 @@ jobs:
     templates: (( grab meta.router_templates ))
     instances: 2
     vm_type: router
-    stemcell: 3232.6
+    stemcell: default
     networks:
       - name: router
     properties:
