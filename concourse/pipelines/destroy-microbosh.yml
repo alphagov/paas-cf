@@ -94,7 +94,7 @@ jobs:
       - aggregate:
           - get: pipeline-trigger
             trigger: true
-            passed: [ init ]
+            passed: ['init']
           - get: paas-cf
           - get: bosh-secrets
           - get: bosh-init-state
@@ -167,10 +167,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: [ bosh-init-delete ]
+            passed: ['bosh-init-delete']
             trigger: true
           - get: paas-cf
-            passed: [ bosh-init-delete ]
+            passed: ['bosh-init-delete']
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate

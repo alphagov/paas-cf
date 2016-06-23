@@ -159,10 +159,10 @@ jobs:
     plan:
     - get: paas-cf
       trigger: true
-      passed: [init-bucket]
+      passed: ['init-bucket']
     - get: build-all-trigger
       trigger: true
-      passed: [init-bucket]
+      passed: ['init-bucket']
     - get: vpc-terraform-state
 
     - task: generate-ssh-keys
@@ -220,12 +220,12 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
-      passed: [vpc]
+      passed: ['vpc']
     - get: build-all-trigger
       trigger: true
-      passed: [vpc]
+      passed: ['vpc']
     - get: vpc-terraform-state
-      passed: [vpc]
+      passed: ['vpc']
     - get: concourse-terraform-state
     - get: concourse-cert
     - get: git-ssh-public-key
@@ -335,14 +335,14 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
-      passed: [concourse-terraform]
+      passed: ['concourse-terraform']
     - get: build-all-trigger
       trigger: true
-      passed: [concourse-terraform]
+      passed: ['concourse-terraform']
     - get: vpc-terraform-state
-      passed: [vpc]
+      passed: ['vpc']
     - get: concourse-terraform-state
-      passed: [concourse-terraform]
+      passed: ['concourse-terraform']
     - get: concourse-secrets
 
     - task: terraform-outputs-to-yaml
@@ -450,11 +450,11 @@ jobs:
     plan:
     - get: build-all-trigger
       trigger: true
-      passed: [concourse-prepare-deploy]
+      passed: ['concourse-prepare-deploy']
     - get: concourse-bosh-state
     - get: ssh-private-key
     - get: concourse-manifest
-      passed: [concourse-prepare-deploy]
+      passed: ['concourse-prepare-deploy']
 
     - task: concourse-deploy
       timeout: 30m
@@ -488,14 +488,14 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
-      passed: [concourse-prepare-deploy]
+      passed: ['concourse-prepare-deploy']
     - get: build-all-trigger
       trigger: true
-      passed: [concourse-deploy]
+      passed: ['concourse-deploy']
     - get: vpc-terraform-state
     - get: concourse-terraform-state
     - get: git-ssh-public-key
-      passed: [concourse-terraform]
+      passed: ['concourse-terraform']
 
     - task: vpc-terraform-outputs-to-sh
       config:

@@ -150,11 +150,11 @@ jobs:
     serial: true
     plan:
     - get: paas-cf
-      passed: [destroy-concourse]
+      passed: ['destroy-concourse']
     - get: vpc-terraform-state
     - get: destroy-all-trigger
       trigger: true
-      passed: [destroy-concourse]
+      passed: ['destroy-concourse']
     - task: tf-destroy-vpc
       config:
         image: docker:///governmentpaas/terraform
@@ -182,11 +182,11 @@ jobs:
     serial: true
     plan:
       - get: paas-cf
-        passed: [destroy-vpc]
+        passed: ['destroy-vpc']
       - get: bucket-terraform-state
       - get: destroy-all-trigger
         trigger: true
-        passed: [destroy-vpc]
+        passed: ['destroy-vpc']
       - task: tf-destroy-init-bucket
         config:
           image: docker:///governmentpaas/terraform
