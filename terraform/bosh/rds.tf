@@ -38,6 +38,7 @@ resource "aws_db_instance" "bosh" {
   identifier = "${var.env}-bosh"
   name = "bosh"
   allocated_storage = 5
+  storage_type = "gp2"
   engine = "postgres"
   engine_version = "9.4.5"
   instance_class = "db.t2.medium"
