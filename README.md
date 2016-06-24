@@ -381,4 +381,4 @@ To do this, run `aws ses verify-email-identity --email-address youremail@example
 and click on the link in the resulting email
 
 ## BOSH failover
-Visit [BOSH failover page](https://github.com/alphagov/paas-cf/doc/bosh_failover.md)
+Visit [BOSH failover page](https://github.com/alphagov/paas-cf/blob/master/doc/bosh_failover.md)
