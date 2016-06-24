@@ -148,6 +148,7 @@ properties:
     extra_headers_to_log:
     debug_addr:
     enable_routing_api:
+    drain_wait: 15
 
   cc:
     jobs:
