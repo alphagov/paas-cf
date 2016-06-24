@@ -810,11 +810,11 @@ jobs:
           - get: cf-tfstate
           - get: cf-certs-tfstate
           - get: bosh-CA
-            passed: ['generate-secrets']
+            passed: ['pre-deploy']
           - get: cf-certs
             passed: ['generate-secrets']
           - get: cf-secrets
-            passed: ['generate-secrets']
+            passed: ['pre-deploy']
 
       - task: upload-certs-to-aws
         config:
@@ -1454,9 +1454,9 @@ jobs:
           - get: paas-cf
             passed: ['cf-deploy']
           - get: cf-manifest
-            passed: ['generate-cf-config']
+            passed: ['cf-deploy']
           - get: cf-secrets
-            passed: ['generate-cf-config']
+            passed: ['cf-deploy']
           - get: bosh-CA
 
       - task: retrieve-config
@@ -1535,10 +1535,10 @@ jobs:
           - get: paas-cf
             passed: ['post-deploy','availability-tests']
           - get: cf-manifest
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -1570,10 +1570,10 @@ jobs:
           - get: paas-cf
             passed: ['post-deploy','availability-tests']
           - get: cf-manifest
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -1660,10 +1660,10 @@ jobs:
           - get: paas-cf
             passed: ['post-deploy','availability-tests']
           - get: cf-manifest
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -1779,7 +1779,7 @@ jobs:
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
 
       - do:
         - task: create-temp-user
