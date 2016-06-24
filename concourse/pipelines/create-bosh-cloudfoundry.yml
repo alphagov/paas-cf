@@ -769,7 +769,7 @@ jobs:
             - name: bosh-init-state
             - name: ssh-private-key
           outputs:
-            - name: updated-bosh-init-state
+            - name: bosh-init-working-dir
           params:
             BOSH_MANIFEST_STATE: {{bosh_manifest_state}}
           run:
@@ -778,16 +778,16 @@ jobs:
               - -e
               - -c
               - |
-                mkdir -p bosh-manifest/.ssh
-                cp ssh-private-key/id_rsa bosh-manifest/.ssh/id_rsa
-                chmod 400 bosh-manifest/.ssh/id_rsa
-                cp bosh-init-state/"${BOSH_MANIFEST_STATE}" bosh-manifest/bosh-manifest-state.json
-                bosh-init deploy bosh-manifest/bosh-manifest.yml
-                cp bosh-manifest/bosh-manifest-state.json updated-bosh-init-state/"${BOSH_MANIFEST_STATE}"
+                mkdir -p bosh-init-working-dir/.ssh
+                cp ssh-private-key/id_rsa bosh-init-working-dir/.ssh/id_rsa
+                chmod 400 bosh-init-working-dir/.ssh/id_rsa
+                cp bosh-manifest/bosh-manifest.yml bosh-init-working-dir/bosh-manifest.yml
+                cp bosh-init-state/"${BOSH_MANIFEST_STATE}" bosh-init-working-dir/bosh-manifest-state.json
+                bosh-init deploy bosh-init-working-dir/bosh-manifest.yml
         ensure:
           put: bosh-init-state
           params:
-            file: "updated-bosh-init-state/bosh-manifest-state-*.json"
+            file: "bosh-init-working-dir/bosh-manifest-state.json"
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
