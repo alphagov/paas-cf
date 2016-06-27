@@ -46,6 +46,7 @@ resource "aws_db_instance" "bosh" {
   password = "${var.secrets_bosh_postgres_password}"
   db_subnet_group_name = "${aws_db_subnet_group.bosh_rds.name}"
   parameter_group_name = "${aws_db_parameter_group.default.id}"
+  backup_window = "01:00-02:00"
   maintenance_window = "Thu:03:00-Thu:04:00"
   multi_az = "${var.bosh_db_multi_az}"
   backup_retention_period = "${var.bosh_db_backup_retention_period}"
