@@ -4,10 +4,6 @@ meta:
   release:
     name: cf
 
-  logsearch_shipper:
-    release:
-      name: "logsearch-shipper"
-
   api_consul_services:
     cloud_controller_ng: {}
 
@@ -20,8 +16,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
   - name: java-buildpack
     release: (( grab meta.release.name ))
   - name: java-offline-buildpack
@@ -48,24 +42,18 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   clock_templates:
   - name: cloud_controller_clock
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   consul_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   etcd_templates:
   - name: consul_agent
@@ -76,8 +64,6 @@ meta:
     release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   loggregator_templates:
   - name: consul_agent
@@ -88,8 +74,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   loggregator_trafficcontroller_templates:
   - name: consul_agent
@@ -98,8 +82,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   nats_templates:
   - name: consul_agent
@@ -118,8 +100,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
   - name: haproxy
     release: paas-haproxy
 
@@ -130,8 +110,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   uaa_templates:
   - name: consul_agent
@@ -142,8 +120,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
-  - name: logsearch-shipper
-    release: (( grab meta.logsearch_shipper.release.name ))
 
   diego_job_templates:
     brain:

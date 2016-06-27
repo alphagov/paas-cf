@@ -9,10 +9,6 @@ releases:
   url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=200.0.0
   version: 200.0.0
   sha1: 527c35db31cd66810accf128ceffee4f5fde80c3
-- name: logsearch-shipper
-  url: https://bosh.io/d/github.com/logsearch/logsearch-shipper-boshrelease?v=4
-  version: 4
-  sha1: c92ce357c5e1e77a4fb7944d58a1971c7aee06b0
 
 jobs:
 - name: ingestor_z1
@@ -181,8 +177,3 @@ properties:
       host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json
-  logsearch:
-    metrics:
-      enabled: false
-    logs:
-      server: (( concat terraform_outputs.logsearch_ingestor_elb_dns_name ":5514" ))
