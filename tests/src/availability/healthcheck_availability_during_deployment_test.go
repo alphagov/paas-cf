@@ -78,7 +78,7 @@ var _ = Describe("Availability test", func() {
 			}
 		})
 
-		It(fmt.Sprintf("does not get reuest success rate less than %.2f%%", availabilitySuccessRateThreshold), func() {
+		It(fmt.Sprintf("does not get request success rate less than %.2f%%", availabilitySuccessRateThreshold), func() {
 			appUri := "https://healthcheck." + helpers.GetAppsDomainZoneName() + "/?availability-test=" + helpers.GetResourceVersion()
 
 			attacker, resultChannel = loadTest(appUri, "/", availabilityTestRate)
