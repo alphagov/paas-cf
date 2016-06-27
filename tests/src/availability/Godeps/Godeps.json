@@ -1,13 +1,11 @@
 {
-	"ImportPath": "github.com/alphagov/paas-cf/tests/src/availability",
+	"ImportPath": "availability",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
+	"Packages": [
+		"./..."
+	],
 	"Deps": [
-		{
-			"ImportPath": "github.com/alphagov/paas-cf/tests/helpers",
-			"Comment": "prod-0.0.116-7-gd23b5b1",
-			"Rev": "e894eeab98bd239df34dfaafd57f8609db6a1409"
-		},
 		{
 			"ImportPath": "github.com/bmizerany/pat",
 			"Rev": "c068ca2f0aacee5ac3681d68e4d0a003b7d1fd2c"

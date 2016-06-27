@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/alphagov/paas-cf/tests/helpers"
+	"availability/helpers"
 
 	vegeta "github.com/tsenart/vegeta/lib"
 
