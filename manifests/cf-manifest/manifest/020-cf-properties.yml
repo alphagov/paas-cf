@@ -15,7 +15,7 @@ meta:
 properties:
   domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain: (( grab terraform_outputs.cf_root_domain ))
-  system_domain_organization: GDS
+  system_domain_organization: admin
   app_domains:
    - (( grab terraform_outputs.cf_apps_domain ))
 
