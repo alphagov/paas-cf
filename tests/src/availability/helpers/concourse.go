@@ -34,7 +34,7 @@ type basicAuthTransport struct {
 
 func getConfigFromEnvironment(varName string) string {
 	configValue := os.Getenv(varName)
-	Expect(configValue).NotTo(BeEmpty(), "Environment variable $%s is not set", varName)
+	ExpectWithOffset(2, configValue).NotTo(BeEmpty(), "Environment variable $%s is not set", varName)
 	return configValue
 }
 
@@ -115,15 +115,15 @@ func buildsWithVersion(client concourse.Client, pipelineName, resourceName, reso
 	}
 
 	resourceVersions, _, resourceExists, err := client.ResourceVersions(pipelineName, resourceName, page)
-	Expect(err).NotTo(HaveOccurred())
-	Expect(resourceExists).To(BeTrue())
+	ExpectWithOffset(2, err).NotTo(HaveOccurred())
+	ExpectWithOffset(2, resourceExists).To(BeTrue())
 
 	for _, version := range resourceVersions {
 		if resourceVersion == version.Version["number"] {
 			resourceVersionID = version.ID
 		}
 	}
-	Expect(resourceVersionID).NotTo(Equal(0), "Resource: %s with version: %s should exist in Concourse", resourceName, resourceVersion)
+	ExpectWithOffset(2, resourceVersionID).NotTo(Equal(0), "Resource: %s with version: %s should exist in Concourse", resourceName, resourceVersion)
 
 	builds, _, err := client.BuildsWithVersionAsInput(pipelineName, resourceName, resourceVersionID)
 
