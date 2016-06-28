@@ -1388,7 +1388,7 @@ jobs:
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
-                  if cf service-brokers | grep "rds-broker\s*http://$RDS_BROKER_SERVER"; then
+                  if cf service-brokers | grep "rds-broker\s"; then
                     cf update-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
                   else
                     cf create-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
