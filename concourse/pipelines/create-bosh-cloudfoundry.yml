@@ -584,7 +584,7 @@ jobs:
                 export PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
                 echo "Running tests"
-                ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/availability
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability
 
 
   - name: bosh-terraform
@@ -1509,7 +1509,7 @@ jobs:
                 cf set-quota testers test_apps
                 cf create-space healthcheck -o testers
                 cf target -o testers -s healthcheck
-                cd paas-cf/tests/example-apps/healthcheck
+                cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
 
                 cf create-service postgres M-dedicated-9.5 healthcheck-db
@@ -1608,7 +1608,7 @@ jobs:
                   puts YAML.dump(my)" > acceptance_test_properties.yml
                   cat acceptance_test_properties.yml
 
-                  ./paas-cf/tests/bosh-template-renderer/render.rb \
+                  ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
                     ./cf-release/jobs/acceptance-tests/templates/run.erb \
                     ./cf-release/jobs/acceptance-tests/spec \
                     acceptance_test_properties.yml \
@@ -1616,7 +1616,7 @@ jobs:
 
                   chmod +x ./test-config/run
 
-                  ./paas-cf/tests/bosh-template-renderer/render.rb \
+                  ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
                     ./cf-release/jobs/acceptance-tests/templates/config.json.erb \
                     ./cf-release/jobs/acceptance-tests/spec \
                     acceptance_test_properties.yml \
@@ -1689,7 +1689,7 @@ jobs:
                 - -c
                 - |
                   export CF_MANIFEST=cf-manifest/cf-manifest.yml
-                  ./paas-cf/tests/generate_test_config.rb \
+                  ./paas-cf/platform-tests/generate_test_config.rb \
                     > test-config/config.json
 
         - task: run-tests
@@ -1710,7 +1710,7 @@ jobs:
 
                   echo "Running tests"
                   export CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/acceptance/
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/acceptance/
 
         ensure:
           task: remove-temp-user
@@ -1805,7 +1805,7 @@ jobs:
                 - -c
                 - |
                   export CF_MANIFEST=cf-manifest/cf-manifest.yml
-                  ./paas-cf/tests/generate_test_config.rb \
+                  ./paas-cf/platform-tests/generate_test_config.rb \
                     > test-config/config.json
 
         - task: run-tests
@@ -1826,7 +1826,7 @@ jobs:
 
                   echo "Running tests"
                   export CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/tests/run_tests.sh ./paas-cf/tests/src/performance/
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/performance/
 
         ensure:
           task: remove-temp-user
