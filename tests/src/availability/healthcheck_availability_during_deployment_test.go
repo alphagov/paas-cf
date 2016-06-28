@@ -2,6 +2,7 @@ package availability_test
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"availability/helpers"
@@ -60,6 +61,7 @@ func errorRateThreshold(metrics vegeta.Metrics, minimumTestDuration time.Duratio
 var _ = Describe("Availability test", func() {
 
 	var metrics vegeta.Metrics
+	var metricsLock sync.Mutex
 	var stopAttackCriteria func() bool
 
 	Context("when runs (until the deployment is finished or error rate > 50%)", func() {
@@ -71,6 +73,8 @@ var _ = Describe("Availability test", func() {
 				if helpers.DeploymentHasFinishedInConcourse() {
 					return true
 				}
+				metricsLock.Lock()
+				defer metricsLock.Unlock()
 				if errorRateThreshold(metrics, minimumTestDuration, maximumErrorRate) {
 					return true
 				}
@@ -86,7 +90,9 @@ var _ = Describe("Availability test", func() {
 
 			go func() {
 				for res := range resultChannel {
+					metricsLock.Lock()
 					metrics.Add(res)
+					metricsLock.Unlock()
 				}
 			}()
 
