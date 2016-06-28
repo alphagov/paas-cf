@@ -110,6 +110,14 @@ output "rds_broker_postgres95_db_parameter_group" {
   value = "${aws_db_parameter_group.rds_broker_postgres95.id}"
 }
 
+output "rds_broker_elb_name" {
+  value = "${aws_elb.rds_broker.name}"
+}
+
+output "rds_broker_elb_dns_name" {
+  value = "${aws_route53_record.rds_broker.fqdn}"
+}
+
 output "cloud_controller_security_group" {
   value = "${aws_security_group.cloud_controller.name}"
 }

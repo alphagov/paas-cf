@@ -1137,6 +1137,8 @@ jobs:
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
+          - get: cf-tfstate
+            passed: ['generate-cf-config']
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
           - get: grafana-boshrelease
@@ -1265,6 +1267,7 @@ jobs:
             - name: paas-cf
             - name: cf-secrets
             - name: cf-manifest
+            - name: cf-tfstate
           outputs:
             - name: config
           params:
@@ -1277,6 +1280,10 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
+                ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                  < cf-tfstate/cf.tfstate \
+                  > cf-terraform-outputs.yml
+
                 CF_ADMIN=admin
                 CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
                 FIREHOSE_USER=graphite-nozzle
@@ -1285,7 +1292,7 @@ jobs:
                 UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
                 DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
                 GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
-                RDS_BROKER_SERVER=$($VAL_FROM_YAML jobs.rds_broker.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
+                RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.rds_broker_elb_dns_name cf-terraform-outputs.yml)
                 RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
 
                 for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS; do

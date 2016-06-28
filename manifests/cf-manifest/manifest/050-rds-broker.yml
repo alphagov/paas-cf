@@ -23,8 +23,8 @@ releases:
 
 jobs:
   - name: rds_broker
-    azs: [z1]
-    instances: 1
+    azs: [z1, z2]
+    instances: 2
     vm_type: rds_broker
     stemcell: default
     templates:
@@ -32,8 +32,6 @@ jobs:
         release: aws-broker
     networks:
       - name: cf
-        static_ips:
-          - 10.0.16.25
     properties:
       rds-broker:
         aws_access_key_id: ""
