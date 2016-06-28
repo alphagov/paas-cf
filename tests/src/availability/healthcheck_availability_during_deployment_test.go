@@ -88,7 +88,10 @@ var _ = Describe("Availability test", func() {
 			attacker, resultChannel = loadTest(appUri, "/", availabilityTestRate)
 			defer attacker.Stop()
 
+			var wg sync.WaitGroup
+			wg.Add(1)
 			go func() {
+				defer wg.Done()
 				for res := range resultChannel {
 					metricsLock.Lock()
 					metrics.Add(res)
@@ -103,8 +106,9 @@ var _ = Describe("Availability test", func() {
 			).Should(BeTrue(), "Deployment did not finish in the expected time")
 
 			attacker.Stop()
-			metrics.Close()
+			wg.Wait() // Ensure all results have been collected.
 
+			metrics.Close()
 			Expect(metrics.Success*100).To(
 				BeNumerically(">=", availabilitySuccessRateThreshold),
 				"Errors detected during the attack: %v", metrics.Errors,
