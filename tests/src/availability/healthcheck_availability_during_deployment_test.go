@@ -38,7 +38,7 @@ func loadTest(appUri string, endpoint string, rate uint64) (*vegeta.Attacker, <-
 	return attacker, res
 }
 
-func errorRateThreshold(metrics vegeta.Metrics, minimumTestDuration time.Duration, maximumErrorRate float64) bool {
+func errorRateThreshold(metrics *vegeta.Metrics, minimumTestDuration time.Duration, maximumErrorRate float64) bool {
 	// metrics.Close() does trigger the computation of metrics, but does not stop any process
 	metrics.Close()
 
@@ -75,7 +75,7 @@ var _ = Describe("Availability test", func() {
 				}
 				metricsLock.Lock()
 				defer metricsLock.Unlock()
-				if errorRateThreshold(metrics, minimumTestDuration, maximumErrorRate) {
+				if errorRateThreshold(&metrics, minimumTestDuration, maximumErrorRate) {
 					return true
 				}
 				return false
