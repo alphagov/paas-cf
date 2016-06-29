@@ -18,7 +18,7 @@ const (
 	availabilityTestMaxDuration      = 2 * time.Hour
 	availabilityTestMaxLatency       = 300 * time.Millisecond
 	availabilityTestMaxErrors        = 0
-	availabilitySuccessRateThreshold = 99.9
+	availabilitySuccessRateThreshold = 100.0
 	minimumTestDuration              = 15 * time.Second
 	maximumErrorRate                 = 0.5
 
