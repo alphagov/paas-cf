@@ -1,10 +1,10 @@
-# Custom acceptance tests
+# Platform acceptance tests
 
-These are custom acceptance tests for the CF deployment that are run in
+These are acceptance tests for our CF deployment that are run in
 addition to the [upstream acceptance
 tests](https://github.com/cloudfoundry/cf-acceptance-tests). These are
-automatically run from the deploy-cloudfoundry concourse pipeline after the
-concourse deploy.
+automatically run from the concourse pipeline after the platform has been
+deployed.
 
 ## Dependencies
 
@@ -14,8 +14,8 @@ The tests have the following dependencies:
 * `curl`
 * [`godep`](https://github.com/tools/godep)
 
-When running on concourse, these use our [cf-cli
-container](https://hub.docker.com/r/governmentpaas/cf-cli/).
+When running on concourse, these use our [cf-acceptance-tests
+container](https://hub.docker.com/r/governmentpaas/cf-acceptance-tests/).
 
 ## Running the tests
 
@@ -36,4 +36,5 @@ Example:
 }
 ```
 
-Run the tests using the `run_tests.sh` script.
+Run the tests using the `run_tests.sh` script passing the package name of the
+set of tests you want to run (eg `./run_tests.sh acceptance`).

@@ -26,7 +26,7 @@ spec:
 		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
-	cd tests/bosh-template-renderer &&\
+	cd platform-tests/bosh-template-renderer &&\
 		bundle exec rspec
 
 lint_yaml:
