@@ -36,3 +36,4 @@ terraform_outputs:
   rds_broker_dbs_security_group_id: stub_rds_broker_dbs_security_group_id
   rds_broker_dbs_subnet_group: stub_rds_broker_dbs_subnet_group
   rds_broker_postgres95_db_parameter_group: stub_rds_broker_postgres95_db_parameter_group
+  cloud_controller_security_group: sg-0000000

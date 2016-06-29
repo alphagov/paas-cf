@@ -37,6 +37,7 @@ vm_types:
       security_groups:
         - (( grab terraform_outputs.default_security_group ))
         - (( grab terraform_outputs.cf_rds_client_security_group ))
+        - (( grab terraform_outputs.cloud_controller_security_group ))
 
   - name: clock_global
     network: cf
@@ -49,6 +50,7 @@ vm_types:
       security_groups:
         - (( grab terraform_outputs.default_security_group ))
         - (( grab terraform_outputs.cf_rds_client_security_group ))
+        - (( grab terraform_outputs.cloud_controller_security_group ))
 
   - name: api_worker
     network: cf
@@ -62,6 +64,7 @@ vm_types:
       security_groups:
         - (( grab terraform_outputs.default_security_group ))
         - (( grab terraform_outputs.cf_rds_client_security_group ))
+        - (( grab terraform_outputs.cloud_controller_security_group ))
 
   - name: uaa
     network: cf
