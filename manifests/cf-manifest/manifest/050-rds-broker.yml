@@ -19,7 +19,7 @@ meta:
 
 releases:
   - name: aws-broker
-    version: 0.0.5
+    version: 0.0.7
 
 jobs:
   - name: rds_broker
