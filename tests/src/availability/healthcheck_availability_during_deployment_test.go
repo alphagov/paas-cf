@@ -2,6 +2,7 @@ package availability_test
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"availability/helpers"
@@ -37,7 +38,7 @@ func loadTest(appUri string, endpoint string, rate uint64) (*vegeta.Attacker, <-
 	return attacker, res
 }
 
-func errorRateThreshold(metrics vegeta.Metrics, minimumTestDuration time.Duration, maximumErrorRate float64) bool {
+func errorRateThreshold(metrics *vegeta.Metrics, minimumTestDuration time.Duration, maximumErrorRate float64) bool {
 	// metrics.Close() does trigger the computation of metrics, but does not stop any process
 	metrics.Close()
 
@@ -60,6 +61,7 @@ func errorRateThreshold(metrics vegeta.Metrics, minimumTestDuration time.Duratio
 var _ = Describe("Availability test", func() {
 
 	var metrics vegeta.Metrics
+	var metricsLock sync.Mutex
 	var stopAttackCriteria func() bool
 
 	Context("when runs (until the deployment is finished or error rate > 50%)", func() {
@@ -71,7 +73,9 @@ var _ = Describe("Availability test", func() {
 				if helpers.DeploymentHasFinishedInConcourse() {
 					return true
 				}
-				if errorRateThreshold(metrics, minimumTestDuration, maximumErrorRate) {
+				metricsLock.Lock()
+				defer metricsLock.Unlock()
+				if errorRateThreshold(&metrics, minimumTestDuration, maximumErrorRate) {
 					return true
 				}
 				return false
@@ -84,9 +88,14 @@ var _ = Describe("Availability test", func() {
 			attacker, resultChannel = loadTest(appUri, "/", availabilityTestRate)
 			defer attacker.Stop()
 
+			var wg sync.WaitGroup
+			wg.Add(1)
 			go func() {
+				defer wg.Done()
 				for res := range resultChannel {
+					metricsLock.Lock()
 					metrics.Add(res)
+					metricsLock.Unlock()
 				}
 			}()
 
@@ -97,8 +106,9 @@ var _ = Describe("Availability test", func() {
 			).Should(BeTrue(), "Deployment did not finish in the expected time")
 
 			attacker.Stop()
-			metrics.Close()
+			wg.Wait() // Ensure all results have been collected.
 
+			metrics.Close()
 			Expect(metrics.Success*100).To(
 				BeNumerically(">=", availabilitySuccessRateThreshold),
 				"Errors detected during the attack: %v", metrics.Errors,
