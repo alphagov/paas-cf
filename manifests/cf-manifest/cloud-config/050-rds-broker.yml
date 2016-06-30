@@ -4,7 +4,7 @@ vm_types:
     network: cf
     env: (( grab meta.default_env ))
     cloud_properties:
-      instance_type: m3.medium
+      instance_type: t2.nano
       iam_instance_profile: rds-broker
       ephemeral_disk:
         size: 10240
