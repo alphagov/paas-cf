@@ -1691,24 +1691,7 @@ jobs:
               PREFIX: custom-acceptance-test-user
 
         - task: generate-test-config
-          config:
-            platform: linux
-            image: docker:///ruby#2.2-slim
-            inputs:
-              - name: paas-cf
-              - name: cf-manifest
-              - name: admin-creds
-            outputs:
-              - name: test-config
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  export CF_MANIFEST=cf-manifest/cf-manifest.yml
-                  ./paas-cf/platform-tests/generate_test_config.rb \
-                    > test-config/config.json
+          file: paas-cf/concourse/tasks/generate-test-config.yml
 
         - task: run-tests
           config:
@@ -1807,24 +1790,7 @@ jobs:
               PREFIX: performance-tests-user
 
         - task: generate-test-config
-          config:
-            platform: linux
-            image: docker:///ruby#2.2-slim
-            inputs:
-              - name: paas-cf
-              - name: cf-manifest
-              - name: admin-creds
-            outputs:
-              - name: test-config
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  export CF_MANIFEST=cf-manifest/cf-manifest.yml
-                  ./paas-cf/platform-tests/generate_test_config.rb \
-                    > test-config/config.json
+          file: paas-cf/concourse/tasks/generate-test-config.yml
 
         - task: run-tests
           config:
