@@ -26,7 +26,7 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.5.0
     sha1: 4ab6166d800668ad3e9c2c10cfd3403a7de5885f
   - name: paas-haproxy
-    version: 0.0.3
+    version: 0.0.4
   - name: routing
     version: commit-bfe3632ad6a2d143279db865aa050aea076fef9e
 
