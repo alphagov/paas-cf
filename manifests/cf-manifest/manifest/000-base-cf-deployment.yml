@@ -28,7 +28,7 @@ releases:
   - name: paas-haproxy
     version: 0.0.4
   - name: routing
-    version: commit-bfe3632ad6a2d143279db865aa050aea076fef9e
+    version: commit-0bad6993f4cb87fa6213fa957f4e8eacbd22f762
 
 stemcells:
   - alias: default
