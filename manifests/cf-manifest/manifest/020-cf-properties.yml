@@ -62,12 +62,6 @@ properties:
     require_ssl: false
     peer_require_ssl: false
 
-  etcd_metrics_server:
-    nats:
-      machines: (( grab properties.nats.machines ))
-      username: (( grab properties.nats.user ))
-      password: (( grab properties.nats.password ))
-
   loggregator:
     maxRetainedLogMessages: 100
     debug: false
@@ -88,8 +82,6 @@ properties:
   logger_endpoint:
     port: 443
   syslog_daemon_config: ~
-
-  collector:
 
   doppler:
     maxRetainedLogMessages: 100

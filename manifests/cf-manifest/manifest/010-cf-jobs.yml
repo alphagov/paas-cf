@@ -60,8 +60,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: etcd
     release: etcd
-  - name: etcd_metrics_server
-    release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
 
@@ -102,14 +100,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: haproxy
     release: paas-haproxy
-
-  stats_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: collector
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   uaa_templates:
   - name: consul_agent
@@ -264,19 +254,6 @@ jobs:
         agent:
           services:
             etcd: {}
-
-  - name: stats
-    azs: [z1]
-    templates: (( grab meta.stats_templates ))
-    instances: 1
-    vm_type: small
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-
 
   - name: uaa
     azs: [z1, z2]
