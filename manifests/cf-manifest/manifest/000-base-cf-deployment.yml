@@ -6,9 +6,9 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: 237
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=237
-    sha1: 8996122278b03b6ba21ec673812d2075c37f1097
+    version: 238
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=238
+    sha1: fa6d35300f4fcd74a75fd8c7138f592acfcb32b0
   - name: diego
     version: 0.1472.0
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1472.0
