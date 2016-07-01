@@ -60,8 +60,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: etcd
     release: etcd
-  - name: etcd_metrics_server
-    release: etcd
   - name: metron_agent
     release: (( grab meta.release.name ))
 
