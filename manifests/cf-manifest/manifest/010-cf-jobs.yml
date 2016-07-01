@@ -1,6 +1,4 @@
 meta:
-  api_domain: (( concat "api." properties.domain ))
-
   release:
     name: cf
 

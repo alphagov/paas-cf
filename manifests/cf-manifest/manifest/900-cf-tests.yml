@@ -1,6 +1,6 @@
 properties:
   acceptance_tests:
-    api: (( grab meta.api_domain ))
+    api: (( concat "api." properties.system_domain ))
     apps_domain: (( grab properties.app_domains[0] ))
     system_domain: (( grab properties.system_domain ))
     admin_user: "admin"
@@ -21,7 +21,7 @@ properties:
     include_route_services: false
 
   smoke_tests:
-    api: (( grab meta.api_domain ))
+    api: (( grab properties.acceptance_tests.api ))
     apps_domain: (( grab properties.app_domains[0] ))
     user: "admin"
     password: (( grab secrets.uaa_admin_password ))
