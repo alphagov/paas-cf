@@ -393,3 +393,69 @@ jobs:
                   BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: rds-broker
+    serial_groups: [ failure ]
+    serial: true
+    plan:
+      - aggregate:
+          - get: cf-release
+            params:
+              submodules:
+                - src/smoke-tests
+          - get: paas-cf
+          - get: cf-manifest
+          - get: cf-secrets
+          - get: bosh-secrets
+          - get: bosh-CA
+          - get: pipeline-trigger
+            passed: ['cell']
+            trigger: true
+      - task: get-instance-id
+        file: paas-cf/concourse/tasks/get-instance-id.yml
+        config:
+          params:
+            VM_NAME: rds_broker/0
+            BOSH_FQDN: {{bosh_fqdn}}
+      - task: kill-instance
+        file: paas-cf/concourse/tasks/kill-instance.yml
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          config:
+            params:
+              PREFIX: rds-broker-test-user
+
+        - task: generate-test-config
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+
+        - task: run-tests
+          config:
+            platform: linux
+            image: docker:///governmentpaas/cf-acceptance-tests
+            inputs:
+              - name: paas-cf
+              - name: test-config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  echo "Running tests"
+                  export CONFIG="$(pwd)/test-config/config.json"
+                  export GINKGO_FOCUS='RDS broker'
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/acceptance/
+
+        ensure:
+          aggregate:
+            - task: recover
+              file: paas-cf/concourse/tasks/recover.yml
+              config:
+                params:
+                  BOSH_FQDN: {{bosh_fqdn}}
+            - task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml

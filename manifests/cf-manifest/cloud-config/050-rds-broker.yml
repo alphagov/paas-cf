@@ -4,7 +4,7 @@ vm_types:
     network: cf
     env: (( grab meta.default_env ))
     cloud_properties:
-      instance_type: m3.medium
+      instance_type: t2.nano
       iam_instance_profile: rds-broker
       ephemeral_disk:
         size: 10240
@@ -12,3 +12,5 @@ vm_types:
       security_groups:
         - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
         - (( grab terraform_outputs.default_security_group ))
+      elbs:
+        - (( grab terraform_outputs.rds_broker_elb_name ))

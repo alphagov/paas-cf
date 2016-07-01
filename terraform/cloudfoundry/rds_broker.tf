@@ -1,3 +1,26 @@
+resource "aws_elb" "rds_broker" {
+  name = "${var.env}-rds-broker"
+  subnets = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout = "${var.elb_idle_timeout}"
+  cross_zone_load_balancing = "true"
+  internal = true
+  security_groups = ["${aws_security_group.service_brokers.id}"]
+
+  health_check {
+    target = "HTTP:80/healthcheck"
+    interval = "${var.health_check_interval}"
+    timeout = "${var.health_check_timeout}"
+    healthy_threshold = "${var.health_check_healthy}"
+    unhealthy_threshold = "${var.health_check_unhealthy}"
+  }
+  listener {
+    instance_port = 80
+    instance_protocol = "http"
+    lb_port = 80
+    lb_protocol = "http"
+  }
+}
+
 resource "aws_db_subnet_group" "rds_broker" {
   name = "rdsbroker-${var.env}"
   description = "Subnet group for RDS broker managed instances"
