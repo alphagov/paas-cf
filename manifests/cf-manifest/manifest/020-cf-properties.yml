@@ -131,6 +131,7 @@ properties:
     additional_frontend_config: |
       capture response header strict-transport-security len 128
       http-response add-header Strict-Transport-Security max-age=31536000 unless { capture.res.hdr(0) -m found }
+    enable_healthcheck_frontend: true
 
   router:
     enable_ssl: false
@@ -148,6 +149,7 @@ properties:
     extra_headers_to_log:
     debug_addr:
     enable_routing_api:
+    drain_wait: 15
 
   cc:
     jobs:
