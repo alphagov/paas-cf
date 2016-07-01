@@ -103,14 +103,6 @@ meta:
   - name: haproxy
     release: paas-haproxy
 
-  stats_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: collector
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-
   uaa_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -264,19 +256,6 @@ jobs:
         agent:
           services:
             etcd: {}
-
-  - name: stats
-    azs: [z1]
-    templates: (( grab meta.stats_templates ))
-    instances: 1
-    vm_type: small
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-
 
   - name: uaa
     azs: [z1, z2]

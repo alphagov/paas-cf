@@ -89,8 +89,6 @@ properties:
     port: 443
   syslog_daemon_config: ~
 
-  collector:
-
   doppler:
     maxRetainedLogMessages: 100
     debug: false
