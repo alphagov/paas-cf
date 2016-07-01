@@ -69,8 +69,8 @@ RSpec.describe "base properties" do
     describe "links" do
       subject(:links) { login.fetch("links") }
 
-      it { is_expected.to include("passwd" => "https://console.#{terraform_fixture(:cf_root_domain)}/password_resets/new") }
-      it { is_expected.to include("signup" => "https://console.#{terraform_fixture(:cf_root_domain)}/register") }
+      it { is_expected.to include("passwd" => "https://login.#{terraform_fixture(:cf_root_domain)}/forgot_password") }
+      it { is_expected.to include("signup" => "https://login.#{terraform_fixture(:cf_root_domain)}/create_account") }
     end
   end
 

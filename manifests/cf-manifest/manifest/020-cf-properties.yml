@@ -350,8 +350,8 @@ properties:
       password: ~
 
     links:
-      passwd: (( concat "https://console." properties.system_domain "/password_resets/new" ))
-      signup: (( concat "https://console." properties.system_domain "/register" ))
+      passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
+      signup: (( concat "https://login." properties.system_domain "/create_account" ))
 
     logout: ~
 
