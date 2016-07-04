@@ -393,10 +393,10 @@ jobs:
       metron_agent:
         zone: ""
 
-  - name: cell_z1
-    azs: [z1]
+  - name: cell
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.cell ))
-    instances: (( grab meta.cell_z1.instances ))
+    instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
     networks:
@@ -404,56 +404,28 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-      diego:
-        rep:
-          zone: z1
+    # FIXME: remove once deployed to prod.
+    migrated_from:
+      - {name: cell_z1, az: z1}
+      - {name: cell_z2, az: z2}
 
-  - name: colocated_z1
-    azs: [z1]
+  - name: colocated
+    azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.colocated ))
-    instances: 1
+    instances: 2
     vm_type: medium
     stemcell: default
     networks:
       - name: cf
     properties:
-      diego:
-        rep:
-          zone: z1
       metron_agent:
         zone: ""
     update:
       serial: true
-
-  - name: colocated_z2
-    azs: [z2]
-    templates: (( grab meta.diego_job_templates.colocated ))
-    instances: 1
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      diego:
-        rep:
-          zone: z2
-      metron_agent:
-        zone: ""
-
-  - name: cell_z2
-    azs: [z2]
-    templates: (( grab meta.diego_job_templates.cell ))
-    instances: (( grab meta.cell_z2.instances ))
-    vm_type: cell
-    stemcell: default
-    networks:
-      - name: cell
-    properties:
-      metron_agent:
-        zone: ""
-      diego:
-        rep:
-          zone: z2
+    # FIXME: remove once deployed to prod.
+    migrated_from:
+      - {name: colocated_z1, az: z1}
+      - {name: colocated_z2, az: z2}
 
   - name: database
     azs: [z1, z2]

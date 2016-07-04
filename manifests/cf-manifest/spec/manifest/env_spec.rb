@@ -10,10 +10,10 @@ RSpec.describe "Environment specific configuration" do
 
   it "should allow a higher number of instances of cells in production" do
 
-    default_cell_z1_instances = get_job_instances(default_manifest, "cell_z1")
-    prod_cell_z1_instances = get_job_instances(prod_manifest, "cell_z1")
+    default_cell_instances = get_job_instances(default_manifest, "cell")
+    prod_cell_instances = get_job_instances(prod_manifest, "cell")
 
-    expect(default_cell_z1_instances).to be < prod_cell_z1_instances
+    expect(default_cell_instances).to be < prod_cell_instances
   end
 
 end
