@@ -3,11 +3,11 @@ name: concourse
 
 releases:
   - name: concourse
-    url: https://bosh.io/d/github.com/concourse/concourse?v=0.74.0
-    sha1: c99ef709e9d4468ac25cca31dd5be1444417011d
-  - name: garden-linux
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.334.0
-    sha1: 85170c5089fa4ff317f139c2f1da024860dbea85
+    url: https://bosh.io/d/github.com/concourse/concourse?v=1.5.1
+    sha1: 9f6797ddab15f3659bcfe81c63c697f22e488451
+  - name: garden-runc
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-runc-release?v=0.4.0
+    sha1: b59fb02eeae70104486251c82099316af04b77b7
   # When updating the version of the CPI here, the version used in the
   # bosh-init container must also be updated so that the cached CPI compile
   # will be used.
@@ -69,7 +69,7 @@ jobs:
       - {release: concourse, name: groundcrew}
       - {release: concourse, name: tsa}
       - {release: concourse, name: baggageclaim}
-      - {release: garden-linux, name: garden}
+      - {release: garden-runc, name: garden}
       - {release: collectd, name: collectd}
 
     networks:
