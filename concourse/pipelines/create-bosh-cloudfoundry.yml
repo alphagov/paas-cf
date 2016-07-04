@@ -1843,7 +1843,7 @@ jobs:
             - -c
             - |
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-              CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.properties.atc.basic_auth_password concourse-manifest/concourse-manifest.yml)
+              CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.properties.basic_auth_password concourse-manifest/concourse-manifest.yml)
               export CONCOURSE_ATC_PASSWORD
               echo Looking for non running VMs
               ./paas-cf/concourse/scripts/bosh-cli.sh bosh status

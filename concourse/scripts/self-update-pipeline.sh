@@ -23,7 +23,7 @@ else
   echo "Self update pipeline is enabled. Updating. (set SELF_UPDATE_PIPELINE=false to disable)"
 
   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-  CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.properties.atc.basic_auth_password concourse-manifest/concourse-manifest.yml)
+  CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.properties.basic_auth_password concourse-manifest/concourse-manifest.yml)
   export CONCOURSE_ATC_PASSWORD
 
   make -C ./paas-cf "${MAKEFILE_ENV_TARGET}" pipelines
