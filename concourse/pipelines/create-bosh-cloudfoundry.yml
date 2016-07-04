@@ -2012,3 +2012,23 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          on_failure:
+            task: alert
+            config:
+              platform: linux
+              image: docker:///governmentpaas/awscli
+              params:
+                AWS_DEFAULT_REGION: {{aws_region}}
+                DEPLOY_ENV: {{deploy_env}}
+                SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+                ALERT_EMAIL_ADDRESS: {{ALERT_EMAIL_ADDRESS}}
+              inputs:
+                - name: paas-cf
+              run:
+                path: sh
+                args:
+                - -e
+                - -c
+                - |
+                  paas-cf/concourse/scripts/failed_admin_removal_email.sh \
+                    ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}
