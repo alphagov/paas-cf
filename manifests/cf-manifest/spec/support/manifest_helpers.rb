@@ -20,7 +20,24 @@ module ManifestHelpers
     output
   end
 
+  def grafana_dashboards_manifest_path
+    File.expand_path("../../../grafana/grafana-dashboards-manifest.yml", __FILE__)
+  end
+
+  def render_grafana_dashboards_manifest
+    output, _ = Open3.capture2([
+      File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__),
+      File.expand_path("../../../grafana", __FILE__),
+    ].join(' '))
+    File.write(grafana_dashboards_manifest_path, output)
+  end
+
+  def remove_grafana_dashboards_manifest
+    FileUtils.rm(grafana_dashboards_manifest_path)
+  end
+
   def load_default_manifest(environment = "default")
+    render_grafana_dashboards_manifest
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../manifest/*.yml", __FILE__),
@@ -28,6 +45,7 @@ module ManifestHelpers
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+        grafana_dashboards_manifest_path,
         File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
     ])
 
@@ -42,6 +60,9 @@ module ManifestHelpers
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
     deep_freeze(YAML.load(manifest + cloud_config))
+
+    ensure
+      remove_grafana_dashboards_manifest
   end
 
   def load_terraform_fixture

@@ -1013,32 +1013,51 @@ jobs:
             passed: ['bosh-terraform']
           - get: cf-tfstate
             passed: ['cf-terraform']
-      - task: extract-terraform-outputs
-        config:
-          platform: linux
-          image: docker:///ruby#2.2-slim
-          inputs:
-            - name: paas-cf
-            - name: vpc-tfstate
-            - name: bosh-tfstate
-            - name: concourse-tfstate
-            - name: cf-tfstate
-          outputs:
-            - name: terraform-outputs
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                for state in vpc bosh concourse cf; do
-                  ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-                    < $state-tfstate/$state.tfstate \
-                    > terraform-outputs/$state.yml
-                  ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                    < ${state}-tfstate/${state}.tfstate \
-                    > terraform-outputs/${state}.tfvars.sh
-                done
+      - aggregate:
+        - task: extract-terraform-outputs
+          config:
+            platform: linux
+            image: docker:///ruby#2.2-slim
+            inputs:
+              - name: paas-cf
+              - name: vpc-tfstate
+              - name: bosh-tfstate
+              - name: concourse-tfstate
+              - name: cf-tfstate
+            outputs:
+              - name: terraform-outputs
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  for state in vpc bosh concourse cf; do
+                    ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                      < $state-tfstate/$state.tfstate \
+                      > terraform-outputs/$state.yml
+                    ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                      < ${state}-tfstate/${state}.tfstate \
+                      > terraform-outputs/${state}.tfvars.sh
+                  done
+
+        - task: generate-grafana-dashboards-manifest
+          config:
+            platform: linux
+            image: docker:///governmentpaas/json-minify
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: grafana-dashboards-manifest
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  CF_MANIFEST_DIR=./paas-cf/manifests/cf-manifest
+                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-manifest.rb ${CF_MANIFEST_DIR}/grafana \
+                    > grafana-dashboards-manifest/grafana-dashboards-manifest.yml
 
       - aggregate:
         - task: generate-cloud-config
@@ -1080,6 +1099,7 @@ jobs:
               - name: cf-secrets
               - name: cf-certs
               - name: bosh-CA
+              - name: grafana-dashboards-manifest
             outputs:
               - name: cf-manifest
             params:
@@ -1090,6 +1110,7 @@ jobs:
                 ./cf-secrets/cf-secrets.yml
                 ./certs/*.yml
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
+                ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
             run:
               path: sh
               args:
