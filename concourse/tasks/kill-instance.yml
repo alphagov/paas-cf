@@ -1,7 +1,10 @@
 ---
 inputs:
   - name: instance-id
-image: docker:///governmentpaas/awscli
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/awscli
 platform: linux
 run:
   path: sh

@@ -305,7 +305,10 @@ jobs:
       - task: init-pipeline-pool
         config:
           platform: linux
-          image: docker:///governmentpaas/git-ssh
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/git-ssh
           inputs:
             - name: paas-cf
             - name: git-ssh-private-key
@@ -346,7 +349,10 @@ jobs:
       - task: self-update-pipeline
         config:
           platform: linux
-          image: docker:///governmentpaas/self-update-pipelines
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/self-update-pipelines
           inputs:
             - name: paas-cf
             - name: concourse-manifest
@@ -363,7 +369,10 @@ jobs:
       - task: bootstrap-s3-state
         config:
           platform: linux
-          image: docker:///governmentpaas/curl-ssl
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/curl-ssl
           inputs:
             - name: paas-cf
           run:
@@ -400,7 +409,10 @@ jobs:
       - task: generate-bosh-CA
         config:
           platform: linux
-          image: docker:///governmentpaas/certstrap
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/certstrap
           inputs:
             - name: paas-cf
             - name: bosh-CA
@@ -433,7 +445,11 @@ jobs:
       - task: generate-bosh-secrets
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: bosh-secrets
@@ -458,7 +474,10 @@ jobs:
       - task: generate-cf-certs
         config:
           platform: linux
-          image: docker:///governmentpaas/certstrap
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/certstrap
           inputs:
             - name: bosh-CA
             - name: paas-cf
@@ -494,7 +513,11 @@ jobs:
       - task: generate-cf-secrets
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: cf-secrets
@@ -541,7 +564,10 @@ jobs:
             params:
               SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
               CF_ADMIN: admin
-            image: docker:///governmentpaas/cf-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
             run:
               path: sh
               args:
@@ -582,7 +608,10 @@ jobs:
       - task: run-tests
         config:
           platform: linux
-          image: docker:///governmentpaas/cf-acceptance-tests
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-acceptance-tests
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -630,7 +659,11 @@ jobs:
       - task: extract-terraform-variables
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
@@ -654,7 +687,10 @@ jobs:
       - task: terraform-apply
         config:
           platform: linux
-          image: docker:///governmentpaas/terraform
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/terraform
           inputs:
             - name: paas-cf
             - name: terraform-variables
@@ -705,7 +741,11 @@ jobs:
       - task: extract_terraform_outputs
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
@@ -728,7 +768,10 @@ jobs:
       - task: extract-bosh-CA
         config:
           platform: linux
-          image: docker:///governmentpaas/certstrap
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/certstrap
           inputs:
             - name: paas-cf
             - name: bosh-CA
@@ -748,7 +791,10 @@ jobs:
       - task: render-bosh-manifest
         config:
           platform: linux
-          image: docker:///governmentpaas/spruce
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/spruce
           inputs:
             - name: paas-cf
             - name: terraform-outputs
@@ -794,7 +840,10 @@ jobs:
       - task: bosh-init-microbosh
         config:
           platform: linux
-          image: docker:///governmentpaas/bosh-init
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-init
           inputs:
             - name: bosh-manifest
             - name: bosh-init-state
@@ -844,7 +893,10 @@ jobs:
       - task: upload-certs-to-aws
         config:
           platform: linux
-          image: docker:///governmentpaas/terraform
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/terraform
           inputs:
             - name: paas-cf
             - name: cf-certs-tfstate
@@ -888,7 +940,10 @@ jobs:
       - task: retrieve-pingdom-probes-ips
         config:
           platform: linux
-          image: docker:///governmentpaas/curl-ssl
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/curl-ssl
           inputs:
             - name: paas-cf
           outputs:
@@ -910,7 +965,11 @@ jobs:
       - task: extract-terraform-variables
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
@@ -936,7 +995,10 @@ jobs:
       - task: terraform-apply
         config:
           platform: linux
-          image: docker:///governmentpaas/terraform
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/terraform
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -976,7 +1038,11 @@ jobs:
       - task: extract-cf-terraform-outputs
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -995,7 +1061,10 @@ jobs:
       - task: init-db
         config:
           platform: linux
-          image: docker:///governmentpaas/psql
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/psql
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -1035,7 +1104,11 @@ jobs:
         - task: extract-terraform-outputs
           config:
             platform: linux
-            image: docker:///ruby#2.2-slim
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
             inputs:
               - name: paas-cf
               - name: vpc-tfstate
@@ -1062,7 +1135,10 @@ jobs:
         - task: generate-grafana-dashboards-manifest
           config:
             platform: linux
-            image: docker:///governmentpaas/json-minify
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/json-minify
             inputs:
               - name: paas-cf
             outputs:
@@ -1081,7 +1157,10 @@ jobs:
         - task: generate-cloud-config
           config:
             platform: linux
-            image: docker:///governmentpaas/spruce
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/spruce
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1110,7 +1189,10 @@ jobs:
         - task: generate-cf-manifest
           config:
             platform: linux
-            image: docker:///governmentpaas/spruce
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/spruce
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1166,7 +1248,10 @@ jobs:
         - task: generate-runtime-config
           config:
             platform: linux
-            image: docker:///governmentpaas/spruce
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/spruce
             inputs:
               - name: paas-cf
             outputs:
@@ -1223,7 +1308,10 @@ jobs:
         - task: upload-releases
           config:
             platform: linux
-            image: docker:///governmentpaas/bosh-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli
             inputs:
               - name: paas-cf
               - name: bosh-secrets
@@ -1261,7 +1349,10 @@ jobs:
         - task: get-and-upload-stemcell
           config:
             platform: linux
-            image: docker:///governmentpaas/bosh-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli
             inputs:
               - name: bosh-secrets
               - name: paas-cf
@@ -1283,7 +1374,10 @@ jobs:
         - task: update-cloud-config
           config:
             platform: linux
-            image: docker:///governmentpaas/bosh-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli
             inputs:
               - name: cloud-config
               - name: bosh-secrets
@@ -1300,7 +1394,10 @@ jobs:
       - task: cf-deploy
         config:
           platform: linux
-          image: docker:///governmentpaas/bosh-cli
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli
           inputs:
             - name: paas-cf
             - name: cf-manifest
@@ -1335,7 +1432,11 @@ jobs:
           outputs:
             - name: config
           params:
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           run:
             path: sh
             args:
@@ -1373,7 +1474,10 @@ jobs:
               - name: config
               - name: cf-manifest
             params:
-            image: docker:///governmentpaas/cf-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
             run:
               path: sh
               args:
@@ -1396,7 +1500,10 @@ jobs:
               - name: config
               - name: cf-manifest
             params:
-            image: docker:///governmentpaas/cf-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
             run:
               path: sh
               args:
@@ -1418,7 +1525,11 @@ jobs:
         - task: sync-admin-users
           config:
             platform: linux
-            image: docker:///ruby#2.2
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
             inputs:
               - name: paas-cf
               - name: config
@@ -1446,7 +1557,10 @@ jobs:
         - task: register-rds-broker
           config:
             platform: linux
-            image: docker:///governmentpaas/cf-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
             inputs:
               - name: paas-cf
               - name: config
@@ -1478,7 +1592,10 @@ jobs:
               - name: config
               - name: bosh-CA
             params:
-            image: docker:///governmentpaas/cf-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
             run:
               path: sh
               args:
@@ -1533,7 +1650,11 @@ jobs:
         - task: update-kibana-timezone
           config:
             platform: linux
-            image: docker:///ruby#2.2-slim
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
             params:
               SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
               DEPLOY_ENV: {{deploy_env}}
@@ -1580,7 +1701,11 @@ jobs:
           outputs:
             - name: config
           params:
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           run:
             path: sh
             args:
@@ -1602,7 +1727,10 @@ jobs:
       - task: update-rds-broker-backup-retention-period
         config:
           platform: linux
-          image: docker:///governmentpaas/awscli
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
           params:
             AWS_DEFAULT_REGION: {{aws_region}}
             DEPLOY_ENV: {{deploy_env}}
@@ -1621,7 +1749,10 @@ jobs:
       - task: deploy-healthcheck
         config:
           platform: linux
-          image: docker:///governmentpaas/cf-cli
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
           inputs:
             - name: paas-cf
             - name: config
@@ -1715,7 +1846,10 @@ jobs:
         - task: generate-test-config
           config:
             platform: linux
-            image: docker:///governmentpaas/bosh-cli
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli
             inputs:
               - name: cf-release
               - name: paas-cf
@@ -1755,7 +1889,10 @@ jobs:
         - task: run-tests
           config:
             platform: linux
-            image: docker:///governmentpaas/cf-acceptance-tests
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-acceptance-tests
             inputs:
               - name: paas-cf
               - name: cf-release
@@ -1807,7 +1944,10 @@ jobs:
         - task: run-tests
           config:
             platform: linux
-            image: docker:///governmentpaas/cf-acceptance-tests
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-acceptance-tests
             inputs:
               - name: paas-cf
               - name: test-config
@@ -1842,7 +1982,11 @@ jobs:
       - task: test-bosh-cli
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           params:
             SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
             DEPLOY_ENV: {{deploy_env}}
@@ -1863,7 +2007,10 @@ jobs:
       - task: test-bosh-vms
         config:
           platform: linux
-          image: docker:///governmentpaas/bosh-cli
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli
           inputs:
           - name: paas-cf
           - name: cf-manifest
@@ -1905,7 +2052,10 @@ jobs:
         - task: run-tests
           config:
             platform: linux
-            image: docker:///governmentpaas/cf-acceptance-tests
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-acceptance-tests
             inputs:
               - name: paas-cf
               - name: test-config
@@ -1941,7 +2091,10 @@ jobs:
 
       - task: tag-release
         config:
-          image: docker:///governmentpaas/git-ssh
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/git-ssh
           platform: linux
           params:
             aws_account: {{aws_account}}
@@ -1981,7 +2134,10 @@ jobs:
       - get: pipeline-pool
       - task: print-pipeline-lock-state
         config:
-          image: docker:///governmentpaas/git-ssh
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/git-ssh
           platform: linux
           inputs:
           - name: pipeline-pool
@@ -2021,7 +2177,10 @@ jobs:
     plan:
       - task: ssh-keygen
         config:
-          image: docker:///governmentpaas/git-ssh
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
           platform: linux
           outputs:
           - name: generated-git-keys
@@ -2100,7 +2259,10 @@ jobs:
             task: alert
             config:
               platform: linux
-              image: docker:///governmentpaas/awscli
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/awscli
               params:
                 AWS_DEFAULT_REGION: {{aws_region}}
                 DEPLOY_ENV: {{deploy_env}}

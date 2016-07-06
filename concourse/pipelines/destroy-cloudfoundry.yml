@@ -110,7 +110,10 @@ jobs:
       - task: self-update-pipeline
         config:
           platform: linux
-          image: docker:///governmentpaas/self-update-pipelines
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/self-update-pipelines
           inputs:
             - name: paas-cf
             - name: concourse-manifest
@@ -149,7 +152,10 @@ jobs:
       - task: delete-deployment
         config:
           platform: linux
-          image: docker:///governmentpaas/bosh-cli
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli
           inputs:
             - name: bosh-secrets
             - name: paas-cf
@@ -182,7 +188,11 @@ jobs:
       - task: extract-terraform-variables
         config:
           platform: linux
-          image: docker:///ruby#2.2-slim
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -217,7 +227,10 @@ jobs:
       - task: cf-terraform-destroy
         config:
           platform: linux
-          image: docker:///governmentpaas/terraform
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/terraform
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -256,7 +269,10 @@ jobs:
       - task: cf-certs-terraform-destroy
         config:
           platform: linux
-          image: docker:///governmentpaas/terraform
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/terraform
           inputs:
             - name: paas-cf
             - name: cf-certs-tfstate

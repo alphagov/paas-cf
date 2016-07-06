@@ -17,9 +17,10 @@ generate_config(){
   cat <<EOF
 ---
 platform: linux
-
-image: docker:///governmentpaas/bosh-cli
-
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/bosh-cli
 inputs:
   - name: paas-cf
   - name: cf-manifest

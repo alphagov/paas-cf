@@ -4,7 +4,10 @@ inputs:
   - name: paas-cf
 outputs:
   - name: instance-id
-image: docker:///governmentpaas/bosh-cli
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/bosh-cli
 platform: linux
 run:
   path: sh
