@@ -56,6 +56,24 @@ RSpec.describe "the jobs definitions block" do
     end
   end
 
+  describe "in order to apply BBS migrations before upgrading the cells" do
+    it "has database before the cells" do
+      expect("database").to be_ordered_before("cell")
+    end
+
+    it "has colocated before the cells" do
+      expect("colocated").to be_ordered_before("cell")
+    end
+
+    it "has database serial" do
+      expect("database").to be_updated_serially
+    end
+
+    it "has colocated serial" do
+      expect("colocated").to be_updated_serially
+    end
+  end
+
   it "should list consul_agent first if present" do
     jobs_with_consul = jobs.select{ |j|
       not j["templates"].select{ |t|

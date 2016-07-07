@@ -393,22 +393,6 @@ jobs:
       metron_agent:
         zone: ""
 
-  - name: cell
-    azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.cell ))
-    instances: (( grab meta.cell.instances ))
-    vm_type: cell
-    stemcell: default
-    networks:
-      - name: cell
-    properties:
-      metron_agent:
-        zone: ""
-    # FIXME: remove once deployed to prod.
-    migrated_from:
-      - {name: cell_z1, az: z1}
-      - {name: cell_z2, az: z2}
-
   - name: colocated
     azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.colocated ))
@@ -438,6 +422,24 @@ jobs:
     properties:
       metron_agent:
         zone: ""
+    update:
+      serial: true
+
+  - name: cell
+    azs: [z1, z2]
+    templates: (( grab meta.diego_job_templates.cell ))
+    instances: (( grab meta.cell.instances ))
+    vm_type: cell
+    stemcell: default
+    networks:
+      - name: cell
+    properties:
+      metron_agent:
+        zone: ""
+    # FIXME: remove once deployed to prod.
+    migrated_from:
+      - {name: cell_z1, az: z1}
+      - {name: cell_z2, az: z2}
 
   - name: route_emitter
     azs: [z1, z2]
