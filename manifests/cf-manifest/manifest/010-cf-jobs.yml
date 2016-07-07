@@ -357,42 +357,6 @@ jobs:
 
 # Diego
 
-  - name: access
-    azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.access ))
-    instances: 0
-    vm_type: access
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: brain
-    azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.brain ))
-    instances: 0
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-
-  - name: cc_bridge
-    azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.cc_bridge ))
-    instances: 0
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-
   - name: colocated
     azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.colocated ))
@@ -425,6 +389,18 @@ jobs:
     update:
       serial: true
 
+  - name: brain
+    azs: [z1, z2]
+    templates: (( grab meta.diego_job_templates.brain ))
+    instances: 0
+    vm_type: medium
+    stemcell: default
+    networks:
+      - name: cf
+    properties:
+      metron_agent:
+        zone: ""
+
   - name: cell
     azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.cell ))
@@ -441,11 +417,35 @@ jobs:
       - {name: cell_z1, az: z1}
       - {name: cell_z2, az: z2}
 
+  - name: cc_bridge
+    azs: [z1, z2]
+    templates: (( grab meta.diego_job_templates.cc_bridge ))
+    instances: 0
+    vm_type: medium
+    stemcell: default
+    networks:
+      - name: cf
+    properties:
+      metron_agent:
+        zone: ""
+
   - name: route_emitter
     azs: [z1, z2]
     templates: (( grab meta.diego_job_templates.route_emitter ))
     instances: 0
     vm_type: medium
+    stemcell: default
+    networks:
+      - name: cf
+    properties:
+      metron_agent:
+        zone: ""
+
+  - name: access
+    azs: [z1, z2]
+    templates: (( grab meta.diego_job_templates.access ))
+    instances: 0
+    vm_type: access
     stemcell: default
     networks:
       - name: cf
