@@ -18,49 +18,43 @@ RSpec.describe "the jobs definitions block" do
     jobs.select{ |j| j["name"] == job_name}.first
   end
 
-  def is_serial(job_name)
-    job = get_job(job_name)
-    job["update"]["serial"]
+  matcher :be_updated_serially do
+    match do |job_name|
+      get_job(job_name)["update"]["serial"]
+    end
   end
 
-  def ordered(job1_name, job2_name)
-    i1 = jobs.index{ |j| j["name"] == job1_name }
-    i2 = jobs.index{ |j| j["name"] == job2_name }
-    i1 < i2
+  matcher :be_ordered_before do |later_job|
+    match do |earlier_job|
+      jobs.index {|j| j["name"] == earlier_job } < jobs.index {|j| j["name"] == later_job }
+    end
   end
 
   describe "in order to enforce etcd dependency on NATS" do
     it "has etcd serial" do
-      expect(is_serial("etcd")).to be true
+      expect("etcd").to be_updated_serially
     end
 
     it "has nats before etcd" do
-      expect(ordered("nats", "etcd")).to be true
+      expect("nats").to be_ordered_before("etcd")
     end
   end
 
   describe "in order to start/upgrade etcd cluster while maintaining consensus" do
     it "has etcd serial" do
-      expect(is_serial("etcd")).to be true
+      expect("etcd").to be_updated_serially
     end
   end
 
   describe "in order to start one consul master for consensus" do
     it "has consul serial" do
-      expect(is_serial("consul")).to be true
+      expect("consul").to be_updated_serially
     end
 
     specify "has consul first" do
       expect(jobs[0]["name"]).to eq("consul")
     end
   end
-
-
-end
-
-RSpec.describe "the job definitions" do
-
-  let(:jobs) { manifest_with_defaults["jobs"] }
 
   it "should list consul_agent first if present" do
     jobs_with_consul = jobs.select{ |j|
@@ -74,5 +68,4 @@ RSpec.describe "the job definitions" do
         "expected '#{j["name"]}' job to list 'consul_agent' first"
     }
   end
-
 end
