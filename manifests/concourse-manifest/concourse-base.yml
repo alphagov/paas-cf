@@ -106,7 +106,9 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
-        graph_cleanup_threshold_in_mb: 3072
+        graph_cleanup_threshold_in_mb: 41000
+        max_containers: 1024
+        network_pool: "10.254.0.0/20"
       baggageclaim:
         url: "http://127.0.0.1:7788"
       collectd:
