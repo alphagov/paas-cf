@@ -15,7 +15,7 @@ releases:
 - name: graphite
   version: commit-ccc206f3ba21fe5ba4f3e617bb7dca3e66a652ad
 - name: grafana
-  version: commit-4a9e3a322b72bfb4a76ae460a280acf04a5b445d
+  version: commit-6dce2ec39a6ffc00c092d5b0401dfaf8bbf3ae55
 
 jobs:
 - name: graphite
