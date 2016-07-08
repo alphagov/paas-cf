@@ -124,7 +124,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-routing-release.git
       tag_filter: {{cf_routing_version}}
-      branch: cf_237
+      branch: gds_master
 
   - name: graphite-nozzle
     type: git

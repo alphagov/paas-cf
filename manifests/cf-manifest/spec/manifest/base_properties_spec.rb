@@ -7,11 +7,7 @@ RSpec.describe "base properties" do
     expect(manifest["name"]).to eq(terraform_fixture(:environment))
   end
 
-  it "sets the domain from the terraform outputs" do
-    expect(properties["domain"]).to eq(terraform_fixture(:cf_root_domain))
-  end
-
-  it "sets the system_domain" do
+  it "sets the system_domain from the terraform outputs" do
     expect(properties["system_domain"]).to eq(terraform_fixture(:cf_root_domain))
   end
 
@@ -73,8 +69,8 @@ RSpec.describe "base properties" do
     describe "links" do
       subject(:links) { login.fetch("links") }
 
-      it { is_expected.to include("passwd" => "https://console.#{terraform_fixture(:cf_root_domain)}/password_resets/new") }
-      it { is_expected.to include("signup" => "https://console.#{terraform_fixture(:cf_root_domain)}/register") }
+      it { is_expected.to include("passwd" => "https://login.#{terraform_fixture(:cf_root_domain)}/forgot_password") }
+      it { is_expected.to include("signup" => "https://login.#{terraform_fixture(:cf_root_domain)}/create_account") }
     end
   end
 

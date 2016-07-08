@@ -13,7 +13,6 @@ meta:
   etcd_consul_service: ["etcd.service.cf.internal"]
 
 properties:
-  domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain_organization: admin
   app_domains:
@@ -149,6 +148,10 @@ properties:
     enable_routing_api:
     drain_wait: 15
 
+  # FIXME: remove when no longer needed
+  hm9000:
+    port: 5155
+
   cc:
     jobs:
       global:
@@ -195,7 +198,7 @@ properties:
 
     external_host: api
     external_port: 9022
-    srv_api_uri: (( concat "https://" properties.cc.external_host "." properties.domain ))
+    srv_api_uri: (( concat "https://" properties.cc.external_host "." properties.system_domain ))
 
     bulk_api_password: (( grab secrets.bulk_api_password ))
     internal_api_user: "internal_user"
@@ -351,8 +354,8 @@ properties:
       password: ~
 
     links:
-      passwd: (( concat "https://console." properties.domain "/password_resets/new" ))
-      signup: (( concat "https://console." properties.domain "/register" ))
+      passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
+      signup: (( concat "https://login." properties.system_domain "/create_account" ))
 
     logout: ~
 
@@ -363,7 +366,7 @@ properties:
     restricted_ips_regex: ~
 
   uaa:
-    url: (( concat "https://uaa." properties.domain ))
+    url: (( concat "https://uaa." properties.system_domain ))
     issuer: (( grab properties.uaa.url ))
     ssh_proxy_client_secret: (( grab secrets.uaa_admin_client_secret ))
     token_url: (( concat properties.uaa.url "/oauth/token" ))
@@ -414,7 +417,7 @@ properties:
         scope: openid,oauth.approvals
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
         authorized-grant-types: authorization_code,client_credentials,refresh_token
-        redirect-uri: (( concat "https://login." properties.domain ))
+        redirect-uri: (( concat "https://login." properties.system_domain ))
         secret: (( grab secrets.uaa_clients_login_secret ))
       cf:
         id: cf
