@@ -145,7 +145,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: colocated_z1/0
+            VM_NAME: colocated/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
@@ -370,7 +370,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         config:
           params:
-            VM_NAME: cell_z1/0
+            VM_NAME: cell/0
             BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
