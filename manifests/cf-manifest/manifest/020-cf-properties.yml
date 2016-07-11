@@ -185,7 +185,7 @@ properties:
 
     users_can_select_backend: true
     default_to_diego_backend: true
-    allow_app_ssh_access: true
+    allow_app_ssh_access: false
     default_app_memory: 1024
     default_app_disk_in_mb: 1024
     maximum_app_disk_in_mb: 2048
