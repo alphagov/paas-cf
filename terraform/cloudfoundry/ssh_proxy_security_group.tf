@@ -16,7 +16,8 @@ resource "aws_security_group" "sshproxy" {
     protocol  = "tcp"
     cidr_blocks = [
       "${compact(split(",", var.admin_cidrs))}",
-      "${compact(split(",", var.tenant_cidrs))}"
+      "${compact(split(",", var.tenant_cidrs))}",
+      "${var.concourse_elastic_ip}/32"
     ]
   }
 
