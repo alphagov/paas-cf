@@ -11,15 +11,17 @@ SUBJECT='Welcome to the Government PaaS'
 # shellcheck disable=SC2016,SC1078
 MESSAGE='Hello,
 
-Your account has been created for the  Government PaaS service.
+Your account for the Government PaaS service has been created.
 
-Your organisation is \"${ORG}\" and your login and password:
+Your organisation is \"${ORG}\" and your login and password are:
 
  - login: ${EMAIL}
  - password: ${PASSWORD}
 
-To get started you can follow our Quick Setup Guide:
+To get started, look at our Quick Setup Guide:
 https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/quick_setup_guide/
+
+You should make sure to change your password, as explained in the Quick Setup Guide.
 
 Regards,
 Government PaaS team.
