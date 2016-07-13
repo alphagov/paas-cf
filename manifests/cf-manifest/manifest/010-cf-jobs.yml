@@ -370,10 +370,6 @@ jobs:
         zone: ""
     update:
       serial: true
-    # FIXME: remove once deployed to prod.
-    migrated_from:
-      - {name: colocated_z1, az: z1}
-      - {name: colocated_z2, az: z2}
 
   - name: database
     azs: [z1, z2]
@@ -412,10 +408,6 @@ jobs:
     properties:
       metron_agent:
         zone: ""
-    # FIXME: remove once deployed to prod.
-    migrated_from:
-      - {name: cell_z1, az: z1}
-      - {name: cell_z2, az: z2}
 
   - name: cc_bridge
     azs: [z1, z2]
