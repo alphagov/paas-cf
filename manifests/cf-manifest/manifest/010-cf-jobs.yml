@@ -274,6 +274,7 @@ jobs:
 
 # Diego
 
+  # FIXME: Remove this job when separate diego jobs have been deployed to prod.
   - name: colocated
     azs: [z1, z2]
     templates:
@@ -321,7 +322,7 @@ jobs:
         release: diego
       - name: metron_agent
         release: cf
-    instances: 0
+    instances: 2
     vm_type: medium
     stemcell: default
     networks:
@@ -343,7 +344,7 @@ jobs:
         release: diego
       - name: metron_agent
         release: cf
-    instances: 0
+    instances: 2
     vm_type: medium
     stemcell: default
     networks:
@@ -389,7 +390,7 @@ jobs:
         release: cf
       - name: metron_agent
         release: cf
-    instances: 0
+    instances: 2
     vm_type: medium
     stemcell: default
     networks:
@@ -407,7 +408,7 @@ jobs:
         release: diego
       - name: metron_agent
         release: cf
-    instances: 0
+    instances: 2
     vm_type: medium
     stemcell: default
     networks:
@@ -427,7 +428,7 @@ jobs:
         release: cf
       - name: file_server
         release: diego
-    instances: 0
+    instances: 2
     vm_type: access
     stemcell: default
     networks:
