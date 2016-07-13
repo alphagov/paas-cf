@@ -111,89 +111,6 @@ meta:
   - name: statsd-injector
     release: (( grab meta.release.name ))
 
-  diego_job_templates:
-    brain:
-      - name: consul_agent
-        release: cf
-      - name: auctioneer
-        release: diego
-      - name: converger
-        release: diego
-      - name: metron_agent
-        release: cf
-    cell:
-      - name: consul_agent
-        release: cf
-      - name: rep
-        release: diego
-      - name: garden
-        release: garden-linux
-      - name: cflinuxfs2-rootfs-setup
-        release: cflinuxfs2-rootfs
-      - name: metron_agent
-        release: cf
-    cc_bridge:
-      - name: consul_agent
-        release: cf
-      - name: stager
-        release: cf
-      - name: nsync
-        release: cf
-      - name: tps
-        release: cf
-      - name: cc_uploader
-        release: cf
-      - name: metron_agent
-        release: cf
-    route_emitter:
-      - name: consul_agent
-        release: cf
-      - name: route_emitter
-        release: diego
-      - name: metron_agent
-        release: cf
-    access:
-      - name: consul_agent
-        release: cf
-      - name: ssh_proxy
-        release: diego
-      - name: metron_agent
-        release: cf
-      - name: file_server
-        release: diego
-    database:
-      - name: consul_agent
-        release: cf
-      - name: bbs
-        release: diego
-      - name: metron_agent
-        release: cf
-    colocated:
-      - name: consul_agent
-        release: cf
-      - name: auctioneer
-        release: diego
-      - name: bbs
-        release: diego
-      - name: cc_uploader
-        release: cf
-      - name: converger
-        release: diego
-      - name: file_server
-        release: diego
-      - name: metron_agent
-        release: cf
-      - name: nsync
-        release: cf
-      - name: route_emitter
-        release: diego
-      - name: ssh_proxy
-        release: diego
-      - name: stager
-        release: cf
-      - name: tps
-        release: cf
-
 jobs:
   - name: consul
     azs: [z1, z2, z3]
@@ -359,7 +276,31 @@ jobs:
 
   - name: colocated
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.colocated ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: auctioneer
+        release: diego
+      - name: bbs
+        release: diego
+      - name: cc_uploader
+        release: cf
+      - name: converger
+        release: diego
+      - name: file_server
+        release: diego
+      - name: metron_agent
+        release: cf
+      - name: nsync
+        release: cf
+      - name: route_emitter
+        release: diego
+      - name: ssh_proxy
+        release: diego
+      - name: stager
+        release: cf
+      - name: tps
+        release: cf
     instances: 2
     vm_type: colocated
     stemcell: default
@@ -373,7 +314,13 @@ jobs:
 
   - name: database
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.database ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: bbs
+        release: diego
+      - name: metron_agent
+        release: cf
     instances: 0
     vm_type: medium
     stemcell: default
@@ -387,7 +334,15 @@ jobs:
 
   - name: brain
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.brain ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: auctioneer
+        release: diego
+      - name: converger
+        release: diego
+      - name: metron_agent
+        release: cf
     instances: 0
     vm_type: medium
     stemcell: default
@@ -399,7 +354,17 @@ jobs:
 
   - name: cell
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.cell ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: rep
+        release: diego
+      - name: garden
+        release: garden-linux
+      - name: cflinuxfs2-rootfs-setup
+        release: cflinuxfs2-rootfs
+      - name: metron_agent
+        release: cf
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
@@ -411,7 +376,19 @@ jobs:
 
   - name: cc_bridge
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.cc_bridge ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: stager
+        release: cf
+      - name: nsync
+        release: cf
+      - name: tps
+        release: cf
+      - name: cc_uploader
+        release: cf
+      - name: metron_agent
+        release: cf
     instances: 0
     vm_type: medium
     stemcell: default
@@ -423,7 +400,13 @@ jobs:
 
   - name: route_emitter
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.route_emitter ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: route_emitter
+        release: diego
+      - name: metron_agent
+        release: cf
     instances: 0
     vm_type: medium
     stemcell: default
@@ -435,7 +418,15 @@ jobs:
 
   - name: access
     azs: [z1, z2]
-    templates: (( grab meta.diego_job_templates.access ))
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: ssh_proxy
+        release: diego
+      - name: metron_agent
+        release: cf
+      - name: file_server
+        release: diego
     instances: 0
     vm_type: access
     stemcell: default
