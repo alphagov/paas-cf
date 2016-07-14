@@ -74,6 +74,28 @@ RSpec.describe "the jobs definitions block" do
     end
   end
 
+  describe "in order to match the upstream Diego job ordering" do
+    it "has database before brain" do
+      expect("database").to be_ordered_before("brain")
+    end
+
+    it "has brain before the cells" do
+      expect("brain").to be_ordered_before("cell")
+    end
+
+    it "has the cells before cc_bridge" do
+      expect("cell").to be_ordered_before("cc_bridge")
+    end
+
+    it "has cc_bridge before route_emitter" do
+      expect("cc_bridge").to be_ordered_before("route_emitter")
+    end
+
+    it "has route_emitter before access" do
+      expect("route_emitter").to be_ordered_before("access")
+    end
+  end
+
   it "should list consul_agent first if present" do
     jobs_with_consul = jobs.select{ |j|
       not j["templates"].select{ |t|
