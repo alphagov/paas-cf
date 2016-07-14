@@ -61,16 +61,8 @@ RSpec.describe "the jobs definitions block" do
       expect("database").to be_ordered_before("cell")
     end
 
-    it "has colocated before the cells" do
-      expect("colocated").to be_ordered_before("cell")
-    end
-
     it "has database serial" do
       expect("database").to be_updated_serially
-    end
-
-    it "has colocated serial" do
-      expect("colocated").to be_updated_serially
     end
   end
 

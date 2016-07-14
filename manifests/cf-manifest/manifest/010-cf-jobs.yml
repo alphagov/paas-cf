@@ -274,45 +274,6 @@ jobs:
 
 # Diego
 
-  # FIXME: Remove this job when separate diego jobs have been deployed to prod.
-  - name: colocated
-    azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: cf
-      - name: auctioneer
-        release: diego
-      - name: bbs
-        release: diego
-      - name: cc_uploader
-        release: cf
-      - name: converger
-        release: diego
-      - name: file_server
-        release: diego
-      - name: metron_agent
-        release: cf
-      - name: nsync
-        release: cf
-      - name: route_emitter
-        release: diego
-      - name: ssh_proxy
-        release: diego
-      - name: stager
-        release: cf
-      - name: tps
-        release: cf
-    instances: 2
-    vm_type: colocated
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-    update:
-      serial: true
-
   - name: database
     azs: [z1, z2]
     templates:
