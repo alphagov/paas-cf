@@ -131,6 +131,8 @@ jobs:
     release: bosh
   - name: health_monitor
     release: bosh
+  - name: collectd
+    release: collectd
   - name: registry
     release: bosh
   - name: aws_cpi
@@ -151,6 +153,52 @@ networks:
 - name: public
   type: vip
 properties:
+  collectd:
+    config: |
+      LoadPlugin cpu
+      LoadPlugin disk
+      LoadPlugin entropy
+      LoadPlugin interface
+      LoadPlugin load
+      LoadPlugin memory
+      LoadPlugin swap
+      LoadPlugin uptime
+
+      LoadPlugin df
+      <Plugin df>
+        ReportInodes true
+        ReportReserved true
+      </Plugin>
+
+      LoadPlugin syslog
+      <Plugin syslog>
+        LogLevel warning
+        NotifyLevel WARNING
+      </Plugin>
+
+      LoadPlugin vmem
+      <Plugin vmem>
+        Verbose false
+      </Plugin>
+
+      LoadPlugin "write_graphite"
+      <Plugin "write_graphite">
+       <Node "myNode">
+         #FIXME: hard coded static IP to be removed during #121602315
+         # This address comes from 040-graphite.yml:31 in the CloudFoundry
+         # manifest and has been copied as `grab` cannot interpolate in a
+         # multi-line string.
+         Host "10.0.16.20"
+         Port "2003"
+         Prefix "collectd."
+         EscapeCharacter "_"
+         SeparateInstances true
+         StoreRates false
+         AlwaysAppendDS false
+       </Node>
+      </Plugin>
+    hostname_prefix: bosh_
+    interval: 10
   director:
     trusted_certs: |
       -----BEGIN RSA PRIVATE KEY-----
@@ -160,10 +208,14 @@ properties:
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       -----END RSA PRIVATE KEY-----
+
 releases:
 - name: bosh
   sha1: 6b12652650b87810dcef1be1f6a6d23f1c0c13a7
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=255.8
+- name: collectd
+  sha1: 89d9afbb4e682f31e745f07bd40ff569d347343f
+  url: https://github.com/alphagov/paas-collectd-boshrelease/releases/download/0.4/collectd-0.4.tgz
 - name: bosh-aws-cpi
   sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52

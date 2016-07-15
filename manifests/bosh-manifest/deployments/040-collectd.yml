@@ -1,0 +1,16 @@
+---
+releases:
+- name: collectd
+  sha1: 89d9afbb4e682f31e745f07bd40ff569d347343f
+  url: https://github.com/alphagov/paas-collectd-boshrelease/releases/download/0.4/collectd-0.4.tgz
+
+jobs:
+- name: bosh
+  templates:
+  - {name: collectd, release: collectd}
+
+properties:
+  collectd:
+    hostname_prefix: bosh_
+    interval: (( grab meta.collectd.interval ))
+    config: (( grab meta.collectd.config ))

@@ -754,6 +754,7 @@ jobs:
               ./bosh-CA-yml/bosh-ca-cert.yml
               ./terraform-outputs/bosh.terraform-outputs.yml
               ./terraform-outputs/vpc.terraform-outputs.yml
+              ./paas-cf/manifests/shared/deployments/collectd.yml
           run:
             path: sh
             args:
