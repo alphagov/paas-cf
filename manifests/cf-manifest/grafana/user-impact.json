@@ -541,11 +541,11 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(maxSeries(stats.gauges.cfstats.colocated.*.ops.bbs.LRPsDesired), 'Desired apps')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsDesired), 'Desired apps')"
             },
             {
               "refId": "B",
-              "target": "alias(maxSeries(stats.gauges.cfstats.colocated.*.ops.bbs.LRPsRunning), 'Running apps')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsRunning), 'Running apps')"
             }
           ],
           "timeFrom": null,
