@@ -692,7 +692,7 @@
   "annotations": {
     "list": []
   },
-  "refresh": false,
+  "refresh": "30s",
   "schemaVersion": 12,
   "version": 0,
   "links": []
