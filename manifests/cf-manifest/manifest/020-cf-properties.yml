@@ -502,6 +502,9 @@ properties:
         require_ssl: true
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
+    executor:
+      container_metrics_report_interval: 60
+
     bbs:
       active_key_label: keylabel1
       encryption_keys:
