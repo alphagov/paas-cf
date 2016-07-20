@@ -106,12 +106,6 @@ resources:
       uri: https://github.com/alphagov/paas-aws-broker-boshrelease.git
       tag_filter: {{cf_aws_broker_version}}
 
-  - name: collectd-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-collectd-boshrelease.git
-      tag_filter: {{cf_collectd_version}}
-
   - name: os-conf-boshrelease
     type: git
     source:
@@ -1201,7 +1195,6 @@ jobs:
           - get: grafana-boshrelease
           - get: paas-haproxy-release
           - get: aws-broker-boshrelease
-          - get: collectd-boshrelease
           - get: os-conf-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
@@ -1221,7 +1214,6 @@ jobs:
               - name: grafana-boshrelease
               - name: paas-haproxy-release
               - name: aws-broker-boshrelease
-              - name: collectd-boshrelease
               - name: os-conf-boshrelease
               - name: routing-release
             run:
@@ -1246,9 +1238,6 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
                     {{cf_aws_broker_version}} aws-broker-boshrelease
-
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb collectd \
-                    {{cf_collectd_version}} collectd-boshrelease
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb routing \
                     {{cf_routing_version}} routing-release

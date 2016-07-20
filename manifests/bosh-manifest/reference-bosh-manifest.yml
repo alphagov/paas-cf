@@ -214,12 +214,13 @@ releases:
 - name: bosh
   sha1: 6b12652650b87810dcef1be1f6a6d23f1c0c13a7
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=255.8
-- name: collectd
-  sha1: 89d9afbb4e682f31e745f07bd40ff569d347343f
-  url: https://github.com/alphagov/paas-collectd-boshrelease/releases/download/0.4/collectd-0.4.tgz
 - name: bosh-aws-cpi
   sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52
+- name: collectd
+  sha1: 89d9afbb4e682f31e745f07bd40ff569d347343f
+  url: https://github.com/alphagov/paas-collectd-boshrelease/releases/download/0.4/collectd-0.4.tgz
+  version: "0.4"
 resource_pools:
 - cloud_properties:
     availability_zone: eu-west-1a
