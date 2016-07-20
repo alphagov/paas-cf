@@ -67,6 +67,8 @@ properties:
       machines: (( grab properties.nats.machines ))
       username: (( grab properties.nats.user ))
       password: (( grab properties.nats.password ))
+    etcd:
+      dns_suffix: (( grab properties.system_domain ))
 
   loggregator:
     maxRetainedLogMessages: 100
