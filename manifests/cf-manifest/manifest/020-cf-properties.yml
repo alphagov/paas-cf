@@ -261,6 +261,21 @@ properties:
         total_services: 10
         non_basic_services_allowed: false
         total_routes: 1000
+      small:
+        memory_limit: 10240
+        total_services: 10
+        non_basic_services_allowed: true
+        total_routes: 1000
+      medium:
+        memory_limit: 61440
+        total_services: 10
+        non_basic_services_allowed: true
+        total_routes: 1000
+      large:
+        memory_limit: 102400
+        total_services: 10
+        non_basic_services_allowed: true
+        total_routes: 1000
       trade_tariff:
         memory_limit: 61440
         total_services: 10
