@@ -155,6 +155,7 @@ networks:
 properties:
   collectd:
     config: |
+      WriteQueueLimitHigh 100000
       LoadPlugin cpu
       LoadPlugin disk
       LoadPlugin entropy

@@ -3,6 +3,7 @@ meta:
   collectd:
     interval: 10
     config: |
+      WriteQueueLimitHigh 100000
       LoadPlugin cpu
       LoadPlugin disk
       LoadPlugin entropy
