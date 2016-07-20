@@ -145,7 +145,7 @@ properties:
     route_services_timeout:
     logrotate:
     extra_headers_to_log:
-    debug_addr:
+    debug_address:
     enable_routing_api:
     drain_wait: 15
 
