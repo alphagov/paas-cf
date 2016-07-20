@@ -6,25 +6,25 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: 238
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=238
-    sha1: fa6d35300f4fcd74a75fd8c7138f592acfcb32b0
+    version: 239
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=239
+    sha1: 4d1d000ccdf34918738420a710f295977790df28
   - name: diego
     version: 0.1476.0
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/diego-release?v=0.1476.0
-    sha1: 4b66fde250472e47eb2a0151bb676fc1be840f47
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1480.0
+    sha1: c5c1cdde94665a55152f69238bb7476a124c3efd
   - name: garden-linux
-    version: 0.338.0
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.338.0
-    sha1: 432225d88edc9731be4453cb61eba33fa829ebdc
+    version: 0.339.0
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.339.0
+    sha1: fe72f86b00f9630b885d1b7ec74ccdb4788fb5c4
   - name: etcd
-    version: 55
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=55
-    sha1: b64fc693e658cee0ac07712646f8c7b67de0e8b6
+    version: 60
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=60
+    sha1: 66d233c86dd97760facb890f77777757317e9c86
   - name: cflinuxfs2-rootfs
-    version: 1.15.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.15.0
-    sha1: 389ad7bb316ec5bbb7ff2ed085d551d83afc7a0f
+    version: 1.18.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.18.0
+    sha1: 7ed6c55b53477cd96d7030aa8fa6e1c0cb1f4637
   - name: paas-haproxy
     version: 0.0.4
   - name: routing
@@ -33,7 +33,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: 3232.11
+    version: 3262.2
 
 update:
   canaries: 0
