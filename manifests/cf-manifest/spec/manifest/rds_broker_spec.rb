@@ -74,6 +74,11 @@ RSpec.describe "RDS broker properties" do
       let(:pg_service) { services.find {|s| s["name"] == "postgres" } }
       let(:pg_plans) { pg_service.fetch("plans") }
 
+      it "contains only M-dedicated-9.5 and M-HA-dedicated-9.5 plans" do
+        pg_plan_names = pg_plans.map {|p| p["name"] }
+        expect(pg_plan_names).to contain_exactly("M-dedicated-9.5", "M-HA-dedicated-9.5")
+      end
+
       describe "plan rds_properties" do
         shared_examples "all postgres plans" do
           it "uses postgres 9.5" do
@@ -86,6 +91,11 @@ RSpec.describe "RDS broker properties" do
             expect(subject).to include(
               "db_subnet_group_name" => terraform_fixture("rds_broker_dbs_subnet_group"),
               "vpc_security_group_ids" => [terraform_fixture("rds_broker_dbs_security_group_id")],
+            )
+          end
+          it "has a backup retention period of 7 days" do
+            expect(subject).to include(
+              "backup_retention_period" => 7
             )
           end
         end
