@@ -1112,6 +1112,7 @@ jobs:
                 ./cf-secrets/cf-secrets.yml
                 ./certs/*.yml
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
+                ./paas-cf/manifests/shared/deployments/collectd.yml
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
             run:
               path: sh
