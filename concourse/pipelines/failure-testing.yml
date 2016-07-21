@@ -139,7 +139,7 @@ jobs:
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
-            passed: ['colocated']
+            passed: ['cloud-controller']
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
