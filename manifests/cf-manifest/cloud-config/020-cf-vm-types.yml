@@ -104,14 +104,6 @@ vm_types:
         - (( grab terraform_outputs.cf_router_elb_name ))
 
 # Diego below
-  - name: colocated
-    network: cf
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      elbs:
-        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
-
   - name: access
     network: cf
     env: (( grab meta.default_env ))
