@@ -181,5 +181,5 @@ resource_pools:
   name: vms
   network: private
   stemcell:
-    sha1: ac920cae17c7159dee3bf1ebac727ce2d01564e9
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.4
+    sha1: 477371a335d172f4728c7a8806448edb9703104c
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.13
