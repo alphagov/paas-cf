@@ -27,8 +27,8 @@ jobs:
   networks:
     - name: cf
       static_ips:
-        # This IP is replicated in runtime.yml:52 because grab cannot be used
-        # to interpolate in a multi-line string.
+        # This IP is replicated in manifests/shared/deployments/collectd.yml:38
+        # because grab cannot be used to interpolate in a multi-line string.
         - 10.0.16.20
   properties:
     metron_agent:

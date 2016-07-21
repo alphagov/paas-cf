@@ -1,0 +1,47 @@
+---
+meta:
+  collectd:
+    interval: 10
+    config: |
+      LoadPlugin cpu
+      LoadPlugin disk
+      LoadPlugin entropy
+      LoadPlugin interface
+      LoadPlugin load
+      LoadPlugin memory
+      LoadPlugin swap
+      LoadPlugin uptime
+
+      LoadPlugin df
+      <Plugin df>
+        ReportInodes true
+        ReportReserved true
+      </Plugin>
+
+      LoadPlugin syslog
+      <Plugin syslog>
+        LogLevel warning
+        NotifyLevel WARNING
+      </Plugin>
+
+      LoadPlugin vmem
+      <Plugin vmem>
+        Verbose false
+      </Plugin>
+
+      LoadPlugin "write_graphite"
+      <Plugin "write_graphite">
+       <Node "myNode">
+         #FIXME: hard coded static IP to be removed during #121602315
+         # This address comes from 040-graphite.yml:31 in the CloudFoundry
+         # manifest and has been copied as `grab` cannot interpolate in a
+         # multi-line string.
+         Host "10.0.16.20"
+         Port "2003"
+         Prefix "collectd."
+         EscapeCharacter "_"
+         SeparateInstances true
+         StoreRates false
+         AlwaysAppendDS false
+       </Node>
+      </Plugin>
