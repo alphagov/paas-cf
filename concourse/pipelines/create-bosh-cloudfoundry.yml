@@ -1514,6 +1514,31 @@ jobs:
 
                   cf push
 
+        - task: update-kibana-timezone
+          config:
+            platform: linux
+            image: docker:///ruby#2.2-slim
+            params:
+              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+              DEPLOY_ENV: {{deploy_env}}
+            inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                SCRIPTS_PATH="./paas-cf/concourse/scripts"
+                TF_VARS_SCRIPT="extract_tf_vars_from_terraform_state.rb"
+                $SCRIPTS_PATH/$TF_VARS_SCRIPT < cf-tfstate/cf.tfstate | grep logsearch_elastic_master_elb_dns_name > ./logsearch_var.sh
+                . ./logsearch_var.sh
+                export ES_HOST="${TF_VAR_logsearch_elastic_master_elb_dns_name}"
+                export ES_PORT="9200"
+                $(pwd)/paas-cf/concourse/scripts/kibana_set_utc.rb
+
   - name: post-deploy
     plan:
       - aggregate:
@@ -1527,6 +1552,7 @@ jobs:
           - get: cf-secrets
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: cf-tfstate
 
       - task: retrieve-config
         config:
