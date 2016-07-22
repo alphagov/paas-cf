@@ -28,6 +28,7 @@ groups:
       - bosh-terraform
       - generate-bosh-config
       - bosh-deploy
+      - bosh-cli
   - name: cloudfoundry
     jobs:
       - pre-deploy
@@ -2283,3 +2284,33 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: bosh-cli
+    plan:
+      - aggregate:
+          - get: paas-cf
+          - get: bosh-secrets
+          - get: cf-manifest
+
+      - task: run-bosh-cli
+        config:
+          platform: linux
+          # FIXME: use image_resource once https://github.com/concourse/fly/issues/98 is implemented
+          image: docker:///governmentpaas/bosh-cli
+          inputs:
+            - name: paas-cf
+            - name: cf-manifest
+            - name: bosh-secrets
+          params:
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+          run:
+            path: sh
+            args:
+            - -c
+            - -e
+            - |
+              ./paas-cf/concourse/scripts/bosh_login.sh bosh.${SYSTEM_DNS_ZONE_NAME} bosh-secrets/bosh-secrets.yml
+
+              uuid=$(bosh status --uuid)
+              sed -e "s/^director_uuid:.*$/director_uuid: ${uuid}/" cf-manifest/cf-manifest.yml > cf-manifest-with-uuid.yml
+              bosh deployment ./cf-manifest-with-uuid.yml
