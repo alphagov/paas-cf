@@ -424,6 +424,7 @@ jobs:
             concourse-secrets/generated-concourse-secrets.yml
             terraform-outputs/concourse-terraform-outputs.yml
             terraform-outputs/vpc-terraform-outputs.yml
+            ./paas-cf/manifests/shared/deployments/collectd.yml
         inputs:
         - name: paas-cf
         - name: predefined-concourse-secrets

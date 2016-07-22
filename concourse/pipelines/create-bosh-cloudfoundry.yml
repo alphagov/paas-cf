@@ -106,12 +106,6 @@ resources:
       uri: https://github.com/alphagov/paas-aws-broker-boshrelease.git
       tag_filter: {{cf_aws_broker_version}}
 
-  - name: collectd-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-collectd-boshrelease.git
-      tag_filter: {{cf_collectd_version}}
-
   - name: os-conf-boshrelease
     type: git
     source:
@@ -243,6 +237,13 @@ resources:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
       versioned_file: cloud-config.yml
+
+  - name: runtime-config
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: runtime-config.yml
 
   - name: cf-release
     type: git
@@ -747,6 +748,7 @@ jobs:
               ./bosh-CA-yml/bosh-ca-cert.yml
               ./terraform-outputs/bosh.terraform-outputs.yml
               ./terraform-outputs/vpc.terraform-outputs.yml
+              ./paas-cf/manifests/shared/deployments/collectd.yml
           run:
             path: sh
             args:
@@ -1109,8 +1111,9 @@ jobs:
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
                 ./certs/*.yml
-                ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
+                ./paas-cf/manifests/shared/deployments/collectd.yml
+                ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
             run:
               path: sh
               args:
@@ -1144,6 +1147,32 @@ jobs:
             params:
               file: cf-manifest/cf-manifest.yml
 
+        - task: generate-runtime-config
+          config:
+            platform: linux
+            image: docker:///governmentpaas/spruce
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: runtime-config
+            params:
+              MANIFEST_STUBS: |
+                ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
+                ./paas-cf/manifests/shared/deployments/collectd.yml
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  echo "Generating runtime config..."
+
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > runtime-config/runtime-config.yml
+          on_success:
+            put: runtime-config
+            params:
+              file: runtime-config/runtime-config.yml
+
   - name: cf-deploy
     serial_groups: [cf-deploy]
     serial: true
@@ -1158,6 +1187,8 @@ jobs:
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
+          - get: runtime-config
+            passed: ['generate-cf-config']
           - get: cf-tfstate
             passed: ['generate-cf-config']
           - get: bosh-secrets
@@ -1165,7 +1196,6 @@ jobs:
           - get: grafana-boshrelease
           - get: paas-haproxy-release
           - get: aws-broker-boshrelease
-          - get: collectd-boshrelease
           - get: os-conf-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
@@ -1185,7 +1215,6 @@ jobs:
               - name: grafana-boshrelease
               - name: paas-haproxy-release
               - name: aws-broker-boshrelease
-              - name: collectd-boshrelease
               - name: os-conf-boshrelease
               - name: routing-release
             run:
@@ -1210,9 +1239,6 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
                     {{cf_aws_broker_version}} aws-broker-boshrelease
-
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb collectd \
-                    {{cf_collectd_version}} collectd-boshrelease
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb routing \
                     {{cf_routing_version}} routing-release
@@ -1263,6 +1289,7 @@ jobs:
             - name: paas-cf
             - name: cf-manifest
             - name: bosh-secrets
+            - name: runtime-config
           outputs:
             - name: updated-cf-manifest
           run:
@@ -1274,7 +1301,7 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
                 bosh deployment updated-cf-manifest/cf-manifest.yml
-                bosh update runtime-config paas-cf/manifests/cf-manifest/manifest/runtime/runtime.yml
+                bosh update runtime-config runtime-config/runtime-config.yml
                 bosh -n deploy
       - put: cf-manifest
         params:

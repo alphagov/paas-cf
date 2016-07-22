@@ -65,6 +65,18 @@ module ManifestHelpers
       remove_grafana_dashboards_manifest
   end
 
+  def load_runtime_config
+    runtime_config = render([
+      File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
+      File.expand_path("../../../runtime-config/runtime-config-base.yml", __FILE__),
+      File.expand_path("../../../../shared/deployments/collectd.yml", __FILE__)
+    ])
+
+    # Deep freeze the object so that it's safe to use across multiple examples
+    # without risk of state leaking.
+    deep_freeze(YAML.load(runtime_config))
+  end
+
   def load_terraform_fixture
     data = YAML.load_file(File.expand_path("../../../../shared/spec/fixtures/terraform/terraform-outputs.yml", __FILE__))
     deep_freeze(data)

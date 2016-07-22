@@ -17,7 +17,8 @@ module ManifestHelpers
         File.expand_path("../../fixtures/bosh-secrets.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-ssl-certificates.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-terraform-outputs.yml", __FILE__),
-        File.expand_path("../../fixtures/vpc-terraform-outputs.yml", __FILE__)
+        File.expand_path("../../fixtures/vpc-terraform-outputs.yml", __FILE__),
+        File.expand_path("../../../../shared/deployments/collectd.yml", __FILE__)
       ].join(' ')
     )
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"

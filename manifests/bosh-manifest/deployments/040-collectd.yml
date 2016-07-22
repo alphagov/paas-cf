@@ -1,0 +1,11 @@
+---
+jobs:
+- name: bosh
+  templates:
+  - {name: collectd, release: collectd}
+
+properties:
+  collectd:
+    hostname_prefix: bosh_
+    interval: (( grab meta.collectd.interval ))
+    config: (( grab meta.collectd.config ))

@@ -70,6 +70,7 @@ jobs:
       - {release: concourse, name: tsa}
       - {release: concourse, name: baggageclaim}
       - {release: garden-linux, name: garden}
+      - {release: collectd, name: collectd}
 
     networks:
       - name: public
@@ -112,6 +113,10 @@ jobs:
           - { type: s3-iam, image: "docker:///governmentpaas/s3-resource" }
           - { type: semver-iam, image: "docker:///governmentpaas/semver-resource" }
           - { type: git-gpg, image: "docker:///governmentpaas/git-resource" }
+      collectd:
+        hostname_prefix: concourse_
+        interval: (( grab meta.collectd.interval ))
+        config: (( grab meta.collectd.config ))
 
 cloud_provider:
   template: {name: aws_cpi, release: bosh-aws-cpi}
