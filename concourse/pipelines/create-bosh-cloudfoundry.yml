@@ -2230,6 +2230,7 @@ jobs:
 
   - name: continuous-smoke-tests
     serial_groups: [smoke-tests]
+    build_logs_to_retain: 10000
     plan:
       - get: cf-release
         params:
