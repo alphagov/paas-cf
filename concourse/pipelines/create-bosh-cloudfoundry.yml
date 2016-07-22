@@ -1395,6 +1395,9 @@ jobs:
 
                   ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
+                  # FIXME Remove these once they've run on prod.
+                  cf delete-quota -f trade_tariff
+                  cf delete-quota -f paas_demo
 
         - task: sync-admin-users
           config:
