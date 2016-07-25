@@ -8,6 +8,12 @@ RSpec.describe "generic manifest validations" do
     expect(manifest["name"]).to match(/\S+/)
   end
 
+  it "sets stemcell versions as strings" do
+    manifest.fetch("stemcells").each do |stemcell|
+      expect(stemcell.fetch("version")).to be_a(String)
+    end
+  end
+
   describe "name uniqueness" do
     %w(
       disk_pools
