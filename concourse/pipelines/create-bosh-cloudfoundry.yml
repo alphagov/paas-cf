@@ -845,6 +845,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-init
+              tag: 117991263_upgrade_bosh_init
           inputs:
             - name: bosh-manifest
             - name: bosh-init-state
