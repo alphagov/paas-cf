@@ -1,3 +1,20 @@
+---
+resource_types:
+- name: git-gpg
+  type: docker-image
+  source:
+    repository: governmentpaas/git-resource
+
+- name: s3-iam
+  type: docker-image
+  source:
+    repository: governmentpaas/s3-resource
+
+- name: semver-iam
+  type: docker-image
+  source:
+    repository: governmentpaas/semver-resource
+
 resources:
   - name: paas-cf
     type: git-gpg
@@ -64,7 +81,10 @@ jobs:
       - task: self-update-pipeline
         config:
           platform: linux
-          image: docker:///governmentpaas/self-update-pipelines
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/self-update-pipelines
           inputs:
             - name: paas-cf
             - name: concourse-manifest
@@ -98,18 +118,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: api/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: api/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: controller-smoketest-user
+          params:
+            PREFIX: controller-smoketest-user
         - task: generate-test-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
@@ -118,9 +136,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -143,18 +160,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: nats/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: nats/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: nats-smoketest-user
+          params:
+            PREFIX: nats-smoketest-user
         - task: generate-test-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
@@ -163,9 +178,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -188,18 +202,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: router/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: router/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: router-smoketest-user
+          params:
+            PREFIX: router-smoketest-user
         - task: generate-test-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
@@ -208,9 +220,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -233,18 +244,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: etcd/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: etcd/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: etcd-smoketest-user
+          params:
+            PREFIX: etcd-smoketest-user
         - task: generate-test-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
@@ -253,9 +262,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -278,18 +286,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: consul/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: consul/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: consul-smoketest-user
+          params:
+            PREFIX: consul-smoketest-user
         - task: generate-test-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
@@ -298,9 +304,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -323,18 +328,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: cell/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: cell/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: cell-smoketest-user
+          params:
+            PREFIX: cell-smoketest-user
         - task: generate-test-config
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
@@ -343,9 +346,8 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -368,18 +370,16 @@ jobs:
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
-        config:
-          params:
-            VM_NAME: rds_broker/0
-            BOSH_FQDN: {{bosh_fqdn}}
+        params:
+          VM_NAME: rds_broker/0
+          BOSH_FQDN: {{bosh_fqdn}}
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
         - task: create-temp-user
           file: paas-cf/concourse/tasks/create_admin.yml
-          config:
-            params:
-              PREFIX: rds-broker-test-user
+          params:
+            PREFIX: rds-broker-test-user
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
@@ -387,7 +387,10 @@ jobs:
         - task: run-tests
           config:
             platform: linux
-            image: docker:///governmentpaas/cf-acceptance-tests
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/self-update-pipelines
             inputs:
               - name: paas-cf
               - name: test-config
@@ -409,8 +412,7 @@ jobs:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
-              config:
-                params:
-                  BOSH_FQDN: {{bosh_fqdn}}
+              params:
+                BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml

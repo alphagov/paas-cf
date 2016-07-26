@@ -1,6 +1,9 @@
 ---
 platform: linux
-image: docker:///governmentpaas/cf-acceptance-tests
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-acceptance-tests
 inputs:
   - name: paas-cf
   - name: cf-release

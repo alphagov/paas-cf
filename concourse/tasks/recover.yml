@@ -2,7 +2,10 @@ inputs:
   - name: paas-cf
   - name: bosh-secrets
   - name: cf-manifest
-image: docker:///governmentpaas/bosh-cli
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/bosh-cli
 platform: linux
 run:
   path: sh

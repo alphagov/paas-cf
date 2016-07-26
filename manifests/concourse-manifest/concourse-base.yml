@@ -3,11 +3,11 @@ name: concourse
 
 releases:
   - name: concourse
-    url: https://bosh.io/d/github.com/concourse/concourse?v=0.74.0
-    sha1: c99ef709e9d4468ac25cca31dd5be1444417011d
-  - name: garden-linux
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-linux-release?v=0.334.0
-    sha1: 85170c5089fa4ff317f139c2f1da024860dbea85
+    url: https://bosh.io/d/github.com/concourse/concourse?v=1.5.1
+    sha1: 9f6797ddab15f3659bcfe81c63c697f22e488451
+  - name: garden-runc
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-runc-release?v=0.4.0
+    sha1: b59fb02eeae70104486251c82099316af04b77b7
   # When updating the version of the CPI here, the version used in the
   # bosh-init container must also be updated so that the cached CPI compile
   # will be used.
@@ -22,7 +22,7 @@ resource_pools:
       url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.13
       sha1: 477371a335d172f4728c7a8806448edb9703104c
     cloud_properties:
-      instance_type: t2.medium
+      instance_type: c4.large
       availability_zone: (( grab terraform_outputs.zone0 ))
       iam_instance_profile: deployer-concourse
       elbs:
@@ -69,7 +69,7 @@ jobs:
       - {release: concourse, name: groundcrew}
       - {release: concourse, name: tsa}
       - {release: concourse, name: baggageclaim}
-      - {release: garden-linux, name: garden}
+      - {release: garden-runc, name: garden}
       - {release: collectd, name: collectd}
 
     networks:
@@ -81,38 +81,37 @@ jobs:
         default: [dns, gateway]
 
     properties:
-      atc:
-        external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
-        basic_auth_username: admin
-        basic_auth_password: (( grab secrets.concourse_atc_password ))
-        publicly_viewable: true
-        postgresql:
-          address: 127.0.0.1:5432
-          role: &atc-role
-            name: atc
-            password: dummy-password
+      external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
+      basic_auth_username: admin
+      basic_auth_password: (( grab secrets.concourse_atc_password ))
+      publicly_viewable: true
+
+      databases:
+        - name: atc
+          role: atc
+          password: dummy-password
 
       postgresql:
-        databases: [{name: atc}]
-        roles:
-          - *atc-role
+        address: 127.0.0.1:5432
+        database: atc
+        role:
+          name: atc
+          password: dummy-password
       tsa:
+        host: 127.0.0.1
+        port: 2222
         forward_host: 127.0.0.1
         atc:
           address: 127.0.0.1:8080
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
-        graph_cleanup_threshold_in_mb: 3072
-      groundcrew:
-        baggageclaim:
-          url: "http://127.0.0.1:7788"
-        tsa:
-          host: 127.0.0.1
-        additional_resource_types:
-          - { type: s3-iam, image: "docker:///governmentpaas/s3-resource" }
-          - { type: semver-iam, image: "docker:///governmentpaas/semver-resource" }
-          - { type: git-gpg, image: "docker:///governmentpaas/git-resource" }
+        graph_cleanup_threshold_in_mb: 41000
+        max_containers: 1024
+        network_pool: "10.254.0.0/20"
+        default_container_grace_time: 1m
+      baggageclaim:
+        url: "http://127.0.0.1:7788"
       collectd:
         hostname_prefix: concourse_
         interval: (( grab meta.collectd.interval ))

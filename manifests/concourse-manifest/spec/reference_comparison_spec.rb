@@ -27,7 +27,7 @@ RSpec.describe "manifest generation" do
 
   it "gets values from concourse terraform outputs" do
     expect(
-      manifest_with_defaults["jobs"].first["properties"]["atc"]["external_url"]
+      manifest_with_defaults["jobs"].first["properties"]["external_url"]
     ).to eq("https://" + fixtures["terraform_outputs"]["concourse_dns_name"])
   end
 
@@ -41,7 +41,7 @@ RSpec.describe "manifest generation" do
 
   it "gets values from predefined secrets" do
     expect(
-      manifest_with_defaults["jobs"].first["properties"]["atc"]["basic_auth_password"]
+      manifest_with_defaults["jobs"].first["properties"]["basic_auth_password"]
     ).to eq(fixtures["secrets"]["concourse_atc_password"])
   end
 

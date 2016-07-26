@@ -13,43 +13,9 @@ $("${SCRIPT_DIR}/environment.sh")
 OUTPUT_FILE=$(mktemp -t bosh-cli.XXXXXX)
 trap 'rm -f "${OUTPUT_FILE}"' EXIT
 
-generate_config(){
-  cat <<EOF
----
-platform: linux
+$FLY_CMD -t "${FLY_TARGET}" trigger-job -j create-bosh-cloudfoundry/bosh-cli -w | tee "${OUTPUT_FILE}"
 
-image: docker:///governmentpaas/bosh-cli
+BUILD_NUMBER=$(awk '/started create-bosh-cloudfoundry\/bosh-cli/ { print $3 }' "${OUTPUT_FILE}" | tr -d '#')
 
-inputs:
-  - name: paas-cf
-  - name: cf-manifest
-  - name: bosh-secrets
-run:
-  path: sh
-  args:
-  - -c
-  - -e
-  - |
-    ./paas-cf/concourse/scripts/bosh_login.sh bosh.${SYSTEM_DNS_ZONE_NAME} bosh-secrets/bosh-secrets.yml
-
-    uuid=\$(bosh status --uuid)
-    sed -e "s/^director_uuid:.*$/director_uuid: \${uuid}/" cf-manifest/cf-manifest.yml > cf-manifest-with-uuid.yml
-    bosh deployment ./cf-manifest-with-uuid.yml
-EOF
-}
-
-generate_config > /dev/null
-
-$FLY_CMD -t "${FLY_TARGET}" \
-  execute \
-  --inputs-from=create-bosh-cloudfoundry/cf-deploy \
-  --config=<(generate_config) \
-  | tee "${OUTPUT_FILE}"
-
-BUILD_NUMBER=$(awk '/executing build/ { print $3 }' "${OUTPUT_FILE}")
-
-$FLY_CMD -t "${FLY_TARGET}" \
-  intercept \
-  --build="${BUILD_NUMBER}"\
-  --step=one-off \
-  "${@:-sh}"
+$FLY_CMD -t "${FLY_TARGET}" intercept -j create-bosh-cloudfoundry/bosh-cli -b "${BUILD_NUMBER}" \
+   -s run-bosh-cli "${@:-ash}"
