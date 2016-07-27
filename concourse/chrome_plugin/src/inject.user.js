@@ -15,7 +15,7 @@ var readyStateCheckInterval = setInterval(function() {
         var element = document.getElementsByClassName("legend")[0];
         element.parentNode.removeChild(element);
 
-        var element = document.getElementById("cli-downloads");
+        var element = document.getElementsByClassName("lower-right-info")[0];
         element.parentNode.removeChild(element);
 
         var hostname = location.hostname.replace("deployer.", "").replace(".cloudpipeline.digital","")
