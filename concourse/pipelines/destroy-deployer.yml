@@ -63,7 +63,7 @@ jobs:
     - task: destroy-concourse
       timeout: 30m
       config:
-        image: docker:///governmentpaas/bosh-init#117991263_upgrade_bosh_init
+        image: docker:///governmentpaas/bosh-init
         inputs:
         - name: paas-cf
         - name: concourse-manifest
