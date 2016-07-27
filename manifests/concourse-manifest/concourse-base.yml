@@ -28,7 +28,7 @@ resource_pools:
       elbs:
       - (( grab terraform_outputs.concourse_elb_name ))
       ephemeral_disk:
-        size: 50240
+        size: 65536
         type: gp2
     env:
       bosh:
@@ -106,7 +106,7 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
-        graph_cleanup_threshold_in_mb: 41000
+        graph_cleanup_threshold_in_mb: 32768
         max_containers: 1024
         network_pool: "10.254.0.0/20"
         default_container_grace_time: 1m
