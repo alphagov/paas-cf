@@ -28,7 +28,7 @@ resource_pools:
       elbs:
       - (( grab terraform_outputs.concourse_elb_name ))
       ephemeral_disk:
-        size: 50240
+        size: 102400
         type: gp2
     env:
       bosh:
