@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/onsi/gomega/gexec"
 	"github.com/onsi/gomega/ghttp"
@@ -20,6 +21,10 @@ type DeploymentResponse []struct {
 }
 
 var _ = Describe("BoshPreDestroy", func() {
+	const (
+		ExecutionTimeout = 3 * time.Second
+	)
+
 	var (
 		config      *os.File
 		server      *ghttp.Server
@@ -67,7 +72,7 @@ var _ = Describe("BoshPreDestroy", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, ExecutionTimeout).Should(gexec.Exit(0))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err.Contents()).To(BeEmpty())
 		})
@@ -82,7 +87,7 @@ var _ = Describe("BoshPreDestroy", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, ExecutionTimeout).Should(gexec.Exit(1))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err.Contents()).To(Equal([]byte(
 				"The following deployments must be deleted before destroying BOSH:\n" +
