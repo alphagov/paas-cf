@@ -106,7 +106,7 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
-        graph_cleanup_threshold_in_mb: 41000
+        graph_cleanup_threshold_in_mb: 3072
         max_containers: 1024
         network_pool: "10.254.0.0/20"
         default_container_grace_time: 1m
