@@ -356,18 +356,6 @@ providing them to the interactive configure command.
 [variety of other methods]: http://docs.aws.amazon.com/cli/latest/userguide/installing.html
 [access keys using environment variables]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-environment
 
-## Pingdom checks
-
-### Requirements
-
-* The credential store set up (paas-pass).
-* Installation of the Pingdom Terraform provider. Instructions for this are documented when running the make target for the first time.
-* Correct AWS credentials for the environment you are setting up checks for. For those developers with AWS CLI config files, the [AWS CLI Documentation](http://docs.aws.amazon.com/cli/latest/topic/config-vars.html#id1) states environment variables have the highest precedence.
-
-### Setting up the checks
-
-Run `make ENV pingdom` to set up the Pingdom checks.
-
 ## Creating Users
 
 Once you got the OK from the Product and Delivery managers to create
@@ -397,3 +385,6 @@ and click on the link in the resulting email
 
 ## BOSH failover
 Visit [BOSH failover page](https://github.com/alphagov/paas-cf/blob/master/doc/bosh_failover.md)
+
+## Pingdom checks
+Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/pingdom.md)
