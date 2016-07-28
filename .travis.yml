@@ -37,5 +37,11 @@ before_install:
   - pip install --user yamllint
   - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
 
+  - eval "$(gimme 1.6)"
+  - export GOPATH=$HOME/gopath
+  - export PATH=$HOME/gopath/bin:$PATH
+  - go get github.com/onsi/ginkgo/ginkgo
+  - go get github.com/onsi/gomega/...
+
 script:
   - make test
