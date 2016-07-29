@@ -18,7 +18,7 @@ resource "pingdom_check" "paas_http_healthcheck" {
     name = "PaaS HTTPS - ${var.env}"
     host = "healthcheck.${var.apps_dns_zone_name}"
     encryption = true
-    resolution = 5
+    resolution = 1
     uselegacynotifications = true
     sendtoemail = true
     sendnotificationwhendown = 2
@@ -31,7 +31,7 @@ resource "pingdom_check" "paas_db_healthcheck" {
     host = "healthcheck.${var.apps_dns_zone_name}"
     url  = "/db"
     encryption = true
-    resolution = 5
+    resolution = 1
     uselegacynotifications = true
     sendtoemail = true
     sendnotificationwhendown = 2
