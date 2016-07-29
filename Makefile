@@ -17,6 +17,8 @@ spec:
 	cd scripts &&\
 		BUNDLE_GEMFILE=Gemfile bundle exec rspec
 	cd concourse/scripts &&\
+		go test
+	cd concourse/scripts &&\
 		bundle exec rspec
 	cd manifests/shared &&\
 		bundle exec rspec
