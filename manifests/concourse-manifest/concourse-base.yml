@@ -3,8 +3,8 @@ name: concourse
 
 releases:
   - name: concourse
-    url: https://bosh.io/d/github.com/concourse/concourse?v=1.5.1
-    sha1: 9f6797ddab15f3659bcfe81c63c697f22e488451
+    url: https://github.com/alphagov/paas-concourse/releases/download/v1.5.1.gds1/concourse-1.5.1.gds1.tgz
+    sha1: 363c959751685658593661855339418dafed02e5
   - name: garden-runc
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/garden-runc-release?v=0.4.0
     sha1: b59fb02eeae70104486251c82099316af04b77b7
@@ -28,7 +28,7 @@ resource_pools:
       elbs:
       - (( grab terraform_outputs.concourse_elb_name ))
       ephemeral_disk:
-        size: 50240
+        size: 102400
         type: gp2
     env:
       bosh:
@@ -106,7 +106,7 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
-        graph_cleanup_threshold_in_mb: 41000
+        graph_cleanup_threshold_in_mb: 3072
         max_containers: 1024
         network_pool: "10.254.0.0/20"
         default_container_grace_time: 1m
