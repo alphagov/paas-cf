@@ -1,28 +1,9 @@
 #!/bin/bash
 
 set -eu
-
-function help {
-  cat <<EOF
-Help
-
-You need to install the terraform pingdom binary by adding the binary location to your path and copying or appending to your ~/.terraformrc file
-
-export PATH=\$PWD/${TERRAFORM_PATH}${TERRAFORM_BINARY_DIR}:\$PATH
-
-If you do not have a ~/.terraformrc file
-
-cp ${TERRAFORM_PATH}/.terraformrc ~/.terraformrc
-EOF
-	exit 1
-}
-
-# Terraform Pingdom provider
-TERRAFORM_PATH=terraform/providers
-if [ "$(uname)" = "Darwin" ];
-	then TERRAFORM_BINARY_DIR=/osx
-	else TERRAFORM_BINARY_DIR=/linux-amd64
-fi
+VERSION=0.2.1
+BINARY=terraform-provider-pingdom-$(uname -s)-$(uname -m)
+STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
 
 # Get Pingdom credentials
 export PASSWORD_STORE_DIR=~/.paas-pass
@@ -31,28 +12,31 @@ PINGDOM_PASSWORD=$(pass pingdom.com/password)
 PINGDOM_API_KEY=$(pass pingdom.com/api_key)
 PINGDOM_ACCOUNT_EMAIL=$(pass pingdom.com/account_email)
 
-# Check bucket for Terraform state file
-cd terraform/pingdom
-declare -r STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
-if ! aws s3 ls "s3://${DEPLOY_ENV}-state/${STATEFILE}" --summarize | grep -q "Total Objects: 0";
-	then aws s3 cp "s3://${DEPLOY_ENV}-state/${STATEFILE}" "${STATEFILE}"
-else
-	echo "No previous ${STATEFILE} file found in s3://${DEPLOY_ENV}-state/. Assuming first run."
-fi
+# Install Terraform plugin to temporary directory
+mkdir -p /tmp/terraform-pingdom
+wget "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${VERSION}/${BINARY}" \
+  -O /tmp/terraform-pingdom/terraform-provider-pingdom
+chmod +x /tmp/terraform-pingdom/terraform-provider-pingdom
+cp terraform/providers/.terraformrc /tmp/terraform-pingdom/
 
-# Run Terraform Pingdom Provider
-set +e
-terraform apply -state="${STATEFILE}" \
+# Configure Terraform remote state
+terraform remote config \
+    -backend=s3 \
+    -backend-config="bucket=${DEPLOY_ENV}-state" \
+    -backend-config="key=${STATEFILE}" \
+    -backend-config="region=${AWS_DEFAULT_REGION}"
+
+# Run Terraform Pingdom Provider. We change $HOME so Terraform can find terraformrc
+HOME=/tmp/terraform-pingdom \
+terraform apply \
 	-var "env=${MAKEFILE_ENV_TARGET}" \
+	-var "contact_ids=${PINGDOM_CONTACT_IDS}" \
 	-var "pingdom_user=${PINGDOM_USER}" \
 	-var "pingdom_password=${PINGDOM_PASSWORD}" \
 	-var "pingdom_api_key=${PINGDOM_API_KEY}" \
 	-var "pingdom_account_email=${PINGDOM_ACCOUNT_EMAIL}" \
-	-var "apps_dns_zone_name=${APPS_DNS_ZONE_NAME}"
-if [ "$?" -ne 0 ]; then help; fi
-set -e
+	-var "apps_dns_zone_name=${APPS_DNS_ZONE_NAME}" \
+  terraform/pingdom
 
-# Copy statefile back to bucket and remove local copy
-aws s3 cp "${STATEFILE}" "s3://${DEPLOY_ENV}-state/${STATEFILE}"
-rm -f "${STATEFILE}"
-rm -f "${STATEFILE}".backup
+# Delete temporary directory
+rm -rf /tmp/terraform-pingdom
