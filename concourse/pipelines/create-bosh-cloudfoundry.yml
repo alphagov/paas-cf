@@ -137,6 +137,12 @@ resources:
       tag_filter: {{cf_routing_version}}
       branch: gds_master
 
+  - name: rep-boshrelease
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-rep-boshrelease.git
+      tag_filter: {{cf_rep_version}}
+
   - name: graphite-nozzle
     type: git
     source:
@@ -1304,6 +1310,7 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: routing-release
+          - get: rep-boshrelease
 
       - aggregate:
         - task: upload-releases
@@ -1322,6 +1329,7 @@ jobs:
               - name: aws-broker-boshrelease
               - name: os-conf-boshrelease
               - name: routing-release
+              - name: rep-boshrelease
             run:
               path: sh
               args:
@@ -1347,6 +1355,10 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb routing \
                     {{cf_routing_version}} routing-release
+
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb rep \
+                    {{cf_rep_version}} rep-boshrelease
+
         - task: get-and-upload-stemcell
           config:
             platform: linux
