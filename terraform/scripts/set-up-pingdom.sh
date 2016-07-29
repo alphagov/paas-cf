@@ -44,6 +44,7 @@ fi
 set +e
 terraform apply -state="${STATEFILE}" \
 	-var "env=${MAKEFILE_ENV_TARGET}" \
+	-var "contact_ids=${PINGDOM_CONTACT_IDS}" \
 	-var "pingdom_user=${PINGDOM_USER}" \
 	-var "pingdom_password=${PINGDOM_PASSWORD}" \
 	-var "pingdom_api_key=${PINGDOM_API_KEY}" \

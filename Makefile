@@ -141,6 +141,7 @@ manually_upload_certs: ## Manually upload to AWS the SSL certificates for public
 .PHONY: pingdom
 pingdom: ## Use custom Terraform provider to set up Pingdom check
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
+	$(eval export PINGDOM_CONTACT_IDS=11089310)
 	@terraform/scripts/set-up-pingdom.sh
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
