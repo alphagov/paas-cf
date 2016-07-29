@@ -1867,7 +1867,6 @@ jobs:
                   my['properties']['acceptance_tests']['password'] = File.read('admin-creds/password').strip()
 
                   puts YAML.dump(my)" > acceptance_test_properties.yml
-                  cat acceptance_test_properties.yml
 
                   ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
                     ./cf-release/jobs/acceptance-tests/templates/run.erb \
