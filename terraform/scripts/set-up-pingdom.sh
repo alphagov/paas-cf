@@ -40,3 +40,6 @@ terraform apply \
 
 # Delete temporary directory
 rm -rf /tmp/terraform-pingdom
+
+# Delete local terraform state
+rm -rf .terraform
