@@ -17,6 +17,7 @@ resource "pingdom_check" "paas_http_healthcheck" {
     type = "http"
     name = "PaaS HTTPS - ${var.env}"
     host = "healthcheck.${var.apps_dns_zone_name}"
+    url  = "/"
     encryption = true
     resolution = 1
     uselegacynotifications = true
