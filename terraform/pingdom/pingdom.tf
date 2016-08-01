@@ -22,6 +22,7 @@ resource "pingdom_check" "paas_http_healthcheck" {
     uselegacynotifications = true
     sendtoemail = true
     sendnotificationwhendown = 2
+    notifywhenbackup = true
     contactids = ["${split(",", var.contact_ids)}"]
 }
 
@@ -35,5 +36,6 @@ resource "pingdom_check" "paas_db_healthcheck" {
     uselegacynotifications = true
     sendtoemail = true
     sendnotificationwhendown = 2
+    notifywhenbackup = true
     contactids = ["${split(",", var.contact_ids)}"]
 }
