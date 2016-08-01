@@ -320,7 +320,7 @@ jobs:
       - name: consul_agent
         release: cf
       - name: rep
-        release: diego
+        release: rep
       - name: garden
         release: garden-linux
       - name: cflinuxfs2-rootfs-setup

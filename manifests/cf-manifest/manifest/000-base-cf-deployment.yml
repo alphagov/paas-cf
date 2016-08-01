@@ -29,6 +29,8 @@ releases:
     version: 0.0.4
   - name: routing
     version: commit-0bad6993f4cb87fa6213fa957f4e8eacbd22f762
+  - name: rep
+    version: 0.0.1
 
 stemcells:
   - alias: default
