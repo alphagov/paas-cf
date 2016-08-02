@@ -26,7 +26,7 @@ const (
 	vegetaKeepAlive  = true
 )
 
-func loadTest(appUri string, endpoint string, rate uint64) (*vegeta.Attacker, <-chan *vegeta.Result) {
+func loadTest(appUri string, rate uint64) (*vegeta.Attacker, <-chan *vegeta.Result) {
 	targeter := vegeta.NewStaticTargeter(vegeta.Target{
 		Method: "GET",
 		URL:    appUri,
@@ -85,7 +85,7 @@ var _ = Describe("Availability test", func() {
 		It(fmt.Sprintf("does not get request success rate less than %.2f%%", availabilitySuccessRateThreshold), func() {
 			appUri := "https://healthcheck." + helpers.GetAppsDomainZoneName() + "/?availability-test=" + helpers.GetResourceVersion()
 
-			attacker, resultChannel = loadTest(appUri, "/", availabilityTestRate)
+			attacker, resultChannel = loadTest(appUri, availabilityTestRate)
 			defer attacker.Stop()
 
 			var wg sync.WaitGroup
