@@ -64,6 +64,10 @@ var _ = Describe("Availability test", func() {
 	var metricsLock sync.Mutex
 	var stopAttackCriteria func() bool
 
+	BeforeEach(func() {
+		metrics = vegeta.Metrics{}
+	})
+
 	Context("when runs (until the deployment is finished or error rate > 50%)", func() {
 		var attacker *vegeta.Attacker
 		var resultChannel <-chan *vegeta.Result
