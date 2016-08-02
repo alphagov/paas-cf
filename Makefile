@@ -64,6 +64,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
+	$(eval export ENABLE_HEALTHCHECK_DB=false)
 	@true
 
 .PHONY: ci

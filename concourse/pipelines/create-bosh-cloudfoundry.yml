@@ -1762,6 +1762,8 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-cli
+          params:
+            ENABLE_HEALTHCHECK_DB: {{enable_healthcheck_db}}
           inputs:
             - name: paas-cf
             - name: config
@@ -1783,13 +1785,14 @@ jobs:
                 cf target -o testers -s healthcheck
                 cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
-
-                cf create-service postgres M-dedicated-9.5 healthcheck-db
-                while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
-                  echo "Waiting for creation of service to complete..."
-                  sleep 30
-                done
-                cf bind-service healthcheck healthcheck-db
+                if  [ "$ENABLE_HEALTHCHECK_DB" != "false" ] ; then
+                  cf create-service postgres M-dedicated-9.5 healthcheck-db
+                  while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                  cf bind-service healthcheck healthcheck-db
+                fi
 
                 cf start healthcheck
 
