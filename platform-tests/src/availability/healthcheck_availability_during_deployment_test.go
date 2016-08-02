@@ -2,11 +2,13 @@ package availability_test
 
 import (
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
 	"availability/helpers"
 
+	"github.com/onsi/gomega/ghttp"
 	vegeta "github.com/tsenart/vegeta/lib"
 
 	. "github.com/onsi/ginkgo"
@@ -66,6 +68,42 @@ var _ = Describe("Availability test", func() {
 
 	BeforeEach(func() {
 		metrics = vegeta.Metrics{}
+	})
+
+	Describe("vegeta library", func() {
+		var server *ghttp.Server
+		BeforeEach(func() {
+			server = ghttp.NewServer()
+		})
+		AfterEach(func() {
+			server.Close()
+		})
+
+		Context("endpoint returns 404 mimicing CF app with no instances", func() {
+			BeforeEach(func() {
+				server.RouteToHandler("GET", "/",
+					ghttp.CombineHandlers(
+						ghttp.RespondWith(http.StatusNotFound, ""),
+					),
+				)
+			})
+
+			It("reports the requests as not successful", func() {
+				attacker, resultChannel := loadTest(server.URL(), availabilityTestRate)
+				defer attacker.Stop()
+
+				Eventually(func() int {
+					return len(server.ReceivedRequests())
+				}).Should(BeNumerically(">", 1))
+				attacker.Stop()
+
+				for result := range resultChannel {
+					metrics.Add(result)
+				}
+				metrics.Close()
+				Expect(metrics.Success * 100).To(BeNumerically("==", 0))
+			})
+		})
 	})
 
 	Context("when runs (until the deployment is finished or error rate > 50%)", func() {

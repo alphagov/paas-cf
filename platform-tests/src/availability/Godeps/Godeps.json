@@ -2,9 +2,6 @@
 	"ImportPath": "availability",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/bmizerany/pat",
@@ -29,6 +26,10 @@
 		{
 			"ImportPath": "github.com/concourse/go-concourse/concourse/internal",
 			"Rev": "1eae515495e3938a7be17a8e1da9b13948a083c6"
+		},
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "34a5f244f1c01cdfee8e60324258cfbb97a42aec"
 		},
 		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
@@ -116,6 +117,11 @@
 		},
 		{
 			"ImportPath": "github.com/onsi/gomega/format",
+			"Comment": "v1.0-91-g7ce781e",
+			"Rev": "7ce781ea776b2fd506491011353bded2e40c8467"
+		},
+		{
+			"ImportPath": "github.com/onsi/gomega/ghttp",
 			"Comment": "v1.0-91-g7ce781e",
 			"Rev": "7ce781ea776b2fd506491011353bded2e40c8467"
 		},
