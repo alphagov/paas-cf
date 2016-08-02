@@ -53,32 +53,27 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(sumSeries(derivative(collectd.$Host.cpu.*.cpu.user)), 5)",
+              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.user)), 1), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasByNode(sumSeries(derivative(collectd.$Host.cpu.*.cpu.system)), 5)",
+              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.system)), 1), 5)",
               "textEditor": false
             },
             {
               "refId": "C",
-              "target": "aliasByNode(sumSeries(derivative(collectd.$Host.cpu.*.cpu.wait)), 5)",
+              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.wait)), 1), 5)",
               "textEditor": false
             },
             {
               "refId": "D",
-              "target": "aliasByNode(sumSeries(derivative(collectd.$Host.cpu.*.cpu.nice)), 5)",
-              "textEditor": false
-            },
-            {
-              "refId": "E",
-              "target": "aliasByNode(sumSeries(derivative(collectd.$Host.cpu.*.cpu.idle)), 5)",
+              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.nice)), 1), 5)",
               "textEditor": false
             },
             {
               "refId": "F",
-              "target": "aliasByNode(sumSeries(derivative(collectd.$Host.cpu.*.cpu.steal)), 5)",
+              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.steal)), 1), 5)",
               "textEditor": false
             }
           ],
