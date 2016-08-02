@@ -143,6 +143,13 @@ resources:
       uri: https://github.com/alphagov/paas-rep-boshrelease.git
       tag_filter: {{cf_rep_version}}
 
+  - name: logsearch-for-cloudfoundry-boshrelease
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-logsearch-for-cloudfoundry.git
+      tag_filter: {{cf_logsearch_for_cloudfoundry_version}}
+      branch: gds_master
+
   - name: graphite-nozzle
     type: git
     source:
@@ -1309,6 +1316,7 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-CA
           - get: graphite-nozzle
+          - get: logsearch-for-cloudfoundry-boshrelease
           - get: routing-release
           - get: rep-boshrelease
 
@@ -1330,6 +1338,7 @@ jobs:
               - name: os-conf-boshrelease
               - name: routing-release
               - name: rep-boshrelease
+              - name: logsearch-for-cloudfoundry-boshrelease
             run:
               path: sh
               args:
@@ -1358,6 +1367,9 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb rep \
                     {{cf_rep_version}} rep-boshrelease
+
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb logsearch-for-cloudfoundry \
+                    {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
 
         - task: get-and-upload-stemcell
           config:
