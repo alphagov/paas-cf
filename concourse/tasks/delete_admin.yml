@@ -17,6 +17,10 @@ run:
     - -c
     - |
       NAME=$(cat admin-creds/username)
+      if [ "${ENABLE_ADMIN_USER_CREATION}" == "false" ]; then
+        echo "Temporary user creation is disabled (ENABLE_ADMIN_USER_CREATION=${ENABLE_ADMIN_USER_CREATION}). Skipping."
+        exit 0
+      fi
       ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
@@ -26,5 +30,5 @@ run:
       echo "Removing user ${NAME}"
       uaac target "${UAA_ENDPOINT}"
       uaac token client get admin -s "${UAA_ADMIN_CLIENT_PASS}"
-      
+
       uaac user delete "${NAME}"

@@ -1866,6 +1866,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: acceptance-test-user
+            ENABLE_ADMIN_USER_CREATION: {{enable_cf_acceptance_tests}}
 
         - task: generate-test-config
           config:
@@ -1945,6 +1946,8 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            ENABLE_ADMIN_USER_CREATION: {{enable_cf_acceptance_tests}}
 
   - name: custom-acceptance-tests
     plan:

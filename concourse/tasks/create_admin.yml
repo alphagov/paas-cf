@@ -18,6 +18,12 @@ run:
     - -c
     - |
       [ -z "${PREFIX}" ] && echo "You need to specify \$PREFIX" && exit 1
+      if [ "${ENABLE_ADMIN_USER_CREATION}" == "false" ]; then
+        echo "Temporary user creation is disabled (ENABLE_ADMIN_USER_CREATION=${ENABLE_ADMIN_USER_CREATION}). Skipping."
+        echo "none" >admin-creds/username
+        echo "none" >admin-creds/password
+        exit 0
+      fi
       ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
       SUFFIX=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c10)
