@@ -13,11 +13,17 @@ meta:
       LoadPlugin cpu
       LoadPlugin disk
       LoadPlugin entropy
-      LoadPlugin interface
       LoadPlugin load
       LoadPlugin memory
       LoadPlugin swap
       LoadPlugin uptime
+
+      LoadPlugin interface
+      <Plugin interface>
+        IgnoredSelected false
+        Interface lo0
+        Interface eth0
+      </Plugin>
 
       LoadPlugin df
       <Plugin df>
