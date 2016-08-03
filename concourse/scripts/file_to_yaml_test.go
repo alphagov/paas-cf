@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
 )
 
@@ -46,6 +47,40 @@ key_one:
     Some content
 `)))
 			Expect(session.Err.Contents()).To(BeEmpty())
+		})
+	})
+
+	Context("wrong number of arguments", func() {
+		BeforeEach(func() {
+			_, err := inputFile.Write([]byte("Some content"))
+			Expect(err).ToNot(HaveOccurred())
+
+			command = exec.Command("./file_to_yaml.sh", "key_one", "key_two")
+		})
+
+		It("should return non-zero, no STDOUT, and STDERR message", func() {
+			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+			Expect(err).ToNot(HaveOccurred())
+
+			Eventually(session).Should(gexec.Exit(1))
+			Expect(session.Out.Contents()).To(BeEmpty())
+			Expect(session.Err).To(gbytes.Say("Missing arguments"))
+		})
+	})
+
+	Context("file does not exist", func() {
+		BeforeEach(func() {
+			os.Remove(inputFile.Name())
+			command = exec.Command("./file_to_yaml.sh", "key_one", "key_two", inputFile.Name())
+		})
+
+		It("should return non-zero, no STDOUT, and STDERR message", func() {
+			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+			Expect(err).ToNot(HaveOccurred())
+
+			Eventually(session).Should(gexec.Exit(1))
+			Expect(session.Out.Contents()).To(BeEmpty())
+			Expect(session.Err).To(gbytes.Say("No such file or directory"))
 		})
 	})
 })
