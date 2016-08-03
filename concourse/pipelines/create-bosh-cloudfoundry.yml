@@ -450,7 +450,7 @@ jobs:
                   mkdir out
                   tar -xvzf generated-bosh-CA/bosh-CA.tar.gz -C out
                 fi
-                ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > generated-bosh-CA/bosh-ca-cert.yml
+                ./paas-cf/concourse/scripts/file_to_yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > generated-bosh-CA/bosh-ca-cert.yml
         on_success:
           put: bosh-CA
           params:
@@ -800,7 +800,7 @@ jobs:
                 echo "The CA cert already exists, skipping generation..."
                 mkdir out
                 tar -xvzf bosh-CA/bosh-CA.tar.gz -C out
-                ./paas-cf/concourse/scripts/file-to-yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > bosh-CA-yml/bosh-ca-cert.yml
+                ./paas-cf/concourse/scripts/file_to_yaml.sh secrets bosh_ca_cert out/bosh-CA.crt > bosh-CA-yml/bosh-ca-cert.yml
 
       - task: render-bosh-manifest
         config:
@@ -1243,11 +1243,11 @@ jobs:
                     yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
 
                     echo "Converting ${cn} certs to YAML"
-                    ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
-                    ../paas-cf/concourse/scripts/file-to-yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
+                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
+                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
                   done
 
-                  ../paas-cf/concourse/scripts/file-to-yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
+                  ../paas-cf/concourse/scripts/file_to_yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
                   cd ..
 
                   echo "Generating manifests"
