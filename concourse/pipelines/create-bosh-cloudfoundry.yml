@@ -1916,6 +1916,8 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
+            params:
+              ENABLE_CF_ACCEPTANCE_TESTS: {{enable_cf_acceptance_tests}}
             inputs:
               - name: paas-cf
               - name: cf-release
@@ -1935,8 +1937,11 @@ jobs:
                   ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
                   ln -snf /usr/local/go /var/vcap/packages/golang1.6
                   ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
-                  /var/vcap/jobs/acceptance-tests/bin/run
-
+                  if  [ "$ENABLE_CF_ACCEPTANCE_TESTS" != "false" ]; then
+                    /var/vcap/jobs/acceptance-tests/bin/run
+                  else
+                    echo "WARNING: The acceptance tests have been disabled. Set ENABLE_CF_ACCEPTANCE_TESTS=true when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
+                  fi
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml

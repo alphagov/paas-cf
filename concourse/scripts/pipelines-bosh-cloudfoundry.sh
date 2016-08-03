@@ -92,6 +92,7 @@ enable_healthcheck_db: ${ENABLE_HEALTHCHECK_DB:-}
 bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
+enable_cf_acceptance_tests: ${ENABLE_CF_ACCEPTANCE_TESTS:-true}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
