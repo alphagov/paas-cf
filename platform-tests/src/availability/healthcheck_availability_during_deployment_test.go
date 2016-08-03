@@ -2,11 +2,13 @@ package availability_test
 
 import (
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
 	"availability/helpers"
 
+	"github.com/onsi/gomega/ghttp"
 	vegeta "github.com/tsenart/vegeta/lib"
 
 	. "github.com/onsi/ginkgo"
@@ -26,7 +28,7 @@ const (
 	vegetaKeepAlive  = true
 )
 
-func loadTest(appUri string, endpoint string, rate uint64) (*vegeta.Attacker, <-chan *vegeta.Result) {
+func loadTest(appUri string, rate uint64) (*vegeta.Attacker, <-chan *vegeta.Result) {
 	targeter := vegeta.NewStaticTargeter(vegeta.Target{
 		Method: "GET",
 		URL:    appUri,
@@ -64,6 +66,46 @@ var _ = Describe("Availability test", func() {
 	var metricsLock sync.Mutex
 	var stopAttackCriteria func() bool
 
+	BeforeEach(func() {
+		metrics = vegeta.Metrics{}
+	})
+
+	Describe("vegeta library", func() {
+		var server *ghttp.Server
+		BeforeEach(func() {
+			server = ghttp.NewServer()
+		})
+		AfterEach(func() {
+			server.Close()
+		})
+
+		Context("endpoint returns 404 mimicing CF app with no instances", func() {
+			BeforeEach(func() {
+				server.RouteToHandler("GET", "/",
+					ghttp.CombineHandlers(
+						ghttp.RespondWith(http.StatusNotFound, ""),
+					),
+				)
+			})
+
+			It("reports the requests as not successful", func() {
+				attacker, resultChannel := loadTest(server.URL(), availabilityTestRate)
+				defer attacker.Stop()
+
+				Eventually(func() int {
+					return len(server.ReceivedRequests())
+				}).Should(BeNumerically(">", 1))
+				attacker.Stop()
+
+				for result := range resultChannel {
+					metrics.Add(result)
+				}
+				metrics.Close()
+				Expect(metrics.Success * 100).To(BeNumerically("==", 0))
+			})
+		})
+	})
+
 	Context("when runs (until the deployment is finished or error rate > 50%)", func() {
 		var attacker *vegeta.Attacker
 		var resultChannel <-chan *vegeta.Result
@@ -85,7 +127,7 @@ var _ = Describe("Availability test", func() {
 		It(fmt.Sprintf("does not get request success rate less than %.2f%%", availabilitySuccessRateThreshold), func() {
 			appUri := "https://healthcheck." + helpers.GetAppsDomainZoneName() + "/?availability-test=" + helpers.GetResourceVersion()
 
-			attacker, resultChannel = loadTest(appUri, "/", availabilityTestRate)
+			attacker, resultChannel = loadTest(appUri, availabilityTestRate)
 			defer attacker.Stop()
 
 			var wg sync.WaitGroup

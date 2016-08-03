@@ -31,6 +31,10 @@
 			"Rev": "1eae515495e3938a7be17a8e1da9b13948a083c6"
 		},
 		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "3852dcfda249c2097355a6aabb199a28d97b30df"
+		},
+		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
 			"Rev": "281073eb9eb092240d33ef253c404f1cca550309"
 		},
@@ -116,6 +120,11 @@
 		},
 		{
 			"ImportPath": "github.com/onsi/gomega/format",
+			"Comment": "v1.0-91-g7ce781e",
+			"Rev": "7ce781ea776b2fd506491011353bded2e40c8467"
+		},
+		{
+			"ImportPath": "github.com/onsi/gomega/ghttp",
 			"Comment": "v1.0-91-g7ce781e",
 			"Rev": "7ce781ea776b2fd506491011353bded2e40c8467"
 		},
