@@ -9,6 +9,11 @@ resource "aws_elb" "cf_router" {
     "${aws_security_group.pingdom-probes-1.id}",
     "${aws_security_group.pingdom-probes-2.id}"
   ]
+  access_logs {
+    bucket = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-router"
+    interval = 5
+  }
 
   health_check {
     target = "HTTP:82/"
