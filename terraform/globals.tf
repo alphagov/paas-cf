@@ -104,3 +104,23 @@ variable "web_access_cidrs" {
   description = "CSV of CIDR addresses with access to "
   default     = ""
 }
+
+# List of Elastic Load Balancing Account ID to configure ELB access log policies
+# Provided by AWS in http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/enable-access-logs.html
+variable "elb_account_ids" {
+  default = {
+    us-east-1 = "127311923021"
+    us-west-1 = "027434742980"
+    us-west-2 = "797873946194"
+    eu-west-1 = "156460612806"
+    eu-central-1 = "054676820928"
+    ap-northeast-1 = "582318560864"
+    ap-northeast-2 = "600734575887"
+    ap-southeast-1 = "114774131450"
+    ap-southeast-2 = "783225319266"
+    ap-south-1 = "718504428378"
+    sa-east-1 = "507241528517"
+    us-gov-west-1 = "048591011584"
+    cn-north-1 = "638102146993"
+  }
+}
