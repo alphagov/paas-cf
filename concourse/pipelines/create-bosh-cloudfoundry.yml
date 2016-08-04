@@ -1738,34 +1738,10 @@ jobs:
                 CF_ADMIN=admin
                 CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
                 API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
-                RDS_BROKER_BACKUP_RETENTION_PERIOD=$($VAL_FROM_YAML jobs.rds_broker.properties.rds-broker.catalog.services.0.plans.0.rds_properties.backup_retention_period cf-manifest/cf-manifest.yml)
 
-                for var_name in CF_ADMIN CF_PASS API_ENDPOINT RDS_BROKER_BACKUP_RETENTION_PERIOD; do
+                for var_name in CF_ADMIN CF_PASS API_ENDPOINT; do
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
-
-      # FIXME: Remove this task once the retention is updated in all running instances
-      - task: update-rds-broker-backup-retention-period
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            DEPLOY_ENV: {{deploy_env}}
-          inputs:
-            - name: paas-cf
-            - name: config
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                . ./config/config.sh
-                . ./paas-cf/concourse/scripts/set_rds_backup_retention.sh "${DEPLOY_ENV}" "${RDS_BROKER_BACKUP_RETENTION_PERIOD}"
 
       - task: deploy-healthcheck
         config:
