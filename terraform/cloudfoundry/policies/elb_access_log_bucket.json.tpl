@@ -3,16 +3,10 @@
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${bucket_name}/*/AWSLogs/*/*"
-      ],
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${bucket_name}/*/AWSLogs/*/*",
       "Principal": {
-        "AWS": [
-          "${principal}"
-        ]
+        "AWS": "arn:aws:iam::${principal}:root"
       }
     }
   ]
