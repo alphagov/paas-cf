@@ -6,6 +6,11 @@ resource "aws_elb" "cf_cc" {
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",
   ]
+  access_logs {
+    bucket = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-cc"
+    interval = 5
+  }
 
   health_check {
     target = "HTTP:9022/info"
@@ -31,6 +36,11 @@ resource "aws_elb" "cf_uaa" {
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",
   ]
+  access_logs {
+    bucket = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-uaa"
+    interval = 5
+  }
 
   health_check {
     target = "TCP:8080"
@@ -56,6 +66,11 @@ resource "aws_elb" "cf_loggregator" {
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",
   ]
+  access_logs {
+    bucket = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-loggregator"
+    interval = 5
+  }
 
   health_check {
     target = "TCP:8080"
@@ -81,6 +96,11 @@ resource "aws_elb" "cf_doppler" {
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",
   ]
+  access_logs {
+    bucket = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-doppler"
+    interval = 5
+  }
 
   health_check {
     target = "TCP:8081"
