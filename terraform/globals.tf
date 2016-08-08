@@ -124,3 +124,8 @@ variable "elb_account_ids" {
     cn-north-1 = "638102146993"
   }
 }
+
+variable "assets_prefix" {
+  description = "Prefix for global assests like S3 buckets"
+  default = "gds-paas"
+}
