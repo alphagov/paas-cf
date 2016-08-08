@@ -49,6 +49,13 @@ lint_concourse:
 lint_ruby:
 	bundle exec rubocop -l --config rubocop.yml
 
+.PHONY: list_merge_keys
+list_merge_keys: ## List all GPG keys allowed to sign merge commits.
+	@for key in $$(cat .gpg-id); do \
+		printf "$${key}: "; \
+		gpg --list-keys --with-colons $$key 2> /dev/null | awk -F: '/^pub/ {found = 1; print $$10} END {if (found != 1) {print "*** not found in local keychain ***"}}'; \
+	done
+
 .PHONY: globals
 globals:
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
