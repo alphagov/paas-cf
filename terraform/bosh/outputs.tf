@@ -3,11 +3,11 @@ output "environment" {
 }
 
 output "zone0" {
-  value = "${var.zones.zone0}"
+  value = "${var.zones["zone0"]}"
 }
 
 output "zone1" {
-  value = "${var.zones.zone1}"
+  value = "${var.zones.["zone1"]}"
 }
 
 output "region" {
