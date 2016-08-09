@@ -10,8 +10,6 @@ export GOPATH
 TESTS_DIR="${1}"
 cd "${TESTS_DIR}"
 
-godep restore
-
 if [ -x ./run_tests.sh ]; then
   ./run_tests.sh
 else
