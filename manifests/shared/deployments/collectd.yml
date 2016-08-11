@@ -54,7 +54,6 @@ meta:
          Prefix "collectd."
          EscapeCharacter "_"
          SeparateInstances true
-         StoreRates false
          AlwaysAppendDS false
        </Node>
       </Plugin>
