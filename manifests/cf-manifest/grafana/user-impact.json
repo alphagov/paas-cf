@@ -59,6 +59,16 @@
               "refId": "A",
               "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.total_requests.rate), 60), 'Apps requests per minute')",
               "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), 60), 'Apps HTTP 4xx per minute')",
+              "textEditor": true
+            },
+            {
+              "refId": "C",
+              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), 60), 'Apps HTTP 5xx per minute')",
+              "textEditor": true
             }
           ],
           "timeFrom": null,
@@ -133,6 +143,16 @@
             {
               "refId": "A",
               "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.requests.completed)), '1min', 'sum', false), 'API requests per minute')"
+            },
+            {
+              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX)), '1min', 'sum', false), 'API HTTP 4xx per minute')",
+              "refId": "B",
+              "textEditor": true
+            },
+            {
+              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX)), '1min', 'sum', false), 'API HTTP 5xx per minute')",
+              "refId": "C",
+              "textEditor": true
             }
           ],
           "timeFrom": null,
@@ -168,174 +188,6 @@
         }
       ],
       "title": "Row"
-    },
-    {
-      "collapse": false,
-      "editable": true,
-      "height": "250px",
-      "panels": [
-        {
-          "aliasColors": {
-            "4xx Error rate": "#BF1B00",
-            "5xx Error Rate": "#EF843C"
-          },
-          "bars": false,
-          "datasource": "graphite",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "250",
-          "id": 1,
-          "isNew": true,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 6,
-          "stack": true,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "B",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), 60), 'Apps HTTP 4xx per minute')"
-            },
-            {
-              "refId": "A",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), 60), 'Apps HTTP 5xx per minute')"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "transparent": false,
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "datasource": "graphite",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "250",
-          "id": 7,
-          "isNew": true,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 6,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX)), '1min', 'sum', false), 'API HTTP 4xx per minute')"
-            },
-            {
-              "refId": "B",
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX)), '1min', 'sum', false), 'API HTTP 5xx per minute')"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            }
-          ]
-        }
-      ],
-      "title": "New row"
     },
     {
       "collapse": false,
