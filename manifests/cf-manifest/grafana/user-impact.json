@@ -44,7 +44,7 @@
           "lines": true,
           "linewidth": 2,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -57,23 +57,23 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.total_requests.rate), 60), 'Apps requests per minute')",
+              "target": "alias(sumSeries(stats.counters.cfstats.router.*.ops.responses.rate), 'Total')",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), 60), 'Apps HTTP 4xx per minute')",
-              "textEditor": true
+              "target": "aliasByNode(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), -2)",
+              "textEditor": false
             },
             {
               "refId": "C",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), 60), 'Apps HTTP 5xx per minute')",
-              "textEditor": true
+              "target": "aliasByNode(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), -2)",
+              "textEditor": false
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "App requests/sec",
           "tooltip": {
             "msResolution": false,
             "shared": true,
