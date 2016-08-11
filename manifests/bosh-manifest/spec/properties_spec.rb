@@ -19,7 +19,7 @@ RSpec.describe "manifest properties validations" do
     expect(bosh_properties["hm"]["director_account"]["password"]).to eq("BOSH_HM_DIRECTOR_PASSWORD")
   end
 
-  it "enables the health manager resurrector" do
-    expect(bosh_properties["hm"]["resurrector_enabled"]).to eq(true)
+  it "disables the health manager resurrector" do
+    expect(bosh_properties["hm"]["resurrector_enabled"]).to eq(false)
   end
 end

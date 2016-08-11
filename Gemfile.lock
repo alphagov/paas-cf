@@ -129,6 +129,3 @@ DEPENDENCIES
   rspec (~> 3.3)
   rubocop
   webmock (~> 1.24)
-
-BUNDLED WITH
-   1.12.5
