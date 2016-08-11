@@ -130,7 +130,7 @@
           "lines": true,
           "linewidth": 2,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -142,22 +142,23 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.requests.completed)), '1min', 'sum', false), 'API requests per minute')"
+              "target": "alias(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.*), 1)), 'Total')",
+              "textEditor": false
             },
             {
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX)), '1min', 'sum', false), 'API HTTP 4xx per minute')",
               "refId": "B",
-              "textEditor": true
+              "target": "aliasByNode(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX), 1)), -1)",
+              "textEditor": false
             },
             {
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX)), '1min', 'sum', false), 'API HTTP 5xx per minute')",
               "refId": "C",
+              "target": "aliasByNode(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX), 1)), -1)",
               "textEditor": true
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "API requests/sec",
           "tooltip": {
             "msResolution": true,
             "shared": true,
