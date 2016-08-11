@@ -71,10 +71,11 @@ jobs:
         local:
           users:
             - { name: admin, password: (( grab secrets.bosh_admin_password )) }
+            - { name: hm, password: (( grab secrets.bosh_hm_director_password )) }
 
     hm:
       director_account:
-        user: admin
+        user: hm
         password: (( grab secrets.bosh_hm_director_password ))
       resurrector_enabled: true
 
