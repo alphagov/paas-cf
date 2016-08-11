@@ -393,16 +393,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsDesired), 'Desired apps')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsDesired), 'Desired')"
             },
             {
               "refId": "B",
-              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsRunning), 'Running apps')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsRunning), 'Running')"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "Application Instances",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -415,7 +415,7 @@
           "yaxes": [
             {
               "format": "short",
-              "label": null,
+              "label": "LRPs",
               "logBase": 1,
               "max": null,
               "min": 0,
