@@ -53,27 +53,27 @@
           "targets": [
             {
               "refId": "A",
-              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.user)), 1), 5)",
+              "target": "aliasByNode(sumSeries(collectd.$Host.cpu.*.cpu.user), 5)",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.system)), 1), 5)",
+              "target": "aliasByNode(sumSeries(collectd.$Host.cpu.*.cpu.system), 5)",
               "textEditor": false
             },
             {
               "refId": "C",
-              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.wait)), 1), 5)",
+              "target": "aliasByNode(sumSeries(collectd.$Host.cpu.*.cpu.wait), 5)",
               "textEditor": false
             },
             {
               "refId": "D",
-              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.nice)), 1), 5)",
+              "target": "aliasByNode(sumSeries(collectd.$Host.cpu.*.cpu.nice), 5)",
               "textEditor": false
             },
             {
               "refId": "F",
-              "target": "aliasByNode(scaleToSeconds(sumSeries(derivative(collectd.$Host.cpu.*.cpu.steal)), 1), 5)",
+              "target": "aliasByNode(sumSeries(collectd.$Host.cpu.*.cpu.steal), 5)",
               "textEditor": false
             }
           ],
@@ -91,8 +91,8 @@
           },
           "yaxes": [
             {
-              "format": "short",
-              "label": null,
+              "format": "none",
+              "label": "Jiffies",
               "logBase": 1,
               "max": null,
               "min": 0,

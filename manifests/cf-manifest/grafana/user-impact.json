@@ -44,7 +44,7 @@
           "lines": true,
           "linewidth": 2,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -57,13 +57,23 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.total_requests.rate), 60), 'Apps requests per minute')",
+              "target": "alias(sumSeries(stats.counters.cfstats.router.*.ops.responses.rate), 'Total')",
+              "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasByNode(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), -2)",
+              "textEditor": false
+            },
+            {
+              "refId": "C",
+              "target": "aliasByNode(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), -2)",
               "textEditor": false
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "App requests/sec",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -120,7 +130,7 @@
           "lines": true,
           "linewidth": 2,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null as zero",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -132,12 +142,23 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.requests.completed)), '1min', 'sum', false), 'API requests per minute')"
+              "target": "alias(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.*), 1)), 'Total')",
+              "textEditor": false
+            },
+            {
+              "refId": "B",
+              "target": "aliasByNode(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX), 1)), -1)",
+              "textEditor": false
+            },
+            {
+              "refId": "C",
+              "target": "aliasByNode(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX), 1)), -1)",
+              "textEditor": true
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "API requests/sec",
           "tooltip": {
             "msResolution": true,
             "shared": true,
@@ -175,177 +196,7 @@
       "height": "250px",
       "panels": [
         {
-          "aliasColors": {
-            "4xx Error rate": "#BF1B00",
-            "5xx Error Rate": "#EF843C"
-          },
-          "bars": false,
-          "datasource": "graphite",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "250",
-          "id": 1,
-          "isNew": true,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 6,
-          "stack": true,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "B",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), 60), 'Apps HTTP 4xx per minute')"
-            },
-            {
-              "refId": "A",
-              "target": "alias(scale(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), 60), 'Apps HTTP 5xx per minute')"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "transparent": false,
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            }
-          ]
-        },
-        {
           "aliasColors": {},
-          "bars": false,
-          "datasource": "graphite",
-          "editable": true,
-          "error": false,
-          "fill": 1,
-          "grid": {
-            "threshold1": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "height": "250",
-          "id": 7,
-          "isNew": true,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "connected",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "span": 6,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX)), '1min', 'sum', false), 'API HTTP 4xx per minute')"
-            },
-            {
-              "refId": "B",
-              "target": "alias(summarize(derivative(sumSeries(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX)), '1min', 'sum', false), 'API HTTP 5xx per minute')"
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "value_type": "cumulative"
-          },
-          "type": "graph",
-          "xaxis": {
-            "show": true
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            }
-          ]
-        }
-      ],
-      "title": "New row"
-    },
-    {
-      "collapse": false,
-      "editable": true,
-      "height": "250px",
-      "panels": [
-        {
-          "aliasColors": {
-            "Response times mean 90": "#E0F9D7"
-          },
           "bars": false,
           "datasource": "graphite",
           "editable": true,
@@ -372,7 +223,7 @@
           "lines": true,
           "linewidth": 2,
           "links": [],
-          "nullPointMode": "connected",
+          "nullPointMode": "null",
           "percentage": false,
           "pointradius": 5,
           "points": false,
@@ -384,12 +235,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(averageSeries(stats.timers.cfstats.router.*.http.responsetimes.http.mean_90), 'Router response time')"
+              "target": "aliasByNode(stats.timers.cfstats.router.*.http.responsetimes.http.upper_90, 4)"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "Router 90th percentile response times",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -401,7 +252,7 @@
           },
           "yaxes": [
             {
-              "format": "short",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -458,12 +309,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(maxSeries(stats.gauges.cfstats.api.*.ops.cc.total_users), 'Total users registered on CC')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.api.*.ops.cc.total_users), 'Total')"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "Users registered in CC",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -476,7 +327,7 @@
           "yaxes": [
             {
               "format": "short",
-              "label": null,
+              "label": "Users",
               "logBase": 1,
               "max": null,
               "min": 0,
@@ -541,16 +392,16 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsDesired), 'Desired apps')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsDesired), 'Desired')"
             },
             {
               "refId": "B",
-              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsRunning), 'Running apps')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.database.*.ops.bbs.LRPsRunning), 'Running')"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "Application Instances",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -563,7 +414,7 @@
           "yaxes": [
             {
               "format": "short",
-              "label": null,
+              "label": "LRPs",
               "logBase": 1,
               "max": null,
               "min": 0,
@@ -619,12 +470,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(maxSeries(stats.gauges.cfstats.api.*.ops.cc.job_queue_length.total), 'CC job queue length')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.api.*.ops.cc.job_queue_length.total), 'Total')"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "CC Job Queue",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -637,7 +488,7 @@
           "yaxes": [
             {
               "format": "short",
-              "label": null,
+              "label": "Jobs",
               "logBase": 1,
               "max": null,
               "min": 0,
@@ -655,10 +506,92 @@
         }
       ],
       "title": "New row"
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "datasource": "graphite",
+          "editable": true,
+          "error": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "id": 10,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "aliasByNode(sumSeriesWithWildcards(collectd.cell_*.memory.memory.{free,cached}, 4), 1)",
+              "textEditor": false
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Cell free memory (including cache)",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "show": true
+          },
+          "yaxes": [
+            {
+              "format": "bytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "links": []
+        }
+      ],
+      "title": "Cell memory"
     }
   ],
   "time": {
-    "from": "now-1h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
