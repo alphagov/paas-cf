@@ -1,4 +1,5 @@
 require 'erb'
+require 'json'
 require 'bosh/template/evaluation_context'
 
 class Hash
