@@ -28,8 +28,6 @@ meta:
 jobs:
 - name: bosh
   properties:
-    hm:
-      resurrector_enabled: true
     aws: (( grab meta.aws.bosh_properties ))
     dns: null
 
