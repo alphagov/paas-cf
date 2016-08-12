@@ -8,8 +8,14 @@ help:
 SHELLCHECK=shellcheck
 YAMLLINT=yamllint
 
+DEPLOY_ENV_MAX_LENGTH=15
+DEPLOY_ENV_VALID_LENGTH=$(shell if [ $${\#DEPLOY_ENV} -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
+DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
+
 check-env-vars:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
+	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
+	$(if ${DEPLOY_ENV_VALID_CHARS},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) must use only alphanumeric chars and hyphens, otherwise derived names will be malformatted))
 
 test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby ## Run linting tests
 

@@ -65,7 +65,7 @@ state files).
 [instance profiles]: http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
 [aws-account-wide-terraform]: https://github.gds/government-paas/aws-account-wide-terraform
 
-* Declare you environment name using the variable DEPLOY_ENV. It must be 18 characters maximum and contain only alphanumeric characters and hyphens.
+* Declare your environment name using the variable DEPLOY_ENV.
 
 ```
 $ export DEPLOY_ENV=environment-name
