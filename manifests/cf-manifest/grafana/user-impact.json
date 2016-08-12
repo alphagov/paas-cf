@@ -470,12 +470,12 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(maxSeries(stats.gauges.cfstats.api.*.ops.cc.job_queue_length.total), 'CC job queue length')"
+              "target": "alias(maxSeries(stats.gauges.cfstats.api.*.ops.cc.job_queue_length.total), 'Total')"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "",
+          "title": "CC Job Queue",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -488,7 +488,7 @@
           "yaxes": [
             {
               "format": "short",
-              "label": null,
+              "label": "Jobs",
               "logBase": 1,
               "max": null,
               "min": 0,
