@@ -1,6 +1,6 @@
 require 'fileutils'
 
-RSpec.describe "tag-release.sh", :type => :aruba do
+RSpec.describe "tag_release.sh", :type => :aruba do
   before(:each) do
     # check the version of the git command
     run_simple("git --version")
@@ -43,7 +43,7 @@ RSpec.describe "tag-release.sh", :type => :aruba do
         clone_repository("paas-cf")
         bash_block("cd paas-cf && git checkout previous-0.0.2")
 
-        run("./tag-release.sh next- test_aws_account test_env \"previous-*\"")
+        run("./tag_release.sh next- test_aws_account test_env \"previous-*\"")
         expect(last_command_started).to have_exit_status(0)
       end
 
@@ -81,7 +81,7 @@ RSpec.describe "tag-release.sh", :type => :aruba do
       end
 
       it("should skip and not fail while promoting tag to 'next-*'") do
-        run("./tag-release.sh next- test_aws_account test_env \"previous-*\"")
+        run("./tag_release.sh next- test_aws_account test_env \"previous-*\"")
         expect(last_command_started).to have_exit_status(0)
         last_command_output = last_command_started.output.strip
           
