@@ -6,8 +6,8 @@ require 'yaml'
 manifest_file = ENV.fetch("CF_MANIFEST")
 manifest = YAML.load_file(manifest_file)
 
-admin_user = File.read('admin-creds/username').strip()
-admin_password = File.read('admin-creds/password').strip()
+admin_user = File.read('admin-creds/username').strip
+admin_password = File.read('admin-creds/password').strip
 
 api_url = manifest.fetch("properties").fetch("cc").fetch("srv_api_uri")
 apps_domain = manifest.fetch("properties").fetch("app_domains").first

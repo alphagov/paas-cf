@@ -70,7 +70,7 @@ class SecretGenerator
       # Get byte-representation of absolute value of val
       data = val.to_s(2)
 
-      first_byte = data[0,1].unpack("c").first
+      first_byte = data[0, 1].unpack("c").first
       if val < 0
         # For negative values, highest bit must be set
         data[0] = [0x80 & first_byte].pack("c")

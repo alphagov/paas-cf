@@ -6,7 +6,7 @@ module ManifestHelpers
     @@manifest_with_defaults ||= load_default_manifest
   end
 
-  private
+private
 
   def load_default_manifest
     output, error, status = Open3.capture3(
@@ -30,7 +30,7 @@ module ManifestHelpers
   def deep_freeze(object)
     case object
     when Hash
-      object.each { |_k,v| deep_freeze(v) }
+      object.each { |_k, v| deep_freeze(v) }
     when Array
       object.each { |v| deep_freeze(v) }
     end

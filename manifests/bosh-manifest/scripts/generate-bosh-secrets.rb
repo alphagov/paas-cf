@@ -4,15 +4,13 @@ require 'optparse'
 require 'yaml'
 require File.expand_path("../../../shared/lib/secret_generator", __FILE__)
 
-generator = SecretGenerator.new({
-  "bosh_postgres_password" => :simple,
+generator = SecretGenerator.new("bosh_postgres_password" => :simple,
   "bosh_nats_password" => :simple,
   "bosh_registry_password" => :simple,
   "bosh_redis_password" => :simple,
   "bosh_hm_director_password" => :simple,
   "bosh_admin_password" => :simple,
-  "bosh_vcap_password" => :sha512_crypted,
-})
+  "bosh_vcap_password" => :sha512_crypted)
 
 OptionParser.new do |opts|
   opts.on('--existing-secrets FILE') do |file|

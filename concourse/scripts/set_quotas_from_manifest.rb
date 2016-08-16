@@ -14,7 +14,7 @@ class QuotasSetter
     end
   end
 
-  private
+private
 
   def create_update_quota(name, definition)
     args = []

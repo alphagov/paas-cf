@@ -2,7 +2,7 @@ require 'net/http'
 require 'json'
 
 class PullRequest
-  BASE_URL = 'https://api.github.com/repos'
+  BASE_URL = 'https://api.github.com/repos'.freeze
 
   def initialize(pr_number)
     @pr_number = pr_number
@@ -43,9 +43,9 @@ class PullRequest
 
   def commit_message
     <<-EOT
-Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fetch("login")}/#{head_ref}
+Merge pull request ##{@pr_number} from #{details.fetch('head').fetch('user').fetch('login')}/#{head_ref}
 
-#{details.fetch("title")}
+#{details.fetch('title')}
     EOT
   end
 
@@ -82,7 +82,7 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
     info "Done."
   end
 
-  private
+private
 
   def read_repo_from_git
     details = `git remote -v`
@@ -118,7 +118,7 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
 
   def get_json(url)
     response = http_get(url)
-    if response.is_a?(Net::HTTPForbidden) and response.body =~ /API rate limit exceeded for/
+    if response.is_a?(Net::HTTPForbidden) && response.body =~ /API rate limit exceeded for/
       raise "Github rate-limit exceeded. To avoid this create a Github API token with public access and put it in GITHUB_API_TOKEN env var."
     end
 
@@ -132,9 +132,9 @@ Merge pull request ##{@pr_number} from #{details.fetch("head").fetch("user").fet
   def http_get(url)
     uri = URI.parse(url)
     if ENV["GITHUB_API_TOKEN"]
-      uri.query = [uri.query, "access_token=#{ENV["GITHUB_API_TOKEN"]}"].compact.join('&')
+      uri.query = [uri.query, "access_token=#{ENV['GITHUB_API_TOKEN']}"].compact.join('&')
     end
-    Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https') do |http|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
       request = Net::HTTP::Get.new(uri.request_uri)
       return http.request(request)
     end

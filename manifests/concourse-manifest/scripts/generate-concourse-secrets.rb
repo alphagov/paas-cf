@@ -4,10 +4,8 @@ require 'optparse'
 require 'yaml'
 require File.expand_path("../../../shared/lib/secret_generator", __FILE__)
 
-generator = SecretGenerator.new({
-  "concourse_nats_password" => :simple,
-  "concourse_vcap_password" => :sha512_crypted,
-})
+generator = SecretGenerator.new("concourse_nats_password" => :simple,
+  "concourse_vcap_password" => :sha512_crypted)
 
 OptionParser.new do |opts|
   opts.on('--existing-secrets FILE') do |file|

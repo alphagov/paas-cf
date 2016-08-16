@@ -12,7 +12,7 @@ module ManifestHelpers
     @@fixture.fetch(key.to_s)
   end
 
-  private
+private
 
   def render(arg_list)
     output, error, status = Open3.capture3(arg_list.join(' '))
@@ -25,7 +25,7 @@ module ManifestHelpers
   end
 
   def render_grafana_dashboards_manifest
-    output, _ = Open3.capture2([
+    output, = Open3.capture2([
       File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__),
       File.expand_path("../../../grafana", __FILE__),
     ].join(' '))
@@ -61,8 +61,8 @@ module ManifestHelpers
     # without risk of state leaking.
     deep_freeze(YAML.load(manifest + cloud_config))
 
-    ensure
-      remove_grafana_dashboards_manifest
+  ensure
+    remove_grafana_dashboards_manifest
   end
 
   def load_runtime_config
@@ -85,7 +85,7 @@ module ManifestHelpers
   def deep_freeze(object)
     case object
     when Hash
-      object.each { |_k,v| deep_freeze(v) }
+      object.each { |_k, v| deep_freeze(v) }
     when Array
       object.each { |v| deep_freeze(v) }
     end

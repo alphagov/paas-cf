@@ -33,7 +33,7 @@ RSpec.describe "Hash" do
         'properties' =>
           { 'a' =>
             { 'b' =>
-              {'c' => 'foo'}
+              { 'c' => 'foo' }
             }
           }
       }
@@ -68,7 +68,7 @@ end
 
 RSpec.describe "render_template" do
   let(:example_spec) {
-    %Q{
+    %{
 ---
 properties:
   a.b.c:
@@ -83,7 +83,7 @@ properties:
   }
 
   let(:example_manifest) {
-    %Q{
+    %{
 ---
 properties:
   a:
@@ -138,4 +138,3 @@ a.b.c is <%= p('a.b.c') %> and a.b.d is <%= p('a.b.d') %> and the ip is <%= disc
     expect(result).to eq("d is y")
   end
 end
-

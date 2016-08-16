@@ -1,5 +1,4 @@
 RSpec.describe "the global update block" do
-
   let(:manifest) { manifest_with_defaults }
 
   describe "in order to run parallel deployment by default" do
@@ -7,15 +6,13 @@ RSpec.describe "the global update block" do
       expect(manifest["update"]["serial"]).to be false
     end
   end
-
 end
 
 RSpec.describe "the jobs definitions block" do
-
   let(:jobs) { manifest_with_defaults["jobs"] }
 
   def get_job(job_name)
-    jobs.select{ |j| j["name"] == job_name}.first
+    jobs.select { |j| j["name"] == job_name }.first
   end
 
   matcher :be_updated_serially do
@@ -26,7 +23,7 @@ RSpec.describe "the jobs definitions block" do
 
   matcher :be_ordered_before do |later_job|
     match do |earlier_job|
-      jobs.index {|j| j["name"] == earlier_job } < jobs.index {|j| j["name"] == later_job }
+      jobs.index { |j| j["name"] == earlier_job } < jobs.index { |j| j["name"] == later_job }
     end
   end
 
@@ -89,15 +86,15 @@ RSpec.describe "the jobs definitions block" do
   end
 
   it "should list consul_agent first if present" do
-    jobs_with_consul = jobs.select{ |j|
-      not j["templates"].select{ |t|
+    jobs_with_consul = jobs.select { |j|
+      not j["templates"].select { |t|
         t["name"] == "consul_agent"
       }.empty?
     }
 
-    jobs_with_consul.each{ |j|
+    jobs_with_consul.each { |j|
       expect(j["templates"].first["name"]).to eq("consul_agent"),
-        "expected '#{j["name"]}' job to list 'consul_agent' first"
+        "expected '#{j['name']}' job to list 'consul_agent' first"
     }
   end
 end

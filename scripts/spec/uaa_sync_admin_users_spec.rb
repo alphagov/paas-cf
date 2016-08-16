@@ -2,7 +2,6 @@ require 'uaa_sync_admin_users'
 require 'mail_credentials_helper'
 
 RSpec.describe UaaSyncAdminUsers do
-
   def user_uuid(username)
     "__user__#{username}__uuid__"
   end
@@ -11,19 +10,19 @@ RSpec.describe UaaSyncAdminUsers do
     "__group__#{groupname}__uuid__"
   end
 
-  def json_admin_token_response()
+  def json_admin_token_response
     reply = {
-      :access_token => "test_access_token",
-      :token_type => "bearer",
-      :scope => "clients.read password.write clients.secret clients.write uaa.admin scim.write scim.read",
-      :expires_in => 98765
+      access_token: "test_access_token",
+      token_type: "bearer",
+      scope: "clients.read password.write clients.secret clients.write uaa.admin scim.write scim.read",
+      expires_in: 98765
     }
     CF::UAA::Util.json(reply)
   end
 
 
   def json_query_responses(json_resources)
-    %Q{
+    %{
       {
         "totalResults" : #{json_resources.length},
         "resources" : [
@@ -40,7 +39,7 @@ RSpec.describe UaaSyncAdminUsers do
 
   def json_user_groups_response(groups)
     groups.map { |g|
-      %Q{
+      %{
         {
         "type" : "DIRECT",
           "display" : "#{g}",
@@ -51,7 +50,7 @@ RSpec.describe UaaSyncAdminUsers do
   end
 
   def json_group_response(groupname, members = [])
-    %Q{
+    %{
       {
         "zoneId" : "uaa",
         "schemas" : [
@@ -65,25 +64,23 @@ RSpec.describe UaaSyncAdminUsers do
         },
         "displayName" : "#{groupname}",
         "members" : [
-          #{
-            members.map { |m|
-              %Q{
+          #{members.map { |m|
+              %{
               {
                 "value" : "#{user_uuid(m)}",
                   "type" : "USER",
                   "origin" : "uaa"
                 }
                   }
-            }.join(",\n")
-          }
+            }.join(",\n")}
         ]
       }
       }
   end
 
-  def json_user_response(username, email, groups=[], hours_since_creation=24)
+  def json_user_response(username, email, groups = [], hours_since_creation = 24)
     change_time = (Time.now - hours_since_creation * 60 * 60).iso8601
-    %Q{
+    %{
     {
       "userName" : "#{username}",
       "id" : "#{user_uuid(username)}",
@@ -139,11 +136,11 @@ RSpec.describe UaaSyncAdminUsers do
       WebMock.stub_request(:post, %r{https://.+:.+@[^/]+/oauth/token}).
         to_return(
           status: 200,
-          headers: {"content-type" => "application/json"},
-          body: json_admin_token_response(),
+          headers: { "content-type" => "application/json" },
+          body: json_admin_token_response,
       )
 
-      uaa_sync_admin_users.request_token()
+      uaa_sync_admin_users.request_token
     end
 
     it "connects and authenticates and gets a token" do
@@ -153,8 +150,8 @@ RSpec.describe UaaSyncAdminUsers do
     context "when updating from a list with existing and new users" do
       let(:users) {
         [
-          {:username => "existing_user", :email => "existing_user@example.com", :password => "123"},
-          {:username => "new_user", :email => "new_user@example.com", :password => "123"},
+          { username: "existing_user", email: "existing_user@example.com", password: "123" },
+          { username: "new_user", email: "new_user@example.com", password: "123" },
         ]
       }
 
@@ -162,14 +159,14 @@ RSpec.describe UaaSyncAdminUsers do
         WebMock.stub_request(:get, %r{^#{target}/Users.*}).
           to_return(
             status: 200,
-            headers: {"content-type" => "application/json"},
+            headers: { "content-type" => "application/json" },
             body: json_query_responses([])
         )
-        [ "admin", "existing_user", "removed_user" ].each { |user_to_match|
+        %w(admin existing_user removed_user).each { |user_to_match|
           WebMock.stub_request(:get, %r{#{target}/Users\?filter=username eq "#{user_to_match}".*}).
             to_return(
               status: 200,
-              headers: {"content-type" => "application/json"},
+              headers: { "content-type" => "application/json" },
               body: json_query_responses([
                 json_user_response(user_to_match, "#{user_to_match}@example.com"),
               ])
@@ -177,17 +174,17 @@ RSpec.describe UaaSyncAdminUsers do
           WebMock.stub_request(:get, %r{#{target}/Users\?filter=id eq "#{user_uuid(user_to_match)}".*}).
             to_return(
               status: 200,
-              headers: {"content-type" => "application/json"},
+              headers: { "content-type" => "application/json" },
               body: json_query_responses([
                 json_user_response(user_to_match, "#{user_to_match}@example.com"),
               ])
           )
         }
-        [ "test_user_1", "test_user_2" ].each { |user_to_match|
+        %w(test_user_1 test_user_2).each { |user_to_match|
           WebMock.stub_request(:get, %r{#{target}/Users\?filter=id eq "#{user_uuid(user_to_match)}".*}).
             to_return(
               status: 200,
-              headers: {"content-type" => "application/json"},
+              headers: { "content-type" => "application/json" },
               body: json_query_responses([
                 json_user_response(user_to_match, "#{user_to_match}@example.com", [], 1),
               ])
@@ -199,7 +196,7 @@ RSpec.describe UaaSyncAdminUsers do
           ).
           to_return(
             status: 200,
-            headers: {"content-type" => "application/json"},
+            headers: { "content-type" => "application/json" },
             body: json_user_response("new_user", "new_user@example.com"),
           )
 
@@ -207,28 +204,27 @@ RSpec.describe UaaSyncAdminUsers do
           WebMock.stub_request(:get, %r{^#{target}/Groups\?filter=displayName eq "#{group_name}".*}).
             to_return(
               status: 200,
-              headers: {"content-type" => "application/json"},
+              headers: { "content-type" => "application/json" },
               body: json_query_responses([
-                json_group_response(group_name, ["admin", "existing_user", "removed_user", "test_user_1", "test_user_2"])
+                json_group_response(group_name, %w(admin existing_user removed_user test_user_1 test_user_2))
               ])
             )
           WebMock.stub_request(:put, %r{^#{target}/Groups/#{group_uuid(group_name)}$}).
             to_return(
               status: 200,
-              headers: {"content-type" => "application/json"},
-              body: json_group_response(group_name, ["admin", "existing_user", "new_user", "removed_user"])
+              headers: { "content-type" => "application/json" },
+              body: json_group_response(group_name, %w(admin existing_user new_user removed_user))
           )
         }
 
         WebMock.stub_request(:delete, "#{target}/Users/__user__removed_user__uuid__").
           to_return(
             status: 200,
-            headers: {"content-type" => "application/json"},
+            headers: { "content-type" => "application/json" },
             body: json_user_response("removed_user", "removed_user@example.com"),
         )
 
         @created_users, @deleted_users = uaa_sync_admin_users.update_admin_users(users)
-
       end
 
       it "creates only the new users" do
@@ -291,12 +287,10 @@ RSpec.describe UaaSyncAdminUsers do
 
       it "returns created and deleted users" do
         expect(@created_users.length).to be(1)
-        expect(@created_users[0]).to include(:username => "new_user")
+        expect(@created_users[0]).to include(username: "new_user")
         expect(@deleted_users.length).to be(1)
-        expect(@deleted_users[0]).to include(:username => "removed_user")
+        expect(@deleted_users[0]).to include(username: "removed_user")
       end
     end
   end
-
 end
-

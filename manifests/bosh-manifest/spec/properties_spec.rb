@@ -1,7 +1,7 @@
 RSpec.describe "manifest properties validations" do
   let(:manifest) { manifest_with_defaults }
   let(:properties) { manifest.fetch("properties") }
-  let(:bosh_job) { manifest.fetch("jobs").select{|x| x["name"] == "bosh"}.first }
+  let(:bosh_job) { manifest.fetch("jobs").select { |x| x["name"] == "bosh" }.first }
   let(:bosh_properties) { properties.merge(bosh_job["properties"]) }
 
   it "uses local user management" do

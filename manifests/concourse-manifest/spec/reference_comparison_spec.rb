@@ -44,5 +44,4 @@ RSpec.describe "manifest generation" do
       manifest_with_defaults["jobs"].first["properties"]["basic_auth_password"]
     ).to eq(fixtures["secrets"]["concourse_atc_password"])
   end
-
 end

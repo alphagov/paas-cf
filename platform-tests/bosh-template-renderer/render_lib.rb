@@ -6,7 +6,7 @@ class Hash
   def dig(dotted_path)
     key, rest = dotted_path.split '.', 2
     match = self[key]
-    if !rest or match.nil?
+    if !rest || match.nil?
       return match
     else
       return match.dig(rest)
@@ -42,20 +42,20 @@ def render_template(template, spec, manifest, job = nil)
   job_spec["properties"] = {}
 
   if manifest["properties"]
-    job_spec["properties"] = manifest["properties"].clone()
+    job_spec["properties"] = manifest["properties"].clone
   end
 
   if job
-    job_properties = manifest["jobs"].select{ |j| j["name"] == job }.first["properties"].clone()
+    job_properties = manifest["jobs"].select { |j| j["name"] == job }.first["properties"].clone
     job_spec["properties"].merge!(job_properties)
   end
 
   job_spec.populate_default_properties_from_spec(spec)
 
   # Populate the network
-  job_spec["networks"] =  {"cf1" => {"ip" => "127.0.0.1"}}
+  job_spec["networks"] = { "cf1" => { "ip" => "127.0.0.1" } }
 
   context = Bosh::Template::EvaluationContext.new(job_spec)
   erb = ERB.new(template)
-  return erb.result(context.get_binding)
+  erb.result(context.get_binding)
 end

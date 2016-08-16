@@ -6,22 +6,22 @@ Vagrant.require_version ">= 1.8.0"
 AWS_ACCOUNT = ENV.fetch("AWS_ACCOUNT", "dev")
 AWS_ACCOUNT_DATA = {
   "dev" => {
-    :subnet_id => "subnet-d55defe8", # us-east-1e in default VPC, 172.31.32.0/20 range
-    :security_group => "sg-99e0c0e0", # "Bootstrap Concourse" security group
+    subnet_id: "subnet-d55defe8", # us-east-1e in default VPC, 172.31.32.0/20 range
+    security_group: "sg-99e0c0e0", # "Bootstrap Concourse" security group
   },
   "ci" => {
-    :subnet_id => "subnet-68bb7e30", # us-east-1a in default VPC, 172.31.16.0/20 range
-    :security_group => "sg-23e1c15a", # "Bootstrap Concourse" security group
+    subnet_id: "subnet-68bb7e30", # us-east-1a in default VPC, 172.31.16.0/20 range
+    security_group: "sg-23e1c15a", # "Bootstrap Concourse" security group
   },
   "staging" => {
-    :subnet_id => "subnet-9034fbc8", # us-east-1c in default VPC, 172.31.16.0/20 range
-    :security_group => "sg-87e1c1fe", # "Bootstrap Concourse" security group
+    subnet_id: "subnet-9034fbc8", # us-east-1c in default VPC, 172.31.16.0/20 range
+    security_group: "sg-87e1c1fe", # "Bootstrap Concourse" security group
   },
   "prod" => {
-    :subnet_id => "subnet-bc34fbe4", # us-east-1a in default VPC, 172.31.16.0/20 range
-    :security_group => "sg-14e2c26d", # "Bootstrap Concourse" security group
+    subnet_id: "subnet-bc34fbe4", # us-east-1a in default VPC, 172.31.16.0/20 range
+    security_group: "sg-14e2c26d", # "Bootstrap Concourse" security group
   },
-}
+}.freeze
 AWS_ACCOUNT_VARIABLES = AWS_ACCOUNT_DATA.fetch(AWS_ACCOUNT)
 
 Vagrant.configure(2) do |config|
@@ -30,8 +30,8 @@ Vagrant.configure(2) do |config|
   Dir.glob("./post-deploy.d/*").sort.each do |post_deploy_file|
     config.vm.provision "shell" do |s|
       s.privileged = true
-      s.env = ENV.select {
-        |key| ['CONCOURSE_ATC_PASSWORD', 'CONCOURSE_ATC_USER'].include? key
+      s.env = ENV.select { |key|
+        %w(CONCOURSE_ATC_PASSWORD CONCOURSE_ATC_USER).include? key
       }
       s.name = post_deploy_file
       s.path = post_deploy_file
@@ -63,5 +63,4 @@ Vagrant.configure(2) do |config|
     # Fix issue on osx: https://github.com/mitchellh/vagrant/issues/5401#issuecomment-115240904
     override.nfs.functional = false
   end
-
 end

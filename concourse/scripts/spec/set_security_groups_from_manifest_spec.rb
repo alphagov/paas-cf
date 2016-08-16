@@ -4,7 +4,8 @@ RSpec.describe SecurityGroupsSetter do
   let(:security_group_definitions) { [] }
   let(:default_running_security_groups) { [] }
   let(:default_staging_security_groups) { [] }
-  let(:manifest) {{
+  let(:manifest) {
+    {
     "properties" => {
       "cc" => {
         "security_group_definitions" => security_group_definitions,
@@ -43,17 +44,16 @@ OK
       end
 
       it "creates the security groups" do
-        dns_rules = [{"protocol" => "tcp", "destination" => "10.0.0.2", "port" => "udp"}]
-        smtp_rules = [{"protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25}]
-        security_group_definitions << {"name" => "dns", "rules" => dns_rules}
-        security_group_definitions << {"name" => "smtp", "rules" => smtp_rules}
+        dns_rules = [{ "protocol" => "tcp", "destination" => "10.0.0.2", "port" => "udp" }]
+        smtp_rules = [{ "protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25 }]
+        security_group_definitions << { "name" => "dns", "rules" => dns_rules }
+        security_group_definitions << { "name" => "smtp", "rules" => smtp_rules }
 
         expect_cf_sg_create("dns", dns_rules)
         expect_cf_sg_create("smtp", smtp_rules)
 
         subject.apply!
       end
-
     end
 
     context "when some security groups exist" do
@@ -72,10 +72,10 @@ OK
           EOT
         end
 
-        @dns_rules = [{"protocol" => "tcp", "destination" => "10.0.0.2", "port" => "udp"}]
-        @smtp_rules = [{"protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25}]
-        security_group_definitions << {"name" => "dns", "rules" => @dns_rules}
-        security_group_definitions << {"name" => "smtp", "rules" => @smtp_rules}
+        @dns_rules = [{ "protocol" => "tcp", "destination" => "10.0.0.2", "port" => "udp" }]
+        @smtp_rules = [{ "protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25 }]
+        security_group_definitions << { "name" => "dns", "rules" => @dns_rules }
+        security_group_definitions << { "name" => "smtp", "rules" => @smtp_rules }
       end
 
       it "updates an existing group" do
@@ -91,7 +91,6 @@ OK
   end
 
   describe "binding default security groups" do
-
     it "binds the default running security groups" do
       default_running_security_groups << "foo" << "bar"
       expect_cf_bind_sg("running", "foo")
@@ -116,9 +115,11 @@ OK
       system("exit 0") # setup $?
     end
   end
+
   def expect_cf_sg_create(name, rules)
     expect_cf_sg_write(name, rules, 'create-security-group')
   end
+
   def expect_cf_sg_update(name, rules)
     expect_cf_sg_write(name, rules, 'update-security-group')
   end

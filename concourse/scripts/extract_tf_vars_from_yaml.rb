@@ -10,16 +10,16 @@ require 'yaml'
 def process_yaml(yaml_tree, prefix_chain)
   case yaml_tree
   when Hash
-    yaml_tree.each { |k,v|
+    yaml_tree.each { |k, v|
       process_yaml(v, prefix_chain + [k])
     }
   when Array
-    yaml_tree.each_with_index { |v,i|
-      if v.instance_of? Hash and v['name']
-        name = v['name']
-      else
-        name = i
-      end
+    yaml_tree.each_with_index { |v, i|
+      name = if v.instance_of?(Hash) && v['name']
+               v['name']
+             else
+               i
+             end
       process_yaml(v, prefix_chain + [name])
     }
   else
