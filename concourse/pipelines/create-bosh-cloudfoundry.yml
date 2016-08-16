@@ -832,7 +832,6 @@ jobs:
               - -c
               - |
                 ./paas-cf/manifests/shared/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
-                /bin/cat bosh-manifest/bosh-manifest.yml
         on_success:
           put: bosh-manifest
           params:
