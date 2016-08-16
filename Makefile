@@ -53,7 +53,7 @@ lint_concourse:
 
 .PHONY: lint_ruby
 lint_ruby:
-	bundle exec govuk-lint-ruby -l
+	bundle exec govuk-lint-ruby
 
 .PHONY: list_merge_keys
 list_merge_keys: ## List all GPG keys allowed to sign merge commits.
