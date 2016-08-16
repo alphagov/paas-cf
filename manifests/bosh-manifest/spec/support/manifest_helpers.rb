@@ -1,9 +1,15 @@
+require 'singleton'
 require 'open3'
 require 'yaml'
 
 module ManifestHelpers
+  class Cache
+    include Singleton
+    attr_accessor :manifest_with_defaults
+  end
+
   def manifest_with_defaults
-    @@manifest_with_defaults ||= load_default_manifest
+    Cache.instance.manifest_with_defaults ||= load_default_manifest
   end
 
 private

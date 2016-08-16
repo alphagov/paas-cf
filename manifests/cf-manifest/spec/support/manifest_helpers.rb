@@ -1,15 +1,22 @@
 require 'open3'
 require 'yaml'
+require 'singleton'
+
 
 module ManifestHelpers
-  def manifest_with_defaults
-    @@manifest_with_defaults ||= load_default_manifest
+  class Cache
+    include Singleton
+    attr_accessor :manifest_with_defaults
+    attr_accessor :terraform_fixture
   end
 
+  def manifest_with_defaults
+    Cache.instance.manifest_with_defaults ||= load_default_manifest
+  end
 
   def terraform_fixture(key)
-    @@fixture ||= load_terraform_fixture.fetch('terraform_outputs')
-    @@fixture.fetch(key.to_s)
+    Cache.instance.terraform_fixture ||= load_terraform_fixture.fetch('terraform_outputs')
+    Cache.instance.terraform_fixture.fetch(key.to_s)
   end
 
 private
