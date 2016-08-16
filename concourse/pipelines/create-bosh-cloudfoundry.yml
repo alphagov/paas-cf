@@ -2122,7 +2122,7 @@ jobs:
                 echo \$TAG_PREFIX not set, skipping
                 exit 0
               fi
-              paas-cf/concourse/scripts/tag-release.sh \
+              paas-cf/concourse/scripts/tag_release.sh \
                 ${TAG_PREFIX} ${aws_account} ${deploy_env} ${TAG_FILTER}
 
   - name: pipeline-unlock

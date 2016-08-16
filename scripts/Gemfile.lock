@@ -78,6 +78,3 @@ DEPENDENCIES
   mail
   rspec (~> 3.3)
   webmock (~> 1.24)
-
-BUNDLED WITH
-   1.12.5
