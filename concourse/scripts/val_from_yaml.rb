@@ -22,8 +22,8 @@ class PropertyTree
                      tree[current_key.to_i]
                    else # if not, search for a element with `name: current_key`
                      tree.select { |x| x.is_a?(Hash) && x['name'] == current_key }.first
-                                end
-    end
+                   end
+                 end
     if not next_level.nil?
       recursive_get(next_level, next_keys)
     end
