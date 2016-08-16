@@ -12,13 +12,14 @@ generator = SecretGenerator.new("bosh_postgres_password" => :simple,
   "bosh_admin_password" => :simple,
   "bosh_vcap_password" => :sha512_crypted)
 
-OptionParser.new do |opts|
+option_parser = OptionParser.new do |opts|
   opts.on('--existing-secrets FILE') do |file|
     existing_secrets = YAML.load_file(file)
     # An empty file parses as false
     generator.existing_secrets = existing_secrets["secrets"] if existing_secrets
   end
-end.parse!
+end
+option_parser.parse!
 
 output = { "secrets" => generator.generate }
 puts output.to_yaml

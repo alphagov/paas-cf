@@ -35,13 +35,14 @@ generator = SecretGenerator.new("vcap_password" => :sha512_crypted,
   "rds_broker_state_encryption_key" => :simple,
   "ssh_proxy_host_key" => :ssh_key)
 
-OptionParser.new do |opts|
+option_parser = OptionParser.new do |opts|
   opts.on('--existing-secrets FILE') do |file|
     existing_secrets = YAML.load_file(file)
     # An empty file parses as false
     generator.existing_secrets = existing_secrets["secrets"] if existing_secrets
   end
-end.parse!
+end
+option_parser.parse!
 
 output = { "secrets" => generator.generate }
 puts output.to_yaml
