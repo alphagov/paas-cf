@@ -19,8 +19,8 @@ abort "Unable to parse YAML hash from the input" if pipe.class != Hash
 abort "Can't find job definitions in the input"  if pipe['jobs'].nil?
 abort "Jobs definition not an array"             if pipe['jobs'].class != Array
 
-myJob = pipe['jobs'].find { |j| j['name'] == ARGV[0] }
-abort "Job " + ARGV[0] + " not found in the pipeline" if myJob.nil?
+my_job = pipe['jobs'].find { |j| j['name'] == ARGV[0] }
+abort "Job " + ARGV[0] + " not found in the pipeline" if my_job.nil?
 
-remove_passed(myJob['plan'])
+remove_passed(my_job['plan'])
 puts YAML.dump(pipe)
