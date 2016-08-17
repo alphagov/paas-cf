@@ -79,7 +79,7 @@
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "CPU time",
+          "title": "CPU usage across all cores",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -92,7 +92,7 @@
           "yaxes": [
             {
               "format": "none",
-              "label": "Jiffies",
+              "label": "CPU % used",
               "logBase": 1,
               "max": null,
               "min": 0,
