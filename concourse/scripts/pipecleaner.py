@@ -218,15 +218,15 @@ if __name__ == '__main__':
                 del err['fatal']
 
                 if err_type in ['unknown_resource', 'unfetched_resource']:
-                    colour = '\033[91m'
+                    msg_prefix = '\033[91mERROR '
                 if err_type in ['unused_fetch', 'unused_resource', 'unused_output']:
-                    colour = '\033[93m'
+                    msg_prefix = '\033[93mWARNING '
 
                 error_strings = []
                 for k, v in err.items():
                     error_strings.append("%s='%s'" % (k, v))
 
-                print FMT % (colour, err_type.replace('_', ' ').title(), ', '.join(error_strings))
+                print FMT % (msg_prefix, err_type.replace('_', ' ').title(), ', '.join(error_strings))
 
     if fatal is True:
         sys.exit(10)
