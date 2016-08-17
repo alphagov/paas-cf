@@ -34,3 +34,16 @@ run:
       echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
       cf delete-user "${NAME}" -f
+
+      echo "Removing leaked ${PREFIX} users"
+      url="/v2/users"
+      while [ "${url}" != "null" ] ; do
+        cf curl $url > users.json
+        # Delete users
+        cat users.json \
+           | jq -r ".resources[] | .entity.username | select(. != null) | select(test(\"^${PREFIX}\"))" \
+           | xargs -r -I {} cf delete-user {} -f
+
+        # See if there's another page of data.  If "next_url" is null we can stop
+        url=$(cat users.json | jq -r ".next_url")
+      done
