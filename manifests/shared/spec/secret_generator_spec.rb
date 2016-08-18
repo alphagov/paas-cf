@@ -201,5 +201,28 @@ RSpec.describe SecretGenerator do
 
       expect(results).not_to have_key("other")
     end
+
+    it "generates empty paswords in the existing set that are in the required set" do
+      generator.existing_secrets = {
+        "simple1" => "",
+        "simple2" => nil,
+      }
+      results = generator.generate
+
+      expect(results["simple1"]).to match(SIMPLE_PASSWORD_REGEX)
+      expect(results["simple2"]).to match(SIMPLE_PASSWORD_REGEX)
+    end
+
+    it "generates all the required secrets if existing_secrets is nil" do
+      required_secrets = {
+        "foo" => :simple,
+        "bar" => :simple,
+      }
+      generator = SecretGenerator.new(required_secrets)
+      generator.existing_secrets = nil
+      results = generator.generate
+
+      expect(results.keys).to match_array(%w(foo bar))
+    end
   end
 end
