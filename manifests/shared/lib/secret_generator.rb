@@ -34,21 +34,30 @@ class SecretGenerator
 
   def generate
     @required_secrets.each_with_object({}) do |(key, type), output|
+      # If a secret exists and is not nil or empty, keep it rather than
+      # generating a new one. This checks that existing_secrets is a hash
+      # because if the secrets key in the yaml file exists but is empty we'll
+      # get nil.
+      if existing_secrets.is_a?(Hash) && !([nil, ''].include? @existing_secrets.fetch(key, nil))
+        # Special case for keeping the original uncrypted password
+        if type == :sha512_crypted
+          output["#{key}_orig"] = @existing_secrets["#{key}_orig"]
+        end
+
+        output[key] = @existing_secrets[key]
+        next
+      end
+
       case type
       when :simple
-        output[key] = @existing_secrets.fetch(key) { self.class.random_password }
+        output[key] = self.class.random_password
       when :simple_in_array
-        output[key] = @existing_secrets.fetch(key) { [self.class.random_password] }
+        output[key] = [self.class.random_password]
       when :sha512_crypted
-        if @existing_secrets.has_key?(key)
-          output["#{key}_orig"] = @existing_secrets.fetch("#{key}_orig")
-          output[key] = @existing_secrets[key]
-        else
-          output["#{key}_orig"] = self.class.random_password
-          output[key] = self.class.sha512_crypt(output["#{key}_orig"])
-        end
+        output["#{key}_orig"] = self.class.random_password
+        output[key] = self.class.sha512_crypt(output["#{key}_orig"])
       when :ssh_key
-        output[key] = @existing_secrets.fetch(key) { self.class.generate_ssh_key }
+        output[key] = self.class.generate_ssh_key
       else
         raise ArgumentError, "unrecognized secret type '#{type}'"
       end
