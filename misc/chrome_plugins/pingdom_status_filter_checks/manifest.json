@@ -1,0 +1,19 @@
+{
+  "name": "Pingdom status filter checks",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "permissions": [
+    "http://stats.pingdom.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://stats.pingdom.com/*"
+      ],
+      "js": [
+        "src/inject.user.js"
+      ],
+      "all_frames": true
+    }
+  ]
+}
