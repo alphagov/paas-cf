@@ -10,8 +10,8 @@ def get_uaa_target(api_url)
   uri = URI.parse(api_url) + "/v2/info"
   http = Net::HTTP.new(uri.host, uri.port)
   if uri.instance_of? URI::HTTPS
-    http.use_ssl=true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE if ENV['SKIP_SSL_VERIFICATION'].to_s.downcase == "true"
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE if ENV['SKIP_SSL_VERIFICATION'].to_s.casecmp("true").zero?
   end
   response = http.request(Net::HTTP::Get.new(uri.request_uri))
   if response.code != "200"
@@ -45,10 +45,10 @@ target = get_uaa_target(api_url)
 users = load_admin_user_list(users_filename)
 
 options = {}
-options[:skip_ssl_validation] = true if ENV['SKIP_SSL_VERIFICATION'].to_s.downcase == "true"
+options[:skip_ssl_validation] = true if ENV['SKIP_SSL_VERIFICATION'].to_s.casecmp("true").zero?
 
 uaa_sync_admin_users = UaaSyncAdminUsers.new(target, admin_user, admin_password, options)
-uaa_sync_admin_users.request_token()
+uaa_sync_admin_users.request_token
 created_users, deleted_users = uaa_sync_admin_users.update_admin_users(users)
 
 created_users.each { |user|
@@ -64,4 +64,3 @@ puts "Deleted users: #{deleted_users.length}"
 deleted_users.each { |u|
   puts " - #{u.fetch(:username)}"
 }
-

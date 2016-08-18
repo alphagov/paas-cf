@@ -18,7 +18,7 @@ def update_es_index(uri, document)
     uri: uri,
     http_method: :Put,
     body: document,
-    allowed_response_codes: ['200', '201']
+    allowed_response_codes: %w(200 201)
   )
 end
 
@@ -53,7 +53,7 @@ def set_utc_config
   es_url = "http://#{es_host}:#{es_port}"
 
   config_uri = config_uri(es_url)
-  response = send_request(uri: config_uri, http_method: :Get, allowed_response_codes: ['200', '404'])
+  response = send_request(uri: config_uri, http_method: :Get, allowed_response_codes: %w(200 404))
   response_json = JSON.parse(response.body)
 
   if need_to_create_index(response_json)
@@ -69,7 +69,7 @@ def set_utc_config
   end
 
   if need_to_set_timezone(response_json)
-    update_es_index(config_uri(es_url), { "dateFormat:tz" => "UTC" })
+    update_es_index(config_uri(es_url), "dateFormat:tz" => "UTC")
   end
 end
 

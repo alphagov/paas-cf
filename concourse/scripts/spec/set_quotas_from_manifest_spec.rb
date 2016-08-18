@@ -2,7 +2,8 @@ require_relative "../set_quotas_from_manifest"
 
 RSpec.describe QuotasSetter do
   let(:quota_definitions) { {} }
-  let(:manifest) {{
+  let(:manifest) {
+    {
     "properties" => {
       "cc" => {
         "quota_definitions" => quota_definitions,
@@ -50,7 +51,6 @@ name                                    total memory   instance memory   routes 
 
         subject.apply!
       end
-
     end
 
     context "when some quotas exist" do
@@ -84,9 +84,11 @@ default                                 2G             unlimited         1000   
       system("exit 0") # setup $?
     end
   end
+
   def expect_cf_quota_create(name, *args)
     expect_cf_quota_write(name, 'create-quota', *args)
   end
+
   def expect_cf_quota_update(name, *args)
     expect_cf_quota_write(name, 'update-quota', *args)
   end

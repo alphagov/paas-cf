@@ -11,8 +11,8 @@ RSpec.describe SecretGenerator do
     end
 
     it "generates a different password each time" do
-      passwords = 10.times.map {|_| SecretGenerator.random_password }
-      duplicated_passwords = passwords.select {|n| passwords.count(n) > 1 }.uniq
+      passwords = 10.times.map { |_| SecretGenerator.random_password }
+      duplicated_passwords = passwords.select { |n| passwords.count(n) > 1 }.uniq
       expect(duplicated_passwords).to be_empty,
         "Duplicate passwords generated (#{duplicated_passwords.join(',')} generated more than once)"
     end
@@ -27,7 +27,7 @@ RSpec.describe SecretGenerator do
   describe "sha512_crypt" do
     # expectations generated with
     # `echo 'sample_password' | mkpasswd -s -m sha-512 -S saltysaltysalty`
-    let(:password) { "sample_password"}
+    let(:password) { "sample_password" }
     let(:salt) { "saltysaltysalty" }
     let(:expected_hash) { "$6$saltysaltysalty$50J9RJ/77gabvLQnqIxwnwTWFBWNx01w7/SNxJ14UsY9s7ZpETjf2DIUilzYjc0w0XQfcu1OMRnr1YSR/7Rd41" }
 
@@ -64,7 +64,6 @@ RSpec.describe SecretGenerator do
   end
 
   describe "generating required passwords" do
-
     it "generates the requested simple passwords" do
       required_secrets = {
         "foo" => :simple,
@@ -110,7 +109,8 @@ RSpec.describe SecretGenerator do
     end
 
     describe "generating sha_512 crypted passwords" do
-      let(:required_secrets) {{
+      let(:required_secrets) {
+        {
         "baz" => :sha512_crypted,
       }}
       let(:results) { SecretGenerator.new(required_secrets).generate }
@@ -124,7 +124,7 @@ RSpec.describe SecretGenerator do
         allow(SecretGenerator).to receive(:sha512_crypt) { |pw| "crypted_#{pw}" }
 
         expect(results).to have_key("baz")
-        expect(results["baz"]).to eq("crypted_#{results["baz_orig"]}")
+        expect(results["baz"]).to eq("crypted_#{results['baz_orig']}")
       end
     end
 
@@ -144,7 +144,8 @@ RSpec.describe SecretGenerator do
   end
 
   describe "merging with existing passwords" do
-    let(:required_secrets) {{
+    let(:required_secrets) {
+      {
       "simple1" => :simple,
       "simple2" => :simple,
       "array" => :simple_in_array,
@@ -184,7 +185,7 @@ RSpec.describe SecretGenerator do
 
     it "keeps ssh keys from the existing set" do
       generator.existing_secrets = {
-        "host_key" => {"private_key" => "1234", "public_fingerprint" => "2345"},
+        "host_key" => { "private_key" => "1234", "public_fingerprint" => "2345" },
       }
       results = generator.generate
 

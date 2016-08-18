@@ -8,4 +8,3 @@ template = File.read(template_path)
 spec = YAML.load_file(spec_path)
 manifest = YAML.load_file(manifest_path)
 puts render_template(template, spec, manifest, job)
-

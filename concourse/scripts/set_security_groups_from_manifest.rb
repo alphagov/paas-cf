@@ -22,7 +22,7 @@ class SecurityGroupsSetter
     end
   end
 
-  private
+private
 
   def create_update_sg(sg)
     rules_file = Tempfile.new(["rules", ".json"])

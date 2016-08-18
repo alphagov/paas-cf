@@ -19,7 +19,7 @@ class UaaSyncAdminUsers
     "scim.read",
     "scim.write",
     "doppler.firehose"
-  ]
+  ].freeze
 
   HOURS_TO_KEEP_TEST_USERS = 2
 
@@ -34,40 +34,40 @@ class UaaSyncAdminUsers
   #   - skip_ssl_validation: default=false
   #   - extra_admin_groups: default=[] Additional admin groups apart of DEFAULT_ADMIN_GROUPS
   #   - log_level: default: :warn. Options: :debug, :trace, :warn
-  def initialize(target, admin_client, admin_password, options=nil)
+  def initialize(target, admin_client, admin_password, options = nil)
     @target = target
     @admin_client = admin_client
     @admin_password = admin_password
     @options = options
 
-    self.admin_groups = DEFAULT_ADMIN_GROUPS + (options.fetch(:extra_admin_groups, []))
+    self.admin_groups = DEFAULT_ADMIN_GROUPS + options.fetch(:extra_admin_groups, [])
 
     self.token_issuer = CF::UAA::TokenIssuer.new(@target, @admin_client, @admin_password, @options)
-    self.token_issuer.logger = self.get_logger()
+    self.token_issuer.logger = self.get_logger
   end
 
   # Returns the logger for this object.
   # Set by options[:log_level] = {:debug, :trace, :warn} or $UAA_LOG_LEVEL
-  def get_logger()
+  def get_logger
     if @logger.nil?
-      if ENV['UAA_LOG_LEVEL']
-        log_level = ENV.fetch('UAA_LOG_LEVEL').strip.downcase.to_sym
-      else
-        log_level = @options.fetch(:log_level, :info)
-      end
+      log_level = if ENV['UAA_LOG_LEVEL']
+                    ENV.fetch('UAA_LOG_LEVEL').strip.downcase.to_sym
+                  else
+                    @options.fetch(:log_level, :info)
+                  end
       @logger = Logger.new($stdout)
       @logger.level = Logger::Severity.const_get(log_level.to_s.upcase)
     end
     @logger
   end
 
-  def token()
+  def token
     raise "Token not initialised. Did you call .request_token()?" if @token.nil?
-    return @token
+    @token
   end
 
-  def auth_header()
-    return "#{self.token.fetch('token_type')} #{self.token.fetch('access_token')}"
+  def auth_header
+    "#{self.token.fetch('token_type')} #{self.token.fetch('access_token')}"
   end
 
   def get_user_by_username(username)
@@ -90,7 +90,7 @@ class UaaSyncAdminUsers
     info = {
       userName: user.fetch(:username),
       password: user.fetch(:password),
-      emails: [{value: user.fetch(:email)}],
+      emails: [{ value: user.fetch(:email) }],
     }
     self.ua.add(:user, info)
   end
@@ -102,11 +102,11 @@ class UaaSyncAdminUsers
   end
 
   # Authenticates the client with the UAA server and requests a new token.
-  def request_token()
-    @token = self.token_issuer.client_credentials_grant().info
+  def request_token
+    @token = self.token_issuer.client_credentials_grant.info
     self.ua = CF::UAA::Scim.new(@target, self.auth_header, @options)
-    self.ua.logger = self.get_logger()
-    return self
+    self.ua.logger = self.get_logger
+    self
   end
 
   # Creates the given users and adds them to the Admin users
@@ -118,7 +118,7 @@ class UaaSyncAdminUsers
     deleted_users = []
 
     # Ensure we always keep admin
-    users = users.clone()
+    users = users.clone
     users << {
       username: "admin",
       email: "admin"
@@ -133,7 +133,7 @@ class UaaSyncAdminUsers
 
     # Get/Create users if required
     users_info = {}
-    users.each{ |user|
+    users.each { |user|
       user_info = self.get_user_by_username(user.fetch(:username))
       if user_info.nil?
         user[:password] ||= SecureRandom.hex
@@ -150,12 +150,12 @@ class UaaSyncAdminUsers
       groups_info.fetch(group_name).fetch("members").each { |m|
         member_set << m.fetch("value")
       }
-      users.each{ |user|
+      users.each { |user|
         user_info = users_info.fetch(user.fetch(:username))
         if not member_set.include? user_info.fetch("id")
-          get_logger.info("Adding user #{user_info.fetch("username")} to group #{group_name}")
+          get_logger.info("Adding user #{user_info.fetch('username')} to group #{group_name}")
           member_set << user_info.fetch("id")
-          group_info_to_update ||= groups_info.fetch(group_name).clone()
+          group_info_to_update ||= groups_info.fetch(group_name).clone
           group_info_to_update["members"] = member_set.to_a
         end
       }
@@ -169,7 +169,7 @@ class UaaSyncAdminUsers
     allowed_user_ids = users_info.map { |_, v| v.fetch("id") }
     existing_user_ids = Set.new
     groups_info.each { |_, group_info|
-      group_info.fetch("members").each{ |m| existing_user_ids << m.fetch("value") }
+      group_info.fetch("members").each { |m| existing_user_ids << m.fetch("value") }
     }
 
     to_delete_user_ids = existing_user_ids - allowed_user_ids
@@ -180,15 +180,14 @@ class UaaSyncAdminUsers
       end
 
       if Time.parse(user_info.fetch("meta").fetch("created")) < (Time.now - HOURS_TO_KEEP_TEST_USERS * 60 * 60)
-        get_logger.info("Deleting admin user #{user_info.fetch("username")} which is not in the list.")
+        get_logger.info("Deleting admin user #{user_info.fetch('username')} which is not in the list.")
         ua.delete(:user, user_id)
         deleted_users << { username: user_info.fetch("username"), email: user_info.fetch("emails").fetch(0).fetch("value") }
       else
-        get_logger.info("Not deleting user #{user_info.fetch("username")} created in the last #{HOURS_TO_KEEP_TEST_USERS} hours.")
+        get_logger.info("Not deleting user #{user_info.fetch('username')} created in the last #{HOURS_TO_KEEP_TEST_USERS} hours.")
       end
     }
 
-    return created_users, deleted_users
-
+    [created_users, deleted_users]
   end
 end
