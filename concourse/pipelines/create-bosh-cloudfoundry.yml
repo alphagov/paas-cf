@@ -1574,6 +1574,44 @@ jobs:
                   bundle
                   bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "{{NEW_ACCOUNT_EMAIL_ADDRESS}}"
 
+        - task: purge-unnamed-users
+          config:
+            platform: linux
+            inputs:
+              - name: paas-cf
+              - name: bosh-CA
+              - name: config
+              - name: cf-manifest
+            params:
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                  url="/v2/users"
+                  while [ "${url}" != "null" ] ; do
+                    cf curl $url > users.json
+                    # Identify users with null usernames - they were leaked by
+                    # deleting the user with uaac
+                    cat users.json \
+                       | jq -r '.resources[] | select(.entity.username == null) | .metadata.guid' >> users_to_delete
+
+                    # See if there's another page of data.  If "next_url" is null we can stop
+                    url=$(cat users.json | jq -r ".next_url")
+                  done
+
+                  # Schedule deletions
+                  cat users_to_delete |  xargs -t -r -I {} cf curl -X DELETE /v2/users/{}?async=true
         - task: register-rds-broker
           config:
             platform: linux
