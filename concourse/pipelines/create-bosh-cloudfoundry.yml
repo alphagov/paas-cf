@@ -1817,6 +1817,8 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            PREFIX: smoketest-user
 
   - name: acceptance-tests
     plan:
@@ -1922,6 +1924,7 @@ jobs:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
+            PREFIX: acceptance-test-user
             ENABLE_ADMIN_USER_CREATION: {{enable_cf_acceptance_tests}}
 
   - name: custom-acceptance-tests
@@ -1973,6 +1976,8 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            PREFIX: custom-acceptance-test-user
 
   - name: bosh-tests
     plan:
@@ -2081,6 +2086,8 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            PREFIX: performance-tests-user
 
   - name: tag-release
     plan:
@@ -2290,6 +2297,8 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            PREFIX: cont-smoketest-user
 
   - name: bosh-cli
     plan:

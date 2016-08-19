@@ -140,6 +140,8 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: controller-smoketest-user
 
   - name: nats
     serial_groups: [ failure ]
@@ -182,6 +184,8 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: nats-smoketest-user
 
   - name: router
     serial_groups: [ failure ]
@@ -224,6 +228,8 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: router-smoketest-user
 
   - name: etcd
     serial_groups: [ failure ]
@@ -266,6 +272,8 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: etcd-smoketest-user
 
   - name: consul
     serial_groups: [ failure ]
@@ -308,6 +316,8 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: consul-smoketest-user
 
   - name: cell
     serial_groups: [ failure ]
@@ -350,6 +360,8 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: cell-smoketest-user
 
   - name: rds-broker
     serial_groups: [ failure ]
@@ -416,3 +428,5 @@ jobs:
                 BOSH_FQDN: {{bosh_fqdn}}
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                PREFIX: rds-broker-test-user
