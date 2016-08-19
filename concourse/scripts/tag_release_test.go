@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -13,6 +14,10 @@ import (
 	"os/exec"
 
 	"github.com/onsi/gomega/gexec"
+)
+
+const (
+	ExecutionTimeout = 3 * time.Second
 )
 
 var _ = Describe("TagRelease", func() {
@@ -28,7 +33,7 @@ var _ = Describe("TagRelease", func() {
 
 		session, err := gexec.Start(gitVersionCommand, GinkgoWriter, GinkgoWriter)
 		Expect(err).ToNot(HaveOccurred())
-		Eventually(session).Should(gexec.Exit(0))
+		Eventually(session, ExecutionTimeout).Should(gexec.Exit(0))
 		Expect(session.Out.Contents()).To(MatchRegexp(".* [2-9]\\.[0-9]+\\.[0-9]+.*"), "Expected git version 2.0.0 or bigger")
 		Expect(session.Err.Contents()).To(BeEmpty())
 	})
@@ -158,7 +163,7 @@ func runBashScript(baseCmd *exec.Cmd, script string) *gexec.Session {
 	cmd := bashScript(baseCmd, script)
 	session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 	Expect(err).ToNot(HaveOccurred())
-	Eventually(session).Should(gexec.Exit(0))
+	Eventually(session, ExecutionTimeout).Should(gexec.Exit(0))
 	return session
 }
 
