@@ -116,7 +116,7 @@ jobs:
     azs: [z1, z2, z3]
     templates: (( grab meta.consul_templates ))
     instances: 3
-    persistent_disk: 1024
+    persistent_disk_type: consul
     vm_type: small
     stemcell: default
     networks:
@@ -153,7 +153,7 @@ jobs:
     azs: [z1, z2, z3]
     templates: (( grab meta.etcd_templates ))
     instances: 3
-    persistent_disk: 10024
+    persistent_disk_type: etcd
     vm_type: medium
     stemcell: default
     networks:

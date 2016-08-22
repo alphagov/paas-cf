@@ -138,7 +138,7 @@ RSpec.describe "generic manifest validations" do
         next unless job["persistent_disk_type"]
 
         expect(disk_type_names).to include(job["persistent_disk_type"]),
-          "disk_pool #{job['persistent_disk_pool']} not found for job #{job['name']}"
+          "disk_type #{job['persistent_disk_type']} not found for job #{job['name']}"
       end
     end
   end

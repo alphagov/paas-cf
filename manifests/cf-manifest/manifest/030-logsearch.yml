@@ -64,7 +64,7 @@ jobs:
     static_ips:
       - 10.0.16.13
       - 10.0.17.13
-  disk_type: queue
+  persistent_disk_type: queue
   update: (( grab meta.update ))
 
 - name: parser_z1
