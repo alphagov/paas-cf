@@ -2,7 +2,6 @@
 terraform_outputs:
   environment: test
   infra_subnet_ids: subnet-12345678,subnet-23456789
-  key_pair_name: ssh_key_pair
   region: eu-west-1
   ssh_security_group: alext-office-access-ssh
   subnet0_id: subnet-12345678
