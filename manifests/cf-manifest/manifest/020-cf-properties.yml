@@ -67,6 +67,8 @@ properties:
       machines: (( grab properties.nats.machines ))
       username: (( grab properties.nats.user ))
       password: (( grab properties.nats.password ))
+    etcd:
+      dns_suffix: (( grab properties.system_domain ))
 
   loggregator:
     maxRetainedLogMessages: 100
@@ -145,7 +147,7 @@ properties:
     route_services_timeout:
     logrotate:
     extra_headers_to_log:
-    debug_addr:
+    debug_address:
     enable_routing_api:
     drain_wait: 15
 
@@ -504,6 +506,9 @@ properties:
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+
+    executor:
+      container_metrics_report_interval: 60
 
     bbs:
       active_key_label: keylabel1
