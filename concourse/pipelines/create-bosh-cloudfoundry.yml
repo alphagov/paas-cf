@@ -212,11 +212,18 @@ resources:
       region_name: {{aws_region}}
       versioned_file: {{bosh_manifest_state}}
 
-  - name: ssh-private-key
+  - name: bosh-ssh-private-key
     type: s3-iam
     source:
       bucket: {{state_bucket}}
-      versioned_file: id_rsa
+      versioned_file: bosh_id_rsa
+      region_name: {{aws_region}}
+
+  - name: bosh-ssh-public-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: bosh_id_rsa.pub
       region_name: {{aws_region}}
 
   - name: git-ssh-private-key
@@ -404,6 +411,9 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa.pub paas-cf/concourse/init_files/zero_bytes
+
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -419,6 +429,8 @@ jobs:
           - get: bosh-secrets
           - get: cf-certs
           - get: cf-secrets
+          - get: bosh-ssh-private-key
+          - get: bosh-ssh-public-key
 
       - task: generate-bosh-CA
         config:
@@ -484,6 +496,46 @@ jobs:
           put: bosh-secrets
           params:
             file: generated-bosh-secrets/bosh-secrets.yml
+
+      - task: generate-bosh-ssh-keypair
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/git-ssh
+          inputs:
+            - name: paas-cf
+            - name: bosh-ssh-private-key
+            - name: bosh-ssh-public-key
+          outputs:
+            - name: generated-bosh-ssh-private-key
+            - name: generated-bosh-ssh-public-key
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                if [ -s bosh-ssh-private-key/bosh_id_rsa ] ; then
+                  echo "BOSH private key non-zero size, skipping generation..."
+                  echo "Key uploads will fail and this is OK as no new keys have been generated."
+                  exit 0
+                fi
+
+                echo "Generating new ssh key pair for BOSH..."
+                ssh-keygen -t rsa -b 4096 -f bosh_id_rsa -N ''
+                cp bosh_id_rsa generated-bosh-ssh-private-key
+                cp bosh_id_rsa.pub generated-bosh-ssh-public-key
+        on_success:
+          try:
+            aggregate:
+              - put: bosh-ssh-private-key
+                params:
+                  file: generated-bosh-ssh-private-key/bosh_id_rsa
+              - put: bosh-ssh-public-key
+                params:
+                  file: generated-bosh-ssh-public-key/bosh_id_rsa.pub
 
       - task: generate-cf-certs
         config:
@@ -669,6 +721,7 @@ jobs:
           - get: bosh-tfstate
           - get: bosh-secrets
             passed: ['generate-secrets']
+          - get: bosh-ssh-public-key
 
       - task: extract-terraform-variables
         config:
@@ -709,6 +762,7 @@ jobs:
             - name: paas-cf
             - name: terraform-variables
             - name: bosh-tfstate
+            - name: bosh-ssh-public-key
           outputs:
             - name: updated-bosh-tfstate
           params:
@@ -726,7 +780,7 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh-secrets.tfvars.sh
                 export TF_VAR_bosh_az="${BOSH_AZ}"
-
+                cp bosh-ssh-public-key/bosh_id_rsa.pub paas-cf/terraform/bosh
                 terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh
         ensure:
@@ -848,7 +902,7 @@ jobs:
           - get: bosh-manifest
             passed: ['generate-bosh-config']
           - get: bosh-init-state
-          - get: ssh-private-key
+          - get: bosh-ssh-private-key
 
       - task: bosh-init-microbosh
         config:
@@ -860,7 +914,7 @@ jobs:
           inputs:
             - name: bosh-manifest
             - name: bosh-init-state
-            - name: ssh-private-key
+            - name: bosh-ssh-private-key
           outputs:
             - name: bosh-init-working-dir
           params:
@@ -872,8 +926,8 @@ jobs:
               - -c
               - |
                 mkdir -p bosh-init-working-dir/.ssh
-                cp ssh-private-key/id_rsa bosh-init-working-dir/.ssh/id_rsa
-                chmod 400 bosh-init-working-dir/.ssh/id_rsa
+                cp bosh-ssh-private-key/bosh_id_rsa bosh-init-working-dir/.ssh/bosh_id_rsa
+                chmod 400 bosh-init-working-dir/.ssh/bosh_id_rsa
                 cp bosh-manifest/bosh-manifest.yml bosh-init-working-dir/bosh-manifest.yml
                 cp bosh-init-state/"${BOSH_MANIFEST_STATE}" bosh-init-working-dir/bosh-manifest-state.json
                 bosh-init deploy bosh-init-working-dir/bosh-manifest.yml

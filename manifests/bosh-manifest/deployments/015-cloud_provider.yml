@@ -3,7 +3,7 @@ cloud_provider:
     host: (( grab terraform_outputs.bosh_fqdn ))
     port: 22
     user: vcap
-    private_key: .ssh/id_rsa
+    private_key: .ssh/bosh_id_rsa
 
   mbus: (( concat "https://mbus:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":6868" ))
 
