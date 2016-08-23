@@ -55,12 +55,17 @@ vagrant plugin install vagrant-aws
 export AWS_ACCESS_KEY_ID=XXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
 ```
+And optionally:
+
+```
+export AWS_DEFAULT_REGION=eu-west-1
+```
 
 The access keys are only required to spin up the *Bootstrap Concourse*. From
-that point on they won't be required as all the pipelines will use [instance
-profiles][] to make calls to AWS. The policies for these are defined in the
-repo [aws-account-wide-terraform][] (not public because it also contains
-state files).
+that point on they won't be required (except by manual actions) as all the
+pipelines will use [instance profiles][] to make calls to AWS. The policies for
+these are defined in the repo [aws-account-wide-terraform][]
+(not public because it also contains state files).
 
 [instance profiles]: http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
 [aws-account-wide-terraform]: https://github.gds/government-paas/aws-account-wide-terraform
@@ -169,9 +174,9 @@ To interact with a CloudFoundry environment you will need the following:
 
 - the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
 - `API_ENDPOINT` from `make dev showenv`
-- `uaa_admin_password` from `cf-secrets.yml` in the state bucket
+- `uaa_admin_password` from `cf-secrets.yml` in the state bucket (you can run `aws s3 cp "s3://${DEPLOY_ENV}-state/cf-secrets.yml" - | grep uaa_admin_password` to see it)
 
-Then you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login).
+Then you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), using the `admin` user.
 
 You will need to supply the `--skip-ssl-validation` argument if you are
 using a development environment.
