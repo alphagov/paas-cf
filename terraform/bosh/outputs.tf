@@ -66,10 +66,6 @@ output "bosh_db_username" {
   value = "${aws_db_instance.bosh.username}"
 }
 
-output "bosh_db_password" {
-  value = "${aws_db_instance.bosh.password}"
-}
-
 output "bosh_db_dbname" {
   value = "${aws_db_instance.bosh.name}"
 }
