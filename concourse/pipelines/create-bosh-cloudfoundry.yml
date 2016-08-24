@@ -226,6 +226,21 @@ resources:
       versioned_file: bosh_id_rsa.pub
       region_name: {{aws_region}}
 
+  - name: ssh-private-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: id_rsa
+      region_name: {{aws_region}}
+
+  - name: ssh-public-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: id_rsa.pub
+      region_name: {{aws_region}}
+
+
   - name: git-ssh-private-key
     type: s3-iam
     source:
@@ -431,6 +446,8 @@ jobs:
           - get: cf-secrets
           - get: bosh-ssh-private-key
           - get: bosh-ssh-public-key
+          - get: ssh-private-key
+          - get: ssh-public-key
 
       - task: generate-bosh-CA
         config:
@@ -536,6 +553,46 @@ jobs:
               - put: bosh-ssh-public-key
                 params:
                   file: generated-bosh-ssh-public-key/bosh_id_rsa.pub
+
+      - task: generate-deployments-ssh-keypair
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/git-ssh
+          inputs:
+            - name: paas-cf
+            - name: ssh-private-key
+            - name: ssh-public-key
+          outputs:
+            - name: generated-ssh-private-key
+            - name: generated-ssh-public-key
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                if [ -s ssh-private-key/id_rsa ] ; then
+                  echo "Deployments private key non-zero size, skipping generation..."
+                  echo "Key uploads will fail and this is OK as no new keys have been generated."
+                  exit 0
+                fi
+
+                echo "Generating new ssh key pair for deployments..."
+                ssh-keygen -t rsa -b 4096 -f id_rsa -N ''
+                cp id_rsa generated-ssh-private-key
+                cp id_rsa.pub generated-ssh-public-key
+        on_success:
+          try:
+            aggregate:
+              - put: ssh-private-key
+                params:
+                  file: generated-ssh-private-key/id_rsa
+              - put: ssh-public-key
+                params:
+                  file: generated-ssh-public-key/id_rsa.pub
 
       - task: generate-cf-certs
         config:
@@ -722,6 +779,7 @@ jobs:
           - get: bosh-secrets
             passed: ['generate-secrets']
           - get: bosh-ssh-public-key
+          - get: ssh-public-key
 
       - task: extract-terraform-variables
         config:
@@ -763,6 +821,7 @@ jobs:
             - name: terraform-variables
             - name: bosh-tfstate
             - name: bosh-ssh-public-key
+            - name: ssh-public-key
           outputs:
             - name: updated-bosh-tfstate
           params:
@@ -780,6 +839,7 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh-secrets.tfvars.sh
                 export TF_VAR_bosh_az="${BOSH_AZ}"
+                cp ssh-public-key/id_rsa.pub paas-cf/terraform/bosh
                 cp bosh-ssh-public-key/bosh_id_rsa.pub paas-cf/terraform/bosh
                 terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh

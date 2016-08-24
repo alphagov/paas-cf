@@ -60,13 +60,6 @@ resources:
       versioned_file: concourse-manifest.yml
       region_name: {{aws_region}}
 
-  - name: ssh-private-key
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      versioned_file: id_rsa
-      region_name: {{aws_region}}
-
   - name: concourse-ssh-private-key
     type: s3-iam
     source:
@@ -172,7 +165,7 @@ jobs:
       passed: ['init-bucket']
     - get: vpc-terraform-state
 
-    - task: generate-ssh-keys
+    - task: generate-git-ssh-key
       config:
         image: docker:///governmentpaas/curl-ssl
         inputs:
@@ -189,9 +182,6 @@ jobs:
           - |
             apk add --update openssh
             cd ssh-keys
-            ssh-keygen -t rsa -b 4096 -f generated_id_rsa -N ''
-            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa generated_id_rsa
-            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub generated_id_rsa.pub
             ssh-keygen -t rsa -b 4096 -f generated_git_id_rsa -N ''
             ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git_id_rsa generated_git_id_rsa
             ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git_id_rsa.pub generated_git_id_rsa.pub
@@ -214,7 +204,6 @@ jobs:
           - -e
           - -c
           - |
-            cp ssh-keys/id_rsa.pub paas-cf/terraform/vpc
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=vpc-terraform-state/vpc.tfstate -state-out=vpc.tfstate paas-cf/terraform/vpc

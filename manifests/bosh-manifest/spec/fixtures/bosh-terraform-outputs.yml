@@ -19,3 +19,4 @@ terraform_outputs:
   bosh_default_gw: 10.0.0.1
   bosh_subnet_cidr: 10.0.0.0/24
   bosh_ssh_key_pair_name: bosh_keypair
+  key_pair_name: ssh_key_pair

@@ -34,10 +34,6 @@ output "zone2" {
   value = "${var.zones.zone2}"
 }
 
-output "key_pair_name" {
-  value = "${aws_key_pair.env_key_pair.key_name}"
-}
-
 output "infra_subnet_ids" {
   value = "${join(",", aws_subnet.infra.*.id)}"
 }
