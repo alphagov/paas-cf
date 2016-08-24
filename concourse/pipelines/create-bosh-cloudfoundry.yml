@@ -2275,19 +2275,20 @@ jobs:
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
-      - get: cf-release
-        params:
-          submodules:
-            - src/smoke-tests
-      - get: paas-cf
-        passed: ['cf-deploy']
-      - get: cf-manifest
-        passed: ['cf-deploy']
-      - get: bosh-CA
-      - get: smoke-tests-timer
-        trigger: {{continuous_smoke_tests_trigger}}
-      - get: cf-secrets
-        passed: ['cf-deploy']
+      - aggregate:
+        - get: cf-release
+          params:
+            submodules:
+              - src/smoke-tests
+        - get: paas-cf
+          passed: ['cf-deploy']
+        - get: cf-manifest
+          passed: ['cf-deploy']
+        - get: bosh-CA
+        - get: smoke-tests-timer
+          trigger: {{continuous_smoke_tests_trigger}}
+        - get: cf-secrets
+          passed: ['cf-deploy']
 
       - do:
         - task: create-temp-user
