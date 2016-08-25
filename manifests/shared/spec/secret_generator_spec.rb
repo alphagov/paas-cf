@@ -193,7 +193,7 @@ RSpec.describe SecretGenerator do
       expect(results["host_key"]["public_fingerprint"]).to eq("2345")
     end
 
-    it "ignores passwords in the existing set that aren't in the requested set" do
+    it "removes passwords in the existing set that aren't in the requested set" do
       generator.existing_secrets = {
         "other" => "something",
       }
