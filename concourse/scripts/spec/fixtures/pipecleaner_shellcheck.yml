@@ -1,0 +1,17 @@
+---
+resources: {}
+
+jobs:
+  - name: shellcheck
+    plan:
+      - task: bad-compare
+        config:
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                if [ "red" == "blue" ]; then
+                  echo "colour error!"
+                fi
