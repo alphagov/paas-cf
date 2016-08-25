@@ -10,14 +10,12 @@ terraform_outputs:
   microbosh_static_private_ip: 10.0.0.6
   microbosh_static_public_ip: 194.1.2.4
   region: eu-west-1
-  zone0: eu-west-1a
-  zone1: eu-west-1b
   bosh_db_address: 1.2.3.4
   bosh_db_port: 5432
   bosh_db_username: bosh
-  bosh_db_password: BOSH_POSTGRES_PASSWORD
   bosh_db_dbname: bosh
   bosh_fqdn: bosh.example.com
   bosh_az: eu-west-1a
   bosh_default_gw: 10.0.0.1
   bosh_subnet_cidr: 10.0.0.0/24
+  bosh_ssh_key_pair_name: bosh_keypair

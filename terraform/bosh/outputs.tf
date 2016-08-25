@@ -66,10 +66,6 @@ output "bosh_db_username" {
   value = "${aws_db_instance.bosh.username}"
 }
 
-output "bosh_db_password" {
-  value = "${aws_db_instance.bosh.password}"
-}
-
 output "bosh_db_dbname" {
   value = "${aws_db_instance.bosh.name}"
 }
@@ -80,4 +76,8 @@ output "bosh_az" {
 
 output "bosh_fqdn" {
   value = "${aws_route53_record.bosh.name}"
+}
+
+output "bosh_ssh_key_pair_name" {
+  value = "${aws_key_pair.bosh_ssh_key_pair.key_name}"
 }
