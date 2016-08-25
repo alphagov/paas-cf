@@ -3,6 +3,7 @@
 set -eu
 
 export PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR}
+STATEFILE=cf-certs.tfstate
 
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.key" > /dev/null
@@ -11,19 +12,21 @@ pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.crt" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key" > /dev/null
 pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate.crt" > /dev/null
 
+# Ensure there's no local state before we kick off terraform, it prioritises it
+rm -rf .terraform
+
 WORKING_DIR=$(mktemp -d cf-certs.XXXXXX)
 trap 'rm -r "${WORKING_DIR}"' EXIT
 
-if ! aws s3 ls "s3://${DEPLOY_ENV}-state/cf-certs.tfstate" --summarize | grep -q "Total Objects: 0"; then
-  aws s3 cp "s3://${DEPLOY_ENV}-state/cf-certs.tfstate" "${WORKING_DIR}/cf-certs.tfstate"
-else
-  echo "No previous cf-certs.tfstate file found in s3://${DEPLOY_ENV}-state/. Assuming first run."
-fi
+# Configure Terraform remote state
+terraform remote config \
+  -backend=s3 \
+  -backend-config="bucket=${DEPLOY_ENV}-state" \
+  -backend-config="key=${STATEFILE}" \
+  -backend-config="region=${AWS_DEFAULT_REGION}"
 
-set +e
 terraform apply -var env="${DEPLOY_ENV}" \
   -var-file="terraform/${AWS_ACCOUNT}.tfvars" \
-  -state="${WORKING_DIR}/cf-certs.tfstate" \
   -var system_domain_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.crt")" \
   -var system_domain_key="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.key")" \
   -var system_domain_intermediate_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain_intermediate.crt")" \
@@ -31,9 +34,6 @@ terraform apply -var env="${DEPLOY_ENV}" \
   -var apps_domain_key="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain.key")" \
   -var apps_domain_intermediate_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate.crt")" \
   terraform/cf-certs
-exit_status=$?
-set -e
 
-aws s3 cp "${WORKING_DIR}/cf-certs.tfstate" "s3://${DEPLOY_ENV}-state/cf-certs.tfstate"
-
-exit $exit_status
+# Delete new local terraform state
+rm -rf .terraform
