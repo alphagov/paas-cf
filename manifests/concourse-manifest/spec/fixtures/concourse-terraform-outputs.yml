@@ -2,6 +2,6 @@
 terraform_outputs:
   concourse_elastic_ip: 1.2.3.4
   concourse_security_group: concourse_sg
-  concourse_security_group_id: sg-a1b2c3d4
   concourse_elb_name: env1234-concourse
   concourse_dns_name: deployer.env1234.dev.cloudpipeline.digital
+  concourse_key_pair_name: concourse_ssh_key_pair

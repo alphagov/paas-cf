@@ -1,13 +1,6 @@
 ---
 terraform_outputs:
-  environment: test
-  infra_subnet_ids: subnet-12345678,subnet-23456789
-  key_pair_name: ssh_key_pair
   region: eu-west-1
   ssh_security_group: alext-office-access-ssh
   subnet0_id: subnet-12345678
-  vpc_cidr: 10.0.0.0/16
-  vpc_id: vpc-12345678
   zone0: eu-west-1a
-  zone1: eu-west-1b
-  zone2: eu-west-1c

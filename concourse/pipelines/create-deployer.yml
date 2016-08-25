@@ -67,6 +67,13 @@ resources:
       versioned_file: id_rsa
       region_name: {{aws_region}}
 
+  - name: concourse-ssh-private-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: concourse_id_rsa
+      region_name: {{aws_region}}
+
   - name: git-ssh-public-key
     type: s3-iam
     source:
@@ -280,6 +287,28 @@ jobs:
         params:
           file: generated-concourse-cert/concourse-cert.tar.gz
 
+    - task: generate-concourse-ssh-key
+      config:
+        image: docker:///governmentpaas/curl-ssl
+        inputs:
+        - name: paas-cf
+        outputs:
+        - name: concourse-ssh-key
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+        run:
+          path: sh
+          args:
+          - -e
+          - -c
+          - |
+            apk add --update openssh
+            cd concourse-ssh-key
+            ssh-keygen -t rsa -b 4096 -f generated_concourse_id_rsa -N ''
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse_id_rsa generated_concourse_id_rsa
+            ../paas-cf/concourse/scripts/s3init.sh {{state_bucket}} concourse_id_rsa.pub generated_concourse_id_rsa.pub
+
+
     - task: terraform-apply
       config:
         image: docker:///governmentpaas/terraform
@@ -289,6 +318,7 @@ jobs:
         - name: concourse-terraform-state
         - name: generated-concourse-cert
         - name: git-ssh-public-key
+        - name: concourse-ssh-key
         params:
           VAGRANT_IP: {{vagrant_ip}}
           TF_VAR_env: {{deploy_env}}
@@ -300,6 +330,7 @@ jobs:
           - -e
           - -c
           - |
+            cp concourse-ssh-key/concourse_id_rsa.pub paas-cf/terraform/concourse
             tar xzvf generated-concourse-cert/concourse-cert.tar.gz
             . vpc-terraform-outputs/tfvars.sh
             export TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
@@ -453,7 +484,7 @@ jobs:
       trigger: true
       passed: ['concourse-prepare-deploy']
     - get: concourse-bosh-state
-    - get: ssh-private-key
+    - get: concourse-ssh-private-key
     - get: concourse-manifest
       passed: ['concourse-prepare-deploy']
 
@@ -464,22 +495,22 @@ jobs:
         inputs:
         - name: concourse-manifest
         - name: concourse-bosh-state
-        - name: ssh-private-key
+        - name: concourse-ssh-private-key
         run:
           path: sh
           args:
           - -e
           - -c
           - |
-            cp ssh-private-key/id_rsa id_rsa
-            chmod 400 id_rsa
-            ls -l id_rsa
+            cp concourse-ssh-private-key/concourse_id_rsa concourse_id_rsa
+            chmod 400 concourse_id_rsa
+            ls -l concourse_id_rsa
             cp -v concourse-bosh-state/concourse-manifest-state.json .
             cp -v concourse-manifest/concourse-manifest.yml .
             export BOSH_INIT_LOG_LEVEL={{log_level}}
             bosh-init deploy concourse-manifest.yml
             rm concourse-manifest/concourse-manifest.yml
-            rm id_rsa
+            rm concourse_id_rsa
       ensure:
         put: concourse-bosh-state
         params:

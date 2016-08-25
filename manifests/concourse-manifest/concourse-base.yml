@@ -123,14 +123,14 @@ cloud_provider:
     host: (( grab terraform_outputs.concourse_elastic_ip ))
     port: 22
     user: vcap
-    private_key: id_rsa # Appears to be relative to working dir
+    private_key: concourse_id_rsa # Appears to be relative to working dir
 
   mbus: (( concat "https://mbus:" secrets.concourse_nats_password "@" terraform_outputs.concourse_elastic_ip ":6868" ))
 
   properties:
     aws:
       credentials_source: env_or_profile
-      default_key_name: (( grab terraform_outputs.key_pair_name ))
+      default_key_name: (( grab terraform_outputs.concourse_key_pair_name ))
       default_security_groups:
       - (( grab terraform_outputs.concourse_security_group ))
       - (( grab terraform_outputs.ssh_security_group ))
