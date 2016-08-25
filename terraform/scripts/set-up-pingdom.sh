@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -eu
+TERRAFORM_ACTION=${1}
 VERSION=0.2.1
 BINARY=terraform-provider-pingdom-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
@@ -28,7 +29,7 @@ terraform remote config \
 
 # Run Terraform Pingdom Provider. We change $HOME so Terraform can find terraformrc
 HOME=/tmp/terraform-pingdom \
-terraform apply \
+terraform "${TERRAFORM_ACTION}" \
 	-var "env=${MAKEFILE_ENV_TARGET}" \
 	-var "contact_ids=${PINGDOM_CONTACT_IDS}" \
 	-var "pingdom_user=${PINGDOM_USER}" \

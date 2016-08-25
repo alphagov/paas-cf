@@ -2,6 +2,7 @@
 
 set -eu
 
+TERRAFORM_ACTION=${1}
 export PASSWORD_STORE_DIR=${CERT_PASSWORD_STORE_DIR}
 STATEFILE=cf-certs.tfstate
 
@@ -25,7 +26,7 @@ terraform remote config \
   -backend-config="key=${STATEFILE}" \
   -backend-config="region=${AWS_DEFAULT_REGION}"
 
-terraform apply -var env="${DEPLOY_ENV}" \
+terraform "${TERRAFORM_ACTION}" -var env="${DEPLOY_ENV}" \
   -var-file="terraform/${AWS_ACCOUNT}.tfvars" \
   -var system_domain_crt="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.crt")" \
   -var system_domain_key="$(pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/system_domain.key")" \
