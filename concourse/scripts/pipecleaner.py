@@ -27,9 +27,13 @@ import re
 import sys
 import os
 import getopt
+import tempfile
+import subprocess
 
 
 class Pipecleaner(object):
+    def __init__(self, shellcheck_enabled):
+        self.shellcheck_enabled = shellcheck_enabled
 
     def validate(self, filename):
         data = self.load_pipeline(filename)
@@ -39,6 +43,27 @@ class Pipecleaner(object):
         raw = open(filename).read()
         raw = re.sub('\{\{.*?\}\}', 'DUMMY', raw)
         return yaml.load(raw)
+
+    def shellcheck(self, job, task, args):
+        if not self.shellcheck_enabled:
+            return
+
+        if args[-2] != '-c':
+            print "Odd args " + job + "." + task
+            print args
+            return
+
+        script = tempfile.NamedTemporaryFile(
+                prefix = job + "." + task,
+                delete = False
+        )
+        script.write("#!/bin/sh\n")
+        for switch in args[:-2]:
+            script.write("set " + switch + "\n")
+        script.write(args[-1])
+        script.close()
+        subprocess.call(["shellcheck", script.name])
+        os.unlink(script.name)
 
     def check_pipeline(self, data):
         errors = {
@@ -137,6 +162,10 @@ class Pipecleaner(object):
                         for i in item['config']['outputs']:
                             output_resources.add(i['name'])
 
+                    if 'run' in item['config']:
+                        if item['config']['run']['path'] == 'sh':
+                            self.shellcheck(job['name'], item['task'], item['config']['run']['args'])
+
             overall_used_resources = overall_used_resources.union(used_resources).union(get_resources)
 
             # Resources that were fetched with a `get:` but never referred to
@@ -175,23 +204,26 @@ class Pipecleaner(object):
 
 if __name__ == '__main__':
     def usage():
-        print 'pipecleaner.py pipeline.yml [pipeline2.yml..] [--ignore-types=unused_fetch,unused_resource] [--fatal-warnings]'
+        print 'pipecleaner.py pipeline.yml [pipeline2.yml..] [--ignore-types=unused_fetch,unused_resource] [--fatal-warnings] [--shellcheck]'
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '', ['ignore-types=', 'fatal-warnings'])
+        opts, args = getopt.getopt(sys.argv[1:], '', ['ignore-types=', 'fatal-warnings', 'shellcheck'])
     except getopt.GetoptError:
         usage()
 
-    files = sys.argv[1:]
+    files = args
     ignore_types = []
     fatal_warnings = False
+    shellcheck = False
 
     for flag, arg in opts:
         if flag == '--ignore-types':
             ignore_types = arg.split(',')
         if flag == '--fatal-warnings':
             fatal_warnings = True
+        if flag == '--shellcheck':
+            shellcheck = True
 
     if not files:
         usage()
@@ -201,7 +233,7 @@ if __name__ == '__main__':
     FMT = '%s' + BOLD + '* ' + ENDC + '%s' + ': %s'
 
     fatal = None
-    p = Pipecleaner()
+    p = Pipecleaner(shellcheck)
     for filename in files:
         errors = p.validate(filename)
 
