@@ -38,7 +38,7 @@ var _ = Describe("RDS broker", func() {
 		// slow (several minutes).
 
 		const (
-			DB_CREATE_TIMEOUT = 15 * time.Minute
+			DB_CREATE_TIMEOUT = 30 * time.Minute
 			testPlanName      = "M-dedicated-9.5"
 		)
 
