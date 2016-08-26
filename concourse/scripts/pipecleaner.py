@@ -30,8 +30,9 @@ import getopt
 import subprocess
 
 class Pipecleaner(object):
-    def __init__(self, shellcheck_enabled):
+    def __init__(self, shellcheck_enabled=False, shellcheck_fatal=False):
         self.shellcheck_enabled = shellcheck_enabled
+        self.shellcheck_fatal = shellcheck_fatal
 
     def validate(self, filename):
         data = self.load_pipeline(filename)
@@ -42,9 +43,10 @@ class Pipecleaner(object):
         raw = re.sub('\{\{.*?\}\}', 'DUMMY', raw)
         return yaml.load(raw)
 
-    def shellcheck(self, shell, job, task, args):
+    def call_shellcheck(self, shell, args):
+        """"Returns the exitcode and any output from running shellcheck"""
         if not self.shellcheck_enabled:
-            return
+            return 0, ""
 
         script = ""
 
@@ -55,17 +57,13 @@ class Pipecleaner(object):
         script += args[-1]
 
         process = subprocess.Popen(["shellcheck", "-s", shell, "-"],
-                                   stdin = subprocess.PIPE,
-                                   stdout = subprocess.PIPE,
-                                   stderr = subprocess.STDOUT)
-        out = process.communicate(script)[0]
-        exit = process.returncode
+                                   stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT)
+        output = process.communicate(script)[0]
+        exitcode = process.returncode
 
-        # TODO: exitcode non-zero == ERROR
-        #       output non-silent == WARNING
-
-        print "Exitcode: " + str(exit)
-        print "Output: " + out
+        return exitcode, output
 
     def check_pipeline(self, data):
         errors = {
@@ -73,7 +71,8 @@ class Pipecleaner(object):
             'unfetched_resource': [],
             'unused_fetch': [],
             'unused_resource': [],
-            'unused_output': []
+            'unused_output': [],
+            'shellcheck': [],
         }
 
         defined_resource_names = set([e['name'] for e in data['resources']])
@@ -166,7 +165,15 @@ class Pipecleaner(object):
 
                     if 'run' in item['config']:
                         if item['config']['run']['path'] in ['sh', 'bash', 'zsh']:
-                            self.shellcheck(item['config']['run']['path'], job['name'], item['task'], item['config']['run']['args'])
+                            exitcode, output = self.call_shellcheck(item['config']['run']['path'],
+                                                                    item['config']['run']['args'])
+                            if exitcode != 0:
+                                errors['shellcheck'].append({
+                                    'job': job['name'],
+                                    'task': item['task'],
+                                    'output': output,
+                                    'fatal': self.shellcheck_fatal,
+                                })
 
             overall_used_resources = overall_used_resources.union(used_resources).union(get_resources)
 
@@ -206,11 +213,21 @@ class Pipecleaner(object):
 
 if __name__ == '__main__':
     def usage():
-        print 'pipecleaner.py pipeline.yml [pipeline2.yml..] [--ignore-types=unused_fetch,unused_resource] [--fatal-warnings] [--shellcheck]'
+        print """
+pipecleaner.py pipeline.yml [pipeline2.yml..]
+                            [--ignore-types=unused_fetch,unused_resource]
+                            [--fatal-warnings]
+                            [--shellcheck]
+                            [--shellcheck-fatal]"""
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '', ['ignore-types=', 'fatal-warnings', 'shellcheck'])
+        opts, args = getopt.getopt(sys.argv[1:],
+                                   '',
+                                   ['ignore-types=',
+                                    'fatal-warnings',
+                                    'shellcheck',
+                                    'shellcheck-fatal'])
     except getopt.GetoptError:
         usage()
 
@@ -218,6 +235,7 @@ if __name__ == '__main__':
     ignore_types = []
     fatal_warnings = False
     shellcheck = False
+    shellcheck_fatal = False
 
     for flag, arg in opts:
         if flag == '--ignore-types':
@@ -226,6 +244,8 @@ if __name__ == '__main__':
             fatal_warnings = True
         if flag == '--shellcheck':
             shellcheck = True
+        if flag == '--shellcheck-fatal':
+            shellcheck_fatal = True
 
     if not files:
         usage()
@@ -235,7 +255,7 @@ if __name__ == '__main__':
     FMT = '%s' + BOLD + '* ' + ENDC + '%s' + ': %s'
 
     fatal = None
-    p = Pipecleaner(shellcheck)
+    p = Pipecleaner(shellcheck_enabled=shellcheck, shellcheck_fatal=shellcheck_fatal)
     for filename in files:
         errors = p.validate(filename)
 
@@ -247,14 +267,14 @@ if __name__ == '__main__':
                 continue
 
             for err in err_list:
+                if err['fatal']:
+                    msg_prefix = '\033[91mERROR '
+                else:
+                    msg_prefix = '\033[93mWARNING '
+
                 if not fatal:
                     fatal = err['fatal']
                 del err['fatal']
-
-                if err_type in ['unknown_resource', 'unfetched_resource']:
-                    msg_prefix = '\033[91mERROR '
-                if err_type in ['unused_fetch', 'unused_resource', 'unused_output']:
-                    msg_prefix = '\033[93mWARNING '
 
                 error_strings = []
                 for k, v in err.items():
