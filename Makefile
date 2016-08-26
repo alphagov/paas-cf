@@ -144,7 +144,7 @@ pipelines: ## Upload pipelines to Concourse
 showenv: ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@echo CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_key_pair" \
+		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 	@concourse/scripts/environment.sh
 
