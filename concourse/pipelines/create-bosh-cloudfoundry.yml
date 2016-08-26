@@ -226,6 +226,21 @@ resources:
       versioned_file: bosh_id_rsa.pub
       region_name: {{aws_region}}
 
+  - name: ssh-private-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: id_rsa
+      region_name: {{aws_region}}
+
+  - name: ssh-public-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: id_rsa.pub
+      region_name: {{aws_region}}
+
+
   - name: git-ssh-private-key
     type: s3-iam
     source:
@@ -431,6 +446,8 @@ jobs:
           - get: cf-secrets
           - get: bosh-ssh-private-key
           - get: bosh-ssh-public-key
+          - get: ssh-private-key
+          - get: ssh-public-key
 
       - task: generate-bosh-CA
         config:
@@ -468,143 +485,183 @@ jobs:
           params:
             file: generated-bosh-CA/bosh-CA.tar.gz
 
-      - task: generate-bosh-secrets
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.2-slim
-          inputs:
-            - name: paas-cf
-            - name: bosh-secrets
-              path: existing-bosh-secrets
-          outputs:
-            - name: generated-bosh-secrets
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
-                  --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
-                  > generated-bosh-secrets/bosh-secrets.yml
-                ls -l generated-bosh-secrets
-        on_success:
-          put: bosh-secrets
-          params:
-            file: generated-bosh-secrets/bosh-secrets.yml
+      - aggregate:
+        - task: generate-bosh-secrets
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
+            inputs:
+              - name: paas-cf
+              - name: bosh-secrets
+                path: existing-bosh-secrets
+            outputs:
+              - name: generated-bosh-secrets
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/manifests/bosh-manifest/scripts/generate-bosh-secrets.rb \
+                    --existing-secrets existing-bosh-secrets/bosh-secrets.yml \
+                    > generated-bosh-secrets/bosh-secrets.yml
+                  ls -l generated-bosh-secrets
+          on_success:
+            put: bosh-secrets
+            params:
+              file: generated-bosh-secrets/bosh-secrets.yml
 
-      - task: generate-bosh-ssh-keypair
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/git-ssh
-          inputs:
-            - name: paas-cf
-            - name: bosh-ssh-private-key
-            - name: bosh-ssh-public-key
-          outputs:
-            - name: generated-bosh-ssh-private-key
-            - name: generated-bosh-ssh-public-key
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if [ -s bosh-ssh-private-key/bosh_id_rsa ] ; then
-                  echo "BOSH private key non-zero size, skipping generation..."
-                  echo "Key uploads will fail and this is OK as no new keys have been generated."
-                  exit 0
-                fi
+        - task: generate-bosh-ssh-keypair
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/git-ssh
+            inputs:
+              - name: paas-cf
+              - name: bosh-ssh-private-key
+              - name: bosh-ssh-public-key
+            outputs:
+              - name: generated-bosh-ssh-private-key
+              - name: generated-bosh-ssh-public-key
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ -s bosh-ssh-private-key/bosh_id_rsa ] ; then
+                    echo "BOSH private key non-zero size, skipping generation..."
+                    echo "Key uploads will fail and this is OK as no new keys have been generated."
+                    exit 0
+                  fi
 
-                echo "Generating new ssh key pair for BOSH..."
-                ssh-keygen -t rsa -b 4096 -f bosh_id_rsa -N ''
-                cp bosh_id_rsa generated-bosh-ssh-private-key
-                cp bosh_id_rsa.pub generated-bosh-ssh-public-key
-        on_success:
-          try:
-            aggregate:
-              - put: bosh-ssh-private-key
-                params:
-                  file: generated-bosh-ssh-private-key/bosh_id_rsa
-              - put: bosh-ssh-public-key
-                params:
-                  file: generated-bosh-ssh-public-key/bosh_id_rsa.pub
+                  echo "Generating new ssh key pair for BOSH..."
+                  ssh-keygen -t rsa -b 4096 -f bosh_id_rsa -N ''
+                  cp bosh_id_rsa generated-bosh-ssh-private-key
+                  cp bosh_id_rsa.pub generated-bosh-ssh-public-key
+          on_success:
+            try:
+              aggregate:
+                - put: bosh-ssh-private-key
+                  params:
+                    file: generated-bosh-ssh-private-key/bosh_id_rsa
+                - put: bosh-ssh-public-key
+                  params:
+                    file: generated-bosh-ssh-public-key/bosh_id_rsa.pub
 
-      - task: generate-cf-certs
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/certstrap
-          inputs:
-            - name: bosh-CA
-            - name: paas-cf
-            - name: cf-certs
-          outputs:
-            - name: generated-cf-certs
-          params:
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                mkdir certs
-                echo "Extracting extant certs"
-                tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+        - task: generate-deployments-ssh-keypair
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/git-ssh
+            inputs:
+              - name: paas-cf
+              - name: ssh-private-key
+              - name: ssh-public-key
+            outputs:
+              - name: generated-ssh-private-key
+              - name: generated-ssh-public-key
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ -s ssh-private-key/id_rsa ] ; then
+                    echo "Deployments private key non-zero size, skipping generation..."
+                    echo "Key uploads will fail and this is OK as no new keys have been generated."
+                    exit 0
+                  fi
 
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
+                  echo "Generating new ssh key pair for deployments..."
+                  ssh-keygen -t rsa -b 4096 -f id_rsa -N ''
+                  cp id_rsa generated-ssh-private-key
+                  cp id_rsa.pub generated-ssh-public-key
+          on_success:
+            try:
+              aggregate:
+                - put: ssh-private-key
+                  params:
+                    file: generated-ssh-private-key/id_rsa
+                - put: ssh-public-key
+                  params:
+                    file: generated-ssh-public-key/id_rsa.pub
 
-                echo "Generating uaa_jwt_signing public key from private key"
-                openssl rsa -pubout -in certs/uaa_jwt_signing.key -out certs/uaa_jwt_verification.pem
+        - task: generate-cf-certs
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/certstrap
+            inputs:
+              - name: bosh-CA
+              - name: paas-cf
+              - name: cf-certs
+            outputs:
+              - name: generated-cf-certs
+            params:
+              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  mkdir certs
+                  echo "Extracting extant certs"
+                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-                echo "Creating updated cert tarball"
-                cd certs
-                tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
-        on_success:
-          put: cf-certs
-          params:
-            file: generated-cf-certs/cf-certs.tar.gz
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
 
-      - task: generate-cf-secrets
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.2-slim
-          inputs:
-            - name: paas-cf
-            - name: cf-secrets
-              path: existing-cf-secrets
-          outputs:
-            - name: generated-cf-secrets
-          run:
-            path: sh
-            args:
-              - -c
-              - -e
-              - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                  --existing-secrets existing-cf-secrets/cf-secrets.yml \
-                  > generated-cf-secrets/cf-secrets.yml
-                ls -l generated-cf-secrets
-        on_success:
-          put: cf-secrets
-          params:
-            file: generated-cf-secrets/cf-secrets.yml
+                  echo "Generating uaa_jwt_signing public key from private key"
+                  openssl rsa -pubout -in certs/uaa_jwt_signing.key -out certs/uaa_jwt_verification.pem
 
+                  echo "Creating updated cert tarball"
+                  cd certs
+                  tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+          on_success:
+            put: cf-certs
+            params:
+              file: generated-cf-certs/cf-certs.tar.gz
+
+        - task: generate-cf-secrets
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
+            inputs:
+              - name: paas-cf
+              - name: cf-secrets
+                path: existing-cf-secrets
+            outputs:
+              - name: generated-cf-secrets
+            run:
+              path: sh
+              args:
+                - -c
+                - -e
+                - |
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                    --existing-secrets existing-cf-secrets/cf-secrets.yml \
+                    > generated-cf-secrets/cf-secrets.yml
+                  ls -l generated-cf-secrets
+          on_success:
+            put: cf-secrets
+            params:
+              file: generated-cf-secrets/cf-secrets.yml
 
   - name: pre-deploy
     plan:
@@ -722,6 +779,7 @@ jobs:
           - get: bosh-secrets
             passed: ['generate-secrets']
           - get: bosh-ssh-public-key
+          - get: ssh-public-key
 
       - task: extract-terraform-variables
         config:
@@ -763,6 +821,7 @@ jobs:
             - name: terraform-variables
             - name: bosh-tfstate
             - name: bosh-ssh-public-key
+            - name: ssh-public-key
           outputs:
             - name: updated-bosh-tfstate
           params:
@@ -780,6 +839,7 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh-secrets.tfvars.sh
                 export TF_VAR_bosh_az="${BOSH_AZ}"
+                cp ssh-public-key/id_rsa.pub paas-cf/terraform/bosh
                 cp bosh-ssh-public-key/bosh_id_rsa.pub paas-cf/terraform/bosh
                 terraform apply -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh

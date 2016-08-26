@@ -81,3 +81,7 @@ output "bosh_fqdn" {
 output "bosh_ssh_key_pair_name" {
   value = "${aws_key_pair.bosh_ssh_key_pair.key_name}"
 }
+
+output "key_pair_name" {
+  value = "${aws_key_pair.env_key_pair.key_name}"
+}

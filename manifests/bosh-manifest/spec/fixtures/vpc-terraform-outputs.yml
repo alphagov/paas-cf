@@ -1,3 +1,0 @@
----
-terraform_outputs:
-  key_pair_name: ssh_key_pair
