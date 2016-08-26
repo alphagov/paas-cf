@@ -44,7 +44,7 @@ class Pipecleaner(object):
         raw = re.sub('\{\{.*?\}\}', 'DUMMY', raw)
         return yaml.load(raw)
 
-    def shellcheck(self, job, task, args):
+    def shellcheck(self, shell, job, task, args):
         if not self.shellcheck_enabled:
             return
 
@@ -57,7 +57,7 @@ class Pipecleaner(object):
                 prefix = job + "." + task,
                 delete = False
         )
-        script.write("#!/bin/sh\n")
+        script.write("#!/bin/" + shell + "\n")
         for switch in args[:-2]:
             script.write("set " + switch + "\n")
         script.write(args[-1])
@@ -163,8 +163,8 @@ class Pipecleaner(object):
                             output_resources.add(i['name'])
 
                     if 'run' in item['config']:
-                        if item['config']['run']['path'] == 'sh':
-                            self.shellcheck(job['name'], item['task'], item['config']['run']['args'])
+                        if item['config']['run']['path'] in ['sh', 'bash', 'zsh']:
+                            self.shellcheck(item['config']['run']['path'], job['name'], item['task'], item['config']['run']['args'])
 
             overall_used_resources = overall_used_resources.union(used_resources).union(get_resources)
 
