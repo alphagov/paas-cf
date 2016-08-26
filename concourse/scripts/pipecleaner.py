@@ -27,9 +27,7 @@ import re
 import sys
 import os
 import getopt
-import tempfile
 import subprocess
-
 
 class Pipecleaner(object):
     def __init__(self, shellcheck_enabled):
@@ -48,22 +46,26 @@ class Pipecleaner(object):
         if not self.shellcheck_enabled:
             return
 
-        if args[-2] != '-c':
-            print "Odd args " + job + "." + task
-            print args
-            return
+        script = ""
 
-        script = tempfile.NamedTemporaryFile(
-                prefix = job + "." + task,
-                delete = False
-        )
-        script.write("#!/bin/" + shell + "\n")
-        for switch in args[:-2]:
-            script.write("set " + switch + "\n")
-        script.write(args[-1])
-        script.close()
-        subprocess.call(["shellcheck", script.name])
-        os.unlink(script.name)
+        for switch in args[:-1]:
+            if switch != "-c":
+                script += "set " + switch + "\n"
+
+        script += args[-1]
+
+        process = subprocess.Popen(["shellcheck", "-s", shell, "-"],
+                                   stdin = subprocess.PIPE,
+                                   stdout = subprocess.PIPE,
+                                   stderr = subprocess.STDOUT)
+        out = process.communicate(script)[0]
+        exit = process.returncode
+
+        # TODO: exitcode non-zero == ERROR
+        #       output non-silent == WARNING
+
+        print "Exitcode: " + str(exit)
+        print "Output: " + out
 
     def check_pipeline(self, data):
         errors = {
