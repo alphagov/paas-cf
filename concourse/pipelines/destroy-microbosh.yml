@@ -45,6 +45,20 @@ resources:
       region_name: {{aws_region}}
       versioned_file: {{bosh_manifest_state}}
 
+  - name: bosh-ssh-public-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: bosh_id_rsa.pub
+      region_name: {{aws_region}}
+
+  - name: ssh-public-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: id_rsa.pub
+      region_name: {{aws_region}}
+
   - name: bosh-manifest
     type: s3-iam
     source:
@@ -203,6 +217,8 @@ jobs:
           - get: concourse-tfstate
           - get: bosh-tfstate
           - get: bosh-secrets
+          - get: bosh-ssh-public-key
+          - get: ssh-public-key
       - task: extract-terraform-variables
         config:
           platform: linux
@@ -241,6 +257,8 @@ jobs:
             - name: paas-cf
             - name: terraform-variables
             - name: bosh-tfstate
+            - name: bosh-ssh-public-key
+            - name: ssh-public-key
           outputs:
             - name: updated-bosh-tfstate
           params:
@@ -258,6 +276,8 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/bosh-secrets.tfvars.sh
 
+                cp ssh-public-key/id_rsa.pub paas-cf/terraform/bosh
+                cp bosh-ssh-public-key/bosh_id_rsa.pub paas-cf/terraform/bosh
                 terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                   -state=bosh-tfstate/bosh.tfstate -state-out=updated-bosh-tfstate/bosh.tfstate paas-cf/terraform/bosh
         ensure:
