@@ -164,7 +164,7 @@ class Pipecleaner(object):
                             output_resources.add(i['name'])
 
                     if 'run' in item['config']:
-                        if item['config']['run']['path'] in ['sh', 'bash', 'zsh']:
+                        if item['config']['run']['path'] in ['sh', 'bash', 'dash', 'ksh']:
                             exitcode, output = self.call_shellcheck(item['config']['run']['path'],
                                                                     item['config']['run']['args'])
                             if exitcode != 0:
