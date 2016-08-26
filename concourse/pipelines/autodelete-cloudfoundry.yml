@@ -15,6 +15,11 @@ resource_types:
   source:
     repository: governmentpaas/semver-resource
 
+- name: enum
+  type: docker-image
+  source:
+    repository: governmentpaas/enum-resource
+
 resources:
   - name: paas-cf
     type: git-gpg
@@ -60,11 +65,13 @@ resources:
       versioned_file: bosh-CA.tar.gz
 
   - name: healthcheck-deployed
-    type: s3-iam
+    type: enum
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
       versioned_file: healthcheck-deployed
+      valid_values: ["yes", "no"]
+      default_value: "no"
 
 jobs:
   - name: delete
@@ -91,8 +98,6 @@ jobs:
             - name: delete-timer
             - name: bosh-secrets
             - name: paas-cf
-          outputs:
-            - name: healthcheck-deployed
           image_resource:
             type: docker-image
             source:
@@ -116,8 +121,7 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 bosh -n delete deployment {{deploy_env}} --force
 
-                echo "no" > healthcheck-deployed/healthcheck-deployed
         on_success:
           put: healthcheck-deployed
           params:
-            file: healthcheck-deployed/healthcheck-deployed
+            value: "no"
