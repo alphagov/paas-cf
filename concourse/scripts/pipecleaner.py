@@ -29,6 +29,7 @@ import os
 import getopt
 import subprocess
 
+
 class Pipecleaner(object):
     def __init__(self, shellcheck_enabled=False, shellcheck_fatal=False):
         self.shellcheck_enabled = shellcheck_enabled
