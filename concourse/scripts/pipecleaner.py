@@ -172,7 +172,7 @@ class Pipecleaner(object):
                                 errors['shellcheck'].append({
                                     'job': job['name'],
                                     'task': item['task'],
-                                    'output': output,
+                                    '~': output,
                                     'fatal': self.shellcheck_fatal,
                                 })
 
@@ -278,7 +278,7 @@ pipecleaner.py pipeline.yml [pipeline2.yml..]
                 del err['fatal']
 
                 error_strings = []
-                for k, v in err.items():
+                for k, v in sorted(err.items()):
                     error_strings.append("%s='%s'" % (k, v))
 
                 print FMT % (msg_prefix, err_type.replace('_', ' ').title(), ', '.join(error_strings))
