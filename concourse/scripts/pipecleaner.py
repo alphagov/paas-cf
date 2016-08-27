@@ -246,6 +246,7 @@ pipecleaner.py pipeline.yml [pipeline2.yml..]
         if flag == '--shellcheck':
             shellcheck = True
         if flag == '--shellcheck-fatal':
+            shellcheck = True
             shellcheck_fatal = True
 
     if not files:
