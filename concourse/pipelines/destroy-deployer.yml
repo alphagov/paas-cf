@@ -132,7 +132,7 @@ jobs:
           - -c
           - |
             . vpc-terraform-outputs/tfvars.sh
-            touch concourse.crt concourse.key
+            touch concourse.crt concourse.key paas-cf/terraform/concourse/concourse_id_rsa.pub
             terraform destroy -force \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
               -state=concourse-terraform-state/concourse.tfstate \
