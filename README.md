@@ -310,10 +310,10 @@ You can get both from command line. You will need [aws-cli](#aws-cli), to do thi
 ```
 eval $(make dev showenv | grep CONCOURSE_IP=)
 
-aws s3 cp "s3://${DEPLOY_ENV}-state/id_rsa" ./deployer_id_rsa && \
-chmod 400 deployer_id_rsa
+aws s3 cp "s3://${DEPLOY_ENV}-state/concourse_id_rsa" ./concourse_id_rsa && \
+  chmod 400 concourse_id_rsa
 
-ssh -i deployer_id_rsa -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null vcap@$CONCOURSE_IP
+ssh -i concourse_id_rsa -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null vcap@$CONCOURSE_IP
 ```
 
 If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
