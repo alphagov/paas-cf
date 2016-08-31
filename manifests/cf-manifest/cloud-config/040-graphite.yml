@@ -11,7 +11,7 @@ vm_types:
     cloud_properties:
       instance_type: t2.medium
       ephemeral_disk:
-        size: 65536
+        size: 10240
         type: gp2
       elbs:
         - (( grab terraform_outputs.metrics_elb_name ))
