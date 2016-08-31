@@ -82,12 +82,6 @@ resource_types:
   source:
     repository: governmentpaas/semver-resource
 
-- name: enum
-  type: docker-image
-  source:
-    repository: governmentpaas/enum-resource
-    tag: feature_123003931_concourse_enum_type
-
 resources:
   - name: pipeline-trigger
     type: semver-iam
@@ -303,15 +297,6 @@ resources:
       region_name: {{aws_region}}
       versioned_file: runtime-config.yml
 
-  - name: healthcheck-deployed
-    type: enum
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: healthcheck-deployed
-      valid_values: ["yes", "no"]
-      default_value: "no"
-
   - name: cf-release
     type: git
     source:
@@ -445,6 +430,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub paas-cf/concourse/init_files/zero_bytes
+
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -685,7 +671,6 @@ jobs:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
-          - get: healthcheck-deployed
           - get: paas-cf
             passed: ['generate-secrets']
           - get: cf-secrets
@@ -700,7 +685,6 @@ jobs:
               - name: bosh-CA
               - name: paas-cf
               - name: cf-secrets
-              - name: healthcheck-deployed
               - name: pipeline-trigger
             params:
               SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
@@ -716,12 +700,6 @@ jobs:
                 - -u
                 - -c
                 - |
-                  HEALTHCHECK_DEPLOYED=$(cat healthcheck-deployed/value)
-                  if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                    echo "Skipping availability tests because the healthcheck is not deployed"
-                    exit 0
-                  fi
-
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
@@ -741,13 +719,13 @@ jobs:
                     sleep 5
                   done
 
+
   - name: availability-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
-          - get: healthcheck-deployed
           - get: paas-cf
             passed: ['generate-secrets']
           - get: bosh-CA
@@ -764,7 +742,6 @@ jobs:
             - name: pipeline-trigger
             - name: concourse-manifest
             - name: bosh-CA
-            - name: healthcheck-deployed
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
@@ -778,12 +755,6 @@ jobs:
               - -e
               - -c
               - |
-                HEALTHCHECK_DEPLOYED=$(cat healthcheck-deployed/value)
-                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                  echo "Skipping availability tests because the healthcheck is not deployed"
-                  exit 0
-                fi
-
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 export CONCOURSE_ATC_PASSWORD=$(awk '/basic_auth_password/ { print $2 }' concourse-manifest/concourse-manifest.yml | tr -d '"')
@@ -1927,10 +1898,6 @@ jobs:
                 fi
 
                 cf start healthcheck
-        on_success:
-          put: healthcheck-deployed
-          params:
-            value: "yes"
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
