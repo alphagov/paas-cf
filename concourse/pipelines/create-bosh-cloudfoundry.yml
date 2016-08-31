@@ -1779,7 +1779,7 @@ jobs:
                       PREFIX_JOB: "true"
                   EOF
 
-                  cf push
+                  ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
 
         - task: update-kibana-timezone
           config:
