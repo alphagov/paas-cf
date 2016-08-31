@@ -428,6 +428,8 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa.pub paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub paas-cf/concourse/init_files/zero_bytes
 
 
   - name: generate-secrets
