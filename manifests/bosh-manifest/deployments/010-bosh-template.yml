@@ -79,8 +79,6 @@ jobs:
         password: (( grab secrets.bosh_hm_director_password ))
       resurrector_enabled: false
 
-    ntp: (( grab meta.ntp ))
-
     agent:
       mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 

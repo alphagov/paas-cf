@@ -13,5 +13,3 @@ cloud_provider:
     blobstore:
       provider: local
       path: /var/vcap/micro_bosh/data/cache
-    ntp: (( grab meta.ntp ))
-
