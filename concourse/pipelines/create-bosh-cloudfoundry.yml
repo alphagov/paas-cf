@@ -93,6 +93,13 @@ resources:
       tag_filter: {{paas_cf_tag_filter}}
       commit_verification_key_ids: {{gpg_ids}}
 
+  - name: datadog-agent-boshrelease
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-datadog-agent-boshrelease.git
+      tag_filter: {{cf_datadog_agent_version}}
+      branch: custom_config
+
   - name: paas-haproxy-release
     type: git
     source:
@@ -1391,6 +1398,7 @@ jobs:
             outputs:
               - name: runtime-config
             params:
+              DATADOG_API_KEY: {{datadog_api_key}}
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
@@ -1437,6 +1445,7 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: logsearch-for-cloudfoundry-boshrelease
+          - get: datadog-agent-boshrelease
 
       - aggregate:
         - task: upload-releases
@@ -1455,6 +1464,7 @@ jobs:
               - name: aws-broker-boshrelease
               - name: os-conf-boshrelease
               - name: logsearch-for-cloudfoundry-boshrelease
+              - name: datadog-agent-boshrelease
             run:
               path: sh
               args:
@@ -1480,6 +1490,9 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb logsearch-for-cloudfoundry \
                     {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
+
+                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb datadog-agent \
+                    {{cf_datadog_agent_version}} datadog-agent-boshrelease
 
         - task: get-and-upload-stemcell
           config:

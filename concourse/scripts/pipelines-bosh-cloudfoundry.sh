@@ -45,6 +45,7 @@ prepare_environment() {
   cf_aws_broker_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.aws-broker.version "${cf_manifest_dir}/050-rds-broker.yml")
   cf_os_conf_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.os-conf.version "${cf_manifest_dir}/../runtime-config/runtime-config-base.yml")
   cf_logsearch_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.logsearch-for-cloudfoundry.version "${cf_manifest_dir}/030-logsearch.yml")
+  cf_datadog_agent_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.datadog-agent.version "${cf_manifest_dir}/../runtime-config/runtime-config-base.yml")
 
   if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
     gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
@@ -56,6 +57,12 @@ prepare_environment() {
   get_git_concourse_pool_clone_full_url_ssh
 
   export EXPOSE_PIPELINE=1
+
+  if [ "${ENABLE_DATADOG:-}" = "true" ]; then
+    export PASSWORD_STORE_DIR=~/.paas-pass
+    datadog_api_key=$(pass datadog/api_key)
+    datadog_app_key=$(pass datadog/app_key)
+  fi
 }
 
 generate_vars_file() {
@@ -80,6 +87,7 @@ cf_grafana_version: ${cf_grafana_version}
 cf_aws_broker_version: ${cf_aws_broker_version}
 cf_os_conf_version: ${cf_os_conf_version}
 cf_logsearch_for_cloudfoundry_version: ${cf_logsearch_for_cloudfoundry_version}
+cf_datadog_agent_version: ${cf_datadog_agent_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
@@ -93,6 +101,8 @@ bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 enable_cf_acceptance_tests: ${ENABLE_CF_ACCEPTANCE_TESTS:-true}
+datadog_api_key: ${datadog_api_key:-}
+datadog_app_key: ${datadog_app_key:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
