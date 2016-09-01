@@ -57,7 +57,6 @@ jobs:
       disks:
         max_orphaned_age_in_days: 0
       cpi_job: (( grab cloud_provider.template.name ))
-      ignore_missing_gateway: "false"
       user_management:
         provider: local
         local:
