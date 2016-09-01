@@ -58,7 +58,6 @@ jobs:
         max_orphaned_age_in_days: 0
       cpi_job: (( grab cloud_provider.template.name ))
       user_management:
-        provider: local
         local:
           users:
             - { name: admin, password: (( grab secrets.bosh_admin_password )) }
