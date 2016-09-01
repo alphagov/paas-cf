@@ -301,8 +301,6 @@ jobs:
         release: cf
       - name: auctioneer
         release: diego
-      - name: converger
-        release: diego
       - name: metron_agent
         release: cf
     instances: 2
