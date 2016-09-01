@@ -33,7 +33,7 @@ jobs:
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
 
-  resource_pool: vms
+  resource_pool: bosh
   persistent_disk_pool: disks
 
   networks:
