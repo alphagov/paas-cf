@@ -52,8 +52,6 @@ jobs:
       password: (( grab secrets.bosh_nats_password ))
 
     redis:
-      listen_address: 127.0.0.1
-      address: 127.0.0.1
       password: (( grab secrets.bosh_redis_password ))
 
     postgres: (( grab meta.postgres ))
