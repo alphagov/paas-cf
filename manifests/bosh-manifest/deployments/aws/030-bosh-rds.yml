@@ -6,4 +6,3 @@ meta:
     user: (( grab terraform_outputs.bosh_db_username ))
     password: (( grab secrets.bosh_postgres_password ))
     database: (( grab terraform_outputs.bosh_db_dbname ))
-    adapter: postgres
