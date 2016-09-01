@@ -95,7 +95,7 @@ meta:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: gorouter
-    release: routing
+    release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: haproxy
