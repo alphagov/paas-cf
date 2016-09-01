@@ -2,12 +2,6 @@
 meta:
   environment: (( grab terraform_outputs.environment ))
 
-  default_dns:
-    address: (( grab meta.bosh_public_ip ))
-    domain_name: microbosh
-    db: (( grab meta.postgres ))
-    recursor: 8.8.8.8
-
   default_agent:
     mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
@@ -90,7 +84,5 @@ jobs:
       host: (( grab terraform_outputs.bosh_fqdn ))
       username: admin
       password: (( grab secrets.bosh_registry_password ))
-
-    dns: (( grab meta.default_dns ))
 
 properties: ~
