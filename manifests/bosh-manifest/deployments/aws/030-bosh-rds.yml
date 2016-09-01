@@ -1,6 +1,6 @@
 ---
 meta:
-  postgres:
+  rds:
     host: (( grab terraform_outputs.bosh_db_address ))
     port: (( grab terraform_outputs.bosh_db_port ))
     user: (( grab terraform_outputs.bosh_db_username ))

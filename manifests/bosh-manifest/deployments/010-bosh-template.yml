@@ -48,12 +48,10 @@ jobs:
     redis:
       password: (( grab secrets.bosh_redis_password ))
 
-    postgres: (( grab meta.postgres ))
-
     director:
       address: 127.0.0.1
       name: my-bosh
-      db: (( grab meta.postgres ))
+      db: (( grab meta.rds ))
       disks:
         max_orphaned_age_in_days: 0
       cpi_job: (( grab cloud_provider.template.name ))
@@ -73,7 +71,7 @@ jobs:
       mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
     registry:
-      db: (( grab meta.postgres ))
+      db: (( grab meta.rds ))
       http:
         # Properties used by director and registry jobs
         user: admin
