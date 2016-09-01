@@ -83,18 +83,16 @@ jobs:
       mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
     registry:
-      host: (( grab terraform_outputs.bosh_fqdn ))
       db: (( grab meta.postgres ))
       http:
-        # Variables used by official job release
+        # Properties used by director and registry jobs
         user: admin
         password: (( grab secrets.bosh_registry_password ))
-      # Variables used by Google job release
+      # Properties used by AWS CPI
+      host: (( grab terraform_outputs.bosh_fqdn ))
       username: admin
       password: (( grab secrets.bosh_registry_password ))
 
     dns: (( grab meta.default_dns ))
 
 properties: ~
-
-
