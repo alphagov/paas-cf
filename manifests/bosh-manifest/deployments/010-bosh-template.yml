@@ -21,7 +21,7 @@ releases:
 
 disk_pools:
 - name: disks
-  disk_size: 32_768
+  disk_size: 32768
 
 jobs:
 - name: bosh

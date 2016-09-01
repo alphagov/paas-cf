@@ -7,7 +7,7 @@ resource_pools:
     sha1: 477371a335d172f4728c7a8806448edb9703104c
   cloud_properties:
     instance_type: t2.medium
-    ephemeral_disk: {size: 40_000, type: gp2}
+    ephemeral_disk: {size: 40000, type: gp2}
     availability_zone: (( grab terraform_outputs.bosh_az ))
     iam_instance_profile: bosh-director
   env:
