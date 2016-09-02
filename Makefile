@@ -176,3 +176,5 @@ find_diverged_forks: ## Check all github forks belonging to paas to see if they'
 run_job: check-env-vars ##  Unbind paas-cf of $JOB in create-bosh-cloudfoundry pipeline and then trigger it
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
+ssh_concourse: check-env-vars ## SSH to the concourse server
+	@./concourse/scripts/ssh.sh
