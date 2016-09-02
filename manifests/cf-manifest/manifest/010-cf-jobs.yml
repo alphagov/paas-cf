@@ -281,7 +281,7 @@ jobs:
       - name: consul_agent
         release: cf
       - name: rep
-        release: rep
+        release: diego
       - name: garden
         release: garden-linux
       - name: cflinuxfs2-rootfs-setup

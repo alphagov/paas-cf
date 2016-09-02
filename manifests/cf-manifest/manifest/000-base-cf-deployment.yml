@@ -27,8 +27,6 @@ releases:
     sha1: b6a7e32d04bafb2a11afd246f9123524ee703a02
   - name: paas-haproxy
     version: 0.0.4
-  - name: rep
-    version: 0.0.1
 
 stemcells:
   - alias: default

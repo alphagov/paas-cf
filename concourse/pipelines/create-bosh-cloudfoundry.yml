@@ -135,12 +135,6 @@ resources:
       tag_filter: {{cf_os_conf_version}}
       branch: gds_master
 
-  - name: rep-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-rep-boshrelease.git
-      tag_filter: {{cf_rep_version}}
-
   - name: logsearch-for-cloudfoundry-boshrelease
     type: git
     source:
@@ -1453,7 +1447,6 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: logsearch-for-cloudfoundry-boshrelease
-          - get: rep-boshrelease
 
       - aggregate:
         - task: upload-releases
@@ -1471,7 +1464,6 @@ jobs:
               - name: paas-haproxy-release
               - name: aws-broker-boshrelease
               - name: os-conf-boshrelease
-              - name: rep-boshrelease
               - name: logsearch-for-cloudfoundry-boshrelease
             run:
               path: sh
@@ -1495,9 +1487,6 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
                     {{cf_aws_broker_version}} aws-broker-boshrelease
-
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb rep \
-                    {{cf_rep_version}} rep-boshrelease
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb logsearch-for-cloudfoundry \
                     {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
