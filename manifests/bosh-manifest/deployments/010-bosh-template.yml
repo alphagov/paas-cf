@@ -1,7 +1,5 @@
 ---
 meta:
-  environment: (( grab terraform_outputs.environment ))
-
   default_agent:
     mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
@@ -11,7 +9,6 @@ releases:
 - name: bosh
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=255.8
   sha1: 6b12652650b87810dcef1be1f6a6d23f1c0c13a7
-
 
 disk_pools:
 - name: disks
