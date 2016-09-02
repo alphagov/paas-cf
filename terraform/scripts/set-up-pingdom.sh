@@ -21,7 +21,6 @@ trap 'rm -r "${PAAS_CF_DIR}/${WORKING_DIR}"' EXIT
 wget "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${VERSION}/${BINARY}" \
   -O "${WORKING_DIR}"/terraform-provider-pingdom
 chmod +x "${WORKING_DIR}"/terraform-provider-pingdom
-cp terraform/providers/.terraformrc "${WORKING_DIR}"
 
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
 cd "${WORKING_DIR}"
@@ -33,8 +32,7 @@ terraform remote config \
     -backend-config="key=${STATEFILE}" \
     -backend-config="region=${AWS_DEFAULT_REGION}"
 
-# Run Terraform Pingdom Provider. We change $HOME so Terraform can find terraformrc
-HOME=${WORKING_DIR} \
+# Run Terraform Pingdom Provider
 terraform "${TERRAFORM_ACTION}" \
 	-var "env=${MAKEFILE_ENV_TARGET}" \
 	-var "contact_ids=${PINGDOM_CONTACT_IDS}" \
