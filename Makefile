@@ -151,16 +151,18 @@ showenv: ## Display environment information
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
 manually_upload_certs: ## Manually upload to AWS the SSL certificates for public facing endpoints
+	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	# check password store and if varables are accesible
 	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${CERT_PASSWORD_STORE_DIR}),,$(error Password store ${CERT_PASSWORD_STORE_DIR} does not exist))
-	@terraform/scripts/manually-upload-certs.sh
+	@terraform/scripts/manually-upload-certs.sh ${ACTION}
 
 .PHONY: pingdom
 pingdom: ## Use custom Terraform provider to set up Pingdom check
+	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	$(eval export PINGDOM_CONTACT_IDS=11089310)
-	@terraform/scripts/set-up-pingdom.sh
+	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))

@@ -54,10 +54,15 @@ In that case, the operator must manually upload the certificates:
     [password store](https://www.passwordstore.org/) directory to read
     the certificates from by passing the variable `CERT_PASSWORD_STORE_DIR`
 
-    For example: `make prod manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass`
+    To review changes:
+    ```
+make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=plan
+```
 
-    This will upload the certificates and update the `cf-certs.tfstate` with
-    the information of the aws server certificates.
+    To apply changes:
+    ```
+make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=apply
+```
 
  3. Continue with the standard procedure to deploy cloudfoundry.
 

@@ -13,8 +13,15 @@ The IDs of the contacts to be notified are stored as a comma-delimited string in
 * Load the AWS credentials for the environment you are setting up checks for. These are required as the Terraform state file for the Pingdom checks is stored in an S3 bucket.
 
 ### Usage
-Run `make <ENV> pingdom` to set up the Pingdom checks.
+To review changes:
+```
+make <ENV> pingdom ACTION=plan
+```
 
+To apply changes:
+```
+make <ENV> pingdom ACTION=apply
+```
 
 ## Build from source
 
