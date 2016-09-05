@@ -54,9 +54,9 @@ You may need to ensure your Terraform version is compatible with the terraform l
 #### Install
 Run `go install github.com/russellcardullo/terraform-provider-pingdom`. This will build and install the binary in `$GOPATH/bin`. Make sure `$GOPATH/bin` is in your `$PATH`.
 
-Add the content of `terraform/providers/terraformrc` to `$HOME/.terraformrc`.
+Terraform will look in various places to find plugin binaries, see the [discover](https://github.com/hashicorp/terraform/blob/10cc8b8c63f0e780c022c2e9b25e954bf7a7bca8/config.go#L80) function.
 
-The binary should now be installed and Terraform knows where to find it.
+For temporary work, it should be sufficient create a symlink of the same name in the directory from which you will run `terraform`.
 
 ## Publishing the custom provider
 Build from inside directory `$GOPATH/src/github.com/russellcardullo/terraform-provider-pingdom`.
