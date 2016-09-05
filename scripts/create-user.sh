@@ -105,6 +105,14 @@ generate_password() {
 create_org_space() {
   cf create-org "${ORG}"
   cf create-space "${DEFAULT_SPACE}" -o "${ORG}"
+
+  # cf create-{org|space} has the side-effect of giving roles in the org/space
+  # to the user making the request. We don't want this, so have to undo it.
+  local admin_user
+  admin_user=$(cf target | awk '/User:/ { print $2}')
+  cf unset-org-role "${admin_user}" "${ORG}" OrgManager
+  cf unset-space-role "${admin_user}" "${ORG}" "${DEFAULT_SPACE}" SpaceManager
+  cf unset-space-role "${admin_user}" "${ORG}" "${DEFAULT_SPACE}" SpaceDeveloper
 }
 
 create_user() {
