@@ -527,15 +527,6 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
 
-    converger:
-      bbs:
-        api_location: bbs.service.cf.internal:8889
-        ca_cert: (( grab meta.secrets.consul_ca_cert ))
-        client_cert: (( grab secrets.bbs_client_cert  ))
-        client_key: (( grab secrets.bbs_client_key  ))
-        require_ssl: true
-      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-
     file_server:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
