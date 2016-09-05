@@ -4,8 +4,18 @@ RSpec.describe "manifest properties validations" do
   let(:bosh_job) { manifest.fetch("jobs").select { |x| x["name"] == "bosh" }.first }
   let(:bosh_properties) { properties.merge(bosh_job["properties"]) }
 
-  it "uses local user management" do
-    expect(bosh_properties["director"]["user_management"]["provider"]).to eq("local")
+  it "configures hm bosh user with password" do
+    users = bosh_properties["director"]["user_management"]["local"]["users"]
+    hm = users.find { |u| u['name'] == 'hm' }
+    expect(hm).to be
+    expect(hm["password"]).to eq("BOSH_HM_DIRECTOR_PASSWORD")
+  end
+
+  it "configures admin bosh user with password" do
+    users = bosh_properties["director"]["user_management"]["local"]["users"]
+    admin = users.find { |u| u['name'] == 'admin' }
+    expect(admin).to be
+    expect(admin["password"]).to eq("BOSH_ADMIN_PASSWORD")
   end
 
   it "creates a local user for health manager" do

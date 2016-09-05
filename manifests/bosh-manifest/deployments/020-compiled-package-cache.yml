@@ -2,10 +2,6 @@ jobs:
 - name: bosh
   properties:
     compiled_package_cache:
-      provider: s3
       options:
         credentials_source: env_or_profile
         bucket_name: (( grab terraform_outputs.compiled_cache_bucket_name ))
-        host: (( grab terraform_outputs.compiled_cache_bucket_host ))
-
-

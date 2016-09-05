@@ -6,7 +6,6 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52
   sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
 
-
 jobs:
 - name: bosh
   templates:
@@ -20,4 +19,3 @@ cloud_provider:
 
   properties:
     aws: (( grab meta.aws.cloud_provider ))
-

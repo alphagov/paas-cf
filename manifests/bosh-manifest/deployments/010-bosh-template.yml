@@ -1,13 +1,5 @@
 ---
 meta:
-  environment: (( grab terraform_outputs.environment ))
-
-  default_dns:
-    address: (( grab meta.bosh_public_ip ))
-    domain_name: microbosh
-    db: (( grab meta.postgres ))
-    recursor: 8.8.8.8
-
   default_agent:
     mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
@@ -18,10 +10,9 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=255.8
   sha1: 6b12652650b87810dcef1be1f6a6d23f1c0c13a7
 
-
 disk_pools:
 - name: disks
-  disk_size: 32_768
+  disk_size: 32768
 
 jobs:
 - name: bosh
@@ -33,7 +24,7 @@ jobs:
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
 
-  resource_pool: vms
+  resource_pool: bosh
   persistent_disk_pool: disks
 
   networks:
@@ -52,22 +43,16 @@ jobs:
       password: (( grab secrets.bosh_nats_password ))
 
     redis:
-      listen_address: 127.0.0.1
-      address: 127.0.0.1
       password: (( grab secrets.bosh_redis_password ))
-
-    postgres: (( grab meta.postgres ))
 
     director:
       address: 127.0.0.1
       name: my-bosh
-      db: (( grab meta.postgres ))
+      db: (( grab meta.rds ))
       disks:
         max_orphaned_age_in_days: 0
       cpi_job: (( grab cloud_provider.template.name ))
-      ignore_missing_gateway: "false"
       user_management:
-        provider: local
         local:
           users:
             - { name: admin, password: (( grab secrets.bosh_admin_password )) }
@@ -79,24 +64,18 @@ jobs:
         password: (( grab secrets.bosh_hm_director_password ))
       resurrector_enabled: false
 
-    ntp: (( grab meta.ntp ))
-
     agent:
       mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 
     registry:
-      host: (( grab terraform_outputs.bosh_fqdn ))
-      db: (( grab meta.postgres ))
+      db: (( grab meta.rds ))
       http:
-        # Variables used by official job release
+        # Properties used by director and registry jobs
         user: admin
         password: (( grab secrets.bosh_registry_password ))
-      # Variables used by Google job release
+      # Properties used by AWS CPI
+      host: (( grab terraform_outputs.bosh_fqdn ))
       username: admin
       password: (( grab secrets.bosh_registry_password ))
 
-    dns: (( grab meta.default_dns ))
-
 properties: ~
-
-

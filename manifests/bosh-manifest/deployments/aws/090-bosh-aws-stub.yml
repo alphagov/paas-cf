@@ -19,13 +19,7 @@ meta:
   bosh_private_ip: (( grab terraform_outputs.microbosh_static_private_ip ))
   bosh_public_ip: (( grab terraform_outputs.microbosh_static_public_ip ))
 
-  ntp:
-  - 0.pool.ntp.org
-  - 1.pool.ntp.org
-
-
 jobs:
 - name: bosh
   properties:
     aws: (( grab meta.aws.bosh_properties ))
-    dns: null
