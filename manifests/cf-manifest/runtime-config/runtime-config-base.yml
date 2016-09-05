@@ -21,3 +21,4 @@ addons:
       release: datadog-agent
     properties:
       api_key: (( grab $DATADOG_API_KEY ))
+      use_dogstatsd: no
