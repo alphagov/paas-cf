@@ -41,15 +41,28 @@ For bleeding-edge features, it may be necessary to build the provider from our f
 ```
 # go-pingdom library
 cd $GOPATH/src/github.com/russellcardullo/go-pingdom
-git remote add alphagov https://github.com/russellcardullo/go-pingdom.git
+git remote add alphagov git@github.com:alphagov/paas-go-pingdom.git
+git fetch alphagov
+git checkout gds_master
 
 # terraform-provider-pingdom
 cd $GOPATH/src/github.com/russellcardullo/terraform-provider-pingdom
-git remote add alphagov https://github.com/russellcardullo/terraform-provider-pingdom.git
+git remote add alphagov git@github.com:alphagov/paas-terraform-provider-pingdom.git
+git fetch alphagov
+git checkout gds_master
 ```
 
 #### Terraform version
-You may need to ensure your Terraform version is compatible with the terraform library used to compile the provider. You can run `terraform -v` to get your version of Terraform and find the corresponding git tag for this version in `$GOPATH/src/github.com/hashicorp/terraform`. Use the tag to checkout that version of the terraform library prior to installing the provider.
+You may need to ensure your Terraform version is compatible with the terraform library used to compile the provider.
+You can run `terraform -v` to get your version of Terraform and find the corresponding git tag for this version in `$GOPATH/src/github.com/hashicorp/terraform`.
+Use the tag to checkout that version of the terraform library prior to installing the provider.
+
+```
+cd $GOPATH/src/github.com/hashicorp/terraform
+git fetch
+git tag -l
+git checkout v0.6.15
+```
 
 #### Install
 Run `go install github.com/russellcardullo/terraform-provider-pingdom`. This will build and install the binary in `$GOPATH/bin`. Make sure `$GOPATH/bin` is in your `$PATH`.

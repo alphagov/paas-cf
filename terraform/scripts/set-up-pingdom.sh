@@ -2,7 +2,7 @@
 
 set -eu
 TERRAFORM_ACTION=${1}
-VERSION=0.2.1
+VERSION=0.2.2
 BINARY=terraform-provider-pingdom-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
 
