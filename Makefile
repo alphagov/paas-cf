@@ -8,7 +8,7 @@ help:
 SHELLCHECK=shellcheck
 YAMLLINT=yamllint
 
-DEPLOY_ENV_MAX_LENGTH=15
+DEPLOY_ENV_MAX_LENGTH=12
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $${\#DEPLOY_ENV} -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
