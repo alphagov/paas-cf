@@ -33,6 +33,10 @@ jobs:
     networks:
       - name: cf
     properties:
+      tags:
+        job: rds_broker
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
       rds-broker:
         aws_access_key_id: ""
         aws_secret_access_key: ""

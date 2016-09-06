@@ -131,6 +131,10 @@ jobs:
       consul:
         agent:
           mode: server
+      tags:
+        job: consul
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: nats
     azs: [z1, z2]
@@ -143,6 +147,11 @@ jobs:
         static_ips:
           - 10.0.16.11
           - 10.0.17.11
+    properties:
+      tags:
+        job: nats
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: etcd
     azs: [z1, z2, z3]
@@ -164,6 +173,10 @@ jobs:
         agent:
           services:
             etcd: {}
+      tags:
+        job: etcd
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: uaa
     azs: [z1, z2]
@@ -178,6 +191,10 @@ jobs:
         agent:
           services:
             uaa: {}
+      tags:
+        job: uaa
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: api
     azs: [z1, z2]
@@ -191,6 +208,10 @@ jobs:
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
+      tags:
+        job: api
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: clock_global
     azs: [z1]
@@ -200,6 +221,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: clock_global
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: api_worker
     azs: [z1, z2]
@@ -209,6 +235,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: api_worker
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: doppler
     azs: [z1, z2]
@@ -218,6 +249,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: doppler
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
@@ -227,6 +263,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: loggregator_trafficcontroller
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: router
     azs: [z1, z2]
@@ -241,6 +282,10 @@ jobs:
         agent:
           services:
             gorouter: {}
+      tags:
+        job: router
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 # Diego
 
   - name: database
@@ -257,6 +302,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: database
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
     update:
       serial: true
 
@@ -274,6 +324,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: brain
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: cell
     azs: [z1, z2]
@@ -293,6 +348,11 @@ jobs:
     stemcell: default
     networks:
       - name: cell
+    properties:
+      tags:
+        job: cell
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: cc_bridge
     azs: [z1, z2]
@@ -314,6 +374,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: cc_bridge
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: route_emitter
     azs: [z1, z2]
@@ -329,6 +394,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: route_emitter
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))
 
   - name: access
     azs: [z1, z2]
@@ -346,3 +416,8 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      tags:
+        job: access
+        environment: (( grab meta.environment ))
+        aws_account: (( grab $AWS_ACCOUNT ))

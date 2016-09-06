@@ -31,6 +31,10 @@ jobs:
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
+    tags:
+      job: ingestor_z1
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 - name: ingestor_z2
   release: logsearch
@@ -50,6 +54,10 @@ jobs:
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
+    tags:
+      job: ingestor_z2
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 - name: queue
   release: logsearch
@@ -66,6 +74,11 @@ jobs:
       - 10.0.17.13
   persistent_disk_type: queue
   update: (( grab meta.update ))
+  properties:
+    tags:
+      job: queue
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 - name: parser_z1
   release: logsearch
@@ -88,6 +101,10 @@ jobs:
     logstash_parser:
       filters:
       - /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+    tags:
+      job: parser_z1
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 - name: parser_z2
   release: logsearch
@@ -110,6 +127,10 @@ jobs:
     logstash_parser:
       filters:
       - /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+    tags:
+      job: parser_z2
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 - name: elasticsearch_master
   release: logsearch
@@ -134,6 +155,10 @@ jobs:
       discovery:
         minimum_master_nodes: 2
       master_hosts: (( grab properties.elasticsearch.master_hosts ))
+    tags:
+      job: elasticsearch_master
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
   update: (( grab meta.update ))
 
 - name: maintenance
@@ -153,6 +178,10 @@ jobs:
     elasticsearch_config:
       templates:
       - index_template: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logs-template.json
+    tags:
+      job: maintenance
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 - name: kibana
   release: logsearch
@@ -166,6 +195,11 @@ jobs:
   networks:
   - name: cf
   update: (( grab meta.update ))
+  properties:
+    tags:
+      job: kibana
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
 properties:
   syslog_daemon_config:

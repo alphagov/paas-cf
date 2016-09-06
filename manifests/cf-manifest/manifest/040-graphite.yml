@@ -64,5 +64,9 @@ jobs:
         - name: graphite
           url: http://localhost:3001
           database_type: graphite
+    tags:
+      job: graphite
+      environment: (( grab meta.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
 
   templates: (( grab meta.graphite_templates ))
