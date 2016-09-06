@@ -41,6 +41,7 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
+      - reset-cloudfoundry-passwords
   - name: tests
     jobs:
       - availability-tests
@@ -2221,6 +2222,37 @@ jobs:
       - put: pipeline-pool
         params:
           release: pipeline-pool
+
+  - name: reset-cloudfoundry-passwords
+    plan:
+      - get: cf-secrets
+      - get: paas-cf
+      - task: reset-passwords
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/spruce
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+          outputs:
+            - name: modified-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                spruce merge \
+                  cf-secrets/cf-secrets.yml \
+                  paas-cf/concourse/resources/cf-secrets-deleter.yml \
+                  > modified-secrets/cf-secrets.yml
+        on_success:
+          put: cf-secrets
+          params:
+            file: modified-secrets/cf-secrets.yml
 
   - name: generate-git-keys
     plan:
