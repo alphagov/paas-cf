@@ -97,4 +97,16 @@ RSpec.describe "the jobs definitions block" do
         "expected '#{j['name']}' job to list 'consul_agent' first"
     }
   end
+
+  describe "in order to monitor all hosts via datadog" do
+    it "has datadog tags on each job" do
+      jobs.each { |job|
+        expect(job["properties"]["tags"]).not_to be_nil, "job '#{job['name']}' is missing the datadog 'tags' property"
+        expect(job["properties"]["tags"]["job"]).to eq(job["name"]),
+          "job '#{job['name']}' should have a tag 'job=#{job['name']}' instead of #{job['properties']['tags']['job']}"
+        expect(job["properties"]["tags"]["environment"]).to eq("unit-test")
+        expect(job["properties"]["tags"]["aws_account"]).to eq(ENV["AWS_ACCOUNT"])
+      }
+    end
+  end
 end

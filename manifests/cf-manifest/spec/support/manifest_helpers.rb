@@ -21,7 +21,13 @@ module ManifestHelpers
 
 private
 
+  def fake_env_vars
+    ENV["AWS_ACCOUNT"] = "dev"
+    ENV["DATADOG_API_KEY"] = "abcd1234"
+  end
+
   def render(arg_list)
+    fake_env_vars
     output, error, status = Open3.capture3(arg_list.join(' '))
     expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
     output
