@@ -15,11 +15,6 @@ resource_types:
   source:
     repository: governmentpaas/semver-resource
 
-- name: enum
-  type: docker-image
-  source:
-    repository: governmentpaas/enum-resource
-
 resources:
   - name: paas-cf
     type: git-gpg
@@ -106,14 +101,12 @@ resources:
       region_name: {{aws_region}}
       versioned_file: concourse-manifest.yml
 
-  - name: healthcheck-deployed
-    type: enum
+  - name: deployed-healthcheck
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
       versioned_file: healthcheck-deployed
-      valid_values: ["yes", "no"]
-      default_value: "no"
 
 jobs:
   - name: init
@@ -173,6 +166,8 @@ jobs:
           inputs:
             - name: bosh-secrets
             - name: paas-cf
+          outputs:
+            - name: deployed-healthcheck
           run:
             path: sh
             args:
@@ -181,10 +176,11 @@ jobs:
               - |
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 bosh -n delete deployment --force {{deploy_env}}
+                echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
-          put: healthcheck-deployed
+          put: deployed-healthcheck
           params:
-            value: "no"
+            file: deployed-healthcheck/healthcheck-deployed
 
 
   - name: terraform-destroy

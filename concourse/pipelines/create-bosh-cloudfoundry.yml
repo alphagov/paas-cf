@@ -82,11 +82,6 @@ resource_types:
   source:
     repository: governmentpaas/semver-resource
 
-- name: enum
-  type: docker-image
-  source:
-    repository: governmentpaas/enum-resource
-
 resources:
   - name: pipeline-trigger
     type: semver-iam
@@ -302,14 +297,12 @@ resources:
       region_name: {{aws_region}}
       versioned_file: runtime-config.yml
 
-  - name: healthcheck-deployed
-    type: enum
+  - name: deployed-healthcheck
+    type: s3-iam
     source:
       bucket: {{state_bucket}}
       region_name: {{aws_region}}
       versioned_file: healthcheck-deployed
-      valid_values: ["yes", "no"]
-      default_value: "no"
 
   - name: cf-release
     type: git
@@ -444,6 +437,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} healthcheck-deployed paas-cf/concourse/init_files/string-no
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -684,7 +678,7 @@ jobs:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
-          - get: healthcheck-deployed
+          - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
           - get: cf-secrets
@@ -699,7 +693,7 @@ jobs:
               - name: bosh-CA
               - name: paas-cf
               - name: cf-secrets
-              - name: healthcheck-deployed
+              - name: deployed-healthcheck
               - name: pipeline-trigger
             params:
               SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
@@ -715,7 +709,7 @@ jobs:
                 - -u
                 - -c
                 - |
-                  HEALTHCHECK_DEPLOYED=$(cat healthcheck-deployed/value)
+                  HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
                   if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
                     echo "Skipping availability tests because the healthcheck is not deployed"
                     exit 0
@@ -740,13 +734,14 @@ jobs:
                     sleep 5
                   done
 
+
   - name: availability-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
-          - get: healthcheck-deployed
+          - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
           - get: bosh-CA
@@ -763,7 +758,7 @@ jobs:
             - name: pipeline-trigger
             - name: concourse-manifest
             - name: bosh-CA
-            - name: healthcheck-deployed
+            - name: deployed-healthcheck
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
@@ -777,7 +772,7 @@ jobs:
               - -e
               - -c
               - |
-                HEALTHCHECK_DEPLOYED=$(cat healthcheck-deployed/value)
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
                 if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
                   echo "Skipping availability tests because the healthcheck is not deployed"
                   exit 0
@@ -1899,6 +1894,8 @@ jobs:
             - name: paas-cf
             - name: config
             - name: bosh-CA
+          outputs:
+            - name: deployed-healthcheck
           run:
             path: sh
             args:
@@ -1914,6 +1911,7 @@ jobs:
                 cf set-quota testers test_apps
                 cf create-space healthcheck -o testers
                 cf target -o testers -s healthcheck
+                BUILD_ROOT=$(pwd)
                 cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
                 if  [ "$ENABLE_HEALTHCHECK_DB" != "false" ] ; then
@@ -1926,10 +1924,12 @@ jobs:
                 fi
 
                 cf start healthcheck
+                cd $BUILD_ROOT
+                echo "yes" > deployed-healthcheck/healthcheck-deployed
         on_success:
-          put: healthcheck-deployed
+          put: deployed-healthcheck
           params:
-            value: "yes"
+            file: deployed-healthcheck/healthcheck-deployed
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
