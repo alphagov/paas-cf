@@ -2329,6 +2329,11 @@ jobs:
               - |
                 spruce merge \
                   cf-secrets/cf-secrets.yml \
+                  paas-cf/concourse/resources/cf-secrets-keep-grafana.yml \
+                  > intermediate.yml
+
+                spruce merge \
+                  intermediate.yml \
                   paas-cf/concourse/resources/cf-secrets-deleter.yml \
                   > modified-secrets/cf-secrets.yml
         on_success:
