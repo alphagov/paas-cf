@@ -55,11 +55,18 @@ lint_concourse:
 lint_ruby:
 	bundle exec govuk-lint-ruby
 
+GPG = $(shell command -v gpg2 || command -v gpg)
+
 .PHONY: list_merge_keys
 list_merge_keys: ## List all GPG keys allowed to sign merge commits.
+	$(if $(GPG),,$(error "gpg2 or gpg not found in PATH"))
 	@for key in $$(cat .gpg-id); do \
 		printf "$${key}: "; \
-		gpg --list-keys --with-colons $$key 2> /dev/null | awk -F: '/^pub/ {found = 1; print $$10} END {if (found != 1) {print "*** not found in local keychain ***"}}'; \
+		if [ "$$($(GPG) --version | awk 'NR==1 { split($$3,version,"."); print version[1]}')" = "2" ]; then \
+			$(GPG) --list-keys --with-colons $$key 2> /dev/null | awk -F: '/^uid/ {found = 1; print $$10; exit} END {if (found != 1) {print "*** not found in local keychain ***"}}'; \
+		else \
+			$(GPG) --list-keys --with-colons $$key 2> /dev/null | awk -F: '/^pub/ {found = 1; print $$10} END {if (found != 1) {print "*** not found in local keychain ***"}}'; \
+		fi;\
 	done
 
 .PHONY: globals
