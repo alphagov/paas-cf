@@ -77,3 +77,20 @@ resource "aws_route53_record" "rds_broker" {
   ttl = "60"
   records = ["${aws_elb.rds_broker.dns_name}"]
 }
+
+resource "aws_route53_record" "spf" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "${var.system_dns_zone_name}."
+  type = "TXT"
+  ttl = "300"
+  records = ["v=spf1 -all"]
+}
+
+resource "aws_route53_record" "dmarc" {
+  zone_id = "${var.system_dns_zone_id}"
+  name = "_dmarc.${var.system_dns_zone_name}."
+  type = "TXT"
+  ttl = "300"
+  records = ["v=DMARC1; p=reject; rua=mailto:dmarc-groups-test@digital.cabinet-office.gov.uk,dmarc-rua@dmarc.service.gov.uk;ruf=mailto:dmarc-groups-test@digital.cabinet-office.gov.uk,dmarc-ruf@dmarc.service.gov.uk;fo=1"]
+}
+
