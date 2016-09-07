@@ -21,7 +21,9 @@ get_git_concourse_pool_clone_full_url_ssh() {
 
   aws s3 cp "s3://${env}-state/concourse.tfstate" "${tfstate_file}"
 
-  git_concourse_pool_clone_full_url_ssh=$(awk -F '"' '/git_concourse_pool_clone_full_url_ssh/ {print $4}' "${tfstate_file}")
+  git_concourse_pool_clone_full_url_ssh=$(ruby < "${tfstate_file}" -rjson -e \
+    'puts JSON.load(STDIN)["modules"][0]["outputs"]["git_concourse_pool_clone_full_url_ssh"]["value"]'
+  )
 
   rm -f "${tfstate_file}"
 }
