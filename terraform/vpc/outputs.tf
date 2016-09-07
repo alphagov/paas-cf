@@ -23,15 +23,15 @@ output "subnet0_id" {
 }
 
 output "zone0" {
-  value = "${var.zones.zone0}"
+  value = "${var.zones["zone0"]}"
 }
 
 output "zone1" {
-  value = "${var.zones.zone1}"
+  value = "${var.zones["zone1"]}"
 }
 
 output "zone2" {
-  value = "${var.zones.zone2}"
+  value = "${var.zones["zone2"]}"
 }
 
 output "infra_subnet_ids" {
