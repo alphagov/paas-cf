@@ -9,7 +9,7 @@ SHELLCHECK=shellcheck
 YAMLLINT=yamllint
 
 DEPLOY_ENV_MAX_LENGTH=12
-DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(echo -n $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
+DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
 check-env-vars:
