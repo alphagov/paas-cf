@@ -14,7 +14,7 @@ resource "aws_security_group" "office-access-ssh" {
     from_port = 22
     to_port   = 22
     protocol  = "tcp"
-    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs), var.vagrant_cidr))}"]
+    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs), list(var.vagrant_cidr)))}"]
   }
 
   tags {
