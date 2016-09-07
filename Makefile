@@ -49,7 +49,7 @@ lint_shellcheck:
 	find . -name '*.sh' -not -path '*/vendor/*' | xargs $(SHELLCHECK)
 
 lint_concourse:
-	cd .. && python paas-cf/concourse/scripts/pipecleaner.py paas-cf/concourse/pipelines/*.yml
+	cd .. && python paas-cf/concourse/scripts/pipecleaner.py --shellcheck paas-cf/concourse/pipelines/*.yml
 
 .PHONY: lint_ruby
 lint_ruby:
