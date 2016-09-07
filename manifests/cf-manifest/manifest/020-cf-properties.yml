@@ -145,7 +145,7 @@ properties:
     route_services_timeout:
     logrotate:
     extra_headers_to_log:
-    debug_addr:
+    debug_address:
     enable_routing_api:
     drain_wait: 15
 
@@ -428,7 +428,7 @@ properties:
         id: cf
         override: true
         authorized-grant-types: password,refresh_token
-        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read
+        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,cloud_controller.admin_read_only,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write
         authorities: uaa.none
         access-token-validity: 600
         refresh-token-validity: 2592000
@@ -478,6 +478,9 @@ properties:
     restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
 
     zones:
+      internal:
+        hostnames:
+          - uaa.service.cf.internal
 
   uaadb:
     db_scheme: postgresql
@@ -523,15 +526,6 @@ properties:
         require_ssl: false
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
-
-    converger:
-      bbs:
-        api_location: bbs.service.cf.internal:8889
-        ca_cert: (( grab meta.secrets.consul_ca_cert ))
-        client_cert: (( grab secrets.bbs_client_cert  ))
-        client_key: (( grab secrets.bbs_client_key  ))
-        require_ssl: true
-      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     file_server:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))

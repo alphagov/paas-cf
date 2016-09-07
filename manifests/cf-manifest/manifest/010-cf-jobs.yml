@@ -95,7 +95,7 @@ meta:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: gorouter
-    release: routing
+    release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: haproxy
@@ -131,8 +131,6 @@ jobs:
       consul:
         agent:
           mode: server
-      metron_agent:
-        zone: ""
 
   - name: nats
     azs: [z1, z2]
@@ -145,9 +143,6 @@ jobs:
         static_ips:
           - 10.0.16.11
           - 10.0.17.11
-    properties:
-      metron_agent:
-        zone: ""
 
   - name: etcd
     azs: [z1, z2, z3]
@@ -165,8 +160,6 @@ jobs:
     update:
       serial: true
     properties:
-      metron_agent:
-        zone: ""
       consul:
         agent:
           services:
@@ -185,8 +178,6 @@ jobs:
         agent:
           services:
             uaa: {}
-      metron_agent:
-        zone: ""
 
   - name: api
     azs: [z1, z2]
@@ -200,8 +191,6 @@ jobs:
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
-      metron_agent:
-        zone: ""
 
   - name: clock_global
     azs: [z1]
@@ -211,9 +200,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""
 
   - name: api_worker
     azs: [z1, z2]
@@ -223,10 +209,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""
-
 
   - name: doppler
     azs: [z1, z2]
@@ -236,11 +218,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      doppler:
-        zone: ""
-      metron_agent:
-        zone: ""
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
@@ -250,11 +227,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      traffic_controller:
-        zone: ""
-      metron_agent:
-        zone: ""
 
   - name: router
     azs: [z1, z2]
@@ -269,9 +241,6 @@ jobs:
         agent:
           services:
             gorouter: {}
-      metron_agent:
-        zone: ""
-
 # Diego
 
   - name: database
@@ -288,9 +257,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""
     update:
       serial: true
 
@@ -301,8 +267,6 @@ jobs:
         release: cf
       - name: auctioneer
         release: diego
-      - name: converger
-        release: diego
       - name: metron_agent
         release: cf
     instances: 2
@@ -310,9 +274,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""
 
   - name: cell
     azs: [z1, z2]
@@ -320,7 +281,7 @@ jobs:
       - name: consul_agent
         release: cf
       - name: rep
-        release: rep
+        release: diego
       - name: garden
         release: garden-linux
       - name: cflinuxfs2-rootfs-setup
@@ -332,9 +293,6 @@ jobs:
     stemcell: default
     networks:
       - name: cell
-    properties:
-      metron_agent:
-        zone: ""
 
   - name: cc_bridge
     azs: [z1, z2]
@@ -356,9 +314,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""
 
   - name: route_emitter
     azs: [z1, z2]
@@ -374,9 +329,6 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""
 
   - name: access
     azs: [z1, z2]
@@ -394,6 +346,3 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      metron_agent:
-        zone: ""

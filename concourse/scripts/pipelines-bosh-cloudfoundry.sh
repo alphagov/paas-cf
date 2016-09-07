@@ -42,8 +42,6 @@ prepare_environment() {
   cf_grafana_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.grafana.version "${cf_manifest_dir}/040-graphite.yml")
   cf_aws_broker_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.aws-broker.version "${cf_manifest_dir}/050-rds-broker.yml")
   cf_os_conf_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.os-conf.version "${cf_manifest_dir}/../runtime-config/runtime-config-base.yml")
-  cf_routing_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.routing.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
-  cf_rep_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.rep.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
   cf_logsearch_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.logsearch-for-cloudfoundry.version "${cf_manifest_dir}/030-logsearch.yml")
 
   if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
@@ -77,8 +75,6 @@ cf_graphite_version: ${cf_graphite_version}
 cf_grafana_version: ${cf_grafana_version}
 cf_aws_broker_version: ${cf_aws_broker_version}
 cf_os_conf_version: ${cf_os_conf_version}
-cf_routing_version: ${cf_routing_version}
-cf_rep_version: ${cf_rep_version}
 cf_logsearch_for_cloudfoundry_version: ${cf_logsearch_for_cloudfoundry_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
