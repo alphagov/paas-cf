@@ -1405,6 +1405,7 @@ jobs:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
+                ./paas-cf/manifests/shared/deployments/datadog.yml
             run:
               path: sh
               args:

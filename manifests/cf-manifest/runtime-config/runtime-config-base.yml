@@ -1,8 +1,6 @@
 releases:
   - name: os-conf
     version: commit-a2bc2ab32248c8edf7c4790b33902893b1f4db66
-  - name: datadog-agent
-    version: custom_005
 
 addons:
   - name: os-configuration
@@ -19,6 +17,4 @@ addons:
     jobs:
     - name: datadog-agent
       release: datadog-agent
-    properties:
-      api_key: (( grab $DATADOG_API_KEY ))
-      use_dogstatsd: no
+    properties: (( grab meta.datadog ))

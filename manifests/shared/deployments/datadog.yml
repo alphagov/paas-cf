@@ -1,0 +1,11 @@
+---
+releases:
+- name: datadog-agent
+  sha1: 1cefcc1981b3de2c549452974b41964eaa6637ec
+  url: https://github.com/alphagov/paas-datadog-agent-boshrelease/releases/download/custom_005/datadog-agent-custom_005.tgz
+  version: "custom_005"
+
+meta:
+  datadog:
+    api_key: (( grab $DATADOG_API_KEY ))
+    use_dogstatsd: false
