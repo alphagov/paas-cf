@@ -9,6 +9,12 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
 env=${DEPLOY_ENV}
+if [ "${ENABLE_DATADOG:-}" = "true" ]; then
+  export PASSWORD_STORE_DIR=~/.paas-pass
+  datadog_api_key=$(pass datadog/api_key)
+else
+  datadog_api_key="disabled"
+fi
 
 generate_vars_file() {
    cat <<EOF
@@ -24,6 +30,8 @@ concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 log_level: ${LOG_LEVEL:-}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
+aws_account: ${AWS_ACCOUNT:-dev}
+datadog_api_key: ${datadog_api_key:-}
 EOF
 }
 

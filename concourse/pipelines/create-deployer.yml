@@ -438,6 +438,8 @@ jobs:
       config:
         image: docker:///governmentpaas/spruce
         params:
+          AWS_ACCOUNT: {{aws_account}}
+          DATADOG_API_KEY: {{datadog_api_key}}
           CONCOURSE_MANIFEST_STUBS: |
             ./paas-cf/manifests/concourse-manifest/concourse-base.yml
             predefined-concourse-secrets/predefined-concourse-secrets.yml
@@ -445,6 +447,7 @@ jobs:
             terraform-outputs/concourse-terraform-outputs.yml
             terraform-outputs/vpc-terraform-outputs.yml
             ./paas-cf/manifests/shared/deployments/collectd.yml
+            ./paas-cf/manifests/shared/deployments/datadog.yml
         inputs:
         - name: paas-cf
         - name: predefined-concourse-secrets
