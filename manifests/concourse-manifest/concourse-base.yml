@@ -19,8 +19,8 @@ resource_pools:
   - name: concourse
     network: concourse
     stemcell:
-      url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3262.5
-      sha1: 13c73b82675742012ba3ded6528524b8f3ce9ec3
+      url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3262.12
+      sha1: 90e9825b814da801e1aff7b02508fdada8e155cb
     cloud_properties:
       instance_type: m4.large
       availability_zone: (( grab terraform_outputs.zone0 ))
