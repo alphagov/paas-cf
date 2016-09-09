@@ -13,11 +13,11 @@ resource "aws_route_table" "infra" {
 resource "aws_subnet" "infra" {
   count             = "${var.zone_count}"
   vpc_id            = "${aws_vpc.myvpc.id}"
-  cidr_block        = "${lookup(var.infra_cidrs, concat("zone", count.index))}"
-  availability_zone = "${lookup(var.zones,       concat("zone", count.index))}"
+  cidr_block        = "${lookup(var.infra_cidrs, format("zone%d", count.index))}"
+  availability_zone = "${lookup(var.zones,       format("zone%d", count.index))}"
   depends_on        = ["aws_internet_gateway.default"]
   tags {
-    Name = "${var.env}-infra-${lookup(var.zones, concat("zone", count.index))}"
+    Name = "${var.env}-infra-${lookup(var.zones, format("zone%d", count.index))}"
   }
 }
 

@@ -21,7 +21,7 @@ resource "aws_security_group" "concourse" {
     from_port   = 6868
     to_port     = 6868
     protocol    = "tcp"
-    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs), var.vagrant_cidr))}"]
+    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs), list(var.vagrant_cidr)))}"]
   }
 
   tags {

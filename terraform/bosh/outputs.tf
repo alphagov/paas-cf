@@ -3,11 +3,11 @@ output "environment" {
 }
 
 output "zone0" {
-  value = "${var.zones.zone0}"
+  value = "${var.zones["zone0"]}"
 }
 
 output "zone1" {
-  value = "${var.zones.zone1}"
+  value = "${var.zones["zone1"]}"
 }
 
 output "region" {
@@ -19,11 +19,11 @@ output "bosh_subnet_id" {
 }
 
 output "bosh_subnet_cidr" {
-  value = "${lookup(var.infra_cidrs, concat("zone", lookup(var.zone_index, var.bosh_az)))}"
+  value = "${lookup(var.infra_cidrs, format("zone%s", lookup(var.zone_index, var.bosh_az)))}"
 }
 
 output "bosh_default_gw" {
-  value = "${lookup(var.infra_gws, lookup(var.infra_cidrs, concat("zone", lookup(var.zone_index, var.bosh_az))))}"
+  value = "${lookup(var.infra_gws, lookup(var.infra_cidrs, format("zone%s", lookup(var.zone_index, var.bosh_az))))}"
 }
 
 output "microbosh_static_private_ip" {
