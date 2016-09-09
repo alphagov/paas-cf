@@ -60,6 +60,7 @@ private
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
         grafana_dashboards_manifest_path,
         File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
+        File.expand_path("../../../../shared/deployments/datadog.yml", __FILE__),
     ])
 
     cloud_config = render([

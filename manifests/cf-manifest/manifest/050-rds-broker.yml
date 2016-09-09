@@ -35,8 +35,7 @@ jobs:
     properties:
       tags:
         job: rds_broker
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
       rds-broker:
         aws_access_key_id: ""
         aws_secret_access_key: ""

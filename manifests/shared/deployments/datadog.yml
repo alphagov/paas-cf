@@ -9,3 +9,6 @@ meta:
   datadog:
     api_key: (( grab $DATADOG_API_KEY ))
     use_dogstatsd: false
+  datadog_tags:
+    environment: (( grab meta.environment ))
+    aws_account: (( grab $AWS_ACCOUNT ))

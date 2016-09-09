@@ -33,8 +33,7 @@ jobs:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
     tags:
       job: ingestor_z1
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 - name: ingestor_z2
   release: logsearch
@@ -56,8 +55,7 @@ jobs:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
     tags:
       job: ingestor_z2
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 - name: queue
   release: logsearch
@@ -77,8 +75,7 @@ jobs:
   properties:
     tags:
       job: queue
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 - name: parser_z1
   release: logsearch
@@ -103,8 +100,7 @@ jobs:
       - /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
     tags:
       job: parser_z1
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 - name: parser_z2
   release: logsearch
@@ -129,8 +125,7 @@ jobs:
       - /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
     tags:
       job: parser_z2
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 - name: elasticsearch_master
   release: logsearch
@@ -157,8 +152,7 @@ jobs:
       master_hosts: (( grab properties.elasticsearch.master_hosts ))
     tags:
       job: elasticsearch_master
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
   update: (( grab meta.update ))
 
 - name: maintenance
@@ -180,8 +174,7 @@ jobs:
       - index_template: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logs-template.json
     tags:
       job: maintenance
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 - name: kibana
   release: logsearch
@@ -198,8 +191,7 @@ jobs:
   properties:
     tags:
       job: kibana
-      environment: (( grab meta.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))
 
 properties:
   syslog_daemon_config:

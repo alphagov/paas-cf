@@ -7,5 +7,4 @@ jobs:
     datadog: (( inject meta.datadog ))
     tags:
       job: bosh
-      environment: (( grab terraform_outputs.environment ))
-      aws_account: (( grab $AWS_ACCOUNT ))
+      tags: (( inject meta.datadog_tags ))

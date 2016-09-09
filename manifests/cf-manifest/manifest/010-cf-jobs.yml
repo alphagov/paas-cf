@@ -133,8 +133,7 @@ jobs:
           mode: server
       tags:
         job: consul
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: nats
     azs: [z1, z2]
@@ -150,8 +149,7 @@ jobs:
     properties:
       tags:
         job: nats
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: etcd
     azs: [z1, z2, z3]
@@ -175,8 +173,7 @@ jobs:
             etcd: {}
       tags:
         job: etcd
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: uaa
     azs: [z1, z2]
@@ -193,8 +190,7 @@ jobs:
             uaa: {}
       tags:
         job: uaa
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: api
     azs: [z1, z2]
@@ -210,8 +206,7 @@ jobs:
           services: (( grab meta.api_consul_services ))
       tags:
         job: api
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: clock_global
     azs: [z1]
@@ -224,8 +219,7 @@ jobs:
     properties:
       tags:
         job: clock_global
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: api_worker
     azs: [z1, z2]
@@ -238,8 +232,7 @@ jobs:
     properties:
       tags:
         job: api_worker
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: doppler
     azs: [z1, z2]
@@ -252,8 +245,7 @@ jobs:
     properties:
       tags:
         job: doppler
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
@@ -266,8 +258,7 @@ jobs:
     properties:
       tags:
         job: loggregator_trafficcontroller
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: router
     azs: [z1, z2]
@@ -284,8 +275,7 @@ jobs:
             gorouter: {}
       tags:
         job: router
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 # Diego
 
   - name: database
@@ -305,8 +295,7 @@ jobs:
     properties:
       tags:
         job: database
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
     update:
       serial: true
 
@@ -327,8 +316,7 @@ jobs:
     properties:
       tags:
         job: brain
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: cell
     azs: [z1, z2]
@@ -351,8 +339,7 @@ jobs:
     properties:
       tags:
         job: cell
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: cc_bridge
     azs: [z1, z2]
@@ -377,8 +364,7 @@ jobs:
     properties:
       tags:
         job: cc_bridge
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: route_emitter
     azs: [z1, z2]
@@ -397,8 +383,7 @@ jobs:
     properties:
       tags:
         job: route_emitter
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
 
   - name: access
     azs: [z1, z2]
@@ -419,5 +404,4 @@ jobs:
     properties:
       tags:
         job: access
-        environment: (( grab meta.environment ))
-        aws_account: (( grab $AWS_ACCOUNT ))
+        tags: (( inject meta.datadog_tags ))
