@@ -1,4 +1,6 @@
 ---
-properties:
-  director:
-    trusted_certs: (( grab secrets.bosh_ca_cert ))
+jobs:
+- name: bosh
+  properties:
+    director:
+      trusted_certs: (( grab secrets.bosh_ca_cert ))

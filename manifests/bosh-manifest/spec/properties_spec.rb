@@ -1,8 +1,6 @@
 RSpec.describe "manifest properties validations" do
   let(:manifest) { manifest_with_defaults }
-  let(:properties) { manifest.fetch("properties") }
-  let(:bosh_job) { manifest.fetch("jobs").select { |x| x["name"] == "bosh" }.first }
-  let(:bosh_properties) { properties.merge(bosh_job["properties"]) }
+  let(:bosh_properties) { manifest.fetch("jobs").select { |x| x["name"] == "bosh" }.first["properties"] }
 
   it "configures hm bosh user with password" do
     users = bosh_properties["director"]["user_management"]["local"]["users"]

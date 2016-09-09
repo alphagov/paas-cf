@@ -3,10 +3,9 @@ jobs:
 - name: bosh
   templates:
   - {name: datadog-agent, release: datadog-agent}
-
-properties:
-  datadog: (( inject meta.datadog ))
-  tags:
-    job: bosh
-    environment: (( grab terraform_outputs.environment ))
-    aws_account: (( grab $AWS_ACCOUNT ))
+  properties:
+    datadog: (( inject meta.datadog ))
+    tags:
+      job: bosh
+      environment: (( grab terraform_outputs.environment ))
+      aws_account: (( grab $AWS_ACCOUNT ))
