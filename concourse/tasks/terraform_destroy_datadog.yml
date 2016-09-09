@@ -1,0 +1,26 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/terraform
+inputs:
+  - name: paas-cf
+  - name: datadog-tfstate
+outputs:
+  - name: updated-datadog-tfstate
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      if [ "${TF_VAR_datadog_api_key}" != "disabled" ]; then
+        terraform destroy -force \
+          -state=datadog-tfstate/datadog.tfstate \
+          -state-out=updated-datadog-tfstate/datadog.tfstate \
+        paas-cf/terraform/datadog
+      else
+        echo "Datadog disabled, skipping terraform run..."
+        cp datadog-tfstate/datadog.tfstate updated-datadog-tfstate/datadog.tfstate
+      fi

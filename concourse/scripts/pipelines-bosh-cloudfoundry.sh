@@ -61,6 +61,8 @@ prepare_environment() {
     export PASSWORD_STORE_DIR=~/.paas-pass
     datadog_api_key=$(pass datadog/api_key)
     datadog_app_key=$(pass datadog/app_key)
+  else
+    datadog_api_key="disabled"
   fi
 }
 

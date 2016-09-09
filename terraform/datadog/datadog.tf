@@ -1,5 +1,6 @@
 variable "datadog_api_key" {}
 variable "datadog_app_key" {}
+variable "env" {}
 
 provider "datadog" {
     api_key = "${var.datadog_api_key}"

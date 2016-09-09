@@ -237,6 +237,13 @@ resources:
       versioned_file: cf.tfstate
       region_name: eu-west-1
 
+  - name: datadog-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: datadog.tfstate
+      region_name: eu-west-1
+
   - name: cf-secrets
     type: s3-iam
     source:
@@ -414,6 +421,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa.pub paas-cf/concourse/init_files/zero_bytes
@@ -1149,8 +1157,6 @@ jobs:
             TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
             TF_VAR_apps_dns_zone_name: {{apps_dns_zone_name}}
             AWS_DEFAULT_REGION: {{aws_region}}
-            TF_VAR_datadog_api_key: {{datadog_api_key}}
-            TF_VAR_datadog_app_key: {{datadog_app_key}}
           run:
             path: sh
             args:
@@ -1448,6 +1454,7 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: logsearch-for-cloudfoundry-boshrelease
+          - get: datadog-tfstate
 
       - aggregate:
         - task: upload-releases
@@ -1817,6 +1824,39 @@ jobs:
                 export ES_HOST="${TF_VAR_logsearch_elastic_master_elb_dns_name}"
                 export ES_PORT="9200"
                 $(pwd)/paas-cf/concourse/scripts/kibana_set_utc.rb
+
+        - task: datadog-terraform-apply
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/terraform
+            inputs:
+              - name: datadog-tfstate
+              - name: paas-cf
+            outputs:
+              - name: updated-tfstate
+            params:
+              TF_VAR_env: {{deploy_env}}
+              TF_VAR_datadog_api_key: {{datadog_api_key}}
+              TF_VAR_datadog_app_key: {{datadog_app_key}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ "${TF_VAR_datadog_api_key}" != "disabled" ]; then
+                    terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate paas-cf/terraform/datadog
+                  else
+                    echo "Datadog disabled, skipping terraform run..."
+                    cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                  fi
+          ensure:
+            put: datadog-tfstate
+            params:
+              file: updated-tfstate/datadog.tfstate
 
   - name: post-deploy
     plan:
