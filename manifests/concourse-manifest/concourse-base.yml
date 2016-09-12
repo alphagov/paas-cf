@@ -64,13 +64,65 @@ jobs:
     persistent_disk_pool: db
 
     templates:
-      - {release: concourse, name: postgresql}
-      - {release: concourse, name: atc}
-      - {release: concourse, name: groundcrew}
-      - {release: concourse, name: tsa}
-      - {release: concourse, name: baggageclaim}
-      - {release: garden-runc, name: garden}
-      - {release: collectd, name: collectd}
+      - name: postgresql
+        release: concourse
+        properties:
+          databases:
+            - name: atc
+              role: atc
+              password: dummy-password
+
+      - name: atc
+        release: concourse
+        properties:
+          external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
+          basic_auth_username: admin
+          basic_auth_password: (( grab secrets.concourse_atc_password ))
+          publicly_viewable: true
+
+          postgresql:
+            address: 127.0.0.1:5432
+            database: atc
+            role:
+              name: atc
+              password: dummy-password
+
+      - name: groundcrew
+        release: concourse
+        properties:
+          baggageclaim:
+            url: "http://127.0.0.1:7788"
+          tsa:
+            host: 127.0.0.1
+            port: 2222
+
+      - name: tsa
+        release: concourse
+        properties:
+          forward_host: 127.0.0.1
+          atc:
+            address: 127.0.0.1:8080
+
+      - name: baggageclaim
+        release: concourse
+
+      - name: garden
+        release: garden-runc
+        properties:
+          garden:
+            listen_network: tcp
+            listen_address: 0.0.0.0:7777
+            graph_cleanup_threshold_in_mb: 3072
+            max_containers: 1024
+            network_pool: "10.254.0.0/20"
+
+      - name: collectd
+        release: collectd
+        properties:
+          collectd:
+            hostname_prefix: concourse_
+            interval: (( grab meta.collectd.interval ))
+            config: (( grab meta.collectd.config ))
 
     networks:
       - name: public
@@ -80,41 +132,7 @@ jobs:
         static_ips: (( static_ips(0) ))
         default: [dns, gateway]
 
-    properties:
-      external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
-      basic_auth_username: admin
-      basic_auth_password: (( grab secrets.concourse_atc_password ))
-      publicly_viewable: true
-
-      databases:
-        - name: atc
-          role: atc
-          password: dummy-password
-
-      postgresql:
-        address: 127.0.0.1:5432
-        database: atc
-        role:
-          name: atc
-          password: dummy-password
-      tsa:
-        host: 127.0.0.1
-        port: 2222
-        forward_host: 127.0.0.1
-        atc:
-          address: 127.0.0.1:8080
-      garden:
-        listen_network: tcp
-        listen_address: 0.0.0.0:7777
-        graph_cleanup_threshold_in_mb: 3072
-        max_containers: 1024
-        network_pool: "10.254.0.0/20"
-      baggageclaim:
-        url: "http://127.0.0.1:7788"
-      collectd:
-        hostname_prefix: concourse_
-        interval: (( grab meta.collectd.interval ))
-        config: (( grab meta.collectd.config ))
+    properties: {}
 
 cloud_provider:
   template: {name: aws_cpi, release: bosh-aws-cpi}
