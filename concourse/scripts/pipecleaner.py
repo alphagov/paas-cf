@@ -71,7 +71,7 @@ class Pipecleaner(object):
                         del item[block_type]
 
                 # Flatten single blocks we don't care about
-                for block_type in ('on_success', 'on_failure', 'ensure'):
+                for block_type in ('on_success', 'on_failure', 'ensure', 'try'):
                     if block_type in item:
                         discovered_blocks.append(item[block_type])
                         del item[block_type]
