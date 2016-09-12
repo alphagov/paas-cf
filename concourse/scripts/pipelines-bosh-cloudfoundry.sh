@@ -54,6 +54,8 @@ prepare_environment() {
 
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
+
+  export EXPOSE_PIPELINE=1
 }
 
 generate_vars_file() {
