@@ -12,7 +12,7 @@ resource "datadog_monitor" "router" {
   type = "service check"
   message = "Missing router hosts in environment {{host.environment}}. Notify: @the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
   escalation_message = "Missing router hosts! Check VM state."
-
+  no_data_timeframe = "2"
   query = "${format("'datadog.agent.up'.over('environment:%s','job:router').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
