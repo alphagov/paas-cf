@@ -1871,7 +1871,6 @@ jobs:
           - get: cf-secrets
             passed: ['cf-deploy']
           - get: bosh-CA
-          - get: cf-tfstate
 
       - task: retrieve-config
         config:
