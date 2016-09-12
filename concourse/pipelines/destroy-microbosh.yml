@@ -1,10 +1,5 @@
 ---
 resource_types:
-- name: git-gpg
-  type: docker-image
-  source:
-    repository: governmentpaas/git-resource
-
 - name: s3-iam
   type: docker-image
   source:
@@ -17,7 +12,7 @@ resource_types:
 
 resources:
   - name: paas-cf
-    type: git-gpg
+    type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
       branch: {{branch_name}}
