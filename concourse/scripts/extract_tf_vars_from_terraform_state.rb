@@ -2,8 +2,8 @@
 
 require 'json'
 
-outputs = JSON.load($stdin)
+tfstate = JSON.load($stdin)
 
-outputs['modules'][0]['outputs'].each { |k, v|
-  puts "export TF_VAR_#{k}='#{v['value']}'"
+tfstate['modules'][0]['outputs'].each { |k, v|
+  puts "export TF_VAR_#{k}='#{v.fetch('value')}'"
 }
