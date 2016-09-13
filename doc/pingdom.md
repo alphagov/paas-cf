@@ -8,7 +8,7 @@ The IDs of the contacts to be notified are stored as a comma-delimited string in
 
 ### Requirements
 
-* [Terraform](https://www.terraform.io/downloads.html) must be installed. We currently support version `0.6.*`
+* [Terraform](https://www.terraform.io/downloads.html) must be installed. See the Makefile for the minimum Terraform version.
 * Make sure you have access to the PaaS credential store, this is required for Pingdom credentials.
 * Load the AWS credentials for the environment you are setting up checks for. These are required as the Terraform state file for the Pingdom checks is stored in an S3 bucket.
 
