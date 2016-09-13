@@ -21,14 +21,14 @@ ssh_concourse() {
     ruby -ryaml -e 'puts "Sudo password is " + YAML.load(STDIN)["secrets"]["concourse_vcap_password_orig"]'
   echo
 
-  ssh -i $key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+  ssh -i $key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=60 \
     vcap@"$CONCOURSE_IP"
 }
 
 create_tunnel() {
   echo "Creating tunnel at socket $(print_socket) to ${TUNNEL}"
   ssh -i $key -fNTM -o ControlPath=${SOCKET} -o "ExitOnForwardFailure yes" \
-    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=60 \
     -L "${TUNNEL}" vcap@"${CONCOURSE_IP}"
 }
 
