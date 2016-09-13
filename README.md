@@ -405,3 +405,6 @@ Visit [BOSH failover page](https://github.com/alphagov/paas-cf/blob/master/doc/b
 
 ## Pingdom checks
 Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/pingdom.md)
+
+## Other useful commands
+Type `make` to get the list of all available commands.
