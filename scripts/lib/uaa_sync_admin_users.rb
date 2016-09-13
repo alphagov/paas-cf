@@ -176,7 +176,8 @@ class UaaSyncAdminUsers
     to_delete_user_ids.each { |user_id|
       user_info = self.get_user_by_id(user_id)
       if user_info.nil?
-        raise "User #{user_id} not found"
+        get_logger.info("User #{user_id} not found. Skipping.")
+        next
       end
 
       if Time.parse(user_info.fetch("meta").fetch("created")) < (Time.now - HOURS_TO_KEEP_TEST_USERS * 60 * 60)
