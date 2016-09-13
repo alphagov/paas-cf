@@ -3,7 +3,7 @@
 set -eu
 TERRAFORM_ACTION=${1}
 VERSION=0.2.2
-BINARY=terraform-provider-pingdom-$(uname -s)-$(uname -m)
+BINARY=terraform-provider-pingdom-tf-0.7.3-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
 
 # Get Pingdom credentials
@@ -35,7 +35,7 @@ terraform remote config \
 # Run Terraform Pingdom Provider
 terraform "${TERRAFORM_ACTION}" \
 	-var "env=${MAKEFILE_ENV_TARGET}" \
-	-var "contact_ids=${PINGDOM_CONTACT_IDS}" \
+	-var "contact_ids=\"${PINGDOM_CONTACT_IDS}\"" \
 	-var "pingdom_user=${PINGDOM_USER}" \
 	-var "pingdom_password=${PINGDOM_PASSWORD}" \
 	-var "pingdom_api_key=${PINGDOM_API_KEY}" \
