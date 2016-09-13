@@ -10,7 +10,7 @@ set -euo pipefail
 
 FLY_CMD_URL="${CONCOURSE_URL}/api/v1/cli?arch=amd64&platform=$(uname | tr '[:upper:]' '[:lower:]')"
 echo "Downloading fly command..."
-curl "$FLY_CMD_URL" -L -f -k -z "$FLY_CMD" -o "$FLY_CMD" -u "${CONCOURSE_ATC_USER}:${CONCOURSE_ATC_PASSWORD}"
+curl "$FLY_CMD_URL" -# -L -f -k -z "$FLY_CMD" -o "$FLY_CMD" -u "${CONCOURSE_ATC_USER}:${CONCOURSE_ATC_PASSWORD}"
 chmod +x "$FLY_CMD"
 
 echo "Doing fly login"
