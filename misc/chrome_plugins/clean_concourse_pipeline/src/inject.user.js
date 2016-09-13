@@ -20,7 +20,7 @@ var readyStateCheckInterval = setInterval(function() {
 
         var hostname = location.hostname.replace("deployer.", "").replace(".cloudpipeline.digital","")
 
-        var element = document.getElementsByTagName("nav")[0];
+        var element = document.getElementById("top-bar-app");
         element.innerHTML = "&nbsp;<font size=5>" + hostname + "</font>";
     }
 }, 10);
