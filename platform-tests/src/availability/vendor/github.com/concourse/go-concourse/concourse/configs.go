@@ -7,9 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"mime/multipart"
 	"net/http"
-	"net/textproto"
 	"strings"
 
 	"github.com/concourse/atc"
@@ -18,8 +16,11 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func (client *client) PipelineConfig(pipelineName string) (atc.Config, atc.RawConfig, string, bool, error) {
-	params := rata.Params{"pipeline_name": pipelineName}
+func (team *team) PipelineConfig(pipelineName string) (atc.Config, atc.RawConfig, string, bool, error) {
+	params := rata.Params{
+		"pipeline_name": pipelineName,
+		"team_name":     team.name,
+	}
 
 	var configResponse atc.ConfigResponse
 
@@ -28,7 +29,7 @@ func (client *client) PipelineConfig(pipelineName string) (atc.Config, atc.RawCo
 		Headers: &responseHeaders,
 		Result:  &configResponse,
 	}
-	err := client.connection.Send(internal.Request{
+	err := team.connection.Send(internal.Request{
 		RequestName: atc.GetConfig,
 		Params:      params,
 	}, &response)
@@ -49,11 +50,6 @@ func (client *client) PipelineConfig(pipelineName string) (atc.Config, atc.RawCo
 	}
 }
 
-type pipelineConfigResponse struct {
-	Config *atc.Config
-	Errors []string `json:"errors"`
-}
-
 type configValidationError struct {
 	ErrorMessages []string `json:"errors"`
 }
@@ -72,40 +68,26 @@ type setConfigResponse struct {
 	Warnings []ConfigWarning `json:"warnings"`
 }
 
-func (client *client) CreateOrUpdatePipelineConfig(pipelineName string, configVersion string, passedConfig atc.Config) (bool, bool, []ConfigWarning, error) {
-	params := rata.Params{"pipeline_name": pipelineName}
+func (team *team) CreateOrUpdatePipelineConfig(pipelineName string, configVersion string, passedConfig atc.Config) (bool, bool, []ConfigWarning, error) {
+	params := rata.Params{
+		"pipeline_name": pipelineName,
+		"team_name":     team.name,
+	}
+
 	response := internal.Response{}
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
 
-	yamlWriter, err := writer.CreatePart(
-		textproto.MIMEHeader{
-			"Content-type": {"application/x-yaml"},
-		},
-	)
+	yamlConfig, err := yaml.Marshal(passedConfig)
 	if err != nil {
 		return false, false, []ConfigWarning{}, err
 	}
 
-	rawConfig, err := yaml.Marshal(passedConfig)
-	if err != nil {
-		return false, false, []ConfigWarning{}, err
-	}
-
-	_, err = yamlWriter.Write(rawConfig)
-	if err != nil {
-		return false, false, []ConfigWarning{}, err
-	}
-
-	writer.Close()
-
-	err = client.connection.Send(internal.Request{
+	err = team.connection.Send(internal.Request{
 		ReturnResponseBody: true,
 		RequestName:        atc.SaveConfig,
 		Params:             params,
-		Body:               body,
+		Body:               bytes.NewBuffer(yamlConfig),
 		Header: http.Header{
-			"Content-Type":          {writer.FormDataContentType()},
+			"Content-Type":          {"application/x-yaml"},
 			atc.ConfigVersionHeader: {configVersion},
 		},
 	},

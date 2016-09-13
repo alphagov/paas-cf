@@ -237,8 +237,8 @@ func pathContains(child string, parent string) bool {
 func (counter pathCounter) getErrorMessages() []string {
 	messages := []string{}
 
-	for path, numOccurences := range counter.inputCount {
-		if numOccurences > 1 {
+	for path, numOccurrences := range counter.inputCount {
+		if numOccurrences > 1 {
 			messages = append(messages, fmt.Sprintf(duplicateErrorMessage, "input", path))
 		}
 
@@ -259,8 +259,8 @@ func (counter pathCounter) getErrorMessages() []string {
 		}
 	}
 
-	for path, numOccurences := range counter.outputCount {
-		if numOccurences > 1 {
+	for path, numOccurrences := range counter.outputCount {
+		if numOccurrences > 1 {
 			messages = append(messages, fmt.Sprintf(duplicateErrorMessage, "output", path))
 		}
 
@@ -331,6 +331,9 @@ type TaskRunConfig struct {
 	Path string   `json:"path" yaml:"path"`
 	Args []string `json:"args,omitempty" yaml:"args"`
 	Dir  string   `json:"dir",omitempty" yaml:"dir"`
+
+	// The user that the task will run as (defaults to whatever the docker image specifies)
+	User string `json:"user,omitempty" yaml:"user,omitempty" mapstructure:"user"`
 }
 
 type TaskInputConfig struct {

@@ -101,6 +101,9 @@ func (connection *connection) ConnectToEventStream(passedRequest Request) (*sse.
 			if brErr.Response.StatusCode == http.StatusUnauthorized {
 				return nil, ErrUnauthorized
 			}
+			if brErr.Response.StatusCode == http.StatusForbidden {
+				return nil, ErrForbidden
+			}
 		}
 
 		return nil, err
@@ -152,6 +155,10 @@ func (connection *connection) populateResponse(response *http.Response, returnRe
 		return ErrUnauthorized
 	}
 
+	if response.StatusCode == http.StatusForbidden {
+		return ErrForbidden
+	}
+
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		body, _ := ioutil.ReadAll(response.Body)
 
@@ -173,6 +180,12 @@ func (connection *connection) populateResponse(response *http.Response, returnRe
 		passedResponse.Created = true
 	}
 
+	if passedResponse.Headers != nil {
+		for k, v := range response.Header {
+			(*passedResponse.Headers)[k] = v
+		}
+	}
+
 	if returnResponseBody {
 		passedResponse.Result = response.Body
 		return nil
@@ -185,12 +198,6 @@ func (connection *connection) populateResponse(response *http.Response, returnRe
 	err := json.NewDecoder(response.Body).Decode(passedResponse.Result)
 	if err != nil {
 		return err
-	}
-
-	if passedResponse.Headers != nil {
-		for k, v := range response.Header {
-			(*passedResponse.Headers)[k] = v
-		}
 	}
 
 	return nil
