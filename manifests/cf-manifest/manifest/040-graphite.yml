@@ -15,7 +15,9 @@ releases:
 - name: graphite
   version: commit-829b5920f4343cb9929c5fc219dfc4413a772e63
 - name: grafana
-  version: commit-6dce2ec39a6ffc00c092d5b0401dfaf8bbf3ae55
+  version: 5
+  url: https://bosh.io/d/github.com/vito/grafana-boshrelease?v=5
+  sha1: 0edd89d7b383a2556a79f6688f576aa4b6f33bc2
 
 jobs:
 - name: graphite
@@ -62,8 +64,8 @@ jobs:
       admin_password: (( grab secrets.grafana_admin_password ))
       datasources:
         - name: graphite
+          type: graphite
           url: http://localhost:3001
-          database_type: graphite
     tags:
       job: graphite
       tags: (( inject meta.datadog_tags ))
