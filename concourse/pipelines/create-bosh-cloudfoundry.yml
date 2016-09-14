@@ -106,12 +106,6 @@ resources:
       tag_filter: {{cf_graphite_version}}
       branch: gds_master
 
-  - name: grafana-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-grafana-boshrelease.git
-      tag_filter: {{cf_grafana_version}}
-
   - name: aws-broker-boshrelease
     type: git
     source:
@@ -1445,7 +1439,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
-          - get: grafana-boshrelease
           - get: paas-haproxy-release
           - get: aws-broker-boshrelease
           - get: os-conf-boshrelease
@@ -1468,7 +1461,6 @@ jobs:
               - name: paas-cf
               - name: bosh-secrets
               - name: graphite-statsd-boshrelease
-              - name: grafana-boshrelease
               - name: paas-haproxy-release
               - name: aws-broker-boshrelease
               - name: os-conf-boshrelease
@@ -1483,9 +1475,6 @@ jobs:
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
                     {{cf_graphite_version}} graphite-statsd-boshrelease
-
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb grafana \
-                    {{cf_grafana_version}} grafana-boshrelease
 
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
                     {{cf-paas-haproxy-release-version}} paas-haproxy-release
