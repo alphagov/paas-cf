@@ -44,3 +44,9 @@ yes y | \
 $FLY_CMD -t "${FLY_TARGET}" \
   unpause-pipeline \
   --pipeline "${pipeline}"
+
+if [ -n "${EXPOSE_PIPELINE:-}" ]; then
+  $FLY_CMD -t "${FLY_TARGET}" \
+    expose-pipeline \
+    --pipeline "${pipeline}"
+fi

@@ -15,7 +15,9 @@ type Events interface {
 func (client *client) BuildEvents(buildID string) (Events, error) {
 	sseEvents, err := client.connection.ConnectToEventStream(internal.Request{
 		RequestName: atc.BuildEvents,
-		Params:      rata.Params{"build_id": buildID},
+		Params: rata.Params{
+			"build_id": buildID,
+		},
 	})
 	if err != nil {
 		return nil, err

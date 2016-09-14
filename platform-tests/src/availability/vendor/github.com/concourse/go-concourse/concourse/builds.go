@@ -33,11 +33,15 @@ func (client *client) CreateBuild(plan atc.Plan) (atc.Build, error) {
 	return build, err
 }
 
-func (client *client) CreateJobBuild(pipelineName string, jobName string) (atc.Build, error) {
-	params := rata.Params{"job_name": jobName, "pipeline_name": pipelineName}
+func (team *team) CreateJobBuild(pipelineName string, jobName string) (atc.Build, error) {
+	params := rata.Params{
+		"job_name":      jobName,
+		"pipeline_name": pipelineName,
+		"team_name":     team.name,
+	}
 
 	var build atc.Build
-	err := client.connection.Send(internal.Request{
+	err := team.connection.Send(internal.Request{
 		RequestName: atc.CreateJobBuild,
 		Params:      params,
 	}, &internal.Response{
@@ -47,14 +51,20 @@ func (client *client) CreateJobBuild(pipelineName string, jobName string) (atc.B
 	return build, err
 }
 
-func (client *client) JobBuild(pipelineName, jobName, buildName string) (atc.Build, bool, error) {
+func (team *team) JobBuild(pipelineName, jobName, buildName string) (atc.Build, bool, error) {
 	if pipelineName == "" {
 		return atc.Build{}, false, NameRequiredError("pipeline")
 	}
 
-	params := rata.Params{"job_name": jobName, "build_name": buildName, "pipeline_name": pipelineName}
+	params := rata.Params{
+		"job_name":      jobName,
+		"build_name":    buildName,
+		"pipeline_name": pipelineName,
+		"team_name":     team.name,
+	}
+
 	var build atc.Build
-	err := client.connection.Send(internal.Request{
+	err := team.connection.Send(internal.Request{
 		RequestName: atc.GetJobBuild,
 		Params:      params,
 	}, &internal.Response{
@@ -72,7 +82,10 @@ func (client *client) JobBuild(pipelineName, jobName, buildName string) (atc.Bui
 }
 
 func (client *client) Build(buildID string) (atc.Build, bool, error) {
-	params := rata.Params{"build_id": buildID}
+	params := rata.Params{
+		"build_id": buildID,
+	}
+
 	var build atc.Build
 	err := client.connection.Send(internal.Request{
 		RequestName: atc.GetBuild,
@@ -117,7 +130,10 @@ func (client *client) Builds(page Page) ([]atc.Build, Pagination, error) {
 }
 
 func (client *client) AbortBuild(buildID string) error {
-	params := rata.Params{"build_id": buildID}
+	params := rata.Params{
+		"build_id": buildID,
+	}
+
 	return client.connection.Send(internal.Request{
 		RequestName: atc.AbortBuild,
 		Params:      params,

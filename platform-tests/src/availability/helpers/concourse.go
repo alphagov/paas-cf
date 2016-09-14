@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	teamName     = "main"
 	pipelineName = "create-bosh-cloudfoundry"
 	jobName      = "cf-deploy"
 	resourceName = "pipeline-trigger"
@@ -105,7 +106,7 @@ func newConcourseClient(atcUrl, username, password string) concourse.Client {
 	return client
 }
 
-func buildsWithVersion(client concourse.Client, pipelineName, resourceName, resourceVersion string) []atc.Build {
+func buildsWithVersion(team concourse.Team, pipelineName, resourceName, resourceVersion string) []atc.Build {
 	var resourceVersionID int
 
 	page := concourse.Page{
@@ -114,7 +115,7 @@ func buildsWithVersion(client concourse.Client, pipelineName, resourceName, reso
 		Limit: 10,
 	}
 
-	resourceVersions, _, resourceExists, err := client.ResourceVersions(pipelineName, resourceName, page)
+	resourceVersions, _, resourceExists, err := team.ResourceVersions(pipelineName, resourceName, page)
 	ExpectWithOffset(2, err).NotTo(HaveOccurred())
 	ExpectWithOffset(2, resourceExists).To(BeTrue())
 
@@ -125,14 +126,14 @@ func buildsWithVersion(client concourse.Client, pipelineName, resourceName, reso
 	}
 	ExpectWithOffset(2, resourceVersionID).NotTo(Equal(0), "Resource: %s with version: %s should exist in Concourse", resourceName, resourceVersion)
 
-	builds, _, err := client.BuildsWithVersionAsInput(pipelineName, resourceName, resourceVersionID)
+	builds, _, err := team.BuildsWithVersionAsInput(pipelineName, resourceName, resourceVersionID)
 
 	return filterBuildsByNameAndSortByTime(builds, jobName)
 }
 
 func DeploymentHasFinishedInConcourse() bool {
-	client := newConcourseClient(getConcourseAtcUrl(), getConcourseUserName(), getConcoursePassword())
-	builds := buildsWithVersion(client, pipelineName, resourceName, GetResourceVersion())
+	team := newConcourseClient(getConcourseAtcUrl(), getConcourseUserName(), getConcoursePassword()).Team(teamName)
+	builds := buildsWithVersion(team, pipelineName, resourceName, GetResourceVersion())
 	if len(builds) != 0 && (builds[0].Status == "succeeded" || builds[0].Status == "failed") {
 		return true
 	}
