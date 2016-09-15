@@ -15,6 +15,9 @@ module ManifestHelpers
 private
 
   def load_default_manifest
+    ENV["AWS_ACCOUNT"] = "dev"
+    ENV["DATADOG_API_KEY"] = "abcd1234"
+
     output, error, status = Open3.capture3(
       [
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
@@ -23,6 +26,7 @@ private
         File.expand_path("../../fixtures/bosh-secrets.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-ssl-certificates.yml", __FILE__),
         File.expand_path("../../fixtures/bosh-terraform-outputs.yml", __FILE__),
+        File.expand_path("../../../../shared/deployments/datadog.yml", __FILE__),
         File.expand_path("../../../../shared/deployments/collectd.yml", __FILE__)
       ].join(' ')
     )

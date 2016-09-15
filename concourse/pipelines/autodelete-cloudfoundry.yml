@@ -61,6 +61,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: healthcheck-deployed
 
+  - name: datadog-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: datadog.tfstate
+      region_name: eu-west-1
+
 jobs:
   - name: delete
     serial: true
@@ -72,12 +79,24 @@ jobs:
       - get: cf-secrets
       - get: cf-manifest
       - get: bosh-CA
+      - get: datadog-tfstate
 
       - task: get-cf-cli-config
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
 
       - task: remove-healthcheck-db
         file: paas-cf/concourse/tasks/remove-healthcheck-db.yml
+
+      - task: datadog-TF-destroy
+        file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
+        params:
+          TF_VAR_datadog_api_key: {{datadog_api_key}}
+          TF_VAR_datadog_app_key: {{datadog_app_key}}
+          TF_VAR_env: {{deploy_env}}
+        ensure:
+          put: datadog-tfstate
+          params:
+            file: updated-datadog-tfstate/datadog.tfstate
 
       - task: delete-deployment
         config:

@@ -351,10 +351,6 @@ jobs:
     serial: true
     plan:
       - aggregate:
-          - get: cf-release
-            params:
-              submodules:
-                - src/smoke-tests
           - get: paas-cf
           - get: cf-manifest
           - get: cf-secrets

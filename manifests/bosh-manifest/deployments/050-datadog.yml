@@ -1,0 +1,10 @@
+---
+jobs:
+- name: bosh
+  templates:
+  - {name: datadog-agent, release: datadog-agent}
+  properties:
+    datadog: (( inject meta.datadog ))
+    tags:
+      job: bosh
+      tags: (( inject meta.datadog_tags ))

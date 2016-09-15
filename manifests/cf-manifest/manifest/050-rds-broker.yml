@@ -33,6 +33,9 @@ jobs:
     networks:
       - name: cf
     properties:
+      tags:
+        job: rds_broker
+        tags: (( inject meta.datadog_tags ))
       rds-broker:
         aws_access_key_id: ""
         aws_secret_access_key: ""

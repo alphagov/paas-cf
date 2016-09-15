@@ -56,6 +56,14 @@ prepare_environment() {
   get_git_concourse_pool_clone_full_url_ssh
 
   export EXPOSE_PIPELINE=1
+
+  if [ "${ENABLE_DATADOG:-}" = "true" ]; then
+    export PASSWORD_STORE_DIR=~/.paas-pass
+    datadog_api_key=$(pass datadog/api_key)
+    datadog_app_key=$(pass datadog/app_key)
+  else
+    datadog_api_key="disabled"
+  fi
 }
 
 generate_vars_file() {
@@ -93,6 +101,8 @@ bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 enable_cf_acceptance_tests: ${ENABLE_CF_ACCEPTANCE_TESTS:-true}
+datadog_api_key: ${datadog_api_key:-}
+datadog_app_key: ${datadog_app_key:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }

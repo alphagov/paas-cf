@@ -1,5 +1,6 @@
 ---
 meta:
+  environment: (( grab terraform_outputs.environment ))
   default_agent:
     mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
 

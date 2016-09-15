@@ -237,6 +237,13 @@ resources:
       versioned_file: cf.tfstate
       region_name: eu-west-1
 
+  - name: datadog-tfstate
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: datadog.tfstate
+      region_name: eu-west-1
+
   - name: cf-secrets
     type: s3-iam
     source:
@@ -414,6 +421,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} bosh_id_rsa.pub paas-cf/concourse/init_files/zero_bytes
@@ -938,6 +946,8 @@ jobs:
           outputs:
             - name: bosh-manifest
           params:
+            AWS_ACCOUNT: {{aws_account}}
+            DATADOG_API_KEY: {{datadog_api_key}}
             BOSH_MANIFEST_STUBS: |
               ./paas-cf/manifests/bosh-manifest/deployments/*.yml
               ./paas-cf/manifests/bosh-manifest/deployments/aws/*.yml
@@ -946,6 +956,7 @@ jobs:
               ./terraform-outputs/bosh.terraform-outputs.yml
               ./terraform-outputs/vpc.terraform-outputs.yml
               ./paas-cf/manifests/shared/deployments/collectd.yml
+              ./paas-cf/manifests/shared/deployments/datadog.yml
           run:
             path: sh
             args:
@@ -1345,7 +1356,10 @@ jobs:
                 ./certs/*.yml
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
+                ./paas-cf/manifests/shared/deployments/datadog.yml
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
+              AWS_ACCOUNT: {{aws_account}}
+              DATADOG_API_KEY: {{datadog_api_key}}
             run:
               path: sh
               args:
@@ -1391,9 +1405,12 @@ jobs:
             outputs:
               - name: runtime-config
             params:
+              DATADOG_API_KEY: {{datadog_api_key}}
+              AWS_ACCOUNT: {{aws_account}}
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
+                ./paas-cf/manifests/shared/deployments/datadog.yml
             run:
               path: sh
               args:
@@ -1437,6 +1454,7 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: logsearch-for-cloudfoundry-boshrelease
+          - get: datadog-tfstate
 
       - aggregate:
         - task: upload-releases
@@ -1807,6 +1825,39 @@ jobs:
                 export ES_PORT="9200"
                 $(pwd)/paas-cf/concourse/scripts/kibana_set_utc.rb
 
+        - task: datadog-terraform-apply
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/terraform
+            inputs:
+              - name: datadog-tfstate
+              - name: paas-cf
+            outputs:
+              - name: updated-tfstate
+            params:
+              TF_VAR_env: {{deploy_env}}
+              TF_VAR_datadog_api_key: {{datadog_api_key}}
+              TF_VAR_datadog_app_key: {{datadog_app_key}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ "${TF_VAR_datadog_api_key}" != "disabled" ]; then
+                    terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate paas-cf/terraform/datadog
+                  else
+                    echo "Datadog disabled, skipping terraform run..."
+                    cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                  fi
+          ensure:
+            put: datadog-tfstate
+            params:
+              file: updated-tfstate/datadog.tfstate
+
   - name: post-deploy
     plan:
       - aggregate:
@@ -1820,7 +1871,6 @@ jobs:
           - get: cf-secrets
             passed: ['cf-deploy']
           - get: bosh-CA
-          - get: cf-tfstate
 
       - task: retrieve-config
         config:
