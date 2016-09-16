@@ -4,3 +4,4 @@ terraform_outputs:
   ssh_security_group: alext-office-access-ssh
   subnet0_id: subnet-12345678
   zone0: eu-west-1a
+  environment: dev
