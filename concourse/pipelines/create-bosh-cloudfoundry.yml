@@ -325,9 +325,11 @@ jobs:
   - name: pipeline-lock
     serial: true
     plan:
-      - get: paas-cf
-        trigger: {{auto_deploy}}
-      - get: git-ssh-private-key
+      - aggregate:
+        - get: paas-cf
+          trigger: {{auto_deploy}}
+        - get: git-ssh-private-key
+        - get: concourse-manifest
       - task: init-pipeline-pool
         config:
           platform: linux
@@ -359,19 +361,6 @@ jobs:
       - put: pipeline-pool
         params:
           claim: lock
-      - put: pipeline-trigger
-        params: {bump: patch}
-
-  - name: init
-    serial_groups: [bosh-deploy]
-    serial: true
-    plan:
-      - get: pipeline-trigger
-        trigger: true
-        passed: ['pipeline-lock']
-      - get: paas-cf
-        passed: ['pipeline-lock']
-      - get: concourse-manifest
       - task: self-update-pipeline
         config:
           platform: linux
@@ -391,7 +380,19 @@ jobs:
             BOSH_AZ: {{bosh_az}}
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
+      - put: pipeline-trigger
+        params: {bump: patch}
 
+
+  - name: init
+    serial_groups: [bosh-deploy]
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        trigger: true
+        passed: ['pipeline-lock']
+      - get: paas-cf
+        passed: ['pipeline-lock']
       - task: bootstrap-s3-state
         config:
           platform: linux
