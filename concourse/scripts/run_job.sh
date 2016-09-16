@@ -17,5 +17,5 @@ FLY="$FLY_CMD -t ${FLY_TARGET}"
 ${FLY} get-pipeline -p ${PIPE} | "${SCRIPT_DIR}"/unbind_job.rb "${JOB}" >$TEMP
 ${FLY} set-pipeline -p ${PIPE} -c=$TEMP -n
 
-curl -k -u "${CONCOURSE_ATC_USER}:${CONCOURSE_ATC_PASSWORD}" "${CONCOURSE_URL}/api/v1/pipelines/${PIPE}/jobs/${JOB}/builds" -d ''
+${FLY} trigger-job -j "${PIPE}/${JOB}"
 rm -f $TEMP
