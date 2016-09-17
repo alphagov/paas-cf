@@ -263,7 +263,7 @@ jobs:
           - |
             tar xzvf concourse-cert/concourse-cert.tar.gz
             if [ -f concourse.crt ] && [ -f concourse.key ]; then
-              echo Certificate and private key already created, nothing to do
+              echo "Certificate and private key already created, nothing to do"
               cp concourse-cert/concourse-cert.tar.gz generated-concourse-cert/
               exit 0
             fi
