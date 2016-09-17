@@ -59,6 +59,18 @@ var _ = Describe("PipeCleaner", func() {
 			})
 		})
 
+		Context("when params are supplied", func() {
+			BeforeEach(func() {
+				command = exec.Command("./pipecleaner.py", "spec/fixtures/pipecleaner_shellcheck_params.yml")
+			})
+
+			It("should not report an issue", func() {
+				Eventually(session).Should(gexec.Exit(0))
+				Expect(session.Out.Contents()).To(BeEmpty())
+				Expect(session.Err.Contents()).To(BeEmpty())
+			})
+		})
+
 		Context("with --fatal-warnings", func() {
 			BeforeEach(func() {
 				command = exec.Command("./pipecleaner.py", "--fatal-warnings", "spec/fixtures/pipecleaner_shellcheck.yml")

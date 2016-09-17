@@ -45,7 +45,7 @@ class Pipecleaner(object):
         raw = re.sub('\{\{.*?\}\}', 'DUMMY', raw)
         return yaml.load(raw)
 
-    def call_shellcheck(self, shell, args):
+    def call_shellcheck(self, shell, args, variables):
         """"Returns the exitcode and any output from running shellcheck"""
         if "shellcheck" in self.ignore_types:
             return 0, ""
@@ -55,6 +55,9 @@ class Pipecleaner(object):
         for switch in args[:-1]:
             if switch != "-c":
                 script += "set " + switch + "\n"
+
+        for name, value in variables.iteritems():
+            script += "export " + name + "='DUMMY'\n"
 
         script += args[-1]
 
@@ -170,8 +173,13 @@ class Pipecleaner(object):
                         # shellcheck expands its set of dialects.
                         shellcheck_dialects =  ['sh', 'bash', 'dash', 'ksh']
                         if item['config']['run']['path'] in shellcheck_dialects:
+                            params = item['config'].get('params', {}) or {}
+                            item_params = item.get('params', {}) or {}
+                            combined_params = params.copy()
+                            combined_params.update(item_params)
                             exitcode, output = self.call_shellcheck(item['config']['run']['path'],
-                                                                    item['config']['run']['args'])
+                                                                    item['config']['run']['args'],
+                                                                    combined_params)
                             if exitcode != 0:
                                 errors['shellcheck'].append({
                                     'job': job['name'],
