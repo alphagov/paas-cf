@@ -1053,7 +1053,7 @@ jobs:
               - -e
               - -c
               - |
-                if [ "${SKIP_UPLOAD_GENERATED_CERTS}" == "true" ]; then
+                if [ "${SKIP_UPLOAD_GENERATED_CERTS}" = "true" ]; then
                   cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
                   echo "Using pre-uploaded public certificates for ${TF_VAR_env}"
                 else
