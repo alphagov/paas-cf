@@ -466,7 +466,8 @@ jobs:
                   certstrap init --passphrase "" --common-name bosh-CA
                   cd out
                   tar -cvzf ../generated-bosh-CA/bosh-CA.tar.gz bosh-CA.*
-                  cd ..
+                  # shellcheck disable=SC2103
+                  cd .. || true
                 else
                   echo "The CA cert already exists, skipping generation..."
                   cp existing-bosh-CA/bosh-CA.tar.gz generated-bosh-CA/bosh-CA.tar.gz
@@ -1381,7 +1382,8 @@ jobs:
                   done
 
                   ../paas-cf/concourse/scripts/file_to_yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
-                  cd ..
+                  # shellcheck disable=SC2103
+                  cd .. || true
 
                   echo "Generating manifests"
 
