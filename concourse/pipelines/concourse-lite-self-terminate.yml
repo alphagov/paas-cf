@@ -23,9 +23,11 @@ jobs:
           - -e
           - -c
           - |
-            export AWS_AVAILIABILITY_ZONE=$(curl -qs http://169.254.169.254/latest/meta-data/placement/availability-zone)
-            export AWS_DEFAULT_REGION="${AWS_AVAILIABILITY_ZONE%%[a-z]}"
-            export AWS_INSTANCE_ID=$(curl -qs http://169.254.169.254/latest/meta-data/instance-id)
+            export AWS_AVAILIABILITY_ZONE
+            AWS_AVAILIABILITY_ZONE=$(curl -qs http://169.254.169.254/latest/meta-data/placement/availability-zone)
+            export AWS_DEFAULT_REGION
+            AWS_DEFAULT_REGION="${AWS_AVAILIABILITY_ZONE%%[a-z]}"
+            export AWS_INSTANCE_ID
+            AWS_INSTANCE_ID=$(curl -qs http://169.254.169.254/latest/meta-data/instance-id)
 
             aws ec2 terminate-instances --instance-ids ${AWS_INSTANCE_ID}
-

@@ -322,7 +322,8 @@ jobs:
             cp concourse-ssh-key/concourse_id_rsa.pub paas-cf/terraform/concourse
             tar xzvf generated-concourse-cert/concourse-cert.tar.gz
             . vpc-terraform-outputs/tfvars.sh
-            export TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
+            export TF_VAR_git_rsa_id_pub
+            TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
             terraform_params=${VAGRANT_IP:+-var vagrant_cidr=$VAGRANT_IP/32}
             terraform apply ${terraform_params} \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
@@ -587,7 +588,8 @@ jobs:
           - -c
           - |
             . vpc-terraform-outputs/tfvars.sh
-            export TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
+            export TF_VAR_git_rsa_id_pub
+            TF_VAR_git_rsa_id_pub=$(cat git-ssh-public-key/git_id_rsa.pub)
             terraform apply -target=aws_security_group.concourse \
               -state=concourse-terraform-state/concourse.tfstate -state-out=concourse.tfstate \
               -var-file=paas-cf/terraform/{{aws_account}}.tfvars paas-cf/terraform/concourse

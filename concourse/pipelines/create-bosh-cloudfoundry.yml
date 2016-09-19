@@ -765,9 +765,12 @@ jobs:
 
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                export CONCOURSE_ATC_PASSWORD=$(awk '/basic_auth_password/ { print $2 }' concourse-manifest/concourse-manifest.yml | tr -d '"')
-                export CONCOURSE_ATC_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
-                export PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export CONCOURSE_ATC_PASSWORD
+                CONCOURSE_ATC_PASSWORD=$(awk '/basic_auth_password/ { print $2 }' concourse-manifest/concourse-manifest.yml | tr -d '"')
+                export CONCOURSE_ATC_URL
+                CONCOURSE_ATC_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+                export PIPELINE_TRIGGER_VERSION
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
                 echo "Running tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability
@@ -1688,7 +1691,8 @@ jobs:
                   . ./config/config.sh
 
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  export UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+                  export UAA_CLIENT_SECRET
+                  UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
                   cd paas-cf/scripts
                   bundle
                   bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "{{NEW_ACCOUNT_EMAIL_ADDRESS}}"
@@ -2127,7 +2131,8 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   echo "Running tests"
-                  export CONFIG="$(pwd)/test-config/config.json"
+                  export CONFIG
+                  CONFIG="$(pwd)/test-config/config.json"
                   ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/acceptance/
 
         ensure:
@@ -2235,7 +2240,8 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   echo "Running tests"
-                  export CONFIG="$(pwd)/test-config/config.json"
+                  export CONFIG
+                  CONFIG="$(pwd)/test-config/config.json"
                   ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/performance/
 
         ensure:
