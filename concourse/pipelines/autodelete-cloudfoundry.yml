@@ -122,7 +122,7 @@ jobs:
               # how it works.
               - |
                 sum=$(echo {{deploy_env}} | md5sum);
-                short=${sum:0:15};
+                short=$(echo $sum | cut -b 1-15)
                 decimal=$((0x$short));
                 sleeptime=$((${decimal##-} % 60*20));
                 echo "Sleeping for $sleeptime seconds before deletion.."
