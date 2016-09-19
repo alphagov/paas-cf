@@ -1,7 +1,4 @@
 ---
-meta:
-  environment: for_datadog
-
 releases:
   - name: os-conf
     version: commit-a2bc2ab32248c8edf7c4790b33902893b1f4db66
