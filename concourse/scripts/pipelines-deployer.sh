@@ -8,13 +8,12 @@ export TARGET_CONCOURSE=bootstrap
 $("${SCRIPT_DIR}/environment.sh" "$@")
 "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
+# shellcheck source=./concourse/scripts/lib/datadog.sh
+. "${SCRIPT_DIR}/lib/datadog.sh"
+
 env=${DEPLOY_ENV}
-if [ "${ENABLE_DATADOG:-}" = "true" ]; then
-  export PASSWORD_STORE_DIR=~/.paas-pass
-  datadog_api_key=$(pass datadog/api_key)
-else
-  datadog_api_key="disabled"
-fi
+
+get_datadog_secrets
 
 generate_vars_file() {
    cat <<EOF

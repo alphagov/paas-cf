@@ -6,6 +6,9 @@ export TARGET_CONCOURSE=deployer
 # shellcheck disable=SC2091
 $("${SCRIPT_DIR}/environment.sh" "$@")
 
+# shellcheck disable=1090
+. "${SCRIPT_DIR}/lib/datadog.sh"
+
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
@@ -53,16 +56,9 @@ prepare_environment() {
 
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
+  get_datadog_secrets
 
   export EXPOSE_PIPELINE=1
-
-  if [ "${ENABLE_DATADOG:-}" = "true" ]; then
-    export PASSWORD_STORE_DIR=~/.paas-pass
-    datadog_api_key=$(pass datadog/api_key)
-    datadog_app_key=$(pass datadog/app_key)
-  else
-    datadog_api_key="disabled"
-  fi
 }
 
 generate_vars_file() {
