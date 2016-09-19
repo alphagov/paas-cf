@@ -126,14 +126,6 @@ jobs:
             interval: (( grab meta.collectd.interval ))
             config: (( grab meta.collectd.config ))
 
-      - name: datadog-agent
-        release: datadog-agent
-        properties:
-          datadog: (( inject meta.datadog ))
-          tags:
-            job: concourse
-            tags: (( inject meta.datadog_tags ))
-
     networks:
       - name: public
         static_ips:
