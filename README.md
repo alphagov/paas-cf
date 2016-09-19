@@ -252,6 +252,15 @@ to remove `passed` dependencies for `paas-cf` in the specified job. This means
 that your job will pick the latest changes to `paas-cf` directly, without the
 need to run the pipeline from start in order to bring the changes forward.
 
+## Optionally deploy datadog agent in dev environment
+
+If you want to deploy datadog agent in your dev environment, set DEPLOY_DATADOG_AGENT
+variable to true:
+
+```
+DEPLOY_DATADOG_AGENT=true make dev pipelines
+```
+
 ## Sharing your Bootstrap Concourse
 
 If you need to share access to your *Bootstrap Concourse* with a colleague
