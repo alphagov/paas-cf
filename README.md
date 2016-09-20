@@ -228,12 +228,14 @@ Acceptance tests can be optionally disabled by setting the environment
 variable `ENABLE_CF_ACCEPTANCE_TESTS=false`.
 
 ```
-ENABLE_CF_ACCEPTANCE_TESTS=false make dev pipelines
+ENABLE_CF_ACCEPTANCE_TESTS=false SELF_UPDATE_PIPELINE=false make dev pipelines
 ```
 
 It is enabled in all the environments except in `staging` and `prod`.
 This will only disable the execution of the test, but the job will
 be still configured in concourse.
+
+*Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
 
 ## Optionally run specific job in the create-bosh-cloudfoundry pipeline
 
