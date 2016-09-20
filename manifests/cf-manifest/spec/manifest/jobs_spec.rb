@@ -12,7 +12,12 @@ RSpec.describe "the jobs definitions block" do
   let(:jobs) { manifest_with_defaults["jobs"] }
 
   def get_job(job_name)
-    jobs.select { |j| j["name"] == job_name }.first
+    job = jobs.select { |j| j["name"] == job_name }.first
+    if job == nil
+      raise "No job named '#{job_name}' known. Known jobs are #{jobs.collect { |job_hash| job_hash['name'] }}"
+    else
+      job
+    end
   end
 
   matcher :be_updated_serially do
@@ -21,9 +26,11 @@ RSpec.describe "the jobs definitions block" do
     end
   end
 
-  matcher :be_ordered_before do |later_job|
-    match do |earlier_job|
-      jobs.index { |j| j["name"] == earlier_job } < jobs.index { |j| j["name"] == later_job }
+  matcher :be_ordered_before do |later_job_name|
+    match do |earlier_job_name|
+      later_job = get_job(later_job_name)
+      earlier_job = get_job(earlier_job_name)
+      jobs.index { |j| j == earlier_job } < jobs.index { |j| j == later_job }
     end
   end
 
@@ -34,6 +41,13 @@ RSpec.describe "the jobs definitions block" do
 
     it "has nats before etcd" do
       expect("nats").to be_ordered_before("etcd")
+    end
+  end
+
+  describe "in order to ensure high availability of ingestor" do
+    it "has ingestor serial" do
+      expect("ingestor_z1").to be_updated_serially
+      expect("ingestor_z2").to be_updated_serially
     end
   end
 
