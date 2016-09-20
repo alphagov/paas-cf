@@ -1,9 +1,3 @@
-meta:
-  update:
-    serial: false
-    canaries: 1
-    max_in_flight: 1
-
 releases:
 - name: logsearch
   url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=200.0.0
@@ -27,7 +21,6 @@ jobs:
     default: [gateway, dns]
     static_ips:
       - 10.0.16.12
-  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
@@ -49,7 +42,6 @@ jobs:
     default: [gateway, dns]
     static_ips:
       - 10.0.17.12
-  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
@@ -71,7 +63,6 @@ jobs:
       - 10.0.16.13
       - 10.0.17.13
   persistent_disk_type: queue
-  update: (( grab meta.update ))
   properties:
     tags:
       job: queue
@@ -90,7 +81,6 @@ jobs:
   - name: cf
     static_ips:
       - 10.0.16.14
-  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
@@ -115,7 +105,6 @@ jobs:
   - name: cf
     static_ips:
       - 10.0.17.14
-  update: (( grab meta.update ))
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
@@ -153,7 +142,6 @@ jobs:
     tags:
       job: elasticsearch_master
       tags: (( inject meta.datadog_tags ))
-  update: (( grab meta.update ))
 
 - name: maintenance
   instances: 1
@@ -167,7 +155,6 @@ jobs:
   stemcell: default
   networks:
   - name: cf
-  update: (( grab meta.update ))
   properties:
     elasticsearch_config:
       templates:
@@ -187,7 +174,6 @@ jobs:
   instances: 1
   networks:
   - name: cf
-  update: (( grab meta.update ))
   properties:
     tags:
       job: kibana
