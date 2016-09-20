@@ -165,6 +165,7 @@ jobs:
           TF_VAR_datadog_api_key: {{datadog_api_key}}
           TF_VAR_datadog_app_key: {{datadog_app_key}}
           TF_VAR_env: {{deploy_env}}
+          DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
         ensure:
           put: datadog-tfstate
           params:

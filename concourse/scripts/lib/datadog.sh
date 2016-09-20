@@ -15,8 +15,5 @@ get_datadog_secrets() {
     datadog_app_key=$("${SCRIPT_DIR}"/val_from_yaml.rb datadog_app_key "${secrets_file}")
 
     rm -f "${secrets_file}"
-  else
-    datadog_api_key="disabled"
-    datadog_app_key="disabled"
   fi
 }

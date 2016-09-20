@@ -15,7 +15,7 @@ run:
     - -e
     - -c
     - |
-      if [ "${TF_VAR_datadog_api_key}" != "disabled" ]; then
+      if [ "${DEPLOY_DATADOG_AGENT}" = "true" ]; then
         terraform destroy -force \
           -state=datadog-tfstate/datadog.tfstate \
           -state-out=updated-datadog-tfstate/datadog.tfstate \

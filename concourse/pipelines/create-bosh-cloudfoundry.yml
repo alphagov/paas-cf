@@ -1849,13 +1849,14 @@ jobs:
               TF_VAR_env: {{deploy_env}}
               TF_VAR_datadog_api_key: {{datadog_api_key}}
               TF_VAR_datadog_app_key: {{datadog_app_key}}
+              DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  if [ "${TF_VAR_datadog_api_key}" != "disabled" ]; then
+                  if [ "${DEPLOY_DATADOG_AGENT}" = "true" ]; then
                     terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate paas-cf/terraform/datadog
                   else
                     echo "Datadog disabled, skipping terraform run..."
