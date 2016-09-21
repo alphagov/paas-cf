@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os/exec"
+	"regexp"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/rds"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
@@ -15,9 +19,15 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
+const (
+	DB_CREATE_TIMEOUT = 30 * time.Minute
+)
+
 var _ = Describe("RDS broker", func() {
 	const (
-		serviceName = "postgres"
+		serviceName  = "postgres"
+		testPlanName = "M-dedicated-9.5"
+		region       = "eu-west-1"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -33,32 +43,24 @@ var _ = Describe("RDS broker", func() {
 		Expect(plans).To(Say("M-HA-dedicated-9.5"))
 	})
 
-	Context("creating a database instance", func() {
+	Context("creating a database instance with default settings", func() {
 		// Avoid creating additional tests in this block because this setup and teardown is
 		// slow (several minutes).
 
-		const (
-			DB_CREATE_TIMEOUT = 30 * time.Minute
-			testPlanName      = "M-dedicated-9.5"
-		)
-
 		var (
-			appName        string
-			dbInstanceName string
+			appName         string
+			dbInstanceName  string
+			rdsInstanceName string
 		)
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName("CATS-APP-")
 			dbInstanceName = generator.PrefixedRandomName("test-db-")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
-			fmt.Fprint(GinkgoWriter, "Polling for RDS creation to complete")
-			Eventually(func() *Buffer {
-				fmt.Fprint(GinkgoWriter, ".")
-				command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
-				Expect(command).To(Exit(0))
-				return command.Out
-			}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
-			fmt.Fprint(GinkgoWriter, "done\n")
+			pollForRDSCreationCompletion(dbInstanceName)
+
+			rdsInstanceName = getRDSInstanceName(dbInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Created RDS instance: %s\n", rdsInstanceName)
 
 			Expect(cf.Cf(
 				"push", appName,
@@ -78,15 +80,22 @@ var _ = Describe("RDS broker", func() {
 			cf.Cf("delete", appName, "-f").Wait(DEFAULT_TIMEOUT)
 
 			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+
 			// Poll until destruction is complete, otherwise the org cleanup fails.
-			fmt.Fprint(GinkgoWriter, "Polling for RDS destruction to complete")
-			Eventually(func() *Buffer {
-				fmt.Fprint(GinkgoWriter, ".")
-				command := quietCf("cf", "services").Wait(DEFAULT_TIMEOUT)
-				Expect(command).To(Exit(0))
-				return command.Out
-			}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
-			fmt.Fprint(GinkgoWriter, "done\n")
+			pollForRDSDeletionCompletion(dbInstanceName)
+
+			rdsClient, err := NewRDSClient(region)
+			Expect(err).NotTo(HaveOccurred())
+			snapshots, err := rdsClient.GetDBFinalSnapshots(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Final snapshots for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshots)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(snapshots).Should(ContainSubstring(rdsInstanceName))
+
+			snapshotDeletionOutput, err := rdsClient.deleteDBFinalSnapshot(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Snapshot deletion output for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshotDeletionOutput)
+			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("can connect to the DB instance from the app", func() {
@@ -124,7 +133,107 @@ var _ = Describe("RDS broker", func() {
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response testing multi-user permissions. Response body:\n%s\n", resp.StatusCode, string(body))
 		})
 	})
+
+	Context("creating a database instance with custom parameters", func() {
+
+		var (
+			dbInstanceName  string
+			rdsInstanceName string
+		)
+
+		BeforeEach(func() {
+			dbInstanceName = generator.PrefixedRandomName("test-db-")
+			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName, "-c", `{"skip_final_snapshot": "true"}`).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+
+			pollForRDSCreationCompletion(dbInstanceName)
+
+			rdsInstanceName = getRDSInstanceName(dbInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Created RDS instance: %s\n", rdsInstanceName)
+		})
+
+		It("should not create a final snapshot when `skip_final_snapshot` is set to true", func() {
+			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+
+			// Poll until destruction is complete, otherwise the org cleanup fails.
+			pollForRDSDeletionCompletion(dbInstanceName)
+
+			rdsClient, err := NewRDSClient(region)
+			Expect(err).NotTo(HaveOccurred())
+			snapshots, err := rdsClient.GetDBFinalSnapshots(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Final snapshots for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshots)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).Should(ContainSubstring("DBSnapshotNotFound"))
+
+			snapshotDeletionOutput, err := rdsClient.deleteDBFinalSnapshot(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Snapshot deletion output for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshotDeletionOutput)
+			Expect(err).To(HaveOccurred())
+		})
+
+		It("should create a final snapshot if we set `skip_final_snapshot` back to false", func() {
+			Expect(cf.Cf("update-service", dbInstanceName, "-c", `{"skip_final_snapshot": "false"}`).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			pollForRDSUpdateCompletion(dbInstanceName)
+			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+
+			// Poll until destruction is complete, otherwise the org cleanup fails.
+			pollForRDSDeletionCompletion(dbInstanceName)
+
+			rdsClient, err := NewRDSClient(region)
+			Expect(err).NotTo(HaveOccurred())
+			snapshots, err := rdsClient.GetDBFinalSnapshots(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Final snapshots for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshots)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(snapshots).Should(ContainSubstring(rdsInstanceName))
+
+			snapshotDeletionOutput, err := rdsClient.deleteDBFinalSnapshot(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Snapshot deletion output for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshotDeletionOutput)
+			Expect(err).NotTo(HaveOccurred())
+		})
+	})
 })
+
+func pollForRDSCreationCompletion(dbInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for RDS creation to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
+		Expect(command).To(Exit(0))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func pollForRDSDeletionCompletion(dbInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for RDS destruction to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "services").Wait(DEFAULT_TIMEOUT)
+		Expect(command).To(Exit(0))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func pollForRDSUpdateCompletion(dbInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for RDS update to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
+		Expect(command).To(Exit(0))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("update succeeded"))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func getRDSInstanceName(dbInstanceName string) string {
+	serviceOutput := cf.Cf("service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
+	Expect(serviceOutput).To(Exit(0))
+	rxp, _ := regexp.Compile("rdsbroker-([a-z0-9-]+)")
+	return string(rxp.Find(serviceOutput.Out.Contents()))
+}
 
 // quietCf is an equivelent of cf.Cf that doesn't send the output to
 // GinkgoWriter. Used when you don't want the output, even in verbose mode (eg
@@ -133,4 +242,49 @@ func quietCf(program string, args ...string) *Session {
 	command, err := Start(exec.Command(program, args...), nil, nil)
 	Expect(err).NotTo(HaveOccurred())
 	return command
+}
+
+type RDSClient struct {
+	region string
+	rdssvc *rds.RDS
+}
+
+func NewRDSClient(region string) (*RDSClient, error) {
+	sess, err := session.NewSession(&aws.Config{Region: aws.String(region)})
+	if err != nil {
+		fmt.Println("Failed to create AWS session,", err)
+		return nil, err
+	}
+
+	rdssvc := rds.New(sess)
+	return &RDSClient{
+		region: region,
+		rdssvc: rdssvc,
+	}, nil
+}
+
+func (r *RDSClient) GetDBFinalSnapshots(ID string) (*rds.DescribeDBSnapshotsOutput, error) {
+	params := &rds.DescribeDBSnapshotsInput{
+		DBSnapshotIdentifier: aws.String(ID + "-final-snapshot"),
+	}
+
+	resp, err := r.rdssvc.DescribeDBSnapshots(params)
+
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (r *RDSClient) deleteDBFinalSnapshot(ID string) (*rds.DeleteDBSnapshotOutput, error) {
+	params := &rds.DeleteDBSnapshotInput{
+		DBSnapshotIdentifier: aws.String(ID + "-final-snapshot"),
+	}
+
+	resp, err := r.rdssvc.DeleteDBSnapshot(params)
+
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
