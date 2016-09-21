@@ -947,6 +947,7 @@ jobs:
           params:
             AWS_ACCOUNT: {{aws_account}}
             DATADOG_API_KEY: {{datadog_api_key}}
+            DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
             BOSH_MANIFEST_STUBS: |
               ./paas-cf/manifests/bosh-manifest/deployments/*.yml
               ./paas-cf/manifests/bosh-manifest/deployments/aws/*.yml
@@ -955,13 +956,17 @@ jobs:
               ./terraform-outputs/bosh.terraform-outputs.yml
               ./terraform-outputs/vpc.terraform-outputs.yml
               ./paas-cf/manifests/shared/deployments/collectd.yml
-              ./paas-cf/manifests/shared/deployments/datadog.yml
           run:
             path: sh
             args:
               - -e
               - -c
               - |
+                if [ "${DEPLOY_DATADOG_AGENT}" = "true" ] ; then
+                   BOSH_MANIFEST_STUBS="${BOSH_MANIFEST_STUBS}
+                                        ./paas-cf/manifests/bosh-manifest/extensions/datadog.yml
+                                        ./paas-cf/manifests/shared/deployments/datadog.yml"
+                fi
                 ./paas-cf/manifests/shared/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
         on_success:
           put: bosh-manifest
@@ -1407,11 +1412,11 @@ jobs:
               - name: runtime-config
             params:
               DATADOG_API_KEY: {{datadog_api_key}}
+              DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
               AWS_ACCOUNT: {{aws_account}}
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
-                ./paas-cf/manifests/shared/deployments/datadog.yml
             run:
               path: sh
               args:
@@ -1419,6 +1424,12 @@ jobs:
                 - -c
                 - |
                   echo "Generating runtime config..."
+
+                  if [ "${DEPLOY_DATADOG_AGENT}" = "true" ] ; then
+                     MANIFEST_STUBS="${MANIFEST_STUBS}
+                                    ./paas-cf/manifests/cf-manifest/runtime-config/datadog-addon.yml
+                                    ./paas-cf/manifests/shared/deployments/datadog.yml"
+                  fi
 
                   ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > runtime-config/runtime-config.yml
           on_success:

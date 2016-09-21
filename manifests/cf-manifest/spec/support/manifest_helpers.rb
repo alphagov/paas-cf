@@ -83,6 +83,7 @@ private
     runtime_config = render([
       File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
       File.expand_path("../../../runtime-config/runtime-config-base.yml", __FILE__),
+      File.expand_path("../../../runtime-config/datadog-addon.yml", __FILE__),
       File.expand_path("../../../../shared/deployments/datadog.yml", __FILE__),
       File.expand_path("../../../../shared/deployments/collectd.yml", __FILE__)
     ])

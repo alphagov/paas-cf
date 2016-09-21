@@ -1,0 +1,6 @@
+addons:
+  - name: datadog-agent
+    jobs:
+    - name: datadog-agent
+      release: datadog-agent
+    properties: (( grab meta.datadog ))
