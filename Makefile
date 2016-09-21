@@ -159,6 +159,14 @@ showenv: ## Display environment information
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 	@concourse/scripts/environment.sh
 
+.PHONY: upload-datadog-secrets
+upload-datadog-secrets: check-env-vars ## Decrypt and upload Datadog credentials to S3
+	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	$(if ${AWS_ACCOUNT},,$(error Must set environment to ci/staging/prod))
+	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
+	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-datadog-secrets.sh
+
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
 manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certificates for public facing endpoints

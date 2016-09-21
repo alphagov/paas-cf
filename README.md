@@ -408,5 +408,8 @@ Visit [BOSH failover page](https://github.com/alphagov/paas-cf/blob/master/doc/b
 ## Pingdom checks
 Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/pingdom.md)
 
+## Datadog credentials
+These must be published in each new environment. Visit the [Datadog documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/datadog.md)
+
 ## Other useful commands
 Type `make` to get the list of all available commands.
