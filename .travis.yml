@@ -21,7 +21,7 @@ before_install:
     export PATH=~/bin:$PATH
   - |
     echo "Fetching shellcheck"
-    wget -O ~/bin/shellcheck https://github.com/alphagov/paas-cf/releases/download/shellcheck_binary_0.3.7/shellcheck_linux_amd64
+    wget -O ~/bin/shellcheck https://github.com/alphagov/paas-cf/releases/download/shellcheck_binary_0.4.4/shellcheck_linux_amd64
     chmod +x ~/bin/shellcheck
   - |
     echo "Fetching Terraform"
