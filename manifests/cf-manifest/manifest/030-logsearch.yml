@@ -27,6 +27,8 @@ jobs:
     tags:
       job: ingestor_z1
       tags: (( inject meta.datadog_tags ))
+  update:
+    serial: true
 
 - name: ingestor_z2
   release: logsearch
@@ -48,6 +50,8 @@ jobs:
     tags:
       job: ingestor_z2
       tags: (( inject meta.datadog_tags ))
+  update:
+    serial: true
 
 - name: queue
   release: logsearch
