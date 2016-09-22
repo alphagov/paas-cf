@@ -175,6 +175,27 @@ jobs:
         job: etcd
         tags: (( inject meta.datadog_tags ))
 
+  - name: database
+    azs: [z1, z2]
+    templates:
+      - name: consul_agent
+        release: cf
+      - name: bbs
+        release: diego
+      - name: metron_agent
+        release: cf
+    instances: 2
+    vm_type: medium
+    stemcell: default
+    networks:
+      - name: cf
+    properties:
+      tags:
+        job: database
+        tags: (( inject meta.datadog_tags ))
+    update:
+      serial: true
+
   - name: uaa
     azs: [z1, z2]
     templates: (( grab meta.uaa_templates ))
@@ -276,28 +297,6 @@ jobs:
       tags:
         job: router
         tags: (( inject meta.datadog_tags ))
-# Diego
-
-  - name: database
-    azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: cf
-      - name: bbs
-        release: diego
-      - name: metron_agent
-        release: cf
-    instances: 2
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      tags:
-        job: database
-        tags: (( inject meta.datadog_tags ))
-    update:
-      serial: true
 
   - name: brain
     azs: [z1, z2]
