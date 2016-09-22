@@ -2171,7 +2171,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: 2.2-slim
+              tag: "2.2"
           params:
             SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
             DEPLOY_ENV: {{deploy_env}}
