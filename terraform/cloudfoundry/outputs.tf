@@ -18,6 +18,10 @@ output "cell2_subnet_id" {
   value = "${aws_subnet.cell.1.id}"
 }
 
+output "cell3_subnet_id" {
+  value = "${aws_subnet.cell.2.id}"
+}
+
 output "router1_subnet_id" {
   value = "${aws_subnet.router.0.id}"
 }
