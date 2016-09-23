@@ -7,7 +7,7 @@ releases:
 
 meta:
   datadog:
-    api_key: (( grab $DATADOG_API_KEY ))
+    api_key: (( grab $DATADOG_API_KEY || "undefined" ))
     use_dogstatsd: false
   datadog_tags:
     environment: (( grab meta.environment || "undefined" ))
