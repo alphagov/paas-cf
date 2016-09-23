@@ -10,8 +10,6 @@ meta:
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: cloud_controller_ng
     release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
   - name: java-buildpack
@@ -38,19 +36,13 @@ meta:
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: cloud_controller_worker
     release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   clock_templates:
   - name: cloud_controller_clock
     release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   consul_templates:
   - name: consul_agent
-    release: (( grab meta.release.name ))
-  - name: metron_agent
     release: (( grab meta.release.name ))
 
   etcd_templates:
@@ -60,8 +52,6 @@ meta:
     release: etcd
   - name: etcd_metrics_server
     release: etcd
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   loggregator_templates:
   - name: consul_agent
@@ -70,15 +60,11 @@ meta:
     release: (( grab meta.release.name ))
   - name: syslog_drain_binder
     release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   loggregator_trafficcontroller_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: loggregator_trafficcontroller
-    release: (( grab meta.release.name ))
-  - name: metron_agent
     release: (( grab meta.release.name ))
 
   nats_templates:
@@ -88,15 +74,11 @@ meta:
     release: (( grab meta.release.name ))
   - name: nats_stream_forwarder
     release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   router_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: gorouter
-    release: (( grab meta.release.name ))
-  - name: metron_agent
     release: (( grab meta.release.name ))
   - name: haproxy
     release: paas-haproxy
@@ -105,8 +87,6 @@ meta:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: uaa
-    release: (( grab meta.release.name ))
-  - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
@@ -182,8 +162,6 @@ jobs:
         release: cf
       - name: bbs
         release: diego
-      - name: metron_agent
-        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -305,8 +283,6 @@ jobs:
         release: cf
       - name: auctioneer
         release: diego
-      - name: metron_agent
-        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -328,8 +304,6 @@ jobs:
         release: garden-linux
       - name: cflinuxfs2-rootfs-setup
         release: cflinuxfs2-rootfs
-      - name: metron_agent
-        release: cf
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
@@ -353,8 +327,6 @@ jobs:
         release: cf
       - name: cc_uploader
         release: cf
-      - name: metron_agent
-        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -372,8 +344,6 @@ jobs:
         release: cf
       - name: route_emitter
         release: diego
-      - name: metron_agent
-        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -391,8 +361,6 @@ jobs:
         release: cf
       - name: ssh_proxy
         release: diego
-      - name: metron_agent
-        release: cf
       - name: file_server
         release: diego
     instances: 2

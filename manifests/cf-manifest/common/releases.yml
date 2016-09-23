@@ -1,0 +1,8 @@
+---
+meta:
+  cf-releases:
+  - name: cf
+    version: "240"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=240
+    sha1: 7dba7cc0c9c4beca699d8c876ac046890e13bb9e
+
