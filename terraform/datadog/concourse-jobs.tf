@@ -1,6 +1,5 @@
 resource "datadog_timeboard" "concourse-jobs" {
-
-  title = "${format("%s job runtime difference", var.env) }"
+  title = "${data.null_data_source.datadog.inputs.env} job runtime difference"
   description = "vs previous hour"
   read_only = false
 
@@ -8,7 +7,7 @@ resource "datadog_timeboard" "concourse-jobs" {
     title = "Runtime changes vs hour ago"
     viz = "change"
     request {
-       q = "${format("avg:%s_concourse.build.finished{*} by {job}", replace(var.env, "-", "_"))}"
+       q = "avg:${data.null_data_source.datadog.inputs.env}_concourse.build.finished{*} by {job}"
     }
   }
 }
