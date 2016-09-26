@@ -2325,6 +2325,44 @@ jobs:
         passed: ['tag-release']
         trigger: true
       - get: pipeline-pool
+      - task: update-datadog
+        config:
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/git-ssh
+          platform: linux
+          params:
+            DATADOG_API_KEY: {{datadog_api_key}}
+            ENV: {{deploy_env}}
+            AWS_ACCOUNT: {{aws_account}}
+            DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
+          inputs:
+          - name: pipeline-pool
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              cd pipeline-pool
+              current_time=$(date +%s)
+              lock_time=$(git log -1  --pretty=format:'%ct')
+              delta=$((${current_time} - ${lock_time}))
+              echo "Total pipeline time was: ${delta}s"
+
+              if [ "${DEPLOY_DATADOG_AGENT}" = "true" ]; then
+                curl  -X POST -H "Content-type: application/json" \
+                  -d "{ \"series\" :
+                         [{\"metric\":\"${ENV}.pipeline_time\",
+                          \"points\":[[$current_time, ${delta}]],
+                          \"type\":\"gauge\",
+                          \"host\":\"concourse.${ENV}\",
+                          \"tags\":[\"environment:${ENV}\", \"aws_account:${AWS_ACCOUNT}\"]}
+                        ]
+                    }" \
+                  "https://app.datadoghq.com/api/v1/series?api_key=${DATADOG_API_KEY}"
+              fi
       - put: pipeline-pool
         params:
           release: pipeline-pool
