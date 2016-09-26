@@ -20,7 +20,10 @@ run:
         echo "CF API unavailable. Skipping..."
         exit 0
       fi
-      echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+      if ! echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}; then
+        echo "Login failed.  Skipping..."
+        exit 0
+      fi
       if ! cf org testers > /dev/null; then
         echo "Org 'testers' not found. Skipping..."
         exit 0
