@@ -209,3 +209,7 @@ tunnel: check-env-vars ## SSH tunnel to internal IPs
 
 stop-tunnel: check-env-vars ## Stop SSH tunnel
 	@./concourse/scripts/ssh.sh stop
+
+show-cf-memory-usage: ## Show the memory usage of the current CF cluster
+	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
+	@./scripts/show-cf-memory-usage.rb
