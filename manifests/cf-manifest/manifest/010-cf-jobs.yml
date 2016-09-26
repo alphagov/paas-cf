@@ -294,7 +294,7 @@ jobs:
         tags: (( inject meta.datadog_tags ))
 
   - name: cell
-    azs: [z1, z2]
+    azs: [z1, z2, z3]
     templates:
       - name: consul_agent
         release: cf

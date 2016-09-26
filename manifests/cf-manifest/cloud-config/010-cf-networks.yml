@@ -62,6 +62,15 @@ networks:
       cloud_properties:
         subnet: (( grab terraform_outputs.cell2_subnet_id ))
       az: z2
+    - range: 10.0.34.0/24
+      reserved:
+        - 10.0.34.2 - 10.0.34.3
+      gateway: 10.0.34.1
+      dns:
+        - 10.0.0.2
+      cloud_properties:
+        subnet: (( grab terraform_outputs.cell3_subnet_id ))
+      az: z3
 - name: router
   subnets:
     - range: 10.0.48.0/24
