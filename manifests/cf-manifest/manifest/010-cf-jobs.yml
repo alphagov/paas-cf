@@ -87,7 +87,7 @@ meta:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: uaa
-    release: (( grab meta.release.name ))
+    release: uaa
   - name: statsd-injector
     release: (( grab meta.release.name ))
 
