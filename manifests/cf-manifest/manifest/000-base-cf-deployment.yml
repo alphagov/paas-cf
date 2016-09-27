@@ -25,6 +25,10 @@ releases:
     sha1: bf95dfc4593e1a9f291e4bb3e50c85575483e618
   - name: paas-haproxy
     version: 0.0.4
+  - name: uaa
+    version: "12.6"
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=12.6
+    sha1: 8ffc7b9bfee004464bc8a81c322db7160dd7440f
 
 stemcells:
   - alias: default
