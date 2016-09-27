@@ -1,3 +1,9 @@
+releases:
+  - name: riemann
+    url: https://github.com/alphagov/paas-cf/releases/download/riemann-1/riemann-gds-1.tgz
+    sha1: 8a4220a039ce6a2a0383aab8d4a76746501e58ec
+    version: gds-1
+
 jobs:
   - name: concourse
     templates:
@@ -8,3 +14,9 @@ jobs:
           tags:
             job: concourse
             tags: (( inject meta.datadog_tags ))
+      - name: riemann
+        release: riemann
+        properties:
+          riemann:
+            datadog:
+              api_key: (( grab meta.datadog.api_key ))
