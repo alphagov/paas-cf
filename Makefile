@@ -21,7 +21,7 @@ check-env-vars:
 check-tf-version:
 	@./terraform/scripts/ensure_terraform_version.sh $(MIN_TERRAFORM_VERSION)
 
-test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby ## Run linting tests
+test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
 
 spec:
 	cd scripts &&\
@@ -58,6 +58,10 @@ lint_concourse:
 .PHONY: lint_ruby
 lint_ruby:
 	bundle exec govuk-lint-ruby
+
+.PHONY: lint_posix_newlines
+lint_posix_newlines:
+	git ls-files | grep -v vendor/ | xargs ./scripts/test_posix_newline.sh
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 
