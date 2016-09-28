@@ -1867,7 +1867,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  if [ -n "${TF_VAR_datadog_api_key}" -a -n "${TF_VAR_datadog_app_key}" -a "${ENABLE_DATADOG}" = "false" ]; then
+                  if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
                     echo "Datadog disabled but keys present, running check cleanup..."
                     terraform destroy -force \
                        -state=datadog-tfstate/datadog.tfstate \
@@ -2355,7 +2355,7 @@ jobs:
               cd pipeline-pool
               current_time=$(date +%s)
               lock_time=$(git log -1  --pretty=format:'%ct')
-              delta=$((${current_time} - ${lock_time}))
+              delta=$((current_time - lock_time))
               dd_env=$(echo ${ENV} | sed 's/-/_/g')
               echo "Total pipeline time was: ${delta}s"
 
