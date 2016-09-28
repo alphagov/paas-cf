@@ -78,8 +78,10 @@ list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 	done
 
 .PHONY: globals
+PASSWORD_STORE_DIR?=${HOME}/.paas-pass
 globals:
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
+	$(eval export PASSWORD_STORE_DIR=${PASSWORD_STORE_DIR})
 	@true
 
 .PHONY: dev
@@ -108,6 +110,7 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export DEPLOY_DATADOG_AGENT=true)
+	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=ci_deployments/master)
 	@true
 
 .PHONY: staging
@@ -125,6 +128,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
 	$(eval export DEPLOY_DATADOG_AGENT=true)
+	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=staging_deployment)
 	@true
 
 .PHONY: prod
@@ -141,6 +145,7 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod.yml)
 	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
 	$(eval export DEPLOY_DATADOG_AGENT=true)
+	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=prod_deployment)
 	@true
 
 .PHONY: bootstrap
