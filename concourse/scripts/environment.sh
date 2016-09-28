@@ -36,7 +36,7 @@ esac
 
 CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER:-admin}
 if [ -z "${CONCOURSE_ATC_PASSWORD:-}" ]; then
-  if [ -n "${DECRYPT_CONCOURSE_ATC_PASSWORD}" ]; then
+  if [ -n "${DECRYPT_CONCOURSE_ATC_PASSWORD:-}" ]; then
     CONCOURSE_ATC_PASSWORD=$(pass "${DECRYPT_CONCOURSE_ATC_PASSWORD}/concourse_password")
   else
     CONCOURSE_ATC_PASSWORD=$(hashed_password "${AWS_SECRET_ACCESS_KEY}:${DEPLOY_ENV}:atc")
