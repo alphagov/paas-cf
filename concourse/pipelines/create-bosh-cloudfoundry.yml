@@ -1835,14 +1835,16 @@ jobs:
               - -e
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                SCRIPTS_PATH="./paas-cf/concourse/scripts"
-                TF_VARS_SCRIPT="extract_tf_vars_from_terraform_state.rb"
-                $SCRIPTS_PATH/$TF_VARS_SCRIPT < cf-tfstate/cf.tfstate | grep logsearch_elastic_master_elb_dns_name > ./logsearch_var.sh
-                . ./logsearch_var.sh
-                export ES_HOST="${TF_VAR_logsearch_elastic_master_elb_dns_name}"
+                SCRIPT_DIR="./paas-cf/concourse/scripts"
+
+                ruby "${SCRIPT_DIR}/extract_terraform_state_to_yaml.rb" \
+                  < cf-tfstate/cf.tfstate \
+                  > cf-tfstate.yaml
+
+                export ES_HOST
+                ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
                 export ES_PORT="9200"
-                $(pwd)/paas-cf/concourse/scripts/kibana_set_utc.rb
+                ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
 
         - task: datadog-terraform-apply
           config:
