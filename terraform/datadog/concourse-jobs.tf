@@ -8,7 +8,7 @@ resource "datadog_timeboard" "concourse-jobs" {
     title = "Runtime changes vs hour ago"
     viz = "change"
     request {
-       q = "${format("avg:%s_concourse.build.finished{*} by {job}", replace(var.env, "-", "_"))}"
+       q = "${format("avg:concourse.build.finished{bosh-deployment:%s} by {job}", var.env)}"
     }
   }
 }
