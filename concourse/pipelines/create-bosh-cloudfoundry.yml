@@ -947,7 +947,7 @@ jobs:
           params:
             AWS_ACCOUNT: {{aws_account}}
             DATADOG_API_KEY: {{datadog_api_key}}
-            DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
+            ENABLE_DATADOG: {{enable_datadog}}
             BOSH_MANIFEST_STUBS: |
               ./paas-cf/manifests/bosh-manifest/deployments/*.yml
               ./paas-cf/manifests/bosh-manifest/deployments/aws/*.yml
@@ -962,7 +962,7 @@ jobs:
               - -e
               - -c
               - |
-                if [ "${DEPLOY_DATADOG_AGENT}" = "true" ] ; then
+                if [ "${ENABLE_DATADOG}" = "true" ] ; then
                    BOSH_MANIFEST_STUBS="${BOSH_MANIFEST_STUBS}
                                         ./paas-cf/manifests/bosh-manifest/extensions/datadog.yml
                                         ./paas-cf/manifests/shared/deployments/datadog.yml"
@@ -1414,7 +1414,7 @@ jobs:
               - name: runtime-config
             params:
               DATADOG_API_KEY: {{datadog_api_key}}
-              DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
+              ENABLE_DATADOG: {{enable_datadog}}
               AWS_ACCOUNT: {{aws_account}}
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
@@ -1429,7 +1429,7 @@ jobs:
                 - |
                   echo "Generating runtime config..."
 
-                  if [ "${DEPLOY_DATADOG_AGENT}" = "true" ] ; then
+                  if [ "${ENABLE_DATADOG}" = "true" ] ; then
                      MANIFEST_STUBS="${MANIFEST_STUBS}
                                     ./paas-cf/manifests/cf-manifest/runtime-config/datadog-addon.yml
                                     ./paas-cf/manifests/shared/deployments/datadog.yml"
@@ -1853,14 +1853,14 @@ jobs:
               TF_VAR_env: {{deploy_env}}
               TF_VAR_datadog_api_key: {{datadog_api_key}}
               TF_VAR_datadog_app_key: {{datadog_app_key}}
-              DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
+              ENABLE_DATADOG: {{enable_datadog}}
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  if [ -n "${TF_VAR_datadog_api_key}" -a -n "${TF_VAR_datadog_app_key}" -a "${DEPLOY_DATADOG_AGENT}" = "false" ]; then
+                  if [ -n "${TF_VAR_datadog_api_key}" -a -n "${TF_VAR_datadog_app_key}" -a "${ENABLE_DATADOG}" = "false" ]; then
                     echo "Datadog disabled but keys present, running check cleanup..."
                     terraform destroy -force \
                        -state=datadog-tfstate/datadog.tfstate \
@@ -1869,7 +1869,7 @@ jobs:
                     exit 0
                   fi
 
-                  if [ "${DEPLOY_DATADOG_AGENT}" = "true" ]; then
+                  if [ "${ENABLE_DATADOG}" = "true" ]; then
                     terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate paas-cf/terraform/datadog
                   else
                     echo "Datadog disabled, skipping terraform run..."
@@ -2336,7 +2336,7 @@ jobs:
             DATADOG_API_KEY: {{datadog_api_key}}
             ENV: {{deploy_env}}
             AWS_ACCOUNT: {{aws_account}}
-            DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
+            ENABLE_DATADOG: {{enable_datadog}}
           inputs:
           - name: pipeline-pool
           run:
@@ -2352,7 +2352,7 @@ jobs:
               dd_env=$(echo ${ENV} | sed 's/-/_/g')
               echo "Total pipeline time was: ${delta}s"
 
-              if [ "${DEPLOY_DATADOG_AGENT}" = "true" ]; then
+              if [ "${ENABLE_DATADOG}" = "true" ]; then
                 curl  -X POST -H "Content-type: application/json" \
                   -d "{ \"series\" :
                          [{\"metric\":\"${dd_env}.pipeline_time\",

@@ -441,7 +441,7 @@ jobs:
         params:
           AWS_ACCOUNT: {{aws_account}}
           DATADOG_API_KEY: {{datadog_api_key}}
-          DEPLOY_DATADOG_AGENT: {{deploy_datadog_agent}}
+          ENABLE_DATADOG: {{enable_datadog}}
           CONCOURSE_MANIFEST_STUBS: |
             ./paas-cf/manifests/concourse-manifest/concourse-base.yml
             predefined-concourse-secrets/predefined-concourse-secrets.yml
@@ -462,7 +462,7 @@ jobs:
           - -e
           - -c
           - |
-            if [ "${DEPLOY_DATADOG_AGENT}" = "true" ] ; then
+            if [ "${ENABLE_DATADOG}" = "true" ] ; then
                CONCOURSE_MANIFEST_STUBS="${CONCOURSE_MANIFEST_STUBS}
                               ./paas-cf/manifests/concourse-manifest/extensions/datadog.yml
                               ./paas-cf/manifests/shared/deployments/datadog.yml"

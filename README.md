@@ -254,11 +254,11 @@ need to run the pipeline from start in order to bring the changes forward.
 
 ## Optionally deploy datadog agent in dev environment
 
-If you want to deploy datadog agent in your dev environment, set DEPLOY_DATADOG_AGENT
+If you want to deploy datadog agent in your dev environment, set ENABLE_DATADOG
 variable to true:
 
 ```
-DEPLOY_DATADOG_AGENT=true make dev pipelines
+ENABLE_DATADOG=true make dev pipelines
 ```
 
 ## Sharing your Bootstrap Concourse

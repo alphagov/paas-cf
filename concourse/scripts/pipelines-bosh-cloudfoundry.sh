@@ -97,7 +97,7 @@ bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 enable_cf_acceptance_tests: ${ENABLE_CF_ACCEPTANCE_TESTS:-true}
 datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
-deploy_datadog_agent: ${DEPLOY_DATADOG_AGENT}
+enable_datadog: ${ENABLE_DATADOG}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
