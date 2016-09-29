@@ -20,3 +20,9 @@ jobs:
           riemann:
             datadog:
               api_key: (( grab meta.datadog.api_key ))
+
+      - name: atc
+        properties:
+          riemann:
+            host: '127.0.0.1'
+            service_prefix: (( concat terraform_outputs.environment "-concourse." ))

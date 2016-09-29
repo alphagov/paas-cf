@@ -89,10 +89,6 @@ jobs:
               name: atc
               password: dummy-password
 
-          riemann:
-            host: '127.0.0.1'
-            service_prefix: (( concat terraform_outputs.environment "-concourse." ))
-
       - name: groundcrew
         release: concourse
         properties:

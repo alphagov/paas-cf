@@ -2349,16 +2349,17 @@ jobs:
               current_time=$(date +%s)
               lock_time=$(git log -1  --pretty=format:'%ct')
               delta=$((${current_time} - ${lock_time}))
+              dd_env=$(echo ${ENV} | sed 's/-/_/g')
               echo "Total pipeline time was: ${delta}s"
 
               if [ "${DEPLOY_DATADOG_AGENT}" = "true" ]; then
                 curl  -X POST -H "Content-type: application/json" \
                   -d "{ \"series\" :
-                         [{\"metric\":\"${ENV}.pipeline_time\",
+                         [{\"metric\":\"${dd_env}.pipeline_time\",
                           \"points\":[[$current_time, ${delta}]],
                           \"type\":\"gauge\",
-                          \"host\":\"concourse.${ENV}\",
-                          \"tags\":[\"environment:${ENV}\", \"aws_account:${AWS_ACCOUNT}\"]}
+                          \"host\":\"concourse.${dd_env}\",
+                          \"tags\":[\"environment:${dd_env}\", \"aws_account:${AWS_ACCOUNT}\"]}
                         ]
                     }" \
                   "https://app.datadoghq.com/api/v1/series?api_key=${DATADOG_API_KEY}"

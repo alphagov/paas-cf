@@ -38,7 +38,7 @@ resource "datadog_timeboard" "pipeline" {
     title = "Pipeline run time"
     viz = "timeseries"
     request {
-      q = "${format("avg:%s.pipeline_time{environment:%s}", var.env, var.env)}"
+      q = "${format("avg:%s.pipeline_time{environment:%s}", replace(var.env, "-", "_"), replace(var.env, "-", "_"))}"
     }
   }
 
