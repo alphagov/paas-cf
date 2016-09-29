@@ -26,6 +26,7 @@ generator = SecretGenerator.new(
   "uaa_clients_gorouter_secret" => :simple,
   "uaa_clients_ssh_proxy_secret" => :simple,
   "uaa_clients_firehose_password" => :simple,
+  "uaa_clients_datadog_firehose_password" => :simple,
   "loggregator_endpoint_shared_secret" => :simple,
   "consul_encrypt_keys" => :simple_in_array,
   "grafana_admin_password" => :simple,

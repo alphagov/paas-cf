@@ -1365,11 +1365,13 @@ jobs:
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
                 ./paas-cf/manifests/cf-manifest/common/*.yml
               AWS_ACCOUNT: {{aws_account}}
+              ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}
             run:
               path: sh
               args:
                 - -e
+                - -u
                 - -c
                 - |
                   mkdir certs
@@ -1392,6 +1394,11 @@ jobs:
                   cd .. || true
 
                   echo "Generating manifests"
+
+                  if [ "${ENABLE_DATADOG}" = "true" ] ; then
+                     MANIFEST_STUBS="${MANIFEST_STUBS}
+                                    ./paas-cf/manifests/cf-manifest/stubs/datadog-nozzle.yml"
+                  fi
 
                   # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
                   eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml

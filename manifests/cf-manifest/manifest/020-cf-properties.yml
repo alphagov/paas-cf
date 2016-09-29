@@ -462,6 +462,13 @@ properties:
         secret: (( grab secrets.uaa_clients_firehose_password ))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
+      datadog-nozzle:
+        access-token-validity: 1209600
+        authorized-grant-types: authorization_code,client_credentials,refresh_token
+        override: true
+        secret: (( grab secrets.uaa_clients_datadog_firehose_password ))
+        scope: openid,oauth.approvals,doppler.firehose
+        authorities: oauth.login,doppler.firehose
 
     database: ~
 
