@@ -964,8 +964,8 @@ jobs:
               - |
                 if [ "${ENABLE_DATADOG}" = "true" ] ; then
                    BOSH_MANIFEST_STUBS="${BOSH_MANIFEST_STUBS}
-                                        ./paas-cf/manifests/bosh-manifest/extensions/datadog.yml
-                                        ./paas-cf/manifests/shared/deployments/datadog.yml"
+                                        ./paas-cf/manifests/bosh-manifest/extensions/datadog-agent.yml
+                                        ./paas-cf/manifests/shared/deployments/datadog-agent.yml"
                 fi
                 ./paas-cf/manifests/shared/build_manifest.sh $BOSH_MANIFEST_STUBS > bosh-manifest/bosh-manifest.yml
         on_success:
@@ -1361,7 +1361,7 @@ jobs:
                 ./certs/*.yml
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
-                ./paas-cf/manifests/shared/deployments/datadog.yml
+                ./paas-cf/manifests/shared/deployments/datadog-agent.yml
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
                 ./paas-cf/manifests/cf-manifest/common/*.yml
               AWS_ACCOUNT: {{aws_account}}
@@ -1431,8 +1431,8 @@ jobs:
 
                   if [ "${ENABLE_DATADOG}" = "true" ] ; then
                      MANIFEST_STUBS="${MANIFEST_STUBS}
-                                    ./paas-cf/manifests/cf-manifest/runtime-config/datadog-addon.yml
-                                    ./paas-cf/manifests/shared/deployments/datadog.yml"
+                                    ./paas-cf/manifests/cf-manifest/runtime-config/datadog-agent-addon.yml
+                                    ./paas-cf/manifests/shared/deployments/datadog-agent.yml"
                   fi
 
                   ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > runtime-config/runtime-config.yml
