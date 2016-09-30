@@ -1,0 +1,46 @@
+releases:
+- name: datadog-firehose-nozzle
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/datadog-firehose-nozzle-release?v=51
+  version: "51"
+  sha1: b358712488c44a09e815f278d6b767f3e82cd3e3
+
+jobs:
+- name: nozzle
+  azs: [z1, z2]
+  templates:
+  - name: datadog-firehose-nozzle
+    release: datadog-firehose-nozzle
+    properties:
+      datadog:
+        api_key: (( grab meta.datadog.api_key ))
+        metric_prefix: "cf."
+      nozzle:
+        subscription_id: "datadog-nozzle"
+        deployment: (( grab meta.environment ))
+        insecure_ssl_skip_verify: false
+      uaa:
+        url: (( grab properties.uaa.url ))
+        client: "datadog-nozzle"
+        client_secret: (( grab secrets.uaa_clients_datadog_firehose_password ))
+      loggregator: (( grab properties.loggregator ))
+
+  vm_type: small
+  stemcell: default
+  instances: 2
+  networks:
+  - name: cf
+  properties:
+    tags:
+      job: nozzle
+      tags: (( inject meta.datadog_tags ))
+
+properties:
+  uaa:
+    clients:
+      datadog-nozzle:
+        access-token-validity: 1209600
+        authorized-grant-types: authorization_code,client_credentials,refresh_token
+        override: true
+        secret: (( grab secrets.uaa_clients_datadog_firehose_password ))
+        scope: openid,oauth.approvals,doppler.firehose
+        authorities: oauth.login,doppler.firehose
