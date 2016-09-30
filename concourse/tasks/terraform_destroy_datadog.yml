@@ -16,12 +16,12 @@ run:
     - -c
     - |
       cleanup=false
-      if [ -n "${TF_VAR_datadog_api_key}" -a -n "${TF_VAR_datadog_app_key}" -a "${DEPLOY_DATADOG_AGENT}" = "false" ]; then
+      if [ -n "${TF_VAR_datadog_api_key}" -a -n "${TF_VAR_datadog_app_key}" -a "${ENABLE_DATADOG}" = "false" ]; then
         cleanup=true
         echo "Datadog disabled but keys present, running check cleanup..."
       fi
 
-      if [ "${DEPLOY_DATADOG_AGENT}" = "true" -o "${cleanup}" = "true" ]; then
+      if [ "${ENABLE_DATADOG}" = "true" -o "${cleanup}" = "true" ]; then
         terraform destroy -force \
           -state=datadog-tfstate/datadog.tfstate \
           -state-out=updated-datadog-tfstate/datadog.tfstate \

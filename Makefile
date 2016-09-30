@@ -95,7 +95,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_HEALTHCHECK_DB=false)
-	$(eval export DEPLOY_DATADOG_AGENT ?= false)
+	$(eval export ENABLE_DATADOG ?= false)
 	@true
 
 .PHONY: ci
@@ -109,7 +109,7 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
-	$(eval export DEPLOY_DATADOG_AGENT=true)
+	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=ci_deployments/master)
 	@true
 
@@ -127,7 +127,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
-	$(eval export DEPLOY_DATADOG_AGENT=true)
+	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=staging_deployment)
 	@true
 
@@ -144,7 +144,7 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod.yml)
 	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
-	$(eval export DEPLOY_DATADOG_AGENT=true)
+	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=prod_deployment)
 	@true
 

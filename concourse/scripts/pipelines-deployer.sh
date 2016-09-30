@@ -31,7 +31,7 @@ paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 aws_account: ${AWS_ACCOUNT:-dev}
 datadog_api_key: ${datadog_api_key:-}
-deploy_datadog_agent: ${DEPLOY_DATADOG_AGENT}
+enable_datadog: ${ENABLE_DATADOG}
 EOF
 }
 
