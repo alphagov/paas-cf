@@ -109,7 +109,7 @@ jobs:
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
-            passed: ['init']
+            passed: ['rds-broker']
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
@@ -357,7 +357,7 @@ jobs:
           - get: bosh-secrets
           - get: bosh-CA
           - get: pipeline-trigger
-            passed: ['cell']
+            passed: ['init']
             trigger: true
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
@@ -375,30 +375,10 @@ jobs:
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
 
-        - task: run-tests
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/self-update-pipelines
-            inputs:
-              - name: paas-cf
-              - name: test-config
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
-                  echo "Running tests"
-                  export CONFIG
-                  CONFIG="$(pwd)/test-config/config.json"
-                  export GINKGO_FOCUS='RDS broker'
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/acceptance/
+        - task: "Run custom aceptance tests with RDS broker focus"
+          file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
+          params:
+            GINKGO_FOCUS: 'RDS broker'
 
         ensure:
           aggregate:
