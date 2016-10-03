@@ -2520,7 +2520,6 @@ jobs:
                 ALERT_EMAIL_ADDRESS: {{ALERT_EMAIL_ADDRESS}}
               inputs:
                 - name: paas-cf
-                - name: smoke-tests-log
               run:
                 path: sh
                 args:
