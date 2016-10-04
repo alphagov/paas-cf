@@ -29,7 +29,7 @@ var _ = Describe("PipeCleaner", func() {
 
 		It("should return non-zero, with Usage on STDOUT, nothing on STDERR", func() {
 			Eventually(session).Should(gexec.Exit(2))
-			Expect(session.Out).To(gbytes.Say("pipecleaner.py pipeline.yml"))
+			Expect(session.Out).To(gbytes.Say("pipecleaner.py [--ignore-types=unused_fetch,unused_resource]"))
 			Expect(session.Err.Contents()).To(BeEmpty())
 		})
 	})
