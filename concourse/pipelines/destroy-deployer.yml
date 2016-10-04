@@ -50,6 +50,13 @@ resources:
       versioned_file: concourse-manifest-state.json
       region_name: {{aws_region}}
 
+  - name: ssh-private-key
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      versioned_file: id_rsa
+      region_name: {{aws_region}}
+
 jobs:
   - name: destroy-concourse
     serial: true
@@ -59,6 +66,7 @@ jobs:
     - get: concourse-bosh-state
     - get: vpc-terraform-state
     - get: concourse-terraform-state
+    - get: ssh-private-key
 
     - task: destroy-concourse
       timeout: 30m
@@ -68,6 +76,7 @@ jobs:
         - name: paas-cf
         - name: concourse-manifest
         - name: concourse-bosh-state
+        - name: ssh-private-key
         run:
           path: sh
           args:
@@ -78,7 +87,7 @@ jobs:
             [ "$(cat concourse-bosh-state/concourse-manifest-state.json)" = "{}" ] \
               && echo Concourse bosh state empty, assuming already destroyed \
               && exit 0
-            echo -n "${private_ssh_key}" > id_rsa
+            cp ssh-private-key/id_rsa id_rsa
             chmod 400 id_rsa
             ls -l id_rsa
             cp -v concourse-manifest/concourse-manifest.yml .

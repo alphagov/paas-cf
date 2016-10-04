@@ -185,7 +185,7 @@ class Pipecleaner(object):
                                     'job': job['name'],
                                     'task': item['task'],
                                     '~': output,
-                                    'fatal': False,
+                                    'fatal': True,
                                 })
 
             overall_used_resources = overall_used_resources.union(used_resources).union(get_resources)
