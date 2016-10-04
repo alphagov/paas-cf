@@ -9,8 +9,6 @@ inputs:
   - name: cf-release
   - name: test-config
   - name: bosh-CA
-outputs:
-  - name: smoke-tests-log
 run:
   path: bash
   args:
@@ -25,5 +23,4 @@ run:
       ln -snf /usr/local/go /var/vcap/packages/golang1.6
       ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
       set -o pipefail
-      git --git-dir paas-cf/.git log -1 > smoke-tests-log/last-commit.log
-      /var/vcap/jobs/smoke-tests/bin/run | tee smoke-tests-log/smoke-tests.log
+      /var/vcap/jobs/smoke-tests/bin/run

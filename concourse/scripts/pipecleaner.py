@@ -227,9 +227,9 @@ class Pipecleaner(object):
 if __name__ == '__main__':
     def usage():
         print """
-pipecleaner.py pipeline.yml [pipeline2.yml..]
-                            [--ignore-types=unused_fetch,unused_resource]
-                            [--fatal-warnings]"""
+pipecleaner.py [--ignore-types=unused_fetch,unused_resource]
+               [--fatal-warnings]
+               pipeline1.yml [pipelineN.yml...]"""
         sys.exit(2)
 
     try:

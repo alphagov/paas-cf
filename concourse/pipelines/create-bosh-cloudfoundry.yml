@@ -464,10 +464,7 @@ jobs:
               - |
                 if  [ -z "$(tar -tvzf existing-bosh-CA/bosh-CA.tar.gz)" ] ; then
                   certstrap init --passphrase "" --common-name bosh-CA
-                  cd out
-                  tar -cvzf ../generated-bosh-CA/bosh-CA.tar.gz bosh-CA.*
-                  # shellcheck disable=SC2103
-                  cd .. || true
+                  (cd out && tar -cvzf ../generated-bosh-CA/bosh-CA.tar.gz bosh-CA.*)
                 else
                   echo "The CA cert already exists, skipping generation..."
                   cp existing-bosh-CA/bosh-CA.tar.gz generated-bosh-CA/bosh-CA.tar.gz
@@ -2520,7 +2517,6 @@ jobs:
                 ALERT_EMAIL_ADDRESS: {{ALERT_EMAIL_ADDRESS}}
               inputs:
                 - name: paas-cf
-                - name: smoke-tests-log
               run:
                 path: sh
                 args:

@@ -6,7 +6,7 @@ export TARGET_CONCOURSE=deployer
 # shellcheck disable=SC2091
 $("${SCRIPT_DIR}/environment.sh" "$@")
 
-# shellcheck disable=1090
+# shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/datadog.sh"
 
 download_git_id_rsa() {
