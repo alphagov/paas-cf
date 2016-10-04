@@ -28,18 +28,3 @@ resource "datadog_monitor" "router" {
   }
 }
 
-resource "datadog_timeboard" "pipeline" {
-
-  title = "${format("%s - Concourse timeboard", var.env)}"
-  description = "Concourse metrics"
-  read_only = true
-
-  graph {
-    title = "Pipeline run time"
-    viz = "timeseries"
-    request {
-      q = "${format("avg:%s.pipeline_time{environment:%s}", replace(var.env, "-", "_"), replace(var.env, "-", "_"))}"
-    }
-  }
-
-}

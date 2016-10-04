@@ -11,4 +11,13 @@ resource "datadog_timeboard" "concourse-jobs" {
        q = "${format("avg:concourse.build.finished{bosh-deployment:%s} by {job}", var.env)}"
     }
   }
+
+  graph {
+    title = "CF pipeline run time"
+    viz = "timeseries"
+    request {
+      q = "${format("avg:concourse.pipeline_time{environment:%s,pipeline_name:create-bosh-cloudfoundry}", var.env)}"
+    }
+  }
+
 }
