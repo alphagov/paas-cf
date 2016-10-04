@@ -16,7 +16,7 @@ resource "datadog_timeboard" "concourse-jobs" {
     title = "CF pipeline run time"
     viz = "timeseries"
     request {
-      q = "${format("avg:%s.pipeline_time{environment:%s}", replace(var.env, "-", "_"), replace(var.env, "-", "_"))}"
+      q = "${format("avg:concourse.pipeline_time{environment:%s,pipeline_name:create-bosh-cloudfoundry}", var.env)}"
     }
   }
 
