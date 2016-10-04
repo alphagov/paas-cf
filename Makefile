@@ -53,7 +53,7 @@ lint_shellcheck:
 	find . -name '*.sh' -not -path '*/vendor/*' | xargs $(SHELLCHECK)
 
 lint_concourse:
-	cd .. && SHELLCHECK_OPTS="-e SC1091,SC2034,SC2046,SC2086" python paas-cf/concourse/scripts/pipecleaner.py paas-cf/concourse/pipelines/*.yml
+	cd .. && SHELLCHECK_OPTS="-e SC1091,SC2034,SC2046,SC2086" python paas-cf/concourse/scripts/pipecleaner.py --fatal-warnings paas-cf/concourse/pipelines/*.yml
 
 .PHONY: lint_ruby
 lint_ruby:
