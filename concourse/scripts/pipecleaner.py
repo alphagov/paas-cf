@@ -12,8 +12,8 @@ It can check for the following issues:
 * Resources that have been `get:`-ted and are not used in the job.
   (Warning)
 * `output:`s that are not used later in the job. (Warning)
-* scriptlets that fail the tests implemented by `shellcheck`
-  http://www.shellcheck.net/ (Warning)
+* Scriptlets that fail the tests implemented by `shellcheck`
+  http://www.shellcheck.net/ (Fatal)
 
 By default it will exit with a nonzero exit code for any Fatal errors,
 and will exit with a nonzero code for Warnings if you pass the
