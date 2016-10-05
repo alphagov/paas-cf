@@ -84,8 +84,33 @@ RSpec.describe "base properties" do
     it { is_expected.to include("issuer" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
     it { is_expected.to include("url" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
 
-    specify {
-      expect(uaa["clients"]["login"]).to include("redirect-uri" => "https://login.#{terraform_fixture(:cf_root_domain)}")
-    }
+
+    describe "clients" do
+      subject(:clients) { uaa.fetch("clients") }
+
+      it {
+        expect(clients.keys).to contain_exactly(
+          "login",
+          "cf",
+          "notifications",
+          "doppler",
+          "cloud_controller_username_lookup",
+          "cc_routing",
+          "gorouter",
+          "tcp_emitter",
+          "tcp_router",
+          "ssh-proxy",
+          "graphite-nozzle",
+          "datadog-nozzle",
+        )
+      }
+
+      describe "login" do
+        subject(:client) { clients.fetch("login") }
+        it {
+          is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture(:cf_root_domain)}")
+        }
+      end
+    end
   end
 end
