@@ -111,6 +111,34 @@ RSpec.describe "base properties" do
           is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture(:cf_root_domain)}")
         }
       end
+
+      def comma_tokenize(str)
+        str.split(",").map(&:strip)
+      end
+
+      describe "datadog-nozzle" do
+        subject(:client) { clients.fetch("datadog-nozzle") }
+        it {
+          expect(comma_tokenize(client["authorized-grant-types"])).to contain_exactly(
+            "authorization_code",
+            "client_credentials",
+            "refresh_token",
+          )
+        }
+        it {
+          expect(comma_tokenize(client["scope"])).to contain_exactly(
+            "openid",
+            "oauth.approvals",
+            "doppler.firehose",
+          )
+        }
+        it {
+          expect(comma_tokenize(client["authorities"])).to contain_exactly(
+            "oauth.login",
+            "doppler.firehose",
+          )
+        }
+      end
     end
   end
 end
