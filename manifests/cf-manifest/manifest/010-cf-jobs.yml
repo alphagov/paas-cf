@@ -82,6 +82,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: haproxy
     release: paas-haproxy
+  - name: datadog-router
+    release: datadog-for-cloudfoundry
 
   uaa_templates:
   - name: consul_agent

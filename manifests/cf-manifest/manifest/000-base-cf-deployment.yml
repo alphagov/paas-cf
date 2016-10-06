@@ -29,6 +29,8 @@ releases:
     version: "12.6"
     url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=12.6
     sha1: 8ffc7b9bfee004464bc8a81c322db7160dd7440f
+  - name: datadog-for-cloudfoundry
+    version: "0.0.1"
 
 stemcells:
   - alias: default
