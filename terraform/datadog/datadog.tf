@@ -28,3 +28,44 @@ resource "datadog_monitor" "router" {
   }
 }
 
+resource "datadog_timeboard" "gorouter" {
+  title = "${format("%s gorouter", var.env)}"
+  description = "Monitoring GoRouter"
+  read_only = true
+
+  graph {
+    title = "Total Routes"
+    viz = "timeseries"
+    request {
+      q = "${format("avg:cf.gorouter.total_routes{deployment:%s,job:router}", var.env)}"
+    }
+  }
+
+  graph {
+    title = "Running GoRoutines"
+    viz = "timeseries"
+    request {
+      q = "${format("avg:cf.MetronAgent.numGoRoutines{deployment:%s,job:router}", var.env)}"
+    }
+  }
+
+  graph {
+    title = "Requests vs. Responses"
+    viz = "timeseries"
+    request {
+      q = "${format("avg:cf.gorouter.total_requests{deployment:%s,job:router}", var.env)}"
+    }
+
+    request {
+      q = "${format("avg:cf.gorouter.responses{deployment:%s,job:router}", var.env)}"
+    }
+  }
+
+  graph {
+    title = "Last registry update"
+    viz = "timeseries"
+    request {
+      q = "${format("avg:cf.gorouter.ms_since_last_registry_update{deployment:%s,job:router}", var.env)}"
+    }
+  }
+}
