@@ -136,7 +136,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-graphite-nozzle
-      branch: upgrade_go
+      branch: gds_master
 
   - name: vpc-tfstate
     type: s3-iam
