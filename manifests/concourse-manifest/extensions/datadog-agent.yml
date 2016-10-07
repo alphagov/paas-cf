@@ -1,8 +1,8 @@
 releases:
   - name: riemann
-    url: https://github.com/alphagov/paas-cf/releases/download/riemann-1/riemann-gds-1.tgz
-    sha1: 8a4220a039ce6a2a0383aab8d4a76746501e58ec
-    version: gds-1
+    url: https://github.com/alphagov/paas-riemann-boshrelease/releases/download/v0.5.0-dev/riemann-gds-4.tgz
+    sha1: 76bbc59dfb46052353226839c67ad1f011ed2225
+    version: gds-4
 
 jobs:
   - name: concourse
