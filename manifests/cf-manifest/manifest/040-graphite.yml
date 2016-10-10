@@ -1,5 +1,7 @@
 meta:
   graphite_templates:
+    - name: consul_agent
+      release: (( grab meta.consul_templates.consul_agent.release ))
     - name: carbon
       release: graphite
     - name: graphite-web

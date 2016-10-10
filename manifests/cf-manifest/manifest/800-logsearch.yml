@@ -12,7 +12,10 @@ jobs:
   release: logsearch
   azs: [z1, z2]
   templates:
-  - {name: queue, release: logsearch}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: queue
+    release: logsearch
   vm_type: small
   stemcell: default
   instances: 2
@@ -31,8 +34,12 @@ jobs:
   release: logsearch
   azs: [z1]
   templates:
-  - {name: parser, release: logsearch}
-  - {name: logsearch-for-cloudfoundry-filters, release: logsearch-for-cloudfoundry}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: parser
+    release: logsearch
+  - name: logsearch-for-cloudfoundry-filters
+    release: logsearch-for-cloudfoundry
   vm_type: medium
   stemcell: default
   instances: 1
@@ -55,8 +62,12 @@ jobs:
   release: logsearch
   azs: [z2]
   templates:
-  - {name: parser, release: logsearch}
-  - {name: logsearch-for-cloudfoundry-filters, release: logsearch-for-cloudfoundry}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: parser
+    release: logsearch
+  - name: logsearch-for-cloudfoundry-filters
+    release: logsearch-for-cloudfoundry
   vm_type: medium
   stemcell: default
   instances: 1
@@ -79,7 +90,10 @@ jobs:
   release: logsearch
   azs: [z1, z2, z3]
   templates:
-  - {name: elasticsearch, release: logsearch}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: elasticsearch
+    release: logsearch
   vm_type: elasticsearch_master
   stemcell: default
   instances: 3
@@ -107,9 +121,14 @@ jobs:
   release: logsearch
   azs: [z1, z2]
   templates:
-  - {name: elasticsearch_config, release: logsearch}
-  - {name: curator, release: logsearch}
-  - {name: logsearch-for-cloudfoundry-filters, release: logsearch-for-cloudfoundry}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: elasticsearch_config
+    release: logsearch
+  - name: curator
+    release: logsearch
+  - name: logsearch-for-cloudfoundry-filters
+    release: logsearch-for-cloudfoundry
   vm_type: small
   stemcell: default
   networks:
@@ -126,8 +145,12 @@ jobs:
   release: logsearch
   azs: [z1, z2]
   templates:
-  - {name: kibana, release: logsearch}
-  - {name: haproxy, release: logsearch}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: kibana
+    release: logsearch
+  - name: haproxy
+    release: logsearch
   vm_type: kibana
   stemcell: default
   instances: 1
@@ -142,8 +165,12 @@ jobs:
   release: logsearch
   azs: [z1]
   templates:
-  - {name: ingestor_syslog, release: logsearch}
-  - {name: ingestor_relp, release: logsearch}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: ingestor_syslog
+    release: logsearch
+  - name: ingestor_relp
+    release: logsearch
   vm_type: ingestor
   stemcell: default
   instances: 1
@@ -165,8 +192,12 @@ jobs:
   release: logsearch
   azs: [z2]
   templates:
-  - {name: ingestor_syslog, release: logsearch}
-  - {name: ingestor_relp, release: logsearch}
+  - name: consul_agent
+    release: (( grab meta.consul_templates.consul_agent.release ))
+  - name: ingestor_syslog
+    release: logsearch
+  - name: ingestor_relp
+    release: logsearch
   vm_type: ingestor
   stemcell: default
   instances: 1
