@@ -21,13 +21,16 @@ vm_types:
     network: (( grab vm_types.medium.network ))
     env: (( grab meta.default_env ))
     cloud_properties:
-      instance_type: (( grab vm_types.medium.cloud_properties.instance_type ))
+      instance_type: m4.large
+      ephemeral_disk:
+        size: 10240
+        type: gp2
       elbs:
         - (( grab terraform_outputs.logsearch_elastic_master_elb_name ))
 
 disk_types:
   - name: elasticsearch_master
-    disk_size: 102400
+    disk_size: 204800
     cloud_properties: {type: gp2}
   - name: queue
     disk_size: 102400
