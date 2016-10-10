@@ -10,7 +10,7 @@ meta:
       multi_az: false
       publicly_accessible: false
       copy_tags_to_snapshot: true
-      skip_final_snapshot: true
+      skip_final_snapshot: false
       backup_retention_period: 7
       db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
       vpc_security_group_ids:
@@ -19,7 +19,7 @@ meta:
 
 releases:
   - name: aws-broker
-    version: 0.0.9
+    version: 0.0.10
 
 jobs:
   - name: rds_broker
@@ -39,6 +39,8 @@ jobs:
         job: rds_broker
         tags: (( inject meta.datadog_tags ))
       rds-broker:
+        allow_user_provision_parameters: true
+        allow_user_update_parameters: true
         aws_access_key_id: ""
         aws_secret_access_key: ""
         aws_region: "eu-west-1"
@@ -63,7 +65,7 @@ jobs:
                 providerDisplayName: "Amazon Web Services"
                 documentationUrl: "https://aws.amazon.com/documentation/rds/"
                 supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
-              plan_updateable: false
+              plan_updateable: true
               plans:
                 - id: "9b882524-ab58-4c18-b501-d2a3f4619104"
                   name: "M-dedicated-9.5"
