@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	ExecutionTimeout = 3 * time.Second
+	ExecutionTimeout = 30 * time.Second
 )
 
 var _ = Describe("TagRelease", func() {
