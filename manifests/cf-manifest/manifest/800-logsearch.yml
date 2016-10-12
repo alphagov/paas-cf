@@ -1,8 +1,8 @@
 releases:
 - name: logsearch
-  url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=200.0.0
-  version: 200.0.0
-  sha1: 527c35db31cd66810accf128ceffee4f5fde80c3
+  url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=203.0.0
+  version: 203.0.0
+  sha1: 4872c3d89fb2587d844dabbc93b124fb43b720d8
 - name: logsearch-for-cloudfoundry
   version: v203.0.0-gds
 
@@ -53,7 +53,7 @@ jobs:
     logstash: (( grab properties.parser_logstash ))
     logstash_parser:
       filters:
-      - /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+        - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
     tags:
       job: parser_z1
       tags: (( inject meta.datadog_tags ))
@@ -81,7 +81,7 @@ jobs:
     logstash: (( grab properties.parser_logstash ))
     logstash_parser:
       filters:
-      - /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+        - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
     tags:
       job: parser_z2
       tags: (( inject meta.datadog_tags ))
@@ -148,8 +148,6 @@ jobs:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
   - name: kibana
-    release: logsearch
-  - name: haproxy
     release: logsearch
   vm_type: kibana
   stemcell: default
@@ -225,16 +223,15 @@ properties:
       elasticsearch:
         data_hosts: (( grab properties.elasticsearch.master_hosts ))
   curator:
-    elasticsearch_host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+    elasticsearch:
+      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
   elasticsearch:
     master_hosts: (( grab jobs.elasticsearch_master.networks.cf.static_ips[0] jobs.elasticsearch_master.networks.cf.static_ips[1] jobs.elasticsearch_master.networks.cf.static_ips[2] ))
     cluster_name: logsearch
   kibana:
-    elasticsearch: (( concat terraform_outputs.logsearch_elastic_master_elb_dns_name ":9200" ))
-  haproxy:
-    inbound_port: 5602
-    backend_servers: ["localhost"]
-    backend_port: 5601
+    elasticsearch:
+      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+      port: 9200
   elasticsearch_config:
     elasticsearch:
       host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))

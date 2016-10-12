@@ -1483,6 +1483,30 @@ jobs:
           - get: datadog-tfstate
 
       - aggregate:
+        - task: extract-cf-terraform-outputs
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
+            inputs:
+              - name: paas-cf
+              - name: cf-tfstate
+            outputs:
+              - name: cf-terraform-outputs
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  SCPATH="./paas-cf/concourse/scripts"
+                  SCFILE="extract_tf_vars_from_terraform_state.rb"
+                  $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
+                  ls -l cf-terraform-outputs/cf.tfstate.sh
+
         - task: upload-releases
           config:
             platform: linux
@@ -1859,6 +1883,30 @@ jobs:
                 ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
                 export ES_PORT="9200"
                 ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
+
+        - task: enable-elasticsearch-shard-reallocation
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/curl-ssl
+            inputs:
+            - name: paas-cf
+            - name: cf-terraform-outputs
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                export TF_VAR_logsearch_elastic_master_elb_dns_name
+                . cf-terraform-outputs/cf.tfstate.sh
+
+                curl -s \
+                  -X PUT \
+                  -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
+                  "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
 
         - task: datadog-terraform-apply
           config:

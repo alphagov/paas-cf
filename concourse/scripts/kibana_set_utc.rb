@@ -4,7 +4,7 @@ require 'net/http'
 require 'json'
 
 def config_uri(es_url)
-  config_url = "#{es_url}/.kibana/config/4.3.1"
+  config_url = "#{es_url}/.kibana/config/4.4.0"
   URI(config_url)
 end
 
