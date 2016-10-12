@@ -1870,6 +1870,7 @@ jobs:
               TF_VAR_env: {{deploy_env}}
               TF_VAR_datadog_api_key: {{datadog_api_key}}
               TF_VAR_datadog_app_key: {{datadog_app_key}}
+              TF_VAR_aws_account: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
             run:
               path: sh
