@@ -7,4 +7,6 @@ jobs:
     datadog: (( inject meta.datadog ))
     tags:
       job: bosh
+      bosh-job: bosh
+      bosh-az: (( grab terraform_outputs.bosh_az_label ))
       tags: (( inject meta.datadog_tags ))

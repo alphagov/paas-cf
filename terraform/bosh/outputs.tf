@@ -74,6 +74,10 @@ output "bosh_az" {
   value = "${var.bosh_az}"
 }
 
+output "bosh_az_label" {
+  value = "${lookup(var.zone_labels, var.bosh_az)}"
+}
+
 output "bosh_fqdn" {
   value = "${aws_route53_record.bosh.name}"
 }
