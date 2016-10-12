@@ -1,14 +1,15 @@
 ---
 releases:
 - name: datadog-agent
-  sha1: 7ba4b58c95812ecda39fd0bcf16cb8d3635c2ecd
-  url: https://github.com/alphagov/paas-datadog-agent-boshrelease/releases/download/custom_007/datadog-agent-custom_007.tgz
-  version: "custom_007"
+  sha1: 14c7f9be2eb534fda1f4c70ea2355865ac93a87b
+  url: https://github.com/alphagov/paas-datadog-agent-boshrelease/releases/download/v5.8.5.3-gds/datadog-agent-v5.8.5.3-gds.tgz
+  version: "v5.8.5.3-gds"
 
 meta:
   datadog:
     api_key: (( grab $DATADOG_API_KEY || "undefined" ))
     use_dogstatsd: false
+    include_bosh_tags: true
   datadog_tags:
     environment: (( grab meta.environment || "undefined" ))
     aws_account: (( grab $AWS_ACCOUNT ))
