@@ -39,6 +39,15 @@ variable "zone_index" {
   }
 }
 
+variable "zone_labels" {
+  description = "AWS availability zone labels as used in BOSH manifests (z1-z3)"
+  default     = {
+    eu-west-1a = "z1"
+    eu-west-1b = "z2"
+    eu-west-1c = "z3"
+  }
+}
+
 variable "zone_count" {
   description = "Number of zones to use"
   default = 3

@@ -30,4 +30,12 @@ RSpec.describe "manifest properties validations" do
   it "disables the health manager resurrector" do
     expect(bosh_properties["hm"]["resurrector_enabled"]).to eq(false)
   end
+
+  it "configures datadog tag bosh-job" do
+    expect(bosh_properties["tags"]["bosh-job"]).to eq("bosh")
+  end
+
+  it "configures datadog tag bosh-az with the right AZ" do
+    expect(bosh_properties["tags"]["bosh-az"]).to eq("z1")
+  end
 end
