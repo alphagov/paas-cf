@@ -146,6 +146,7 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=prod_deployment)
+	$(eval export CONCOURSE_AUTH_DURATION=5m)
 	@true
 
 .PHONY: bootstrap

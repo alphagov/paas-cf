@@ -32,6 +32,7 @@ system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 aws_account: ${AWS_ACCOUNT:-dev}
 datadog_api_key: ${datadog_api_key:-}
 enable_datadog: ${ENABLE_DATADOG}
+concourse_auth_duration: ${CONCOURSE_AUTH_DURATION:-24h}
 EOF
 }
 

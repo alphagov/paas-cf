@@ -17,6 +17,7 @@ private
   def load_default_manifest
     ENV["AWS_ACCOUNT"] = "dev"
     ENV["DATADOG_API_KEY"] = "abcd1234"
+    ENV["CONCOURSE_AUTH_DURATION"] = "24h"
     output, error, status = Open3.capture3(
       [
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),

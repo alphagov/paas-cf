@@ -442,6 +442,7 @@ jobs:
           AWS_ACCOUNT: {{aws_account}}
           DATADOG_API_KEY: {{datadog_api_key}}
           ENABLE_DATADOG: {{enable_datadog}}
+          CONCOURSE_AUTH_DURATION: {{concourse_auth_duration}}
           CONCOURSE_MANIFEST_STUBS: |
             ./paas-cf/manifests/concourse-manifest/concourse-base.yml
             predefined-concourse-secrets/predefined-concourse-secrets.yml
