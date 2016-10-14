@@ -40,7 +40,7 @@ jobs:
     release: logsearch
   - name: logsearch-for-cloudfoundry-filters
     release: logsearch-for-cloudfoundry
-  vm_type: medium
+  vm_type: small
   stemcell: default
   instances: 1
   networks:
@@ -68,7 +68,7 @@ jobs:
     release: logsearch
   - name: logsearch-for-cloudfoundry-filters
     release: logsearch-for-cloudfoundry
-  vm_type: medium
+  vm_type: small
   stemcell: default
   instances: 1
   networks:
