@@ -73,7 +73,7 @@ jobs:
           databases:
             - name: atc
               role: atc
-              password: dummy-password
+              password: (( grab secrets.concourse_postgres_password ))
 
       - name: atc
         release: concourse
@@ -87,7 +87,7 @@ jobs:
             database: atc
             role:
               name: atc
-              password: dummy-password
+              password: (( grab secrets.concourse_postgres_password ))
 
       - name: groundcrew
         release: concourse
