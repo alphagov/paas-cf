@@ -30,6 +30,8 @@ jobs:
     templates:
       - name: consul_agent
         release: (( grab meta.consul_templates.consul_agent.release ))
+      - name: datadog-consul
+        release: datadog-for-cloudfoundry
       - name: rds-broker
         release: aws-broker
     networks:
