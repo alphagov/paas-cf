@@ -96,6 +96,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_HEALTHCHECK_DB=false)
 	$(eval export ENABLE_DATADOG ?= false)
+	$(eval export CONCOURSE_AUTH_DURATION=48h)
 	@true
 
 .PHONY: ci
@@ -146,7 +147,6 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=prod_deployment)
-	$(eval export CONCOURSE_AUTH_DURATION=5m)
 	@true
 
 .PHONY: bootstrap
