@@ -73,7 +73,7 @@ jobs:
           databases:
             - name: atc
               role: atc
-              password: dummy-password
+              password: (( grab secrets.concourse_postgres_password ))
 
       - name: atc
         release: concourse
@@ -81,13 +81,14 @@ jobs:
           external_url: (( concat "https://" terraform_outputs.concourse_dns_name ))
           basic_auth_username: admin
           basic_auth_password: (( grab secrets.concourse_atc_password ))
+          auth_duration: (( grab $CONCOURSE_AUTH_DURATION ))
 
           postgresql:
             address: 127.0.0.1:5432
             database: atc
             role:
               name: atc
-              password: dummy-password
+              password: (( grab secrets.concourse_postgres_password ))
 
       - name: groundcrew
         release: concourse

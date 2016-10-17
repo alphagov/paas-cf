@@ -442,6 +442,7 @@ jobs:
           AWS_ACCOUNT: {{aws_account}}
           DATADOG_API_KEY: {{datadog_api_key}}
           ENABLE_DATADOG: {{enable_datadog}}
+          CONCOURSE_AUTH_DURATION: {{concourse_auth_duration}}
           CONCOURSE_MANIFEST_STUBS: |
             ./paas-cf/manifests/concourse-manifest/concourse-base.yml
             predefined-concourse-secrets/predefined-concourse-secrets.yml
@@ -485,6 +486,7 @@ jobs:
     - get: concourse-ssh-private-key
     - get: concourse-manifest
       passed: ['concourse-prepare-deploy']
+    - get: paas-cf
 
     - task: concourse-deploy
       timeout: 30m
@@ -513,6 +515,30 @@ jobs:
         put: concourse-bosh-state
         params:
           file: concourse-deploy/concourse-manifest-state.json
+
+    - task: add-env-specific-team
+      config:
+        image: docker:///governmentpaas/self-update-pipelines
+        inputs:
+          - name: paas-cf
+          - name: concourse-manifest
+        params:
+          SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+          CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
+          CONCOURSE_ATC_USER: admin
+          FLY_TEAM: {{aws_account}}
+          FLY_TARGET: {{deploy_env}}
+          FLY_CMD: ./paas-cf/bin/fly
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              export CONCOURSE_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
+              ./paas-cf/concourse/scripts/fly_sync_and_login.sh
+              echo y | ./paas-cf/bin/fly -t ${FLY_TARGET} set-team -n ${FLY_TEAM} \
+                         --basic-auth-username admin --basic-auth-password ${CONCOURSE_ATC_PASSWORD}
 
   - name: expunge-vagrant
     serial: true
