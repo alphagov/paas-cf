@@ -8,7 +8,6 @@ generator = SecretGenerator.new(
   "bosh_postgres_password" => :simple,
   "bosh_nats_password" => :simple,
   "bosh_registry_password" => :simple,
-  "bosh_redis_password" => :simple,
   "bosh_hm_director_password" => :simple,
   "bosh_admin_password" => :simple,
   "bosh_vcap_password" => :sha512_crypted,
