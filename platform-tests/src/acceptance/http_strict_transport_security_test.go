@@ -12,9 +12,16 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/runner"
 )
 
 var _ = Describe("Strict-Transport-Security headers", func() {
+
+	It("should serve HSTS headers from the apex domain", func() {
+		headers := curlApexDomainUrl()
+		Expect(headers["Strict-Transport-Security"]).Should(HaveLen(1))
+		Expect(headers["Strict-Transport-Security"][0]).To(Equal("max-age=31536000; includeSubDomains; preload"))
+	})
 
 	It("should add the header if it is not present", func() {
 
@@ -31,7 +38,7 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 		headers := curlAppHeaders(appName, "/")
 
 		Expect(headers["Strict-Transport-Security"]).Should(HaveLen(1))
-		Expect(headers["Strict-Transport-Security"][0]).To(Equal("max-age=31536000"))
+		Expect(headers["Strict-Transport-Security"][0]).To(Equal("max-age=31536000; includeSubDomains; preload"))
 	})
 
 	It("should not override the header if set by an app", func() {
@@ -57,6 +64,23 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 
 func curlAppHeaders(appName, path string, args ...string) textproto.MIMEHeader {
 	curlResponse := helpers.CurlApp(appName, path, append(args, "-I")...)
+
+	reader := textproto.NewReader(bufio.NewReader(bytes.NewBufferString(curlResponse)))
+	reader.ReadLine()
+
+	m, err := reader.ReadMIMEHeader()
+	Expect(err).ShouldNot(HaveOccurred())
+
+	return m
+}
+
+func curlApexDomainUrl() textproto.MIMEHeader {
+	appsDomain := config.AppsDomain
+	apexDomainUrl := config.Protocol() + appsDomain + "/"
+	curlCmd := runner.Curl(apexDomainUrl, "-I").Wait(helpers.CURL_TIMEOUT)
+	Expect(curlCmd).To(Exit(0))
+	Expect(string(curlCmd.Err.Contents())).To(HaveLen(0))
+	curlResponse := string(curlCmd.Out.Contents())
 
 	reader := textproto.NewReader(bufio.NewReader(bytes.NewBufferString(curlResponse)))
 	reader.ReadLine()
