@@ -283,6 +283,10 @@ jobs:
     networks:
       - name: cf
     properties:
+      consul:
+        agent:
+          services:
+            loggregator_trafficcontroller: {}
       tags:
         job: loggregator_trafficcontroller
         tags: (( inject meta.datadog_tags ))
