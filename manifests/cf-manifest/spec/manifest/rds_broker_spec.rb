@@ -73,9 +73,9 @@ RSpec.describe "RDS broker properties" do
       let(:pg_service) { services.find { |s| s["name"] == "postgres" } }
       let(:pg_plans) { pg_service.fetch("plans") }
 
-      it "contains only M-dedicated-9.5 and M-HA-dedicated-9.5 plans" do
+      it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("M-dedicated-9.5", "M-HA-dedicated-9.5")
+        expect(pg_plan_names).to contain_exactly("S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5")
       end
 
       describe "plan rds_properties" do
