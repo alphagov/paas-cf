@@ -95,6 +95,7 @@ properties:
     blacklisted_syslog_ranges: ~
     unmarshaller_count: 5
     port: 443
+    outgoing_port: 8081
     tls:
       enable: ~
       server_cert: ~
