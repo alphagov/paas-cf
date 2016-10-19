@@ -370,6 +370,14 @@ properties:
         countFailuresWithinSeconds: ~
         lockoutPeriodSeconds: ~
 
+    password:
+      policy:
+        minLength: ~
+        requireUpperCaseCharacter: ~
+        requireLowerCaseCharacter: ~
+        requireDigit: ~
+        requireSpecialCharacter: ~
+
     login: ~
 
     ldap: ~
