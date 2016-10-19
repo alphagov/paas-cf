@@ -360,7 +360,14 @@ properties:
       external_groups: ~
       groups: ~
       users:
-        - (( concat "admin|" secrets.uaa_admin_password "|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose" ))
+        - name: admin
+          password: (( grab secrets.uaa_admin_password ))
+          groups:
+            - scim.write
+            - scim.read
+            - openid
+            - cloud_controller.admin
+            - doppler.firehose
 
     ssl:
       port: -1
