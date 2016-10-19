@@ -17,8 +17,6 @@ addons:
       metron_agent:
         deployment: (( grab meta.environment ))
         preferred_protocol: ~
-        enable_buffer: ~
-        buffer_size: ~
         dropsonde_incoming_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
         tls:
           client_cert: ~
