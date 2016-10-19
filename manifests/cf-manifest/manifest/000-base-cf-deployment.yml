@@ -7,10 +7,6 @@ director_uuid: ~
 releases:
   - name: cf
     data: (( inject meta.cf-releases.cf ))
-  - name: routing
-    version: 0.136.0.gds1
-    url: https://github.com/alphagov/paas-routing-release/releases/download/0.136.0.gds1/routing-0.136.0.gds1.tgz
-    sha1: da9f95958119030ae2a95179c59511c90be8c33e
   - name: diego
     version: 0.1482.0
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1482.0
@@ -20,19 +16,15 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/garden-linux-release?v=0.341.0
     sha1: 9d95512cc32d5a356928539af111dbfd16333d40
   - name: etcd
-    version: 64
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=64
-    sha1: 7345569e73c80681124d3cd97a3dc1be372b0381
+    version: 75
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=75
+    sha1: a046281bfeae54ac6d194af80aa2471c8f9b119c
   - name: cflinuxfs2-rootfs
     version: 1.22.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.22.0
     sha1: bf95dfc4593e1a9f291e4bb3e50c85575483e618
   - name: paas-haproxy
     version: 0.0.4
-  - name: uaa
-    version: "12.6"
-    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=12.6
-    sha1: 8ffc7b9bfee004464bc8a81c322db7160dd7440f
   - name: datadog-for-cloudfoundry
     version: "0.0.5"
 

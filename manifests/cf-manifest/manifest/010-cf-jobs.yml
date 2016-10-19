@@ -101,7 +101,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: gorouter
-    release: routing
+    release: (( grab meta.release.name ))
   - name: haproxy
     release: paas-haproxy
   - name: datadog-router
@@ -113,7 +113,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: uaa
-    release: uaa
+    release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
 
