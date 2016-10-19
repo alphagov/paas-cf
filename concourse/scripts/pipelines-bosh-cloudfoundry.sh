@@ -116,38 +116,40 @@ generate_manifest_file() {
     < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 
+upload_pipeline() {
+  bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+        "${env}" "${pipeline_name}" \
+        <(generate_manifest_file) \
+        <(generate_vars_file)
+}
+
+remove_pipeline() {
+  yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+}
+
 update_pipeline() {
   pipeline_name=$1
 
   case $pipeline_name in
     create-bosh-cloudfoundry|failure-testing)
-      bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-        "${env}" "${pipeline_name}" \
-        <(generate_manifest_file) \
-        <(generate_vars_file)
+      upload_pipeline
     ;;
     destroy-*)
       if [ -n "${ENABLE_DESTROY:-}" ]; then
-        bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-          "${env}" "${pipeline_name}" \
-          <(generate_manifest_file) \
-          <(generate_vars_file)
+        upload_pipeline
       else
-        yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+        remove_pipeline
       fi
     ;;
     autodelete-cloudfoundry)
       if [ -n "${ENABLE_AUTODELETE:-}" ]; then
-        bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-          "${env}" "${pipeline_name}" \
-          <(generate_manifest_file) \
-          <(generate_vars_file)
+        upload_pipeline
 
         echo
         echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
         echo "         To disable it, unset ENABLE_AUTODELETE or pause the pipeline."
       else
-        yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+        remove_pipeline
 
         echo
         echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
