@@ -58,36 +58,6 @@ resource "aws_elb" "cf_uaa" {
   }
 }
 
-resource "aws_elb" "cf_loggregator" {
-  name = "${var.env}-cf-loggregator"
-  subnets = ["${split(",", var.infra_subnet_ids)}"]
-  idle_timeout = "${var.elb_idle_timeout}"
-  cross_zone_load_balancing = "true"
-  security_groups = [
-    "${aws_security_group.cf_api_elb.id}",
-  ]
-  access_logs {
-    bucket = "${aws_s3_bucket.elb_access_log.id}"
-    bucket_prefix = "cf-loggregator"
-    interval = 5
-  }
-
-  health_check {
-    target = "TCP:8080"
-    interval = "${var.health_check_interval}"
-    timeout = "${var.health_check_timeout}"
-    healthy_threshold = "${var.health_check_healthy}"
-    unhealthy_threshold = "${var.health_check_unhealthy}"
-  }
-  listener {
-    instance_port = 8080
-    instance_protocol = "tcp"
-    lb_port = 443
-    lb_protocol = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
-  }
-}
-
 resource "aws_elb" "cf_doppler" {
   name = "${var.env}-cf-doppler"
   subnets = ["${split(",", var.infra_subnet_ids)}"]

@@ -90,7 +90,6 @@ vm_types:
         type: gp2
       elbs:
         - (( grab terraform_outputs.cf_doppler_elb_name ))
-        - (( grab terraform_outputs.cf_loggregator_elb_name ))
 
   - name: router
     network: router

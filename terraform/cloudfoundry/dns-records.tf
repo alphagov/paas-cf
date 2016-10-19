@@ -22,14 +22,6 @@ resource "aws_route53_record" "cf_login" {
   records = ["${aws_elb.cf_uaa.dns_name}"]
 }
 
-resource "aws_route53_record" "cf_loggregator" {
-  zone_id = "${var.system_dns_zone_id}"
-  name = "loggregator.${var.system_dns_zone_name}."
-  type = "CNAME"
-  ttl = "60"
-  records = ["${aws_elb.cf_loggregator.dns_name}"]
-}
-
 resource "aws_route53_record" "cf_doppler" {
   zone_id = "${var.system_dns_zone_id}"
   name = "doppler.${var.system_dns_zone_name}."
