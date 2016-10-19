@@ -490,6 +490,12 @@ properties:
     ssl:
       skip_cert_verify: false
       starting_container_weight: 0.25
+    cfdot:
+      bbs:
+        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        client_cert: (( grab secrets.bbs_client_cert  ))
+        client_key: (( grab secrets.bbs_client_key  ))
+        use_ssl: (( grab properties.diego.bbs.require_ssl ))
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889

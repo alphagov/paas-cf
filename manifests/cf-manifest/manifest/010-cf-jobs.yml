@@ -191,6 +191,8 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: bbs
         release: diego
+      - name: cfdot
+        release: diego
     instances: 2
     vm_type: medium
     stemcell: default
@@ -321,6 +323,8 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: auctioneer
         release: diego
+      - name: cfdot
+        release: diego
     instances: 2
     vm_type: medium
     stemcell: default
@@ -344,6 +348,8 @@ jobs:
         release: garden-linux
       - name: cflinuxfs2-rootfs-setup
         release: cflinuxfs2-rootfs
+      - name: cfdot
+        release: diego
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
@@ -369,6 +375,8 @@ jobs:
         release: cf
       - name: cc_uploader
         release: cf
+      - name: cfdot
+        release: diego
     instances: 2
     vm_type: medium
     stemcell: default
@@ -387,6 +395,8 @@ jobs:
       - name: datadog-consul
         release: datadog-for-cloudfoundry
       - name: route_emitter
+        release: diego
+      - name: cfdot
         release: diego
     instances: 2
     vm_type: medium
@@ -408,6 +418,8 @@ jobs:
       - name: ssh_proxy
         release: diego
       - name: file_server
+        release: diego
+      - name: cfdot
         release: diego
     instances: 2
     vm_type: access
