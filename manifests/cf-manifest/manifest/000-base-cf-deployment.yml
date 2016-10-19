@@ -8,21 +8,21 @@ releases:
   - name: cf
     data: (( inject meta.cf-releases.cf ))
   - name: diego
-    version: 0.1482.0
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1482.0
-    sha1: 4d7740d58d2245b531d5fb5a3c87ab55cdd4a76b
+    version: 0.1487.0
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1487.0
+    sha1: f173af7117baa34cff97cf4355f958ea536a45d0
   - name: garden-linux
-    version: 0.341.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-linux-release?v=0.341.0
-    sha1: 9d95512cc32d5a356928539af111dbfd16333d40
+    version: 0.342.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-linux-release?v=0.342.0
+    sha1: 5da920b05879f66d813526793e2a73706b36b9cb
   - name: etcd
     version: 75
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=75
     sha1: a046281bfeae54ac6d194af80aa2471c8f9b119c
   - name: cflinuxfs2-rootfs
-    version: 1.22.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.22.0
-    sha1: bf95dfc4593e1a9f291e4bb3e50c85575483e618
+    version: 1.34.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.34.0
+    sha1: b1e367e228f5400439d4031a63df2600a9e213c4
   - name: paas-haproxy
     version: 0.0.4
   - name: datadog-for-cloudfoundry
