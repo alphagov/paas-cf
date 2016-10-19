@@ -284,6 +284,9 @@ jobs:
     networks:
       - name: cf
     properties:
+      loggregator:
+        uaa:
+          client_secret: (( grab properties.uaa.clients.doppler.secret ))
       consul:
         agent:
           services:
