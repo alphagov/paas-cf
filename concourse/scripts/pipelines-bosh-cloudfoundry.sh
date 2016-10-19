@@ -131,8 +131,15 @@ update_pipeline() {
   pipeline_name=$1
 
   case $pipeline_name in
-    create-bosh-cloudfoundry|failure-testing)
+    create-bosh-cloudfoundry)
       upload_pipeline
+    ;;
+    failure-testing)
+      if [ "${ENABLE_FAILURE_TESTING:-}" = "true" ]; then
+        upload_pipeline
+      else
+        remove_pipeline
+      fi
     ;;
     destroy-*)
       if [ -n "${ENABLE_DESTROY:-}" ]; then
