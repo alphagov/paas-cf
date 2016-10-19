@@ -49,10 +49,10 @@ prepare_environment() {
   cf_logsearch_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.logsearch-for-cloudfoundry.version "${cf_manifest_dir}/800-logsearch.yml")
   cf_datadog_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.datadog-for-cloudfoundry.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
 
-  if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
-    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
-  else
+  if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
     gpg_ids="[]"
+  else
+    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
   fi
 
   download_git_id_rsa
@@ -142,14 +142,14 @@ update_pipeline() {
       fi
     ;;
     destroy-*)
-      if [ -n "${ENABLE_DESTROY:-}" ]; then
+      if [ "${ENABLE_DESTROY:-}" = "true" ]; then
         upload_pipeline
       else
         remove_pipeline
       fi
     ;;
     autodelete-cloudfoundry)
-      if [ -n "${ENABLE_AUTODELETE:-}" ]; then
+      if [ "${ENABLE_AUTODELETE:-}" = "true" ]; then
         upload_pipeline
 
         echo
