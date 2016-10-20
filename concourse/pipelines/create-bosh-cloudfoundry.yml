@@ -1400,6 +1400,7 @@ jobs:
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
                 ./paas-cf/manifests/shared/deployments/datadog-agent.yml
+                ./paas-cf/manifests/shared/deployments/syslog.yml
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
@@ -1453,6 +1454,7 @@ jobs:
                 repository: governmentpaas/spruce
             inputs:
               - name: paas-cf
+              - name: terraform-outputs
             outputs:
               - name: runtime-config
             params:
@@ -1462,6 +1464,8 @@ jobs:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
+                ./paas-cf/manifests/shared/deployments/syslog.yml
+                ./terraform-outputs/*.yml
             run:
               path: sh
               args:

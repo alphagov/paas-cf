@@ -103,7 +103,8 @@ properties:
 
   logger_endpoint:
     port: 443
-  syslog_daemon_config: ~
+  syslog_daemon_config:
+    enable: false
 
   doppler:
     maxRetainedLogMessages: 100

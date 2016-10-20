@@ -14,3 +14,16 @@ addons:
       release: collectd
     properties:
       collectd: (( grab meta.collectd ))
+  - name: syslog_forwarder
+    jobs:
+    - name: syslog_forwarder
+      release: syslog
+    properties:
+      syslog:
+        address: (( grab terraform_outputs.logsearch_ingestor_elb_dns_name ))
+        port: 2514
+        transport: 'relp'
+  - name: syslog_cleanup
+    jobs:
+    - name: cleanup_syslog_forwarding
+      release: os-conf

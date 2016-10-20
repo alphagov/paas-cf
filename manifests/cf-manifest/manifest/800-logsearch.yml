@@ -199,9 +199,7 @@ jobs:
 
 properties:
   syslog_daemon_config:
-    address: (( grab terraform_outputs.logsearch_ingestor_elb_dns_name ))
-    port: 2514
-    transport: relp
+    enable: false
   parser_logstash:
     output:
       elasticsearch:
