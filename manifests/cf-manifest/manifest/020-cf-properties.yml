@@ -10,8 +10,6 @@ meta:
 
   consul_servers: (( grab jobs.consul.networks.cf.static_ips ))
 
-  etcd_consul_service: ["etcd.service.cf.internal"]
-
 properties:
   system_domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain_organization: admin
@@ -60,9 +58,24 @@ properties:
   etcd:
     machines: (( grab jobs.etcd.networks.cf.static_ips ))
     require_ssl: false
-    peer_require_ssl: false
+    peer_require_ssl: (( grab properties.etcd.require_ssl ))
+    advertise_urls_dns_suffix: etcd.service.cf.internal
+    ca_cert: ""
+    client_cert: ""
+    client_key: ""
+    peer_ca_cert: ""
+    peer_cert: ""
+    peer_key: ""
+    server_cert: ""
+    server_key: ""
 
   etcd_metrics_server:
+    etcd:
+      require_ssl: (( grab properties.etcd.require_ssl ))
+      ca_cert: (( grab properties.etcd.ca_cert ))
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
+      dns_suffix: (( grab properties.etcd.advertise_urls_dns_suffix ))
     nats:
       machines: (( grab properties.nats.machines ))
       username: (( grab properties.nats.user ))
@@ -80,7 +93,9 @@ properties:
     tls:
       ca_cert: ~
     etcd:
-      machines: (( grab meta.etcd_consul_service ))
+      machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
+      require_ssl: (( grab properties.etcd.require_ssl ))
+      ca_cert: (( grab properties.etcd.ca_cert ))
 
   loggregator_endpoint:
     shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
@@ -101,6 +116,9 @@ properties:
       server_cert: ~
       port: ~
       server_key: ~
+    etcd:
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
 
   doppler_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
@@ -109,7 +127,14 @@ properties:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
 
   traffic_controller:
-    outgoing_port: 8080
+    etcd:
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
+
+  syslog_drain_binder:
+    etcd:
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
 
   ha_proxy:
     enable_proxy_protocol: true
@@ -516,7 +541,7 @@ properties:
       auctioneer:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
-        machines: (( grab meta.etcd_consul_service ))
+        machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
         ca_cert: (( grab meta.secrets.consul_ca_cert ))
         client_cert: (( grab secrets.consul_agent_cert ))
         client_key: (( grab secrets.consul_agent_key ))
