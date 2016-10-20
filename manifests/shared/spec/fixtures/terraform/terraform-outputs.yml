@@ -23,6 +23,7 @@ terraform_outputs:
   cf_router_elb_name: unit-test-cf-router-elb
   cf_cc_elb_name: stub_cf_cc_elb
   cf_uaa_elb_name: stub_cf_uaa_elb
+  cf_loggregator_elb_name: stub_cf_loggregator_elb
   cf_doppler_elb_name: stub_cf_doppler_elb
   cf_ssh_proxy_elb_name: stub_cf_ssh_proxy_elb
   logsearch_ingestor_elb_name: stub_ingestor_elb

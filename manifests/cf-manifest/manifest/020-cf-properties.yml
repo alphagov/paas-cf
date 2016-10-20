@@ -127,6 +127,7 @@ properties:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
 
   traffic_controller:
+    outgoing_port: 8080
     etcd:
       client_cert: (( grab properties.etcd.client_cert ))
       client_key: (( grab properties.etcd.client_key ))
