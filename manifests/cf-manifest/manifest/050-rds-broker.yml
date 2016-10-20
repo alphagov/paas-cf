@@ -1,7 +1,39 @@
 meta:
   rds_broker:
+    small_postgres_rds_properties:
+      db_instance_class: "db.t2.small"
+      engine: "postgres"
+      engine_version: "9.5.2"
+      storage_type: "gp2"
+      allocated_storage: 20
+      auto_minor_version_upgrade: true
+      multi_az: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+      vpc_security_group_ids:
+        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
+      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
     medium_postgres_rds_properties:
       db_instance_class: "db.m4.large"
+      engine: "postgres"
+      engine_version: "9.5.2"
+      storage_type: "gp2"
+      allocated_storage: 20
+      auto_minor_version_upgrade: true
+      multi_az: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+      vpc_security_group_ids:
+        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
+      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
+    large_postgres_rds_properties:
+      db_instance_class: "db.m4.2xlarge"
       engine: "postgres"
       engine_version: "9.5.2"
       storage_type: "gp2"
@@ -67,9 +99,40 @@ jobs:
                 supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
               plan_updateable: true
               plans:
+                - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
+                  name: "S-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.039
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.small_postgres_rds_properties ))
+
+                - id: "359bcb39-0264-46bd-9120-0182c3829067"
+                  name: "S-HA-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.078
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.small_postgres_rds_properties ))
+                    multi_az: true
+
                 - id: "9b882524-ab58-4c18-b501-d2a3f4619104"
                   name: "M-dedicated-9.5"
-                  description: "20GB Storage, Dedicated Instance, Max 500 Concurrent Connections. Postgres Version 9.5"
+                  description: "20GB Storage, Dedicated Instance, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
                   free: false
                   metadata:
                     costs:
@@ -84,7 +147,7 @@ jobs:
 
                 - id: "bf5b99c2-7990-4b66-b341-1bb83566d76e"
                   name: "M-HA-dedicated-9.5"
-                  description: "20GB Storage, Dedicated Instance, Highly Available, Max 500 Concurrent Connections. Postgres Version 9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
                   free: false
                   metadata:
                     costs:
@@ -98,6 +161,36 @@ jobs:
                     inject: (( inject meta.rds_broker.medium_postgres_rds_properties ))
                     multi_az: true
 
+                - id: "238a1328-4f77-4b70-9bd9-2cdbbfb999c8"
+                  name: "L-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.806
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.large_postgres_rds_properties ))
+
+                - id: "dfe4ab2b-2069-41a5-ba08-2be21b0c76d3"
+                  name: "L-HA-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 1.612
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.large_postgres_rds_properties ))
+                    multi_az: true
 properties:
   cc:
     security_group_definitions:
