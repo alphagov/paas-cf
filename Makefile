@@ -210,6 +210,9 @@ run_job: check-env-vars ## Unbind paas-cf of $JOB in create-bosh-cloudfoundry pi
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 
+ssh_bosh: check-env-vars ## SSH to the bosh server
+	@./concourse/scripts/ssh_bosh.sh
+
 ssh_concourse: check-env-vars ## SSH to the concourse server
 	@./concourse/scripts/ssh.sh
 

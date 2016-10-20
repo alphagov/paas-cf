@@ -315,26 +315,13 @@ forward some ports to the agent of the new VM.
 Both public and private keys are also uploaded to S3 to be consumed by
 other jobs in the pipelines as resources and/or by us for troubleshooting.
 
-To manually ssh to the *Deployer Concourse*, you will need its IP and `id_rsa` key.
-You can get both from command line. You will need [aws-cli](#aws-cli), to do this:
+To ssh to the *Deployer Concourse*, use makefile target ssh_concourse, e.g.
+`make dev ssh_concourse`. This will retrieve required keys and print a sudo
+password before ssh-ing to the concourse VM.
 
-```
-eval $(make dev showenv | grep CONCOURSE_IP=)
-
-aws s3 cp "s3://${DEPLOY_ENV}-state/concourse_id_rsa" ./concourse_id_rsa && \
-  chmod 400 concourse_id_rsa
-
-ssh -i concourse_id_rsa -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null vcap@$CONCOURSE_IP
-```
-
-If you get a "Too many authentication failures for vcap" message it is likely that you've got too many keys registered with your ssh-agent and it will fail to authenticate before trying the correct key - generally it will only allow three keys to be tried before disconnecting you. You can list all the keys registered with your ssh-agent with `ssh-add -l` and remove unwanted keys with `ssh-add -d PATH_TO_KEY`.
-
-MicroBOSH is deployed to use the same SSH key, although is not publicly
-accessible. But you can use the *Deployer Concourse* as a jumpbox:
-
-```
-ssh -o ProxyCommand="ssh -W%h:%p %r@$CONCOURSE_IP" vcap@10.0.0.6
-```
+To ssh to the *BOSH*, use makefile target ssh_bosh, e.g.
+`make dev ssh_bosh`. This will retrieve required keys and print a sudo password for
+bosh server before opening the ssh session.
 
 ## Concourse credentials
 
