@@ -11,7 +11,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: cloud_controller_ng
-    release: (( grab meta.release.name ))
+    release: capi
   - name: statsd-injector
     release: (( grab meta.release.name ))
   - name: java-buildpack
@@ -39,7 +39,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: cloud_controller_worker
-    release: (( grab meta.release.name ))
+    release: capi
 
   clock_templates:
   - name: consul_agent
@@ -47,7 +47,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: cloud_controller_clock
-    release: (( grab meta.release.name ))
+    release: capi
 
   consul_templates:
   - name: consul_agent

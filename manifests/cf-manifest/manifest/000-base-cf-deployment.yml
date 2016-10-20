@@ -7,6 +7,10 @@ director_uuid: ~
 releases:
   - name: cf
     data: (( inject meta.cf-releases.cf ))
+  - name: capi
+    version: 1.8.0
+    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.8.0
+    sha1: db40786bc0c1214fe20e663014927fc6693212bf
   - name: diego
     version: 0.1487.0
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1487.0
