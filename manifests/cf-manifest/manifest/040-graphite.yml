@@ -1,11 +1,5 @@
 meta:
   graphite_templates:
-    - name: consul_agent
-      release: (( grab meta.consul_templates.consul_agent.release ))
-    - name: datadog-consul
-      release: datadog-for-cloudfoundry
-    - name: metron_agent
-      release: cf
     - name: carbon
       release: graphite
     - name: graphite-web

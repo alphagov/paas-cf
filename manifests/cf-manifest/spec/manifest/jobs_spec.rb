@@ -11,14 +11,6 @@ end
 RSpec.describe "the jobs definitions block" do
   let(:jobs) { manifest_with_defaults["jobs"] }
 
-  let(:jobs_with_consul) {
-    jobs.select { |j|
-      not j["templates"].select { |t|
-        t["name"] == "consul_agent"
-      }.empty?
-    }
-  }
-
   def get_job(job_name)
     job = jobs.select { |j| j["name"] == job_name }.first
     if job == nil
@@ -108,14 +100,16 @@ RSpec.describe "the jobs definitions block" do
   end
 
   it "should list consul_agent first if present" do
+    jobs_with_consul = jobs.select { |j|
+      not j["templates"].select { |t|
+        t["name"] == "consul_agent"
+      }.empty?
+    }
+
     jobs_with_consul.each { |j|
       expect(j["templates"].first["name"]).to eq("consul_agent"),
         "expected '#{j['name']}' job to list 'consul_agent' first"
     }
-  end
-
-  it "should install consul_agent in all the jobs" do
-    expect(jobs).to eq(jobs_with_consul)
   end
 
   describe "in order to monitor all hosts via datadog" do

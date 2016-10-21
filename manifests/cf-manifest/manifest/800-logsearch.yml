@@ -12,10 +12,6 @@ jobs:
   release: logsearch
   azs: [z1, z2]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: queue
     release: logsearch
   vm_type: small
@@ -36,10 +32,6 @@ jobs:
   release: logsearch
   azs: [z1]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: parser
     release: logsearch
   - name: logsearch-for-cloudfoundry-filters
@@ -66,10 +58,6 @@ jobs:
   release: logsearch
   azs: [z2]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: parser
     release: logsearch
   - name: logsearch-for-cloudfoundry-filters
@@ -96,10 +84,6 @@ jobs:
   release: logsearch
   azs: [z1, z2, z3]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: elasticsearch
     release: logsearch
   vm_type: elasticsearch_master
@@ -129,10 +113,6 @@ jobs:
   release: logsearch
   azs: [z1, z2]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: elasticsearch_config
     release: logsearch
   - name: curator
@@ -155,10 +135,6 @@ jobs:
   release: logsearch
   azs: [z1, z2]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: kibana
     release: logsearch
   vm_type: kibana
@@ -175,10 +151,6 @@ jobs:
   release: logsearch
   azs: [z1]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: ingestor_syslog
     release: logsearch
   - name: ingestor_relp
@@ -204,10 +176,6 @@ jobs:
   release: logsearch
   azs: [z2]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: ingestor_syslog
     release: logsearch
   - name: ingestor_relp

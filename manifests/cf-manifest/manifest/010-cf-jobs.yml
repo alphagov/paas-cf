@@ -46,10 +46,6 @@ meta:
     release: (( grab meta.release.name ))
 
   clock_templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: cloud_controller_clock
     release: capi
   - name: metron_agent
