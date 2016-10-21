@@ -236,6 +236,20 @@ be still configured in concourse.
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
 
+## Optionally disable run of custom acceptance tests
+
+Custom acceptance tests can be optionally disabled by setting the environment
+variable `DISABLE_CUSTOM_ACCEPTANCE_TESTS=true`.
+
+```
+DISABLE_CUSTOM_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
+```
+
+This will only disable the execution of the test, but the job will be still configured in concourse.
+
+*Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run reverting to default, which is to run the tests.
+
+
 ## Optionally deploy failure-testing pipeline
 
 `failure-testing` is a pipeline created for purpose of resiliency testing of CF components. We don't deploy this pipeline by default to our deployments.

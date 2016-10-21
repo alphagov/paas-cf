@@ -2226,16 +2226,21 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: custom-acceptance-test-user
+            DISABLE_ADMIN_USER_CREATION: {{disable_custom_acceptance_tests}}
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
 
         - task: "Run custom acceptance tests"
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
+          params:
+            DISABLE_CUSTOM_ACCEPTANCE_TESTS: {{disable_custom_acceptance_tests}}
 
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            DISABLE_ADMIN_USER_CREATION: {{disable_custom_acceptance_tests}}
 
   - name: bosh-tests
     plan:
