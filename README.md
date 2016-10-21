@@ -237,6 +237,12 @@ be still configured in concourse.
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
 
+## Optionally deploy failure-testing pipeline
+
+`failure-testing` is a pipeline created for purpose of resiliency testing of CF components. We don't deploy this pipeline by default to our deployments.
+In case you want to deploy the pipeline, set `ENABLE_FAILURE_TESTING` environment variable to true, e.g.
+`ENABLE_FAILURE_TESTING=true make dev pipelines`.
+
 ## Optionally run specific job in the create-bosh-cloudfoundry pipeline
 
 `create-bosh-cloudfoundry` is our main pipeline. When we are making changes or

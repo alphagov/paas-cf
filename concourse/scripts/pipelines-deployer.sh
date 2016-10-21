@@ -39,10 +39,10 @@ EOF
 generate_vars_file > /dev/null # Check for missing vars
 
 generate_manifest_file() {
-  if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
-    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
-  else
+  if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
     gpg_ids="[]"
+  else
+    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
   fi
 
   # This exists because concourse does not support multiline value interpolation by design

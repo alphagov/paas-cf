@@ -49,10 +49,10 @@ prepare_environment() {
   cf_logsearch_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.logsearch-for-cloudfoundry.version "${cf_manifest_dir}/800-logsearch.yml")
   cf_datadog_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.datadog-for-cloudfoundry.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
 
-  if [ -z "${SKIP_COMMIT_VERIFICATION:-}" ] ; then
-    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
-  else
+  if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
     gpg_ids="[]"
+  else
+    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
   fi
 
   download_git_id_rsa
@@ -116,38 +116,47 @@ generate_manifest_file() {
     < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 
+upload_pipeline() {
+  bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
+        "${env}" "${pipeline_name}" \
+        <(generate_manifest_file) \
+        <(generate_vars_file)
+}
+
+remove_pipeline() {
+  yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+}
+
 update_pipeline() {
   pipeline_name=$1
 
   case $pipeline_name in
-    create-bosh-cloudfoundry|failure-testing)
-      bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-        "${env}" "${pipeline_name}" \
-        <(generate_manifest_file) \
-        <(generate_vars_file)
+    create-bosh-cloudfoundry)
+      upload_pipeline
+    ;;
+    failure-testing)
+      if [ "${ENABLE_FAILURE_TESTING:-}" = "true" ]; then
+        upload_pipeline
+      else
+        remove_pipeline
+      fi
     ;;
     destroy-*)
-      if [ -n "${ENABLE_DESTROY:-}" ]; then
-        bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-          "${env}" "${pipeline_name}" \
-          <(generate_manifest_file) \
-          <(generate_vars_file)
+      if [ "${ENABLE_DESTROY:-}" = "true" ]; then
+        upload_pipeline
       else
-        yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+        remove_pipeline
       fi
     ;;
     autodelete-cloudfoundry)
-      if [ -n "${ENABLE_AUTODELETE:-}" ]; then
-        bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-          "${env}" "${pipeline_name}" \
-          <(generate_manifest_file) \
-          <(generate_vars_file)
+      if [ "${ENABLE_AUTODELETE:-}" = "true" ]; then
+        upload_pipeline
 
         echo
         echo "WARNING: Pipeline to autodelete Cloud Foundry has been setup and enabled."
         echo "         To disable it, unset ENABLE_AUTODELETE or pause the pipeline."
       else
-        yes y | ${FLY_CMD} -t "${FLY_TARGET}" destroy-pipeline --pipeline "${pipeline_name}" || true
+        remove_pipeline
 
         echo
         echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
