@@ -2024,7 +2024,7 @@ jobs:
             source:
               repository: governmentpaas/cf-cli
           params:
-            ENABLE_HEALTHCHECK_DB: {{enable_healthcheck_db}}
+            DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
           inputs:
             - name: paas-cf
             - name: config
@@ -2049,7 +2049,7 @@ jobs:
                 BUILD_ROOT=$(pwd)
                 cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
-                if  [ "$ENABLE_HEALTHCHECK_DB" != "false" ] ; then
+                if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
                   cf create-service postgres M-dedicated-9.5 healthcheck-db
                   while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."

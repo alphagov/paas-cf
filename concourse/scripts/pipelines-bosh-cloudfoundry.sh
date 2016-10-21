@@ -92,7 +92,7 @@ apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
 ALERT_EMAIL_ADDRESS: ${ALERT_EMAIL_ADDRESS:-}
 NEW_ACCOUNT_EMAIL_ADDRESS: ${NEW_ACCOUNT_EMAIL_ADDRESS:-}
-enable_healthcheck_db: ${ENABLE_HEALTHCHECK_DB:-}
+disable_healthcheck_db: ${DISABLE_HEALTHCHECK_DB:-}
 bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
