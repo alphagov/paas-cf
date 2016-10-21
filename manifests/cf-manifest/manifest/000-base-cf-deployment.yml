@@ -15,10 +15,10 @@ releases:
     version: 0.1487.0
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1487.0
     sha1: f173af7117baa34cff97cf4355f958ea536a45d0
-  - name: garden-linux
-    version: 0.342.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-linux-release?v=0.342.0
-    sha1: 5da920b05879f66d813526793e2a73706b36b9cb
+  - name: garden-runc
+    version: 0.9.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=0.9.0
+    sha1: f0f51762fd470128539ad335934b0319b07b9a04
   - name: etcd
     version: 75
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=75
