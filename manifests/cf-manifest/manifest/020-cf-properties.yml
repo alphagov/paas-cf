@@ -89,7 +89,7 @@ properties:
       - start: 10.10.0.0
         end: 10.10.255.255
     outgoing_dropsonde_port: 8081
-    dropsonde_incoming_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+    dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
     tls:
       ca_cert: ~
@@ -123,6 +123,16 @@ properties:
 
   doppler_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
+
+  metron_agent:
+    deployment: (( grab meta.environment ))
+    preferred_protocol: ~
+    enable_buffer: ~
+    buffer_size: ~
+    dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
+    tls:
+      client_cert: ~
+      client_key: ~
 
   metron_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
@@ -530,7 +540,7 @@ properties:
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     bbs:
       active_key_label: keylabel1
@@ -548,14 +558,14 @@ properties:
         client_cert: (( grab secrets.consul_agent_cert ))
         client_key: (( grab secrets.consul_agent_key ))
         require_ssl: false
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
 
     file_server:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     rep:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
@@ -566,7 +576,7 @@ properties:
         - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
 
     route_emitter:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
@@ -580,7 +590,7 @@ properties:
         port: (( grab properties.nats.port ))
 
     ssh_proxy:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
@@ -596,7 +606,7 @@ properties:
 
   capi:
     cc_uploader:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       cc:
         base_url: (( grab properties.cc.srv_api_uri ))
         basic_auth_password: (( grab properties.cc.internal_api_password ))
@@ -604,7 +614,7 @@ properties:
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
 
     nsync:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
@@ -619,7 +629,7 @@ properties:
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
 
     stager:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
@@ -633,7 +643,7 @@ properties:
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
 
     tps:
-      dropsonde_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
+      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       cc:
         base_url: (( grab properties.cc.srv_api_uri ))
         basic_auth_password: (( grab properties.cc.internal_api_password ))

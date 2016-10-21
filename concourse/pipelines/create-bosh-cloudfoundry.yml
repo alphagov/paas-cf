@@ -1401,7 +1401,6 @@ jobs:
                 ./paas-cf/manifests/shared/deployments/collectd.yml
                 ./paas-cf/manifests/shared/deployments/datadog-agent.yml
                 ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
-                ./paas-cf/manifests/cf-manifest/common/*.yml
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}
@@ -1454,8 +1453,6 @@ jobs:
                 repository: governmentpaas/spruce
             inputs:
               - name: paas-cf
-              - name: terraform-outputs
-              - name: cf-secrets
             outputs:
               - name: runtime-config
             params:
@@ -1465,9 +1462,6 @@ jobs:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/runtime-config/runtime-config-base.yml
                 ./paas-cf/manifests/shared/deployments/collectd.yml
-                ./paas-cf/manifests/cf-manifest/common/*.yml
-                ./terraform-outputs/*.yml
-                ./cf-secrets/cf-secrets.yml
             run:
               path: sh
               args:

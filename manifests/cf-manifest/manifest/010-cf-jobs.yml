@@ -12,6 +12,8 @@ meta:
     release: datadog-for-cloudfoundry
   - name: cloud_controller_ng
     release: capi
+  - name: metron_agent
+    release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
   - name: java-buildpack
@@ -40,6 +42,8 @@ meta:
     release: datadog-for-cloudfoundry
   - name: cloud_controller_worker
     release: capi
+  - name: metron_agent
+    release: (( grab meta.release.name ))
 
   clock_templates:
   - name: consul_agent
@@ -48,12 +52,16 @@ meta:
     release: datadog-for-cloudfoundry
   - name: cloud_controller_clock
     release: capi
+  - name: metron_agent
+    release: (( grab meta.release.name ))
 
   consul_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
   - name: datadog-consul
     release: datadog-for-cloudfoundry
+  - name: metron_agent
+    release: (( grab meta.release.name ))
 
   etcd_templates:
   - name: consul_agent
@@ -64,6 +72,8 @@ meta:
     release: etcd
   - name: etcd_metrics_server
     release: etcd
+  - name: metron_agent
+    release: (( grab meta.release.name ))
 
   loggregator_templates:
   - name: consul_agent
@@ -74,6 +84,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: syslog_drain_binder
     release: (( grab meta.release.name ))
+  - name: metron_agent
+    release: (( grab meta.release.name ))
 
   loggregator_trafficcontroller_templates:
   - name: consul_agent
@@ -81,6 +93,8 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: loggregator_trafficcontroller
+    release: (( grab meta.release.name ))
+  - name: metron_agent
     release: (( grab meta.release.name ))
 
   nats_templates:
@@ -95,6 +109,8 @@ meta:
     release: (( grab meta.release.name ))
   - name: datadog-nats
     release: datadog-for-cloudfoundry
+  - name: metron_agent
+    release: (( grab meta.release.name ))
 
   router_templates:
   - name: consul_agent
@@ -102,6 +118,8 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: gorouter
+    release: (( grab meta.release.name ))
+  - name: metron_agent
     release: (( grab meta.release.name ))
   - name: haproxy
     release: paas-haproxy
@@ -114,6 +132,8 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: uaa
+    release: (( grab meta.release.name ))
+  - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
@@ -193,6 +213,8 @@ jobs:
         release: diego
       - name: cfdot
         release: diego
+      - name: metron_agent
+        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -325,6 +347,8 @@ jobs:
         release: diego
       - name: cfdot
         release: diego
+      - name: metron_agent
+        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -350,6 +374,8 @@ jobs:
         release: cflinuxfs2-rootfs
       - name: cfdot
         release: diego
+      - name: metron_agent
+        release: cf
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
@@ -377,6 +403,8 @@ jobs:
         release: cf
       - name: cfdot
         release: diego
+      - name: metron_agent
+        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -398,6 +426,8 @@ jobs:
         release: diego
       - name: cfdot
         release: diego
+      - name: metron_agent
+        release: cf
     instances: 2
     vm_type: medium
     stemcell: default
@@ -417,6 +447,8 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: ssh_proxy
         release: diego
+      - name: metron_agent
+        release: cf
       - name: file_server
         release: diego
       - name: cfdot

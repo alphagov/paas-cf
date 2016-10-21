@@ -1,32 +1,9 @@
 ---
-meta:
-  environment: (( grab terraform_outputs.environment ))
-
 releases:
   - name: os-conf
     version: commit-a2bc2ab32248c8edf7c4790b33902893b1f4db66
-  - name: cf
-    data: (( inject meta.cf-releases.cf ))
 
 addons:
-  - name: metron_agent
-    jobs:
-    - name: metron_agent
-      release: cf
-    properties:
-      metron_agent:
-        deployment: (( grab meta.environment ))
-        preferred_protocol: ~
-        dropsonde_incoming_port: (( grab meta.metron_agent.dropsonde_incoming_port ))
-        tls:
-          client_cert: ~
-          client_key: ~
-      loggregator:
-        etcd:
-          machines:
-          - (( grab meta.etcd.advertise_urls_dns_suffix ))
-      metron_endpoint:
-        shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
   - name: os-configuration
     jobs:
     - name: set_mtu
