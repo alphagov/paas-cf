@@ -18,8 +18,8 @@ run:
     - -c
     - |
       NAME=$(cat admin-creds/username)
-      if [ "${ENABLE_ADMIN_USER_CREATION:-}" = "false" ]; then
-        echo "Temporary user creation is disabled (ENABLE_ADMIN_USER_CREATION=${ENABLE_ADMIN_USER_CREATION}). Skipping."
+      if [ "${DISABLE_ADMIN_USER_CREATION:-}" = "true" ]; then
+        echo "Temporary user creation is disabled (DISABLE_ADMIN_USER_CREATION=${DISABLE_ADMIN_USER_CREATION}). Skipping."
         exit 0
       fi
       ./paas-cf/concourse/scripts/import_bosh_ca.sh

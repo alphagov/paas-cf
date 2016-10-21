@@ -96,7 +96,9 @@ disable_healthcheck_db: ${DISABLE_HEALTHCHECK_DB:-}
 bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
-enable_cf_acceptance_tests: ${ENABLE_CF_ACCEPTANCE_TESTS:-true}
+disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
+disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS}
+disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING}
 datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
 enable_datadog: ${ENABLE_DATADOG}

@@ -225,13 +225,12 @@ See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 ## Optionally disable run of acceptance tests
 
 Acceptance tests can be optionally disabled by setting the environment
-variable `ENABLE_CF_ACCEPTANCE_TESTS=false`.
+variable `DISABLE_CF_ACCEPTANCE_TESTS=true`. This is default in staging and prod.
 
 ```
-ENABLE_CF_ACCEPTANCE_TESTS=false SELF_UPDATE_PIPELINE=false make dev pipelines
+DISABLE_CF_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
 ```
 
-It is enabled in all the environments except in `staging` and `prod`.
 This will only disable the execution of the test, but the job will
 be still configured in concourse.
 
