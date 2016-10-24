@@ -1,7 +1,0 @@
-jobs:
-- name: bosh
-  properties:
-    compiled_package_cache:
-      options:
-        credentials_source: env_or_profile
-        bucket_name: (( grab terraform_outputs.compiled_cache_bucket_name ))

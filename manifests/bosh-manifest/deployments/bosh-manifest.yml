@@ -75,6 +75,11 @@ jobs:
       username: admin
       password: (( grab secrets.bosh_registry_password ))
 
+    compiled_package_cache:
+      options:
+        credentials_source: env_or_profile
+        bucket_name: (( grab terraform_outputs.compiled_cache_bucket_name ))
+
 properties: ~
 
 cloud_provider:
