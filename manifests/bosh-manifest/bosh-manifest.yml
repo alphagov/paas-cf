@@ -34,18 +34,21 @@ meta:
 name: (( grab meta.environment ))
 
 releases:
+- name: bosh
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=257.14
+  sha1: b41821dccee78ad7bd44466cd0160920c183787a
+
 # When updating the version of the CPI here, the version used in the
 # bosh-init container must also be updated so that the cached CPI compile
 # will be used.
 - name: bosh-aws-cpi
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52
   sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
-- name: bosh
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=257.14
-  sha1: b41821dccee78ad7bd44466cd0160920c183787a
 
 disk_pools:
 - name: disks
+  cloud_properties:
+    type: gp2
   disk_size: 32768
 
 jobs:
@@ -167,11 +170,6 @@ resource_pools:
   env:
     bosh:
       password: (( grab secrets.bosh_vcap_password ))
-
-disk_pools:
-- name: disks
-  cloud_properties:
-    type: gp2
 
 networks:
 - name: private
