@@ -953,7 +953,6 @@ jobs:
             ENABLE_DATADOG: {{enable_datadog}}
             BOSH_MANIFEST_STUBS: |
               ./paas-cf/manifests/bosh-manifest/deployments/*.yml
-              ./paas-cf/manifests/bosh-manifest/deployments/aws/*.yml
               ./bosh-secrets/bosh-secrets.yml
               ./bosh-CA-yml/bosh-ca-cert.yml
               ./terraform-outputs/bosh.terraform-outputs.yml
