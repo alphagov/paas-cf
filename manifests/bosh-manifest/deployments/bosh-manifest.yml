@@ -23,6 +23,7 @@ jobs:
   - {name: nats, release: bosh}
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
+  - {name: collectd, release: collectd}
 
   resource_pool: bosh
   persistent_disk_pool: disks
@@ -80,6 +81,11 @@ jobs:
       options:
         credentials_source: env_or_profile
         bucket_name: (( grab terraform_outputs.compiled_cache_bucket_name ))
+
+    collectd:
+      hostname_prefix: bosh_
+      interval: (( grab meta.collectd.interval ))
+      config: (( grab meta.collectd.config ))
 
 properties: ~
 
