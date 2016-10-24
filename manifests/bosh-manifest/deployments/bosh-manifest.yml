@@ -76,3 +76,19 @@ jobs:
       password: (( grab secrets.bosh_registry_password ))
 
 properties: ~
+
+cloud_provider:
+  ssh_tunnel:
+    host: (( grab terraform_outputs.bosh_fqdn ))
+    port: 22
+    user: vcap
+    private_key: .ssh/bosh_id_rsa
+
+  mbus: (( concat "https://mbus:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":6868" ))
+
+  properties:
+    agent:
+      mbus: (( concat "https://mbus:" secrets.bosh_nats_password "@0.0.0.0:6868" ))
+    blobstore:
+      provider: local
+      path: /var/vcap/micro_bosh/data/cache
