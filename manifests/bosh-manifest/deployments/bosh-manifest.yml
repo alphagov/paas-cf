@@ -7,6 +7,12 @@ meta:
 name: (( grab meta.environment ))
 
 releases:
+# When updating the version of the CPI here, the version used in the
+# bosh-init container must also be updated so that the cached CPI compile
+# will be used.
+- name: bosh-aws-cpi
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52
+  sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
 - name: bosh
   url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=257.14
   sha1: b41821dccee78ad7bd44466cd0160920c183787a
@@ -24,6 +30,8 @@ jobs:
   - {name: director, release: bosh}
   - {name: health_monitor, release: bosh}
   - {name: collectd, release: collectd}
+  - {name: registry, release: bosh}
+  - {name: aws_cpi, release: bosh-aws-cpi}
 
   resource_pool: bosh
   persistent_disk_pool: disks
@@ -90,6 +98,10 @@ jobs:
 properties: ~
 
 cloud_provider:
+  template:
+    name: aws_cpi
+    release: bosh-aws-cpi
+
   ssh_tunnel:
     host: (( grab terraform_outputs.bosh_fqdn ))
     port: 22
@@ -104,6 +116,7 @@ cloud_provider:
     blobstore:
       provider: local
       path: /var/vcap/micro_bosh/data/cache
+    aws: (( grab meta.aws.cloud_provider ))
 
 resource_pools:
 - name: bosh
