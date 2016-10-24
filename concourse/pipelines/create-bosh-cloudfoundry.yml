@@ -349,12 +349,17 @@ jobs:
           params:
             DEPLOY_ENV: {{deploy_env}}
             AWS_ACCOUNT: {{aws_account}}
+            DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
           run:
             path: sh
             args:
             - -e
             - -c
             - |
+              if [ "${DISABLE_PIPELINE_LOCKING:-}" = "true" ] ; then
+                 echo "Pipeline locking is disabled, skipping..."
+                 exit 0
+              fi
               chmod 600 git-ssh-private-key/git_id_rsa
               git config --global push.default simple
               git config --global user.email "concourse@${DEPLOY_ENV}.${AWS_ACCOUNT}"
@@ -364,9 +369,35 @@ jobs:
                 {{git_concourse_pool_clone_full_url_ssh}} \
                 $(pwd)/git-ssh-private-key/git_id_rsa \
                 {{pipeline_name}} lock
-      - put: pipeline-pool
-        params:
-          claim: lock
+
+      - try:
+          task: lock-the-pipeline
+          config:
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            platform: linux
+            params:
+              DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                if [ "${DISABLE_PIPELINE_LOCKING:-}" = "true" ] ; then
+                   echo "Pipeline locking is disabled, skipping..."
+                   exit 0
+                fi
+                echo "About to lock. This job will fail and this is OK."
+                exit 1
+          on_failure:
+            put: pipeline-pool
+            params:
+              claim: lock
+
       - task: self-update-pipeline
         config:
           platform: linux
@@ -2441,9 +2472,31 @@ jobs:
                     }" \
                   "https://app.datadoghq.com/api/v1/series?api_key=${DATADOG_API_KEY}"
               fi
-      - put: pipeline-pool
-        params:
-          release: pipeline-pool
+      - try:
+          task: unlock-the-pipeline
+          config:
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            platform: linux
+            params:
+              DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                if [ "${DISABLE_PIPELINE_LOCKING:-}" = "true" ] ; then
+                   echo "Pipeline locking is disabled, this task will fail and this is OK."
+                   exit 1
+                fi
+          on_success:
+            put: pipeline-pool
+            params:
+              release: pipeline-pool
 
   - name: pipeline-check-lock
     plan:
