@@ -335,6 +335,18 @@ jobs:
         job: brain
         tags: (( inject meta.datadog_tags ))
 
+  - name: cell_3_3
+    data: ((inject jobs.cell))
+    stemcell: default_kernel_3_3
+    instances: 0
+    templates:
+      - name: garden
+        release: garden-linux
+    properties:
+      tags:
+        job: cell_3_3
+        tags: (( inject meta.datadog_tags ))
+
   - name: cell
     azs: [z1, z2, z3]
     templates:
