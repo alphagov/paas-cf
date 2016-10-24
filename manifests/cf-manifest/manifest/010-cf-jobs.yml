@@ -335,6 +335,24 @@ jobs:
         job: brain
         tags: (( inject meta.datadog_tags ))
 
+    # Temporary job definition with instances 0 that uses the stemcell 3262
+    # and release garden-linux, which we keep to easily rollback in case of
+    # issues with the migration to stemcell 3263 with kernel 4.4
+    #
+    # Adding this job will prevent `bosh cleanup` from deleting
+    # the stemcel 6262 and the release.
+  - name: cell_3_3
+    data: ((inject jobs.cell))
+    stemcell: default_kernel_3_3
+    instances: 0
+    templates:
+      - name: garden
+        release: garden-linux
+    properties:
+      tags:
+        job: cell_3_3
+        tags: (( inject meta.datadog_tags ))
+
   - name: cell
     azs: [z1, z2, z3]
     templates:
