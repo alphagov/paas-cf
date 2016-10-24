@@ -10,8 +10,6 @@ meta:
 
   consul_servers: (( grab jobs.consul.networks.cf.static_ips ))
 
-  etcd_consul_service: ["etcd.service.cf.internal"]
-
 properties:
   system_domain: (( grab terraform_outputs.cf_root_domain ))
   system_domain_organization: admin
@@ -60,9 +58,24 @@ properties:
   etcd:
     machines: (( grab jobs.etcd.networks.cf.static_ips ))
     require_ssl: false
-    peer_require_ssl: false
+    peer_require_ssl: (( grab properties.etcd.require_ssl ))
+    advertise_urls_dns_suffix: etcd.service.cf.internal
+    ca_cert: ""
+    client_cert: ""
+    client_key: ""
+    peer_ca_cert: ""
+    peer_cert: ""
+    peer_key: ""
+    server_cert: ""
+    server_key: ""
 
   etcd_metrics_server:
+    etcd:
+      require_ssl: (( grab properties.etcd.require_ssl ))
+      ca_cert: (( grab properties.etcd.ca_cert ))
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
+      dns_suffix: (( grab properties.etcd.advertise_urls_dns_suffix ))
     nats:
       machines: (( grab properties.nats.machines ))
       username: (( grab properties.nats.user ))
@@ -80,7 +93,9 @@ properties:
     tls:
       ca_cert: ~
     etcd:
-      machines: (( grab meta.etcd_consul_service ))
+      machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
+      require_ssl: (( grab properties.etcd.require_ssl ))
+      ca_cert: (( grab properties.etcd.ca_cert ))
 
   loggregator_endpoint:
     shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
@@ -95,11 +110,15 @@ properties:
     blacklisted_syslog_ranges: ~
     unmarshaller_count: 5
     port: 443
+    outgoing_port: 8081
     tls:
       enable: ~
       server_cert: ~
       port: ~
       server_key: ~
+    etcd:
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
 
   doppler_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
@@ -109,6 +128,14 @@ properties:
 
   traffic_controller:
     outgoing_port: 8080
+    etcd:
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
+
+  syslog_drain_binder:
+    etcd:
+      client_cert: (( grab properties.etcd.client_cert ))
+      client_key: (( grab properties.etcd.client_key ))
 
   ha_proxy:
     enable_proxy_protocol: true
@@ -322,11 +349,7 @@ properties:
     protocol: ~
     brand: oss
     asset_base_url: ~
-    uaa_base: ~
     self_service_links_enabled: ~
-    signups_enabled: ~
-    invitations_enabled: ~
-    spring_profiles: ~
     messages: ~
 
     notifications:
@@ -343,8 +366,6 @@ properties:
       signup: (( concat "https://login." properties.system_domain "/create_account" ))
 
     logout: ~
-
-    tiles: ~
 
     saml: ~
 
@@ -365,7 +386,14 @@ properties:
       external_groups: ~
       groups: ~
       users:
-        - (( concat "admin|" secrets.uaa_admin_password "|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose" ))
+        - name: admin
+          password: (( grab secrets.uaa_admin_password ))
+          groups:
+            - scim.write
+            - scim.read
+            - openid
+            - cloud_controller.admin
+            - doppler.firehose
 
     ssl:
       port: -1
@@ -376,13 +404,20 @@ properties:
         countFailuresWithinSeconds: ~
         lockoutPeriodSeconds: ~
 
+    password:
+      policy:
+        minLength: ~
+        requireUpperCaseCharacter: ~
+        requireLowerCaseCharacter: ~
+        requireDigit: ~
+        requireSpecialCharacter: ~
+
     login: ~
 
     ldap: ~
 
     newrelic: ~
     port: 8080
-    spring_profiles: ~
 
     user: ~
 
@@ -451,10 +486,13 @@ properties:
         secret: (( grab secrets.uaa_clients_firehose_password ))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
+      cc-service-dashboards:
+        secret: (( grab secrets.uaa_clients_cc_service_dashboards_password ))
+        scope: openid,cloud_controller_service_permissions.read
+        authorities: clients.read,clients.write,clients.admin
+        authorized-grant-types: authorization_code,client_credentials
 
     database: ~
-
-    restricted_ips_regex: 10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.1[6-9]{1}\.\d{1,3}\.\d{1,3}|172\.2[0-9]{1}\.\d{1,3}\.\d{1,3}|172\.3[0-1]{1}\.\d{1,3}\.\d{1,3}
 
     zones:
       internal:
@@ -478,6 +516,12 @@ properties:
     ssl:
       skip_cert_verify: false
       starting_container_weight: 0.25
+    cfdot:
+      bbs:
+        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        client_cert: (( grab secrets.bbs_client_cert  ))
+        client_key: (( grab secrets.bbs_client_key  ))
+        use_ssl: (( grab properties.diego.bbs.require_ssl ))
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -498,7 +542,7 @@ properties:
       auctioneer:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
-        machines: (( grab meta.etcd_consul_service ))
+        machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
         ca_cert: (( grab meta.secrets.consul_ca_cert ))
         client_cert: (( grab secrets.consul_agent_cert ))
         client_key: (( grab secrets.consul_agent_key ))
