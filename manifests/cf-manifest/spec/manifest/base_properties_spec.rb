@@ -102,6 +102,7 @@ RSpec.describe "base properties" do
           "ssh-proxy",
           "graphite-nozzle",
           "datadog-nozzle",
+          "cc-service-dashboards",
         )
       }
 

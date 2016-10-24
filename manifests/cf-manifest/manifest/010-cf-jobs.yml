@@ -11,7 +11,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: cloud_controller_ng
-    release: (( grab meta.release.name ))
+    release: capi
   - name: statsd-injector
     release: (( grab meta.release.name ))
   - name: java-buildpack
@@ -39,7 +39,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: cloud_controller_worker
-    release: (( grab meta.release.name ))
+    release: capi
 
   clock_templates:
   - name: consul_agent
@@ -47,7 +47,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: cloud_controller_clock
-    release: (( grab meta.release.name ))
+    release: capi
 
   consul_templates:
   - name: consul_agent
@@ -89,6 +89,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: nats
+    consumes: {nats: nil}
     release: (( grab meta.release.name ))
   - name: nats_stream_forwarder
     release: (( grab meta.release.name ))
@@ -101,7 +102,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: gorouter
-    release: routing
+    release: (( grab meta.release.name ))
   - name: haproxy
     release: paas-haproxy
   - name: datadog-router
@@ -113,7 +114,7 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: uaa
-    release: uaa
+    release: (( grab meta.release.name ))
   - name: statsd-injector
     release: (( grab meta.release.name ))
 
@@ -189,6 +190,8 @@ jobs:
       - name: datadog-consul
         release: datadog-for-cloudfoundry
       - name: bbs
+        release: diego
+      - name: cfdot
         release: diego
     instances: 2
     vm_type: medium
@@ -283,6 +286,13 @@ jobs:
     networks:
       - name: cf
     properties:
+      loggregator:
+        uaa:
+          client_secret: (( grab properties.uaa.clients.doppler.secret ))
+      consul:
+        agent:
+          services:
+            loggregator_trafficcontroller: {}
       tags:
         job: loggregator_trafficcontroller
         tags: (( inject meta.datadog_tags ))
@@ -313,6 +323,8 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: auctioneer
         release: diego
+      - name: cfdot
+        release: diego
     instances: 2
     vm_type: medium
     stemcell: default
@@ -321,6 +333,18 @@ jobs:
     properties:
       tags:
         job: brain
+        tags: (( inject meta.datadog_tags ))
+
+  - name: cell_3_3
+    data: ((inject jobs.cell))
+    stemcell: default_kernel_3_3
+    instances: 0
+    templates:
+      - name: garden
+        release: garden-linux
+    properties:
+      tags:
+        job: cell_3_3
         tags: (( inject meta.datadog_tags ))
 
   - name: cell
@@ -333,9 +357,11 @@ jobs:
       - name: rep
         release: diego
       - name: garden
-        release: garden-linux
+        release: garden-runc
       - name: cflinuxfs2-rootfs-setup
         release: cflinuxfs2-rootfs
+      - name: cfdot
+        release: diego
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
@@ -361,6 +387,8 @@ jobs:
         release: cf
       - name: cc_uploader
         release: cf
+      - name: cfdot
+        release: diego
     instances: 2
     vm_type: medium
     stemcell: default
@@ -379,6 +407,8 @@ jobs:
       - name: datadog-consul
         release: datadog-for-cloudfoundry
       - name: route_emitter
+        release: diego
+      - name: cfdot
         release: diego
     instances: 2
     vm_type: medium
@@ -400,6 +430,8 @@ jobs:
       - name: ssh_proxy
         release: diego
       - name: file_server
+        release: diego
+      - name: cfdot
         release: diego
     instances: 2
     vm_type: access
