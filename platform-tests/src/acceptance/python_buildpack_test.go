@@ -25,7 +25,7 @@ var _ = Describe("PythonBuildpack", func() {
 			"-c", "python hello.py",
 			"-d", config.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
-		Expect(cf.Cf("start", appName).Wait(DEFAULT_TIMEOUT * 2)).To(Exit(0))
+		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 	})
 
 })
