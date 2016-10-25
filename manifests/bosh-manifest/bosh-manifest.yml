@@ -1,0 +1,175 @@
+meta:
+  environment: (( grab terraform_outputs.environment ))
+
+  rds:
+    host: (( grab terraform_outputs.bosh_db_address ))
+    port: (( grab terraform_outputs.bosh_db_port ))
+    user: (( grab terraform_outputs.bosh_db_username ))
+    password: (( grab secrets.bosh_postgres_password ))
+    database: (( grab terraform_outputs.bosh_db_dbname ))
+
+  default_security_groups:
+    - (( grab terraform_outputs.default_security_group ))
+
+name: (( grab meta.environment ))
+
+releases:
+- name: bosh
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=257.14
+  sha1: b41821dccee78ad7bd44466cd0160920c183787a
+
+# When updating the version of the CPI here, the version used in the
+# bosh-init container must also be updated so that the cached CPI compile
+# will be used.
+- name: bosh-aws-cpi
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52
+  sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
+
+jobs:
+- name: bosh
+  instances: 1
+
+  templates:
+  - {name: nats, release: bosh}
+  - {name: director, release: bosh}
+  - {name: health_monitor, release: bosh}
+  - {name: collectd, release: collectd}
+  - {name: registry, release: bosh}
+  - {name: aws_cpi, release: bosh-aws-cpi}
+
+  resource_pool: bosh
+  persistent_disk_pool: disks
+
+  networks:
+  - name: private
+    static_ips:
+    - (( grab terraform_outputs.microbosh_static_private_ip ))
+    default: [dns, gateway]
+  - name: public
+    static_ips:
+    - (( grab terraform_outputs.microbosh_static_public_ip ))
+
+  properties:
+    nats:
+      address: 127.0.0.1
+      user: nats
+      password: (( grab secrets.bosh_nats_password ))
+
+    director:
+      address: 127.0.0.1
+      name: my-bosh
+      db: (( grab meta.rds ))
+      disks:
+        max_orphaned_age_in_days: 0
+      cpi_job: (( grab cloud_provider.template.name ))
+      user_management:
+        local:
+          users:
+            - { name: admin, password: (( grab secrets.bosh_admin_password )) }
+            - { name: hm, password: (( grab secrets.bosh_hm_director_password )) }
+      trusted_certs: (( grab secrets.bosh_ca_cert ))
+
+    hm:
+      director_account:
+        user: hm
+        password: (( grab secrets.bosh_hm_director_password ))
+      resurrector_enabled: false
+
+    agent:
+      mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
+
+    registry:
+      db: (( grab meta.rds ))
+      http:
+        # Properties used by director and registry jobs
+        user: admin
+        password: (( grab secrets.bosh_registry_password ))
+      # Properties used by AWS CPI
+      host: (( grab terraform_outputs.bosh_fqdn ))
+      username: admin
+      password: (( grab secrets.bosh_registry_password ))
+
+    compiled_package_cache:
+      options:
+        credentials_source: env_or_profile
+        bucket_name: (( grab terraform_outputs.compiled_cache_bucket_name ))
+
+    collectd:
+      hostname_prefix: bosh_
+      interval: (( grab meta.collectd.interval ))
+      config: (( grab meta.collectd.config ))
+
+    blobstore:
+      provider: s3
+      credentials_source: env_or_profile
+      bucket_name: (( grab terraform_outputs.bosh_blobstore_bucket_name ))
+      s3_region: (( grab terraform_outputs.region ))
+
+    aws:
+      credentials_source: env_or_profile
+      default_key_name: (( grab terraform_outputs.key_pair_name ))
+      default_security_groups: (( grab meta.default_security_groups ))
+      default_iam_instance_profile: bosh-managed
+      region: (( grab terraform_outputs.region ))
+
+properties: ~
+
+cloud_provider:
+  template:
+    name: aws_cpi
+    release: bosh-aws-cpi
+
+  ssh_tunnel:
+    host: (( grab terraform_outputs.bosh_fqdn ))
+    port: 22
+    user: vcap
+    private_key: .ssh/bosh_id_rsa
+
+  mbus: (( concat "https://mbus:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":6868" ))
+
+  properties:
+    agent:
+      mbus: (( concat "https://mbus:" secrets.bosh_nats_password "@0.0.0.0:6868" ))
+    blobstore:
+      provider: local
+      path: /var/vcap/micro_bosh/data/cache
+    aws:
+      credentials_source: env_or_profile
+      default_key_name: (( grab terraform_outputs.bosh_ssh_key_pair_name ))
+      default_security_groups: (( grab meta.default_security_groups ))
+      region: (( grab terraform_outputs.region ))
+
+disk_pools:
+- name: disks
+  disk_size: 32768
+  cloud_properties:
+    type: gp2
+
+resource_pools:
+- name: bosh
+  network: private
+  stemcell:
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.13
+    sha1: 477371a335d172f4728c7a8806448edb9703104c
+  cloud_properties:
+    instance_type: t2.medium
+    ephemeral_disk: {size: 40000, type: gp2}
+    availability_zone: (( grab terraform_outputs.bosh_az ))
+    iam_instance_profile: bosh-director
+  env:
+    bosh:
+      password: (( grab secrets.bosh_vcap_password ))
+
+networks:
+- name: private
+  type: manual
+  subnets:
+  - range: (( grab terraform_outputs.bosh_subnet_cidr ))
+    gateway: (( grab terraform_outputs.bosh_default_gw ))
+    dns: [10.0.0.2]
+    cloud_properties:
+      subnet: (( grab terraform_outputs.bosh_subnet_id ))
+      security_groups:
+      - (( grab terraform_outputs.bosh_security_group ))
+- name: public
+  type: vip
