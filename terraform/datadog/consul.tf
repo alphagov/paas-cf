@@ -1,7 +1,7 @@
 resource "datadog_monitor" "consul" {
   name = "${format("%s Consul hosts", var.env)}"
   type = "service check"
-  message = "Missing consul hosts in environment {{host.environment}}. Notify: @the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
+  message = "${format("Missing consul hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing consul hosts! Check VM state."
   no_data_timeframe = "2"
   query = "${format("'process.up'.over('environment:%s','process:consul').last(6).count_by_status()", var.env)}"

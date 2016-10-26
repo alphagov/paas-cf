@@ -43,7 +43,7 @@ resource "datadog_timeboard" "gorouter" {
 resource "datadog_monitor" "router" {
   name = "${format("%s router hosts", var.env)}"
   type = "service check"
-  message = "Missing router hosts in environment {{host.environment}}. Notify: @the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
+  message = "${format("Missing router hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing router hosts! Check VM state."
   no_data_timeframe = "2"
   query = "${format("'datadog.agent.up'.over('environment:%s','job:router').by('*').last(1).pct_by_status()", var.env)}"
