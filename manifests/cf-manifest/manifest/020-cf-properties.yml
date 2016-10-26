@@ -56,6 +56,7 @@ properties:
     password: (( grab secrets.nats_password ))
 
   etcd:
+    disable_network_diagnostics: true
     machines: (( grab jobs.etcd.networks.cf.static_ips ))
     require_ssl: false
     peer_require_ssl: (( grab properties.etcd.require_ssl ))
