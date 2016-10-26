@@ -15,8 +15,8 @@ name: (( grab meta.environment ))
 
 releases:
 - name: bosh
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=257.14
-  sha1: b41821dccee78ad7bd44466cd0160920c183787a
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=258
+  sha1: 66f7ce02eda71d63fc13e86a6d49fa5a8398c906
 
 # When updating the version of the CPI here, the version used in the
 # bosh-init container must also be updated so that the cached CPI compile
