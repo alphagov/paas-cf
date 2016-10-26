@@ -349,12 +349,17 @@ jobs:
           params:
             DEPLOY_ENV: {{deploy_env}}
             AWS_ACCOUNT: {{aws_account}}
+            DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
           run:
             path: sh
             args:
             - -e
             - -c
             - |
+              if [ "${DISABLE_PIPELINE_LOCKING:-}" = "true" ] ; then
+                 echo "Pipeline locking is disabled, skipping..."
+                 exit 0
+              fi
               chmod 600 git-ssh-private-key/git_id_rsa
               git config --global push.default simple
               git config --global user.email "concourse@${DEPLOY_ENV}.${AWS_ACCOUNT}"
@@ -364,9 +369,35 @@ jobs:
                 {{git_concourse_pool_clone_full_url_ssh}} \
                 $(pwd)/git-ssh-private-key/git_id_rsa \
                 {{pipeline_name}} lock
-      - put: pipeline-pool
-        params:
-          claim: lock
+
+      - try:
+          task: lock-the-pipeline
+          config:
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            platform: linux
+            params:
+              DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                if [ "${DISABLE_PIPELINE_LOCKING:-}" = "true" ] ; then
+                   echo "Pipeline locking is disabled, skipping..."
+                   exit 0
+                fi
+                echo "About to lock. This job will fail and this is OK."
+                exit 1
+          on_failure:
+            put: pipeline-pool
+            params:
+              claim: lock
+
       - task: self-update-pipeline
         config:
           platform: linux
@@ -2024,7 +2055,7 @@ jobs:
             source:
               repository: governmentpaas/cf-cli
           params:
-            ENABLE_HEALTHCHECK_DB: {{enable_healthcheck_db}}
+            DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
           inputs:
             - name: paas-cf
             - name: config
@@ -2049,7 +2080,7 @@ jobs:
                 BUILD_ROOT=$(pwd)
                 cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
-                if  [ "$ENABLE_HEALTHCHECK_DB" != "false" ] ; then
+                if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
                   cf create-service postgres M-dedicated-9.5 healthcheck-db
                   while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."
@@ -2124,7 +2155,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: acceptance-test-user
-            ENABLE_ADMIN_USER_CREATION: {{enable_cf_acceptance_tests}}
+            DISABLE_ADMIN_USER_CREATION: {{disable_cf_acceptance_tests}}
 
         - task: generate-test-config
           config:
@@ -2176,7 +2207,7 @@ jobs:
               source:
                 repository: governmentpaas/cf-acceptance-tests
             params:
-              ENABLE_CF_ACCEPTANCE_TESTS: {{enable_cf_acceptance_tests}}
+              DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
             inputs:
               - name: paas-cf
               - name: cf-release
@@ -2196,16 +2227,16 @@ jobs:
                   ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
                   ln -snf /usr/local/go /var/vcap/packages/golang1.6
                   ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
-                  if  [ "$ENABLE_CF_ACCEPTANCE_TESTS" != "false" ]; then
-                    /var/vcap/jobs/acceptance-tests/bin/run
+                  if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
+                    echo "WARNING: The acceptance tests have been disabled. Unset DISABLE_CF_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
                   else
-                    echo "WARNING: The acceptance tests have been disabled. Set ENABLE_CF_ACCEPTANCE_TESTS=true when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
+                    /var/vcap/jobs/acceptance-tests/bin/run
                   fi
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            ENABLE_ADMIN_USER_CREATION: {{enable_cf_acceptance_tests}}
+            DISABLE_ADMIN_USER_CREATION: {{disable_cf_acceptance_tests}}
 
   - name: custom-acceptance-tests
     plan:
@@ -2226,16 +2257,21 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: custom-acceptance-test-user
+            DISABLE_ADMIN_USER_CREATION: {{disable_custom_acceptance_tests}}
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
 
         - task: "Run custom acceptance tests"
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
+          params:
+            DISABLE_CUSTOM_ACCEPTANCE_TESTS: {{disable_custom_acceptance_tests}}
 
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            DISABLE_ADMIN_USER_CREATION: {{disable_custom_acceptance_tests}}
 
   - name: bosh-tests
     plan:
@@ -2436,9 +2472,31 @@ jobs:
                     }" \
                   "https://app.datadoghq.com/api/v1/series?api_key=${DATADOG_API_KEY}"
               fi
-      - put: pipeline-pool
-        params:
-          release: pipeline-pool
+      - try:
+          task: unlock-the-pipeline
+          config:
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            platform: linux
+            params:
+              DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                if [ "${DISABLE_PIPELINE_LOCKING:-}" = "true" ] ; then
+                   echo "Pipeline locking is disabled, this task will fail and this is OK."
+                   exit 1
+                fi
+          on_success:
+            put: pipeline-pool
+            params:
+              release: pipeline-pool
 
   - name: pipeline-check-lock
     plan:

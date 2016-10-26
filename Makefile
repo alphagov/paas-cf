@@ -94,9 +94,10 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
-	$(eval export ENABLE_HEALTHCHECK_DB=false)
+	$(eval export DISABLE_HEALTHCHECK_DB=true)
 	$(eval export ENABLE_DATADOG ?= false)
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
+	$(eval export DISABLE_PIPELINE_LOCKING=true)
 	@true
 
 .PHONY: ci
@@ -127,7 +128,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
-	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
+	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=staging_deployment)
 	@true
@@ -144,7 +145,7 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod.yml)
-	$(eval export ENABLE_CF_ACCEPTANCE_TESTS=false)
+	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=prod_deployment)
 	@true

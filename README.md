@@ -225,17 +225,40 @@ See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 ## Optionally disable run of acceptance tests
 
 Acceptance tests can be optionally disabled by setting the environment
-variable `ENABLE_CF_ACCEPTANCE_TESTS=false`.
+variable `DISABLE_CF_ACCEPTANCE_TESTS=true`. This is default in staging and prod.
 
 ```
-ENABLE_CF_ACCEPTANCE_TESTS=false SELF_UPDATE_PIPELINE=false make dev pipelines
+DISABLE_CF_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
 ```
 
-It is enabled in all the environments except in `staging` and `prod`.
 This will only disable the execution of the test, but the job will
 be still configured in concourse.
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
+
+## Optionally disable run of custom acceptance tests
+
+Custom acceptance tests can be optionally disabled by setting the environment
+variable `DISABLE_CUSTOM_ACCEPTANCE_TESTS=true`.
+
+```
+DISABLE_CUSTOM_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
+```
+
+This will only disable the execution of the test, but the job will be still configured in concourse.
+
+*Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run reverting to default, which is to run the tests.
+
+## Optionally disable pipeline locking
+
+Pipeline locking is turned on by default to prevent jobs in the pipeline run while previous changes are still being applied. You can optionally
+disable this by setting the environment variable `DISABLE_PIPELINE_LOCKING=true`. This is default in dev to speed up pipeline execution.
+
+```
+DISABLE_PIPELINE_LOCKING=true SELF_UPDATE_PIPELINE=false make dev pipelines
+```
+
+Self update pipeline has to be disabled, otherwise it would revert to default value in the pipeline and unlock job would fail since pipeline was not locked before it self updated.
 
 ## Optionally deploy failure-testing pipeline
 
