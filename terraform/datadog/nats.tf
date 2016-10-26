@@ -2,7 +2,7 @@
 resource "datadog_monitor" "nats" {
   name = "${format("%s NATS hosts", var.env)}"
   type = "service check"
-  message = "Missing nats hosts in environment {{host.environment}}. Notify: @the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
+  message = "${format("Missing nats hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing nats hosts! Check VM state."
   no_data_timeframe = "2"
   query = "${format("'datadog.agent.up'.over('environment:%s','job:nats').by('*').last(1).pct_by_status()", var.env)}"
