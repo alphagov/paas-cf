@@ -117,6 +117,9 @@ vm_types:
     env: (( grab meta.default_env ))
     cloud_properties:
       instance_type: r3.xlarge
+      ephemeral_disk:
+        size: 102400
+        type: gp2
       security_groups:
         - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
         - (( grab terraform_outputs.default_security_group ))
