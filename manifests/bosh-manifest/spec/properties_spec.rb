@@ -46,4 +46,9 @@ RSpec.describe "manifest properties validations" do
   it "enables explicit ARP flushing" do
     expect(bosh_properties["director"]["flush_arp"]).to be true
   end
+
+  it "uses a dedicated worker for status tasks" do
+    expect(bosh_properties["director"]["enable_dedicated_status_worker"]).to be true
+    expect(bosh_properties["director"]["workers"]).to be >= 4
+  end
 end

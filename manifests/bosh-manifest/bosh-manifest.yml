@@ -71,6 +71,8 @@ jobs:
       events:
         record_events: true
       flush_arp: true
+      enable_dedicated_status_worker: true
+      workers: 4
 
     hm:
       director_account:
