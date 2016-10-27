@@ -2081,7 +2081,7 @@ jobs:
                 cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
                 if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
-                  cf create-service postgres M-dedicated-9.5 healthcheck-db
+                  cf create-service postgres Free healthcheck-db
                   while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30
