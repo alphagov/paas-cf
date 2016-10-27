@@ -21,6 +21,10 @@ addons:
         tls:
           client_cert: ~
           client_key: ~
+      loggregator:
+        etcd:
+          machines:
+          - (( grab meta.etcd.advertise_urls_dns_suffix ))
   - name: os-configuration
     jobs:
     - name: set_mtu
