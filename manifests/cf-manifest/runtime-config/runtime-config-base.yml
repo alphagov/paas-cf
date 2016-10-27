@@ -25,6 +25,8 @@ addons:
         etcd:
           machines:
           - (( grab meta.etcd.advertise_urls_dns_suffix ))
+      metron_endpoint:
+        shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
   - name: os-configuration
     jobs:
     - name: set_mtu
