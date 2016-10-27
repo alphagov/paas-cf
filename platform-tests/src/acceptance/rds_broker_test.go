@@ -25,9 +25,10 @@ const (
 
 var _ = Describe("RDS broker", func() {
 	const (
-		serviceName  = "postgres"
-		testPlanName = "M-dedicated-9.5"
-		region       = "eu-west-1"
+		serviceName              = "postgres"
+		testPlanName             = "Free"
+		testPlanNameWithSnapshot = "S-dedicated-9.5"
+		region                   = "eu-west-1"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -48,7 +49,7 @@ var _ = Describe("RDS broker", func() {
 		Expect(plans.Out.Contents()).To(ContainSubstring("L-HA-dedicated-9.5"))
 	})
 
-	Context("creating a database instance with default settings", func() {
+	Context("creating a database instance", func() {
 		// Avoid creating additional tests in this block because this setup and teardown is
 		// slow (several minutes).
 
@@ -86,21 +87,8 @@ var _ = Describe("RDS broker", func() {
 
 			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
-			// Poll until destruction is complete, otherwise the org cleanup fails.
+			// Poll until destruction is complete, otherwise the org cleanup (in AfterSuite) fails.
 			pollForRDSDeletionCompletion(dbInstanceName)
-
-			rdsClient, err := NewRDSClient(region)
-			Expect(err).NotTo(HaveOccurred())
-			snapshots, err := rdsClient.GetDBFinalSnapshots(rdsInstanceName)
-			fmt.Fprintf(GinkgoWriter, "Final snapshots for %s:\n", rdsInstanceName)
-			fmt.Fprint(GinkgoWriter, snapshots)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(snapshots).Should(ContainSubstring(rdsInstanceName))
-
-			snapshotDeletionOutput, err := rdsClient.deleteDBFinalSnapshot(rdsInstanceName)
-			fmt.Fprintf(GinkgoWriter, "Snapshot deletion output for %s:\n", rdsInstanceName)
-			fmt.Fprint(GinkgoWriter, snapshotDeletionOutput)
-			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("can connect to the DB instance from the app", func() {
@@ -139,7 +127,7 @@ var _ = Describe("RDS broker", func() {
 		})
 	})
 
-	Context("creating a database instance with custom parameters", func() {
+	Context("final snapshots", func() {
 
 		var (
 			dbInstanceName  string
@@ -148,7 +136,7 @@ var _ = Describe("RDS broker", func() {
 
 		BeforeEach(func() {
 			dbInstanceName = generator.PrefixedRandomName("test-db-")
-			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName, "-c", `{"skip_final_snapshot": "true"}`).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("create-service", serviceName, testPlanNameWithSnapshot, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			pollForRDSCreationCompletion(dbInstanceName)
 
@@ -156,10 +144,32 @@ var _ = Describe("RDS broker", func() {
 			fmt.Fprintf(GinkgoWriter, "Created RDS instance: %s\n", rdsInstanceName)
 		})
 
-		It("should not create a final snapshot when `skip_final_snapshot` is set to true", func() {
+		It("should create a final snapshot by default", func() {
 			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
-			// Poll until destruction is complete, otherwise the org cleanup fails.
+			// Poll until destruction is complete, and the snapshot will therefore have been created.
+			pollForRDSDeletionCompletion(dbInstanceName)
+
+			rdsClient, err := NewRDSClient(region)
+			Expect(err).NotTo(HaveOccurred())
+			snapshots, err := rdsClient.GetDBFinalSnapshots(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Final snapshots for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshots)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(snapshots).Should(ContainSubstring(rdsInstanceName))
+
+			snapshotDeletionOutput, err := rdsClient.deleteDBFinalSnapshot(rdsInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Snapshot deletion output for %s:\n", rdsInstanceName)
+			fmt.Fprint(GinkgoWriter, snapshotDeletionOutput)
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("should not create a final snapshot when `skip_final_snapshot` is set to true", func() {
+			Expect(cf.Cf("update-service", dbInstanceName, "-c", `{"skip_final_snapshot": "true"}`).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			pollForRDSUpdateCompletion(dbInstanceName)
+			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+
+			// Poll until destruction is complete, and the snapshot would therefore have been created.
 			pollForRDSDeletionCompletion(dbInstanceName)
 
 			rdsClient, err := NewRDSClient(region)
@@ -176,27 +186,6 @@ var _ = Describe("RDS broker", func() {
 			Expect(err).To(HaveOccurred())
 		})
 
-		It("should create a final snapshot if we set `skip_final_snapshot` back to false", func() {
-			Expect(cf.Cf("update-service", dbInstanceName, "-c", `{"skip_final_snapshot": "false"}`).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
-			pollForRDSUpdateCompletion(dbInstanceName)
-			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
-
-			// Poll until destruction is complete, otherwise the org cleanup fails.
-			pollForRDSDeletionCompletion(dbInstanceName)
-
-			rdsClient, err := NewRDSClient(region)
-			Expect(err).NotTo(HaveOccurred())
-			snapshots, err := rdsClient.GetDBFinalSnapshots(rdsInstanceName)
-			fmt.Fprintf(GinkgoWriter, "Final snapshots for %s:\n", rdsInstanceName)
-			fmt.Fprint(GinkgoWriter, snapshots)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(snapshots).Should(ContainSubstring(rdsInstanceName))
-
-			snapshotDeletionOutput, err := rdsClient.deleteDBFinalSnapshot(rdsInstanceName)
-			fmt.Fprintf(GinkgoWriter, "Snapshot deletion output for %s:\n", rdsInstanceName)
-			fmt.Fprint(GinkgoWriter, snapshotDeletionOutput)
-			Expect(err).NotTo(HaveOccurred())
-		})
 	})
 })
 
