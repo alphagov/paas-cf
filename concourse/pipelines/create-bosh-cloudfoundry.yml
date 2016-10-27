@@ -2081,7 +2081,18 @@ jobs:
                 cd paas-cf/platform-tests/example-apps/healthcheck
                 cf push --no-start
                 if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
-                  cf create-service postgres M-dedicated-9.5 healthcheck-db
+
+                  # FIXME: Remove this block once it's run in all environments.
+                  if cf service healthcheck-db | grep -q 'Plan: M-dedicated-9.5'; then
+                    echo "Healthcheck DB is using the wrong plan... Re-creating."
+                    cf unbind-service healthcheck healthcheck-db
+                    # Rename so that we don't have to wait for the delete to
+                    # finish before re-creating
+                    cf rename-service healthcheck-db healthcheck-db-deleting
+                    cf delete-service -f healthcheck-db-deleting
+                  fi
+
+                  cf create-service postgres Free healthcheck-db
                   while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30

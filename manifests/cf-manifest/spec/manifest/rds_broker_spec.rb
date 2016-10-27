@@ -75,7 +75,7 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5")
+        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5")
       end
 
       describe "plan rds_properties" do
@@ -92,17 +92,17 @@ RSpec.describe "RDS broker properties" do
               "vpc_security_group_ids" => [terraform_fixture("rds_broker_dbs_security_group_id")],
             )
           end
-          it "has a backup retention period of 7 days" do
-            expect(subject).to include(
-              "backup_retention_period" => 7
-            )
-          end
         end
 
         shared_examples "medium sized postgres plans" do
           it_behaves_like "all postgres plans"
           it { is_expected.to include("allocated_storage" => 20) }
           it { is_expected.to include("db_instance_class" => "db.m4.large") }
+          it "has a backup retention period of 7 days" do
+            expect(subject).to include(
+              "backup_retention_period" => 7
+            )
+          end
         end
 
         describe "M-dedicated-9.5" do
@@ -121,6 +121,32 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "medium sized postgres plans"
 
           it { is_expected.to include("multi_az" => true) }
+        end
+
+        describe "free plan" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "Free" } }
+          subject { plan.fetch("rds_properties") }
+
+          it_behaves_like "all postgres plans"
+
+          it { is_expected.to include("allocated_storage" => 5) }
+          it { is_expected.to include("db_instance_class" => "db.t2.micro") }
+          it { is_expected.to include("multi_az" => false) }
+
+          it "has all snapshots disabled" do
+            expect(subject).to include(
+              "backup_retention_period" => 0,
+              "skip_final_snapshot" => true,
+            )
+          end
+
+          it "calls out that it's not backed up in the description" do
+            expect(plan.fetch("description")).to include("NOT BACKED UP")
+          end
+
+          it "is marked as free" do
+            expect(plan.fetch("free")).to eq(true)
+          end
         end
       end
     end

@@ -1,53 +1,31 @@
 meta:
   rds_broker:
+    default_postgres_rds_properties:
+      engine: "postgres"
+      engine_version: "9.5.4"
+      storage_type: "gp2"
+      auto_minor_version_upgrade: true
+      multi_az: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+      vpc_security_group_ids:
+        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
+      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
     small_postgres_rds_properties:
+      inject: (( inject meta.rds_broker.default_postgres_rds_properties ))
       db_instance_class: "db.t2.small"
-      engine: "postgres"
-      engine_version: "9.5.2"
-      storage_type: "gp2"
       allocated_storage: 20
-      auto_minor_version_upgrade: true
-      multi_az: false
-      publicly_accessible: false
-      copy_tags_to_snapshot: true
-      skip_final_snapshot: false
-      backup_retention_period: 7
-      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
-      vpc_security_group_ids:
-        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
-      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
     medium_postgres_rds_properties:
+      inject: (( inject meta.rds_broker.default_postgres_rds_properties ))
       db_instance_class: "db.m4.large"
-      engine: "postgres"
-      engine_version: "9.5.2"
-      storage_type: "gp2"
       allocated_storage: 20
-      auto_minor_version_upgrade: true
-      multi_az: false
-      publicly_accessible: false
-      copy_tags_to_snapshot: true
-      skip_final_snapshot: false
-      backup_retention_period: 7
-      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
-      vpc_security_group_ids:
-        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
-      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
     large_postgres_rds_properties:
+      inject: (( inject meta.rds_broker.default_postgres_rds_properties ))
       db_instance_class: "db.m4.2xlarge"
-      engine: "postgres"
-      engine_version: "9.5.2"
-      storage_type: "gp2"
       allocated_storage: 20
-      auto_minor_version_upgrade: true
-      multi_az: false
-      publicly_accessible: false
-      copy_tags_to_snapshot: true
-      skip_final_snapshot: false
-      backup_retention_period: 7
-      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
-      vpc_security_group_ids:
-        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
-      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
 
 releases:
   - name: aws-broker
@@ -101,6 +79,21 @@ jobs:
                 supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
               plan_updateable: true
               plans:
+                - id: "5f2eec8a-0cad-4ab9-b81e-d6adade2fd42"
+                  name: "Free"
+                  description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.micro."
+                  free: true
+                  metadata:
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.default_postgres_rds_properties ))
+                    db_instance_class: "db.t2.micro"
+                    allocated_storage: 5
+                    backup_retention_period: 0
+                    skip_final_snapshot: true
+
                 - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
                   name: "S-dedicated-9.5"
                   description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
