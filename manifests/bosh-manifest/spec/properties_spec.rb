@@ -38,4 +38,8 @@ RSpec.describe "manifest properties validations" do
   it "configures datadog tag bosh-az with the right AZ" do
     expect(bosh_properties["tags"]["bosh-az"]).to eq("z1")
   end
+
+  it "configures event recording in the director" do
+    expect(bosh_properties["director"]["events"]["record_events"]).to be true
+  end
 end

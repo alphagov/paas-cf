@@ -68,6 +68,8 @@ jobs:
             - { name: admin, password: (( grab secrets.bosh_admin_password )) }
             - { name: hm, password: (( grab secrets.bosh_hm_director_password )) }
       trusted_certs: (( grab secrets.bosh_ca_cert ))
+      events:
+        record_events: true
 
     hm:
       director_account:
