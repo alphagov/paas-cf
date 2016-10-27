@@ -70,6 +70,7 @@ jobs:
       trusted_certs: (( grab secrets.bosh_ca_cert ))
       events:
         record_events: true
+      flush_arp: true
 
     hm:
       director_account:

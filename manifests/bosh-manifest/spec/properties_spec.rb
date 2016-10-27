@@ -42,4 +42,8 @@ RSpec.describe "manifest properties validations" do
   it "configures event recording in the director" do
     expect(bosh_properties["director"]["events"]["record_events"]).to be true
   end
+
+  it "enables explicit ARP flushing" do
+    expect(bosh_properties["director"]["flush_arp"]).to be true
+  end
 end
