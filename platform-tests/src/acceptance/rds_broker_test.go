@@ -39,6 +39,7 @@ var _ = Describe("RDS broker", func() {
 	It("has the expected plans available", func() {
 		plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
+		Expect(plans.Out.Contents()).To(ContainSubstring("Free"))
 		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-9.5"))
 		Expect(plans.Out.Contents()).To(ContainSubstring("S-HA-dedicated-9.5"))
 		Expect(plans.Out.Contents()).To(ContainSubstring("M-dedicated-9.5"))

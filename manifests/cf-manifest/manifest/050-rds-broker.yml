@@ -79,6 +79,21 @@ jobs:
                 supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
               plan_updateable: true
               plans:
+                - id: "5f2eec8a-0cad-4ab9-b81e-d6adade2fd42"
+                  name: "Free"
+                  description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.micro."
+                  free: true
+                  metadata:
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.default_postgres_rds_properties ))
+                    db_instance_class: "db.t2.micro"
+                    allocated_storage: 5
+                    backup_retention_period: 0
+                    skip_final_snapshot: true
+
                 - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
                   name: "S-dedicated-9.5"
                   description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
