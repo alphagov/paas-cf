@@ -15,10 +15,17 @@ releases:
     version: 0.1487.0
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1487.0
     sha1: f173af7117baa34cff97cf4355f958ea536a45d0
+    # Temporary reference to garden-linux to be able to quickly rollback
+    # in case of issues with the migration to stemcell 3263 with kernel 4.4
+    # and garden-runc in the cells.
   - name: garden-linux
     version: 0.342.0
     url: https://bosh.io/d/github.com/cloudfoundry/garden-linux-release?v=0.342.0
     sha1: 5da920b05879f66d813526793e2a73706b36b9cb
+  - name: garden-runc
+    version: 0.9.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=0.9.0
+    sha1: f0f51762fd470128539ad335934b0319b07b9a04
   - name: etcd
     version: 78
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=78
@@ -34,6 +41,12 @@ releases:
 
 stemcells:
   - alias: default
+    name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+    version: "3263.8"
+    # Temporary reference to 3262.22 to be able to quickly rollback
+    # in case of issues with the migration to stemcell 3263 with kernel 4.4
+    # and garden-runc in the cells.
+  - alias: default_kernel_3_3
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
     version: "3262.22"
 

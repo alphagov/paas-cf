@@ -1595,6 +1595,7 @@ jobs:
             inputs:
               - name: bosh-secrets
               - name: paas-cf
+              - name: cf-manifest
             run:
               path: sh
               args:
@@ -1603,12 +1604,21 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-                  STEMCELL_VERSION=$($VAL_FROM_YAML stemcells.0.version paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml)
-                  STEMCELL_NAME=$($VAL_FROM_YAML stemcells.0.name paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml)
+                  stemcell_index=0
+                  while true; do
+                    if ! $VAL_FROM_YAML "stemcells.${stemcell_index}" cf-manifest/cf-manifest.yml > /dev/null 2>&1; then
+                      break
+                    fi
 
-                  wget https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION} -O stemcell.tgz
-                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-                  bosh upload stemcell stemcell.tgz --skip-if-exists
+                    STEMCELL_VERSION=$($VAL_FROM_YAML "stemcells.${stemcell_index}.version" cf-manifest/cf-manifest.yml)
+                    STEMCELL_NAME=$($VAL_FROM_YAML "stemcells.${stemcell_index}.name" cf-manifest/cf-manifest.yml)
+
+                    wget https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION} -O stemcell.tgz
+                    ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                    bosh upload stemcell stemcell.tgz --skip-if-exists
+
+                    stemcell_index=$((stemcell_index + 1))
+                  done
 
         - task: update-cloud-config
           config:
@@ -1955,7 +1965,7 @@ jobs:
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-  
+
                   bosh cleanup --all
 
         - task: datadog-terraform-apply
