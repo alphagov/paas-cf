@@ -90,6 +90,7 @@ private
       File.expand_path("../../../../shared/deployments/collectd.yml", __FILE__),
       File.expand_path("../../../common/*.yml", __FILE__),
       File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+      File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
     ])
 
     # Deep freeze the object so that it's safe to use across multiple examples

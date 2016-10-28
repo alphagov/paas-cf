@@ -15,15 +15,15 @@ name: (( grab meta.environment ))
 
 releases:
 - name: bosh
-  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=257.14
-  sha1: b41821dccee78ad7bd44466cd0160920c183787a
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=258
+  sha1: 66f7ce02eda71d63fc13e86a6d49fa5a8398c906
 
 # When updating the version of the CPI here, the version used in the
 # bosh-init container must also be updated so that the cached CPI compile
 # will be used.
 - name: bosh-aws-cpi
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=52
-  sha1: dc4a0cca3b33dce291e4fbeb9e9948b6a7be3324
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=60
+  sha1: 8e40a9ff892204007889037f094a1b0d23777058
 
 jobs:
 - name: bosh
@@ -68,6 +68,11 @@ jobs:
             - { name: admin, password: (( grab secrets.bosh_admin_password )) }
             - { name: hm, password: (( grab secrets.bosh_hm_director_password )) }
       trusted_certs: (( grab secrets.bosh_ca_cert ))
+      events:
+        record_events: true
+      flush_arp: true
+      enable_dedicated_status_worker: true
+      workers: 4
 
     hm:
       director_account:
@@ -149,8 +154,8 @@ resource_pools:
 - name: bosh
   network: private
   stemcell:
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.13
-    sha1: 477371a335d172f4728c7a8806448edb9703104c
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3263.8
+    sha1: 95ecc2709ac62f21d0a1c6cac023585c3919b825
   cloud_properties:
     instance_type: t2.medium
     ephemeral_disk: {size: 40000, type: gp2}

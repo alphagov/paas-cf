@@ -1450,6 +1450,7 @@ jobs:
             inputs:
               - name: paas-cf
               - name: terraform-outputs
+              - name: cf-secrets
             outputs:
               - name: runtime-config
             params:
@@ -1461,6 +1462,7 @@ jobs:
                 ./paas-cf/manifests/shared/deployments/collectd.yml
                 ./paas-cf/manifests/cf-manifest/common/*.yml
                 ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
             run:
               path: sh
               args:

@@ -19,3 +19,6 @@ vm_types:
   cloud_properties:
     iam_instance_profile: bosh-director
     instance_type: c3.large
+    ephemeral_disk:
+      size: 20480
+      type: gp2
