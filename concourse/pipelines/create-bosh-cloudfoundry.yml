@@ -327,6 +327,11 @@ resources:
     source:
       interval: 5m
 
+  - name: cve-notifier
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cve-notifier
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1513,6 +1518,7 @@ jobs:
           - get: graphite-nozzle
           - get: logsearch-for-cloudfoundry-boshrelease
           - get: datadog-tfstate
+          - get: cve-notifier
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -2013,6 +2019,44 @@ jobs:
             put: datadog-tfstate
             params:
               file: updated-tfstate/datadog.tfstate
+
+        - task: deploy-cve-notifier
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            inputs:
+              - name: cve-notifier
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            params:
+              ENABLE_CVE_NOTIFIER: {{enable_cve_notifier}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ "${ENABLE_CVE_NOTIFIER}" != "true" ]; then
+                    echo CVE notifier disabled
+                    exit 0
+                  fi
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf create-org admin
+                  cf create-space admin -o admin
+                  cf target -o admin -s admin
+                  cf push --no-route --no-start -m 100M -b python_buildpack \
+                    --health-check-type none -p cve-notifier cve-notifier
+                  echo Setting DD_API_KEY...
+                  cf set-env cve-notifier DD_API_KEY {{datadog_api_key}} > /dev/null
+                  echo Setting DD_APP_KEY...
+                  cf set-env cve-notifier DD_APP_KEY {{datadog_app_key}} > /dev/null
+                  cf start cve-notifier
 
   - name: post-deploy
     plan:
