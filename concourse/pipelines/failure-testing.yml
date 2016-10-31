@@ -127,6 +127,11 @@ jobs:
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
         ensure:
           aggregate:
             - task: recover
@@ -169,6 +174,11 @@ jobs:
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
         ensure:
           aggregate:
             - task: recover
@@ -211,6 +221,11 @@ jobs:
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
         ensure:
           aggregate:
             - task: recover
@@ -253,6 +268,11 @@ jobs:
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
         ensure:
           aggregate:
             - task: recover
@@ -295,6 +315,11 @@ jobs:
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
         ensure:
           aggregate:
             - task: recover
@@ -337,6 +362,11 @@ jobs:
           file: paas-cf/concourse/tasks/smoke-tests-config.yml
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
         ensure:
           aggregate:
             - task: recover
@@ -379,6 +409,12 @@ jobs:
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
           params:
             GINKGO_FOCUS: 'RDS broker'
+
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
 
         ensure:
           aggregate:

@@ -73,6 +73,7 @@ skip_upload_generated_certs: ${SKIP_UPLOAD_GENERATED_CERTS:-false}
 aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${env}
 state_bucket: ${env}-state
+test_artifacts_bucket: gds-paas-${env}-test-artifacts
 pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
