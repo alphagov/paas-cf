@@ -13,7 +13,7 @@ resource "datadog_monitor" "disk-space" {
 
   require_full_window = true
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "all"
   }
 }
@@ -33,7 +33,7 @@ resource "datadog_monitor" "concourse-disk-space" {
 
   require_full_window = true
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "concourse"
   }
 }

@@ -13,7 +13,7 @@ resource "datadog_monitor" "cell-available-memory" {
 
   require_full_window = true
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "cell"
   }
 }

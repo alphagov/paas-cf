@@ -56,7 +56,7 @@ resource "datadog_monitor" "router" {
 
   require_full_window = true
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }
@@ -77,7 +77,7 @@ resource "datadog_monitor" "route_update_latency" {
   }
 
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }
@@ -98,7 +98,7 @@ resource "datadog_monitor" "total_routes_drop" {
   }
 
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }
@@ -116,7 +116,7 @@ resource "datadog_monitor" "total_routes_discrepancy" {
   thresholds {}
 
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }
@@ -138,7 +138,7 @@ resource "datadog_monitor" "gorouter_process_running" {
   }
 
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }
@@ -158,7 +158,7 @@ resource "datadog_monitor" "gorouter_healthy" {
   }
 
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }
