@@ -46,7 +46,7 @@ resource "datadog_monitor" "router" {
   message = "${format("Missing router hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing router hosts! Check VM state."
   no_data_timeframe = "2"
-  query = "${format("'datadog.agent.up'.over('environment:%s','job:router').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'datadog.agent.up'.over('environment:%s','bosh-job:router').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     ok = 0
