@@ -1,0 +1,9 @@
+source 'https://rubygems.org'
+
+gem 'smashing'
+
+# js runtime for execjs to use
+gem 'therubyracer'
+
+# talk to datadog
+gem 'dogapi'

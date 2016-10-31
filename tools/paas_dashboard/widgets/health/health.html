@@ -1,0 +1,27 @@
+<ul>
+    <li data-bind-class="status">
+        <h1 class="title" data-bind="title"></h1>
+        <div data-showif="status | equals 'error'"> <!-- error -->
+            <span class="h4" data-bind="error">Error</span>
+        </div> <!-- /error -->
+        <div data-hideif="status | equals 'error'"> <!-- no error -->
+            <div data-hideif="criticals | equals 0" class="floated">
+                <div class="h3" data-bind="criticals"></div>
+                <div data-hideif="criticals | equals 0" class="h4">
+                    critical<span data-hideif="criticals | equals 1">s</span>
+                </div>
+            </div>
+
+            <div data-hideif="warnings | equals 0" class="floated">
+                <div class="h3" data-bind="warnings"></div>
+                <div class="h4">
+                    warning<span data-hideif="warnings | equals 1">s</span>
+                </div>
+            </div>
+            <div data-showif="status | equals 'green'">
+                <div class="h3">&#10003;</div>
+            </div>
+            <p class="updated-at" data-bind="updatedAtMessage"></p>
+        </div> <!-- /no error -->
+    </li>
+</ul>

@@ -1,0 +1,91 @@
+$background: #444;
+$text: #fff;
+$success: #86d751;
+$warning: #edde43;
+$failure: #e3394f;
+$error: #df42ff;
+
+
+.widget-health {
+  li {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-top: 25px;
+
+    h3 {
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    h4 {
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    p &.updated-at {
+      font-size: 10px;
+    }
+
+    &.green {
+      background-color: $success;
+
+      p {
+        &.updated-at {
+          color: lighten($success, 20%);
+        }
+      }
+    }
+
+    &.yellow {
+      background-color: $warning;
+
+      p {
+        &.updated-at {
+          color: lighten($warning, 20%);
+        }
+      }
+    }
+
+    &.red {
+      background-color: $failure;
+
+      p {
+        &.updated-at {
+          color: lighten($failure, 20%);
+        }
+      }
+    }
+
+    &.error {
+      background-color: $error;
+
+      p {
+        &.updated-at {
+          color: lighten($error, 20%);
+        }
+      }
+    }
+
+    div {
+      &.floated {
+        display: inline-block;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      &.h3 {
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      &.h4 {
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
