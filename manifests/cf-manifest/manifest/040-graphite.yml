@@ -64,8 +64,5 @@ jobs:
         - name: graphite
           type: graphite
           url: http://localhost:3001
-    tags:
-      job: graphite
-      tags: (( inject meta.datadog_tags ))
 
   templates: (( grab meta.graphite_templates ))

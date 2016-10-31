@@ -12,10 +12,8 @@ jobs:
         properties:
           datadog: (( inject meta.datadog ))
           tags:
-            job: concourse
             bosh-job: concourse
             bosh-az: z1
-            tags: (( inject meta.datadog_tags ))
       - name: riemann
         release: riemann
         properties:

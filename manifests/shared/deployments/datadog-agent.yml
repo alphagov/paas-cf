@@ -10,6 +10,6 @@ meta:
     api_key: (( grab $DATADOG_API_KEY || "undefined" ))
     use_dogstatsd: false
     include_bosh_tags: true
-  datadog_tags:
-    environment: (( grab meta.environment || "undefined" ))
-    aws_account: (( grab $AWS_ACCOUNT ))
+    tags:
+      environment: (( grab meta.environment || "undefined" ))
+      aws_account: (( grab $AWS_ACCOUNT ))
