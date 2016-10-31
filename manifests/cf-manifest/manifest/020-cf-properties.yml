@@ -60,7 +60,7 @@ properties:
     machines: (( grab jobs.etcd.networks.cf.static_ips ))
     require_ssl: false
     peer_require_ssl: (( grab properties.etcd.require_ssl ))
-    advertise_urls_dns_suffix: (( grab meta.etcd.advertise_urls_dns_suffix ))
+    advertise_urls_dns_suffix: etcd.service.cf.internal
     ca_cert: ""
     client_cert: ""
     client_key: ""
