@@ -46,7 +46,7 @@ resource "datadog_monitor" "router" {
   message = "${format("Missing router hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing router hosts! Check VM state."
   no_data_timeframe = "2"
-  query = "${format("'datadog.agent.up'.over('environment:%s','bosh-job:router').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'datadog.agent.up'.over('bosh-deployment:%s','bosh-job:router').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     ok = 0
@@ -129,7 +129,7 @@ resource "datadog_monitor" "gorouter_process_running" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'process.up'.over('environment:%s','process:gorouter').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('bosh-deployment:%s','process:gorouter').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok = 1
@@ -151,7 +151,7 @@ resource "datadog_monitor" "gorouter_healthy" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'http.can_connect'.over('environment:%s','instance:gorouter','url:http://localhost:80/').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'http.can_connect'.over('bosh-deployment:%s','instance:gorouter','url:http://localhost:80/').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50

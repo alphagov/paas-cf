@@ -5,7 +5,7 @@ resource "datadog_monitor" "nats" {
   message = "${format("Missing nats hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing nats hosts! Check VM state."
   no_data_timeframe = "2"
-  query = "${format("'datadog.agent.up'.over('environment:%s','bosh-job:nats').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'datadog.agent.up'.over('bosh-deployment:%s','bosh-job:nats').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     ok = 0
@@ -28,7 +28,7 @@ resource "datadog_monitor" "nats_process_running" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'process.up'.over('environment:%s','process:nats').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('bosh-deployment:%s','process:nats').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok = 1
@@ -50,7 +50,7 @@ resource "datadog_monitor" "nats_stream_forwarded_process_running" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'process.up'.over('environment:%s','process:nats_stream_forwarder').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('bosh-deployment:%s','process:nats_stream_forwarder').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok = 1
@@ -72,7 +72,7 @@ resource "datadog_monitor" "nats_service_open" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'tcp.can_connect'.over('environment:%s','instance:nats_server').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'tcp.can_connect'.over('bosh-deployment:%s','instance:nats_server').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50
@@ -92,7 +92,7 @@ resource "datadog_monitor" "nats_cluster_service_open" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'tcp.can_connect'.over('environment:%s','instance:nats_cluster').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'tcp.can_connect'.over('bosh-deployment:%s','instance:nats_cluster').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50

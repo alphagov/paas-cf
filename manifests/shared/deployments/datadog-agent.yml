@@ -11,5 +11,4 @@ meta:
     use_dogstatsd: false
     include_bosh_tags: true
     tags:
-      environment: (( grab meta.environment || "undefined" ))
       aws_account: (( grab $AWS_ACCOUNT ))
