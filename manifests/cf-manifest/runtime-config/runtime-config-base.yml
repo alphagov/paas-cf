@@ -1,7 +1,7 @@
 ---
 releases:
   - name: os-conf
-    version: commit-a2bc2ab32248c8edf7c4790b33902893b1f4db66
+    version: commit-3c5609485a57b1314a0114b1e4157e6426fbf14a
 
 addons:
   - name: os-configuration
