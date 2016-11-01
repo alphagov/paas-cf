@@ -29,7 +29,9 @@ meta:
 
 releases:
   - name: aws-broker
-    version: 0.0.10
+    version: 0.0.12
+    url: https://github.com/alphagov/paas-aws-broker-boshrelease/releases/download/0.0.12/aws-broker-0.0.12.tgz
+    sha1: 5de975ce69085df22870fc695986fc4331a37881
 
 jobs:
   - name: rds_broker

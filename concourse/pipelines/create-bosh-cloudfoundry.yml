@@ -112,12 +112,6 @@ resources:
       uri: https://github.com/alphagov/paas-datadog-for-cloudfoundry-boshrelease.git
       tag_filter: {{cf_datadog_for_cloudfoundry_version}}
 
-  - name: aws-broker-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-aws-broker-boshrelease.git
-      tag_filter: {{cf_aws_broker_version}}
-
   - name: os-conf-boshrelease
     type: git
     source:
@@ -1509,7 +1503,6 @@ jobs:
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
           - get: paas-haproxy-release
-          - get: aws-broker-boshrelease
           - get: datadog-for-cloudfoundry-boshrelease
           - get: os-conf-boshrelease
           - get: cf-secrets
@@ -1557,7 +1550,6 @@ jobs:
               - name: bosh-secrets
               - name: graphite-statsd-boshrelease
               - name: paas-haproxy-release
-              - name: aws-broker-boshrelease
               - name: os-conf-boshrelease
               - name: logsearch-for-cloudfoundry-boshrelease
               - name: datadog-for-cloudfoundry-boshrelease
@@ -1580,10 +1572,6 @@ jobs:
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_os_conf_version}} os-conf-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
                     {{cf_os_conf_version}} os-conf-boshrelease
-
-                  ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_aws_broker_version}} aws-broker-boshrelease
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb aws-broker \
-                    {{cf_aws_broker_version}} aws-broker-boshrelease
 
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb logsearch-for-cloudfoundry \
