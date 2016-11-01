@@ -56,5 +56,10 @@ func TestSuite(t *testing.T) {
 		environment.Teardown()
 	})
 
-	RunSpecs(t, "Acceptance tests")
+	componentName := "Custom-Acceptance-Tests"
+	if config.ArtifactsDirectory != "" {
+		helpers.EnableCFTrace(config, componentName)
+	}
+
+	RunSpecs(t, componentName)
 }
