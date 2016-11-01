@@ -2036,6 +2036,7 @@ jobs:
               - name: bosh-CA
             params:
               ENABLE_CVE_NOTIFIER: {{enable_cve_notifier}}
+              DEPLOY_ENV: {{deploy_env}}
             run:
               path: sh
               args:
@@ -2054,6 +2055,7 @@ jobs:
                   cf target -o admin -s admin
                   cf push --no-route --no-start -m 100M -b python_buildpack \
                     --health-check-type none -p cve-notifier cve-notifier
+                  cf set-env cve-notifier DEPLOY_ENV "${DEPLOY_ENV}"
                   echo Setting DD_API_KEY...
                   cf set-env cve-notifier DD_API_KEY {{datadog_api_key}} > /dev/null
                   echo Setting DD_APP_KEY...
