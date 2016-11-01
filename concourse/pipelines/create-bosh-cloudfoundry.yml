@@ -1993,6 +1993,7 @@ jobs:
               TF_VAR_datadog_api_key: {{datadog_api_key}}
               TF_VAR_datadog_app_key: {{datadog_app_key}}
               TF_VAR_aws_account: {{aws_account}}
+              ENABLE_CVE_NOTIFIER: {{enable_cve_notifier}}
               ENABLE_DATADOG: {{enable_datadog}}
             run:
               path: sh
@@ -2010,6 +2011,7 @@ jobs:
                   fi
 
                   if [ "${ENABLE_DATADOG}" = "true" ]; then
+                    [ "${ENABLE_CVE_NOTIFIER}" = "true" ] && export TF_VAR_enable_cve_notifier=1
                     terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate paas-cf/terraform/datadog
                   else
                     echo "Datadog disabled, skipping terraform run..."
