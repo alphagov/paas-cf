@@ -8,10 +8,6 @@ jobs:
 - name: nozzle
   azs: [z1, z2]
   templates:
-  - name: consul_agent
-    release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: datadog-firehose-nozzle
     release: datadog-firehose-nozzle
     properties:
