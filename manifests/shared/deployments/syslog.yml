@@ -1,6 +1,6 @@
 ---
 releases:
   - name: syslog
-    version: "7"
-    url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=7
-    sha1: 7aca1a3633f12cc5ce760812959e62b6e51b8641
+    version: "7+gds1"
+    url: https://github.com/alphagov/paas-syslog-release/releases/download/v7-gds1/syslog-7.gds1.tgz
+    sha1: 13e2d7082b128ca59824529dc348ad96568be348

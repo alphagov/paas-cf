@@ -23,6 +23,7 @@ addons:
         address: (( grab terraform_outputs.logsearch_ingestor_elb_dns_name ))
         port: 2514
         transport: 'relp'
+        log_template: 'metron_agent'
   - name: syslog_cleanup
     jobs:
     - name: cleanup_syslog_forwarding
