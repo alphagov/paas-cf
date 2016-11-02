@@ -16,3 +16,6 @@ chmod +x "$FLY_CMD"
 echo "Doing fly login"
 echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
   $FLY_CMD -t "${FLY_TARGET}" login -k --concourse-url "${CONCOURSE_URL}"
+
+echo "Doing fly sync"
+  $FLY_CMD -t "${FLY_TARGET}" sync
