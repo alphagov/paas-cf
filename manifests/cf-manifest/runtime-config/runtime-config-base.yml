@@ -27,3 +27,6 @@ addons:
     jobs:
     - name: cleanup_syslog_forwarding
       release: os-conf
+      properties:
+        syslog_daemon_config: # Note: property also used by metron_agent in main manifest
+          enable: false
