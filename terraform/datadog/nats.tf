@@ -80,7 +80,7 @@ resource "datadog_monitor" "nats_service_open" {
 
   tags {
     "deployment" = "${var.env}"
-    "job" = "router"
+    "job" = "nats"
   }
 }
 
@@ -100,6 +100,6 @@ resource "datadog_monitor" "nats_cluster_service_open" {
 
   tags {
     "deployment" = "${var.env}"
-    "job" = "router"
+    "job" = "nats"
   }
 }

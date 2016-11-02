@@ -35,6 +35,6 @@ resource "datadog_monitor" "consul_connect_to_port" {
 
   tags {
     "deployment" = "${var.env}"
-    "job" = "router"
+    "job" = "consul"
   }
 }
