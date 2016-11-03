@@ -38,39 +38,57 @@ should use "prod".
 ## Manual upload of SSL certificates
 
 For some environments (e.g. prod) we want to use purchased valid certificates
-for the public facing endpoints, instead of using self signed certificates.
+for the public facing endpoints, instead of using self signed certificates. In
+that case, the operator must manually upload the certificates:
 
-In that case, the operator must manually upload the certificates:
+The certificates and the intermediate CA cert need to be stored in the
+[credentials-high][] password store, using this naming convention:
 
- 1. Store the certificates in the [credentials-high][] password store, using
-    this naming convention for the key:
-    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.crt`
-    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.key`
+ * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.crt`
+ * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.key`
+ * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}_intermediate.crt`
+
+Currently the process requires a `system_domain` and `apps_domain` cert.
 
 [credentials-high]: https://github.gds/government-paas/credentials-high
 
- 2. After deploying the deployer with `create-deployer`, execute the make task
+### Initial deployment of an environment
+
+ 1. After deploying the deployer with `create-deployer`, execute the make task
     `manually_upload_certs`. You indicate the
     [password store](https://www.passwordstore.org/) directory to read
     the certificates from by passing the variable `CERT_PASSWORD_STORE_DIR`
 
-    To review changes:
-    ```
-make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=plan
-```
+    To review changes: `make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=plan`
 
-    To apply changes:
-    ```
-make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=apply
-```
+    To apply changes: `make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=apply`
 
- 3. Continue with the standard procedure to deploy cloudfoundry.
+ 1. Continue with the standard procedure to deploy cloudfoundry.
 
-Currently it applies for these certificates:
+### Rotating the certs for an existing deployment
 
-  * External public router endpoints `router_external`:
-    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.crt`
-    * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/router_external.key`
+ 1. List the server certificates, and make a note of their
+    `ServerCertificateName`. This will be needed to clean up afterwards.
+
+    `aws iam list-server-certificates`
+
+ 1. Update the certs in the cred store
+
+ 1. Run the `manually_upload_certs` make task:
+
+    `make <ENV> manually_upload_certs CERT_PASSWORD_STORE_DIR=~/.paas-pass ACTION=apply`
+
+    This will run, upload the new certs, and then eventually fail (after c. 3
+    mins) when attempting to delete the old certs. This is expected because
+    they're still in use.
+
+ 1. Run the deployment pipeline, which will update the system to use the new
+    certs.
+
+ 1. Clean up the old certs using the names noted down in step 1.
+
+    `aws iam delete-server-certificate --server-certificate-name staging-apps-domain-123456....`
+    `aws iam delete-server-certificate --server-certificate-name staging-system-domain-123456....`
 
 ## Deployment process
 
