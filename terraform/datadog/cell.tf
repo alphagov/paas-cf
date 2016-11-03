@@ -14,6 +14,7 @@ resource "datadog_monitor" "cell-available-memory" {
   require_full_window = true
   tags {
     "deployment" = "${var.env}"
+    "service" = "${var.env}_monitors"
     "job" = "cell"
   }
 }
