@@ -21,3 +21,17 @@ resource "aws_s3_bucket" "resources-s3" {
     acl = "private"
     force_destroy = "true"
 }
+
+resource "aws_s3_bucket" "test-artifacts" {
+    bucket = "gds-paas-${var.env}-test-artifacts"
+    acl = "private"
+    force_destroy = "true"
+
+    lifecycle_rule {
+      enabled = true
+      prefix = ""
+      expiration {
+        days = 7
+      }
+    }
+}

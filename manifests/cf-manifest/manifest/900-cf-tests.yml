@@ -19,6 +19,7 @@ properties:
     include_operator: true
     include_services: true
     include_route_services: false
+    artifacts_directory: "/var/vcap/sys/log/test_artifacts"
 
   smoke_tests:
     api: (( grab properties.acceptance_tests.api ))

@@ -1,0 +1,25 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/awscli
+inputs:
+  - name: paas-cf
+  - name: artifacts
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      echo "Archiving test artifacts..."
+      RAND=$(hexdump -n 2 -e '/2 "%u"' /dev/urandom)
+      ARTIFACT_NAME="test-artifact-$(date '+%Y-%m-%d-%H-%M-%S')-$RAND.tgz"
+
+      cd artifacts && tar -czvf "${ARTIFACT_NAME}" -- *
+      aws s3 cp "${ARTIFACT_NAME}" "s3://${TEST_ARTIFACTS_BUCKET}"
+
+      echo "To fetch the artifact from the bucket run:"
+      echo aws s3 cp s3://"${TEST_ARTIFACTS_BUCKET}/${ARTIFACT_NAME}" /tmp/
+

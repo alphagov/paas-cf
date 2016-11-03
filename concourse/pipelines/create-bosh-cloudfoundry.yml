@@ -2173,6 +2173,11 @@ jobs:
 
         - task: smoke-tests-run
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
 
         ensure:
           task: remove-temp-user
@@ -2260,6 +2265,8 @@ jobs:
               - name: cf-manifest
               - name: test-config
               - name: bosh-CA
+            outputs:
+              - name: artifacts
             run:
               path: sh
               args:
@@ -2267,7 +2274,8 @@ jobs:
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
+                  mkdir -p /var/vcap/sys
+                  ln -s $(pwd)/artifacts /var/vcap/sys/log
                   mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
                   ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
                   ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
@@ -2278,6 +2286,13 @@ jobs:
                   else
                     /var/vcap/jobs/acceptance-tests/bin/run
                   fi
+
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
@@ -2312,6 +2327,12 @@ jobs:
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
           params:
             DISABLE_CUSTOM_ACCEPTANCE_TESTS: {{disable_custom_acceptance_tests}}
+
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
 
         ensure:
           task: remove-temp-user
@@ -2695,6 +2716,11 @@ jobs:
                 - |
                   paas-cf/concourse/scripts/smoke_tests_email.sh \
                     ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}
+          ensure:
+            task: upload-test-artifacts
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
 
         ensure:
           task: remove-temp-user
