@@ -1707,6 +1707,29 @@ jobs:
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
 
+      - task: create-admin-org-space
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                echo | cf create-org admin
+                cf create-space admin -o admin
+
       - aggregate:
         - task: set-security-groups-from-manifest
           config:
@@ -1846,9 +1869,9 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  echo | cf create-org admin
-                  cf create-space admin -o admin
+                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                    -o admin -s admin
+
                   cf target -o admin -s admin
 
                   cat <<EOF > graphite-nozzle.json
@@ -2035,10 +2058,8 @@ jobs:
                   fi
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  echo | cf create-org admin
-                  cf create-space admin -o admin
-                  cf target -o admin -s admin
+                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                    -o admin -s admin
                   cf push --no-route --no-start -m 100M -b python_buildpack \
                     --health-check-type none -p cve-notifier cve-notifier
                   cf set-env cve-notifier DEPLOY_ENV "${DEPLOY_ENV}"
@@ -2047,6 +2068,41 @@ jobs:
                   echo Setting DD_APP_KEY...
                   cf set-env cve-notifier DD_APP_KEY {{datadog_app_key}} > /dev/null
                   cf start cve-notifier
+
+        - task: deploy-paas-dashboard
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            params:
+              ENABLE_PAAS_DASHBOARD: {{enable_paas_dashboard}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ "${ENABLE_PAAS_DASHBOARD}" != "true" ]; then
+                    echo PaaS dashboard application disabled
+                    exit 0
+                  fi
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                    -o admin -s admin
+                  cf push --no-start -m 100M -b ruby_buildpack \
+                    -p paas-cf/tools/paas_dashboard paas-dashboard
+                  echo Setting DD_API_KEY...
+                  cf set-env paas-dashboard DD_API_KEY {{datadog_api_key}} > /dev/null
+                  echo Setting DD_APP_KEY...
+                  cf set-env paas-dashboard DD_APP_KEY {{datadog_app_key}} > /dev/null
+                  cf start paas-dashboard
 
   - name: post-deploy
     plan:

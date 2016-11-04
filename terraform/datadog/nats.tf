@@ -16,6 +16,7 @@ resource "datadog_monitor" "nats" {
   require_full_window = true
   tags {
     "deployment" = "${var.env}"
+    "service" = "${var.env}_monitors"
     "job" = "nats"
   }
 }
@@ -38,6 +39,7 @@ resource "datadog_monitor" "nats_process_running" {
 
   tags {
     "deployment" = "${var.env}"
+    "service" = "${var.env}_monitors"
     "job" = "nats"
   }
 }
@@ -60,6 +62,7 @@ resource "datadog_monitor" "nats_stream_forwarded_process_running" {
 
   tags {
     "deployment" = "${var.env}"
+    "service" = "${var.env}_monitors"
     "job" = "nats"
   }
 }
@@ -80,7 +83,8 @@ resource "datadog_monitor" "nats_service_open" {
 
   tags {
     "deployment" = "${var.env}"
-    "job" = "router"
+    "service" = "${var.env}_monitors"
+    "job" = "nats"
   }
 }
 
@@ -100,6 +104,7 @@ resource "datadog_monitor" "nats_cluster_service_open" {
 
   tags {
     "deployment" = "${var.env}"
-    "job" = "router"
+    "service" = "${var.env}_monitors"
+    "job" = "nats"
   }
 }
