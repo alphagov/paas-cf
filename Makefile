@@ -215,15 +215,15 @@ run_job: check-env-vars ## Unbind paas-cf of $JOB in create-bosh-cloudfoundry pi
 ssh_bosh: check-env-vars ## SSH to the bosh server
 	@./scripts/ssh_bosh.sh
 
-ssh_concourse: check-env-vars ## SSH to the concourse server
-	@./scripts/ssh.sh
+ssh_concourse: check-env-vars ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
+	@./scripts/ssh.sh ssh ${SSH_CMD}
 
 tunnel: check-env-vars ## SSH tunnel to internal IPs
 	$(if ${TUNNEL},,$(error Must pass TUNNEL=SRC_PORT:HOST:DST_PORT))
-	@./scripts/ssh.sh ${TUNNEL}
+	@./scripts/ssh.sh tunnel ${TUNNEL}
 
 stop-tunnel: check-env-vars ## Stop SSH tunnel
-	@./scripts/ssh.sh stop
+	@./scripts/ssh.sh tunnel stop
 
 show-cf-memory-usage: ## Show the memory usage of the current CF cluster
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
