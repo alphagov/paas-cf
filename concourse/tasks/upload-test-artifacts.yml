@@ -13,6 +13,11 @@ run:
     - -e
     - -c
     - |
+      if [ "$(find artifacts -type f | wc -l)" -eq 0 ]; then
+        echo "No test artifacts generated. Skipping."
+        exit 0
+      fi
+
       echo "Archiving test artifacts..."
       RAND=$(hexdump -n 2 -e '/2 "%u"' /dev/urandom)
       ARTIFACT_NAME="test-artifact-$(date '+%Y-%m-%d-%H-%M-%S')-$RAND.tgz"
@@ -22,4 +27,3 @@ run:
 
       echo "To fetch the artifact from the bucket run:"
       echo aws s3 cp s3://"${TEST_ARTIFACTS_BUCKET}/${ARTIFACT_NAME}" /tmp/
-
