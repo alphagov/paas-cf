@@ -225,6 +225,10 @@ tunnel: check-env-vars ## SSH tunnel to internal IPs
 stop-tunnel: check-env-vars ## Stop SSH tunnel
 	@./scripts/ssh.sh tunnel stop
 
+shake_concourse_volumes: check-env-vars ## Restarts concourse services and workers and clears the volumes
+	@./scripts/ssh.sh scp concourse/scripts/shake_concourse_volumes.sh /tmp/
+	@./scripts/ssh.sh ssh bash -i /tmp/shake_concourse_volumes.sh
+
 show-cf-memory-usage: ## Show the memory usage of the current CF cluster
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
 	@./scripts/show-cf-memory-usage.rb
