@@ -4,7 +4,7 @@ resource "datadog_monitor" "consul" {
   message = "${format("Missing consul hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Missing consul hosts! Check VM state."
   no_data_timeframe = "2"
-  query = "${format("'process.up'.over('environment:%s','process:consul').last(6).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('bosh-deployment:%s','process:consul').last(6).count_by_status()", var.env)}"
 
   thresholds {
     ok = 1
@@ -14,7 +14,7 @@ resource "datadog_monitor" "consul" {
 
   require_full_window = true
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "consul"
   }
 }
@@ -27,14 +27,14 @@ resource "datadog_monitor" "consul_connect_to_port" {
   no_data_timeframe = "5"
   require_full_window = true
 
-  query = "${format("'tcp.can_connect'.over('environment:%s','instance:consul_server').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'tcp.can_connect'.over('bosh-deployment:%s','instance:consul_server').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50
   }
 
   tags {
-    "environment" = "${var.env}"
+    "deployment" = "${var.env}"
     "job" = "router"
   }
 }

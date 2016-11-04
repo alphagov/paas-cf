@@ -29,10 +29,6 @@ jobs:
   instances: 2
   networks:
   - name: cf
-  properties:
-    tags:
-      job: nozzle
-      tags: (( inject meta.datadog_tags ))
 
 properties:
   uaa:

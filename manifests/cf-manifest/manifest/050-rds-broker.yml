@@ -45,9 +45,6 @@ jobs:
     networks:
       - name: cf
     properties:
-      tags:
-        job: rds_broker
-        tags: (( inject meta.datadog_tags ))
       rds-broker:
         allow_user_provision_parameters: true
         allow_user_update_parameters: true
