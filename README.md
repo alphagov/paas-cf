@@ -283,8 +283,10 @@ need to run the pipeline from start in order to bring the changes forward.
 
 ## Optionally deploy datadog agent in dev environment
 
-If you want to deploy datadog agent in your dev environment, set ENABLE_DATADOG
-variable to true:
+If you want to deploy datadog agent in your dev environment, set the
+ENABLE_DATADOG environment variable to true. *NOTE:* Ensure you have [published
+the dev datadog credentials](#datadog-credentials) in your environment before
+updating pipelines, or you'll get strange terraform errors during cf-terraform.
 
 ```
 ENABLE_DATADOG=true make dev pipelines

@@ -2,7 +2,7 @@
 
 ### What this is for
 
-When setting up an environment the Datadog credentials need to be decrypted and pushed into the S3 state bucket as they are required during pipeline runs. Each environment (ci, staging, and prod) has its own set of Application and API credentials in the PaaS credential store.
+When setting up an environment the Datadog credentials need to be decrypted and pushed into the S3 state bucket as they are required during pipeline runs. Each environment (dev, ci, staging, and prod) has its own set of Application and API credentials in the PaaS credential store.
 
 ### Requirements
 
@@ -14,7 +14,21 @@ When setting up an environment the Datadog credentials need to be decrypted and 
 make <ENV> upload-datadog-secrets
 ```
 
-### Example for testing in a dev environment
+### Example for testing in a dev environment with standard dev API/application keys
+1. Upload the dev keys to your state bucket
+
+```
+make dev upload-datadog-secrets
+```
+
+2. If you have auto-update pipelines disabled
+```
+ENABLE_DATADOG=true make dev pipelines
+```
+
+3. Re-run your pipelines
+
+### Example for testing in a dev environment with new API/application keys
 
 1. Switch to a test password store dir
 
@@ -32,7 +46,7 @@ pass insert datadog/dev/datadog_app_key
 3. Upload the new keys to your state bucket
 
 ```
-make dev upload-datadog-secrets
+ENABLE_DATADOG=true make dev upload-datadog-secrets
 ```
 
 4. Re-run your pipelines
