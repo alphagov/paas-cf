@@ -2117,6 +2117,7 @@ jobs:
           - get: cf-secrets
             passed: ['cf-deploy']
           - get: bosh-CA
+          - get: bosh-secrets
 
       - task: retrieve-config
         config:
@@ -2149,55 +2150,56 @@ jobs:
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
 
-      - task: deploy-healthcheck
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-          params:
-            DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
-          inputs:
-            - name: paas-cf
-            - name: config
-            - name: bosh-CA
-          outputs:
-            - name: deployed-healthcheck
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+      - aggregate:
+        - task: deploy-healthcheck
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            params:
+              DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            outputs:
+              - name: deployed-healthcheck
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                . ./config/config.sh
-                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                cf create-org testers
-                cf set-quota testers test_apps
-                cf create-space healthcheck -o testers
-                cf target -o testers -s healthcheck
-                BUILD_ROOT=$(pwd)
-                cd paas-cf/platform-tests/example-apps/healthcheck
-                cf push --no-start
-                if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
-                  cf create-service postgres Free healthcheck-db
-                  while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
-                    sleep 30
-                  done
-                  cf bind-service healthcheck healthcheck-db
-                fi
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  cf create-org testers
+                  cf set-quota testers test_apps
+                  cf create-space healthcheck -o testers
+                  cf target -o testers -s healthcheck
+                  BUILD_ROOT=$(pwd)
+                  cd paas-cf/platform-tests/example-apps/healthcheck
+                  cf push --no-start
+                  if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
+                    cf create-service postgres Free healthcheck-db
+                    while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
+                      echo "Waiting for creation of service to complete..."
+                      sleep 30
+                    done
+                    cf bind-service healthcheck healthcheck-db
+                  fi
 
-                cf start healthcheck
-                cd $BUILD_ROOT
-                echo "yes" > deployed-healthcheck/healthcheck-deployed
-        on_success:
-          put: deployed-healthcheck
-          params:
-            file: deployed-healthcheck/healthcheck-deployed
+                  cf start healthcheck
+                  cd $BUILD_ROOT
+                  echo "yes" > deployed-healthcheck/healthcheck-deployed
+          on_success:
+            put: deployed-healthcheck
+            params:
+              file: deployed-healthcheck/healthcheck-deployed
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
