@@ -21,6 +21,6 @@ addons:
     properties:
       syslog:
         address: (( grab terraform_outputs.logsearch_ingestor_elb_dns_name ))
-        port: 2514
-        transport: 'relp'
+        port: 5514
+        transport: 'tcp'
         log_template: 'metron_agent'
