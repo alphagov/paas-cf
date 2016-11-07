@@ -2151,6 +2151,32 @@ jobs:
                 done > config/config.sh
 
       - aggregate:
+        - task: bosh-adhoc
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli
+            inputs:
+              - name: paas-cf
+              - name: cf-manifest
+              - name: bosh-secrets
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > cf-manifest.yml
+                  bosh deployment cf-manifest.yml
+                  echo "Removing old /etc/rsyslog.d/00-syslog_forwarder.conf set by metron_agent from all jobs"
+                  for job in $(bosh vms | awk '/[a-z0-9_-]\/[0-9]/ { print $2 }'); do
+                    # shellcheck disable=SC2016
+                    bosh ssh "${job}" 'set -x ; if [ -f /etc/rsyslog.d/00-syslog_forwarder.conf ]; then sudo rm -f /etc/rsyslog.d/00-syslog_forwarder.conf; sudo service rsyslog restart; ls -l /etc/rsyslog.d; ps -fp $(pgrep rsyslogd); fi'
+                  done
+
         - task: deploy-healthcheck
           config:
             platform: linux
