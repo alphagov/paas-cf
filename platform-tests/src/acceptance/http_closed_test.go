@@ -28,7 +28,7 @@ var _ = Describe("Http client", func() {
 			"-p", "../../example-apps/static-app",
 			"-d", config.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
-		Expect(cf.Cf("start", appName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 		uri := appName + "." + config.AppsDomain + ":80"
 		_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
