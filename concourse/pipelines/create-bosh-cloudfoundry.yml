@@ -2096,7 +2096,7 @@ jobs:
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
                     -o admin -s admin
-                  cf push --no-start -m 100M -b ruby_buildpack \
+                  cf push --no-start -m 256M -b ruby_buildpack \
                     -p paas-cf/tools/paas_dashboard paas-dashboard
                   echo Setting DD_API_KEY...
                   cf set-env paas-dashboard DD_API_KEY {{datadog_api_key}} > /dev/null
