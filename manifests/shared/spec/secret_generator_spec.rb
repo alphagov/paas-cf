@@ -2,7 +2,7 @@
 require 'secret_generator'
 
 RSpec.describe SecretGenerator do
-  SIMPLE_PASSWORD_REGEX = /\A[a-zA-Z0-9_-]+\z/
+  SIMPLE_PASSWORD_REGEX = /\A[a-zA-Z0-9]+\z/
 
   describe "password generation" do
     it "generates a passwords of the required length" do
@@ -17,7 +17,7 @@ RSpec.describe SecretGenerator do
         "Duplicate passwords generated (#{duplicated_passwords.join(',')} generated more than once)"
     end
 
-    it "only uses URL-safe characters" do
+    it "only uses alphanumeric characters" do
       10.times do
         expect(SecretGenerator.random_password).to match(SIMPLE_PASSWORD_REGEX)
       end
