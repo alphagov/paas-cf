@@ -117,7 +117,7 @@ var _ = Describe("RDS broker", func() {
 			Expect(cf.Cf("stop", appName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 			Expect(cf.Cf("unbind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
-			Expect(cf.Cf("start", appName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 			resp, err = httpClient.Get(helpers.AppUri(appName, "/db/permissions-check?phase=test"))
 			Expect(err).NotTo(HaveOccurred())
