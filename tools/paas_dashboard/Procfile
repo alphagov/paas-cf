@@ -1,1 +1,0 @@
-web: smashing start -e production -p $PORT
