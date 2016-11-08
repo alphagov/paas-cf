@@ -6,20 +6,20 @@
         </div> <!-- /error -->
         <div data-hideif="status | equals 'error'"> <!-- no error -->
             <div data-hideif="criticals | equals 0" class="floated">
-                <div class="h3" data-bind="criticals"></div>
-                <div class="h4">
+                <h3 data-bind="criticals"></h3>
+                <h4>
                     critical<span data-hideif="criticals | equals 1">s</span>
-                </div>
+                </h4>
             </div>
 
             <div data-hideif="warnings | equals 0" class="floated">
-                <div class="h3" data-bind="warnings"></div>
-                <div class="h4">
+                <h3 data-bind="warnings"></h3>
+                <h4>
                     warning<span data-hideif="warnings | equals 1">s</span>
-                </div>
+                </h4>
             </div>
             <div data-showif="status | equals 'green'">
-                <div class="h3">&#10003;</div>
+                <h3>&#10003;</h3>
             </div>
             <p class="updated-at" data-bind="updatedAtMessage"></p>
         </div> <!-- /no error -->
