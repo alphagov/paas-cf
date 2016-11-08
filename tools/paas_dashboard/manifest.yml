@@ -1,0 +1,6 @@
+---
+applications:
+ - buildpack: ruby_buildpack
+   memory: 256M
+   instances: 1
+   command: "bundle exec smashing start -e production -p $PORT"
