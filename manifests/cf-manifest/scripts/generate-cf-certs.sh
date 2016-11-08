@@ -38,8 +38,6 @@ for cert_entry in ${CERTS_TO_GENERATE}; do
   if [ -f "${CERTS_DIR}/${cn}.crt" ]; then
     echo "Certificate ${cn} is already generated, skipping."
   else
-    # shellcheck disable=SC2086
-    # We don't need/want to quote the domains bit (fixed in newer shellcheck versions)
     certstrap request-cert --passphrase "" --common-name "${cn}" ${domains:+--domain "${domains}"}
     certstrap sign --CA "${CA_NAME}" --passphrase "" "${cn}"
     mv "out/${cn}.key" "${CERTS_DIR}/"
