@@ -183,7 +183,7 @@ showenv: ## Display environment information
 	@concourse/scripts/environment.sh
 	@scripts/show-cf-secrets.sh grafana_admin_password kibana_admin_password uaa_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
+		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
 .PHONY: upload-datadog-secrets
