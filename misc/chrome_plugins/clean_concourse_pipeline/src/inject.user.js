@@ -30,4 +30,4 @@ var readyStateCheckInterval = setInterval(function() {
         // Remove the padding because the top bar isn't there any more.
         element.style.paddingTop = "0";
     }
-}, 10);
+}, 2000);
