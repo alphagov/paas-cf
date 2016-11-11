@@ -1,7 +1,7 @@
 resource "aws_security_group" "metrics_elb" {
-  name = "${var.env}-metrics"
+  name        = "${var.env}-metrics"
   description = "Security group for graphite/grafana ELB"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
@@ -14,8 +14,9 @@ resource "aws_security_group" "metrics_elb" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}"
+      "${compact(split(",", var.admin_cidrs))}",
     ]
   }
 
@@ -23,8 +24,9 @@ resource "aws_security_group" "metrics_elb" {
     from_port = 3001
     to_port   = 3001
     protocol  = "tcp"
+
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}"
+      "${compact(split(",", var.admin_cidrs))}",
     ]
   }
 

@@ -1,7 +1,7 @@
 resource "aws_security_group" "cf_api_elb" {
-  name = "${var.env}-cf-api-elb"
+  name        = "${var.env}-cf-api-elb"
   description = "Security group for CF API public endpoints that allows web traffic from whitelisted IPs"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
@@ -16,10 +16,11 @@ resource "aws_security_group" "cf_api_elb" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
       "${compact(split(",", var.admin_cidrs))}",
       "${compact(split(",", var.tenant_cidrs))}",
-      "${var.concourse_elastic_ip}/32"
+      "${var.concourse_elastic_ip}/32",
     ]
   }
 
@@ -27,6 +28,7 @@ resource "aws_security_group" "cf_api_elb" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]
