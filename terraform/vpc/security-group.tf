@@ -11,9 +11,9 @@ resource "aws_security_group" "office-access-ssh" {
   }
 
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs), list(var.vagrant_cidr)))}"]
   }
 
@@ -21,4 +21,3 @@ resource "aws_security_group" "office-access-ssh" {
     Name = "${var.env}-office-access-ssh"
   }
 }
-

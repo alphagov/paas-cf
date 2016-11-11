@@ -1,7 +1,8 @@
 resource "aws_iam_server_certificate" "concourse" {
-  name_prefix = "${var.env}-concourse-"
+  name_prefix      = "${var.env}-concourse-"
   certificate_body = "${file("concourse.crt")}"
-  private_key = "${file("concourse.key")}"
+  private_key      = "${file("concourse.key")}"
+
   lifecycle {
     create_before_destroy = true
   }
@@ -22,11 +23,11 @@ resource "aws_elb" "concourse" {
   }
 
   listener {
-    instance_port       = 8080
-    instance_protocol   = "tcp"
-    lb_port             = 443
-    lb_protocol         = "ssl"
-    ssl_certificate_id  = "${aws_iam_server_certificate.concourse.arn}"
+    instance_port      = 8080
+    instance_protocol  = "tcp"
+    lb_port            = 443
+    lb_protocol        = "ssl"
+    ssl_certificate_id = "${aws_iam_server_certificate.concourse.arn}"
   }
 
   tags {
@@ -47,10 +48,10 @@ resource "aws_security_group" "concourse-elb" {
   }
 
   ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    cidr_blocks     = ["${compact(concat(split(",", var.admin_cidrs), list("${aws_eip.concourse.public_ip}/32"), list(var.vagrant_cidr)))}" ]
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs), list("${aws_eip.concourse.public_ip}/32"), list(var.vagrant_cidr)))}"]
   }
 
   tags {

@@ -1,7 +1,7 @@
 resource "aws_security_group" "web" {
-  name = "${var.env}-cf-web"
+  name        = "${var.env}-cf-web"
   description = "Security group for web that allows web traffic from the office"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
@@ -16,11 +16,12 @@ resource "aws_security_group" "web" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
       "${compact(split(",", var.admin_cidrs))}",
       "${compact(split(",", var.tenant_cidrs))}",
       "${compact(split(",", var.web_access_cidrs))}",
-      "${var.concourse_elastic_ip}/32"
+      "${var.concourse_elastic_ip}/32",
     ]
   }
 
@@ -28,6 +29,7 @@ resource "aws_security_group" "web" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]

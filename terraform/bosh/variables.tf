@@ -8,17 +8,17 @@ variable "secrets_bosh_postgres_password" {
 
 variable "bosh_db_multi_az" {
   description = "BOSH database multi availabiliy zones"
-  default = "false"
+  default     = "false"
 }
 
 variable "bosh_db_backup_retention_period" {
   description = "BOSH database backup retention period"
-  default = "0"
+  default     = "0"
 }
 
 variable "bosh_db_skip_final_snapshot" {
   description = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
-  default = "true"
+  default     = "true"
 }
 
 variable "bosh_az" {

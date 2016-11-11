@@ -23,7 +23,8 @@ variable "vpc_id" {
 
 variable "zones" {
   description = "AWS availability zones"
-  default     = {
+
+  default = {
     zone0 = "eu-west-1a"
     zone1 = "eu-west-1b"
     zone2 = "eu-west-1c"
@@ -32,7 +33,8 @@ variable "zones" {
 
 variable "zone_index" {
   description = "AWS availability zone indices"
-  default     = {
+
+  default = {
     eu-west-1a = "0"
     eu-west-1b = "1"
     eu-west-1c = "2"
@@ -41,7 +43,8 @@ variable "zone_index" {
 
 variable "zone_labels" {
   description = "AWS availability zone labels as used in BOSH manifests (z1-z3)"
-  default     = {
+
+  default = {
     eu-west-1a = "z1"
     eu-west-1b = "z2"
     eu-west-1c = "z3"
@@ -50,12 +53,13 @@ variable "zone_labels" {
 
 variable "zone_count" {
   description = "Number of zones to use"
-  default = 3
+  default     = 3
 }
 
 variable "infra_cidrs" {
   description = "CIDR for infrastructure subnet indexed by AZ"
-  default     = {
+
+  default = {
     zone0 = "10.0.0.0/24"
     zone1 = "10.0.1.0/24"
     zone2 = "10.0.2.0/24"
@@ -64,7 +68,8 @@ variable "infra_cidrs" {
 
 variable "infra_gws" {
   description = "GW per CIDR"
-  default     = {
+
+  default = {
     "10.0.0.0/24" = "10.0.0.1"
     "10.0.1.0/24" = "10.0.1.1"
     "10.0.2.0/24" = "10.0.2.1"
@@ -73,7 +78,8 @@ variable "infra_gws" {
 
 variable "microbosh_ips" {
   description = "MicroBOSH IPs per zone"
-  default     = {
+
+  default = {
     eu-west-1a = "10.0.0.6"
     eu-west-1b = "10.0.1.6"
     eu-west-1c = "10.0.2.6"
@@ -94,7 +100,6 @@ variable "microbosh_static_private_ip" {
   description = "Microbosh internal IP"
   default     = "10.0.0.6"
 }
-
 
 /* Operators will mainly be from the office. See https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
 variable "admin_cidrs" {
@@ -118,23 +123,23 @@ variable "web_access_cidrs" {
 # Provided by AWS in http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/enable-access-logs.html
 variable "elb_account_ids" {
   default = {
-    us-east-1 = "127311923021"
-    us-west-1 = "027434742980"
-    us-west-2 = "797873946194"
-    eu-west-1 = "156460612806"
-    eu-central-1 = "054676820928"
+    us-east-1      = "127311923021"
+    us-west-1      = "027434742980"
+    us-west-2      = "797873946194"
+    eu-west-1      = "156460612806"
+    eu-central-1   = "054676820928"
     ap-northeast-1 = "582318560864"
     ap-northeast-2 = "600734575887"
     ap-southeast-1 = "114774131450"
     ap-southeast-2 = "783225319266"
-    ap-south-1 = "718504428378"
-    sa-east-1 = "507241528517"
-    us-gov-west-1 = "048591011584"
-    cn-north-1 = "638102146993"
+    ap-south-1     = "718504428378"
+    sa-east-1      = "507241528517"
+    us-gov-west-1  = "048591011584"
+    cn-north-1     = "638102146993"
   }
 }
 
 variable "assets_prefix" {
   description = "Prefix for global assests like S3 buckets"
-  default = "gds-paas"
+  default     = "gds-paas"
 }

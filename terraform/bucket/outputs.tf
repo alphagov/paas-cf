@@ -9,4 +9,3 @@ output "region" {
 output "bucket" {
   value = "${aws_s3_bucket.terraform-state-s3.id}"
 }
-

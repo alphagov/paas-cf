@@ -1,19 +1,20 @@
 resource "aws_eip" "cf" {
   count = "${var.zone_count}"
-  vpc = true
+  vpc   = true
 }
 
 resource "aws_nat_gateway" "cf" {
-  count = "${var.zone_count}"
+  count         = "${var.zone_count}"
   allocation_id = "${element(aws_eip.cf.*.id, count.index)}"
-  subnet_id = "${element(split(",", var.infra_subnet_ids), count.index)}"
+  subnet_id     = "${element(split(",", var.infra_subnet_ids), count.index)}"
 }
 
 resource "aws_route_table" "internet" {
   vpc_id = "${var.vpc_id}"
-  count = "${var.zone_count}"
+  count  = "${var.zone_count}"
+
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = "${element(aws_nat_gateway.cf.*.id, count.index)}"
   }
 }

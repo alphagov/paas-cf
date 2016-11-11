@@ -1,7 +1,7 @@
 resource "aws_security_group" "logsearch_ingestor_elb" {
-  name = "${var.env}-logsearch-ingestor-elb"
+  name        = "${var.env}-logsearch-ingestor-elb"
   description = "Security group for web that allows TCP/5514 for logsearch ingestor"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
@@ -14,8 +14,9 @@ resource "aws_security_group" "logsearch_ingestor_elb" {
     from_port = 2514
     to_port   = 2514
     protocol  = "tcp"
+
     cidr_blocks = [
-      "${var.vpc_cidr}"
+      "${var.vpc_cidr}",
     ]
   }
 
@@ -23,8 +24,9 @@ resource "aws_security_group" "logsearch_ingestor_elb" {
     from_port = 5514
     to_port   = 5514
     protocol  = "tcp"
+
     cidr_blocks = [
-      "${var.vpc_cidr}"
+      "${var.vpc_cidr}",
     ]
   }
 
@@ -34,9 +36,9 @@ resource "aws_security_group" "logsearch_ingestor_elb" {
 }
 
 resource "aws_security_group" "logsearch_elastic_master_elb" {
-  name = "${var.env}-logsearch-elastic-master-elb"
+  name        = "${var.env}-logsearch-elastic-master-elb"
   description = "Security group for elastic master which allows TCP/9200"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
@@ -49,8 +51,9 @@ resource "aws_security_group" "logsearch_elastic_master_elb" {
     from_port = 9200
     to_port   = 9200
     protocol  = "tcp"
+
     cidr_blocks = [
-      "${var.vpc_cidr}"
+      "${var.vpc_cidr}",
     ]
   }
 
@@ -60,9 +63,9 @@ resource "aws_security_group" "logsearch_elastic_master_elb" {
 }
 
 resource "aws_security_group" "logsearch_elb" {
-  name = "${var.env}-logsearch"
+  name        = "${var.env}-logsearch"
   description = "Security group for logsearch ELB"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
@@ -75,8 +78,9 @@ resource "aws_security_group" "logsearch_elb" {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
+
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}"
+      "${compact(split(",", var.admin_cidrs))}",
     ]
   }
 
