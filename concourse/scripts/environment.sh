@@ -43,6 +43,13 @@ if [ -z "${CONCOURSE_ATC_PASSWORD:-}" ]; then
   fi
 fi
 
+if [ -n "${DECRYPT_CONCOURSE_ATC_PASSWORD:-}" ]; then
+  GRAFANA_PASSWORD=$(pass "${DECRYPT_CONCOURSE_ATC_PASSWORD}/grafana_admin_password")
+else
+  GRAFANA_PASSWORD=$(aws s3 cp "s3://${DEPLOY_ENV}-state/cf-secrets.yml" - | \
+                     ruby -ryaml -e 'puts YAML.load(STDIN)["secrets"]["grafana_admin_password"]')
+fi
+
 cat <<EOF
 export AWS_ACCOUNT=${AWS_ACCOUNT}
 export DEPLOY_ENV=${DEPLOY_ENV}
@@ -54,5 +61,6 @@ export FLY_TARGET=${FLY_TARGET}
 export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME}
 export LOGSEARCH_URL=https://logsearch.${SYSTEM_DNS_ZONE_NAME}
 export GRAFANA_URL=https://metrics.${SYSTEM_DNS_ZONE_NAME}
+export GRAFANA_PASSWORD=${GRAFANA_PASSWORD}
 export GRAPHITE_URL=https://metrics.${SYSTEM_DNS_ZONE_NAME}:3001
 EOF
