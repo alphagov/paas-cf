@@ -18,6 +18,7 @@ private
     ENV["AWS_ACCOUNT"] = "dev"
     ENV["DATADOG_API_KEY"] = "abcd1234"
     ENV["CONCOURSE_AUTH_DURATION"] = "5m"
+    ENV["ENABLE_DATADOG"] = "true"
     output, error, status = Open3.capture3(
       [
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),

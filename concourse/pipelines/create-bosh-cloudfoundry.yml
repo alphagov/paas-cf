@@ -980,6 +980,7 @@ jobs:
           params:
             AWS_ACCOUNT: {{aws_account}}
             DATADOG_API_KEY: {{datadog_api_key}}
+            DATADOG_APP_KEY: {{datadog_app_key}}
             ENABLE_DATADOG: {{enable_datadog}}
             BOSH_MANIFEST_STUBS: |
               ./paas-cf/manifests/bosh-manifest/bosh-manifest.yml
