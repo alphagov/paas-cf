@@ -1660,10 +1660,10 @@ jobs:
                 bosh deployment updated-cf-manifest/cf-manifest.yml
                 bosh update runtime-config runtime-config/runtime-config.yml
                 bosh -n deploy
+
       - put: cf-manifest
         params:
           file: updated-cf-manifest/cf-manifest.yml
-
 
       - task: retrieve-config
         config:
@@ -1707,6 +1707,11 @@ jobs:
                 for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS; do
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
+
+                paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
+                  > config/job_instances.tfvars
+
+                ls -l config/*
 
       - task: create-admin-org-space
         config:
@@ -1996,6 +2001,7 @@ jobs:
             inputs:
               - name: datadog-tfstate
               - name: paas-cf
+              - name: config
             outputs:
               - name: updated-tfstate
             params:
@@ -2022,7 +2028,8 @@ jobs:
 
                   if [ "${ENABLE_DATADOG}" = "true" ]; then
                     [ "${ENABLE_CVE_NOTIFIER}" = "true" ] && export TF_VAR_enable_cve_notifier=1
-                    terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate paas-cf/terraform/datadog
+                    terraform apply -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
+                      -var-file=config/job_instances.tfvars paas-cf/terraform/datadog
                   else
                     echo "Datadog disabled, skipping terraform run..."
                     cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
