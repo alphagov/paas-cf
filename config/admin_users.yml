@@ -19,5 +19,7 @@
   gpg_key: "7BC8979D237E9D8E"
 - email: "piotr.komborski@digital.cabinet-office.gov.uk"
   gpg_key: "66A31A11D9693D9D"
+- email: "rafal.proszowski@digital.cabinet-office.gov.uk"
+  gpg_key: "8770F4186BCC9FC5"
 - email: "timothy.mower@digital.cabinet-office.gov.uk"
   gpg_key: "151AF9C9933B33DB"
