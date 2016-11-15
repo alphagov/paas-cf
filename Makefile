@@ -176,10 +176,12 @@ pipelines: ## Upload pipelines to Concourse
 .PHONY: showenv
 showenv: ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
-	@echo CONCOURSE_IP=$$(aws ec2 describe-instances \
+	@concourse/scripts/environment.sh
+	@echo export GRAFANA_PASSWORD=$$(aws s3 cp "s3://${DEPLOY_ENV}-state/cf-secrets.yml" - | \
+		ruby -ryaml -e 'puts YAML.load(STDIN)["secrets"]["grafana_admin_password"]')
+	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
-	@concourse/scripts/environment.sh
 
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env-vars ## Decrypt and upload Datadog credentials to S3
