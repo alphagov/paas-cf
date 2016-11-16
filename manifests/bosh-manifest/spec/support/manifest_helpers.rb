@@ -17,6 +17,7 @@ private
   def load_default_manifest
     ENV["AWS_ACCOUNT"] = "dev"
     ENV["DATADOG_API_KEY"] = "abcd1234"
+    ENV["ENABLE_DATADOG"] = "true"
 
     output, error, status = Open3.capture3(
       [

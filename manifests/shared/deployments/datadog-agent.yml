@@ -7,7 +7,9 @@ releases:
 
 meta:
   datadog:
+    enabled: (( grab $ENABLE_DATADOG ))
     api_key: (( grab $DATADOG_API_KEY || "undefined" ))
+    application_key: (( grab $DATADOG_APP_KEY || "undefined" ))
     use_dogstatsd: false
     include_bosh_tags: true
     tags:

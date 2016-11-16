@@ -24,6 +24,7 @@ private
   def fake_env_vars
     ENV["AWS_ACCOUNT"] = "dev"
     ENV["DATADOG_API_KEY"] = "abcd1234"
+    ENV["ENABLE_DATADOG"] = "true"
   end
 
   def render(arg_list)

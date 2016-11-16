@@ -79,6 +79,10 @@ jobs:
         user: hm
         password: (( grab secrets.bosh_hm_director_password ))
       resurrector_enabled: false
+      datadog_enabled: (( grab meta.datadog.enabled ))
+      datadog:
+          api_key: (( grab meta.datadog.api_key ))
+          application_key: (( grab meta.datadog.application_key ))
 
     agent:
       mbus: (( concat "nats://nats:" secrets.bosh_nats_password "@" terraform_outputs.bosh_fqdn ":4222" ))
