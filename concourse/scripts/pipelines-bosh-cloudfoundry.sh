@@ -56,7 +56,16 @@ prepare_environment() {
 
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
-  get_datadog_secrets
+
+  if [ "${ENABLE_DATADOG}" = "true" ] ; then
+    get_datadog_secrets
+
+    # shellcheck disable=SC2154
+    if [ -z "${datadog_api_key+x}" ] || [ -z "${datadog_app_key+x}" ] ; then
+      echo "Datadog enabled but could not retrieve api or app key. Did you do run \`make dev upload-datadog-secrets\`?"
+      exit 1
+    fi
+  fi
 
   export EXPOSE_PIPELINE=1
 }
