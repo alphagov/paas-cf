@@ -8,3 +8,8 @@ jobs:
     tags:
       bosh-job: bosh
       bosh-az: (( grab terraform_outputs.bosh_az_label ))
+    hm:
+      datadog_enabled: (( grab meta.datadog.enabled ))
+      datadog:
+          api_key: (( grab meta.datadog.api_key ))
+          application_key: (( grab meta.datadog.application_key ))
