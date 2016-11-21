@@ -89,6 +89,10 @@ check_params_and_environment() {
     abort_usage "Org must be defined"
   fi
 
+  if ! cf orgs >/dev/null 2>&1; then
+    abort "You need to be logged into CF CLI"
+  fi
+
   if ! aws ses get-send-quota >/dev/null 2>&1; then
     abort "You must have AWS cli installed and configured with valid credentials. Test it with: aws ses get-send-quota"
   fi
