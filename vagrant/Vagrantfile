@@ -1,25 +1,31 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+def secret_from_pass(path, default)
+  secret = `paas-pass 2>/dev/null #{path}`
+  return default if secret == ""
+  secret.strip
+end
+
 Vagrant.require_version ">= 1.8.0"
 
 AWS_ACCOUNT = ENV.fetch("AWS_ACCOUNT", "dev")
 AWS_ACCOUNT_DATA = {
   "dev" => {
-    subnet_id: "subnet-d55defe8", # us-east-1e in default VPC, 172.31.32.0/20 range
-    security_group: "sg-99e0c0e0", # "Bootstrap Concourse" security group
+    subnet_id: secret_from_pass('paas-cf/dev-subnet-id', 'subnet-d55defe8'), # us-east-1e in default VPC, 172.31.32.0/20 range
+    security_group: secret_from_pass('paas-cf/dev-security-group', 'sg-99e0c0e0'), # "Bootstrap Concourse" security group
   },
   "ci" => {
-    subnet_id: "subnet-68bb7e30", # us-east-1a in default VPC, 172.31.16.0/20 range
-    security_group: "sg-23e1c15a", # "Bootstrap Concourse" security group
+    subnet_id: secret_from_pass('paas-cf/ci-subnet-id', 'subnet-68bb7e30'), # us-east-1a in default VPC, 172.31.16.0/20 range
+    security_group: secret_from_pass('paas-cf/ci-security-group', 'sg-23e1c15a'), # "Bootstrap Concourse" security group
   },
   "staging" => {
-    subnet_id: "subnet-9034fbc8", # us-east-1c in default VPC, 172.31.16.0/20 range
-    security_group: "sg-87e1c1fe", # "Bootstrap Concourse" security group
+    subnet_id: secret_from_pass('paas-cf/staging-subnet-id', 'subnet-9034fbc8'), # us-east-1c in default VPC, 172.31.16.0/20 range
+    security_group: secret_from_pass('paas-cf/staging-security-group', 'sg-87e1c1fe'), # "Bootstrap Concourse" security group
   },
   "prod" => {
-    subnet_id: "subnet-bc34fbe4", # us-east-1a in default VPC, 172.31.16.0/20 range
-    security_group: "sg-14e2c26d", # "Bootstrap Concourse" security group
+    subnet_id: secret_from_pass('paas-cf/prod-subnet-id', 'subnet-bc34fbe4'), # us-east-1a in default VPC, 172.31.16.0/20 range
+    security_group: secret_from_pass('paas-cf/prod-security-group', 'sg-14e2c26d'), # "Bootstrap Concourse" security group
   },
 }.freeze
 AWS_ACCOUNT_VARIABLES = AWS_ACCOUNT_DATA.fetch(AWS_ACCOUNT)
