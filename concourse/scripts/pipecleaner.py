@@ -57,7 +57,9 @@ class Pipecleaner(object):
                 script += "set " + switch + "\n"
 
         for name, value in variables.iteritems():
-            script += "export " + name + "='DUMMY'\n"
+            # Include $(date) so that shellcheck doesn't assume these variables have safe contents
+            script += name + "=\"DUMMY-$(date)\"\n"
+            script += "export " + name + "\n"
 
         script += args[-1]
 
