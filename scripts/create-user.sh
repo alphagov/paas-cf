@@ -27,6 +27,9 @@ https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/
 
 You should make sure to change your password, as explained in the Quick Setup Guide.
 
+You can find our privacy policy here:
+https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/privacy/
+
 Regards,
 Government PaaS team.
 '
