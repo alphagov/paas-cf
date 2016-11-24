@@ -438,5 +438,11 @@ Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/mast
 ## Datadog credentials
 These must be published in each new environment. Visit the [Datadog documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/datadog.md)
 
+## AWS Bosh lite helper
+
+We provide a helper script to configure bosh-lite on AWS. The script is self documented, so run `./scripts/bosh-lite.sh` to print the help.
+
+`DEPLOY_ENV=yourname ./scripts/bosh-lite.sh start` will start a AWS instance of bosh-lite, accesible from the office.
+
 ## Other useful commands
 Type `make` to get the list of all available commands.
