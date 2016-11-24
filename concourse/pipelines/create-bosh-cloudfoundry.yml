@@ -2332,7 +2332,7 @@ jobs:
             outputs:
               - name: artifacts
             run:
-              path: sh
+              path: bash
               args:
                 - -e
                 - -c
@@ -2348,6 +2348,9 @@ jobs:
                   if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
                     echo "WARNING: The acceptance tests have been disabled. Unset DISABLE_CF_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
                   else
+                    SLEEPTIME=90
+                    echo "Sleeping for ${SLEEPTIME} seconds..."
+                    for i in $(seq $SLEEPTIME); do echo -ne "$i"'\r'; sleep 1; done; echo
                     /var/vcap/jobs/acceptance-tests/bin/run
                   fi
 
