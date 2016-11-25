@@ -6,19 +6,19 @@ Vagrant.require_version ">= 1.8.0"
 AWS_ACCOUNT = ENV.fetch("AWS_ACCOUNT", "dev")
 AWS_ACCOUNT_DATA = {
   "dev" => {
-    subnet_id: "subnet-d55defe8", # us-east-1e in default VPC, 172.31.32.0/20 range
+    subnet_id: "subnet-d55defe8", # us-east-1e in default VPC
     security_group: "sg-99e0c0e0", # "Bootstrap Concourse" security group
   },
   "ci" => {
-    subnet_id: "subnet-68bb7e30", # us-east-1a in default VPC, 172.31.16.0/20 range
+    subnet_id: "subnet-68bb7e30", # us-east-1a in default VPC
     security_group: "sg-23e1c15a", # "Bootstrap Concourse" security group
   },
   "staging" => {
-    subnet_id: "subnet-9034fbc8", # us-east-1c in default VPC, 172.31.16.0/20 range
+    subnet_id: "subnet-9034fbc8", # us-east-1c in default VPC
     security_group: "sg-87e1c1fe", # "Bootstrap Concourse" security group
   },
   "prod" => {
-    subnet_id: "subnet-bc34fbe4", # us-east-1a in default VPC, 172.31.16.0/20 range
+    subnet_id: "subnet-bc34fbe4", # us-east-1a in default VPC
     security_group: "sg-14e2c26d", # "Bootstrap Concourse" security group
   },
 }.freeze
