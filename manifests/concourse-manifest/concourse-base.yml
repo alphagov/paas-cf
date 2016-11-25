@@ -25,7 +25,7 @@ resource_pools:
       url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3263.8
       sha1: 95ecc2709ac62f21d0a1c6cac023585c3919b825
     cloud_properties:
-      instance_type: m4.large
+      instance_type: m4.xlarge
       availability_zone: (( grab terraform_outputs.zone0 ))
       iam_instance_profile: deployer-concourse
       elbs:
