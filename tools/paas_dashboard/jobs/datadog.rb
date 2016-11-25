@@ -23,7 +23,6 @@ end
 
 def get_and_emit_data_for_env(service_tag:, data_id_prefix:)
   results = get_monitor_results(service_tag)
-  puts results.to_json
   critical_count, warning_count = get_counts(results)
   send_event("#{data_id_prefix}_counts", criticals: critical_count, warnings: warning_count)
 end
@@ -34,7 +33,7 @@ end
 
 def get_counts(results)
   critical_states = ['Alert']
-  warning_states = ['No Data', 'Warning']
+  warning_states = ['No Data', 'Warn']
 
   criticals = results.select { |monitor| critical_states.include?(monitor['overall_state']) }.size
   warnings = results.select { |monitor| warning_states.include?(monitor['overall_state']) }.size
