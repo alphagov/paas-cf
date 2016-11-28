@@ -25,6 +25,7 @@ resource "aws_security_group" "bosh_lite_office" {
   }
 
   tags {
-    Name = "${var.env}-bosh-lite-office-access"
+    Name       = "${var.env}-bosh-lite-office-access"
+    Created-by = "terraform-bosh-lite"
   }
 }

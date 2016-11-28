@@ -2,7 +2,8 @@ resource "aws_internet_gateway" "default" {
   vpc_id = "${aws_vpc.bosh-lite-vpc.id}"
 
   tags {
-    Name = "${var.env}-bosh-lite-igw"
+    Name       = "${var.env}-bosh-lite-igw"
+    Created-by = "terraform-bosh-lite"
   }
 }
 
@@ -15,7 +16,8 @@ resource "aws_route_table" "bosh-lite" {
   }
 
   tags {
-    Name = "${var.env}-bosh-lite-rtb"
+    Name       = "${var.env}-bosh-lite-rtb"
+    Created-by = "terraform-bosh-lite"
   }
 }
 
@@ -29,7 +31,8 @@ resource "aws_subnet" "bosh-lite" {
   map_public_ip_on_launch = true
 
   tags {
-    Name = "${var.env}-bosh-lite-subnet-${count.index}"
+    Name       = "${var.env}-bosh-lite-subnet-${count.index}"
+    Created-by = "terraform-bosh-lite"
   }
 }
 

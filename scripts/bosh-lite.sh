@@ -36,6 +36,8 @@ Actions:
   destroy       Destroy bosh-lite
   info          Print bosh-lite info
   ssh           SSH or execute commands on the bosh-lite instance
+  cleanup       Directly delete all bosh-lite resources for \$DEPLOY_ENV
+                To use if the terraform and vagrant state is not available.
 
 Basic requirements:
  * Exported \$DEPLOY_ENV variable
@@ -67,7 +69,7 @@ Variables to override:
     Default: true
 
 When not using terraform, these variables would allow to select
-alternative resources:
+alternative resources. Do not override if using terraform.
 
   BOSH_LITE_SUBNET_TAG_NAME:
     VPC tag 'Name' to deploy to. Will be created if missing.
@@ -169,6 +171,17 @@ build_aws_cli_tag_filter() {
   echo "${filter}"
 }
 
+find_vpc_by_tags() {
+  local tag_filter
+  tag_filter="$(build_aws_cli_tag_filter "$@")"
+  # shellcheck disable=SC2086
+  aws ec2 describe-vpcs \
+    --region "${BOSH_LITE_REGION}" \
+    --filters ${tag_filter} \
+    --query 'Vpcs[0].VpcId' \
+    --output text
+}
+
 find_subnet_by_tags() {
   local tag_filter
   tag_filter="$(build_aws_cli_tag_filter "$@")"
@@ -189,6 +202,149 @@ find_security_group_by_tags() {
     --filters ${tag_filter} \
     --query 'SecurityGroups[0].GroupId' \
     --output text
+}
+
+find_route_table_by_tags() {
+  local tag_filter
+  tag_filter="$(build_aws_cli_tag_filter "$@")"
+  # shellcheck disable=SC2086
+  aws ec2 describe-route-tables \
+    --region "${BOSH_LITE_REGION}" \
+    --filters ${tag_filter} \
+    --query 'RouteTables[0].RouteTableId' \
+    --output text
+}
+
+find_internet_gateway_by_tags() {
+  local tag_filter
+  tag_filter="$(build_aws_cli_tag_filter "$@")"
+  # shellcheck disable=SC2086
+  aws ec2 describe-internet-gateways \
+    --region "${BOSH_LITE_REGION}" \
+    --filters ${tag_filter} \
+    --query 'InternetGateways[0].InternetGatewayId' \
+    --output text
+}
+
+find_all_instances_by_tags() {
+  local tag_filter
+  tag_filter="$(build_aws_cli_tag_filter "$@")"
+  # shellcheck disable=SC2086
+  aws ec2 describe-instances \
+    --region "${BOSH_LITE_REGION}" \
+    --filters ${tag_filter} \
+    --query 'Reservations[].Instances[].InstanceId' \
+    --output text | xargs
+}
+
+get_instance_state() {
+  aws ec2 describe-instances \
+    --region "${BOSH_LITE_REGION}" \
+    --instance-ids "$1" \
+    --query 'Reservations[0].Instances[0].State.Name' \
+    --output text
+}
+
+cleanup_bosh_lite() {
+  instanceids="$(find_all_instances_by_tags "Name:${DEPLOY_ENV}-bosh-lite")"
+  subnetid=$(find_subnet_by_tags "Name:${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SUBNET_TAG_NAME_SUFFIX}" "Created-by:terraform-bosh-lite")
+  rtbid="$(find_route_table_by_tags "Name:${DEPLOY_ENV}-bosh-lite-rtb" "Created-by:terraform-bosh-lite")"
+  gwid="$(find_internet_gateway_by_tags "Name:${DEPLOY_ENV}-bosh-lite-igw" "Created-by:terraform-bosh-lite")"
+  sgid="$(find_security_group_by_tags "Name:${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME_SUFFIX}" "Created-by:terraform-bosh-lite")"
+  vpcid=$(find_vpc_by_tags "Name:${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_VPC_TAG_NAME_SUFFIX}" "Created-by:terraform-bosh-lite")
+
+  cat <<EOF
+
+WARNING: This is a destructive operation! It will delete all the objects directly.
+
+If you still have the terraform and the vagrant state for this bosh lite, use:
+
+  DEPLOY_ENV=$DEPLOY_ENV ${SCRIPT_NAME} destroy
+
+These resources will get deleted:
+
+  * Instances: ${instanceids}
+  * Subnet: ${subnetid}
+  * Routing table: ${rtbid}
+  * Gateway ID: ${gwid}
+  * Security Group: ${sgid}
+  * VPC: ${vpcid}
+
+EOF
+  read -r -p "Do you want to continue? [y/N] " c
+  if [ "$c" != "y" ] && [ "$c" != "Y" ]; then
+    exit 1
+  fi
+
+  if [ "$instanceids" != "None" ]; then
+    for instanceid in $instanceids; do
+      if [ "$(get_instance_state "${instanceid}")" != "terminated" ]; then
+        echo "Deleting VM with ${instanceid} Name:${DEPLOY_ENV}-bosh-lite"
+        aws ec2 terminate-instances \
+          --region "${BOSH_LITE_REGION}" \
+          --instance-ids "${instanceid}" > /dev/null
+        echo -n "Waiting for ${instanceid} to be terminated"
+        while [ "$(get_instance_state "${instanceid}")" != "terminated" ]; do
+          echo -n .
+          sleep 2
+        done
+        echo "Done"
+      fi
+    done
+  fi
+
+  if [ "$subnetid" != "None" ]; then
+    echo "Deleting Subnet with ${subnetid} Name:${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SUBNET_TAG_NAME_SUFFIX}"
+    aws ec2 delete-subnet \
+      --region "${BOSH_LITE_REGION}" \
+      --subnet-id "${subnetid}"
+  fi
+
+  if [ "$rtbid" != "None" ]; then
+    echo "Deleting Routing Table ${rtbid} with Name:${DEPLOY_ENV}-bosh-lite-rtb"
+    aws ec2 delete-route-table \
+      --region "${BOSH_LITE_REGION}" \
+      --route-table-id "${rtbid}"
+  fi
+
+  if [ "$gwid" != "None" ]; then
+    echo "Deleting Internet Gateway ${gwid} with Name:${DEPLOY_ENV}-bosh-lite-igw"
+    vpcid="$(
+      aws ec2 describe-internet-gateways \
+        --region "${BOSH_LITE_REGION}" \
+        --internet-gateway-id "${gwid}" \
+        --query InternetGateways[0].Attachments[0].VpcId \
+        --output text
+    )"
+    aws ec2 detach-internet-gateway \
+      --region "${BOSH_LITE_REGION}" \
+      --internet-gateway-id "${gwid}" \
+      --vpc-id "${vpcid}"
+
+    aws ec2 delete-internet-gateway \
+      --region "${BOSH_LITE_REGION}" \
+      --internet-gateway-id "${gwid}"
+  fi
+
+  if [ "$sgid" != "None" ]; then
+    echo "Deleting Security Group ${sgid} with Name:${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME_SUFFIX}"
+    aws ec2 delete-security-group \
+      --region "${BOSH_LITE_REGION}" \
+      --group-id "${sgid}"
+  fi
+
+  if [ "$vpcid" != "None" ]; then
+    echo "Deleting VPC ${vpcid} with Name:${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_VPC_TAG_NAME_SUFFIX}"
+    aws ec2 delete-vpc \
+      --region "${BOSH_LITE_REGION}" \
+      --vpc-id "${vpcid}"
+  fi
+
+  aws ec2 delete-key-pair \
+    --region "${BOSH_LITE_REGION}" \
+    --key-name "${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_KEYPAIR_SUFFIX}" > /dev/null || true
+
+  echo "Bosh-lite called ${DEPLOY_ENV} cleaned!"
 }
 
 run_terraform() {
@@ -331,7 +487,7 @@ EOF
 ACTION=${1:-}
 
 case "${ACTION}" in
-  info|start|stop|destroy|ssh)
+  info|start|stop|destroy|ssh|cleanup)
   ;;
   *)
     usage
@@ -399,6 +555,10 @@ case "${ACTION}" in
     init_ssh_key_vars
     shift
     run_vagrant ssh ${1:+--} "$@"
+  ;;
+  cleanup)
+    init_environment
+    cleanup_bosh_lite
   ;;
 esac
 
