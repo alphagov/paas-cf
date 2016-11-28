@@ -10,19 +10,17 @@ PROJECT_DIR_PARENT="$(cd "${PROJECT_DIR}/.."; pwd)"
 # Set to false to disable autohalt
 BOSH_LITE_AUTO_HALT=${BOSH_LITE_AUTO_HALT:-true}
 
+# Set to false to not run terraform
+BOSH_LITE_TERRAFORM=${BOSH_LITE_TERRAFORM:-true}
+
 # Defaults
 DEFAULT_BOSH_LITE_INSTANCE_TYPE=m3.xlarge
 DEFAULT_BOSH_LITE_CODEBASE_PATH="${PROJECT_DIR_PARENT}/bosh-lite"
 DEFAULT_BOSH_LITE_REGION="eu-west-1"
-DEFAULT_BOSH_LITE_SUBNET_TAG_NAME="bosh-lite-subnet-0"
-DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME="bosh-lite-office-access"
-
-export BOSH_LITE_INSTANCE_TYPE="${BOSH_LITE_INSTANCE_TYPE:-${DEFAULT_BOSH_LITE_INSTANCE_TYPE}}"
-export BOSH_LITE_CODEBASE_PATH="${BOSH_LITE_CODEBASE_PATH:-${DEFAULT_BOSH_LITE_CODEBASE_PATH}}"
-export BOSH_LITE_REGION="${BOSH_LITE_REGION:-${DEFAULT_BOSH_LITE_REGION}}"
-
-export BOSH_LITE_SUBNET_TAG_NAME="${BOSH_LITE_SUBNET_TAG_NAME:-${DEFAULT_BOSH_LITE_SUBNET_TAG_NAME}}"
-export BOSH_LITE_SECURITY_GROUP_TAG_NAME="${BOSH_LITE_SECURITY_GROUP_TAG_NAME:-${DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME}}"
+DEFAULT_BOSH_LITE_VPC_TAG_NAME_SUFFIX="bosh-lite-vpc"
+DEFAULT_BOSH_LITE_SUBNET_TAG_NAME_SUFFIX="bosh-lite-subnet-0"
+DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME_SUFFIX="bosh-lite-office-access"
+DEFAULT_BOSH_LITE_KEYPAIR_SUFFIX=bosh-lite-ssh-key-pair
 
 usage() {
   cat <<EOF
@@ -39,7 +37,7 @@ Actions:
   info          Print bosh-lite info
   ssh           SSH or execute commands on the bosh-lite instance
 
-Requirements:
+Basic requirements:
  * Exported \$DEPLOY_ENV variable
  * Exported AWS credentials as \$AWS_ACCESS_KEY_ID and \$AWS_SECRET_ACCESS_KEY
  * aws_cli installed
@@ -56,17 +54,36 @@ Variables to override:
     Where bosh-lite code is cloned
     Default: ${DEFAULT_BOSH_LITE_CODEBASE_PATH}
 
-  BOSH_LITE_SUBNET_TAG_NAME:
-    Subnet tag 'Name' to deploy to. The subnet determines the VPC.
-    Default: ${DEFAULT_BOSH_LITE_SUBNET_TAG_NAME}
-
-  BOSH_LITE_SECURITY_GROUP_TAG_NAME:
-    Security Group tag 'Name' to use for bosh-lite.
-    Default: ${DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME}
-
   BOSH_LITE_REGION:
     Bosh lite region to deploy
     Defaul: ${DEFAULT_BOSH_LITE_REGION}
+
+  BOSH_LITE_AUTO_HALT:
+    Enable or disable auto-halt of the VM at 19:00 UTC
+    Default: true
+
+  BOSH_LITE_RUN_TERRAFORM:
+    Run terraform to create the AWS required resources: VPC, subnet, SG, keys...
+    Default: true
+
+When not using terraform, these variables would allow to select
+alternative resources:
+
+  BOSH_LITE_SUBNET_TAG_NAME:
+    VPC tag 'Name' to deploy to. Will be created if missing.
+    Default: \${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_VPC_TAG_NAME_SUFFIX}
+
+  BOSH_LITE_SUBNET_TAG_NAME:
+    Subnet tag 'Name' to deploy to. Will be created if missing.
+    Default: \${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SUBNET_TAG_NAME_SUFFIX}
+
+  BOSH_LITE_SECURITY_GROUP_TAG_NAME:
+    Security Group tag 'Name' to use for bosh-lite. Will be created if missing.
+    Default: \${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME_SUFFIX}
+
+  BOSH_LITE_KEYPAIR:
+    AWS SSH key pair to use.
+    Default: \${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_KEYPAIR_SUFFIX}
 
 EOF
 
@@ -90,7 +107,7 @@ EOF
 }
 
 check_vagrant() {
-  if ! ( which vagrant > /dev/null || vagrant plugin list | grep -q vagrant-aws); then
+  if ! ( which vagrant > /dev/null && vagrant plugin list | grep -q vagrant-aws); then
     cat <<EOF
 You must have vagrant installed in your system with the vagrant-aws plugin.
 
@@ -107,23 +124,30 @@ get_vagrant_box() {
   fi
 }
 
-init_credentials() {
+init_environment() {
+  if [ -z "${DEPLOY_ENV:-}" ]; then
+    echo "Error: You must set \$DEPLOY_ENV"
+    exit 1
+  fi
+
   export BOSH_LITE_NAME="${DEPLOY_ENV}-bosh-lite"
   export BOSH_AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
   export BOSH_AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
-}
 
-get_aws_key_pair_finger_print() {
-  aws ec2 describe-key-pairs \
-    --region "${BOSH_LITE_REGION}" \
-    --filters "Name=key-name,Values=${BOSH_LITE_KEYPAIR}" \
-    --query "KeyPairs[0].KeyFingerprint" \
-    --output text
+  export BOSH_LITE_CODEBASE_PATH="${BOSH_LITE_CODEBASE_PATH:-$DEFAULT_BOSH_LITE_CODEBASE_PATH}"
+
+  export BOSH_LITE_INSTANCE_TYPE="${BOSH_LITE_INSTANCE_TYPE:-${DEFAULT_BOSH_LITE_INSTANCE_TYPE}}"
+  export BOSH_LITE_CODEBASE_PATH="${BOSH_LITE_CODEBASE_PATH:-${DEFAULT_BOSH_LITE_CODEBASE_PATH}}"
+  export BOSH_LITE_REGION="${BOSH_LITE_REGION:-${DEFAULT_BOSH_LITE_REGION}}"
+
+  export BOSH_LITE_VPC_TAG_NAME="${BOSH_LITE_VPC_TAG_NAME:-${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_VPC_TAG_NAME_SUFFIX}}"
+  export BOSH_LITE_SUBNET_TAG_NAME="${BOSH_LITE_SUBNET_TAG_NAME:-${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SUBNET_TAG_NAME_SUFFIX}}"
+  export BOSH_LITE_SECURITY_GROUP_TAG_NAME="${BOSH_LITE_SECURITY_GROUP_TAG_NAME:-${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_SECURITY_GROUP_TAG_NAME_SUFFIX}}"
+
+  export BOSH_LITE_KEYPAIR="${BOSH_LITE_KEYPAIR:-${DEPLOY_ENV}-${DEFAULT_BOSH_LITE_KEYPAIR_SUFFIX}}"
 }
 
 init_ssh_key_vars() {
-  export BOSH_LITE_KEYPAIR="${DEPLOY_ENV}_bosh_lite_ssh_key_pair"
-
   # Get SSH key pair from the state
   SSH_DIR="${BOSH_LITE_CODEBASE_PATH}/.vagrant/.ssh"
   mkdir -p "${SSH_DIR}"
@@ -133,42 +157,53 @@ init_ssh_key_vars() {
     ssh-keygen -f "${BOSH_LITE_PRIVATE_KEY}" -P ""
     chmod 600 "${BOSH_LITE_PRIVATE_KEY}"
   fi
-
-  local aws_key_finger_print
-  aws_key_finger_print=$(get_aws_key_pair_finger_print)
-  local local_key_finger_print
-  local_key_finger_print=$(if [ -f "${BOSH_LITE_PRIVATE_KEY}.fingerprint" ]; then cat "${BOSH_LITE_PRIVATE_KEY}.fingerprint"; fi)
-
-  if [ "${aws_key_finger_print}" != "${local_key_finger_print}" ]; then
-    echo "Updating AWS Key ${BOSH_LITE_KEYPAIR}"
-    if [ "${aws_key_finger_print}" != "None" ]; then
-      aws ec2 delete-key-pair \
-        --region "${BOSH_LITE_REGION}" \
-        --key-name "${BOSH_LITE_KEYPAIR}" > /dev/null || true
-    fi
-    aws ec2 import-key-pair \
-      --region "${BOSH_LITE_REGION}" \
-      --key-name "${BOSH_LITE_KEYPAIR}" \
-      --public-key-material "$(cat "${BOSH_LITE_PRIVATE_KEY}.pub")" > /dev/null
-    get_aws_key_pair_finger_print > "${BOSH_LITE_PRIVATE_KEY}.fingerprint"
-  fi
 }
 
-delete_ssh_key_pair() {
-  aws ec2 delete-key-pair \
+build_aws_cli_tag_filter() {
+  local pair
+  local filter
+  filter=""
+  for pair in "$@"; do
+    filter="${filter:+${filter} }Name=tag:${pair%:*},Values=${pair#*:}"
+  done
+  echo "${filter}"
+}
+
+find_subnet_by_tags() {
+  local tag_filter
+  tag_filter="$(build_aws_cli_tag_filter "$@")"
+  # shellcheck disable=SC2086
+  aws ec2 describe-subnets \
     --region "${BOSH_LITE_REGION}" \
-    --key-name "${BOSH_LITE_KEYPAIR}" > /dev/null || true
+    --filters ${tag_filter} \
+    --query 'Subnets[0].SubnetId' \
+    --output text
 }
 
-init_subnet_and_security_group() {
+find_security_group_by_tags() {
+  local tag_filter
+  tag_filter="$(build_aws_cli_tag_filter "$@")"
+  # shellcheck disable=SC2086
+  aws ec2 describe-security-groups \
+    --region "${BOSH_LITE_REGION}" \
+    --filters ${tag_filter} \
+    --query 'SecurityGroups[0].GroupId' \
+    --output text
+}
+
+run_terraform() {
+  mkdir -p "${BOSH_LITE_CODEBASE_PATH}/.vagrant"
+  terraform "$@" \
+    -state="${BOSH_LITE_CODEBASE_PATH}/.vagrant/terraform.tfstate" \
+    -var "env=${DEPLOY_ENV}" \
+    -var "bosh_lite_ssh_key=$(cat "${BOSH_LITE_PRIVATE_KEY}.pub")" \
+    -var-file="${PROJECT_DIR}/terraform/dev.tfvars" \
+    "${PROJECT_DIR}/terraform/bosh-lite"
+}
+
+init_subnet_and_security_group_vars() {
   # Query the subnet tagged as Name=bosh-lite-subnet-0
-  BOSH_LITE_SUBNET_ID=$(
-    aws ec2 describe-subnets \
-      --region "${BOSH_LITE_REGION}" \
-      --filters "Name=tag:Name,Values=${BOSH_LITE_SUBNET_TAG_NAME}" \
-      --query 'Subnets[0].SubnetId' \
-      --output text
-    )
+  BOSH_LITE_SUBNET_ID="$(find_subnet_by_tags "Name:${BOSH_LITE_SUBNET_TAG_NAME}")"
   export BOSH_LITE_SUBNET_ID
   if ! aws ec2 describe-subnets --region "${BOSH_LITE_REGION}" --subnet-ids "${BOSH_LITE_SUBNET_ID}" > /dev/null; then
     echo
@@ -177,13 +212,7 @@ init_subnet_and_security_group() {
   fi
 
   # Query the security group tagged as Name=bosh-lite-office-access
-  BOSH_LITE_SECURITY_GROUP=$(
-    aws ec2 describe-security-groups \
-      --region "${BOSH_LITE_REGION}" \
-      --filters "Name=tag:Name,Values=${BOSH_LITE_SECURITY_GROUP_TAG_NAME}" \
-      --query 'SecurityGroups[0].GroupId' \
-      --output text
-    )
+  BOSH_LITE_SECURITY_GROUP="$(find_security_group_by_tags "Name:${BOSH_LITE_SECURITY_GROUP_TAG_NAME}")"
   export BOSH_LITE_SECURITY_GROUP
   if ! aws ec2 describe-security-groups --region "${BOSH_LITE_REGION}" --group-ids "${BOSH_LITE_SECURITY_GROUP}" > /dev/null; then
     echo
@@ -311,9 +340,9 @@ esac
 
 case "${ACTION}" in
   info)
+    init_environment
     check_bosh_lite_codebase
     check_vagrant
-    init_credentials
     init_ssh_key_vars
     print_info
     if [ "$(get_vagrant_state)" == "running" ]; then
@@ -321,14 +350,19 @@ case "${ACTION}" in
     fi
   ;;
   start)
+    init_environment
     check_bosh_lite_codebase
     check_vagrant
-    init_credentials
+
     init_ssh_key_vars
-    init_subnet_and_security_group
+
+    if [ "${BOSH_LITE_TERRAFORM}" == "true" ]; then
+      run_terraform apply
+    fi
+
+    init_subnet_and_security_group_vars
 
     get_vagrant_box
-
     run_vagrant up --provider=aws
     echo "Bosh lite instance provisioned."
 
@@ -337,9 +371,9 @@ case "${ACTION}" in
     print_info
   ;;
   stop)
+    init_environment
     check_bosh_lite_codebase
     check_vagrant
-    init_credentials
     init_ssh_key_vars
     echo "Halting Bosh lite VM"
     run_vagrant ssh -- sudo halt
@@ -347,17 +381,21 @@ case "${ACTION}" in
     echo "Bosh lite VM state: $(get_vagrant_state)"
   ;;
   destroy)
+    init_environment
     check_bosh_lite_codebase
     check_vagrant
-    init_credentials
     init_ssh_key_vars
+
     run_vagrant destroy
-    delete_ssh_key_pair
+
+    if [ "${BOSH_LITE_TERRAFORM}" == "true" ]; then
+      run_terraform destroy -force
+    fi
   ;;
   ssh)
+    init_environment
     check_bosh_lite_codebase
     check_vagrant
-    init_credentials
     init_ssh_key_vars
     shift
     run_vagrant ssh ${1:+--} "$@"
