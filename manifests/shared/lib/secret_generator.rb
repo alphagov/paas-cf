@@ -3,11 +3,12 @@ require 'openssl'
 require 'digest/md5'
 
 class SecretGenerator
+  PASSWORD_PREFIX = 'p'.freeze
   PASSWORD_LENGTH = 18
 
   def self.random_password
     bytes = PASSWORD_LENGTH / 2
-    SecureRandom.hex(bytes)
+    PASSWORD_PREFIX + SecureRandom.hex(bytes)
   end
 
   def self.sha512_crypt(password, salt = nil)
