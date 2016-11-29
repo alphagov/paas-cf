@@ -1,8 +1,8 @@
 resource "datadog_monitor" "consul" {
-  name               = "${format("%s Consul hosts", var.env)}"
+  name               = "${format("%s Consul process running", var.env)}"
   type               = "service check"
-  message            = "${format("Missing consul hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message = "Missing consul hosts! Check VM state."
+  message            = "${format("Consul process not running on this host in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  escalation_message = "Consul process not running! Check VM state."
   no_data_timeframe  = "7"
   query              = "${format("'process.up'.over('bosh-deployment:%s','process:consul').last(6).count_by_status()", var.env)}"
 
