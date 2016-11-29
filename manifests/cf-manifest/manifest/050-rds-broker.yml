@@ -28,10 +28,10 @@ meta:
       allocated_storage: 20
 
 releases:
-  - name: aws-broker
-    version: 0.0.12
-    url: https://github.com/alphagov/paas-rds-broker-boshrelease/releases/download/0.0.12/aws-broker-0.0.12.tgz
-    sha1: 5de975ce69085df22870fc695986fc4331a37881
+  - name: rds-broker
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.1.tgz
+    sha1: 7c5261a2946c14c7beea5ce7129315c1a447613e
 
 jobs:
   - name: rds_broker
@@ -41,7 +41,7 @@ jobs:
     stemcell: default
     templates:
       - name: rds-broker
-        release: aws-broker
+        release: rds-broker
     networks:
       - name: cf
     properties:
