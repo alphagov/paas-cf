@@ -5,9 +5,14 @@ RSpec.describe SecretGenerator do
   SIMPLE_PASSWORD_REGEX = /\A[a-zA-Z0-9]+\z/
 
   describe "password generation" do
+    it "prefixes the password with a fixed character" do
+      pw = SecretGenerator.random_password
+      expect(pw).to start_with(SecretGenerator::PASSWORD_PREFIX)
+    end
+
     it "generates a passwords of the required length" do
       pw = SecretGenerator.random_password
-      expect(pw.size).to eq(SecretGenerator::PASSWORD_LENGTH)
+      expect(pw.size).to eq(SecretGenerator::PASSWORD_LENGTH + SecretGenerator::PASSWORD_PREFIX.size)
     end
 
     it "generates a different password each time" do
