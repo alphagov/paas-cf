@@ -35,3 +35,28 @@ generate_password() {
     abort "Failure generating password"
   fi
 }
+
+check_aws_account_used() {
+  required_account="${1}"
+  account_alias=$(aws iam list-account-aliases | grep gov-paas | tr -d '" ')
+
+  if [[ "${account_alias}" != "gov-paas-${required_account}" ]]; then
+    echo "Required AWS account is ${required_account}, but your aws-cli is using keys for ${account_alias}"
+    exit 1
+  fi
+}
+
+check_logged_in_cf() {
+  required_api_endpoint="${1}"
+  api_result=$(cf api)
+  if ! [[ "${api_result}" =~ ${required_api_endpoint} ]]; then
+    echo "Required cf api endpoint is ${required_api_endpoint}, but your cf reports '${api_result}'"
+    exit 1
+  fi
+
+  logged_in_pattern="Not logged in"
+  if [[ $(cf target) =~ ${logged_in_pattern} ]]; then
+    echo "Not logged in. Please 'cf login' and retry."
+    exit 1
+  fi
+}
