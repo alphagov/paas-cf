@@ -29,7 +29,7 @@ usage() {
 
 Usage:
 
-  ./$SCRIPT -e \$ENV -u \$USERNAME
+  ./$SCRIPT -e \$ENV -u \$USERNAME [--no-email]
 
 Example:
 
@@ -38,6 +38,7 @@ Example:
 Description:
 
   This script will generate a new password for an existing user, change their password to the newly generated one, and then email them the password.
+  To print the password instead of emailing, supply the '--no-email' flag (useful for development)
 
 Requirements:
 
@@ -58,21 +59,25 @@ fi
 while [[ $# -gt 1 ]]
 do
 key="$1"
+shift
 
 case $key in
   -e|--env)
-  ENVIRONMENT="$2"
-  shift # past argument
+  ENVIRONMENT="$1"
+  shift
   ;;
   -u|--username)
-  USERNAME="$2"
+  USERNAME="$1"
+  shift
+  ;;
+  --no-email)
+  NO_EMAIL="true"
   ;;
   *)
   echo "You have passed an unknown option: $key" >&2
   usage
   ;;
 esac
-shift # past argument or value
 done
 
 check_environment() {
@@ -185,6 +190,18 @@ send_mail() {
   echo
 }
 
+print_password() {
+  success "${USERNAME} has had their password changed to '${PASSWORD}'."
+}
+
+emit_password() {
+  if [ "${NO_EMAIL:-}" = "true" ]; then
+    print_password
+  else
+    send_mail
+  fi
+}
+
 delete_token() {
   info "Deleting your uaac token..."
   uaac token delete
@@ -200,5 +217,5 @@ set_uaac_target
 set_uaac_context
 generate_password
 change_password
-send_mail
+emit_password
 delete_token
