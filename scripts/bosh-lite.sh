@@ -27,17 +27,24 @@ usage() {
 Start a bosh-lite instance in AWS.
 
 Usage:
-  $SCRIPT_NAME <start|stop|destroy|info|ssh>
+  $SCRIPT_NAME <action>
 
 Actions:
 
-  start         Start bosh-lite
-  stop          Halt bosh-lite
-  destroy       Destroy bosh-lite
-  info          Print bosh-lite info
-  ssh           SSH or execute commands on the bosh-lite instance
-  cleanup       Directly delete all bosh-lite resources for \$DEPLOY_ENV
-                To use if the terraform and vagrant state is not available.
+  start                     Start bosh-lite
+  stop                      Halt bosh-lite
+  destroy                   Destroy bosh-lite
+  info                      Print bosh-lite info
+  ssh                       SSH or execute commands on the bosh-lite instance
+  manifest <file.yml>       From the vagrant VM, login in bosh, upload the
+                            given manifest, and set the deployment.
+  bosh <bosh args>          Execute the give bosh-cli command in the vagrant.
+                            Examples:
+                              $SCRIPT_NAME bosh ssh app/0
+                              $SCRIPT_NAME bosh deploy
+  cleanup                   Delete all bosh-lite resources for \$DEPLOY_ENV
+                            To use if the terraform and vagrant state are
+                            not available.
 
 Basic requirements:
  * Exported \$DEPLOY_ENV variable
@@ -435,6 +442,7 @@ if config["user_management"]["local"]["users"] == []
   new_password = (1..12).map{|i| ('a'..'z').to_a[rand(26)]}.join
   config["user_management"]["local"]["users"] =  [{"name" => "admin", "password" => new_password}]
   File.open('/var/vcap/jobs/director/config/director.yml.erb', 'w') { |file| file.write(YAML.dump(config)) }
+  File.open('/home/ubuntu/director_admin_password.txt', 'w') { |file| file.write(new_password) }
   system("/var/vcap/bosh/bin/monit restart director")
   sleep 20
 else
@@ -445,6 +453,16 @@ puts "\nBosh-lite admin password is: #{config["user_management"]["local"]["users
 EOF
 
   run_vagrant ssh -- sudo ruby ./update_director_password.rb
+}
+
+setup_bosh_manifest() {
+  # shellcheck disable=SC2002
+  # shellcheck disable=SC2016
+  cat "$1" | run_vagrant ssh -- '
+      echo -e "admin\n$(cat /home/ubuntu/director_admin_password.txt)" | bosh login
+      sed "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" > manifest.yml
+      bosh deployment manifest.yml
+    '
 }
 
 print_info() {
@@ -487,7 +505,13 @@ EOF
 ACTION=${1:-}
 
 case "${ACTION}" in
-  info|start|stop|destroy|ssh|cleanup)
+  info|start|stop|destroy|ssh|bosh|cleanup)
+  ;;
+  manifest)
+    if [ -z "${2:-}" ] && ! [ -f "${2:-}" ]; then
+      echo "You must pass a manifest file."
+      exit 1
+    fi
   ;;
   *)
     usage
@@ -555,6 +579,21 @@ case "${ACTION}" in
     init_ssh_key_vars
     shift
     run_vagrant ssh ${1:+--} "$@"
+  ;;
+  manifest)
+    init_environment
+    check_bosh_lite_codebase
+    check_vagrant
+    init_ssh_key_vars
+    setup_bosh_manifest "$2"
+  ;;
+  bosh)
+    init_environment
+    check_bosh_lite_codebase
+    check_vagrant
+    init_ssh_key_vars
+    shift
+    run_vagrant ssh -- -t bosh "$@"
   ;;
   cleanup)
     init_environment
