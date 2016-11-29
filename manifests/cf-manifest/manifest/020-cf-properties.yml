@@ -307,7 +307,7 @@ properties:
       - name: staticfile_buildpack
         package: staticfile-buildpack
       - name: java_buildpack
-        package: buildpack_java
+        package: buildpack_java_offline
       - name: ruby_buildpack
         package: ruby-buildpack
       - name: nodejs_buildpack
