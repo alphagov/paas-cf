@@ -6,6 +6,10 @@ import subprocess
 import sys
 import time
 
+# python2 compatibility
+try: input = raw_input
+except NameError: pass
+
 class SubprocessException(Exception):
     pass
 
@@ -25,7 +29,7 @@ class OrgReset(object):
             sys.exit("'No future change is possible.' (phew, not deleted)")
 
     def confirm_user_input(self, question):
-        response = raw_input(question)
+        response = input(question)
         return response == "y"
 
     def whoami(self):
@@ -62,28 +66,28 @@ class OrgReset(object):
                 self.run(['cf', 'set-space-role', user, self.org, self.initial_space, 'SpaceDeveloper'])
 
     def run(self, command):
-        print 'Running \'%s\'' % ' '.join(command)
+        print('Running \'%s\'' % ' '.join(command))
         try:
             output = subprocess.check_output(command)
-            print output
+            print(output)
             return output
         except subprocess.CalledProcessError as err:
             raise SubprocessException('Aborting: \'%s\' failed with exit code %d\n%s' % (err.cmd, err.returncode, err.output))
 
     def run_with_retry(self, command, retry_count, retry_func):
-        print 'Running with retry \'%s\'' % ' '.join(command)
+        print('Running with retry \'%s\'' % ' '.join(command))
         try:
             output = subprocess.check_output(command)
-            print output
+            print(output)
             return output
         except subprocess.CalledProcessError as err:
             if retry_func(err):
-                print err.output
+                print(err.output)
                 retry_count -= 1
                 if retry_count <= 0:
                     raise SubprocessException('Timed out retrying \'%s\'' % ' '.join(command))
 
-                print 'Sleeping for 30 secs before retrying'
+                print('Sleeping for 30 secs before retrying')
                 time.sleep(30)
                 return self.run_with_retry(command, retry_count, retry_func)
             else:
