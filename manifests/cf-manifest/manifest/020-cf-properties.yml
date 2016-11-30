@@ -489,7 +489,7 @@ properties:
         autoapprove: true
         override: true
         redirect-uri: /login
-        scope: openid,cloud_controller.read,cloud_controller.write
+        scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
         secret: (( grab secrets.uaa_clients_ssh_proxy_secret ))
       graphite-nozzle:
         access-token-validity: 1209600
