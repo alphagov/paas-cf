@@ -121,6 +121,8 @@ jobs:
   templates:
   - name: kibana
     release: logsearch
+  - name: haproxy
+    release: logsearch
   vm_type: kibana
   stemcell: default
   instances: 1
@@ -188,6 +190,14 @@ properties:
     elasticsearch:
       host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
       port: 9200
+  haproxy:
+    kibana:
+      auth:
+        username: admin
+        password: (( grab secrets.kibana_admin_password ))
+      backend_servers: ["localhost"]
+      backend_port: 5601
+      inbound_port: 5602
   elasticsearch_config:
     elasticsearch:
       host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
