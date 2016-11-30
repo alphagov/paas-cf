@@ -54,6 +54,7 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
+      - reset-cloudfoundry-passwords
   - name: tests
     jobs:
       - availability-tests
@@ -2675,6 +2676,132 @@ jobs:
       - put: pipeline-pool
         params:
           release: pipeline-pool
+
+  - name: reset-cloudfoundry-passwords
+    plan:
+      - get: cf-secrets
+      - get: paas-cf
+      - task: reset-passwords
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/spruce
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+          outputs:
+            - name: modified-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                spruce merge \
+                  cf-secrets/cf-secrets.yml \
+                  paas-cf/concourse/resources/cf-secrets-keep-grafana.yml \
+                  > intermediate.yml
+
+                spruce merge \
+                  intermediate.yml \
+                  paas-cf/concourse/resources/cf-secrets-deleter.yml \
+                  > modified-secrets/cf-secrets.yml
+        on_success:
+          put: cf-secrets
+          params:
+            file: modified-secrets/cf-secrets.yml
+      - task: clear-ssh-keys
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
+            BUCKET: {{state_bucket}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                if aws s3 ls s3://${BUCKET}/concourse_id_rsa > /dev/null; then
+                  aws s3 rm s3://${BUCKET}/concourse_id_rsa
+                fi
+                if aws s3 ls s3://${BUCKET}/concourse_id_rsa.pub > /dev/null; then
+                  aws s3 rm s3://${BUCKET}/concourse_id_rsa.pub
+                fi
+      - task: README
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          params:
+            DEPLOY_ENV: {{deploy_env}}
+            BRANCH: {{branch_name}}
+            MAKEFILE_ENV_TARGET: {{makefile_env_target}}
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                # Describe manual steps remaining:
+                case "${MAKEFILE_ENV_TARGET}" in
+                  ci)
+                    pass_key="ci_deployments/${DEPLOY_ENV}/concourse_password"
+                    ;;
+                  *)
+                    pass_key="${MAKEFILE_ENV_TARGET}_deployment/concourse_password"
+                    ;;
+                esac
+
+                cat << EOF
+                Cloud Foundry
+                -------------
+
+                You must run the deploy pipeline to generate and apply the new credentials.
+
+                Concourse
+                ----------
+
+                Now need to re-boostrap your concourse.
+
+                Generate a new password in the credential store:
+
+                  paas-pass git checkout -b update_concourse_${DEPLOY_ENV}
+                  pwgen 12 -n 1 | paas-pass insert -m -f ${pass_key}
+
+                And create a pull-request for the branch of the credentials repo.
+
+                Then redeploy concourse:
+
+                  CONCOURSE_ATC_PASSWORD=\$(paas-pass ${pass_key}) BRANCH=${BRANCH} make ${MAKEFILE_ENV_TARGET} bootstrap DEPLOY_ENV=${DEPLOY_ENV}
+
+
+                Grafana
+                --------
+
+                Grafana password will need manual steps. The old grana password
+                was preseved in the cf-secrets.yml in the state bucket
+                as state.grafana_admin_password_old.
+
+                You can do it with after redeploying all the environment:
+
+                  OLD_GRAFANA_PASSWORD=\$(aws --region eu-west-1 s3 cp s3://${DEPLOY_ENV}-state/cf-secrets.yml - | awk '/grafana_admin_password_old:/ {print \$2}')
+                  NEW_GRAFANA_PASSWORD=\$(aws --region eu-west-1 s3 cp s3://${DEPLOY_ENV}-state/cf-secrets.yml - | awk '/grafana_admin_password:/ {print \$2}')
+
+                  curl -c /tmp/mycookie -X POST -d user=admin -d password=\${OLD_GRAFANA_PASSWORD}  -k https://metrics.${SYSTEM_DNS_ZONE_NAME}/login
+                  curl -b /tmp/mycookie -X PUT -d password=\${NEW_GRAFANA_PASSWORD} -k https://metrics.${SYSTEM_DNS_ZONE_NAME}/api/admin/users/1/password
+
+                EOF
 
   - name: generate-git-keys
     plan:
