@@ -3,7 +3,7 @@ resource "datadog_monitor" "nats_process_running" {
   type                = "service check"
   message             = "nats process not running. Check nats state."
   escalation_message  = "nats process still not running. Check nats state."
-  no_data_timeframe   = "7"
+  notify_no_data      = false
   require_full_window = true
 
   query = "${format("'process.up'.over('bosh-deployment:%s','process:nats').last(4).count_by_status()", var.env)}"
@@ -26,7 +26,7 @@ resource "datadog_monitor" "nats_stream_forwarded_process_running" {
   type                = "service check"
   message             = "NATS stream forwarder process not running. Check nats state."
   escalation_message  = "NATS stream forwarder process still not running. Check NATS state."
-  no_data_timeframe   = "7"
+  notify_no_data      = false
   require_full_window = true
 
   query = "${format("'process.up'.over('bosh-deployment:%s','process:nats_stream_forwarder').last(4).count_by_status()", var.env)}"

@@ -112,7 +112,7 @@ resource "datadog_monitor" "gorouter_process_running" {
   type                = "service check"
   message             = "gorouter process not running. Check router state."
   escalation_message  = "gorouter process still not running. Check router state."
-  no_data_timeframe   = "7"
+  notify_no_data      = false
   require_full_window = true
 
   query = "${format("'process.up'.over('bosh-deployment:%s','process:gorouter').last(4).count_by_status()", var.env)}"
