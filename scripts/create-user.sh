@@ -40,10 +40,12 @@ usage() {
   cat <<EOF
 Usage:
 
-  $SCRIPT [-r] [-m] -e <email> -o <orgname>
+  $SCRIPT [-r] [-m] -e <email> -o <orgname> [--no-email]
 
 $SCRIPT will create a user and organisation in the CF service where you
 are currently logged in and send an email to the user if the password changes.
+
+To print the password instead of emailing, supply the '--no-email' flag (useful for development)
 
 Nothing will change if the organisation or the user already exists
 (unless the -r flag is used, which recreates the user with a new password).
@@ -186,6 +188,17 @@ send_mail() {
   fi
 }
 
+print_password() {
+  success "${USERNAME} has had their password changed to '${PASSWORD}'."
+}
+
+emit_password() {
+  if [ "${NO_EMAIL:-}" = "true" ]; then
+    print_password
+  else
+    send_mail
+  fi
+}
 
 TMP_OUTPUT="$(mktemp -t create-tenant-output.XXXXXX)"
 trap 'rm -f "${TMP_OUTPUT}"' EXIT
@@ -196,27 +209,30 @@ ORG_MANAGER=false
 
 while [[ $# -gt 0 ]]; do
   key="$1"
+  shift
   case $key in
     -o|--org)
-      ORG="$2"
-      shift # past argument
+      ORG="$1"
+      shift
     ;;
     -e|--email)
-      EMAIL="$2"
-      shift # past argument
+      EMAIL="$1"
+      shift
     ;;
-      -r|--reset-user)
+    -r|--reset-user)
       RESET_USER=true
     ;;
-      -m|--manager)
+    -m|--manager)
       ORG_MANAGER=true
+    ;;
+    --no-email)
+      NO_EMAIL=true
     ;;
     *)
       # unknown option
       usage
     ;;
   esac
-  shift # past argument or value
 done
 
 load_colors
@@ -226,4 +242,4 @@ generate_password
 create_org_space
 create_user
 set_user_roles
-send_mail
+emit_password
