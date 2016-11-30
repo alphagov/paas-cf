@@ -177,8 +177,7 @@ pipelines: ## Upload pipelines to Concourse
 showenv: ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
-	@echo export GRAFANA_PASSWORD=$$(aws s3 cp "s3://${DEPLOY_ENV}-state/cf-secrets.yml" - | \
-		ruby -ryaml -e 'puts YAML.load(STDIN)["secrets"]["grafana_admin_password"]')
+	@scripts/show-cf-secrets.sh grafana_admin_password kibana_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
