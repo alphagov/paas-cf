@@ -400,7 +400,9 @@ jobs:
       - name: cfdot
         release: diego
     instances: 2
-    vm_type: access
+    vm_type: medium
+    vm_extensions:
+      - ssh_proxy_elb
     stemcell: default
     networks:
       - name: cf
