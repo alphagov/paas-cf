@@ -44,29 +44,6 @@ resource "datadog_timeboard" "gorouter" {
   }
 }
 
-resource "datadog_monitor" "router" {
-  name               = "${format("%s router hosts", var.env)}"
-  type               = "service check"
-  message            = "${format("Missing router hosts in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message = "Missing router hosts! Check VM state."
-  no_data_timeframe  = "7"
-  query              = "${format("'datadog.agent.up'.over('bosh-deployment:%s','bosh-job:router').by('*').last(1).pct_by_status()", var.env)}"
-
-  thresholds {
-    ok       = 0
-    warning  = 0
-    critical = 10
-  }
-
-  require_full_window = true
-
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "router"
-  }
-}
-
 resource "datadog_monitor" "route_update_latency" {
   name                = "${format("%s route update latency", var.env)}"
   type                = "metric alert"
