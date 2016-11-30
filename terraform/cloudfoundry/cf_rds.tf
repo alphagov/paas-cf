@@ -52,14 +52,15 @@ resource "aws_db_instance" "cf" {
   db_subnet_group_name = "${aws_db_subnet_group.cf_rds.name}"
   parameter_group_name = "${aws_db_parameter_group.cf.id}"
 
-  storage_type              = "gp2"
-  backup_window             = "02:00-03:00"
-  maintenance_window        = "Thu:04:00-Thu:05:00"
-  multi_az                  = "${var.cf_db_multi_az}"
-  backup_retention_period   = "${var.cf_db_backup_retention_period}"
-  final_snapshot_identifier = "${var.env}-cf-rds-final-snapshot"
-  skip_final_snapshot       = "${var.cf_db_skip_final_snapshot}"
-  vpc_security_group_ids    = ["${aws_security_group.cf_rds.id}"]
+  storage_type               = "gp2"
+  backup_window              = "02:00-03:00"
+  maintenance_window         = "Thu:04:00-Thu:05:00"
+  multi_az                   = "${var.cf_db_multi_az}"
+  backup_retention_period    = "${var.cf_db_backup_retention_period}"
+  final_snapshot_identifier  = "${var.env}-cf-rds-final-snapshot"
+  skip_final_snapshot        = "${var.cf_db_skip_final_snapshot}"
+  vpc_security_group_ids     = ["${aws_security_group.cf_rds.id}"]
+  auto_minor_version_upgrade = false
 
   tags {
     Name = "${var.env}-cf"
