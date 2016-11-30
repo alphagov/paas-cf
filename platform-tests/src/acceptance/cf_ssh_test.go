@@ -10,7 +10,7 @@ import (
 )
 
 var _ = Describe("CF SSH", func() {
-	It("should be disabled", func() {
+	It("should be enabled", func() {
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
 			"push", appName,
@@ -21,7 +21,7 @@ var _ = Describe("CF SSH", func() {
 			"-m", "64M",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 		cfSSH := cf.Cf("ssh", appName, "-c", "uptime").Wait(DEFAULT_TIMEOUT)
-		Expect(cfSSH).NotTo(Exit(0))
-		Expect(cfSSH).To(Say("Error opening SSH connection:"))
+		Expect(cfSSH).To(Exit(0))
+		Expect(cfSSH).To(Say("load average:"))
 	})
 })
