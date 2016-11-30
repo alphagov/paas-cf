@@ -301,13 +301,11 @@ properties:
         total_routes: 1000
     default_quota_definition: default
 
-    user_buildpacks: []
-    system_buildpacks: (( grab properties.cc.default_buildpacks ))
-    default_buildpacks:
+    install_buildpacks:
       - name: staticfile_buildpack
         package: staticfile-buildpack
       - name: java_buildpack
-        package: buildpack_java
+        package: buildpack_java_offline
       - name: ruby_buildpack
         package: ruby-buildpack
       - name: nodejs_buildpack
@@ -320,8 +318,6 @@ properties:
         package: php-buildpack
       - name: binary_buildpack
         package: binary-buildpack
-
-    install_buildpacks: (( grab properties.cc.system_buildpacks properties.cc.user_buildpacks ))
 
     stacks: ~
 
