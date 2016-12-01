@@ -109,7 +109,7 @@ vm_types:
     network: cell
     env: (( grab meta.default_env ))
     cloud_properties:
-      instance_type: r3.xlarge
+      instance_type: r4.xlarge
       ephemeral_disk:
         size: 102400
         type: gp2
