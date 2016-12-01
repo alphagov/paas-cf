@@ -18,6 +18,7 @@ properties:
     include_logging: true
     include_operator: true
     include_services: true
+    include_diego_ssh: true
     include_route_services: false
     artifacts_directory: "/var/vcap/sys/log/test_artifacts"
     nodes: 10

@@ -104,16 +104,6 @@ vm_types:
         - (( grab terraform_outputs.cf_router_elb_name ))
 
 # Diego below
-  - name: access
-    network: cf
-    env: (( grab meta.default_env ))
-    cloud_properties:
-      instance_type: m3.medium
-      ephemeral_disk:
-        size: 10240
-        type: gp2
-      elbs:
-        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
 
   - name: cell
     network: cell
