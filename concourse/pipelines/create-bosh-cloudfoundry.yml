@@ -2598,7 +2598,7 @@ jobs:
                           \"points\":[[$current_time, ${delta}]],
                           \"type\":\"gauge\",
                           \"tags\":[
-                            \"environment:${ENV}\",
+                            \"bosh-deployment:${ENV}\",
                             \"pipeline_name:create-bosh-cloudfoundry\",
                             \"aws_account:${AWS_ACCOUNT}\"
                           ]}
