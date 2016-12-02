@@ -26,7 +26,7 @@ resource "datadog_timeboard" "concourse-jobs" {
     viz   = "timeseries"
 
     request {
-      q    = "${format("count_nonzero(avg:concourse.build.finished{build_status:failed,bosh-deployment:%s,bosh-job:continuous-smoke-tests})", var.env)}"
+      q    = "${format("count_nonzero(avg:concourse.build.finished{build_status:failed,bosh-deployment:%s,job:continuous-smoke-tests})", var.env)}"
       type = "bars"
 
       style {
@@ -35,7 +35,7 @@ resource "datadog_timeboard" "concourse-jobs" {
     }
 
     request {
-      q    = "${format("count_nonzero(avg:concourse.build.finished{build_status:succeeded,bosh-deployment:%s,bosh-job:continuous-smoke-tests})", var.env)}"
+      q    = "${format("count_nonzero(avg:concourse.build.finished{build_status:succeeded,bosh-deployment:%s,job:continuous-smoke-tests})", var.env)}"
       type = "bars"
 
       style {
