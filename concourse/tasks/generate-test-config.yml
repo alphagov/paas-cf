@@ -17,6 +17,7 @@ run:
     - -e
     - -c
     - |
-      export CF_MANIFEST=cf-manifest/cf-manifest.yml
-      ./paas-cf/platform-tests/generate_test_config.rb \
+      ruby -ryaml -rjson -e \
+        'puts YAML.load(STDIN)["properties"]["acceptance_tests"].to_json' \
+        < cf-manifest/cf-manifest.yml \
         > test-config/config.json
