@@ -5,6 +5,7 @@ properties:
     system_domain: (( grab properties.system_domain ))
     admin_user: "admin"
     admin_password: (( grab secrets.uaa_admin_password ))
+    test_password: (( grab secrets.test_user_password ))
     skip_ssl_validation: false
     backend: "diego"
     client_secret: (( grab secrets.uaa_clients_gorouter_secret ))

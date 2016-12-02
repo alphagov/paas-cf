@@ -15,6 +15,7 @@ generator = SecretGenerator.new(
   "router_password" => :simple,
   "uaa_batch_password" => :simple,
   "uaa_admin_password" => :simple,
+  "test_user_password" => :simple,
   "cc_db_encryption_key" => :simple,
   "uaa_admin_client_secret" => :simple,
   "uaa_cc_client_secret" => :simple,
