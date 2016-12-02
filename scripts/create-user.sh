@@ -189,7 +189,7 @@ send_mail() {
 }
 
 print_password() {
-  success "${EMAIL} has had their password changed to '${PASSWORD}'."
+  success "${EMAIL} has had their password changed to ${PASSWORD}"
 }
 
 emit_password() {
