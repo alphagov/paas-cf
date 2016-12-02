@@ -414,7 +414,7 @@ properties:
 
     password:
       policy:
-        minLength: ~
+        minLength: 8
         requireUpperCaseCharacter: ~
         requireLowerCaseCharacter: ~
         requireDigit: ~
