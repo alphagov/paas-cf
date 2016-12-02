@@ -1,6 +1,6 @@
 properties:
   acceptance_tests:
-    api: (( concat "api." properties.system_domain ))
+    api: (( concat properties.cc.external_host "." properties.system_domain ))
     apps_domain: (( grab properties.app_domains[0] ))
     system_domain: (( grab properties.system_domain ))
     admin_user: "admin"
