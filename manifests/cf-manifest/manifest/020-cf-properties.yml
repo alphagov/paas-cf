@@ -357,16 +357,10 @@ properties:
     url: (( concat "https://uaa." properties.system_domain ))
     issuer: (( grab properties.uaa.url ))
     token_url: (( concat properties.uaa.url "/oauth/token" ))
-
-    no_ssl: ~
     require_https: false
-
     logging_level: INFO
-
     scim:
       userids_enabled: true
-      external_groups: ~
-      groups: ~
       users:
         - name: admin
           password: (( grab secrets.uaa_admin_password ))
@@ -380,28 +374,11 @@ properties:
     ssl:
       port: -1
 
-    authentication:
-      policy:
-        lockoutAfterFailures: ~
-        countFailuresWithinSeconds: ~
-        lockoutPeriodSeconds: ~
-
     password:
       policy:
         minLength: 8
-        requireUpperCaseCharacter: ~
-        requireLowerCaseCharacter: ~
-        requireDigit: ~
-        requireSpecialCharacter: ~
 
-    login: ~
-
-    ldap: ~
-
-    newrelic: ~
     port: 8080
-
-    user: ~
 
     admin:
       client_secret: (( grab secrets.uaa_admin_client_secret ))
@@ -477,8 +454,6 @@ properties:
         scope: openid,cloud_controller_service_permissions.read
         authorities: clients.read,clients.write,clients.admin
         authorized-grant-types: authorization_code,client_credentials
-
-    database: ~
 
     zones:
       internal:
