@@ -655,3 +655,6 @@ properties:
       traffic_controller_url: (( grab properties.loggregator.traffic_controller_url ))
   cflinuxfs2-rootfs:
     trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
+
+  garden:
+    log_level: error
