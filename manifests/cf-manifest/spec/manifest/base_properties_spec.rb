@@ -65,6 +65,30 @@ RSpec.describe "base properties" do
 
       it { is_expected.to include("resource_directory_key" => "#{terraform_fixture(:environment)}-cf-resources") }
     end
+
+    describe "app_events" do
+      subject(:app_events) { cc.fetch("app_events") }
+
+      it { is_expected.to include("cutoff_age_in_days" => 31), "Retention period should be same as specified in Privacy Policy" }
+    end
+
+    describe "app_usage_events" do
+      subject(:app_usage_events) { cc.fetch("app_usage_events") }
+
+      it { is_expected.to include("cutoff_age_in_days" => 31), "Retention period should be same as specified in Privacy Policy" }
+    end
+
+    describe "service_usage_events" do
+      subject(:service_usage_events) { cc.fetch("service_usage_events") }
+
+      it { is_expected.to include("cutoff_age_in_days" => 31), "Retention period should be same as specified in Privacy Policy" }
+    end
+
+    describe "audit_events" do
+      subject(:audit_events) { cc.fetch("audit_events") }
+
+      it { is_expected.to include("cutoff_age_in_days" => 31), "Retention period should be same as specified in Privacy Policy" }
+    end
   end
 
   describe "login" do
