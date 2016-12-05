@@ -181,6 +181,8 @@ properties:
       elasticsearch:
         data_hosts: (( grab properties.elasticsearch.master_hosts ))
   curator:
+    purge_logs:
+      retention_period: 30
     elasticsearch:
       host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
   elasticsearch:
