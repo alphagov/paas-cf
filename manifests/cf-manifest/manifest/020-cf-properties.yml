@@ -349,36 +349,10 @@ properties:
 
   login:
     enabled: true
-    analytics:
-      code: ~
-      domain: ~
-    url: ~
-    catalina_opts: ~
-    protocol: ~
     brand: oss
-    asset_base_url: ~
-    self_service_links_enabled: ~
-    messages: ~
-
-    notifications:
-      url: ~
-
-    smtp:
-      host: ~
-      port: ~
-      user: ~
-      password: ~
-
     links:
       passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
       signup: (( concat "https://login." properties.system_domain "/create_account" ))
-
-    logout: ~
-
-    saml: ~
-
-    restricted_ips_regex: ~
-
   uaa:
     url: (( concat "https://uaa." properties.system_domain ))
     issuer: (( grab properties.uaa.url ))
