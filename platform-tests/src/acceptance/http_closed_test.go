@@ -9,7 +9,6 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 
 	"net"
-	"net/url"
 	"time"
 )
 
@@ -37,11 +36,8 @@ var _ = Describe("Http client", func() {
 	})
 
 	It("that tries to connect to api", func() {
-		apiURL, err := url.Parse(config.ApiEndpoint)
-		Expect(err).To(BeNil(), "unable to parse API endpoint URL")
-
-		uri := apiURL.Host + ":80"
-		_, err = net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
+		uri := config.ApiEndpoint + ":80"
+		_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
 		Expect(err).ToNot(BeNil(), "should not connect")
 		Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
 	})
