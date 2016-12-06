@@ -334,6 +334,10 @@ jobs:
         release: diego
       - name: metron_agent
         release: cf
+      - name: datadog-rep
+        release: datadog-for-cloudfoundry
+      - name: datadog-garden
+        release: datadog-for-cloudfoundry
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
