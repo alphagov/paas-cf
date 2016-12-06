@@ -2397,6 +2397,8 @@ jobs:
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
           params:
             DISABLE_CUSTOM_ACCEPTANCE_TESTS: {{disable_custom_acceptance_tests}}
+            DEPLOY_ENV: {{deploy_env}}
+            AWS_REGION: {{aws_region}}
 
           ensure:
             task: upload-test-artifacts
