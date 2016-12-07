@@ -20,6 +20,28 @@ resource "datadog_monitor" "concourse-load" {
   }
 }
 
+resource "datadog_monitor" "continuous-smoketests" {
+  name               = "${format("%s concourse continuous smoketests runtime", var.env)}"
+  type               = "query alert"
+  message            = "${format("Continuous smoketests too slow: {{value}} ms. Check concourse VM health. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  escalation_message = "Continuous smoketests still too slow: {{value}} ms."
+  no_data_timeframe  = "30"
+  query              = "${format("max(last_1m):avg:concourse.build.finished{job:continuous-smoke-tests,bosh-deployment:%s} > 1800000", var.env)}"
+
+  thresholds {
+    warning  = "1200000.0"
+    critical = "1800000.0"
+  }
+
+  require_full_window = false
+
+  tags {
+    "deployment" = "${var.env}"
+    "service"    = "${var.env}_monitors"
+    "job"        = "concourse"
+  }
+}
+
 resource "datadog_timeboard" "concourse-jobs" {
   title       = "${format("%s job runtime difference", var.env) }"
   description = "vs previous hour"
