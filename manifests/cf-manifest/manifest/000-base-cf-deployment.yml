@@ -32,7 +32,9 @@ releases:
   - name: paas-haproxy
     version: 0.0.5
   - name: datadog-for-cloudfoundry
-    version: "0.0.5"
+    version: 0.1.2
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.2.tgz
+    sha1: 481cf458f39984067144f281be28506ca738d029
 
 stemcells:
   - alias: default

@@ -106,12 +106,6 @@ resources:
       tag_filter: {{cf_graphite_version}}
       branch: gds_master
 
-  - name: datadog-for-cloudfoundry-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-datadog-for-cloudfoundry-boshrelease.git
-      tag_filter: {{cf_datadog_for_cloudfoundry_version}}
-
   - name: os-conf-boshrelease
     type: git
     source:
@@ -1502,7 +1496,6 @@ jobs:
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
           - get: paas-haproxy-release
-          - get: datadog-for-cloudfoundry-boshrelease
           - get: os-conf-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
@@ -1551,7 +1544,6 @@ jobs:
               - name: paas-haproxy-release
               - name: os-conf-boshrelease
               - name: logsearch-for-cloudfoundry-boshrelease
-              - name: datadog-for-cloudfoundry-boshrelease
             run:
               path: sh
               args:
@@ -1575,10 +1567,6 @@ jobs:
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb logsearch-for-cloudfoundry \
                     {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
-
-                  ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_datadog_for_cloudfoundry_version}} datadog-for-cloudfoundry-boshrelease
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb datadog-for-cloudfoundry \
-                    {{cf_datadog_for_cloudfoundry_version}} datadog-for-cloudfoundry-boshrelease
 
         - task: get-and-upload-stemcell
           config:
