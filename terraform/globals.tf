@@ -119,6 +119,12 @@ variable "web_access_cidrs" {
   default     = ""
 }
 
+/* See https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html */
+variable "default_elb_security_policy" {
+  description = "Which Security policy to use for ELBs. This controls things like available SSL protocols/ciphers."
+  default     = "ELBSecurityPolicy-2016-08"
+}
+
 # List of Elastic Load Balancing Account ID to configure ELB access log policies
 # Provided by AWS in http://docs.aws.amazon.com/ElasticLoadBalancing/latest/DeveloperGuide/enable-access-logs.html
 variable "elb_account_ids" {

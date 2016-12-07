@@ -35,6 +35,15 @@ resource "aws_elb" "cf_router" {
   }
 }
 
+resource "aws_load_balancer_listener_policy" "cf_router_listener_policies_443" {
+  load_balancer_name = "${aws_elb.cf_router.name}"
+  load_balancer_port = 443
+
+  policy_names = [
+    "${var.default_elb_security_policy}",
+  ]
+}
+
 resource "aws_proxy_protocol_policy" "http_haproxy" {
   load_balancer  = "${aws_elb.cf_router.name}"
   instance_ports = ["81"]

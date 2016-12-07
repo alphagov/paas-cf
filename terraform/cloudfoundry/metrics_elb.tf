@@ -32,3 +32,21 @@ resource "aws_elb" "metrics" {
     ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
 }
+
+resource "aws_load_balancer_listener_policy" "metrics_listener_policies_443" {
+  load_balancer_name = "${aws_elb.metrics.name}"
+  load_balancer_port = 443
+
+  policy_names = [
+    "${var.default_elb_security_policy}",
+  ]
+}
+
+resource "aws_load_balancer_listener_policy" "metrics_listener_policies_3001" {
+  load_balancer_name = "${aws_elb.metrics.name}"
+  load_balancer_port = 3001
+
+  policy_names = [
+    "${var.default_elb_security_policy}",
+  ]
+}
