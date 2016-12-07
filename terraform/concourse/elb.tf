@@ -35,6 +35,15 @@ resource "aws_elb" "concourse" {
   }
 }
 
+resource "aws_load_balancer_listener_policy" "concourse_listener_policies_443" {
+  load_balancer_name = "${aws_elb.concourse.name}"
+  load_balancer_port = 443
+
+  policy_names = [
+    "${var.default_elb_security_policy}",
+  ]
+}
+
 resource "aws_security_group" "concourse-elb" {
   name        = "${var.env}-concourse-elb"
   description = "Concourse ELB security group"

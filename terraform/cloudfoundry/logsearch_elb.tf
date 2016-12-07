@@ -85,3 +85,12 @@ resource "aws_elb" "logsearch_kibana" {
     ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
 }
+
+resource "aws_load_balancer_listener_policy" "logsearch_kibana_listener_policies_443" {
+  load_balancer_name = "${aws_elb.logsearch_kibana.name}"
+  load_balancer_port = 443
+
+  policy_names = [
+    "${var.default_elb_security_policy}",
+  ]
+}
