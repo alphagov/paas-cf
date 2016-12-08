@@ -31,7 +31,7 @@ vm_types:
 
 disk_types:
   - name: elasticsearch_master
-    disk_size: 307200
+    disk_size: 377856
     cloud_properties: {type: gp2}
   - name: queue
     disk_size: 102400
