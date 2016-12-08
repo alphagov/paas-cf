@@ -71,6 +71,7 @@ private
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+        File.expand_path("../../../cloud-config/env-specific/cf-#{environment}.yml", __FILE__),
     ])
 
     # Deep freeze the object so that it's safe to use across multiple examples

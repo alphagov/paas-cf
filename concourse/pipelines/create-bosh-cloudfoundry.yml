@@ -1349,6 +1349,7 @@ jobs:
                 ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
+                ./paas-cf/manifests/cf-manifest/cloud-config/env-specific/{{cf_env_specific_manifest}}
             run:
               path: sh
               args:
@@ -1357,7 +1358,7 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
-                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
