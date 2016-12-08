@@ -31,3 +31,10 @@ See [dashing.io](http://dashing.io) and the [smashing wiki](https://github.com/d
 
 We deploy our smashing app as part of the `create-bosh-cloudfoundry` pipeline.
 It should be available at https://paas-dasboard.cloudapps.digital
+
+### Running locally
+
+Obtain API and app keys from https://app.datadoghq.com/account/settings#api
+
+```bundle install
+ DD_API_KEY=<api key> DD_APP_KEY=<app key> bundle exec smashing start```
