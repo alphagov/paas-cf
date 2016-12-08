@@ -31,15 +31,6 @@ resource "aws_elb" "cf_cc" {
   }
 }
 
-resource "aws_load_balancer_listener_policy" "cf_cc_listener_policies_443" {
-  load_balancer_name = "${aws_elb.cf_cc.name}"
-  load_balancer_port = 443
-
-  policy_names = [
-    "${var.default_elb_security_policy}",
-  ]
-}
-
 resource "aws_elb" "cf_uaa" {
   name                      = "${var.env}-cf-uaa"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
@@ -71,15 +62,6 @@ resource "aws_elb" "cf_uaa" {
     lb_protocol        = "https"
     ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
-}
-
-resource "aws_load_balancer_listener_policy" "cf_uaa_listener_policies_443" {
-  load_balancer_name = "${aws_elb.cf_uaa.name}"
-  load_balancer_port = 443
-
-  policy_names = [
-    "${var.default_elb_security_policy}",
-  ]
 }
 
 resource "aws_elb" "cf_loggregator" {
@@ -115,15 +97,6 @@ resource "aws_elb" "cf_loggregator" {
   }
 }
 
-resource "aws_load_balancer_listener_policy" "cf_loggregator_listener_policies_443" {
-  load_balancer_name = "${aws_elb.cf_loggregator.name}"
-  load_balancer_port = 443
-
-  policy_names = [
-    "${var.default_elb_security_policy}",
-  ]
-}
-
 resource "aws_elb" "cf_doppler" {
   name                      = "${var.env}-cf-doppler"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
@@ -155,13 +128,4 @@ resource "aws_elb" "cf_doppler" {
     lb_protocol        = "ssl"
     ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
-}
-
-resource "aws_load_balancer_listener_policy" "cf_doppler_listener_policies_443" {
-  load_balancer_name = "${aws_elb.cf_doppler.name}"
-  load_balancer_port = 443
-
-  policy_names = [
-    "${var.default_elb_security_policy}",
-  ]
 }
