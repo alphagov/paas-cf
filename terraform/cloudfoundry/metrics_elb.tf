@@ -32,3 +32,25 @@ resource "aws_elb" "metrics" {
     ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
 }
+
+resource "aws_lb_ssl_negotiation_policy" "metrics_443" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.metrics.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
+resource "aws_lb_ssl_negotiation_policy" "metrics_3001" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.metrics.id}"
+  lb_port       = 3001
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}

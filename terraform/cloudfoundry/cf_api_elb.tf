@@ -31,6 +31,17 @@ resource "aws_elb" "cf_cc" {
   }
 }
 
+resource "aws_lb_ssl_negotiation_policy" "cf_cc" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.cf_cc.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_elb" "cf_uaa" {
   name                      = "${var.env}-cf-uaa"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
@@ -61,6 +72,17 @@ resource "aws_elb" "cf_uaa" {
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = "${var.system_domain_cert_arn}"
+  }
+}
+
+resource "aws_lb_ssl_negotiation_policy" "cf_uaa" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.cf_uaa.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
   }
 }
 
@@ -97,6 +119,17 @@ resource "aws_elb" "cf_loggregator" {
   }
 }
 
+resource "aws_lb_ssl_negotiation_policy" "cf_loggregator" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.cf_loggregator.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_elb" "cf_doppler" {
   name                      = "${var.env}-cf-doppler"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
@@ -127,5 +160,16 @@ resource "aws_elb" "cf_doppler" {
     lb_port            = 443
     lb_protocol        = "ssl"
     ssl_certificate_id = "${var.system_domain_cert_arn}"
+  }
+}
+
+resource "aws_lb_ssl_negotiation_policy" "cf_doppler" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.cf_doppler.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
   }
 }
