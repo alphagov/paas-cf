@@ -1,0 +1,7 @@
+---
+meta:
+  cell:
+    instances: 9
+
+  elasticsearch_master:
+    disk_size: 377856

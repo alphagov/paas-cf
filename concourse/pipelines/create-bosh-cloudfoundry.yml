@@ -1349,7 +1349,7 @@ jobs:
                 ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
-                ./paas-cf/manifests/cf-manifest/cloud-config/env-specific/{{cf_env_specific_manifest}}
+                ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
             run:
               path: sh
               args:
@@ -1391,7 +1391,7 @@ jobs:
                 ./paas-cf/manifests/shared/deployments/collectd.yml
                 ./paas-cf/manifests/shared/deployments/datadog-agent.yml
                 ./paas-cf/manifests/shared/deployments/syslog.yml
-                ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
+                ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}
