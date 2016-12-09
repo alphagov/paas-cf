@@ -22,8 +22,8 @@ releases:
 # bosh-init container must also be updated so that the cached CPI compile
 # will be used.
 - name: bosh-aws-cpi
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=60
-  sha1: 8e40a9ff892204007889037f094a1b0d23777058
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=62
+  sha1: f36967927ceae09e5663a41fdda199edfe649dc6
 
 jobs:
 - name: bosh
