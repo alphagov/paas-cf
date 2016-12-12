@@ -45,9 +45,6 @@ jobs:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
     logstash: (( grab properties.parser_logstash ))
-    logstash_parser:
-      filters:
-        - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
 
 - name: parser_z2
   release: logsearch
@@ -68,9 +65,6 @@ jobs:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
     logstash: (( grab properties.parser_logstash ))
-    logstash_parser:
-      filters:
-        - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
 
 - name: elasticsearch_master
   release: logsearch
@@ -182,6 +176,19 @@ properties:
     output:
       elasticsearch:
         data_hosts: (( grab properties.elasticsearch.master_hosts ))
+  logstash_parser:
+    filters:
+      - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+      - custom-filters: /var/vcap/jobs/logsearch-for-cloudfoundry-filters/config/logstash-filters-custom.conf
+    custom_filters: |
+      if ("lrps" in [auctioneer][data]) {
+        ruby {
+          code => '
+            lrps_hash = event["auctioneer"]["data"]["lrps"]
+            event["auctioneer"]["data"]["lrps"] = lrps_hash.keys
+          '
+        }
+      }
   curator:
     purge_logs:
       retention_period: 30
