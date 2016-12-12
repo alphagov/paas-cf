@@ -1,5 +1,7 @@
 require 'dogapi'
 
+STALENESS_THRESHOLD = 900
+
 SCHEDULER.every '10s', allow_overlapping: false do
   get_and_emit_data_for_env(
     service_tag: "service:prod_monitors",
@@ -22,9 +24,17 @@ SCHEDULER.every '10s', allow_overlapping: false do
 end
 
 def get_and_emit_data_for_env(service_tag:, data_id_prefix:)
-  results = get_monitor_results(service_tag)
-  critical_count, warning_count = get_counts(results)
-  send_event("#{data_id_prefix}_counts", criticals: critical_count, warnings: warning_count)
+  data_id = "#{data_id_prefix}_counts"
+
+  begin
+    results = get_monitor_results(service_tag)
+    critical_count, warning_count = get_counts(results)
+
+    send_event(data_id, criticals: critical_count, warnings: warning_count)
+  rescue RuntimeError => e
+    puts "Error getting data for #{data_id_prefix}: #{e}"
+    check_history_for_stale_data(data_id)
+  end
 end
 
 def get_monitor_results(service_tag)
@@ -40,6 +50,22 @@ def get_counts(results)
   [criticals, warnings]
 end
 
+def check_history_for_stale_data(data_id)
+  # last event format is "data: #{event_hash.to_json}\n\n"
+  last_event = JSON.parse(Sinatra::Application.settings.history[data_id][6..-2])
+  if ! last_event_error?(last_event) && last_event_stale?(last_event)
+    send_event(data_id, error: 'Stale data')
+  end
+end
+
+def last_event_error?(last_event)
+  last_event['error']
+end
+
+def last_event_stale?(last_event)
+  last_event['updatedAt'] + STALENESS_THRESHOLD < Time.now.to_i
+end
+
 def dog
-  @dog ||= Dogapi::Client.new(ENV['DD_API_KEY'], ENV['DD_APP_KEY'])
+  @dog ||= Dogapi::Client.new(ENV['DD_API_KEY'], ENV['DD_APP_KEY'], nil, nil, false)
 end

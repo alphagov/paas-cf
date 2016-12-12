@@ -3,6 +3,7 @@
         <h1 class="title" data-bind="title"></h1>
         <div data-showif="status | equals 'error'"> <!-- error -->
             <span class="h4" data-bind="error">Error</span>
+            <p class="updated-at" data-bind="updatedAtMessage"></p>
         </div> <!-- /error -->
         <div data-hideif="status | equals 'error'"> <!-- no error -->
             <div data-hideif="criticals | equals 0" class="floated">
