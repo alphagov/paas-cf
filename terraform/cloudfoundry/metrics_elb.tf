@@ -34,7 +34,7 @@ resource "aws_elb" "metrics" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "metrics_443" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${var.default_elb_security_policy}-443"
   load_balancer = "${aws_elb.metrics.id}"
   lb_port       = 443
 
@@ -45,7 +45,7 @@ resource "aws_lb_ssl_negotiation_policy" "metrics_443" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "metrics_3001" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${var.default_elb_security_policy}-3001"
   load_balancer = "${aws_elb.metrics.id}"
   lb_port       = 3001
 
