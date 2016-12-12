@@ -22,8 +22,8 @@ releases:
 # bosh-init container must also be updated so that the cached CPI compile
 # will be used.
 - name: bosh-aws-cpi
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=60
-  sha1: 8e40a9ff892204007889037f094a1b0d23777058
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=62
+  sha1: f36967927ceae09e5663a41fdda199edfe649dc6
 
 jobs:
 - name: bosh
@@ -154,8 +154,8 @@ resource_pools:
 - name: bosh
   network: private
   stemcell:
-    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3263.8
-    sha1: 95ecc2709ac62f21d0a1c6cac023585c3919b825
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3263.12
+    sha1: b2e8ea8415dca3ab5826a39dcbe4ef760bcc7b05
   cloud_properties:
     instance_type: t2.medium
     ephemeral_disk: {size: 40000, type: gp2}
