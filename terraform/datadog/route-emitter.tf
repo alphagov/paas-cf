@@ -62,3 +62,31 @@ resource "datadog_monitor" "route_emitter_consul_lock" {
     "job"        = "route_emitter"
   }
 }
+
+resource "datadog_monitor" "route_emitter_lock_held_once" {
+  name                = "${format("%s route-emitter lock held exactly once (%s)", var.env, element(list("upper", "lower"), count.index))}"
+  type                = "query alert"
+  message             = "There is not exactly one route-emitter holding the lock."
+  escalation_message  = "There is still not exactly one route-emitter holding the lock."
+  notify_no_data      = false
+  require_full_window = true
+
+  count = 2
+
+  query = "${
+    format(
+      "min(last_5m):sum:cf.route_emitter.LockHeld.v1_locks_route_emitter_lock{deployment:%s}.fill(last, 60) %s",
+      var.env,
+      element(list("> 1", "< 1"), count.index)
+    )}"
+
+  thresholds {
+    critical = "${element(list("1", "1"), count.index)}"
+  }
+
+  tags {
+    "deployment" = "${var.env}"
+    "service"    = "${var.env}_monitors"
+    "job"        = "route_emitter"
+  }
+}
