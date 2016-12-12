@@ -4,7 +4,9 @@ releases:
   version: 203.0.0
   sha1: 4872c3d89fb2587d844dabbc93b124fb43b720d8
 - name: logsearch-for-cloudfoundry
-  version: v203.0.0-gds
+  version: 0.1.2
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.2.tgz
+  sha1: 9e124f94e36fbc2521b8bf12c3f1ffa7eec03ffd
 
 jobs:
 - (( append ))
