@@ -4,7 +4,7 @@ set -eo pipefail
 
 ensure_env_vars() {
   if [ -z "${DEPLOY_ENV}" ] || [ -z "${AWS_ACCOUNT}" ] || [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
-    echo "Must set DEPLOY_ENV, AWS_ACCOUNT, AWS_ACCOUNT, AWS_SECRET_ACCESS_KEY"
+    echo "Must set DEPLOY_ENV, AWS_ACCOUNT, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY"
     exit 1
   fi
 

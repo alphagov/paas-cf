@@ -172,8 +172,8 @@ bootstrap-destroy: ## Destroy bootstrap
 bosh-cli: ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
 
-.PHONY: pipelines check-aws-credentials
-pipelines: ## Upload pipelines to Concourse
+.PHONY: pipelines
+pipelines: check-aws-credentials ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
 
 .PHONY: showenv
