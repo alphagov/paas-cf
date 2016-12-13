@@ -13,12 +13,13 @@ check_logged_in_cf api.cloud.service.gov.uk
 "${SCRIPT_DIR}"/reset-org.py \
 	-o paas_user_research \
 	-s sandbox \
-	-u holly.challenger+1@digital.cabinet-office.gov.uk \
-	-u holly.challenger+2@digital.cabinet-office.gov.uk \
-	-u holly.challenger+3@digital.cabinet-office.gov.uk \
-	-u holly.challenger+4@digital.cabinet-office.gov.uk \
-	-u holly.challenger+5@digital.cabinet-office.gov.uk \
-	-u holly.challenger+6@digital.cabinet-office.gov.uk \
+	-u \
+	holly.challenger+1@digital.cabinet-office.gov.uk \
+	holly.challenger+2@digital.cabinet-office.gov.uk \
+	holly.challenger+3@digital.cabinet-office.gov.uk \
+	holly.challenger+4@digital.cabinet-office.gov.uk \
+	holly.challenger+5@digital.cabinet-office.gov.uk \
+	holly.challenger+6@digital.cabinet-office.gov.uk \
 	--org-managers \
 	--space-managers \
 	--space-developers \
