@@ -173,7 +173,7 @@ bosh-cli: ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
 
 .PHONY: pipelines
-pipelines: check-aws-credentials ## Upload pipelines to Concourse
+pipelines: ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
 
 .PHONY: showenv
