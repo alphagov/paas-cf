@@ -36,8 +36,6 @@ class OrgReset(object):
         self.user = self.parse_current_user(self.run(['cf', 'target']))
 
     def delete_org(self):
-        # require org to be deleted in advance? have this check for org and and advise, so we don't use the `-f` flag
-        # Prompt for confirmtaion...
         self.run_with_retry(['cf', 'delete-org', self.org, '-f'], 20, lambda err:
             'one or more resources within could not be deleted' in err.output
         )
