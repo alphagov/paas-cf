@@ -117,7 +117,10 @@
           "decimals": null
         },
         {
-          "aliasColors": {},
+          "aliasColors": {
+            "5xx": "#BF1B00",
+            "Max": "#2F575E"
+          },
           "bars": false,
           "datasource": "graphite",
           "editable": true,
@@ -156,23 +159,28 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.*), 1)), 'Total')",
+              "target": "alias(scaleToSeconds(summarize(sumSeries(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.*)), '5m', 'sum', true), 1), 'Rate')",
+              "textEditor": false
+            },
+            {
+              "refId": "D",
+              "target": "alias(summarize(scaleToSeconds(sumSeries(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.*)), 1), '5m', 'max', true), 'Max')",
               "textEditor": false
             },
             {
               "refId": "B",
-              "target": "aliasByNode(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX), 1)), -1)",
+              "target": "alias(summarize(scaleToSeconds(sumSeries(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.4XX)), 1), '5s', 'sum', true), 'max 4xx')",
               "textEditor": false
             },
             {
               "refId": "C",
-              "target": "aliasByNode(sumSeries(scaleToSeconds(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX), 1)), -1)",
-              "textEditor": true
+              "target": "alias(summarize(scaleToSeconds(sumSeries(nonNegativeDerivative(stats.gauges.cfstats.api.*.ops.cc.http_status.5XX)), 1), '5s', 'sum', true), 'max 5xx')",
+              "textEditor": false
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "API requests/sec",
+          "title": "API requests/sec in 5m window",
           "tooltip": {
             "msResolution": true,
             "shared": true,
