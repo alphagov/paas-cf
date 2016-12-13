@@ -10,16 +10,36 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net"
+	"net/http"
 	"strings"
 )
 
 var _ = Describe("X-Forwarded headers", func() {
-	var headers struct {
-		X_Forwarded_For []string `json:"X-Forwarded-For"`
-	}
+	const (
+		egressURL   = "https://canhazip.com/"
+		fakeProxyIP = "1.2.3.4"
+	)
 
-	var _ = BeforeEach(func() {
+	var (
+		egressIP string
+		headers  struct {
+			X_Forwarded_For []string `json:"X-Forwarded-For"`
+		}
+	)
+
+	BeforeEach(func() {
+		resp, err := http.Get(egressURL)
+		Expect(err).ToNot(HaveOccurred(), "Unable to get egress IP from %s", egressURL)
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		Expect(err).ToNot(HaveOccurred())
+		egressIP = strings.TrimSpace(fmt.Sprintf("%s", body))
+		Expect(net.ParseIP(egressIP)).ToNot(BeNil(), "Unable to parse egress IP from %s: %s", egressURL, egressIP)
+
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
 			"push", appName,
@@ -29,35 +49,23 @@ var _ = Describe("X-Forwarded headers", func() {
 			"-c", "./bin/debug_app; sleep 1; echo 'done'",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
-		curlArgs := []string{"-f", "-H", "X-Forwarded-For: 1.2.3.4"}
+		curlArgs := []string{"-f", "-H", fmt.Sprintf("X-Forwarded-For: %s", fakeProxyIP)}
 		jsonData := helpers.CurlApp(appName, "/", curlArgs...)
 
-		err := json.Unmarshal([]byte(jsonData), &headers)
+		err = json.Unmarshal([]byte(jsonData), &headers)
 		Expect(err).NotTo(HaveOccurred())
 	})
 
-	It("should have an upstream IP that is not on our network", func() {
-		Expect(headers.X_Forwarded_For).Should(HaveLen(1))
-		remoteIP := strings.Split(headers.X_Forwarded_For[0], ",")[1]
+	It("should append real egress IP to existing X-Forwarded-For request header", func() {
+		Expect(headers.X_Forwarded_For).To(HaveLen(1))
 
-		parsedRemoteIP := net.ParseIP(strings.TrimSpace(remoteIP))
+		xffNoWhitespace := strings.Replace(headers.X_Forwarded_For[0], " ", "", -1)
+		xffIPs := strings.Split(xffNoWhitespace, ",")
 
-		Expect(parsedRemoteIP).ToNot(BeNil())
-
-		_, infra_cidr, _ := net.ParseCIDR("10.0.0.0/8")
-
-		Expect(infra_cidr.Contains(parsedRemoteIP)).To(BeFalse())
+		Expect(xffIPs).To(ConsistOf(
+			fakeProxyIP,
+			egressIP,
+			"127.0.0.1", // FIXME: haproxy -> gorouter, undesirable.
+		))
 	})
-
-	It("should append to existing X-Forwarded-For header", func() {
-		Expect(headers.X_Forwarded_For).Should(HaveLen(1))
-
-		remoteIP := strings.Split(headers.X_Forwarded_For[0], ",")[0]
-		parsedRemoteIP := net.ParseIP(remoteIP)
-
-		Expect(parsedRemoteIP).ToNot(BeNil())
-
-		Expect(parsedRemoteIP).To(Equal(net.ParseIP("1.2.3.4")))
-	})
-
 })
