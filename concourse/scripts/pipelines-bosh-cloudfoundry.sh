@@ -46,7 +46,6 @@ prepare_environment() {
   cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/040-graphite.yml")
   cf_os_conf_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.os-conf.version "${cf_manifest_dir}/../runtime-config/runtime-config-base.yml")
   cf_logsearch_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.logsearch-for-cloudfoundry.version "${cf_manifest_dir}/800-logsearch.yml")
-  cf_datadog_for_cloudfoundry_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.datadog-for-cloudfoundry.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
 
   if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
     gpg_ids="[]"
@@ -88,7 +87,6 @@ debug: ${DEBUG:-}
 cf-release-version: v${cf_release_version}
 cf-paas-haproxy-release-version: ${cf_paas_haproxy_version}
 cf_graphite_version: ${cf_graphite_version}
-cf_datadog_for_cloudfoundry_version: ${cf_datadog_for_cloudfoundry_version}
 cf_os_conf_version: ${cf_os_conf_version}
 cf_logsearch_for_cloudfoundry_version: ${cf_logsearch_for_cloudfoundry_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
