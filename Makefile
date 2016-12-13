@@ -21,6 +21,9 @@ check-env-vars:
 check-tf-version:
 	@./terraform/scripts/ensure_terraform_version.sh $(MIN_TERRAFORM_VERSION)
 
+check-aws-credentials:
+	@./scripts/validate_aws_credentials.sh
+
 test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
 
 spec:
@@ -170,11 +173,11 @@ bosh-cli: ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
 
 .PHONY: pipelines
-pipelines: ## Upload pipelines to Concourse
+pipelines: check-aws-credentials ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-bosh-cloudfoundry.sh
 
 .PHONY: showenv
-showenv: ## Display environment information
+showenv: check-aws-credentials ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
 	@scripts/show-cf-secrets.sh grafana_admin_password kibana_admin_password uaa_admin_password
@@ -183,7 +186,7 @@ showenv: ## Display environment information
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
 .PHONY: upload-datadog-secrets
-upload-datadog-secrets: check-env-vars ## Decrypt and upload Datadog credentials to S3
+upload-datadog-secrets: check-env-vars check-aws-credentials ## Decrypt and upload Datadog credentials to S3
 	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(if ${AWS_ACCOUNT},,$(error Must set environment to ci/staging/prod))
 	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
@@ -192,7 +195,7 @@ upload-datadog-secrets: check-env-vars ## Decrypt and upload Datadog credentials
 
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
-manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certificates for public facing endpoints
+manually_upload_certs: check-tf-version check-aws-credentials ## Manually upload to AWS the SSL certificates for public facing endpoints
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	# check password store and if varables are accesible
 	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
@@ -200,7 +203,7 @@ manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certif
 	@terraform/scripts/manually-upload-certs.sh ${ACTION}
 
 .PHONY: pingdom
-pingdom: check-tf-version ## Use custom Terraform provider to set up Pingdom check
+pingdom: check-tf-version check-aws-credentials ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	$(eval export PINGDOM_CONTACT_IDS=11089310)
@@ -219,20 +222,20 @@ run_job: check-env-vars ## Unbind paas-cf of $JOB in create-bosh-cloudfoundry pi
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 
-ssh_bosh: check-env-vars ## SSH to the bosh server
+ssh_bosh: check-env-vars check-aws-credentials ## SSH to the bosh server
 	@./scripts/ssh_bosh.sh
 
-ssh_concourse: check-env-vars ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
+ssh_concourse: check-env-vars check-aws-credentials ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
 	@./scripts/ssh.sh ssh ${SSH_CMD}
 
-tunnel: check-env-vars ## SSH tunnel to internal IPs
+tunnel: check-env-vars check-aws-credentials ## SSH tunnel to internal IPs
 	$(if ${TUNNEL},,$(error Must pass TUNNEL=SRC_PORT:HOST:DST_PORT))
 	@./scripts/ssh.sh tunnel ${TUNNEL}
 
-stop-tunnel: check-env-vars ## Stop SSH tunnel
+stop-tunnel: check-env-vars check-aws-credentials ## Stop SSH tunnel
 	@./scripts/ssh.sh tunnel stop
 
-shake_concourse_volumes: check-env-vars ## Restarts concourse services and workers and clears the volumes
+shake_concourse_volumes: check-env-vars check-aws-credentials ## Restarts concourse services and workers and clears the volumes
 	@./scripts/ssh.sh scp concourse/scripts/shake_concourse_volumes.sh /tmp/
 	@./scripts/ssh.sh ssh bash -i /tmp/shake_concourse_volumes.sh
 
