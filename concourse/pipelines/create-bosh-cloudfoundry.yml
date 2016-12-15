@@ -113,13 +113,6 @@ resources:
       tag_filter: {{cf_os_conf_version}}
       branch: gds_master
 
-  - name: logsearch-for-cloudfoundry-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-logsearch-for-cloudfoundry.git
-      tag_filter: {{cf_logsearch_for_cloudfoundry_version}}
-      branch: gds_master
-
   - name: graphite-nozzle
     type: git
     source:
@@ -1501,7 +1494,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-CA
           - get: graphite-nozzle
-          - get: logsearch-for-cloudfoundry-boshrelease
           - get: datadog-tfstate
           - get: cve-notifier
 
@@ -1543,7 +1535,6 @@ jobs:
               - name: graphite-statsd-boshrelease
               - name: paas-haproxy-release
               - name: os-conf-boshrelease
-              - name: logsearch-for-cloudfoundry-boshrelease
             run:
               path: sh
               args:
@@ -1563,10 +1554,6 @@ jobs:
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_os_conf_version}} os-conf-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
                     {{cf_os_conf_version}} os-conf-boshrelease
-
-                  ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb logsearch-for-cloudfoundry \
-                    {{cf_logsearch_for_cloudfoundry_version}} logsearch-for-cloudfoundry-boshrelease
 
         - task: get-and-upload-stemcell
           config:

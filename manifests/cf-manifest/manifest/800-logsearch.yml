@@ -4,7 +4,9 @@ releases:
   version: 203.0.0
   sha1: 4872c3d89fb2587d844dabbc93b124fb43b720d8
 - name: logsearch-for-cloudfoundry
-  version: v203.0.0-gds
+  version: 0.1.2
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.2.tgz
+  sha1: 9e124f94e36fbc2521b8bf12c3f1ffa7eec03ffd
 
 jobs:
 - (( append ))
@@ -43,9 +45,6 @@ jobs:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
     logstash: (( grab properties.parser_logstash ))
-    logstash_parser:
-      filters:
-        - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
 
 - name: parser_z2
   release: logsearch
@@ -66,9 +65,6 @@ jobs:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
     logstash: (( grab properties.parser_logstash ))
-    logstash_parser:
-      filters:
-        - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
 
 - name: elasticsearch_master
   release: logsearch
@@ -180,6 +176,19 @@ properties:
     output:
       elasticsearch:
         data_hosts: (( grab properties.elasticsearch.master_hosts ))
+  logstash_parser:
+    filters:
+      - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
+      - custom-filters: /var/vcap/jobs/logsearch-for-cloudfoundry-filters/config/logstash-filters-custom.conf
+    custom_filters: |
+      if ("lrps" in [auctioneer][data]) {
+        ruby {
+          code => '
+            lrps_hash = event["auctioneer"]["data"]["lrps"]
+            event["auctioneer"]["data"]["lrps"] = lrps_hash.keys
+          '
+        }
+      }
   curator:
     purge_logs:
       retention_period: 30
