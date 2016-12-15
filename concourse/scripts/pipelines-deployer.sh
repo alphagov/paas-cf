@@ -11,7 +11,7 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 # shellcheck source=./concourse/scripts/lib/datadog.sh
 . "${SCRIPT_DIR}/lib/datadog.sh"
 
-state_bucket=${DEPLOY_ENV}-state
+state_bucket=gds-paas-${DEPLOY_ENV}-state
 
 get_datadog_secrets
 

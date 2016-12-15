@@ -16,4 +16,4 @@ datadog_api_key: ${DATADOG_API_KEY}
 datadog_app_key: ${DATADOG_APP_KEY}
 EOF
 
-aws s3 cp "${SECRETS}" "s3://${DEPLOY_ENV}-state/datadog-secrets.yml"
+aws s3 cp "${SECRETS}" "s3://gds-paas-${DEPLOY_ENV}-state/datadog-secrets.yml"

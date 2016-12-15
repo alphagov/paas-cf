@@ -47,7 +47,7 @@ prepare_environment() {
   pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
   bosh_az=${BOSH_AZ:-eu-west-1a}
 
-  state_bucket=${DEPLOY_ENV}-state
+  state_bucket=gds-paas-${DEPLOY_ENV}-state
 
   cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/manifest"
   cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
