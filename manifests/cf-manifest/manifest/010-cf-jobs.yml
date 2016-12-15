@@ -8,8 +8,6 @@ meta:
   api_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: cloud_controller_ng
     release: capi
   - name: metron_agent
@@ -34,16 +32,22 @@ meta:
     release: (( grab meta.release.name ))
   - name: staticfile-buildpack
     release: (( grab meta.release.name ))
+  - name: datadog-consul
+    release: datadog-for-cloudfoundry
+  - name: datadog-cc
+    release: datadog-for-cloudfoundry
 
   api_worker_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
   - name: cloud_controller_worker
     release: capi
   - name: metron_agent
     release: (( grab meta.release.name ))
+  - name: datadog-consul
+    release: datadog-for-cloudfoundry
+  - name: datadog-cc-worker
+    release: datadog-for-cloudfoundry
 
   clock_templates:
   - name: consul_agent
