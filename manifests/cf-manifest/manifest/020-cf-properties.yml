@@ -190,7 +190,9 @@ properties:
       droplet_upload:
         timeout_in_seconds: ~
       generic:
-        number_of_workers: ~
+        number_of_workers: 3
+      local:
+        number_of_workers: 3
 
     app_events:
       cutoff_age_in_days: 31
