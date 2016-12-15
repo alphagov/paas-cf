@@ -37,7 +37,10 @@ releases:
     version: 0.1.4
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.4.tgz
     sha1: 763edf6e79b36bdb3b3cd41d1b8b203fb14b5505
-
+  - name: ipsec
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.1.tgz
+    sha1: c091d8bd1b982176904b3cea8a13a6d3dbf7642b
 
 stemcells:
   - alias: default

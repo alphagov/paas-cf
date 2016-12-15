@@ -125,3 +125,11 @@ output "rds_broker_elb_dns_name" {
 output "cloud_controller_security_group" {
   value = "${aws_security_group.cloud_controller.name}"
 }
+
+output "cell_subnet_cidr_blocks" {
+  value = ["${aws_subnet.cell.*.cidr_block}"]
+}
+
+output "router_subnet_cidr_blocks" {
+  value = ["${aws_subnet.router.*.cidr_block}"]
+}

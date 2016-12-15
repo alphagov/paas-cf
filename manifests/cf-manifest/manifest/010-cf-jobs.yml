@@ -129,6 +129,8 @@ meta:
     release: paas-haproxy
   - name: datadog-router
     release: datadog-for-cloudfoundry
+  - name: racoon
+    release: ipsec
 
   uaa_templates:
   - name: consul_agent
@@ -301,6 +303,10 @@ jobs:
         agent:
           services:
             gorouter: {}
+      racoon:
+        ports:
+        - name: router
+          targets: (( grab terraform_outputs.cell_subnet_cidr_blocks ))
 
   - name: brain
     azs: [z1, z2]
@@ -342,11 +348,18 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: datadog-garden
         release: datadog-for-cloudfoundry
+      - name: racoon
+        release: ipsec
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
     networks:
       - name: cell
+    properties:
+      racoon:
+        ports:
+        - name: cell
+          targets: (( grab terraform_outputs.router_subnet_cidr_blocks ))
 
   - name: cc_bridge
     azs: [z1, z2]

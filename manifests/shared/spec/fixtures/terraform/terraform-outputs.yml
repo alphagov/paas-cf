@@ -40,3 +40,5 @@ terraform_outputs:
   rds_broker_elb_dns_name: rds-broker.com
   rds_broker_elb_name: rds_broker_elb
   cloud_controller_security_group: sg-0000000
+  cell_subnet_cidr_blocks: ""
+  router_subnet_cidr_blocks: ""
