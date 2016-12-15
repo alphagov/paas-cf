@@ -123,7 +123,7 @@ generate_manifest_file() {
 
 upload_pipeline() {
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-        "${env}" "${pipeline_name}" \
+        "${pipeline_name}" \
         <(generate_manifest_file) \
         <(generate_vars_file)
 }

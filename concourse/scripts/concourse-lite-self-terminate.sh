@@ -23,4 +23,4 @@ EOF
 generate_vars_file > /dev/null # Check for missing vars
 
 bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-   "${env}" "${pipeline}" "${config}" <(generate_vars_file)
+   "${pipeline}" "${config}" <(generate_vars_file)

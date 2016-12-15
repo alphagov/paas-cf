@@ -51,7 +51,7 @@ generate_manifest_file() {
 
 for ACTION in create destroy; do
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-    "${env}" "${ACTION}-deployer" \
+    "${ACTION}-deployer" \
     <(generate_manifest_file) \
     <(generate_vars_file)
 done
