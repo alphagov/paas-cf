@@ -17,7 +17,7 @@ compilation:
 vm_types:
 - name: compilation
   cloud_properties:
-    iam_instance_profile: bosh-director
+    iam_instance_profile: compilation-vm
     instance_type: c3.large
     ephemeral_disk:
       size: 20480
