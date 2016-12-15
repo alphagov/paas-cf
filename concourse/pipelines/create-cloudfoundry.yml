@@ -2058,7 +2058,7 @@ jobs:
             - |
               ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
               bosh deployment cf-manifest/cf-manifest.yml
-              bosh vms | tee vms.txt
+              bosh vms {{deploy_env}} | tee vms.txt
               [ $(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)") -eq 0 ]
 
   - name: performance-tests
