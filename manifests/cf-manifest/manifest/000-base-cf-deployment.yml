@@ -26,9 +26,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=78
     sha1: 56f7cbcbf72ff2c8f9be76f27d267aef621d3175
   - name: cflinuxfs2-rootfs
-    version: 1.34.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.34.0
-    sha1: b1e367e228f5400439d4031a63df2600a9e213c4
+    version: 1.43.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.43.0
+    sha1: 587c61d39a525245934f97396ec6d5dd1c97bf79
   - name: paas-haproxy
     version: 0.0.5
   - name: datadog-for-cloudfoundry
