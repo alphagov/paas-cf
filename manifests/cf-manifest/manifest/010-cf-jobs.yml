@@ -386,6 +386,8 @@ jobs:
         release: diego
       - name: metron_agent
         release: cf
+      - name: datadog-route-emitter
+        release: datadog-for-cloudfoundry
     instances: 2
     vm_type: medium
     stemcell: default
