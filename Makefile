@@ -222,7 +222,7 @@ find_diverged_forks: ## Check all github forks belonging to paas to see if they'
 	./scripts/find_diverged_forks.py alphagov --prefix=paas --extra-repo=cf-release --extra-repo=graphite-nozzle --github-token=${GITHUB_TOKEN}
 
 .PHONY: run_job
-run_job: check-env-vars ## Unbind paas-cf of $JOB in create-bosh-cloudfoundry pipeline and then trigger it
+run_job: check-env-vars ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 

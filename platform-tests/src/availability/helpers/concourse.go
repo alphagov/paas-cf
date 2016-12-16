@@ -16,7 +16,7 @@ import (
 
 const (
 	teamName     = "main"
-	pipelineName = "create-bosh-cloudfoundry"
+	pipelineName = "create-cloudfoundry"
 	jobName      = "cf-deploy"
 	resourceName = "pipeline-trigger"
 )

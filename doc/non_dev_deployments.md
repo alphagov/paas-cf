@@ -106,7 +106,7 @@ the staging deployment). These therefore need write access to the git repo.
 This is done as follows:
 
 * Run the `generate-git-keys` job on the deployer concourse (found in the
-  `release` group of the `create-bosh-cloudfoundry` pipeline)
+  `release` group of the `create-cloudfoundry` pipeline)
 * Grab the generated ssh public key from the output of that job.
 * Add this as a [deploy key](https://developer.github.com/guides/managing-deploy-keys/#deploy-keys)
   to the repo - this needs to be done by civil servant. Set the title to the FQDN of the

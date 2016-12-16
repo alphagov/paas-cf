@@ -2173,6 +2173,7 @@ jobs:
             ENV: {{deploy_env}}
             AWS_ACCOUNT: {{aws_account}}
             ENABLE_DATADOG: {{enable_datadog}}
+            PIPELINE_NAME: {{pipeline_name}}
           inputs:
           - name: pipeline-pool
           run:
@@ -2195,7 +2196,7 @@ jobs:
                           \"type\":\"gauge\",
                           \"tags\":[
                             \"bosh-deployment:${ENV}\",
-                            \"pipeline_name:create-bosh-cloudfoundry\",
+                            \"pipeline_name:${PIPELINE_NAME}\",
                             \"aws_account:${AWS_ACCOUNT}\"
                           ]}
                         ]

@@ -145,7 +145,7 @@ if you want to deploy to DEV account.
 
 ### Deploy
 
-Run the `create-bosh-cloudfoundry` pipeline. This will deploy MicroBOSH, and CloudFoundry.
+Run the `create-cloudfoundry` pipeline. This will deploy MicroBOSH, and CloudFoundry.
 
 Run `make dev showenv` to show environment information such as system URLs and Concourse password.
 
@@ -189,7 +189,7 @@ configuration in [`.travis.yml`](.travis.yml).
 
 ## Check and release pipeline locking
 
-the `create-bosh-cloudfoundry` pipeline implements pipeline locking using
+the `create-cloudfoundry` pipeline implements pipeline locking using
 [the concourse pool resource](https://github.com/concourse/pool-resource).
 
 This lock is acquired at the beginning and released the end of all the
@@ -266,9 +266,9 @@ Self update pipeline has to be disabled, otherwise it would revert to default va
 In case you want to deploy the pipeline, set `ENABLE_FAILURE_TESTING` environment variable to true, e.g.
 `ENABLE_FAILURE_TESTING=true make dev pipelines`.
 
-## Optionally run specific job in the create-bosh-cloudfoundry pipeline
+## Optionally run specific job in the create-cloudfoundry pipeline
 
-`create-bosh-cloudfoundry` is our main pipeline. When we are making changes or
+`create-cloudfoundry` is our main pipeline. When we are making changes or
 adding new features to our deployment we many times wish to test only the
 specific changes we have just made. To do that, it's many times enough to run
 only the job that is applying the change. In order to do that, you can use
