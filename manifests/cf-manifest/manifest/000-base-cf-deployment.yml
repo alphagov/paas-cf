@@ -30,7 +30,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.43.0
     sha1: 587c61d39a525245934f97396ec6d5dd1c97bf79
   - name: paas-haproxy
-    version: 0.0.5
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.1.tgz
+    sha1: 50cb6f378a3f6af9d78a55ba5b449f15e227d778
   - name: datadog-for-cloudfoundry
     version: 0.1.4
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.4.tgz

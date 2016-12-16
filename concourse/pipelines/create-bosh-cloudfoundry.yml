@@ -93,12 +93,6 @@ resources:
       tag_filter: {{paas_cf_tag_filter}}
       commit_verification_key_ids: {{gpg_ids}}
 
-  - name: paas-haproxy-release
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-haproxy-release.git
-      tag_filter: {{cf-paas-haproxy-release-version}}
-
   - name: graphite-statsd-boshrelease
     type: git
     source:
@@ -1488,7 +1482,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
-          - get: paas-haproxy-release
           - get: os-conf-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
@@ -1533,7 +1526,6 @@ jobs:
               - name: paas-cf
               - name: bosh-secrets
               - name: graphite-statsd-boshrelease
-              - name: paas-haproxy-release
               - name: os-conf-boshrelease
             run:
               path: sh
@@ -1546,10 +1538,6 @@ jobs:
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_graphite_version}} graphite-statsd-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
                     {{cf_graphite_version}} graphite-statsd-boshrelease
-
-                  ./paas-cf/concourse/scripts/git_check_tag.sh {{cf-paas-haproxy-release-version}} paas-haproxy-release
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb paas-haproxy \
-                    {{cf-paas-haproxy-release-version}} paas-haproxy-release
 
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_os_conf_version}} os-conf-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
