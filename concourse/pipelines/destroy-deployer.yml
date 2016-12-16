@@ -64,8 +64,6 @@ jobs:
     - get: paas-cf
     - get: concourse-manifest
     - get: concourse-bosh-state
-    - get: vpc-terraform-state
-    - get: concourse-terraform-state
     - get: ssh-private-key
 
     - task: destroy-concourse
@@ -101,6 +99,20 @@ jobs:
         put: concourse-bosh-state
         params:
           file: destroy-concourse/concourse-manifest-state.json
+
+    - put: destroy-all-trigger
+      params: {bump: patch}
+
+  - name: destroy-concourse-terraform
+    serial: true
+    plan:
+    - get: paas-cf
+      passed: ['destroy-concourse']
+    - get: destroy-all-trigger
+      trigger: true
+      passed: ['destroy-concourse']
+    - get: vpc-terraform-state
+    - get: concourse-terraform-state
 
     - task: vpc-terraform-outputs-to-sh
       config:
@@ -152,18 +164,15 @@ jobs:
         params:
           file: destroy-concourse-terraform/concourse.tfstate
 
-    - put: destroy-all-trigger
-      params: {bump: patch}
-
   - name: destroy-vpc
     serial: true
     plan:
     - get: paas-cf
-      passed: ['destroy-concourse']
+      passed: ['destroy-concourse-terraform']
     - get: vpc-terraform-state
     - get: destroy-all-trigger
       trigger: true
-      passed: ['destroy-concourse']
+      passed: ['destroy-concourse-terraform']
     - task: tf-destroy-vpc
       config:
         image: docker:///governmentpaas/terraform
