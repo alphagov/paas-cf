@@ -106,6 +106,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export ENABLE_DATADOG ?= false)
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
 	$(eval export DISABLE_PIPELINE_LOCKING=true)
+	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	@true
 
 .PHONY: ci
