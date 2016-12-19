@@ -44,7 +44,7 @@ download_key() {
 
 ssh_concourse() {
   echo
-  aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/generated-concourse-secrets.yml" - | \
+  aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" - | \
     ruby -ryaml -e 'puts "Sudo password is " + YAML.load(STDIN)["secrets"]["concourse_vcap_password_orig"]'
   echo
 
