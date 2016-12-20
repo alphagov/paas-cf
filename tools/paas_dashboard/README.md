@@ -30,7 +30,7 @@ See [dashing.io](http://dashing.io) and the [smashing wiki](https://github.com/d
 ### Our deployment
 
 We deploy our smashing app as part of the `create-bosh-cloudfoundry` pipeline.
-It should be available at https://paas-dasboard.cloudapps.digital
+It should be available [here](https://paas-dashboard.cloudapps.digital)
 
 ### Running locally
 
