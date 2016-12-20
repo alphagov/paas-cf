@@ -35,10 +35,6 @@ spec:
 		bundle exec rspec
 	cd manifests/shared &&\
 		bundle exec rspec
-	cd manifests/concourse-manifest &&\
-		bundle exec rspec
-	cd manifests/bosh-manifest &&\
-		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
 	cd platform-tests/bosh-template-renderer &&\
