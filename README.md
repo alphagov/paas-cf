@@ -160,12 +160,6 @@ overnight](#overnight-deletion-of-environments) by default.
 
 Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, and supporting infrastructure.
 
-Once CloudFoundry has been fully destroyed, run the `destroy-microbosh` pipeline to destroy MicroBOSH.
-
-NB: If the `destroy-microbosh` pipeline is run without first cleaning up
-CloudFoundry, it will be necessary to manually clean up the CloudFoundry
-deployment.
-
 # Additional notes
 
 ## Accessing CloudFoundry
