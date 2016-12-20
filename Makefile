@@ -161,14 +161,6 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export DEPLOY_RUBBERNECKER=true)
 	@true
 
-.PHONY: bootstrap
-bootstrap: ## Start bootstrap
-	vagrant/deploy.sh
-
-.PHONY: bootstrap-destroy
-bootstrap-destroy: ## Destroy bootstrap
-	./vagrant/destroy.sh
-
 .PHONY: bosh-cli
 bosh-cli: ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
