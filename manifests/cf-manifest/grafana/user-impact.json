@@ -15,7 +15,9 @@
       "height": "150px",
       "panels": [
         {
-          "aliasColors": {},
+          "aliasColors": {
+            "5xx": "#BF1B00"
+          },
           "bars": false,
           "datasource": "graphite",
           "editable": true,
@@ -33,13 +35,13 @@
           "isNew": true,
           "legend": {
             "alignAsTable": false,
-            "avg": false,
-            "current": false,
-            "max": false,
+            "avg": true,
+            "current": true,
+            "max": true,
             "min": false,
             "show": true,
             "total": false,
-            "values": false
+            "values": true
           },
           "lines": true,
           "linewidth": 2,
@@ -49,7 +51,16 @@
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
-          "seriesOverrides": [],
+          "seriesOverrides": [
+            {
+              "alias": "4xx",
+              "yaxis": 1
+            },
+            {
+              "alias": "5xx",
+              "yaxis": 1
+            }
+          ],
           "span": 6,
           "stack": false,
           "steppedLine": false,
@@ -57,17 +68,19 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(sumSeries(stats.counters.cfstats.router.*.ops.responses.rate), 'Total')",
+              "target": "alias(scaleToSeconds(summarize(sumSeries(stats.counters.cfstats.router.*.ops.responses.count), '1m', 'sum', true), 1), 'Total')",
               "textEditor": false
             },
             {
-              "refId": "B",
-              "target": "aliasByNode(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.rate), -2)",
+              "hide": false,
+              "refId": "E",
+              "target": "alias(scaleToSeconds(summarize(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.count), '1m', 'sum', true), 1), '5xx')",
               "textEditor": false
             },
             {
-              "refId": "C",
-              "target": "aliasByNode(sumSeries(stats.counters.cfstats.router.*.ops.responses.5xx.rate), -2)",
+              "hide": false,
+              "refId": "D",
+              "target": "alias(scaleToSeconds(summarize(sumSeries(stats.counters.cfstats.router.*.ops.responses.4xx.count), '1m', 'sum', true), 1), '4xx')",
               "textEditor": false
             }
           ],
@@ -100,7 +113,8 @@
               "min": 0,
               "show": true
             }
-          ]
+          ],
+          "decimals": null
         },
         {
           "aliasColors": {},
