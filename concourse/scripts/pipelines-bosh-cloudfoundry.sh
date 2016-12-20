@@ -12,7 +12,7 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
-  aws s3 cp "s3://${env}-state/git_id_rsa" "${git_id_rsa_file}"
+  aws s3 cp "s3://${state_bucket}/git_id_rsa" "${git_id_rsa_file}"
 
   git_id_rsa=$(cat "${git_id_rsa_file}")
 
@@ -22,7 +22,7 @@ download_git_id_rsa() {
 get_git_concourse_pool_clone_full_url_ssh() {
   tfstate_file=$(mktemp -t tfstate.XXXXXX)
 
-  aws s3 cp "s3://${env}-state/concourse.tfstate" "${tfstate_file}"
+  aws s3 cp "s3://${state_bucket}/concourse.tfstate" "${tfstate_file}"
 
   git_concourse_pool_clone_full_url_ssh=$(ruby < "${tfstate_file}" -rjson -e \
     'puts JSON.load(STDIN)["modules"][0]["outputs"]["git_concourse_pool_clone_full_url_ssh"]["value"]'
@@ -34,11 +34,12 @@ get_git_concourse_pool_clone_full_url_ssh() {
 prepare_environment() {
   "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
-  env="${DEPLOY_ENV}"
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
   pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
   bosh_az=${BOSH_AZ:-eu-west-1a}
+
+  state_bucket=${DEPLOY_ENV}-state
 
   cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/manifest"
   cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
@@ -75,9 +76,9 @@ makefile_env_target: ${MAKEFILE_ENV_TARGET:-dev}
 self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
 skip_upload_generated_certs: ${SKIP_UPLOAD_GENERATED_CERTS:-false}
 aws_account: ${AWS_ACCOUNT:-dev}
-deploy_env: ${env}
-state_bucket: ${env}-state
-test_artifacts_bucket: gds-paas-${env}-test-artifacts
+deploy_env: ${DEPLOY_ENV}
+state_bucket: ${state_bucket}
+test_artifacts_bucket: gds-paas-${DEPLOY_ENV}-test-artifacts
 pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
@@ -123,7 +124,7 @@ generate_manifest_file() {
 
 upload_pipeline() {
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-        "${env}" "${pipeline_name}" \
+        "${pipeline_name}" \
         <(generate_manifest_file) \
         <(generate_vars_file)
 }

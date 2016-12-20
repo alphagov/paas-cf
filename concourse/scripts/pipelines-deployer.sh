@@ -11,7 +11,7 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 # shellcheck source=./concourse/scripts/lib/datadog.sh
 . "${SCRIPT_DIR}/lib/datadog.sh"
 
-env=${DEPLOY_ENV}
+state_bucket=${DEPLOY_ENV}-state
 
 get_datadog_secrets
 
@@ -20,9 +20,9 @@ generate_vars_file() {
 ---
 aws_account: ${AWS_ACCOUNT:-dev}
 vagrant_ip: ${VAGRANT_IP}
-deploy_env: ${env}
-tfstate_bucket: bucket=${env}-state
-state_bucket: ${env}-state
+deploy_env: ${DEPLOY_ENV}
+tfstate_bucket: bucket=${state_bucket}
+state_bucket: ${state_bucket}
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION:-eu-west-1}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
@@ -51,7 +51,7 @@ generate_manifest_file() {
 
 for ACTION in create destroy; do
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
-    "${env}" "${ACTION}-deployer" \
+    "${ACTION}-deployer" \
     <(generate_manifest_file) \
     <(generate_vars_file)
 done

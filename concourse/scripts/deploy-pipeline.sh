@@ -7,11 +7,10 @@ usage() {
    cat <<EOF
 Usage:
 
-   $SCRIPT <env> <pipeline> <config> <varsfile>
+   $SCRIPT <pipeline> <config> <varsfile>
 
 Being:
 
-   env			environment name
    pipeline		pipeline name
    config		config for the pipeline
    varsfile     concourse variables to pass to the pipeline
@@ -20,17 +19,15 @@ EOF
    exit 1
 }
 
-if [ $# -lt 4 ]; then
+if [ $# -lt 3 ]; then
    usage
 fi
 
-env=$1; shift
 pipeline=$1; shift
 config=$1; shift
 varsfile=$1; shift
 
 echo "Concourse API target ${FLY_TARGET}"
-echo "Deployment ${env}"
 echo "Pipeline ${pipeline}"
 echo "Config file ${config}"
 

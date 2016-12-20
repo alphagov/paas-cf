@@ -4,7 +4,7 @@ set -u
 
 get_datadog_secrets() {
   # shellcheck disable=SC2154
-  secrets_uri="s3://${env}-state/datadog-secrets.yml"
+  secrets_uri="s3://${state_bucket}/datadog-secrets.yml"
   export datadog_api_key
   export datadog_app_key
   if aws s3 ls "${secrets_uri}" > /dev/null ; then
