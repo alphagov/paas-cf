@@ -85,7 +85,7 @@ check_params_and_environment() {
     abort_usage "Email must be defined"
   fi
 
-  local email_expr="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$"
+  local email_expr="^[A-Za-z0-9._%+-\']+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$"
   if ! [[ "${EMAIL}" =~ ${email_expr} ]]; then
     abort "You must specify a valid email"
   fi
@@ -176,7 +176,7 @@ send_mail() {
     "
 
     aws ses send-email \
-      --destination "ToAddresses=${EMAIL}" \
+      --destination "{ \"ToAddresses\": [\"${EMAIL}\"] }" \
       --message "${MESSAGE_JSON}"\
       --from "${FROM_ADDRESS}"  \
       --region eu-west-1 \
