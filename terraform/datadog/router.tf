@@ -66,6 +66,12 @@ resource "datadog_monitor" "route_update_latency" {
   }
 }
 
+variable "datadog_monitor_total_routes_drop_enabled" {
+  description = "Selector to enable/disable the named resource"
+
+  default = 1
+}
+
 resource "datadog_monitor" "total_routes_drop" {
   name                = "${format("%s total routes difference", var.env)}"
   type                = "query alert"
@@ -73,6 +79,9 @@ resource "datadog_monitor" "total_routes_drop" {
   escalation_message  = "Total routes still dropping quickly. Check the deployment."
   no_data_timeframe   = "7"
   require_full_window = true
+
+  # Conditionally enable this resource based on var.aws_account.
+  count = "${var.datadog_monitor_total_routes_drop_enabled}"
 
   query = "${format("pct_change(avg(last_1m),last_30m):avg:cf.gorouter.total_routes{deployment:%s,job:router} < -33", var.env)}"
 

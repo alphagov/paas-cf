@@ -9,3 +9,7 @@ web_access_cidrs = "0.0.0.0/0"
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="govpaas-alerting-staging@digital.cabinet-office.gov.uk"
+
+# Enabled/disabled resources
+# Disable datadog_monitor.total_routes_drop resource
+datadog_monitor_total_routes_drop_enabled = 0
