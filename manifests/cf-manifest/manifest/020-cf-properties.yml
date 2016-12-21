@@ -618,4 +618,4 @@ properties:
     certificate_authority_cert: (( grab secrets.ipsec_ca_cert ))
     certificate_authority_private_key: (( grab secrets.ipsec_ca_key ))
     verify_certificate: "on"
-    level: use
+    level: require
