@@ -100,13 +100,6 @@ resources:
       tag_filter: {{cf_graphite_version}}
       branch: gds_master
 
-  - name: os-conf-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-os-conf-release.git
-      tag_filter: {{cf_os_conf_version}}
-      branch: gds_master
-
   - name: graphite-nozzle
     type: git
     source:
@@ -1482,7 +1475,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-secrets
           - get: graphite-statsd-boshrelease
-          - get: os-conf-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
           - get: bosh-CA
@@ -1526,7 +1518,6 @@ jobs:
               - name: paas-cf
               - name: bosh-secrets
               - name: graphite-statsd-boshrelease
-              - name: os-conf-boshrelease
             run:
               path: sh
               args:
@@ -1538,10 +1529,6 @@ jobs:
                   ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_graphite_version}} graphite-statsd-boshrelease
                   paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
                     {{cf_graphite_version}} graphite-statsd-boshrelease
-
-                  ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_os_conf_version}} os-conf-boshrelease
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb os-conf \
-                    {{cf_os_conf_version}} os-conf-boshrelease
 
         - task: get-and-upload-stemcell
           config:
