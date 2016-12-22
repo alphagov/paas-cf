@@ -1,13 +1,5 @@
 ---
-releases:
-  - name: os-conf
-    version: commit-3c5609485a57b1314a0114b1e4157e6426fbf14a
-
 addons:
-  - name: os-configuration
-    jobs:
-    - name: set_mtu
-      release: os-conf
   - name: collectd
     jobs:
     - name: collectd
