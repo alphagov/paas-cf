@@ -1329,6 +1329,7 @@ jobs:
                 ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
+                ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
             run:
               path: sh
               args:
@@ -1337,7 +1338,7 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
-                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
@@ -1370,7 +1371,7 @@ jobs:
                 ./paas-cf/manifests/shared/deployments/collectd.yml
                 ./paas-cf/manifests/shared/deployments/datadog-agent.yml
                 ./paas-cf/manifests/shared/deployments/syslog.yml
-                ./paas-cf/manifests/cf-manifest/manifest/env-specific/{{cf_env_specific_manifest}}
+                ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}

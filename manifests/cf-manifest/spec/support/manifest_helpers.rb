@@ -57,7 +57,7 @@ private
         File.expand_path("../../../manifest/*.yml", __FILE__),
         File.expand_path("../../../manifest/data/*.yml", __FILE__),
         grafana_dashboards_manifest_path,
-        File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
+        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         File.expand_path("../../../../shared/deployments/datadog-agent.yml", __FILE__),
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
@@ -71,6 +71,7 @@ private
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
     ])
 
     # Deep freeze the object so that it's safe to use across multiple examples
