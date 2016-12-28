@@ -295,6 +295,11 @@ resources:
     source:
       interval: 5m
 
+  - name: paas-roadmap
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-roadmap
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1475,6 +1480,7 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: datadog-tfstate
+          - get: paas-roadmap
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -2017,6 +2023,37 @@ jobs:
                   echo Setting DD_APP_KEY...
                   cf set-env paas-dashboard DD_APP_KEY {{datadog_app_key}} > /dev/null
                   cf start paas-dashboard
+
+        - task: deploy-paas-roadmap
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            inputs:
+              - name: paas-roadmap
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            params:
+              DEPLOY_ROADMAP: {{deploy_roadmap}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if [ "${DEPLOY_ROADMAP}" != "true" ]; then
+                    echo Roadmap disabled
+                    exit 0
+                  fi
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                    -o admin -s admin
+                  cd paas-roadmap
+                  cf push paas-roadmap
 
   - name: post-deploy
     plan:

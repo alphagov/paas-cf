@@ -103,6 +103,7 @@ datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
+deploy_roadmap: ${DEPLOY_ROADMAP:-false}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
