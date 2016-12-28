@@ -295,11 +295,6 @@ resources:
     source:
       interval: 5m
 
-  - name: cve-notifier
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-cve-notifier
-
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1480,7 +1475,6 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: datadog-tfstate
-          - get: cve-notifier
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -1959,7 +1953,6 @@ jobs:
               TF_VAR_datadog_api_key: {{datadog_api_key}}
               TF_VAR_datadog_app_key: {{datadog_app_key}}
               TF_VAR_aws_account: {{aws_account}}
-              ENABLE_CVE_NOTIFIER: {{enable_cve_notifier}}
               ENABLE_DATADOG: {{enable_datadog}}
             run:
               path: sh
@@ -1977,7 +1970,6 @@ jobs:
                   fi
 
                   if [ "${ENABLE_DATADOG}" = "true" ]; then
-                    [ "${ENABLE_CVE_NOTIFIER}" = "true" ] && export TF_VAR_enable_cve_notifier=1
                     terraform apply \
                       -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                       -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
@@ -1990,44 +1982,6 @@ jobs:
             put: datadog-tfstate
             params:
               file: updated-tfstate/datadog.tfstate
-
-        - task: deploy-cve-notifier
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-            inputs:
-              - name: cve-notifier
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            params:
-              ENABLE_CVE_NOTIFIER: {{enable_cve_notifier}}
-              DEPLOY_ENV: {{deploy_env}}
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  if [ "${ENABLE_CVE_NOTIFIER}" != "true" ]; then
-                    echo CVE notifier disabled
-                    exit 0
-                  fi
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
-                  cf push --no-route --no-start -m 100M -b python_buildpack \
-                    --health-check-type none -p cve-notifier cve-notifier
-                  cf set-env cve-notifier DEPLOY_ENV "${DEPLOY_ENV}"
-                  echo Setting DD_API_KEY...
-                  cf set-env cve-notifier DD_API_KEY {{datadog_api_key}} > /dev/null
-                  echo Setting DD_APP_KEY...
-                  cf set-env cve-notifier DD_APP_KEY {{datadog_app_key}} > /dev/null
-                  cf start cve-notifier
 
         - task: deploy-paas-dashboard
           config:
