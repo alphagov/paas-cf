@@ -158,6 +158,7 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export DECRYPT_CONCOURSE_ATC_PASSWORD=prod_deployment)
 	$(eval export DEPLOY_ROADMAP=true)
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
+	$(eval export DEPLOY_RUBBERNECKER=true)
 	@true
 
 .PHONY: bootstrap

@@ -31,6 +31,11 @@ get_git_concourse_pool_clone_full_url_ssh() {
   rm -f "${tfstate_file}"
 }
 
+upload_tracker_token() {
+  echo "Uploading Pivotal tracker token..."
+  pass pivotal/tracker_token | aws s3 cp - "s3://${state_bucket}/tracker_token"
+}
+
 prepare_environment() {
   "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
@@ -64,6 +69,11 @@ prepare_environment() {
   fi
 
   export EXPOSE_PIPELINE=1
+
+  if [ "${DEPLOY_RUBBERNECKER:-}" = "true" ]; then
+    upload_tracker_token
+  fi
+
 }
 
 generate_vars_file() {
@@ -104,6 +114,8 @@ datadog_app_key: ${datadog_app_key:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
 deploy_roadmap: ${DEPLOY_ROADMAP:-false}
+deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
+pivotal_project_id: ${PIVOTAL_PROJECT_ID:-1275640}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
