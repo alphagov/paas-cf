@@ -32,8 +32,14 @@ get_git_concourse_pool_clone_full_url_ssh() {
 }
 
 upload_tracker_token() {
-  echo "Uploading Pivotal tracker token..."
-  pass pivotal/tracker_token | aws s3 cp - "s3://${state_bucket}/tracker_token"
+  if [ "${DEPLOY_RUBBERNECKER:-}" = "true" ]; then
+    echo "Uploading Pivotal tracker token..."
+    pass pivotal/tracker_token | aws s3 cp - "s3://${state_bucket}/tracker_token"
+  else
+    echo "Uploading empty Pivotal tracker token..."
+    echo "no token" | aws s3 cp - "s3://${state_bucket}/tracker_token"
+  fi
+
 }
 
 prepare_environment() {
@@ -70,9 +76,7 @@ prepare_environment() {
 
   export EXPOSE_PIPELINE=1
 
-  if [ "${DEPLOY_RUBBERNECKER:-}" = "true" ]; then
-    upload_tracker_token
-  fi
+  upload_tracker_token
 
 }
 
