@@ -1,8 +1,6 @@
 ---
 - email: "alex.tomlins@digital.cabinet-office.gov.uk"
   gpg_key: "14491C3B34141441"
-- email: "ben.hyland@digital.cabinet-office.gov.uk"
-  gpg_key: "D8B8E2E5CAB07446"
 - email: "colin.saliceti@digital.cabinet-office.gov.uk"
   gpg_key: "93BD8A652053A480"
 - email: "dan.carley@digital.cabinet-office.gov.uk"
