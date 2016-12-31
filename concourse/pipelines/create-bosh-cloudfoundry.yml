@@ -305,13 +305,6 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-rubbernecker
 
-  - name: tracker_token
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: tracker_token
-
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1494,7 +1487,6 @@ jobs:
           - get: datadog-tfstate
           - get: paas-roadmap
           - get: paas-rubbernecker
-          - get: tracker_token
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -2081,10 +2073,10 @@ jobs:
               - name: config
               - name: bosh-CA
               - name: paas-rubbernecker
-              - name: tracker_token
             params:
               DEPLOY_RUBBERNECKER: {{deploy_rubbernecker}}
               PIVOTAL_PROJECT_ID: {{pivotal_project_id}}
+              TRACKER_TOKEN: {{tracker_token}}
             run:
               path: sh
               args:
@@ -2102,8 +2094,7 @@ jobs:
 
                   cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
                   echo Setting PIVOTAL_API_KEY...
-                  cf set-env rubbernecker PIVOTAL_API_KEY $(cat tracker_token/tracker_token) \
-                    > /dev/null
+                  cf set-env rubbernecker PIVOTAL_API_KEY ${TRACKER_TOKEN} > /dev/null
                   echo Setting PIVOTAL_PROJECT_ID...
                   cf set-env rubbernecker PIVOTAL_PROJECT_ID ${PIVOTAL_PROJECT_ID}
                   cf start rubbernecker
