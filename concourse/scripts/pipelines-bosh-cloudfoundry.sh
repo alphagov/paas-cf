@@ -200,6 +200,14 @@ pipeline_name="test"
 generate_vars_file > /dev/null # Check for missing vars
 pipeline_name=
 
+# FIXME: Remove this once it's been renamed everywhere.
+if $FLY_CMD -t "${FLY_TARGET}" pipelines | grep -q create-bosh-cloudfoundry; then
+  $FLY_CMD -t "${FLY_TARGET}" \
+    rename-pipeline \
+    --old-name create-bosh-cloudfoundry \
+    --new-name create-cloudfoundry
+fi
+
 for p in $pipelines_to_update; do
   update_pipeline "$p"
 done
