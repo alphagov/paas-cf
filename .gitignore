@@ -1,5 +1,4 @@
 **/*.tfstate
-vagrant/.vagrant/
 bin/fly*
 .idea/
 platform-tests/pkg

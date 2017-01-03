@@ -138,7 +138,7 @@ set_uaac_target() {
 set_uaac_context() {
   info "Fetching uaa_admin_client_secret using AWS cli."
   echo
-  UAA_ADMIN_CLIENT_SECRET=$(aws s3 cp s3://"${DEPLOY_ENV}"-state/cf-secrets.yml - | awk '/uaa_admin_client_secret/ {print $2}')
+  UAA_ADMIN_CLIENT_SECRET=$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/cf-secrets.yml" - | awk '/uaa_admin_client_secret/ {print $2}')
   info "Setting uaac client token:"
   echo uaac token client get admin -s REDACTED
   echo

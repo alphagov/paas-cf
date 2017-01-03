@@ -15,129 +15,35 @@ and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 The following components needs to be deployed in order. They should be
 destroyed in reverse order so as not to leave any orphaned resources:
 
-1. [Bootstrap Concourse](#bootstrap-concourse)
 1. [Deployer Concourse](#deployer-concourse)
-1. [MicroBOSH and CloudFoundry](#microbosh-and-cloudfoundry)
+1. [CloudFoundry](#cloudfoundry)
 
 The word *environment* is used herein to describe a single Cloud Foundry
 installation and its supporting infrastructure.
 
-## Bootstrap Concourse
-
-This runs outside an environment and is responsible for creating or
-destroying a [Deployer Concourse](#deployer-concourse) in an environment.
-You don't need to keep this running once you have the Deployer Concourse,
-and you can create it again when the Deployer Concourse needs to be modified
-or destroyed.
-
-### Prerequisites
-
-In order to use this repository you will need:
-
-* [AWS Command Line tool (`awscli`)](https://aws.amazon.com/cli/). You can
-install it using [any of the official methods](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
-or by using [`virtualenv`](https://virtualenv.pypa.io/en/latest/) and pip `pip install -r requirements.txt`
-
-* a recent version of [Vagrant installed][]. The exact version
-requirements are listed in the [`Vagrantfile`](vagrant/Vagrantfile).
-
-[Vagrant installed]: https://docs.vagrantup.com/v2/installation/index.html
-
-Install the AWS plugin for Vagrant:
-
-```
-vagrant plugin install vagrant-aws
-```
-
-* provide AWS access keys as environment variables:
-
-```
-export AWS_ACCESS_KEY_ID=XXXXXXXXXX
-export AWS_SECRET_ACCESS_KEY=YYYYYYYYYY
-```
-And optionally:
-
-```
-export AWS_DEFAULT_REGION=eu-west-1
-```
-
-The access keys are only required to spin up the *Bootstrap Concourse*. From
-that point on they won't be required (except by manual actions) as all the
-pipelines will use [instance profiles][] to make calls to AWS. The policies for
-these are defined in the repo [aws-account-wide-terraform][]
-(not public because it also contains state files).
-
-[instance profiles]: http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html
-[aws-account-wide-terraform]: https://github.gds/government-paas/aws-account-wide-terraform
-
-* Declare your environment name using the variable DEPLOY_ENV.
-
-```
-$ export DEPLOY_ENV=environment-name
-```
-
-### Deploy
-
-Create the bootstrap Concourse with `make`. Select the target based on which AWS account you want to work with. For instance for a DEV bootstrap:
-
-```
-make dev bootstrap
-```
-`make help` will show all available options.
-
-NB: This will [auto-delete overnight](#overnight-deletion-of-environments)
-by default.
-
-An SSH tunnel is created so that you can access it securely. The deploy
-script can be re-run to update the pipelines or set up the tunnel again.
-
-When complete it will output a URL and BasicAuth credentials that you can
-use to login.
-
-### Destroy
-
-Run the following script:
-
-```
-make dev bootstrap-destroy
-```
-
 ## Deployer Concourse
 
 This runs within an environment and is responsible for deploying everything
-else to that environment, such as [MicroBOSH](#microbosh-and-cloudfoundry) and
+else to that environment, such as AWS infrastructure and
 [CloudFoundry](#cloudfoundry). It should be kept running while that
 environment exists.
 
-### Prerequisites
+It is deployed using [paas-bootstrap]. Follow the instructions in that repo to
+create a concourse instance using the `deployer-concourse` profiles etc.
 
-You will need a working [Bootstrap Concourse](#bootstrap-concourse).
+[paas-bootstrap]: https://github.com/alphagov/paas-bootstrap#readme
 
-### Deploy
+## Cloudfoundry
 
-Run the `create-deployer` pipeline from your *Bootstrap Concourse*.
-
-When complete you can access the UI from a browser with the same credentials as
-your *Bootstrap Concourse* on the following URL:
-
-```
-https://deployer.${DEPLOY_ENV}.dev.cloudpipeline.digital/
-```
-
-### Destroy
-
-Run the `destroy-deployer` pipeline from your *Bootstrap Concourse*.
-
-## MicroBOSH and Cloudfoundry
-
-MicroBOSH is responsible for deploying [CloudFoundry](#cloudfoundry) and
-supporting services for the platform.
+The deployer concourse is responsible for deploying CloudFoundry and supporting
+services for the platform.
 
 ### Prerequisites
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
-Deploy the pipeline configurations with `make`. Select the target based on which AWS account you want to work with. For instance, execute:
+Deploy the pipeline configurations using `make`. Select the target based on
+which AWS account you want to work with. For instance, execute:
 ```
 make dev pipelines
 ```
@@ -145,7 +51,7 @@ if you want to deploy to DEV account.
 
 ### Deploy
 
-Run the `create-bosh-cloudfoundry` pipeline. This will deploy MicroBOSH, and CloudFoundry.
+Run the `create-cloudfoundry` pipeline. This configure and deploy CloudFoundry.
 
 Run `make dev showenv` to show environment information such as system URLs and Concourse password.
 
@@ -160,12 +66,6 @@ overnight](#overnight-deletion-of-environments) by default.
 
 Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, and supporting infrastructure.
 
-Once CloudFoundry has been fully destroyed, run the `destroy-microbosh` pipeline to destroy MicroBOSH.
-
-NB: If the `destroy-microbosh` pipeline is run without first cleaning up
-CloudFoundry, it will be necessary to manually clean up the CloudFoundry
-deployment.
-
 # Additional notes
 
 ## Accessing CloudFoundry
@@ -174,7 +74,7 @@ To interact with a CloudFoundry environment you will need the following:
 
 - the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
 - `API_ENDPOINT` from `make dev showenv`
-- `uaa_admin_password` from `cf-secrets.yml` in the state bucket (you can run `aws s3 cp "s3://${DEPLOY_ENV}-state/cf-secrets.yml" - | grep uaa_admin_password` to see it)
+- `uaa_admin_password` from `cf-secrets.yml` in the state bucket (you can run `aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/cf-secrets.yml" - | grep uaa_admin_password` to see it)
 
 Then you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), using the `admin` user.
 
@@ -189,7 +89,7 @@ configuration in [`.travis.yml`](.travis.yml).
 
 ## Check and release pipeline locking
 
-the `create-bosh-cloudfoundry` pipeline implements pipeline locking using
+the `create-cloudfoundry` pipeline implements pipeline locking using
 [the concourse pool resource](https://github.com/concourse/pool-resource).
 
 This lock is acquired at the beginning and released the end of all the
@@ -266,9 +166,9 @@ Self update pipeline has to be disabled, otherwise it would revert to default va
 In case you want to deploy the pipeline, set `ENABLE_FAILURE_TESTING` environment variable to true, e.g.
 `ENABLE_FAILURE_TESTING=true make dev pipelines`.
 
-## Optionally run specific job in the create-bosh-cloudfoundry pipeline
+## Optionally run specific job in the create-cloudfoundry pipeline
 
-`create-bosh-cloudfoundry` is our main pipeline. When we are making changes or
+`create-cloudfoundry` is our main pipeline. When we are making changes or
 adding new features to our deployment we many times wish to test only the
 specific changes we have just made. To do that, it's many times enough to run
 only the job that is applying the change. In order to do that, you can use

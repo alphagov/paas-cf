@@ -3,7 +3,7 @@ set -o pipefail
 
 JOB=$1
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-PIPE='create-bosh-cloudfoundry'
+PIPE='create-cloudfoundry'
 TEMP="/tmp/concourse-run-job.${RANDOM}"
 trap 'rm -f $TEMP' ERR
 

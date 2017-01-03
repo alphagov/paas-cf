@@ -44,10 +44,10 @@ prepare_environment() {
 
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
-  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-bosh-cloudfoundry destroy-cloudfoundry destroy-microbosh autodelete-cloudfoundry failure-testing}"
+  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-cloudfoundry destroy-cloudfoundry autodelete-cloudfoundry failure-testing}"
   bosh_az=${BOSH_AZ:-eu-west-1a}
 
-  state_bucket=${DEPLOY_ENV}-state
+  state_bucket=gds-paas-${DEPLOY_ENV}-state
 
   cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/manifest"
   cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
@@ -155,7 +155,7 @@ update_pipeline() {
   pipeline_name=$1
 
   case $pipeline_name in
-    create-bosh-cloudfoundry)
+    create-cloudfoundry)
       upload_pipeline
     ;;
     failure-testing)
@@ -199,6 +199,22 @@ prepare_environment
 pipeline_name="test"
 generate_vars_file > /dev/null # Check for missing vars
 pipeline_name=
+
+# FIXME: Remove this once it's been renamed everywhere.
+if $FLY_CMD -t "${FLY_TARGET}" pipelines | grep -q create-bosh-cloudfoundry; then
+  $FLY_CMD -t "${FLY_TARGET}" \
+    rename-pipeline \
+    --old-name create-bosh-cloudfoundry \
+    --new-name create-cloudfoundry
+fi
+
+# FIXME: Remove this once it's been removed everywhere.
+if $FLY_CMD -t "${FLY_TARGET}" pipelines | grep -q destroy-microbosh; then
+  $FLY_CMD -t "${FLY_TARGET}" \
+    destroy-pipeline \
+    --pipeline destroy-microbosh \
+    --non-interactive
+fi
 
 for p in $pipelines_to_update; do
   update_pipeline "$p"

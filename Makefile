@@ -35,10 +35,6 @@ spec:
 		bundle exec rspec
 	cd manifests/shared &&\
 		bundle exec rspec
-	cd manifests/concourse-manifest &&\
-		bundle exec rspec
-	cd manifests/bosh-manifest &&\
-		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
 	cd platform-tests/bosh-template-renderer &&\
@@ -161,14 +157,6 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export DEPLOY_RUBBERNECKER=true)
 	@true
 
-.PHONY: bootstrap
-bootstrap: ## Start bootstrap
-	vagrant/deploy.sh
-
-.PHONY: bootstrap-destroy
-bootstrap-destroy: ## Destroy bootstrap
-	./vagrant/destroy.sh
-
 .PHONY: bosh-cli
 bosh-cli: ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
@@ -183,7 +171,7 @@ showenv: ## Display environment information
 	@concourse/scripts/environment.sh
 	@scripts/show-cf-secrets.sh grafana_admin_password kibana_admin_password uaa_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters 'Name=tag:Name,Values=concourse/0' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
+		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
 .PHONY: upload-datadog-secrets
@@ -222,7 +210,7 @@ find_diverged_forks: ## Check all github forks belonging to paas to see if they'
 	./scripts/find_diverged_forks.py alphagov --prefix=paas --extra-repo=cf-release --extra-repo=graphite-nozzle --github-token=${GITHUB_TOKEN}
 
 .PHONY: run_job
-run_job: check-env-vars ## Unbind paas-cf of $JOB in create-bosh-cloudfoundry pipeline and then trigger it
+run_job: check-env-vars ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 

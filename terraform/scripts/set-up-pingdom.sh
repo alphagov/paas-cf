@@ -28,7 +28,7 @@ cd "${WORKING_DIR}"
 # Configure Terraform remote state
 terraform remote config \
     -backend=s3 \
-    -backend-config="bucket=${DEPLOY_ENV}-state" \
+    -backend-config="bucket=gds-paas-${DEPLOY_ENV}-state" \
     -backend-config="key=${STATEFILE}" \
     -backend-config="region=${AWS_DEFAULT_REGION}"
 
