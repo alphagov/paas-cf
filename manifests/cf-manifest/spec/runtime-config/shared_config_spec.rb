@@ -14,9 +14,15 @@ RSpec.describe "Runtime config" do
       expect(datadog_addon.fetch("properties").fetch("use_dogstatsd")).to eq false
     end
 
-    it "with some tags like aws_account" do
+    it "adds aws_account as a tag to datadog" do
       expect(datadog_addon.fetch("properties").fetch("tags")).not_to be_nil
       expect(datadog_addon.fetch("properties").fetch("tags").fetch("aws_account")).to eq(ENV["AWS_ACCOUNT"])
+    end
+
+    it "adds deploy_env from the terraform environment as a tag to datadog" do
+      expect(datadog_addon.fetch("properties").fetch("tags")).not_to be_nil
+      terraform_environment = terraform_fixture("environment")
+      expect(datadog_addon.fetch("properties").fetch("tags").fetch("deploy_env")).to eq(terraform_environment)
     end
   end
 
