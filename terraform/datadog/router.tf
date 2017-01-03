@@ -124,7 +124,7 @@ resource "datadog_monitor" "gorouter_process_running" {
   notify_no_data      = false
   require_full_window = true
 
-  query = "${format("'process.up'.over('bosh-deployment:%s','process:gorouter').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('deploy_env:%s','process:gorouter').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -147,7 +147,7 @@ resource "datadog_monitor" "gorouter_healthy" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'http.can_connect'.over('bosh-deployment:%s','instance:gorouter','url:http://localhost:80/').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:gorouter','url:http://localhost:80/').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50

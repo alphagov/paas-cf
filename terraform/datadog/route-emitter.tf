@@ -6,7 +6,7 @@ resource "datadog_monitor" "route_emitter_process_running" {
   notify_no_data      = false
   require_full_window = true
 
-  query = "${format("'process.up'.over('bosh-deployment:%s','process:route-emitter').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('deploy_env:%s','process:route-emitter').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -29,7 +29,7 @@ resource "datadog_monitor" "route_emitter_healthy" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'http.can_connect'.over('bosh-deployment:%s','instance:route_emitter_debug_endpoint').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:route_emitter_debug_endpoint').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50
@@ -50,7 +50,7 @@ resource "datadog_monitor" "route_emitter_consul_lock" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'http.can_connect'.over('bosh-deployment:%s','instance:route_emitter_consul_lock').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:route_emitter_consul_lock').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 100

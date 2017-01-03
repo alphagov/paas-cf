@@ -6,7 +6,7 @@ resource "datadog_monitor" "cc_api_master_process_running" {
   notify_no_data      = false
   require_full_window = true
 
-  query = "${format("'process.up'.over('bosh-deployment:%s','process:cc_api_master').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('deploy_env:%s','process:cc_api_master').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -29,7 +29,7 @@ resource "datadog_monitor" "cc_api_worker_process_running" {
   notify_no_data      = false
   require_full_window = true
 
-  query = "${format("'process.up'.over('bosh-deployment:%s','process:cc_api_worker').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('deploy_env:%s','process:cc_api_worker').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -52,7 +52,7 @@ resource "datadog_monitor" "cc_api_healthy" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'http.can_connect'.over('bosh-deployment:%s','instance:cc_endpoint').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:cc_endpoint').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50

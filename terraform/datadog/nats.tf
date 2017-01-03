@@ -6,7 +6,7 @@ resource "datadog_monitor" "nats_process_running" {
   notify_no_data      = false
   require_full_window = true
 
-  query = "${format("'process.up'.over('bosh-deployment:%s','process:nats').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('deploy_env:%s','process:nats').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -29,7 +29,7 @@ resource "datadog_monitor" "nats_stream_forwarded_process_running" {
   notify_no_data      = false
   require_full_window = true
 
-  query = "${format("'process.up'.over('bosh-deployment:%s','process:nats_stream_forwarder').last(4).count_by_status()", var.env)}"
+  query = "${format("'process.up'.over('deploy_env:%s','process:nats_stream_forwarder').last(4).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -52,7 +52,7 @@ resource "datadog_monitor" "nats_service_open" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'tcp.can_connect'.over('bosh-deployment:%s','instance:nats_server').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'tcp.can_connect'.over('deploy_env:%s','instance:nats_server').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50
@@ -73,7 +73,7 @@ resource "datadog_monitor" "nats_cluster_service_open" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'tcp.can_connect'.over('bosh-deployment:%s','instance:nats_cluster').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'tcp.can_connect'.over('deploy_env:%s','instance:nats_cluster').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50
