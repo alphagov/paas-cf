@@ -194,6 +194,9 @@ upload-datadog-secrets: check-env-vars ## Decrypt and upload Datadog credentials
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
 
+upload-tracker-token: check-env-vars ## Decrypt and upload Pivotal tracker API token to S3
+	pass pivotal/tracker_token | aws s3 cp - "s3://${DEPLOY_ENV}-state/tracker_token"
+
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
 manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certificates for public facing endpoints
