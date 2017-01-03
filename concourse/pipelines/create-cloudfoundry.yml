@@ -2195,7 +2195,7 @@ jobs:
                           \"points\":[[$current_time, ${delta}]],
                           \"type\":\"gauge\",
                           \"tags\":[
-                            \"bosh-deployment:${ENV}\",
+                            \"deploy_env:${ENV}\",
                             \"pipeline_name:${PIPELINE_NAME}\",
                             \"aws_account:${AWS_ACCOUNT}\"
                           ]}

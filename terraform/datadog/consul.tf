@@ -4,7 +4,7 @@ resource "datadog_monitor" "consul" {
   message            = "${format("Consul process not running on this host in environment {{host.environment}}. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Consul process not running! Check VM state."
   notify_no_data     = false
-  query              = "${format("'process.up'.over('bosh-deployment:%s','process:consul').last(6).count_by_status()", var.env)}"
+  query              = "${format("'process.up'.over('deploy_env:%s','process:consul').last(6).count_by_status()", var.env)}"
 
   thresholds {
     ok       = 1
@@ -29,7 +29,7 @@ resource "datadog_monitor" "consul_connect_to_port" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("'tcp.can_connect'.over('bosh-deployment:%s','instance:consul_server').by('*').last(1).pct_by_status()", var.env)}"
+  query = "${format("'tcp.can_connect'.over('deploy_env:%s','instance:consul_server').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
     critical = 50
