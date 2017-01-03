@@ -14,3 +14,4 @@ meta:
     include_bosh_tags: true
     tags:
       aws_account: (( grab $AWS_ACCOUNT ))
+      deploy_env: (( grab terraform_outputs.environment ))
