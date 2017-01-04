@@ -208,14 +208,6 @@ if $FLY_CMD -t "${FLY_TARGET}" pipelines | grep -q create-bosh-cloudfoundry; the
     --new-name create-cloudfoundry
 fi
 
-# FIXME: Remove this once it's been removed everywhere.
-if $FLY_CMD -t "${FLY_TARGET}" pipelines | grep -q destroy-microbosh; then
-  $FLY_CMD -t "${FLY_TARGET}" \
-    destroy-pipeline \
-    --pipeline destroy-microbosh \
-    --non-interactive
-fi
-
 for p in $pipelines_to_update; do
   update_pipeline "$p"
 done
