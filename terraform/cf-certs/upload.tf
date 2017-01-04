@@ -7,6 +7,7 @@ resource "aws_iam_server_certificate" "system" {
   certificate_body  = "${var.system_domain_crt}"
   private_key       = "${var.system_domain_key}"
   certificate_chain = "${var.system_domain_intermediate_crt}"
+  path              = "/cloudfront/system"
 
   lifecycle {
     create_before_destroy = true
@@ -18,6 +19,7 @@ resource "aws_iam_server_certificate" "apps" {
   certificate_body  = "${var.apps_domain_crt}"
   private_key       = "${var.apps_domain_key}"
   certificate_chain = "${var.apps_domain_intermediate_crt}"
+  path              = "/cloudfront/apps"
 
   lifecycle {
     create_before_destroy = true
