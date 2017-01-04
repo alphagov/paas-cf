@@ -98,7 +98,7 @@ variable "cf_db_backup_retention_period" {
 }
 
 variable "cf_db_skip_final_snapshot" {
-  descrition = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
+  description = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
 }
 
 variable "system_dns_zone_id" {
