@@ -82,13 +82,6 @@ resources:
       tag_filter: {{paas_cf_tag_filter}}
       commit_verification_key_ids: {{gpg_ids}}
 
-  - name: graphite-statsd-boshrelease
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-graphite-statsd-boshrelease.git
-      tag_filter: {{cf_graphite_version}}
-      branch: gds_master
-
   - name: graphite-nozzle
     type: git
     source:
@@ -1085,7 +1078,6 @@ jobs:
           - get: cf-tfstate
             passed: ['generate-cf-config']
           - get: bosh-secrets
-          - get: graphite-statsd-boshrelease
           - get: cf-secrets
             passed: ['generate-cf-config']
           - get: bosh-CA
@@ -1118,29 +1110,6 @@ jobs:
                   SCFILE="extract_tf_vars_from_terraform_state.rb"
                   $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
                   ls -l cf-terraform-outputs/cf.tfstate.sh
-
-        - task: upload-releases
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli
-            inputs:
-              - name: paas-cf
-              - name: bosh-secrets
-              - name: graphite-statsd-boshrelease
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-
-                  ./paas-cf/concourse/scripts/git_check_tag.sh {{cf_graphite_version}} graphite-statsd-boshrelease
-                  paas-cf/concourse/scripts/bosh_create_and_upload_release.rb graphite \
-                    {{cf_graphite_version}} graphite-statsd-boshrelease
 
         - task: get-and-upload-stemcell
           config:

@@ -11,7 +11,9 @@ meta:
 
 releases:
 - name: graphite
-  version: commit-829b5920f4343cb9929c5fc219dfc4413a772e63
+  version: 0.1.1
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/graphite-0.1.1.tgz
+  sha1: 7ce15711ae9afc04ccf152bab3f7de9b234f7c4f
 - name: grafana
   version: 5
   url: https://bosh.io/d/github.com/vito/grafana-boshrelease?v=5
