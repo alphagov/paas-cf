@@ -218,9 +218,7 @@
       "height": "250px",
       "panels": [
         {
-          "aliasColors": {
-            "count": "#CCA300"
-          },
+          "aliasColors": {},
           "bars": false,
           "datasource": "graphite",
           "editable": true,
@@ -230,26 +228,22 @@
             "threshold1": null,
             "threshold1Color": "rgba(216, 200, 27, 0.27)",
             "threshold2": null,
-            "threshold2Color": "rgba(234, 112, 112, 0.22)",
-            "thresholdLine": false
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
           },
           "height": "250",
           "id": 4,
           "isNew": true,
           "legend": {
             "avg": false,
-            "current": true,
-            "max": true,
-            "min": true,
+            "current": false,
+            "max": false,
+            "min": false,
             "show": true,
             "total": false,
-            "values": true,
-            "alignAsTable": false,
-            "rightSide": false,
-            "sideWidth": null
+            "values": false
           },
           "lines": true,
-          "linewidth": 1,
+          "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
@@ -263,27 +257,14 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(summarize(maxSeries(stats.timers.cfstats.router.*.http.responsetimes.http.upper), '1m', 'max', false), 'upper')"
-            },
-            {
-              "refId": "C",
-              "target": "alias(summarize(maxSeries(stats.timers.cfstats.router.*.http.responsetimes.http.upper_90), '1m', 'max', false), '90 percentile')",
-              "textEditor": false
-            },
-            {
-              "refId": "D",
-              "target": "alias(summarize(maxSeries(stats.timers.cfstats.router.*.http.responsetimes.http.mean_90), '1m', 'max', false), '90 avg')"
-            },
-            {
-              "refId": "E",
-              "target": "alias(summarize(maxSeries(stats.timers.cfstats.router.*.http.responsetimes.http.median), '1m', 'max', false), 'median')"
+              "target": "aliasByNode(stats.timers.cfstats.router.*.http.responsetimes.http.upper_90, 4)"
             }
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Router response times",
+          "title": "Router 90th percentile response times",
           "tooltip": {
-            "msResolution": true,
+            "msResolution": false,
             "shared": true,
             "value_type": "cumulative"
           },
@@ -295,9 +276,9 @@
             {
               "format": "ms",
               "label": null,
-              "logBase": 10,
+              "logBase": 1,
               "max": null,
-              "min": 10,
+              "min": 0,
               "show": true
             },
             {
@@ -308,8 +289,7 @@
               "min": 0,
               "show": true
             }
-          ],
-          "decimals": 0
+          ]
         },
         {
           "aliasColors": {},
