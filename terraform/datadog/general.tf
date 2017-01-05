@@ -3,7 +3,7 @@ resource "datadog_monitor" "disk-space" {
   type               = "query alert"
   message            = "${format("More than {{threshold}}%% disk used. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "There is still {{value}} % disk used. Check the VM!"
-  no_data_timeframe  = "10"
+  notify_no_data     = false
   query              = "${format("max(last_5m):max:system.disk.in_use{deploy_env:%s,!device:/dev/loop0,!device:tmpfs,!device:cgroup,!device:udev,!device:/var/vcap/data/root_log,!device:/var/vcap/data/root_tmp,!bosh-job:concourse} by {bosh-job,device,bosh-index} * 100 > 85", var.env)}"
 
   thresholds {
