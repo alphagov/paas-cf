@@ -5,10 +5,6 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 PROJECT_DIR=$(cd "${SCRIPT_DIR}/../.." && pwd)
 
-hashed_password() {
-  echo "$1" | shasum -a 256 | base64 | head -c 32
-}
-
 DEPLOY_ENV=${1:-${DEPLOY_ENV:-}}
 if [ -z "${DEPLOY_ENV}" ]; then
   echo "Must specify DEPLOY_ENV as \$1 or environment variable" 1>&2
@@ -39,7 +35,7 @@ if [ -z "${CONCOURSE_ATC_PASSWORD:-}" ]; then
   if [ -n "${DECRYPT_CONCOURSE_ATC_PASSWORD:-}" ]; then
     CONCOURSE_ATC_PASSWORD=$(pass "${DECRYPT_CONCOURSE_ATC_PASSWORD}/concourse_password")
   else
-    CONCOURSE_ATC_PASSWORD=$(hashed_password "${AWS_SECRET_ACCESS_KEY}:${DEPLOY_ENV}:atc")
+    CONCOURSE_ATC_PASSWORD=$(concourse/scripts/val_from_yaml.rb secrets.concourse_atc_password <(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" -))
   fi
 fi
 
