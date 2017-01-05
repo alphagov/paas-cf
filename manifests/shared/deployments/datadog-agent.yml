@@ -1,9 +1,9 @@
 ---
 releases:
 - name: datadog-agent
-  sha1: 14c7f9be2eb534fda1f4c70ea2355865ac93a87b
-  url: https://github.com/alphagov/paas-datadog-agent-boshrelease/releases/download/v5.8.5.3-gds/datadog-agent-v5.8.5.3-gds.tgz
-  version: "v5.8.5.3-gds"
+  version: 0.1.1
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-agent-0.1.1.tgz
+  sha1: 71c6e2f957b4381d44dedce1b1080cbfc5e8ef28
 
 meta:
   datadog:
