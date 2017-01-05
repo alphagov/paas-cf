@@ -10,107 +10,108 @@
   "sharedCrosshair": false,
   "rows": [
     {
+      "collapse": false,
+      "editable": true,
       "height": "600px",
       "panels": [
         {
-          "title": "Cluster Memory Usage",
-          "error": false,
-          "span": 12,
+          "aliasColors": {
+            "Available memory after failure of one AZ": "#BF1B00",
+            "Available memory after failure of one cell": "#C15C17",
+            "Memory used": "#1F78C1",
+            "Total Available": "#629E51"
+          },
+          "bars": false,
+          "datasource": "graphite",
           "editable": true,
-          "type": "graph",
-          "isNew": true,
+          "error": false,
+          "fill": 0,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
           "id": 1,
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "connected",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "span": 12,
+          "stack": false,
+          "steppedLine": false,
           "targets": [
             {
-              "target": "alias(diffSeries(sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory)),sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityRemainingMemory))),\"Memory used\")",
+              "hide": false,
               "refId": "A",
+              "target": "alias(diffSeries(sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory)),sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityRemainingMemory))),\"Memory used\")",
               "textEditor": true
             },
             {
-              "target": "alias(scale(sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory)), 0.6666),\"AZ Failure\")",
               "refId": "B",
+              "target": "alias(scale(sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory)), 0.6666), 'Available memory after failure of one AZ')",
               "textEditor": true
             },
             {
-              "target": "alias(sumSeries(keepLastValue(limit(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory, -1))),\"Cell Failure\")",
               "refId": "C",
+              "target": "alias(sumSeries(keepLastValue(limit(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory, -1))),\"Available memory after failure of one cell\")",
               "textEditor": true
             },
             {
-              "target": "alias(sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory)),\"Total Available\")",
               "refId": "D",
+              "target": "alias(sumSeries(keepLastValue(stats.gauges.cfstats.cell.*.ops.rep.CapacityTotalMemory)),\"Total Available\")",
               "textEditor": true
             }
           ],
-          "datasource": "graphite",
-          "renderer": "flot",
-          "yaxes": [
-            {
-              "label": null,
-              "show": true,
-              "logBase": 1,
-              "min": null,
-              "max": null,
-              "format": "short"
-            },
-            {
-              "label": null,
-              "show": true,
-              "logBase": 1,
-              "min": null,
-              "max": null,
-              "format": "short"
-            }
-          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Cluster Memory Usage",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "value_type": "cumulative"
+          },
+          "transparent": true,
+          "type": "graph",
           "xaxis": {
             "show": true
           },
-          "grid": {
-            "threshold1": null,
-            "threshold2": null,
-            "threshold1Color": "rgba(216, 200, 27, 0.27)",
-            "threshold2Color": "rgba(234, 112, 112, 0.22)"
-          },
-          "lines": true,
-          "fill": 0,
-          "linewidth": 2,
-          "points": false,
-          "pointradius": 5,
-          "bars": false,
-          "stack": false,
-          "percentage": false,
-          "legend": {
-            "show": true,
-            "values": false,
-            "min": false,
-            "max": false,
-            "current": false,
-            "total": false,
-            "avg": false
-          },
-          "nullPointMode": "connected",
-          "steppedLine": false,
-          "tooltip": {
-            "value_type": "cumulative",
-            "shared": true,
-            "msResolution": false
-          },
-          "timeFrom": null,
-          "timeShift": null,
-          "aliasColors": {
-            "Memory used": "#1F78C1",
-            "AZ Failure": "#BF1B00",
-            "Cell Failure": "#C15C17",
-            "Total Available": "#629E51"
-          },
-          "seriesOverrides": [],
-          "links": [],
-          "transparent": true
+          "yaxes": [
+            {
+              "format": "mbytes",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            }
+          ]
         }
       ],
-      "title": "Row",
-      "collapse": false,
-      "editable": true
+      "title": "Row"
     }
   ],
   "time": {
@@ -118,17 +119,6 @@
     "to": "now"
   },
   "timepicker": {
-    "time_options": [
-      "5m",
-      "15m",
-      "1h",
-      "6h",
-      "12h",
-      "24h",
-      "2d",
-      "7d",
-      "30d"
-    ],
     "refresh_intervals": [
       "5s",
       "10s",
@@ -140,6 +130,17 @@
       "1h",
       "2h",
       "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
     ]
   },
   "templating": {
