@@ -124,6 +124,7 @@ deploy_roadmap: ${DEPLOY_ROADMAP:-false}
 deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
 tracker_token: ${tracker_token:-}
 pivotal_project_id: ${PIVOTAL_PROJECT_ID:-1275640}
+concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
