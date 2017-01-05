@@ -58,7 +58,6 @@ private
         File.expand_path("../../../manifest/data/*.yml", __FILE__),
         grafana_dashboards_manifest_path,
         File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
-        File.expand_path("../../../../shared/deployments/datadog-agent.yml", __FILE__),
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
@@ -79,22 +78,6 @@ private
 
   ensure
     remove_grafana_dashboards_manifest
-  end
-
-  def load_runtime_config
-    runtime_config = render([
-      File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
-      File.expand_path("../../../runtime-config/runtime-config-base.yml", __FILE__),
-      File.expand_path("../../../runtime-config/datadog-agent-addon.yml", __FILE__),
-      File.expand_path("../../../../shared/deployments/datadog-agent.yml", __FILE__),
-      File.expand_path("../../../../shared/deployments/collectd.yml", __FILE__),
-      File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-      File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
-    ])
-
-    # Deep freeze the object so that it's safe to use across multiple examples
-    # without risk of state leaking.
-    deep_freeze(YAML.load(runtime_config))
   end
 
   def load_terraform_fixture
