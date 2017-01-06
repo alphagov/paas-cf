@@ -114,7 +114,7 @@ resource "datadog_monitor" "cc_job_queue_length" {
   escalation_message  = "Job queue in Cloud Controller API still too big, check the API health."
   require_full_window = false
 
-  query = "${format("avg(last_30m):max:cf.cc.job_queue_length.total{deployment:%s} > 10", var.env)}"
+  query = "${format("avg(last_30m):max:cf.cc.job_queue_length.total{deployment:%s} > 25", var.env)}"
 
   thresholds {
     warning  = "20"
