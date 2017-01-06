@@ -117,8 +117,8 @@ resource "datadog_monitor" "cc_job_queue_length" {
   query = "${format("avg(last_30m):max:cf.cc.job_queue_length.total{deployment:%s} > 10", var.env)}"
 
   thresholds {
-    warning  = "7"
-    critical = "10"
+    warning  = "20"
+    critical = "25"
   }
 
   tags {
