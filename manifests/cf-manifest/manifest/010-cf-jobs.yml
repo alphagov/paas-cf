@@ -131,6 +131,8 @@ meta:
     release: datadog-for-cloudfoundry
   - name: racoon
     release: ipsec
+  - name: datadog-ipsec
+    release: datadog-for-cloudfoundry
 
   uaa_templates:
   - name: consul_agent
@@ -350,6 +352,8 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: racoon
         release: ipsec
+      - name: datadog-ipsec
+        release: datadog-for-cloudfoundry
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
