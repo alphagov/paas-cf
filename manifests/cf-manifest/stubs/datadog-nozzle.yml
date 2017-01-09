@@ -12,7 +12,7 @@ jobs:
     release: datadog-firehose-nozzle
     properties:
       datadog:
-        api_key: (( grab meta.datadog.api_key ))
+        api_key: (( grab $DATADOG_API_KEY ))
         metric_prefix: "cf."
       nozzle:
         subscription_id: "datadog-nozzle"

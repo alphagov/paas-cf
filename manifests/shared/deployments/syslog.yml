@@ -1,6 +1,0 @@
----
-releases:
-- name: syslog
-  version: 0.1.1
-  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/syslog-0.1.1.tgz
-  sha1: 6f2dae6c44cbd326fde2081983a3bdebac3825b4
