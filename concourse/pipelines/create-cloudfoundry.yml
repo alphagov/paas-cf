@@ -130,13 +130,6 @@ resources:
       region_name: {{aws_region}}
       versioned_file: ipsec-CA.tar.gz
 
-  - name: concourse-manifest
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: concourse-manifest.yml
-
   - name: ssh-private-key
     type: s3-iam
     source:
