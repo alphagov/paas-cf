@@ -495,10 +495,12 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     bbs:
-      active_key_label: keylabel1
+      active_key_label: key-2017-01
       encryption_keys:
         - label: keylabel1
           passphrase: "a secure passphrase"
+        - label: key-2017-01
+          passphrase: (( grab secrets.bbs_encryption_key ))
       ca_cert: (( grab meta.secrets.bbs_ca_cert ))
       server_cert: (( grab secrets.bbs_server_cert ))
       server_key: (( grab secrets.bbs_server_key ))
