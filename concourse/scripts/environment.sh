@@ -32,11 +32,7 @@ esac
 
 CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER:-admin}
 if [ -z "${CONCOURSE_ATC_PASSWORD:-}" ]; then
-  if [ -n "${DECRYPT_CONCOURSE_ATC_PASSWORD:-}" ]; then
-    CONCOURSE_ATC_PASSWORD=$(pass "${DECRYPT_CONCOURSE_ATC_PASSWORD}/concourse_password")
-  else
-    CONCOURSE_ATC_PASSWORD=$(concourse/scripts/val_from_yaml.rb secrets.concourse_atc_password <(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" -))
-  fi
+  CONCOURSE_ATC_PASSWORD=$(concourse/scripts/val_from_yaml.rb secrets.concourse_atc_password <(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" -))
 fi
 
 cat <<EOF
