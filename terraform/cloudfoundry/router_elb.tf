@@ -27,8 +27,8 @@ resource "aws_elb" "cf_router" {
   }
 
   listener {
-    instance_port      = 81
-    instance_protocol  = "tcp"
+    instance_port      = 443
+    instance_protocol  = "ssl"
     lb_port            = 443
     lb_protocol        = "ssl"
     ssl_certificate_id = "${var.apps_domain_cert_arn}"
@@ -48,5 +48,5 @@ resource "aws_lb_ssl_negotiation_policy" "cf_router" {
 
 resource "aws_proxy_protocol_policy" "http_haproxy" {
   load_balancer  = "${aws_elb.cf_router.name}"
-  instance_ports = ["81"]
+  instance_ports = ["443"]
 }
