@@ -192,33 +192,6 @@ updating pipelines, or you'll get strange terraform errors during cf-terraform.
 ENABLE_DATADOG=true make dev pipelines
 ```
 
-## Sharing your Bootstrap Concourse
-
-If you need to share access to your *Bootstrap Concourse* with a colleague
-then you will need to reproduce some of the work that Vagrant does.
-
-Add their SSH public key:
-
-```
-cd vagrant
-echo "ssh-rsa AAAA... user" | \
-   vagrant ssh -- tee -a .ssh/authorized_keys
-```
-
-Learn the public IP of your *Bootstrap Concourse* run:
-
-```
-cd vagrant
-vagrant ssh-config
-```
-
-They will then need to manually create the SSH tunnel that is normally
-handled by `vagrant/deploy.sh`:
-
-```
-ssh ubuntu@<bootstrap_concourse_ip> -L 8080:127.0.0.1:8080 -fN
-```
-
 ## Using the bosh cli and `bosh ssh`
 
 There's a Makefile target that starts an interactive session on the deployer concourse
@@ -256,31 +229,15 @@ bosh server before opening the ssh session.
 
 ## Concourse credentials
 
-By default, the environment setup script generates the concourse ATC password
-for the admin user, based on the AWS credentials, the environment name and the
-application name. If the `CONCOURSE_ATC_PASSWORD` environment variable is set,
-this will be used instead. These credentials are output by all of the pipeline
-deployment tasks.
-
-These credentials will also be used by the *Deployer Concourse*.
-
-If necessary, the concourse password can be found in the `basic_auth_password`
-property of `concourse-manifest.yml` in the state bucket.
-
-You can also learn the credentials from the `atc` process arguments:
-
- 1. SSH to the Concourse server:
-    * For *Bootstrap Concourse*: `cd vagrant && vagrant ssh`
-    * [For *Deployer Concourse*](#ssh-to-deployer-concourse-and-microbosh)
- 2. Get the password from `atc` arguments: `ps -fea | sed -n 's/.*--basic-auth[-]password \([^ ]*\).*/\1/p'`
+By default, the environment setup script retrieves the admin user password set
+in paas-bootstrap and stored in S3 in the `concourse-secrets.yml` file. If the
+`CONCOURSE_ATC_PASSWORD` environment variable is set, this will be used instead.
+These credentials are output by all of the pipeline deployment tasks.
 
 ## Overnight deletion of environments
 
 In order to avoid unnecessary costs in AWS, there is some logic to
 stop environments and VMs at night:
-
- * **Bootstrap Concourse**: The `self-terminate` pipeline
-   will be triggered every night to terminate the *Bootstrap Concourse*.
 
  * **Cloud Foundry deployment**: The `autodelete-cloudfoundry` pipeline
    will be triggered every night to delete the specific deployment.

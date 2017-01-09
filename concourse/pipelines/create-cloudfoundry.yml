@@ -123,13 +123,6 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-CA.tar.gz
 
-  - name: concourse-manifest
-    type: s3-iam
-    source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      versioned_file: concourse-manifest.yml
-
   - name: ssh-private-key
     type: s3-iam
     source:
@@ -267,7 +260,6 @@ jobs:
         - get: paas-cf
           trigger: {{auto_deploy}}
         - get: git-ssh-private-key
-        - get: concourse-manifest
       - task: init-pipeline-pool
         config:
           platform: linux
@@ -339,7 +331,6 @@ jobs:
               repository: governmentpaas/self-update-pipelines
           inputs:
             - name: paas-cf
-            - name: concourse-manifest
           params:
             DEPLOY_ENV: {{deploy_env}}
             BRANCH: {{branch_name}}
@@ -585,7 +576,6 @@ jobs:
           - get: paas-cf
             passed: ['generate-secrets']
           - get: bosh-CA
-          - get: concourse-manifest
       - task: run-tests
         config:
           platform: linux
@@ -596,7 +586,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
-            - name: concourse-manifest
             - name: bosh-CA
             - name: deployed-healthcheck
           params:
@@ -606,6 +595,7 @@ jobs:
             CONCOURSE_ATC_USERNAME: admin
             DEPLOY_ENV: {{deploy_env}}
             BRANCH: {{branch_name}}
+            CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
           run:
             path: sh
             args:
@@ -620,8 +610,6 @@ jobs:
 
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                export CONCOURSE_ATC_PASSWORD
-                CONCOURSE_ATC_PASSWORD=$(awk '/basic_auth_password/ { print $2 }' concourse-manifest/concourse-manifest.yml | tr -d '"')
                 export CONCOURSE_ATC_URL
                 CONCOURSE_ATC_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
                 export PIPELINE_TRIGGER_VERSION
@@ -1980,7 +1968,6 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['post-deploy','availability-tests']
-          - get: concourse-manifest
           - get: cf-manifest
           - get: bosh-secrets
       - task: test-bosh-cli
@@ -1994,18 +1981,15 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
             DEPLOY_ENV: {{deploy_env}}
+            CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
           inputs:
           - name: paas-cf
-          - name: concourse-manifest
           run:
             path: sh
             args:
             - -e
             - -c
             - |
-              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-              CONCOURSE_ATC_PASSWORD=$("$VAL_FROM_YAML" jobs.concourse.templates.atc.properties.basic_auth_password concourse-manifest/concourse-manifest.yml)
-              export CONCOURSE_ATC_PASSWORD
               echo Looking for non running VMs
               ./paas-cf/concourse/scripts/bosh-cli.sh bosh status
       - task: test-bosh-vms
