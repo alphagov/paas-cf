@@ -3,8 +3,8 @@
 set -eo pipefail
 
 ensure_env_vars() {
-  if [ -z "${DEPLOY_ENV}" ] || [ -z "${AWS_ACCOUNT}" ] || [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
-    echo "Must set DEPLOY_ENV, AWS_ACCOUNT, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY"
+  if [ -z "${AWS_ACCOUNT}" ] || [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
+    echo "Must set AWS_ACCOUNT, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY"
     exit 1
   fi
 
@@ -17,7 +17,7 @@ ensure_env_vars() {
   STS_TOKEN_DIRECTORY="${STS_TOKEN_DIRECTORY:-${HOME}/.aws_sts_tokens}"
 
   STS_TOKEN_STALESNESS_THRESHOLD=600
-  TOKEN_FILE="${STS_TOKEN_DIRECTORY}/${AWS_ACCOUNT}_${DEPLOY_ENV}.sh"
+  TOKEN_FILE="${STS_TOKEN_DIRECTORY}/${AWS_ACCOUNT}.sh"
   unset AWS_SESSION_TOKEN
 }
 
@@ -31,7 +31,7 @@ delete_stale_tokens() {
   # we can't use last modified time since we want the duration to be configurable
 
   now=$(date +%s)
-  token_files=$(find "${STS_TOKEN_DIRECTORY}" -name "*_*.sh" -type f)
+  token_files=$(find "${STS_TOKEN_DIRECTORY}" -name "*.sh" -type f)
 
   for f in $token_files; do
     expire_time=$(head -1 "${f}" | cut -d ":" -f 2)
