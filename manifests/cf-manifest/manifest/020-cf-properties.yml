@@ -497,8 +497,6 @@ properties:
     bbs:
       active_key_label: key-2017-01
       encryption_keys:
-        - label: keylabel1
-          passphrase: "a secure passphrase"
         - label: key-2017-01
           passphrase: (( grab secrets.bbs_encryption_key ))
       ca_cert: (( grab meta.secrets.bbs_ca_cert ))
