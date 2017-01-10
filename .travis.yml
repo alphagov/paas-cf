@@ -1,6 +1,6 @@
 sudo: false
 rvm:
-  - 2.2.3
+  - 2.2.6
 env:
   global:
     - TF_VERSION="0.7.10"
