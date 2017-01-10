@@ -123,6 +123,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-CA.tar.gz
 
+  - name: ipsec-CA
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: ipsec-CA.tar.gz
+
   - name: ssh-private-key
     type: s3-iam
     source:
@@ -361,6 +368,7 @@ jobs:
               - -e
               - -c
               - |
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ipsec-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
@@ -382,12 +390,47 @@ jobs:
             passed: ['init']
             trigger: true
           - get: bosh-CA
+          - get: ipsec-CA
           - get: cf-certs
           - get: cf-secrets
           - get: ssh-private-key
           - get: ssh-public-key
 
       - aggregate:
+        - task: generate-ipsec-CA
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/certstrap
+            inputs:
+              - name: paas-cf
+              - name: ipsec-CA
+                path: existing-ipsec-CA
+            outputs:
+              - name: generated-ipsec-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  if  [ -z "$(tar -tvzf existing-ipsec-CA/ipsec-CA.tar.gz)" ] ; then
+                    certstrap init --passphrase "" --common-name ipsec-CA
+                    (cd out && tar -cvzf ../generated-ipsec-CA/ipsec-CA.tar.gz ipsec-CA.*)
+                  else
+                    echo "The CA cert already exists, skipping generation..."
+                    cp existing-ipsec-CA/ipsec-CA.tar.gz generated-ipsec-CA/ipsec-CA.tar.gz
+                    mkdir out
+                    tar -xvzf generated-ipsec-CA/ipsec-CA.tar.gz -C out
+                  fi
+                  ./paas-cf/concourse/scripts/file_to_yaml.sh secrets ipsec_ca_cert out/ipsec-CA.crt > generated-ipsec-CA/ipsec-ca-cert.yml
+          on_success:
+            put: ipsec-CA
+            params:
+              file: generated-ipsec-CA/ipsec-CA.tar.gz
+
         - task: generate-deployments-ssh-keypair
           config:
             platform: linux
@@ -834,6 +877,7 @@ jobs:
           - get: paas-cf
             passed: ['cf-terraform']
           - get: bosh-CA
+          - get: ipsec-CA
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-certs
@@ -941,6 +985,7 @@ jobs:
               - name: cf-secrets
               - name: cf-certs
               - name: bosh-CA
+              - name: ipsec-CA
               - name: grafana-dashboards-manifest
             outputs:
               - name: cf-manifest
@@ -966,6 +1011,7 @@ jobs:
                   mkdir certs
                   echo "Extracting extant certs"
                   tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
+                  tar -xvzf ipsec-CA/ipsec-CA.tar.gz -C certs
                   tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
                   cd certs
