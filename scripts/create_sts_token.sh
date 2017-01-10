@@ -42,15 +42,15 @@ delete_stale_tokens() {
 }
 
 generate_new_token() {
-  expires=$(($(date +%s) + STS_TOKEN_DURATION - STS_TOKEN_STALESNESS_THRESHOLD))
-  echo "# EXPIRES:${expires}" > "${TOKEN_FILE}"
-  chmod 600 "${TOKEN_FILE}"
-  trap 'rm ${TOKEN_FILE}' ERR
-
   read -r -p "Enter MFA code for ${AWS_ACCOUNT}: " mfa_token
 
   user_arn=$(aws sts get-caller-identity --query Arn --output text)
   token_arn=${user_arn/:user/:mfa}
+
+  expires=$(($(date +%s) + STS_TOKEN_DURATION - STS_TOKEN_STALESNESS_THRESHOLD))
+  echo "# EXPIRES:${expires}" > "${TOKEN_FILE}"
+  chmod 600 "${TOKEN_FILE}"
+  trap 'rm ${TOKEN_FILE}' ERR
 
   aws sts get-session-token \
     --serial-number "${token_arn}" \
