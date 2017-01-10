@@ -34,8 +34,8 @@ var _ = Describe("TagRelease", func() {
 		session, err := gexec.Start(gitVersionCommand, GinkgoWriter, GinkgoWriter)
 		Expect(err).ToNot(HaveOccurred())
 		Eventually(session, ExecutionTimeout).Should(gexec.Exit(0))
-		Expect(session.Out.Contents()).To(MatchRegexp(".* [2-9]\\.[0-9]+\\.[0-9]+.*"), "Expected git version 2.0.0 or bigger")
-		Expect(session.Err.Contents()).To(BeEmpty())
+		Expect(string(session.Out.Contents())).To(MatchRegexp(".* [2-9]\\.[0-9]+\\.[0-9]+.*"), "Expected git version 2.0.0 or bigger")
+		Expect(string(session.Err.Contents())).To(BeEmpty())
 	})
 
 	BeforeEach(func() {
