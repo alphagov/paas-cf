@@ -91,15 +91,15 @@ var _ = Describe("RDS broker", func() {
 			pollForRDSDeletionCompletion(dbInstanceName)
 		})
 
-		It("can connect to the DB instance from the app", func() {
-			By("Sending request to DB Healthcheck app")
+		It("binds a DB instance to the Healthcheck app that matches our criteria", func() {
+			By("allowing connections from the Healthcheck app")
 			resp, err := httpClient.Get(helpers.AppUri(appName, "/db"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
-			By("Sending request to DB Healthcheck app without TLS")
+			By("disallowing connections from the Healthcheck app without TLS")
 			resp, err = httpClient.Get(helpers.AppUri(appName, "/db?ssl=false"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
@@ -107,7 +107,7 @@ var _ = Describe("RDS broker", func() {
 			Expect(resp.StatusCode).NotTo(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 			Expect(body).To(MatchRegexp("no pg_hba.conf entry for .* SSL off"), "Connection without TLS did not report a TLS error")
 
-			By("Testing permissions after unbind and rebind")
+			By("keeping the right permissions after unbind and rebind")
 			resp, err = httpClient.Get(helpers.AppUri(appName, "/db/permissions-check?phase=setup"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
