@@ -37,6 +37,7 @@ generator = SecretGenerator.new(
   "rds_broker_state_encryption_key" => :simple,
   "ssh_proxy_host_key" => :ssh_key,
   "kibana_admin_password" => :simple,
+  "bbs_encryption_key" => :simple,
 )
 
 option_parser = OptionParser.new do |opts|
