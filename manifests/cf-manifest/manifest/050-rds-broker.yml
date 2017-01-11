@@ -6,6 +6,7 @@ meta:
       storage_type: "gp2"
       auto_minor_version_upgrade: true
       multi_az: false
+      storage_encrypted: false
       publicly_accessible: false
       copy_tags_to_snapshot: true
       skip_final_snapshot: false
@@ -151,6 +152,24 @@ jobs:
                     inject: (( inject meta.rds_broker.medium_postgres_rds_properties ))
                     multi_az: true
 
+                - id: "8d50ccc5-707c-4306-be8f-f59a158eb736"
+                  name: "M-HA-enc-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.402
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "Storage Encrypted"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.medium_postgres_rds_properties ))
+                    multi_az: true
+                    storage_encrypted: true
+
                 - id: "238a1328-4f77-4b70-9bd9-2cdbbfb999c8"
                   name: "L-dedicated-9.5"
                   description: "20GB Storage, Dedicated Instance, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
@@ -181,6 +200,24 @@ jobs:
                   rds_properties:
                     inject: (( inject meta.rds_broker.large_postgres_rds_properties ))
                     multi_az: true
+
+                - id: "620055b3-fe7c-46fc-87ad-c7d8f4fe7f34"
+                  name: "L-HA-enc-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 1.612
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "Storage Encrypted"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.large_postgres_rds_properties ))
+                    multi_az: true
+                    storage_encrypted: true
 properties:
   cc:
     security_group_definitions:
