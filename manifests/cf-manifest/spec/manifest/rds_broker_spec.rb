@@ -105,6 +105,15 @@ RSpec.describe "RDS broker properties" do
           it { expect(rds_properties).to include("db_instance_class" => "db.t2.micro") }
         end
 
+        shared_examples "small sized postgres plans" do
+          it_behaves_like "all postgres plans"
+
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
+          it { expect(rds_properties).to include("allocated_storage" => 20) }
+          it { expect(rds_properties).to include("db_instance_class" => "db.t2.small") }
+        end
+
         shared_examples "medium sized postgres plans" do
           it_behaves_like "all postgres plans"
 
@@ -112,6 +121,15 @@ RSpec.describe "RDS broker properties" do
 
           it { expect(rds_properties).to include("allocated_storage" => 20) }
           it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
+        end
+
+        shared_examples "large sized postgres plans" do
+          it_behaves_like "all postgres plans"
+
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
+          it { expect(rds_properties).to include("allocated_storage" => 20) }
+          it { expect(rds_properties).to include("db_instance_class" => "db.m4.2xlarge") }
         end
 
         shared_examples "backup enabled plans" do
@@ -149,6 +167,24 @@ RSpec.describe "RDS broker properties" do
           it { expect(rds_properties).to include("multi_az" => false) }
         end
 
+        describe "S-dedicated-9.5" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "S-dedicated-9.5" } }
+          subject { plan }
+
+          it_behaves_like "small sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+        end
+
+        describe "S-HA-dedicated-9.5" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "S-HA-dedicated-9.5" } }
+          subject { plan }
+
+          it_behaves_like "small sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+        end
+
         describe "M-dedicated-9.5" do
           let(:plan) { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
           subject { plan }
@@ -163,6 +199,24 @@ RSpec.describe "RDS broker properties" do
           subject { plan }
 
           it_behaves_like "medium sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+        end
+
+        describe "L-dedicated-9.5" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "L-dedicated-9.5" } }
+          subject { plan }
+
+          it_behaves_like "large sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+        end
+
+        describe "L-HA-dedicated-9.5" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "L-HA-dedicated-9.5" } }
+          subject { plan }
+
+          it_behaves_like "large sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
         end
