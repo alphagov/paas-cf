@@ -75,7 +75,7 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5")
+        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "M-HA-enc-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5", "L-HA-enc-dedicated-9.5")
       end
 
       describe "plan rds_properties" do
@@ -167,71 +167,99 @@ RSpec.describe "RDS broker properties" do
           it { expect(rds_properties).to include("multi_az" => false) }
         end
 
+        shared_examples "Encryption disabled plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+          it { expect(rds_properties).to include("storage_encrypted" => false) }
+        end
+
+        shared_examples "Encryption enabled plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+          it { expect(rds_properties).to include("storage_encrypted" => true) }
+        end
+
         describe "S-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "S-dedicated-9.5" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "S-dedicated-9.5" } }
 
           it_behaves_like "small sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
         end
 
         describe "S-HA-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "S-HA-dedicated-9.5" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "S-HA-dedicated-9.5" } }
 
           it_behaves_like "small sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
         end
 
         describe "M-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
 
           it_behaves_like "medium sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
         end
 
         describe "M-HA-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "M-HA-dedicated-9.5" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "M-HA-dedicated-9.5" } }
 
           it_behaves_like "medium sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "M-HA-enc-dedicated-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "M-HA-enc-dedicated-9.5" } }
+
+          it_behaves_like "medium sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "L-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "L-dedicated-9.5" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "L-dedicated-9.5" } }
 
           it_behaves_like "large sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
         end
 
         describe "L-HA-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "L-HA-dedicated-9.5" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "L-HA-dedicated-9.5" } }
 
           it_behaves_like "large sized postgres plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "L-HA-enc-dedicated-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "L-HA-enc-dedicated-9.5" } }
+
+          it_behaves_like "large sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "free plan" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "Free" } }
-          subject { plan }
+          subject { pg_plans.find { |p| p["name"] == "Free" } }
 
           it "is marked as free" do
-            expect(plan.fetch("free")).to eq(true)
+            expect(subject.fetch("free")).to eq(true)
           end
 
           it_behaves_like "free sized postgres plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
         end
       end
     end
