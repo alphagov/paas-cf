@@ -80,73 +80,104 @@ RSpec.describe "RDS broker properties" do
 
       describe "plan rds_properties" do
         shared_examples "all postgres plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
           it "uses postgres 9.5" do
-            expect(subject["engine_version"]).to start_with("9.5.")
+            expect(rds_properties["engine_version"]).to start_with("9.5.")
           end
           it "uses solid state storage" do
-            expect(subject).to include("storage_type" => "gp2")
+            expect(rds_properties).to include("storage_type" => "gp2")
           end
           it "sets the db subnet group and security groups from terraform" do
-            expect(subject).to include(
+            expect(rds_properties).to include(
               "db_subnet_group_name" => terraform_fixture("rds_broker_dbs_subnet_group"),
               "vpc_security_group_ids" => [terraform_fixture("rds_broker_dbs_security_group_id")],
             )
           end
         end
 
+        shared_examples "free sized postgres plans" do
+          it_behaves_like "all postgres plans"
+
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
+          it { expect(rds_properties).to include("allocated_storage" => 5) }
+          it { expect(rds_properties).to include("db_instance_class" => "db.t2.micro") }
+        end
+
         shared_examples "medium sized postgres plans" do
           it_behaves_like "all postgres plans"
-          it { is_expected.to include("allocated_storage" => 20) }
-          it { is_expected.to include("db_instance_class" => "db.m4.large") }
+
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
+          it { expect(rds_properties).to include("allocated_storage" => 20) }
+          it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
+        end
+
+        shared_examples "backup enabled plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
           it "has a backup retention period of 7 days" do
-            expect(subject).to include(
+            expect(rds_properties).to include(
               "backup_retention_period" => 7
             )
           end
         end
 
-        describe "M-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
-          subject { plan.fetch("rds_properties") }
+        shared_examples "backup disabled plans" do
+          it "calls out that it's not backed up in the description" do
+            expect(subject.fetch("description")).to include("NOT BACKED UP")
+          end
 
-          it_behaves_like "medium sized postgres plans"
-
-          it { is_expected.to include("multi_az" => false) }
-        end
-
-        describe "M-HA-dedicated-9.5" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "M-HA-dedicated-9.5" } }
-          subject { plan.fetch("rds_properties") }
-
-          it_behaves_like "medium sized postgres plans"
-
-          it { is_expected.to include("multi_az" => true) }
-        end
-
-        describe "free plan" do
-          let(:plan) { pg_plans.find { |p| p["name"] == "Free" } }
-          subject { plan.fetch("rds_properties") }
-
-          it_behaves_like "all postgres plans"
-
-          it { is_expected.to include("allocated_storage" => 5) }
-          it { is_expected.to include("db_instance_class" => "db.t2.micro") }
-          it { is_expected.to include("multi_az" => false) }
+          let(:rds_properties) { subject.fetch("rds_properties") }
 
           it "has all snapshots disabled" do
-            expect(subject).to include(
+            expect(rds_properties).to include(
               "backup_retention_period" => 0,
               "skip_final_snapshot" => true,
             )
           end
+        end
 
-          it "calls out that it's not backed up in the description" do
-            expect(plan.fetch("description")).to include("NOT BACKED UP")
-          end
+        shared_examples "HA plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+          it { expect(rds_properties).to include("multi_az" => true) }
+        end
+
+        shared_examples "non-HA plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+          it { expect(rds_properties).to include("multi_az" => false) }
+        end
+
+        describe "M-dedicated-9.5" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
+          subject { plan }
+
+          it_behaves_like "medium sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+        end
+
+        describe "M-HA-dedicated-9.5" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "M-HA-dedicated-9.5" } }
+          subject { plan }
+
+          it_behaves_like "medium sized postgres plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+        end
+
+        describe "free plan" do
+          let(:plan) { pg_plans.find { |p| p["name"] == "Free" } }
+          subject { plan }
 
           it "is marked as free" do
             expect(plan.fetch("free")).to eq(true)
           end
+
+          it_behaves_like "free sized postgres plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
         end
       end
     end
