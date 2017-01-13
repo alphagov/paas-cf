@@ -6,3 +6,9 @@ vm_extensions:
     cloud_properties:
       elbs:
         - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
+
+  - name: cf_rds_client
+    cloud_properties:
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))

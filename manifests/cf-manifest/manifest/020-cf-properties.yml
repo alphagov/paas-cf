@@ -511,6 +511,9 @@ properties:
         client_cert: (( grab secrets.consul_agent_cert ))
         client_key: (( grab secrets.consul_agent_key ))
         require_ssl: false
+      sql:
+        db_connection_string: (( concat "postgres://bbs:" secrets.cf_db_bbs_password "@" terraform_outputs.cf_db_address ":5432/bbs" ))
+        db_driver: postgres
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
 
