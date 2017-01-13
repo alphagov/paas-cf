@@ -506,10 +506,10 @@ properties:
       auctioneer:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
-        machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
-        ca_cert: (( grab meta.secrets.consul_ca_cert ))
-        client_cert: (( grab secrets.consul_agent_cert ))
-        client_key: (( grab secrets.consul_agent_key ))
+        machines: []
+        ca_cert: ""
+        client_cert: ""
+        client_key: ""
         require_ssl: false
       sql:
         db_connection_string: (( concat "postgres://bbs:" secrets.cf_db_bbs_password "@" terraform_outputs.cf_db_address ":5432/bbs" ))
