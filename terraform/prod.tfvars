@@ -10,3 +10,4 @@ tenant_cidrs = "52.19.165.178/32,52.49.20.243/32,52.18.106.146/32,52.212.106.102
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="gov-uk-paas-support@digital.cabinet-office.gov.uk"
+enable_cve_monitor=1
