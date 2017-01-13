@@ -35,6 +35,82 @@ For staging and production a `DEPLOY_ENV` is required even though it's not used
 in domain names. Staging should use a `DEPLOY_ENV` of "staging", and production
 should use "prod".
 
+## Obtaining new SSL certificates
+
+We use digicert for our SSL certificates. The credentials for this are stored in
+the high creds store - this is a global account but with these credentials you
+should create your own account under Account - Users. You should only do this if
+you have access to the high creds store, and do not create accounts for users
+without access to this.
+
+Once you have this account, and access to a suitable payment method, you can
+order a new SSL certificate by going to "Request a Certificate". The certificate
+type needed is a "Wildcard Plus" certificate.
+
+
+## Rotating SSL certificates in digicert
+
+To rotate an existing certificate, go to Certificates - Orders. Then click on
+the order with the Common Name you want to rotate. You must then use the
+"Request Duplicate" functionality rather than "reissue cert" as the former
+allows you to include SANs.
+
+## Certificate options in digicert
+
+Both renewing and requesting a certificate require the following options to be
+set
+
+Common name (CN) is the wildcard app or system domain
+Other Hostnames (SANs) is the app or system domain name without the wildcard.
+For example, for the production app domain cloudapps.digital, the CN would be
+`*.cloudapps.digital` and the SAN would be `cloudapps.digital`.
+
+For signature hash, we use sha-256, and the server platform should be apache
+
+## Creating a CSR
+
+For both obtaining certificates for a new environment, and rotating certificates
+you will need to generate a CSR. For consistency, we do this using a docker
+container so we can be sure of which versions of software we used to
+generate the certificate. This is important in case there are future
+vulnerabilities in the software used to create the keys so we can decide if our
+keys were affected by these.
+
+Use the following command to generate a certificate
+
+```
+docker run --rm -t -i -v `pwd`/staging:/certs governmentpaas/certstrap \
+            certstrap --depot-path /certs \
+            request-cert \
+            --passphrase '' \
+            --country GB \
+            --organization 'Government Digital Service' \
+            --common-name '*.example.com'
+```
+
+replacing example.com with the required common name
+
+In the commit message for the certificates in the high cred store, you should
+include the command used to generate the certificate.
+
+You should also include the full output of this command 
+
+`docker inspect governmentpaas/certstrap`
+
+in the commit message. This includes important information such as the go
+version and version of the container we used to create the certificates. You can
+see an example of a commit message following this format in the high creds store
+git history
+
+## Domains in digicert
+
+If digicert gives you an error when requesting a certificate, you may need to
+deactivate and then activate the domain. This can be done by clicking on
+domains, then clicking on the domain for the cert, and then clicking deactivate.
+Once this is done you should be able to click activate again. This was found
+after putting in a support ticket with digicert.
+
+
 ## Manual upload of SSL certificates
 
 For some environments (e.g. prod) we want to use purchased valid certificates
