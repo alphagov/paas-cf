@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/common.sh"
 ###########################################################################
 # Defaults
 DEFAULT_SPACE=sandbox
-FROM_ADDRESS='the-multi-cloud-paas-team@digital.cabinet-office.gov.uk'
+FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
 # shellcheck disable=SC2016
 SUBJECT='Welcome to the Government PaaS'
 # shellcheck disable=SC2016,SC1078

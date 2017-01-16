@@ -6,7 +6,7 @@ SCRIPT=$(basename "$0")
 # shellcheck disable=SC1090
 source "${SCRIPT_DIR}/common.sh"
 
-FROM_ADDRESS='the-multi-cloud-paas-team@digital.cabinet-office.gov.uk'
+FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
 SUBJECT='Government PaaS Password Reset Request'
 # shellcheck disable=SC2016
 MESSAGE='Hello,
