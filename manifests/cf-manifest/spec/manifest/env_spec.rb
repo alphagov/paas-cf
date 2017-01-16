@@ -1,6 +1,6 @@
 
 RSpec.describe "Environment specific configuration" do
-  let(:default_manifest) { load_default_manifest("default") }
+  let(:default_manifest) { manifest_with_defaults }
   let(:prod_manifest) { load_default_manifest("prod") }
 
   def get_job_instances(manifest, job_name)

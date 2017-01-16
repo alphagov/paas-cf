@@ -1,6 +1,7 @@
 require 'open3'
 require 'yaml'
 require 'singleton'
+require 'tempfile'
 
 
 module ManifestHelpers
@@ -8,6 +9,8 @@ module ManifestHelpers
     include Singleton
     attr_accessor :manifest_with_defaults
     attr_accessor :terraform_fixture
+    attr_accessor :cf_secrets_file
+    attr_accessor :grafana_dashboards_manifest
   end
 
   def manifest_with_defaults
@@ -17,6 +20,16 @@ module ManifestHelpers
   def terraform_fixture(key)
     Cache.instance.terraform_fixture ||= load_terraform_fixture.fetch('terraform_outputs')
     Cache.instance.terraform_fixture.fetch(key.to_s)
+  end
+
+  def cf_secrets_file
+    Cache.instance.cf_secrets_file ||= generate_cf_secrets
+    Cache.instance.cf_secrets_file.path
+  end
+
+  def grafana_dashboards_manifest
+    Cache.instance.grafana_dashboards_manifest ||= render_grafana_dashboards_manifest
+    Cache.instance.grafana_dashboards_manifest.path
   end
 
 private
@@ -34,55 +47,61 @@ private
     output
   end
 
-  def grafana_dashboards_manifest_path
-    File.expand_path("../../../grafana/grafana-dashboards-manifest.yml", __FILE__)
-  end
-
   def render_grafana_dashboards_manifest
-    output, = Open3.capture2([
+    file = Tempfile.new(['test-grafana-dashboards', '.yml'])
+    output, error, status = Open3.capture3(*[
       File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__),
       File.expand_path("../../../grafana", __FILE__),
-    ].join(' '))
-    File.write(grafana_dashboards_manifest_path, output)
-  end
-
-  def remove_grafana_dashboards_manifest
-    FileUtils.rm(grafana_dashboards_manifest_path)
+    ])
+    unless status.success?
+      raise "Error generating grafana dashboards, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
+    end
+    file.write(output)
+    file.flush
+    file.rewind
+    file
   end
 
   def load_default_manifest(environment = "default")
-    render_grafana_dashboards_manifest
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../manifest/*.yml", __FILE__),
         File.expand_path("../../../manifest/data/*.yml", __FILE__),
-        grafana_dashboards_manifest_path,
+        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        cf_secrets_file,
+        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+        grafana_dashboards_manifest,
         File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
     ])
 
     cloud_config = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../cloud-config/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/cf-secrets.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
+        cf_secrets_file,
     ])
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
     deep_freeze(YAML.load(manifest + cloud_config))
-
-  ensure
-    remove_grafana_dashboards_manifest
   end
 
   def load_terraform_fixture
     data = YAML.load_file(File.expand_path("../../../../shared/spec/fixtures/terraform/terraform-outputs.yml", __FILE__))
     deep_freeze(data)
+  end
+
+  def generate_cf_secrets
+    file = Tempfile.new(['test-cf-secrets', '.yml'])
+    output, error, status = Open3.capture3(File.expand_path("../../../scripts/generate-cf-secrets.rb", __FILE__))
+    unless status.success?
+      raise "Error generating cf-secrets, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
+    end
+    file.write(output)
+    file.flush
+    file.rewind
+    file
   end
 
   def deep_freeze(object)
