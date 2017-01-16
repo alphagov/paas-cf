@@ -102,7 +102,7 @@ and `pipeline-release-lock` in the job group `Operator`.
 
 ## Optionally override the branch used by pipelines
 
-All of the pipeline scripts (including `vagrant/deploy.sh`) honour a
+All of the pipeline scripts honour a
 `BRANCH` environment variable which allows you to override the git branch
 used within the pipeline. This is useful for development and code review:
 
