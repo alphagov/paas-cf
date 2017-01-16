@@ -68,10 +68,6 @@ variable "elb_idle_timeout" {
   default     = 300
 }
 
-variable "subnet0_id" {
-  description = "Subnet that is used to provision ELB"
-}
-
 variable "cf_subnet_count" {
   description = "Number of CF subnets"
   default     = 2
