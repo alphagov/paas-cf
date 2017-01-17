@@ -1,6 +1,6 @@
 
 RSpec.describe "vm_types" do
-  let(:vm_types) { manifest_with_defaults.fetch("vm_types") }
+  let(:vm_types) { cloud_config.fetch("vm_types") }
 
   describe "the router pool" do
     let(:pool) { vm_types.find { |p| p["name"] == "router" } }
