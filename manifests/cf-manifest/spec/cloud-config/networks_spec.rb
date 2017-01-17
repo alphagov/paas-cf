@@ -6,7 +6,7 @@ RSpec.describe "networks" do
     router
   ).freeze
 
-  let(:networks) { manifest_with_defaults.fetch("networks") }
+  let(:networks) { cloud_config.fetch("networks") }
 
   CF_NETWORK_NAMES.each do |net_name|
     describe "#{net_name} network" do

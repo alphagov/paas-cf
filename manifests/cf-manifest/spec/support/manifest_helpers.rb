@@ -8,6 +8,7 @@ module ManifestHelpers
   class Cache
     include Singleton
     attr_accessor :manifest_with_defaults
+    attr_accessor :cloud_config
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
     attr_accessor :grafana_dashboards_manifest
@@ -15,6 +16,10 @@ module ManifestHelpers
 
   def manifest_with_defaults
     Cache.instance.manifest_with_defaults ||= load_default_manifest
+  end
+
+  def cloud_config
+    Cache.instance.cloud_config ||= render_cloud_config
   end
 
   def terraform_fixture(key)
@@ -75,16 +80,19 @@ private
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
     ])
 
-    cloud_config = render([
+    # Deep freeze the object so that it's safe to use across multiple examples
+    # without risk of state leaking.
+    deep_freeze(YAML.load(manifest))
+  end
+
+  def render_cloud_config
+    manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../cloud-config/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
         cf_secrets_file,
     ])
-
-    # Deep freeze the object so that it's safe to use across multiple examples
-    # without risk of state leaking.
-    deep_freeze(YAML.load(manifest + cloud_config))
+    deep_freeze(YAML.load(manifest))
   end
 
   def load_terraform_fixture
