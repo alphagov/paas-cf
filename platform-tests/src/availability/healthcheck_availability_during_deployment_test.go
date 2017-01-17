@@ -45,7 +45,8 @@ func errorRateThreshold(metrics *vegeta.Metrics, minimumTestDuration time.Durati
 	metrics.Close()
 
 	fmt.Printf(
-		" - Duration: %s, Requests: %d, Non 200 Requests: %d, Success Rate: %.2f%%\n",
+		"%s: Duration: %s, Requests: %d, Non 200 Requests: %d, Success Rate: %.2f%%\n",
+		time.Now(),
 		metrics.Duration,
 		metrics.Requests,
 		metrics.Requests-uint64(metrics.StatusCodes["200"]),
