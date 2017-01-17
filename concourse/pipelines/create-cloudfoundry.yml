@@ -1398,10 +1398,6 @@ jobs:
                   cf create-security-group graphite-nozzle graphite-nozzle.json
                   cf bind-security-group graphite-nozzle admin admin
 
-                  #FIXME: remove after applied to prod
-                  cf unbind-staging-security-group graphite-nozzle
-                  cf unbind-running-security-group graphite-nozzle
-
                   cd graphite-nozzle
 
                   echo "web: graphite-nozzle" > Procfile
