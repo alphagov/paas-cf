@@ -1396,8 +1396,11 @@ jobs:
                   ]
                   EOF
                   cf create-security-group graphite-nozzle graphite-nozzle.json
-                  cf bind-staging-security-group graphite-nozzle
-                  cf bind-running-security-group graphite-nozzle
+                  cf bind-security-group graphite-nozzle admin admin
+
+                  #FIXME: remove after applied to prod
+                  cf unbind-staging-security-group graphite-nozzle
+                  cf unbind-running-security-group graphite-nozzle
 
                   cd graphite-nozzle
 
