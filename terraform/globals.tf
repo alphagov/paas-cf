@@ -91,11 +91,6 @@ variable "infra_subnet_ids" {
   default     = ""
 }
 
-variable "vagrant_cidr" {
-  description = "IP address of the AWS Vagrant bootstrap concourse"
-  default     = ""
-}
-
 variable "microbosh_static_private_ip" {
   description = "Microbosh internal IP"
   default     = "10.0.0.6"
