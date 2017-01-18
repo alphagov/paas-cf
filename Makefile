@@ -111,6 +111,7 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=master)
 	@true
 
 .PHONY: staging
@@ -127,6 +128,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=staging)
 	@true
 
 .PHONY: prod
@@ -145,6 +147,7 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export DEPLOY_ROADMAP=true)
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
 	$(eval export DEPLOY_RUBBERNECKER=true)
+	$(eval export DEPLOY_ENV=prod)
 	@true
 
 .PHONY: bosh-cli
