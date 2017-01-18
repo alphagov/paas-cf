@@ -360,6 +360,10 @@ properties:
 
 
   login:
+    saml:
+      serviceProviderKey: ((grab secrets.saml_key))
+      serviceProviderKeyPassword: ""
+      serviceProviderCertificate: ((grab secrets.saml_cert))
     enabled: true
     brand: oss
     links:

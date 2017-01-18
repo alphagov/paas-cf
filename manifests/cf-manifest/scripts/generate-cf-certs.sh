@@ -23,7 +23,8 @@ apps_domain,${APPS_DOMAINS}
 system_domain,${SYSTEM_DOMAINS}
 doppler,
 metron,
-trafficcontroller
+trafficcontroller,
+saml
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"
