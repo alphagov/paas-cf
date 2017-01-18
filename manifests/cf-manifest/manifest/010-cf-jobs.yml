@@ -220,6 +220,8 @@ jobs:
       - name: cf
     update:
       serial: true
+    vm_extensions:
+      - cf_rds_client
 
   - name: uaa
     azs: [z1, z2]
