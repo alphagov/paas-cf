@@ -2,13 +2,50 @@
 
 vm_extensions:
 
-  - name: ssh_proxy_elb
+  - name: 64g_ephemeral_disk
     cloud_properties:
-      elbs:
-        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
+      ephemeral_disk:
+        size: 65536
+        type: gp2
 
-  - name: cf_rds_client
+  - name: cf_cc_instance_profile
+    cloud_properties:
+      iam_instance_profile: cf-cloudcontroller
+
+  - name: cf_rds_client_sg
     cloud_properties:
       security_groups:
         - (( grab terraform_outputs.default_security_group ))
         - (( grab terraform_outputs.cf_rds_client_security_group ))
+
+  # This has to duplicate the cf_rds_client_security_group because
+  # vm_extensions are only shallow merged, and you therefore can't use more
+  # than one that specifies security groups.
+  # https://github.com/cloudfoundry/bosh/issues/1177
+  - name: cf_cc_security_groups
+    cloud_properties:
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+        - (( grab terraform_outputs.cf_rds_client_security_group ))
+        - (( grab terraform_outputs.cloud_controller_security_group ))
+
+  - name: cf_cc_elb
+    cloud_properties:
+      elbs:
+        - (( grab terraform_outputs.cf_cc_elb_name ))
+
+  - name: cf_uaa_elb
+    cloud_properties:
+      elbs:
+        - (( grab terraform_outputs.cf_uaa_elb_name ))
+
+  - name: cf_loggregator_elbs
+    cloud_properties:
+      elbs:
+        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - (( grab terraform_outputs.cf_loggregator_elb_name ))
+
+  - name: ssh_proxy_elb
+    cloud_properties:
+      elbs:
+        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
