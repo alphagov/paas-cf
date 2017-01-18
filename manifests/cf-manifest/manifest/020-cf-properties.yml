@@ -92,7 +92,16 @@ properties:
     dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
     tls:
-      ca_cert: ~
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      doppler:
+        cert: (( grab secrets.doppler_cert  ))
+        key: (( grab secrets.doppler_key  ))
+      metron:
+        cert: (( grab secrets.metron_cert  ))
+        key: (( grab secrets.metron_key  ))
+      trafficcontroller:
+        cert: (( grab secrets.trafficcontroller_cert  ))
+        key: (( grab secrets.trafficcontroller_key  ))
     etcd:
       machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
       require_ssl: (( grab properties.etcd.require_ssl ))
