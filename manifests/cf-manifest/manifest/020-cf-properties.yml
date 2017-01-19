@@ -528,7 +528,11 @@ properties:
         client_key: ""
         require_ssl: false
       sql:
-        db_connection_string: (( concat "postgres://bbs:" secrets.cf_db_bbs_password "@" terraform_outputs.cf_db_address ":5432/bbs" ))
+        db_username: bbs
+        db_password: (( grab secrets.cf_db_bbs_password ))
+        db_host: (( grab terraform_outputs.cf_db_address ))
+        db_port: 5432
+        db_schema: bbs
         db_driver: postgres
         max_open_connections: 20
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
