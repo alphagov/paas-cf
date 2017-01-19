@@ -215,19 +215,22 @@ jobs:
         release: cf
     instances: 2
     vm_type: medium
+    vm_extensions:
+      - cf_rds_client_sg
     stemcell: default
     networks:
       - name: cf
     update:
       serial: true
-    vm_extensions:
-      - cf_rds_client
 
   - name: uaa
     azs: [z1, z2]
     templates: (( grab meta.uaa_templates ))
     instances: 2
-    vm_type: uaa
+    vm_type: medium
+    vm_extensions:
+      - cf_uaa_elb
+      - cf_rds_client_sg
     stemcell: default
     networks:
       - name: cf
@@ -241,7 +244,12 @@ jobs:
     azs: [z1, z2]
     templates: (( grab meta.api_templates ))
     instances: 2
-    vm_type: api
+    vm_type: medium
+    vm_extensions:
+      - 64g_ephemeral_disk
+      - cf_cc_instance_profile
+      - cf_cc_security_groups
+      - cf_cc_elb
     stemcell: default
     networks:
       - name: cf
@@ -254,7 +262,9 @@ jobs:
     azs: [z1]
     templates: (( grab meta.clock_templates ))
     instances: 1
-    vm_type: clock_global
+    vm_type: medium
+    vm_extensions:
+      - cf_cc_security_groups
     stemcell: default
     networks:
       - name: cf
@@ -263,7 +273,11 @@ jobs:
     azs: [z1, z2]
     templates: (( grab meta.api_worker_templates ))
     instances: 2
-    vm_type: api_worker
+    vm_type: medium
+    vm_extensions:
+      - 64g_ephemeral_disk
+      - cf_cc_instance_profile
+      - cf_cc_security_groups
     stemcell: default
     networks:
       - name: cf
@@ -281,7 +295,9 @@ jobs:
     azs: [z1, z2]
     templates: (( grab meta.loggregator_trafficcontroller_templates ))
     instances: 2
-    vm_type: loggregator_trafficcontroller
+    vm_type: medium
+    vm_extensions:
+      - cf_loggregator_elbs
     stemcell: default
     networks:
       - name: cf

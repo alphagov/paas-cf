@@ -68,6 +68,16 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
+    specify "all jobs reference vm_extensions that exist" do
+      vm_extension_names = cloud_config.fetch("vm_extensions", []).map { |r| r["name"] }
+      manifest["jobs"].each do |job|
+        job.fetch("vm_extensions", []).each do |extension|
+          expect(vm_extension_names).to include(extension),
+            "vm_extension '#{extension}' not found for job #{job['name']}"
+        end
+      end
+    end
+
     specify "all jobs reference stemcells that exist" do
       stemcell_names = manifest["stemcells"].map { |r| r["alias"] }
       manifest["jobs"].each do |job|
