@@ -520,7 +520,7 @@ properties:
       server_cert: (( grab secrets.bbs_server_cert ))
       server_key: (( grab secrets.bbs_server_key ))
       auctioneer:
-        api_url: http://auctioneer.service.cf.internal:9016
+        api_location: auctioneer.service.cf.internal:9016
       etcd:
         machines: []
         ca_cert: ""
