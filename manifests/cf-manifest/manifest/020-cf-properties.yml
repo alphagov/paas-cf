@@ -34,6 +34,9 @@ properties:
       log_level:
       servers:
         lan: (( grab meta.consul_servers ))
+      dns_config:
+        allow_stale: true
+        max_stale: "30s"
     ca_cert: (( grab meta.secrets.consul_ca_cert ))
     agent_cert: (( grab secrets.consul_agent_cert ))
     agent_key: (( grab secrets.consul_agent_key ))
