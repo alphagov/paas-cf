@@ -97,6 +97,10 @@ variable "cf_db_skip_final_snapshot" {
   description = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
 }
 
+variable "cf_db_maintenance_window" {
+  description = "The window during which updates to the CF database instance can occur."
+}
+
 variable "system_dns_zone_id" {
   description = "Amazon Route53 DNS zone identifier for the system components. Different per account."
 }
