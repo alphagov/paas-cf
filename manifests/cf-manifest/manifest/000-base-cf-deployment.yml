@@ -9,10 +9,6 @@ releases:
     version: "245"
     url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=245
     sha1: 0c9f485f640c2b9e3136fcc89047b3d76dd6863c
-  - name: capi
-    version: 1.8.0
-    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.8.0
-    sha1: db40786bc0c1214fe20e663014927fc6693212bf
   - name: diego
     version: 0.1487.0
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=0.1487.0
