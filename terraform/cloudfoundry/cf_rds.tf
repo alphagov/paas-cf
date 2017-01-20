@@ -46,12 +46,6 @@ resource "aws_db_parameter_group" "cf_pg_9_5" {
   name        = "${var.env}-pg95-cf"
   family      = "postgres9.5"
   description = "RDS CF Postgres 9.5 parameter group"
-
-  parameter {
-    apply_method = "pending-reboot"
-    name         = "max_connections"
-    value        = "500"
-  }
 }
 
 resource "aws_db_instance" "cf" {
