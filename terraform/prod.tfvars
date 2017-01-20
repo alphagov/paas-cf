@@ -35,6 +35,13 @@ tenant_cidrs = [
   "52.214.76.50/32",
   # GOV.UK Pay CI node
   "52.210.67.64/32",
+  # GOV.UK Notify egress IPs (for metrics gathering)
+  "52.209.11.109/32",
+  "52.212.153.196/32",
+  "52.19.155.10/32",
+  "52.213.138.76/32",
+  "52.213.151.67/32",
+  "52.208.47.129/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
