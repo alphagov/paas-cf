@@ -180,10 +180,6 @@ properties:
       password: (( grab secrets.router_password ))
     drain_wait: 15
 
-  # FIXME: remove when no longer needed
-  hm9000:
-    port: 5155
-
   cc:
     jobs:
       global:
