@@ -54,7 +54,7 @@ resource "aws_db_instance" "cf" {
 
   storage_type               = "gp2"
   backup_window              = "02:00-03:00"
-  maintenance_window         = "Thu:04:00-Thu:05:00"
+  maintenance_window         = "${var.cf_db_maintenance_window}"
   multi_az                   = "${var.cf_db_multi_az}"
   backup_retention_period    = "${var.cf_db_backup_retention_period}"
   final_snapshot_identifier  = "${var.env}-cf-rds-final-snapshot"
