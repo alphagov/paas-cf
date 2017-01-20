@@ -14,14 +14,14 @@ resource "aws_security_group" "bosh_lite_office" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs)))}"]
+    cidr_blocks = ["${compact(concat(var.admin_cidrs))}"]
   }
 
   ingress {
     from_port   = 25555
     to_port     = 25555
     protocol    = "tcp"
-    cidr_blocks = ["${compact(concat(split(",", var.admin_cidrs)))}"]
+    cidr_blocks = ["${compact(concat(var.admin_cidrs))}"]
   }
 
   tags {

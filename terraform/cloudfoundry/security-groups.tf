@@ -26,8 +26,8 @@ resource "aws_security_group" "cf_api_elb" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}",
-      "${compact(split(",", var.tenant_cidrs))}",
+      "${compact(var.admin_cidrs)}",
+      "${compact(var.tenant_cidrs)}",
       "${var.concourse_elastic_ip}/32",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]
@@ -56,7 +56,7 @@ resource "aws_security_group" "metrics_elb" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}",
+      "${compact(var.admin_cidrs)}",
     ]
   }
 
@@ -66,7 +66,7 @@ resource "aws_security_group" "metrics_elb" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}",
+      "${compact(var.admin_cidrs)}",
     ]
   }
 
@@ -93,9 +93,9 @@ resource "aws_security_group" "web" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}",
-      "${compact(split(",", var.tenant_cidrs))}",
-      "${compact(split(",", var.web_access_cidrs))}",
+      "${compact(var.admin_cidrs)}",
+      "${compact(var.tenant_cidrs)}",
+      "${compact(var.web_access_cidrs)}",
       "${var.concourse_elastic_ip}/32",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]
@@ -124,8 +124,8 @@ resource "aws_security_group" "sshproxy" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}",
-      "${compact(split(",", var.tenant_cidrs))}",
+      "${compact(var.admin_cidrs)}",
+      "${compact(var.tenant_cidrs)}",
       "${var.concourse_elastic_ip}/32",
     ]
   }

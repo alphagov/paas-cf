@@ -179,7 +179,7 @@ resource "aws_security_group" "logsearch_elb" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${compact(split(",", var.admin_cidrs))}",
+      "${compact(var.admin_cidrs)}",
     ]
   }
 
