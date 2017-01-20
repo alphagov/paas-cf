@@ -29,6 +29,7 @@ resource "aws_security_group" "cf_rds" {
   }
 }
 
+# FIXME: Remove this once the upgrade to 9.5 has applied everywhere.
 resource "aws_db_parameter_group" "cf" {
   name        = "${var.env}-cf"
   family      = "postgres9.4"
@@ -41,16 +42,28 @@ resource "aws_db_parameter_group" "cf" {
   }
 }
 
+resource "aws_db_parameter_group" "cf_pg_9_5" {
+  name        = "${var.env}-pg95-cf"
+  family      = "postgres9.5"
+  description = "RDS CF Postgres 9.5 parameter group"
+
+  parameter {
+    apply_method = "pending-reboot"
+    name         = "max_connections"
+    value        = "500"
+  }
+}
+
 resource "aws_db_instance" "cf" {
   identifier           = "${var.env}-cf"
   allocated_storage    = 10
   engine               = "postgres"
-  engine_version       = "9.4.5"
+  engine_version       = "9.5.4"
   instance_class       = "db.t2.micro"
   username             = "dbadmin"
   password             = "${var.secrets_cf_db_master_password}"
   db_subnet_group_name = "${aws_db_subnet_group.cf_rds.name}"
-  parameter_group_name = "${aws_db_parameter_group.cf.id}"
+  parameter_group_name = "${aws_db_parameter_group.cf_pg_9_5.id}"
 
   storage_type               = "gp2"
   backup_window              = "02:00-03:00"
@@ -61,6 +74,9 @@ resource "aws_db_instance" "cf" {
   skip_final_snapshot        = "${var.cf_db_skip_final_snapshot}"
   vpc_security_group_ids     = ["${aws_security_group.cf_rds.id}"]
   auto_minor_version_upgrade = false
+
+  # FIXME: Remove this once the upgrade to 9.5 has applied everywhere.
+  allow_major_version_upgrade = true
 
   tags {
     Name = "${var.env}-cf"
