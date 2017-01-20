@@ -1883,7 +1883,7 @@ jobs:
                   mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
                   ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
                   ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
-                  ln -snf /usr/local/go /var/vcap/packages/golang1.6
+                  ln -snf /usr/local/go /var/vcap/packages/golang1.7
                   ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
                   if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
                     echo "WARNING: The acceptance tests have been disabled. Unset DISABLE_CF_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
