@@ -212,7 +212,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-release
-      tag_filter: {{cf-release-version}}
+      tag_filter: v*
 
   - name: git-keys
     type: s3-iam
@@ -1755,6 +1755,8 @@ jobs:
             passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
+            version:
+              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/smoke-tests
@@ -1794,6 +1796,8 @@ jobs:
             passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
+            version:
+              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
