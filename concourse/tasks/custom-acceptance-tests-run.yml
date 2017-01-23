@@ -4,6 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/cf-acceptance-tests
+    tag: steal-upstream-cats-image
 inputs:
   - name: paas-cf
   - name: test-config
