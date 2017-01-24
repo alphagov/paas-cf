@@ -86,24 +86,3 @@ resource "datadog_monitor" "garden_process_running" {
     "job"        = "cell"
   }
 }
-
-resource "datadog_monitor" "garden_healthy" {
-  name                = "${format("%s Cell garden healthy", var.env)}"
-  type                = "service check"
-  message             = "Large portion of Cell garden unhealthy. Check deployment state."
-  escalation_message  = "Large portion of Cell garden still unhealthy. Check deployment state."
-  no_data_timeframe   = "7"
-  require_full_window = true
-
-  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:garden_debug_endpoint').by('*').last(1).pct_by_status()", var.env)}"
-
-  thresholds {
-    critical = 50
-  }
-
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "cell"
-  }
-}
