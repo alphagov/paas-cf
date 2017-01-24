@@ -1048,6 +1048,12 @@ jobs:
     serial: true
     plan:
       - aggregate:
+          - get: cf-release
+            version:
+              ref: {{cf-release-version}}
+            params:
+              submodules:
+                - src/smoke-tests
           - get: pipeline-trigger
             passed: ['generate-cf-config']
             trigger: true
@@ -1156,6 +1162,7 @@ jobs:
             source:
               repository: governmentpaas/bosh-cli
           inputs:
+            - name: cf-release
             - name: paas-cf
             - name: cf-manifest
             - name: bosh-secrets
@@ -1756,11 +1763,10 @@ jobs:
             passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
-            version:
-              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/smoke-tests
+            passed: ['cf-deploy']
           - get: paas-cf
             passed: ['post-deploy','availability-tests']
           - get: cf-manifest
@@ -1797,11 +1803,10 @@ jobs:
             passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
-            version:
-              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
+            passed: ['cf-deploy']
           - get: paas-cf
             passed: ['post-deploy','availability-tests']
           - get: cf-manifest
@@ -2285,6 +2290,7 @@ jobs:
           params:
             submodules:
               - src/smoke-tests
+          passed: ['cf-deploy']
         - get: paas-cf
           passed: ['cf-deploy']
         - get: cf-manifest
