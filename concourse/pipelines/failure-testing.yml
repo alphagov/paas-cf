@@ -100,6 +100,8 @@ jobs:
     plan:
       - aggregate:
           - get: cf-release
+            version:
+              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/smoke-tests
@@ -150,6 +152,7 @@ jobs:
             params:
               submodules:
                 - src/smoke-tests
+            passed: ['cloud-controller']
           - get: paas-cf
           - get: cf-manifest
           - get: cf-secrets
@@ -197,6 +200,7 @@ jobs:
             params:
               submodules:
                 - src/smoke-tests
+            passed: ['nats']
           - get: paas-cf
           - get: cf-manifest
           - get: cf-secrets
@@ -244,6 +248,7 @@ jobs:
             params:
               submodules:
                 - src/smoke-tests
+            passed: ['router']
           - get: paas-cf
           - get: cf-manifest
           - get: cf-secrets
@@ -291,6 +296,7 @@ jobs:
             params:
               submodules:
                 - src/smoke-tests
+            passed: ['etcd']
           - get: paas-cf
           - get: cf-manifest
           - get: cf-secrets
@@ -338,6 +344,7 @@ jobs:
             params:
               submodules:
                 - src/smoke-tests
+            passed: ['consul']
           - get: paas-cf
           - get: cf-manifest
           - get: cf-secrets
