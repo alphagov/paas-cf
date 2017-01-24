@@ -21,6 +21,10 @@ consul_server,server.dc1.cf.internal,server.dc2.cf.internal
 consul_agent,
 apps_domain,${APPS_DOMAINS}
 system_domain,${SYSTEM_DOMAINS}
+doppler,
+metron,
+trafficcontroller,
+saml
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"

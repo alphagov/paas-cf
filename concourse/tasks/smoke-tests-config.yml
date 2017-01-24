@@ -38,8 +38,3 @@ run:
         ./cf-release/jobs/smoke-tests/spec \
         smoke_test_properties.yml \
           > ./test-config/config.json
-
-      #FIXME: in v245 config.json.erb does not allow setting the artifacts directory:
-      # https://github.com/cloudfoundry/cf-release/issues/1089
-      # https://github.com/cloudfoundry/cf-release/blob/v245/jobs/smoke-tests/templates/config.json.erb
-      ruby -rjson -e "j=JSON.load(File.read('./test-config/config.json')); j['artifacts_directory']='/var/vcap/sys/log/smoke_tests'; File.write('./test-config/config.json', j.to_json)"

@@ -212,7 +212,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-release
-      tag_filter: {{cf-release-version}}
+      tag_filter: v*
 
   - name: git-keys
     type: s3-iam
@@ -619,6 +619,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
+              tag: steal-upstream-cats-image
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -1755,6 +1756,8 @@ jobs:
             passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
+            version:
+              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/smoke-tests
@@ -1794,6 +1797,8 @@ jobs:
             passed: ['post-deploy','availability-tests']
             trigger: true
           - get: cf-release
+            version:
+              ref: {{cf-release-version}}
             params:
               submodules:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
@@ -1848,9 +1853,8 @@ jobs:
 
                   chmod +x ./test-config/run
 
-                  #FIXME: revert back to config.json.erb from cf-release when we upgrade to >v246
                   ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
-                    ./paas-cf/platform-tests/config.json.erb \
+                    ./cf-release/jobs/acceptance-tests/templates/config.json.erb \
                     ./cf-release/jobs/acceptance-tests/spec \
                     acceptance_test_properties.yml \
                       > ./test-config/config.json
@@ -1862,6 +1866,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
+                tag: steal-upstream-cats-image
             params:
               DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
             inputs:
@@ -1884,7 +1889,7 @@ jobs:
                   mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
                   ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
                   ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
-                  ln -snf /usr/local/go /var/vcap/packages/golang1.6
+                  ln -snf /usr/local/go /var/vcap/packages/golang1.7
                   ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
                   if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
                     echo "WARNING: The acceptance tests have been disabled. Unset DISABLE_CF_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
@@ -2034,6 +2039,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
+                tag: steal-upstream-cats-image
             inputs:
               - name: paas-cf
               - name: test-config

@@ -34,6 +34,9 @@ properties:
       log_level:
       servers:
         lan: (( grab meta.consul_servers ))
+      dns_config:
+        allow_stale: true
+        max_stale: "30s"
     ca_cert: (( grab meta.secrets.consul_ca_cert ))
     agent_cert: (( grab secrets.consul_agent_cert ))
     agent_key: (( grab secrets.consul_agent_key ))
@@ -92,7 +95,16 @@ properties:
     dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
     tls:
-      ca_cert: ~
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      doppler:
+        cert: (( grab secrets.doppler_cert  ))
+        key: (( grab secrets.doppler_key  ))
+      metron:
+        cert: (( grab secrets.metron_cert  ))
+        key: (( grab secrets.metron_key  ))
+      trafficcontroller:
+        cert: (( grab secrets.trafficcontroller_cert  ))
+        key: (( grab secrets.trafficcontroller_key  ))
     etcd:
       machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
       require_ssl: (( grab properties.etcd.require_ssl ))
@@ -167,10 +179,6 @@ properties:
       user: router_user
       password: (( grab secrets.router_password ))
     drain_wait: 15
-
-  # FIXME: remove when no longer needed
-  hm9000:
-    port: 5155
 
   cc:
     jobs:
@@ -351,6 +359,10 @@ properties:
 
 
   login:
+    saml:
+      serviceProviderKey: ((grab secrets.saml_key))
+      serviceProviderKeyPassword: ""
+      serviceProviderCertificate: ((grab secrets.saml_cert))
     enabled: true
     brand: oss
     links:
@@ -504,7 +516,7 @@ properties:
       server_cert: (( grab secrets.bbs_server_cert ))
       server_key: (( grab secrets.bbs_server_key ))
       auctioneer:
-        api_url: http://auctioneer.service.cf.internal:9016
+        api_location: auctioneer.service.cf.internal:9016
       etcd:
         machines: []
         ca_cert: ""
@@ -512,7 +524,11 @@ properties:
         client_key: ""
         require_ssl: false
       sql:
-        db_connection_string: (( concat "postgres://bbs:" secrets.cf_db_bbs_password "@" terraform_outputs.cf_db_address ":5432/bbs" ))
+        db_username: bbs
+        db_password: (( grab secrets.cf_db_bbs_password ))
+        db_host: (( grab terraform_outputs.cf_db_address ))
+        db_port: 5432
+        db_schema: bbs
         db_driver: postgres
         max_open_connections: 20
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
