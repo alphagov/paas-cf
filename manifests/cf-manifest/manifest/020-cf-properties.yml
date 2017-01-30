@@ -386,14 +386,16 @@ properties:
             - cloud_controller.admin
             - doppler.firehose
 
+    port: 8080
     ssl:
-      port: -1
+      port: 8443
+    sslCertificate: (( grab secrets.uaa_internal_cert ))
+    sslPrivateKey: (( grab secrets.uaa_internal_key ))
+    ca_cert: (( grab secrets.bosh_ca_cert ))
 
     password:
       policy:
         minLength: 8
-
-    port: 8080
 
     admin:
       client_secret: (( grab secrets.uaa_admin_client_secret ))
