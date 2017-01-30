@@ -73,9 +73,9 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: etcd
-    release: etcd
+    release: (( grab meta.release.name ))
   - name: etcd_metrics_server
-    release: etcd
+    release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
 

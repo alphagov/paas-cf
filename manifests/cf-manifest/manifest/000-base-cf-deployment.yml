@@ -17,10 +17,6 @@ releases:
     version: 1.1.1
     url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.1.1
     sha1: 6e50e37efbfbfcfa803d5d87a7a85a3073f69243
-  - name: etcd
-    version: 87
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=87
-    sha1: 887fd8de829c82b3427e63ff9d06882a90c3ef81
   - name: cflinuxfs2-rootfs
     version: 1.45.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.45.0
