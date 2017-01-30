@@ -532,7 +532,7 @@ properties:
         db_port: 5432
         db_schema: bbs
         db_driver: postgres
-        max_open_connections: 150
+        max_open_connections: 100
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
 
