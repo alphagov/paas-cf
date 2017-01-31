@@ -21,9 +21,9 @@ make <ENV> upload-datadog-secrets
 make dev upload-datadog-secrets
 ```
 
-2. If you have auto-update pipelines disabled
+2. Deploy the pipeline with self-update disabled
 ```
-ENABLE_DATADOG=true make dev pipelines
+ENABLE_DATADOG=true SELF_UPDATE_PIPELINE=false make dev pipelines
 ```
 
 3. Re-run your pipelines
