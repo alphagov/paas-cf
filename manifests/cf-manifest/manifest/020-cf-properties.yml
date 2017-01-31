@@ -125,9 +125,6 @@ properties:
     unmarshaller_count: 5
     port: 443
     outgoing_port: 8081
-    tls:
-      enable: ~
-      port: ~
     etcd:
       client_cert: (( grab properties.etcd.client_cert ))
       client_key: (( grab properties.etcd.client_key ))
