@@ -290,6 +290,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      consul:
+        agent:
+          services:
+            doppler: {}
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
