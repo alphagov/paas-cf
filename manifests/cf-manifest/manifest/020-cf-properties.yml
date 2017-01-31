@@ -127,9 +127,7 @@ properties:
     outgoing_port: 8081
     tls:
       enable: ~
-      server_cert: ~
       port: ~
-      server_key: ~
     etcd:
       client_cert: (( grab properties.etcd.client_cert ))
       client_key: (( grab properties.etcd.client_key ))
@@ -143,9 +141,6 @@ properties:
     enable_buffer: ~
     buffer_size: ~
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
-    tls:
-      client_cert: ~
-      client_key: ~
 
   metron_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
