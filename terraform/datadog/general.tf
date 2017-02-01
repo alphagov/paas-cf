@@ -13,9 +13,5 @@ resource "datadog_monitor" "disk-space" {
 
   require_full_window = true
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "all"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }

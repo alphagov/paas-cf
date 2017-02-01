@@ -14,11 +14,7 @@ resource "datadog_monitor" "consul" {
 
   require_full_window = true
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "consul"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:consul"]
 }
 
 resource "datadog_monitor" "consul_connect_to_port" {
@@ -35,9 +31,5 @@ resource "datadog_monitor" "consul_connect_to_port" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "consul"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:consul"]
 }
