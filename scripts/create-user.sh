@@ -33,7 +33,15 @@ https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/
 Regards,
 Government PaaS team.
 '
+NOTIFICATION='
+As the account has been created now please remeber to update gov-uk-paas-announce
+mailing list. You can do that by inviting the user to the group by usng this URL:
 
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/gov-uk-paas-announce/invite
+
+As a welcome message you can use the text from here:
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
+'
 
 ###########################################################################
 usage() {
@@ -183,6 +191,7 @@ send_mail() {
       --output text > /dev/null
 
     echo "An email has been sent to ${EMAIL} with their new credentials."
+    show_notification
   else
     echo "User was already present and has not been recreated. No mail sent."
   fi
@@ -198,6 +207,11 @@ emit_password() {
   else
     send_mail
   fi
+}
+
+show_notification() {
+    echo
+    info "${NOTIFICATION}"
 }
 
 TMP_OUTPUT="$(mktemp -t create-tenant-output.XXXXXX)"
