@@ -4,7 +4,7 @@ rvm:
   - 2.2.6
 env:
   global:
-    - TF_VERSION="0.7.10"
+    - TF_VERSION="0.8.5"
     - SPRUCE_VERSION="1.5.0"
     - DEPLOY_ENV="travis"
 
