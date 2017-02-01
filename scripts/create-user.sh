@@ -129,7 +129,7 @@ create_user() {
     cf delete-user "${EMAIL}" -f
   fi
 
-  if cf create-user "${EMAIL}" "${PASSWORD}" | tee "${TMP_OUTPUT}"; then
+  if cf create-user "${EMAIL}" "${PASSWORD}" 2>&1 | tee "${TMP_OUTPUT}"; then
     if ! grep -q "already exists" "${TMP_OUTPUT}"; then
       SEND_EMAIL=true
     fi
