@@ -46,7 +46,7 @@ lint_yaml:
 lint_terraform: dev
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
 	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
-	find terraform -mindepth 1 -maxdepth 1 -type d -not -path 'terraform/providers' -not -path 'terraform/scripts' -print0 | xargs -0 -n 1 -t terraform graph > /dev/null
+	find terraform -mindepth 1 -maxdepth 1 -type d -not -path 'terraform/providers' -not -path 'terraform/scripts' -print0 | xargs -0 -n 1 -t sh -c 'terraform get $$1 && terraform graph $$1' -- > /dev/null
 	@if [ "$$(terraform fmt -write=false terraform)" != "" ] ; then \
 		echo "Use 'terraform fmt' to fix HCL formatting:"; \
 		terraform fmt -write=false -diff=true terraform ; \
@@ -197,6 +197,11 @@ pingdom: check-tf-version ## Use custom Terraform provider to set up Pingdom che
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
 	$(eval export PINGDOM_CONTACT_IDS=11089310)
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
+
+.PHONY: setup_cdn_instances
+setup_cdn_instances: check-tf-version check-aws-credentials ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
+	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
+	@terraform/scripts/set-up-cdn-instances.sh ${ACTION}
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))
