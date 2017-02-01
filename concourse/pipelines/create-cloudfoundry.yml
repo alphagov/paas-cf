@@ -1051,7 +1051,7 @@ jobs:
       - aggregate:
           - get: cf-release
             version:
-              ref: {{cf-release-version}}
+              ref: {{cf_release_version}}
             params:
               submodules:
                 - src/smoke-tests
