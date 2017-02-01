@@ -14,11 +14,7 @@ resource "datadog_monitor" "route_emitter_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "route_emitter"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:route_emitter"]
 }
 
 resource "datadog_monitor" "route_emitter_healthy" {
@@ -35,11 +31,7 @@ resource "datadog_monitor" "route_emitter_healthy" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "route_emitter"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:route_emitter"]
 }
 
 resource "datadog_monitor" "route_emitter_consul_lock" {
@@ -56,11 +48,7 @@ resource "datadog_monitor" "route_emitter_consul_lock" {
     critical = 100
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "route_emitter"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:route_emitter"]
 }
 
 resource "datadog_monitor" "route_emitter_lock_held_once" {
@@ -84,9 +72,5 @@ resource "datadog_monitor" "route_emitter_lock_held_once" {
     critical = "${element(list("1", "1"), count.index)}"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "route_emitter"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:route_emitter"]
 }

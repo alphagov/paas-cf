@@ -14,11 +14,7 @@ resource "datadog_monitor" "cc_api_master_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "api"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_api_worker_process_running" {
@@ -37,11 +33,7 @@ resource "datadog_monitor" "cc_api_worker_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "api"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_api_healthy" {
@@ -58,11 +50,7 @@ resource "datadog_monitor" "cc_api_healthy" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "api"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_failed_job_count_total_increase" {
@@ -79,11 +67,7 @@ resource "datadog_monitor" "cc_failed_job_count_total_increase" {
     critical = "5"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "api"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_log_count_error_increase" {
@@ -100,11 +84,7 @@ resource "datadog_monitor" "cc_log_count_error_increase" {
     critical = "5"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "api"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_job_queue_length" {
@@ -121,9 +101,5 @@ resource "datadog_monitor" "cc_job_queue_length" {
     critical = "25"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "api"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
