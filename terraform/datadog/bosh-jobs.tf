@@ -44,9 +44,5 @@ resource "datadog_monitor" "job_healthy" {
     warning  = "${element(null_resource.parsed_job_instances.*.triggers.warning, count.index)}"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "${element(null_resource.parsed_job_instances.*.triggers.job_name, count.index)}"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:${element(null_resource.parsed_job_instances.*.triggers.job_name, count.index)}"]
 }

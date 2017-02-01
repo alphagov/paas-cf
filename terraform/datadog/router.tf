@@ -59,11 +59,7 @@ resource "datadog_monitor" "route_update_latency" {
     critical = "45000.0"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "router"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
 }
 
 variable "datadog_monitor_total_routes_drop_enabled" {
@@ -90,11 +86,7 @@ resource "datadog_monitor" "total_routes_drop" {
     critical = "-33.0"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "router"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
 }
 
 resource "datadog_monitor" "total_routes_discrepancy" {
@@ -109,11 +101,7 @@ resource "datadog_monitor" "total_routes_discrepancy" {
 
   thresholds {}
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "router"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
 }
 
 resource "datadog_monitor" "gorouter_process_running" {
@@ -132,11 +120,7 @@ resource "datadog_monitor" "gorouter_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "router"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
 }
 
 resource "datadog_monitor" "gorouter_healthy" {
@@ -153,9 +137,5 @@ resource "datadog_monitor" "gorouter_healthy" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "router"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
 }

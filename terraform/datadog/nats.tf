@@ -14,11 +14,7 @@ resource "datadog_monitor" "nats_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "nats"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:nats"]
 }
 
 resource "datadog_monitor" "nats_stream_forwarded_process_running" {
@@ -37,11 +33,7 @@ resource "datadog_monitor" "nats_stream_forwarded_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "nats"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:nats"]
 }
 
 resource "datadog_monitor" "nats_service_open" {
@@ -58,11 +50,7 @@ resource "datadog_monitor" "nats_service_open" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "nats"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:nats"]
 }
 
 resource "datadog_monitor" "nats_cluster_service_open" {
@@ -79,9 +67,5 @@ resource "datadog_monitor" "nats_cluster_service_open" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "nats"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:nats"]
 }

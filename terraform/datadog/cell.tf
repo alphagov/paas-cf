@@ -13,11 +13,7 @@ resource "datadog_monitor" "cell-available-memory" {
 
   require_full_window = true
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "cell"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }
 
 resource "datadog_monitor" "rep_process_running" {
@@ -36,11 +32,7 @@ resource "datadog_monitor" "rep_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "cell"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }
 
 resource "datadog_monitor" "rep_healthy" {
@@ -57,11 +49,7 @@ resource "datadog_monitor" "rep_healthy" {
     critical = 50
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "cell"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }
 
 resource "datadog_monitor" "garden_process_running" {
@@ -80,9 +68,5 @@ resource "datadog_monitor" "garden_process_running" {
     critical = 3
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "cell"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }

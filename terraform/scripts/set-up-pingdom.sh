@@ -3,7 +3,7 @@
 set -eu
 TERRAFORM_ACTION=${1}
 VERSION=0.2.2
-BINARY=terraform-provider-pingdom-tf-0.7.3-$(uname -s)-$(uname -m)
+BINARY=terraform-provider-pingdom-tf-0.8.5-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
 
 # Get Pingdom credentials

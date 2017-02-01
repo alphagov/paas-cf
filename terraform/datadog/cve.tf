@@ -12,8 +12,5 @@ resource "datadog_monitor" "cve-reporter" {
     critical = "1"
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
 }

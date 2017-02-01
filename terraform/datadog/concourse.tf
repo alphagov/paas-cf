@@ -13,11 +13,7 @@ resource "datadog_monitor" "concourse-load" {
 
   require_full_window = true
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "concourse"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:concourse"]
 }
 
 resource "datadog_monitor" "continuous-smoketests" {
@@ -35,11 +31,7 @@ resource "datadog_monitor" "continuous-smoketests" {
 
   require_full_window = false
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "concourse"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:concourse"]
 }
 
 resource "datadog_timeboard" "concourse-jobs" {

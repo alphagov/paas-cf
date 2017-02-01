@@ -14,9 +14,5 @@ resource "datadog_monitor" "ipsec_daemon_running" {
     critical = 2
   }
 
-  tags {
-    "deployment" = "${var.env}"
-    "service"    = "${var.env}_monitors"
-    "job"        = "all"
-  }
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }
