@@ -166,4 +166,18 @@ RSpec.describe "base properties" do
       end
     end
   end
+
+  describe "buildpacks" do
+    let(:api_job) { manifest_with_defaults.fetch("jobs").find { |j| j.fetch("name") == "api" } }
+    let(:api_template_names) { api_job.fetch("templates").map { |t| t.fetch("name") } }
+
+    let(:install_buildpacks_property) { properties.fetch("cc").fetch("install_buildpacks") }
+
+    it "install_buildpacks reference packages that exist" do
+      install_buildpacks_property.each do |pack|
+        expect(api_template_names).to include(pack.fetch("package")),
+          "install_buildpacks entry #{pack.fetch('name')} references non-existent package #{pack.fetch('package')}"
+      end
+    end
+  end
 end
