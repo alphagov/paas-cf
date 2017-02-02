@@ -69,7 +69,7 @@ resource "datadog_monitor" "route_emitter_lock_held_once" {
     )}"
 
   thresholds {
-    critical = "${element(list("1", "1"), count.index)}"
+    critical = "1" # This value must match the threshold set in the query. Otherwise datadog API would fail obscurely
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:route_emitter"]
