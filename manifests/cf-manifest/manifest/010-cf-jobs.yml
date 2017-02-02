@@ -73,9 +73,9 @@ meta:
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: etcd
-    release: etcd
+    release: (( grab meta.release.name ))
   - name: etcd_metrics_server
-    release: etcd
+    release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
 
@@ -290,6 +290,11 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      consul:
+        agent:
+          services:
+            doppler: {}
 
   - name: loggregator_trafficcontroller
     azs: [z1, z2]

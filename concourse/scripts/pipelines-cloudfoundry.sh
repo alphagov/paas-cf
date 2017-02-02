@@ -99,7 +99,7 @@ pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
-cf-release-version: v${cf_release_version}
+cf_release_version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}

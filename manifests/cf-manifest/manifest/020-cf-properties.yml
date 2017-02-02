@@ -125,11 +125,6 @@ properties:
     unmarshaller_count: 5
     port: 443
     outgoing_port: 8081
-    tls:
-      enable: ~
-      server_cert: ~
-      port: ~
-      server_key: ~
     etcd:
       client_cert: (( grab properties.etcd.client_cert ))
       client_key: (( grab properties.etcd.client_key ))
@@ -143,9 +138,6 @@ properties:
     enable_buffer: ~
     buffer_size: ~
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
-    tls:
-      client_cert: ~
-      client_key: ~
 
   metron_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
@@ -386,14 +378,16 @@ properties:
             - cloud_controller.admin
             - doppler.firehose
 
+    port: 8080
     ssl:
-      port: -1
+      port: 8443
+    sslCertificate: (( grab secrets.uaa_internal_cert ))
+    sslPrivateKey: (( grab secrets.uaa_internal_key ))
+    ca_cert: (( grab secrets.bosh_ca_cert ))
 
     password:
       policy:
         minLength: 8
-
-    port: 8080
 
     admin:
       client_secret: (( grab secrets.uaa_admin_client_secret ))
@@ -445,10 +439,10 @@ properties:
         authorized-grant-types: client_credentials,refresh_token
         secret: (( grab secrets.uaa_clients_gorouter_secret ))
       tcp_emitter:
-        authorities: routing.routes.write,routing.routes.read,routing.router_groups.read
+        authorities: routing.routes.write,routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
       tcp_router:
-        authorities: routing.routes.read,routing.router_groups.read
+        authorities: routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
       ssh-proxy:
         authorized-grant-types: authorization_code
@@ -530,7 +524,7 @@ properties:
         db_port: 5432
         db_schema: bbs
         db_driver: postgres
-        max_open_connections: 150
+        max_open_connections: 100
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
 

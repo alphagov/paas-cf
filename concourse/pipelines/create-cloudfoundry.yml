@@ -212,7 +212,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-release
-      tag_filter: v*
+      tag_filter: {{cf_release_version}}
 
   - name: git-keys
     type: s3-iam
@@ -1049,7 +1049,7 @@ jobs:
       - aggregate:
           - get: cf-release
             version:
-              ref: {{cf-release-version}}
+              ref: {{cf_release_version}}
             params:
               submodules:
                 - src/smoke-tests
