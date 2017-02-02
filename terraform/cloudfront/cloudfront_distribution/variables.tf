@@ -26,3 +26,7 @@ variable "system_dns_zone_id" {
 variable "system_dns_zone_name" {
   description = "Domain name registered with Route 53."
 }
+
+variable "system_domain_cert_id" {
+  description = "The ID of the certificate to be assigned to a new subdomain."
+}
