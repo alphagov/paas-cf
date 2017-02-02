@@ -33,3 +33,20 @@ resource "datadog_monitor" "consul_connect_to_port" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:consul"]
 }
+
+resource "datadog_monitor" "consul_has_leader" {
+  name                = "${format("%s consul cluster has at least one leader", var.env)}"
+  type                = "service check"
+  message             = "No consul cluster servers are repoted as leader"
+  escalation_message  = "Still no consul cluster servers are repoted as leader. Check deployment state."
+  no_data_timeframe   = "7"
+  require_full_window = true
+
+  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:consul_is_leader').by('*').last(1).pct_by_status()", var.env)}"
+
+  thresholds {
+    critical = 100
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:consul"]
+}
