@@ -33,7 +33,15 @@ https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/
 Regards,
 Government PaaS team.
 '
+NOTIFICATION='
+As the account has been created now please remeber to update gov-uk-paas-announce
+mailing list. You can do that by inviting the user to the group by usng this URL:
 
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/gov-uk-paas-announce/invite
+
+As a welcome message you can use the text from here:
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
+'
 
 ###########################################################################
 usage() {
@@ -129,9 +137,9 @@ create_user() {
     cf delete-user "${EMAIL}" -f
   fi
 
-  if cf create-user "${EMAIL}" "${PASSWORD}" | tee "${TMP_OUTPUT}"; then
+  if cf create-user "${EMAIL}" "${PASSWORD}" 2>&1 | tee "${TMP_OUTPUT}"; then
     if ! grep -q "already exists" "${TMP_OUTPUT}"; then
-      SEND_EMAIL=true
+      USER_CREATED=true
     fi
   else
     abort "Error creating user ${EMAIL}"
@@ -159,33 +167,30 @@ get_body() {
 }
 
 send_mail() {
-  if [[ "${SEND_EMAIL}" == "true" ]]; then
-    MESSAGE_JSON="
-    {
-      \"Subject\": {
-        \"Data\": \"$(get_subject)\",
+  MESSAGE_JSON="
+  {
+    \"Subject\": {
+      \"Data\": \"$(get_subject)\",
+      \"Charset\": \"utf8\"
+    },
+    \"Body\": {
+      \"Text\": {
+        \"Data\": \"$(get_body)\",
         \"Charset\": \"utf8\"
-      },
-      \"Body\": {
-        \"Text\": {
-          \"Data\": \"$(get_body)\",
-          \"Charset\": \"utf8\"
-        }
       }
     }
-    "
+  }
+  "
 
-    aws ses send-email \
-      --destination "{ \"ToAddresses\": [\"${EMAIL}\"] }" \
-      --message "${MESSAGE_JSON}"\
-      --from "${FROM_ADDRESS}"  \
-      --region eu-west-1 \
-      --output text > /dev/null
+  aws ses send-email \
+    --destination "{ \"ToAddresses\": [\"${EMAIL}\"] }" \
+    --message "${MESSAGE_JSON}"\
+    --from "${FROM_ADDRESS}"  \
+    --region eu-west-1 \
+    --output text > /dev/null
 
-    echo "An email has been sent to ${EMAIL} with their new credentials."
-  else
-    echo "User was already present and has not been recreated. No mail sent."
-  fi
+  echo "An email has been sent to ${EMAIL} with their new credentials."
+  show_notification
 }
 
 print_password() {
@@ -193,18 +198,27 @@ print_password() {
 }
 
 emit_password() {
-  if [ "${NO_EMAIL:-}" = "true" ]; then
-    print_password
+  if [ "${USER_CREATED}" = "true" ]; then
+    if [ "${NO_EMAIL:-}" = "true" ]; then
+      print_password
+    else
+      send_mail
+    fi
   else
-    send_mail
+    echo "No new users created. Use -r to force password reset for existing users."
   fi
+}
+
+show_notification() {
+    echo
+    info "${NOTIFICATION}"
 }
 
 TMP_OUTPUT="$(mktemp -t create-tenant-output.XXXXXX)"
 trap 'rm -f "${TMP_OUTPUT}"' EXIT
 
 RESET_USER=false
-SEND_EMAIL=false
+USER_CREATED=false
 ORG_MANAGER=false
 
 while [[ $# -gt 0 ]]; do
