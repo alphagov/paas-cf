@@ -10,7 +10,8 @@ resource "datadog_monitor" "etcd_one_leader" {
 
   query = "${
     format(
-      "min(last_5m):sum:cf.etcd.IsLeader{deployment:%s}.fill(last, 60) %s",
+      "%s(last_5m):sum:cf.etcd.IsLeader{deployment:%s}.fill(last, 60) %s",
+      element(list("max", "min"), count.index),
       var.env,
       element(list("> 1", "< 1"), count.index)
     )}"
