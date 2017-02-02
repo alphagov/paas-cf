@@ -38,6 +38,8 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
+    dogapi (1.24.0)
+      multi_json
     govuk-lint (1.2.1)
       rubocop (~> 0.39.0)
       scss_lint
@@ -106,7 +108,11 @@ PLATFORMS
 
 DEPENDENCIES
   bosh_cli
+  dogapi
   govuk-lint (~> 1.2.1)
   json-minify (~> 0.0.2)
   rspec (~> 3.3)
   webmock (~> 1.24)
+
+BUNDLED WITH
+   1.13.2
