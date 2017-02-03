@@ -2267,7 +2267,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/awscli
+              repository: governmentpaas/git-ssh
           platform: linux
           outputs:
           - name: generated-git-keys
