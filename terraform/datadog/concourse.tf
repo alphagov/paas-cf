@@ -19,19 +19,46 @@ resource "datadog_monitor" "concourse-load" {
 resource "datadog_monitor" "continuous-smoketests" {
   name               = "${format("%s concourse continuous smoketests runtime", var.env)}"
   type               = "query alert"
-  message            = "${format("Continuous smoketests too slow: {{value}} ms. Check concourse VM health. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  message            = "${format("Continuous smoketests too slow: {{value}} ms. Check concourse VM health. @govpaas-alerting-%s@digital.cabinet-office.gov.uk  {{#is_no_data}}The continuous smoke tests  have not reported any metrics for a while. Check concourse status. @%s {{/is_no_data}}", var.aws_account, element(list(format("govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account), "pagerduty-Datadog_no_data"), var.enable_pagerduty_notifications))}"
   escalation_message = "Continuous smoketests still too slow: {{value}} ms."
-  no_data_timeframe  = "30"
-  query              = "${format("max(last_1m):avg:concourse.build.finished{job:continuous-smoke-tests,deploy_env:%s} > 1800000", var.env)}"
+  no_data_timeframe  = "20"
+  query              = "${format("max(last_1m):avg:concourse.build.finished{job:continuous-smoke-tests,deploy_env:%s} > 1200000", var.env)}"
 
   thresholds {
-    warning  = "1200000.0"
-    critical = "1800000.0"
+    warning  = "720000.0"
+    critical = "1200000.0"
   }
 
   require_full_window = false
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:concourse"]
+}
+
+resource "datadog_monitor" "continuous-smoketests-failures" {
+  count              = "${var.enable_pagerduty_notifications}"
+  name               = "${format("%s concourse continuous smoketests failures", var.env)}"
+  type               = "query alert"
+  escalation_message = "Smoke test failures"
+  query              = "${format("sum(last_15m):count_nonzero(max:concourse.build.finished{build_status:failed,deploy_env:%s,job:continuous-smoke-tests}) >= 3", var.env)}"
+
+  message = <<EOF
+  {{#is_alert}}
+    The `continuous-smoke-tests` have been failing for a while now.
+
+    We need to investigate.
+
+    Notify: @pagerduty-Datadog
+  {{/is_alert}}
+EOF
+
+  require_full_window = false
+  notify_no_data      = false
+
+  thresholds {
+    critical = "3"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
 }
 
 resource "datadog_timeboard" "concourse-jobs" {

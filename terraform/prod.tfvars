@@ -47,3 +47,6 @@ bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="gov-uk-paas-support@digital.cabinet-office.gov.uk"
 enable_cve_monitor=1
+
+# Enable the pagerduty notifications
+enable_pagerduty_notifications = 1
