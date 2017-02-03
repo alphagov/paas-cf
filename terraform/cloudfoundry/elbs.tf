@@ -1,7 +1,6 @@
 resource "aws_elb" "cf_cc" {
   name                      = "${var.env}-cf-cc"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
-  idle_timeout              = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"
 
   security_groups = [
