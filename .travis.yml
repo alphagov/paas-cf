@@ -22,24 +22,29 @@ before_install:
     export PATH=~/bin:$PATH
   - |
     echo "Fetching shellcheck"
+    set -e
     wget -O ~/bin/shellcheck https://github.com/alphagov/paas-cf/releases/download/shellcheck_binary_0.4.4/shellcheck_linux_amd64
     chmod +x ~/bin/shellcheck
+    set +e
   - |
     echo "Fetching Terraform"
     set -e
     wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
     unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
     rm terraform_${TF_VERSION}_linux_amd64.zip
+    set +e
   - |
     echo "Fetching Terraform pingdom provider"
     set -e
     wget -O ~/bin/terraform-provider-pingdom "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/0.2.2/terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)"
     chmod +x ~/bin/terraform-provider-pingdom
+    set +e
   - |
     echo "Fetching Spruce"
     set -e
     wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64
     mv spruce-linux-amd64 ~/bin/spruce && chmod +x ~/bin/spruce
+    set +e
   - pip install --user yamllint
   - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
 
