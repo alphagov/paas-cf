@@ -34,8 +34,8 @@ terraform remote config \
 
 # Run Terraform Pingdom Provider
 terraform "${TERRAFORM_ACTION}" \
-	-var "env=${MAKEFILE_ENV_TARGET}" \
-	-var "contact_ids=\"${PINGDOM_CONTACT_IDS}\"" \
+	-var-file="${PAAS_CF_DIR}/terraform/${AWS_ACCOUNT}.tfvars" \
+	-var "env=${DEPLOY_ENV}" \
 	-var "pingdom_user=${PINGDOM_USER}" \
 	-var "pingdom_password=${PINGDOM_PASSWORD}" \
 	-var "pingdom_api_key=${PINGDOM_API_KEY}" \

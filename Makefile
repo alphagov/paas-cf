@@ -191,7 +191,6 @@ manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certif
 pingdom: check-tf-version ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
-	$(eval export PINGDOM_CONTACT_IDS=11089310)
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
 .PHONY: setup_cdn_instances

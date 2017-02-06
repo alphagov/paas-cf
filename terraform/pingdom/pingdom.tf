@@ -10,7 +10,9 @@ variable "apps_dns_zone_name" {}
 
 variable "env" {}
 
-variable "contact_ids" {}
+variable "pingdom_contact_ids" {
+  type = "list"
+}
 
 provider "pingdom" {
   user          = "${var.pingdom_user}"
@@ -30,7 +32,7 @@ resource "pingdom_check" "paas_http_healthcheck" {
   sendtoemail              = true
   sendnotificationwhendown = 2
   notifywhenbackup         = true
-  contactids               = ["${split(",", var.contact_ids)}"]
+  contactids               = ["${var.pingdom_contact_ids}"]
 }
 
 resource "pingdom_check" "paas_db_healthcheck" {
@@ -44,5 +46,5 @@ resource "pingdom_check" "paas_db_healthcheck" {
   sendtoemail              = true
   sendnotificationwhendown = 2
   notifywhenbackup         = true
-  contactids               = ["${split(",", var.contact_ids)}"]
+  contactids               = ["${var.pingdom_contact_ids}"]
 }
