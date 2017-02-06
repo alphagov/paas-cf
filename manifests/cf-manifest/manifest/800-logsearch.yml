@@ -131,8 +131,6 @@ jobs:
   templates:
   - name: ingestor_syslog
     release: logsearch
-  - name: ingestor_relp
-    release: logsearch
   vm_type: ingestor
   stemcell: default
   instances: 1
@@ -152,8 +150,6 @@ jobs:
   azs: [z2]
   templates:
   - name: ingestor_syslog
-    release: logsearch
-  - name: ingestor_relp
     release: logsearch
   vm_type: ingestor
   stemcell: default
