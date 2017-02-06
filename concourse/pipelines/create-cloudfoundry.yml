@@ -706,6 +706,10 @@ jobs:
                   tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
                   tar xzf bosh-CA/bosh-CA.tar.gz
 
+                  # FIXME We're expecting this task to fail.
+                  # That's ok, whilst we're updating the certificates.
+                  set +e
+
                   terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                     -var system_domain_crt="$(cat generated-certificates/system_domain.crt)" \
                     -var system_domain_key="$(cat generated-certificates/system_domain.key)" \
@@ -717,6 +721,9 @@ jobs:
                     -state-out=updated-tfstate/cf-certs.tfstate \
                     paas-cf/terraform/cf-certs
                 fi
+
+                # FIXME
+                echo "We're expecting this task to fail. That's fine. - Rafal"
         ensure:
           put: cf-certs-tfstate
           params:
