@@ -16,6 +16,10 @@ addons:
       - git
       - gnupg
 
+cache:
+  bundler: true
+  pip: true
+
 before_install:
   - |
     mkdir ~/bin
