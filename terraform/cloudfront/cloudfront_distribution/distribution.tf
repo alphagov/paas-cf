@@ -45,6 +45,8 @@ resource "aws_cloudfront_distribution" "cdn_instance" {
     max_ttl                = 86400
   }
 
+  price_class = "PriceClass_100"
+
   restrictions {
     geo_restriction {
       restriction_type = "none"
