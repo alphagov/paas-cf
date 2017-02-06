@@ -23,13 +23,6 @@ resource "aws_elb" "logsearch_ingestor" {
     lb_port           = 5514
     lb_protocol       = "tcp"
   }
-
-  listener {
-    instance_port     = 2514
-    instance_protocol = "tcp"
-    lb_port           = 2514
-    lb_protocol       = "tcp"
-  }
 }
 
 resource "aws_elb" "logsearch_es_master" {
@@ -107,16 +100,6 @@ resource "aws_security_group" "logsearch_ingestor_elb" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 2514
-    to_port   = 2514
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${var.vpc_cidr}",
-    ]
   }
 
   ingress {
