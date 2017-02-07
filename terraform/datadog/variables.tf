@@ -17,3 +17,11 @@ variable "enable_pagerduty_notifications" {
   description = "Selector to enable/disable the pagerduty notifications."
   default     = 0
 }
+
+variable "datadog_notification_24x7" {
+  description = "Datadog notification for 24x7 alerts: empty string for no notification, email address (start with @) or pagerduty service name (start with @)"
+}
+
+variable "datadog_notification_in_hours" {
+  description = "Datadog notification for in hours alerts: empty string for no notification, email address (start with @) or pagerduty service name (start with @)"
+}
