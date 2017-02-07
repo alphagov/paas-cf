@@ -16,3 +16,4 @@ support_email="govpaas-alerting-staging@digital.cabinet-office.gov.uk"
 # Enabled/disabled resources
 # Disable datadog_monitor.total_routes_drop resource
 datadog_monitor_total_routes_drop_enabled = 0
+pingdom_contact_ids = [ 11089310, 11190300 ]

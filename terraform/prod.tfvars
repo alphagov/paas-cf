@@ -52,3 +52,4 @@ enable_cve_monitor=1
 
 # Enable the pagerduty notifications
 enable_pagerduty_notifications = 1
+pingdom_contact_ids = [ 11089310, 11189971 ]
