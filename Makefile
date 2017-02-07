@@ -86,7 +86,6 @@ globals:
 
 .PHONY: dev
 dev: globals check-env-vars ## Set Environment to DEV
-	$(eval export MAKEFILE_ENV_TARGET=dev)
 	$(eval export AWS_ACCOUNT=dev)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
@@ -102,7 +101,6 @@ dev: globals check-env-vars ## Set Environment to DEV
 
 .PHONY: ci
 ci: globals check-env-vars ## Set Environment to CI
-	$(eval export MAKEFILE_ENV_TARGET=ci)
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export TAG_PREFIX=staging-)
@@ -116,7 +114,6 @@ ci: globals check-env-vars ## Set Environment to CI
 
 .PHONY: staging
 staging: globals check-env-vars ## Set Environment to Staging
-	$(eval export MAKEFILE_ENV_TARGET=staging)
 	$(eval export AWS_ACCOUNT=staging)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
@@ -133,7 +130,6 @@ staging: globals check-env-vars ## Set Environment to Staging
 
 .PHONY: prod
 prod: globals check-env-vars ## Set Environment to Production
-	$(eval export MAKEFILE_ENV_TARGET=prod)
 	$(eval export AWS_ACCOUNT=prod)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)

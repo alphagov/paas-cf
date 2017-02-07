@@ -4,7 +4,7 @@ set -eu
 TERRAFORM_ACTION=${1}
 VERSION=0.2.2
 BINARY=terraform-provider-pingdom-tf-0.8.5-$(uname -s)-$(uname -m)
-STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
+STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 
 # Get Pingdom credentials
 export PASSWORD_STORE_DIR=~/.paas-pass
