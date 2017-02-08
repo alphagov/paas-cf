@@ -47,6 +47,7 @@ lint_yaml:
 lint_terraform: check-tf-version dev ## Lint the terraform files.
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
 	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
+	$(eval export TF_VERSION=$(MIN_TERRAFORM_VERSION))
 	@terraform/scripts/lint.sh
 
 lint_shellcheck:
