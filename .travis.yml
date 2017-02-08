@@ -22,6 +22,7 @@ cache:
   apt: true
   directories:
     - $HOME/.cache/pip
+    - $HOME/.rvm
 
 before_install:
   - |
