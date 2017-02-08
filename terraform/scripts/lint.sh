@@ -4,7 +4,7 @@ set -eu
 
 # Setup the working grounds.
 PAAS_CF_DIR=$(pwd)
-WORKING_DIR=$(mktemp -d terraform-cloudfront-distribution.XXXXXX)
+WORKING_DIR=$(mktemp -d terraform-lint.XXXXXX)
 trap 'rm -r "${PAAS_CF_DIR}/${WORKING_DIR}"' EXIT
 
 cd "${WORKING_DIR}"
