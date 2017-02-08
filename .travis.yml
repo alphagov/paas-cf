@@ -23,6 +23,8 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/.rvm
+    - $HOME/gopath
+    - $HOME/vendor/bundle
 
 before_install:
   - |
