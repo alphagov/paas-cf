@@ -44,7 +44,7 @@ lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
 
 .PHONY: lint_terraform
-lint_terraform: dev ## Lint the terraform files.
+lint_terraform: check-tf-version dev ## Lint the terraform files.
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
 	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
 	@terraform/scripts/lint.sh
