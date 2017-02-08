@@ -2,7 +2,7 @@
 #
 # Required variables are:
 # - DEPLOY_ENV
-# - MAKEFILE_ENV_TARGET
+# - AWS_ACCOUNT
 # - SELF_UPDATE_PIPELINE
 #
 # Optional variables:
@@ -22,5 +22,5 @@ if [ "${SELF_UPDATE_PIPELINE}" != "true" ]; then
 else
   echo "Self update pipeline is enabled. Updating. (set SELF_UPDATE_PIPELINE=false to disable)"
 
-  make -C ./paas-cf "${MAKEFILE_ENV_TARGET}" pipelines
+  make -C ./paas-cf "${AWS_ACCOUNT}" pipelines
 fi

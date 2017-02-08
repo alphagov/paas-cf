@@ -4,7 +4,7 @@ set -eu
 TERRAFORM_ACTION=${1}
 VERSION=0.2.2
 BINARY=terraform-provider-pingdom-tf-0.8.5-$(uname -s)-$(uname -m)
-STATEFILE=pingdom-${MAKEFILE_ENV_TARGET}.tfstate
+STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 
 # Get Pingdom credentials
 export PASSWORD_STORE_DIR=~/.paas-pass
@@ -34,8 +34,8 @@ terraform remote config \
 
 # Run Terraform Pingdom Provider
 terraform "${TERRAFORM_ACTION}" \
-	-var "env=${MAKEFILE_ENV_TARGET}" \
-	-var "contact_ids=\"${PINGDOM_CONTACT_IDS}\"" \
+	-var-file="${PAAS_CF_DIR}/terraform/${AWS_ACCOUNT}.tfvars" \
+	-var "env=${DEPLOY_ENV}" \
 	-var "pingdom_user=${PINGDOM_USER}" \
 	-var "pingdom_password=${PINGDOM_PASSWORD}" \
 	-var "pingdom_api_key=${PINGDOM_API_KEY}" \
