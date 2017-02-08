@@ -19,7 +19,6 @@ addons:
 cache:
   bundler: true
   pip: true
-  apt: true
   directories:
     - $HOME/.cache/pip
     - $HOME/.rvm
