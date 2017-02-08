@@ -20,6 +20,8 @@ cache:
   bundler: true
   pip: true
   apt: true
+  directories:
+    - $HOME/.cache/pip
 
 before_install:
   - |
