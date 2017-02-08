@@ -20,6 +20,6 @@ done
 
 if [ "$(terraform fmt -write=false "${PAAS_CF_DIR}/terraform")" != "" ] ; then
   echo "Use 'terraform fmt' to fix HCL formatting:"
-  terraform fmt -write=false -diff=true terraform
+  terraform fmt -write=false -diff=true "${PAAS_CF_DIR}/terraform"
   exit 1
 fi
