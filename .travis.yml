@@ -19,6 +19,7 @@ addons:
 cache:
   bundler: true
   pip: true
+  apt: true
 
 before_install:
   - |
