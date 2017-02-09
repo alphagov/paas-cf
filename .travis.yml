@@ -34,12 +34,6 @@ before_install:
     rm terraform_${TF_VERSION}_linux_amd64.zip
     set +e
   - |
-    echo "Fetching Terraform pingdom provider"
-    set -e
-    wget -O ~/bin/terraform-provider-pingdom "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/0.2.2/terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)"
-    chmod +x ~/bin/terraform-provider-pingdom
-    set +e
-  - |
     echo "Fetching Spruce"
     set -e
     wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64
