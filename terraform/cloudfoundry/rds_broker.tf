@@ -20,6 +20,14 @@ resource "aws_elb" "rds_broker" {
     lb_port           = 80
     lb_protocol       = "http"
   }
+
+  listener {
+    instance_port      = 80
+    instance_protocol  = "http"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "${var.system_domain_cert_arn}"
+  }
 }
 
 resource "aws_db_subnet_group" "rds_broker" {
