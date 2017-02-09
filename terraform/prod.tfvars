@@ -44,6 +44,8 @@ tenant_cidrs = [
   "52.208.47.129/32",
   # Cabinet office trial
   "85.133.79.201/32",
+  # Parliamentary web services trial
+  "82.35.29.203/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
