@@ -7,3 +7,5 @@ cf_db_skip_final_snapshot = "true"
 cf_db_maintenance_window = "Mon:04:00-Mon:05:00"
 support_email="govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 pingdom_contact_ids = [ 11089310 ]
+datadog_notification_24x7 = "@govpaas-alerting-dev@digital.cabinet-office.gov.uk"
+datadog_notification_in_hours = "@govpaas-alerting-dev@digital.cabinet-office.gov.uk"
