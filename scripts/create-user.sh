@@ -23,12 +23,12 @@ Your organisation is \"${ORG}\" and your login and password are:
  - password: ${PASSWORD}
 
 To get started, look at our Quick Setup Guide:
-https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/quick_setup_guide/
+https://docs.cloud.service.gov.uk/#quick-setup-guide
 
 You should make sure to change your password, as explained in the Quick Setup Guide.
 
 You can find our privacy policy here:
-https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/privacy/
+https://docs.cloud.service.gov.uk/#privacy-policy
 
 Regards,
 Government PaaS team.
