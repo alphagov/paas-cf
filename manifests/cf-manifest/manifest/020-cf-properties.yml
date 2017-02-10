@@ -19,7 +19,7 @@ properties:
   app_ssh:
     host_key_fingerprint: (( grab secrets.ssh_proxy_host_key.public_fingerprint ))
 
-  support_address: "https://government-paas-developer-docs.readthedocs.io/"
+  support_address: "https://docs.cloud.service.gov.uk/"
   description: null
   ssl:
     skip_cert_verify: false
