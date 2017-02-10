@@ -134,7 +134,11 @@ create_org_space() {
 
 create_user() {
   if [[ "${RESET_USER}" == "true" ]]; then
-    cf delete-user "${EMAIL}" -f
+    if cf delete-user "${EMAIL}" -f 2>&1 | tee "${TMP_OUTPUT}"; then
+      if grep -q "does not exist" "${TMP_OUTPUT}"; then
+        abort "Trying to reset password for non-existing user. Is someone trying to trick you into getting an account?"
+      fi
+    fi
   fi
 
   if cf create-user "${EMAIL}" "${PASSWORD}" 2>&1 | tee "${TMP_OUTPUT}"; then
