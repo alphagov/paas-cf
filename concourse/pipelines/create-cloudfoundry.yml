@@ -1773,17 +1773,23 @@ jobs:
                 cf target -o testers -s healthcheck
                 BUILD_ROOT=$(pwd)
                 cd paas-cf/platform-tests/example-apps/healthcheck
-                cf push --no-start
+
                 if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
                   cf create-service postgres Free healthcheck-db
                   while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30
                   done
-                  cf bind-service healthcheck healthcheck-db
+
+                  ruby -ryaml -e '
+                    manifest = YAML.load_file("manifest.yml")
+                    manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
+                    File.write("manifest.yml", manifest.to_yaml)
+                  '
                 fi
 
-                cf start healthcheck
+                cf blue-green-deploy healthcheck
+
                 cd $BUILD_ROOT
                 echo "yes" > deployed-healthcheck/healthcheck-deployed
         on_success:
