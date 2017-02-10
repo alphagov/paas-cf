@@ -10,7 +10,6 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
-      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -26,7 +25,6 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
-      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -1487,6 +1485,62 @@ jobs:
                   -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
                   "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
 
+        - task: deploy-healthcheck
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            params:
+              DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            outputs:
+              - name: deployed-healthcheck
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  cf create-org testers
+                  cf set-quota testers test_apps
+                  cf create-space healthcheck -o testers
+                  cf target -o testers -s healthcheck
+                  BUILD_ROOT=$(pwd)
+                  cd paas-cf/platform-tests/example-apps/healthcheck
+
+                  if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
+                    cf create-service postgres Free healthcheck-db
+                    while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
+                      echo "Waiting for creation of service to complete..."
+                      sleep 30
+                    done
+
+                    ruby -ryaml -e '
+                      manifest = YAML.load_file("manifest.yml")
+                      manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
+                      File.write("manifest.yml", manifest.to_yaml)
+                    '
+                  fi
+
+                  cf blue-green-deploy healthcheck
+
+                  cd $BUILD_ROOT
+                  echo "yes" > deployed-healthcheck/healthcheck-deployed
+          on_success:
+            put: deployed-healthcheck
+            params:
+              file: deployed-healthcheck/healthcheck-deployed
+
         - task: run-bosh-cleanup
           config:
             platform: linux
@@ -1696,113 +1750,12 @@ jobs:
                   cf set-env rubbernecker PIVOTAL_PROJECT_ID ${PIVOTAL_PROJECT_ID}
                   cf start rubbernecker
 
-  - name: post-deploy
-    plan:
-      - aggregate:
-          - get: pipeline-trigger
-            passed: ['cf-deploy']
-            trigger: true
-          - get: paas-cf
-            passed: ['cf-deploy']
-          - get: cf-manifest
-            passed: ['cf-deploy']
-          - get: cf-secrets
-            passed: ['cf-deploy']
-          - get: bosh-CA
-
-      - task: retrieve-config
-        config:
-          platform: linux
-          inputs:
-            - name: paas-cf
-            - name: cf-secrets
-            - name: cf-manifest
-          outputs:
-            - name: config
-          params:
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.2-slim
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-
-                CF_ADMIN=admin
-                CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
-                API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
-
-                for var_name in CF_ADMIN CF_PASS API_ENDPOINT; do
-                  echo export "${var_name}"=\"$(eval echo \$${var_name})\"
-                done > config/config.sh
-
-      - task: deploy-healthcheck
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-          params:
-            DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
-          inputs:
-            - name: paas-cf
-            - name: config
-            - name: bosh-CA
-          outputs:
-            - name: deployed-healthcheck
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
-                . ./config/config.sh
-                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                cf create-org testers
-                cf set-quota testers test_apps
-                cf create-space healthcheck -o testers
-                cf target -o testers -s healthcheck
-                BUILD_ROOT=$(pwd)
-                cd paas-cf/platform-tests/example-apps/healthcheck
-
-                if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
-                  cf create-service postgres Free healthcheck-db
-                  while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
-                    sleep 30
-                  done
-
-                  ruby -ryaml -e '
-                    manifest = YAML.load_file("manifest.yml")
-                    manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
-                    File.write("manifest.yml", manifest.to_yaml)
-                  '
-                fi
-
-                cf blue-green-deploy healthcheck
-
-                cd $BUILD_ROOT
-                echo "yes" > deployed-healthcheck/healthcheck-deployed
-        on_success:
-          put: deployed-healthcheck
-          params:
-            file: deployed-healthcheck/healthcheck-deployed
-
   - name: smoke-tests
     serial_groups: [smoke-tests]
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -1810,12 +1763,12 @@ jobs:
                 - src/smoke-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
           - get: cf-manifest
-            passed: ['post-deploy']
+            passed: ['cf-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['post-deploy']
+            passed: ['cf-deploy']
 
       - do:
         - task: create-temp-user
@@ -1842,7 +1795,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -1850,12 +1803,12 @@ jobs:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
           - get: cf-manifest
-            passed: ['post-deploy']
+            passed: ['cf-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['post-deploy']
+            passed: ['cf-deploy']
 
       - do:
         - task: create-temp-user
@@ -1962,15 +1915,15 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
           - get: cf-manifest
-            passed: ['post-deploy']
+            passed: ['cf-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['post-deploy']
+            passed: ['cf-deploy']
 
       - do:
         - task: create-temp-user
@@ -2005,10 +1958,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','availability-tests']
+            passed: ['cf-deploy','availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
       - task: test-bosh-cli
