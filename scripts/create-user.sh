@@ -130,11 +130,20 @@ create_org_space() {
   cf unset-org-role "${admin_user}" "${ORG}" OrgManager
   cf unset-space-role "${admin_user}" "${ORG}" "${DEFAULT_SPACE}" SpaceManager
   cf unset-space-role "${admin_user}" "${ORG}" "${DEFAULT_SPACE}" SpaceDeveloper
+
+  # Even after losing all the roles, user is still present in the list of all users of an org
+  # FIXME: remove this fix for https://github.com/cloudfoundry/cli/issues/781 is deployed
+  guid=$(cf org "${ORG}" --guid)
+  cf curl -X DELETE "/v2/organizations/${guid}/users" -d "{\"username\": \"${admin_user}\"}"
 }
 
 create_user() {
   if [[ "${RESET_USER}" == "true" ]]; then
-    cf delete-user "${EMAIL}" -f
+    if cf delete-user "${EMAIL}" -f 2>&1 | tee "${TMP_OUTPUT}"; then
+      if grep -q "does not exist" "${TMP_OUTPUT}"; then
+        abort "Trying to reset password for non-existing user. Is someone trying to trick you into getting an account?"
+      fi
+    fi
   fi
 
   if cf create-user "${EMAIL}" "${PASSWORD}" 2>&1 | tee "${TMP_OUTPUT}"; then
