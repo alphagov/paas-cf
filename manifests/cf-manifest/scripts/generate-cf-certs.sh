@@ -51,17 +51,3 @@ for cert_entry in ${CERTS_TO_GENERATE}; do
   fi
 done
 
-# FIXME: Remove this section once it's been cleaned up everywhere.
-CERTS_TO_CLEANUP="
-router_external
-logsearch
-metrics
-"
-
-for cert_name in ${CERTS_TO_CLEANUP}; do
-  for ext in csr crt key; do
-    if [ -f "${CERTS_DIR}/${cert_name}.${ext}" ]; then
-      rm "${CERTS_DIR}/${cert_name}.${ext}"
-    fi
-  done
-done
