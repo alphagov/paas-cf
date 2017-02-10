@@ -16,7 +16,7 @@ We have received a request to reset the password associated with this email addr
 Your new password is: ${PASSWORD}
 
 For guidance on logging in and changing your password you can visit:
-https://government-paas-developer-docs.readthedocs.io/en/latest/getting_started/quick_setup_guide/#setting-up-the-command-line
+https://docs.cloud.service.gov.uk/#setting-up-the-command-line
 
 You should make sure to change your password, as explained in the documentation in the above link.
 
