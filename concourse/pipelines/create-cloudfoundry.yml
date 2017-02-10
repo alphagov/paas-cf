@@ -1538,6 +1538,7 @@ jobs:
                       terraform destroy -force \
                          -state=datadog-tfstate/datadog.tfstate \
                          -state-out=updated-tfstate/datadog.tfstate \
+                         -var-file=paas-cf/terraform/${TF_VAR_aws_account}.tfvars \
                          paas-cf/terraform/datadog
                       exit 0
                     fi
