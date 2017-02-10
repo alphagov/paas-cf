@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -17,6 +18,7 @@ import (
 var _ = Describe("UpdateDataDogMonitor", func() {
 
 	var (
+		timeOut                = 5 * time.Second
 		cmdInput               string
 		requireFullWindowFalse = `
 {
@@ -218,7 +220,7 @@ var _ = Describe("UpdateDataDogMonitor", func() {
 		})
 
 		It("updates the monitor and preserves all options", func() {
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, timeOut).Should(gexec.Exit(0))
 			Expect(session.Out).To(gbytes.Say("Updated monitor 1 with attributes {\"notify_audit\"=>false, \"locked\"=>false, \"silenced\"=>{}, \"thresholds\"=>{\"critical\"=>3}, \"new_host_delay\"=>300, \"notify_no_data\"=>false, \"escalation_message\"=>\"Smoke test failures\", \"require_full_window\"=>false}\n"))
 		})
 	})
@@ -231,7 +233,7 @@ var _ = Describe("UpdateDataDogMonitor", func() {
 		})
 
 		It("doesn't update the monitor", func() {
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, timeOut).Should(gexec.Exit(0))
 			Expect(session.Out.Contents()).To(BeEmpty())
 		})
 	})
@@ -243,7 +245,7 @@ var _ = Describe("UpdateDataDogMonitor", func() {
 		})
 
 		It("exits with non 0 code", func() {
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, timeOut).Should(gexec.Exit(1))
 		})
 	})
 	Context("when API responds with non 200 code to PUT monitor", func() {
@@ -254,7 +256,7 @@ var _ = Describe("UpdateDataDogMonitor", func() {
 		})
 
 		It("exits with non 0 code", func() {
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, timeOut).Should(gexec.Exit(1))
 		})
 	})
 })
