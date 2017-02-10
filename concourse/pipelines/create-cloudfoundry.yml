@@ -1533,6 +1533,7 @@ jobs:
                   fi
 
                   cf blue-green-deploy healthcheck
+                  cf delete -f healthcheck-old
 
                   cd $BUILD_ROOT
                   echo "yes" > deployed-healthcheck/healthcheck-deployed
