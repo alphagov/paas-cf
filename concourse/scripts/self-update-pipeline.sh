@@ -9,9 +9,6 @@
 # - BRANCH
 # - PIPELINES_TO_UPDATE
 
-# FIXME: Remove after switched to AWS_ACCOUNT
-AWS_ACCOUNT=${AWS_ACCOUNT:-$MAKEFILE_ENV_TARGET}
-
 set -u
 set -e
 
