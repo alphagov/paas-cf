@@ -48,6 +48,8 @@ tenant_cidrs = [
   "82.35.29.203/32",
   # Digital Marketplace Jenkins
   "52.18.174.104/32",
+  # DWP Bereavement Payment Support
+  "194.73.212.3/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
