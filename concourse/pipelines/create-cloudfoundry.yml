@@ -1228,30 +1228,59 @@ jobs:
 
                 ls -l config/*
 
-      - task: create-admin-org-space
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-          inputs:
-            - name: paas-cf
-            - name: config
-            - name: bosh-CA
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                . ./config/config.sh
-                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                echo | cf create-org admin
-                cf create-space admin -o admin
-
       - aggregate:
+        - task: create-admin-org-space
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf create-org admin
+                  cf create-space admin -o admin
+
+        - task: register-rds-broker
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+
+                  if cf service-brokers | grep "rds-broker\s"; then
+                    cf update-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                  else
+                    cf create-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
+                  fi
+                  cf enable-service-access postgres
+
         - task: set-security-groups-from-manifest
           config:
             platform: linux
@@ -1305,6 +1334,7 @@ jobs:
 
                   ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
+      - aggregate:
         - task: sync-admin-users
           config:
             platform: linux
@@ -1337,35 +1367,6 @@ jobs:
                   cd paas-cf/scripts
                   bundle
                   bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "{{NEW_ACCOUNT_EMAIL_ADDRESS}}"
-
-        - task: register-rds-broker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-
-                  if cf service-brokers | grep "rds-broker\s"; then
-                    cf update-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
-                  else
-                    cf create-service-broker rds-broker rds-broker $RDS_BROKER_PASS http://$RDS_BROKER_SERVER
-                  fi
-                  cf enable-service-access postgres
 
         - task: deploy-graphite-nozzle
           config:
