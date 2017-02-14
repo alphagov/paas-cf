@@ -1,7 +1,7 @@
 ---
 disk_types:
   - name: graphite_data
-    disk_size: 204800
+    disk_size: 409600
     cloud_properties: {type: gp2}
 
 vm_types:
