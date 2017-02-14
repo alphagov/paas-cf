@@ -6,7 +6,6 @@ resource "aws_elb" "logsearch_ingestor" {
   internal                  = "true"
 
   security_groups = [
-    "${aws_security_group.logsearch_ingestor_elb.id}",
     "${aws_security_group.logsearch_ingestor_elb_ssl.id}",
   ]
 
@@ -16,13 +15,6 @@ resource "aws_elb" "logsearch_ingestor" {
     timeout             = "${var.health_check_timeout}"
     healthy_threshold   = "${var.health_check_healthy}"
     unhealthy_threshold = "${var.health_check_unhealthy}"
-  }
-
-  listener {
-    instance_port     = 5514
-    instance_protocol = "tcp"
-    lb_port           = 5514
-    lb_protocol       = "tcp"
   }
 
   listener {
@@ -96,33 +88,6 @@ resource "aws_lb_ssl_negotiation_policy" "logsearch_kibana" {
   attribute {
     name  = "Reference-Security-Policy"
     value = "${var.default_elb_security_policy}"
-  }
-}
-
-resource "aws_security_group" "logsearch_ingestor_elb" {
-  name        = "${var.env}-logsearch-ingestor-elb"
-  description = "Security group for web that allows TCP/5514 for logsearch ingestor"
-  vpc_id      = "${var.vpc_id}"
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 5514
-    to_port   = 5514
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${var.vpc_cidr}",
-    ]
-  }
-
-  tags {
-    Name = "${var.env}-logsearch-ingestor"
   }
 }
 
