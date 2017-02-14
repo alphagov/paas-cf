@@ -10,7 +10,7 @@ properties:
     backend: "diego"
     client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
     skip_diego_unsupported_tests: true
-    include_tasks: false
+    include_tasks: true
     include_v3: false
     include_security_groups: true
     include_routing: true
