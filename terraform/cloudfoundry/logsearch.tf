@@ -7,6 +7,7 @@ resource "aws_elb" "logsearch_ingestor" {
 
   security_groups = [
     "${aws_security_group.logsearch_ingestor_elb.id}",
+    "${aws_security_group.logsearch_ingestor_elb_ssl.id}",
   ]
 
   health_check {
@@ -25,10 +26,11 @@ resource "aws_elb" "logsearch_ingestor" {
   }
 
   listener {
-    instance_port     = 2514
-    instance_protocol = "tcp"
-    lb_port           = 2514
-    lb_protocol       = "tcp"
+    instance_port      = 5514
+    instance_protocol  = "tcp"
+    lb_port            = 6514
+    lb_protocol        = "ssl"
+    ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
 }
 
@@ -110,16 +112,6 @@ resource "aws_security_group" "logsearch_ingestor_elb" {
   }
 
   ingress {
-    from_port = 2514
-    to_port   = 2514
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${var.vpc_cidr}",
-    ]
-  }
-
-  ingress {
     from_port = 5514
     to_port   = 5514
     protocol  = "tcp"
@@ -131,6 +123,33 @@ resource "aws_security_group" "logsearch_ingestor_elb" {
 
   tags {
     Name = "${var.env}-logsearch-ingestor"
+  }
+}
+
+resource "aws_security_group" "logsearch_ingestor_elb_ssl" {
+  name        = "${var.env}-logsearch-ingestor-elb-ssl"
+  description = "Security group for web that allows TCP/6514 for logsearch ingestor"
+  vpc_id      = "${var.vpc_id}"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 6514
+    to_port   = 6514
+    protocol  = "tcp"
+
+    cidr_blocks = [
+      "${var.vpc_cidr}",
+    ]
+  }
+
+  tags {
+    Name = "${var.env}-logsearch-ingestor-ssl"
   }
 }
 
