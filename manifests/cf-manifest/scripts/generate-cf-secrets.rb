@@ -14,6 +14,7 @@ generator = SecretGenerator.new(
   "bulk_api_password" => :simple,
   "nats_password" => :simple,
   "router_password" => :simple,
+  "route_services_secret" => :simple,
   "uaa_batch_password" => :simple,
   "uaa_admin_password" => :simple,
   "test_user_password" => :simple,

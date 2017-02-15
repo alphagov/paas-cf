@@ -180,4 +180,12 @@ RSpec.describe "base properties" do
       end
     end
   end
+
+  describe "router" do
+    subject(:router) { properties.fetch("router") }
+
+    it "sets route_services_secret" do
+      expect(router["route_services_secret"]).not_to be_empty
+    end
+  end
 end

@@ -171,6 +171,7 @@ properties:
       user: router_user
       password: (( grab secrets.router_password ))
     drain_wait: 15
+    route_services_secret: (( grab secrets.route_services_secret ))
 
   cc:
     jobs:
