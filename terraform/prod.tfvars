@@ -50,6 +50,8 @@ tenant_cidrs = [
   "52.18.174.104/32",
   # DWP Bereavement Payment Support
   "194.73.212.3/32",
+  # MOJ Digital and Technology
+  "81.134.202.29/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
