@@ -42,6 +42,7 @@ groups:
       - pipeline-check-lock
       - pipeline-release-lock
       - reset-cloudfoundry-passwords
+      - reset-concourse-keys
       - reset-bosh-passwords
   - name: tests
     jobs:
@@ -2254,6 +2255,9 @@ jobs:
           put: cf-secrets
           params:
             file: modified-secrets/cf-secrets.yml
+
+  - name: reset-concourse-keys
+    plan:
       - task: clear-ssh-keys
         config:
           platform: linux
@@ -2276,6 +2280,7 @@ jobs:
                 if aws s3 ls s3://${BUCKET}/concourse_id_rsa.pub > /dev/null; then
                   aws s3 rm s3://${BUCKET}/concourse_id_rsa.pub
                 fi
+                echo "Done"
 
   - name: reset-bosh-passwords
     plan:
