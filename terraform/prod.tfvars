@@ -52,6 +52,9 @@ tenant_cidrs = [
   "194.73.212.3/32",
   # MOJ Digital and Technology
   "81.134.202.29/32",
+  # Tenant egress for story #140308141
+  "185.40.8.212/32",
+  "86.188.177.234/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
