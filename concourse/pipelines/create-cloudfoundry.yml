@@ -2258,6 +2258,7 @@ jobs:
 
   - name: reset-concourse-keys
     plan:
+      - get: paas-cf
       - task: clear-ssh-keys
         config:
           platform: linux
@@ -2265,6 +2266,8 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/awscli
+          inputs:
+            - name: paas-cf
           params:
             AWS_DEFAULT_REGION: {{aws_region}}
             BUCKET: {{state_bucket}}
