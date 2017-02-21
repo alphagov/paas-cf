@@ -15,9 +15,9 @@ releases:
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/graphite-0.1.1.tgz
   sha1: 7ce15711ae9afc04ccf152bab3f7de9b234f7c4f
 - name: grafana
-  version: 5
-  url: https://bosh.io/d/github.com/vito/grafana-boshrelease?v=5
-  sha1: 0edd89d7b383a2556a79f6688f576aa4b6f33bc2
+  version: 0.1.2
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/grafana-0.1.2.tgz
+  sha1: 483ee4a07d683c94014efede103dd93cb92cd883
 
 jobs:
 - name: graphite
