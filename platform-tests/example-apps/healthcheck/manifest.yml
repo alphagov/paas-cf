@@ -2,6 +2,7 @@
 applications:
  - name: healthcheck
    memory: 64M
+   disk_quota: 100M
    instances: 2
    command: "./bin/healthcheck"
    buildpack: go_buildpack

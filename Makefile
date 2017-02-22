@@ -98,6 +98,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	$(eval export ENABLE_DATADOG ?= false)
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
 	$(eval export DISABLE_PIPELINE_LOCKING=true)
+	$(eval export TEST_HEAVY_LOAD=true)
 	@true
 
 .PHONY: ci
@@ -112,6 +113,7 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=master)
+	$(eval export TEST_HEAVY_LOAD=true)
 	@true
 
 .PHONY: staging
@@ -129,6 +131,7 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=staging)
+	$(eval export TEST_HEAVY_LOAD=true)
 	@true
 
 .PHONY: prod
