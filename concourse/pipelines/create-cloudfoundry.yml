@@ -2362,30 +2362,11 @@ jobs:
           params:
             file: modified-secrets/concourse-secrets.yml
       - task: clear-ssh-keys
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-          inputs:
-            - name: paas-cf
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            BUCKET: {{state_bucket}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if aws s3 ls s3://${BUCKET}/concourse_id_rsa > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/concourse_id_rsa
-                fi
-                if aws s3 ls s3://${BUCKET}/concourse_id_rsa.pub > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/concourse_id_rsa.pub
-                fi
-                echo "Done"
+        file: paas-cf/concourse/tasks/delete-ssh-keys.yml
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          BUCKET: {{state_bucket}}
+          NAME: concourse
 
   - name: reset-bosh-passwords
     plan:
@@ -2419,28 +2400,11 @@ jobs:
           params:
             file: modified-secrets/bosh-secrets.yml
       - task: clear-ssh-keys
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            BUCKET: {{state_bucket}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if aws s3 ls s3://${BUCKET}/bosh_id_rsa > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/bosh_id_rsa
-                fi
-                if aws s3 ls s3://${BUCKET}/bosh_id_rsa.pub > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/bosh_id_rsa.pub
-                fi
-                echo "Done"
+        file: paas-cf/concourse/tasks/delete-ssh-keys.yml
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          BUCKET: {{state_bucket}}
+          NAME: bosh
 
   - name: generate-git-keys
     plan:
