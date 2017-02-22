@@ -117,6 +117,13 @@ resources:
       region_name: {{aws_region}}
       versioned_file: bosh-secrets.yml
 
+  - name: concourse-secrets
+    type: s3-iam
+    source:
+      bucket: {{state_bucket}}
+      region_name: {{aws_region}}
+      versioned_file: concourse-secrets.yml
+
   - name: bosh-CA
     type: s3-iam
     source:
@@ -2326,6 +2333,34 @@ jobs:
   - name: reset-concourse-keys
     plan:
       - get: paas-cf
+      - get: concourse-secrets
+      - task: reset-passwords
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/spruce
+          inputs:
+            - name: paas-cf
+            - name: concourse-secrets
+          outputs:
+            - name: modified-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+
+                spruce merge \
+                  concourse-secrets/concourse-secrets.yml \
+                  paas-cf/concourse/resources/concourse-secrets-deleter.yml \
+                  > modified-secrets/concourse-secrets.yml
+        on_success:
+          put: concourse-secrets
+          params:
+            file: modified-secrets/concourse-secrets.yml
       - task: clear-ssh-keys
         config:
           platform: linux
