@@ -41,9 +41,9 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
-      - reset-cloudfoundry-passwords
-      - reset-concourse-keys
-      - reset-bosh-passwords
+      - clear-cloudfoundry-credentials
+      - clear-concourse-credentials
+      - clear-bosh-credentials
   - name: tests
     jobs:
       - availability-tests
@@ -2299,11 +2299,11 @@ jobs:
         params:
           release: pipeline-pool
 
-  - name: reset-cloudfoundry-passwords
+  - name: clear-cloudfoundry-credentials
     plan:
       - get: cf-secrets
       - get: paas-cf
-      - task: reset-passwords
+      - task: clear-passwords
         config:
           platform: linux
           image_resource:
@@ -2330,11 +2330,11 @@ jobs:
           params:
             file: modified-secrets/cf-secrets.yml
 
-  - name: reset-concourse-keys
+  - name: clear-concourse-credentials
     plan:
       - get: paas-cf
       - get: concourse-secrets
-      - task: reset-passwords
+      - task: clear-passwords
         config:
           platform: linux
           image_resource:
@@ -2368,11 +2368,11 @@ jobs:
           BUCKET: {{state_bucket}}
           NAME: concourse
 
-  - name: reset-bosh-passwords
+  - name: clear-bosh-credentials
     plan:
       - get: bosh-secrets
       - get: paas-cf
-      - task: reset-passwords
+      - task: clear-passwords
         config:
           platform: linux
           image_resource:
