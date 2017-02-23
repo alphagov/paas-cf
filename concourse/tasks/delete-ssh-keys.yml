@@ -13,10 +13,10 @@ run:
     - -c
     - -u
     - |
-      if aws s3 ls s3://${BUCKET}/${NAME}_id_rsa > /dev/null; then
-         aws s3 rm s3://${BUCKET}/${NAME}_id_rsa
+      if aws s3 ls s3://${BUCKET}/${SSH_KEY_PREFIX}id_rsa > /dev/null; then
+         aws s3 rm s3://${BUCKET}/${SSH_KEY_PREFIX}id_rsa
       fi
-      if aws s3 ls s3://${BUCKET}/${NAME}_id_rsa.pub > /dev/null; then
-         aws s3 rm s3://${BUCKET}/${NAME}_id_rsa.pub
+      if aws s3 ls s3://${BUCKET}/${SSH_KEY_PREFIX}id_rsa.pub > /dev/null; then
+         aws s3 rm s3://${BUCKET}/${SSH_KEY_PREFIX}id_rsa.pub
       fi
       echo "Done"

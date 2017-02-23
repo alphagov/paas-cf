@@ -2329,6 +2329,12 @@ jobs:
           put: cf-secrets
           params:
             file: modified-secrets/cf-secrets.yml
+      - task: clear-ssh-keys
+        file: paas-cf/concourse/tasks/delete-ssh-keys.yml
+        params:
+          AWS_DEFAULT_REGION: {{aws_region}}
+          BUCKET: {{state_bucket}}
+          SSH_KEY_PREFIX: ""
 
   - name: clear-concourse-credentials
     plan:
@@ -2366,7 +2372,7 @@ jobs:
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
           BUCKET: {{state_bucket}}
-          NAME: concourse
+          SSH_KEY_PREFIX: concourse_
 
   - name: clear-bosh-credentials
     plan:
@@ -2404,7 +2410,7 @@ jobs:
         params:
           AWS_DEFAULT_REGION: {{aws_region}}
           BUCKET: {{state_bucket}}
-          NAME: bosh
+          SSH_KEY_PREFIX: bosh_
 
   - name: generate-git-keys
     plan:
