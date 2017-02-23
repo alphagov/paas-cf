@@ -1,5 +1,4 @@
-.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck lint_concourse check-env-vars
-
+.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck lint_concourse check-env
 .DEFAULT_GOAL := help
 
 help:
@@ -13,16 +12,14 @@ DEPLOY_ENV_MAX_LENGTH=12
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
-check-env-vars:
+check-env:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
 	$(if ${DEPLOY_ENV_VALID_CHARS},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) must use only alphanumeric chars and hyphens, otherwise derived names will be malformatted))
+	@./scripts/validate_aws_credentials.sh
 
 check-tf-version:
 	@./terraform/scripts/ensure_terraform_version.sh $(MIN_TERRAFORM_VERSION)
-
-check-aws-credentials:
-	@./scripts/validate_aws_credentials.sh
 
 test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
 
@@ -86,7 +83,7 @@ globals:
 	@true
 
 .PHONY: dev
-dev: globals check-env-vars ## Set Environment to DEV
+dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
@@ -101,7 +98,7 @@ dev: globals check-env-vars ## Set Environment to DEV
 	@true
 
 .PHONY: ci
-ci: globals check-env-vars ## Set Environment to CI
+ci: globals ## Set Environment to CI
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export TAG_PREFIX=staging-)
@@ -111,10 +108,11 @@ ci: globals check-env-vars ## Set Environment to CI
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=master)
 	@true
 
 .PHONY: staging
-staging: globals check-env-vars ## Set Environment to Staging
+staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
@@ -127,10 +125,11 @@ staging: globals check-env-vars ## Set Environment to Staging
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=staging)
 	@true
 
 .PHONY: prod
-prod: globals check-env-vars ## Set Environment to Production
+prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
@@ -145,18 +144,19 @@ prod: globals check-env-vars ## Set Environment to Production
 	$(eval export DEPLOY_ROADMAP=true)
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
 	$(eval export DEPLOY_RUBBERNECKER=true)
+	$(eval export DEPLOY_ENV=prod)
 	@true
 
 .PHONY: bosh-cli
-bosh-cli: ## Create interactive connnection to BOSH container
+bosh-cli: check-env ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
 
 .PHONY: pipelines
-pipelines: ## Upload pipelines to Concourse
+pipelines: check-env ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-cloudfoundry.sh
 
 .PHONY: showenv
-showenv: ## Display environment information
+showenv: check-env ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
 	@scripts/show-cf-secrets.sh grafana_admin_password kibana_admin_password uaa_admin_password
@@ -165,19 +165,19 @@ showenv: ## Display environment information
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
 .PHONY: upload-datadog-secrets
-upload-datadog-secrets: check-env-vars ## Decrypt and upload Datadog credentials to S3
+upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
 	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(if ${AWS_ACCOUNT},,$(error Must set environment to ci/staging/prod))
 	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
 
-upload-tracker-token: check-env-vars ## Decrypt and upload Pivotal tracker API token to S3
+upload-tracker-token: check-env ## Decrypt and upload Pivotal tracker API token to S3
 	pass pivotal/tracker_token | aws s3 cp - "s3://${DEPLOY_ENV}-state/tracker_token"
 
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
-manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certificates for public facing endpoints
+manually_upload_certs: check-env check-tf-version ## Manually upload to AWS the SSL certificates for public facing endpoints
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	# check password store and if varables are accesible
 	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
@@ -185,9 +185,9 @@ manually_upload_certs: check-tf-version ## Manually upload to AWS the SSL certif
 	@terraform/scripts/manually-upload-certs.sh ${ACTION}
 
 .PHONY: pingdom
-pingdom: check-tf-version ## Use custom Terraform provider to set up Pingdom check
+pingdom: check-env check-tf-version ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
-	$(eval export PASSWORD_STORE_DIR?=~/.paas-pass)
+	$(eval export PASSWORD_STORE_DIR=${PASSWORD_STORE_DIR})
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
 .PHONY: setup_cdn_instances
@@ -204,24 +204,24 @@ find_diverged_forks: ## Check all github forks belonging to paas to see if they'
 	./scripts/find_diverged_forks.py alphagov --prefix=paas --extra-repo=cf-release --extra-repo=graphite-nozzle --github-token=${GITHUB_TOKEN}
 
 .PHONY: run_job
-run_job: check-env-vars ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
+run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 
-ssh_bosh: check-env-vars ## SSH to the bosh server
+ssh_bosh: check-env ## SSH to the bosh server
 	@./scripts/ssh_bosh.sh
 
-ssh_concourse: check-env-vars ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
+ssh_concourse: check-env ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
 	@./scripts/ssh.sh ssh ${SSH_CMD}
 
-tunnel: check-env-vars ## SSH tunnel to internal IPs
+tunnel: check-env ## SSH tunnel to internal IPs
 	$(if ${TUNNEL},,$(error Must pass TUNNEL=SRC_PORT:HOST:DST_PORT))
 	@./scripts/ssh.sh tunnel ${TUNNEL}
 
-stop-tunnel: check-env-vars ## Stop SSH tunnel
+stop-tunnel: check-env ## Stop SSH tunnel
 	@./scripts/ssh.sh tunnel stop
 
-shake_concourse_volumes: check-env-vars ## Restarts concourse services and workers and clears the volumes
+shake_concourse_volumes: check-env ## Restarts concourse services and workers and clears the volumes
 	@./scripts/ssh.sh scp concourse/scripts/shake_concourse_volumes.sh /tmp/
 	@./scripts/ssh.sh ssh bash -i /tmp/shake_concourse_volumes.sh
 
