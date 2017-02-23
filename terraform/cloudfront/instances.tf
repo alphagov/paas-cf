@@ -31,3 +31,16 @@ module "cloudfront_paas_docs" {
   system_dns_zone_id    = "${var.system_dns_zone_id}"
   system_domain_cert_id = "${var.system_domain_cert_id}"
 }
+
+module "redirect_paas_product_page" {
+  source = "./cloudfront_redirect"
+
+  name = "${var.env}-paas-product-page"
+
+  aliases         = ["${var.system_dns_zone_name}"]
+  redirect_target = "https://www.${var.system_dns_zone_name}"
+
+  env            = "${var.env}"
+  dns_zone_id    = "${var.system_dns_zone_id}"
+  domain_cert_id = "${var.system_domain_cert_id}"
+}
