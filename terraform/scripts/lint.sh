@@ -2,6 +2,7 @@
 
 set -eu
 RELEASE=0.2.2
+TF_VERSION=0.8.5
 BINARY=terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)
 
 # Setup the working grounds.
