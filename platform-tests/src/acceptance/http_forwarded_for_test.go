@@ -19,7 +19,7 @@ import (
 
 var _ = Describe("X-Forwarded headers", func() {
 	const (
-		egressURL   = "https://canhazip.com/"
+		egressURL   = "https://icanhazip.com/"
 		fakeProxyIP = "1.2.3.4"
 	)
 
