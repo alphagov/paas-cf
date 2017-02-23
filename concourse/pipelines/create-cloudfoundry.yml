@@ -2323,7 +2323,8 @@ jobs:
               - |
                 spruce merge \
                   cf-secrets/cf-secrets.yml \
-                  paas-cf/concourse/resources/cf-secrets-deleter.yml \
+                  paas-cf/concourse/resources/cf-secrets-keep.yml | \
+                  spruce merge - paas-cf/concourse/resources/finalize.yml \
                   > modified-secrets/cf-secrets.yml
         on_success:
           put: cf-secrets
@@ -2361,7 +2362,8 @@ jobs:
 
                 spruce merge \
                   concourse-secrets/concourse-secrets.yml \
-                  paas-cf/concourse/resources/concourse-secrets-deleter.yml \
+                  paas-cf/concourse/resources/concourse-secrets-keep.yml | \
+                  spruce merge - paas-cf/concourse/resources/finalize.yml \
                   > modified-secrets/concourse-secrets.yml
         on_success:
           put: concourse-secrets
@@ -2399,7 +2401,8 @@ jobs:
 
                 spruce merge \
                   bosh-secrets/bosh-secrets.yml \
-                  paas-cf/concourse/resources/bosh-secrets-deleter.yml \
+                  paas-cf/concourse/resources/bosh-secrets-keep.yml | \
+                  spruce merge - paas-cf/concourse/resources/finalize.yml \
                   > modified-secrets/bosh-secrets.yml
         on_success:
           put: bosh-secrets
