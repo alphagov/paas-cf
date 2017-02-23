@@ -194,7 +194,7 @@ pingdom: check-env check-tf-version ## Use custom Terraform provider to set up P
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
 .PHONY: setup_cdn_instances
-setup_cdn_instances: check-tf-version check-aws-credentials ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
+setup_cdn_instances: check-tf-version check-env ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	@terraform/scripts/set-up-cdn-instances.sh ${ACTION}
 
