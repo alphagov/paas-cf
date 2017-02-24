@@ -41,9 +41,6 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
-      - clear-cloudfoundry-credentials
-      - clear-concourse-credentials
-      - clear-bosh-credentials
   - name: tests
     jobs:
       - availability-tests
@@ -55,7 +52,11 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
-
+  - name: credentials
+    jobs:
+      - clear-cloudfoundry-credentials
+      - clear-concourse-credentials
+      - clear-bosh-credentials
 resource_types:
 - name: s3-iam
   type: docker-image
