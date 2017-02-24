@@ -55,6 +55,8 @@ tenant_cidrs = [
   # Tenant egress for story #140308141
   "185.40.8.212/32",
   "86.188.177.234/32",
+  # Our own build Concourse in CI
+  "52.213.245.135/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
