@@ -19,7 +19,7 @@ resource "datadog_monitor" "concourse-load" {
 resource "datadog_monitor" "continuous-smoketests" {
   name               = "${format("%s concourse continuous smoketests runtime", var.env)}"
   type               = "query alert"
-  message            = "${format("Continuous smoketests too slow: {{value}} ms. Check concourse VM health. %s{{#is_no_data}}The continuous smoke tests  have not reported any metrics for a while. Check concourse status. %s {{/is_no_data}}", var.datadog_notification_24x7, var.datadog_notification_in_hours)}"
+  message            = "${format("Continuous smoketests too slow: {{value}} ms. Check concourse VM health. {{#is_alert}}%s{{/is_alert}} {{#is_warning}}%s{{/is_warning}} {{#is_no_data}}The continuous smoke tests have not reported any metrics for a while. Check concourse status. %s{{/is_no_data}}", var.datadog_notification_24x7, var.datadog_notification_in_hours, var.datadog_notification_24x7)}"
   escalation_message = "Continuous smoketests still too slow: {{value}} ms."
   no_data_timeframe  = "20"
   query              = "${format("max(last_1m):avg:concourse.build.finished{job:continuous-smoke-tests,deploy_env:%s} > 1200000", var.env)}"
