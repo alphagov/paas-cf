@@ -4,7 +4,6 @@
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-MIN_TERRAFORM_VERSION=0.8.5
 SHELLCHECK=shellcheck
 YAMLLINT=yamllint
 
@@ -17,9 +16,6 @@ check-env:
 	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
 	$(if ${DEPLOY_ENV_VALID_CHARS},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) must use only alphanumeric chars and hyphens, otherwise derived names will be malformatted))
 	@./scripts/validate_aws_credentials.sh
-
-check-tf-version:
-	@./terraform/scripts/ensure_terraform_version.sh $(MIN_TERRAFORM_VERSION)
 
 test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
 
@@ -41,10 +37,9 @@ lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
 
 .PHONY: lint_terraform
-lint_terraform: check-tf-version dev ## Lint the terraform files.
+lint_terraform: dev ## Lint the terraform files.
 	$(eval export TF_VAR_system_dns_zone_name=$SYSTEM_DNS_ZONE_NAME)
 	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
-	$(eval export TF_VERSION=$(MIN_TERRAFORM_VERSION))
 	@terraform/scripts/lint.sh
 
 lint_shellcheck:
@@ -180,7 +175,7 @@ upload-tracker-token: check-env ## Decrypt and upload Pivotal tracker API token 
 
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
-manually_upload_certs: check-env check-tf-version ## Manually upload to AWS the SSL certificates for public facing endpoints
+manually_upload_certs: check-env ## Manually upload to AWS the SSL certificates for public facing endpoints
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	# check password store and if varables are accesible
 	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
@@ -188,13 +183,13 @@ manually_upload_certs: check-env check-tf-version ## Manually upload to AWS the 
 	@terraform/scripts/manually-upload-certs.sh ${ACTION}
 
 .PHONY: pingdom
-pingdom: check-env check-tf-version ## Use custom Terraform provider to set up Pingdom check
+pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	$(eval export PASSWORD_STORE_DIR=${PASSWORD_STORE_DIR})
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
 .PHONY: setup_cdn_instances
-setup_cdn_instances: check-tf-version check-env ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
+setup_cdn_instances: check-env ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	@terraform/scripts/set-up-cdn-instances.sh ${ACTION}
 
