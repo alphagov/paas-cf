@@ -1,6 +1,10 @@
 #!/bin/bash
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
+if [ "${SKIP_AWS_CREDENTIAL_VALIDATION:-}" == "true" ]  ; then
+  exit 0
+fi
+
 if [ -z "$AWS_SESSION_TOKEN" ]; then
   echo "No temporary AWS credentials found, please run create_sts_token.sh"
   exit 255;
