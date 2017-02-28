@@ -44,12 +44,16 @@ orgs.each { |org|
   puts "Memory reserved by apps in org '#{org['entity']['name']}': #{org_apps_reserved_memory} MB"
 }
 
+def format_memory(amount)
+  "#{amount} MB (#{amount / 1024} GB)"
+end
+
 puts
 puts "Allocated services: #{allocated_services}"
 puts "Allocated routes: #{allocated_routes}"
 puts
-puts "Memory reserved by orgs: #{orgs_reserved_memory} MB (#{orgs_reserved_memory / 1024} GB)"
-puts "Memory reserved by apps: #{apps_reserved_memory} MB (#{apps_reserved_memory / 1024} GB)"
+puts "Memory reserved by orgs: #{format_memory(orgs_reserved_memory)}"
+puts "Memory reserved by apps: #{format_memory(apps_reserved_memory)}"
 
 apps_used_memory = 0
 apps = JSON.load(`cf curl /v2/apps`)['resources']
@@ -58,5 +62,5 @@ apps.each { |app|
 }
 
 puts
-puts "Memory actually used by apps: #{apps_used_memory} (#{apps_used_memory / 1024} GB)"
+puts "Memory actually used by apps: #{format_memory(apps_used_memory)}"
 puts
