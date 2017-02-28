@@ -54,13 +54,3 @@ puts "Allocated routes: #{allocated_routes}"
 puts
 puts "Memory reserved by orgs: #{format_memory(orgs_reserved_memory)}"
 puts "Memory reserved by apps: #{format_memory(apps_reserved_memory)}"
-
-apps_used_memory = 0
-apps = JSON.load(`cf curl /v2/apps`)['resources']
-apps.each { |app|
-  apps_used_memory += app['entity']['memory'].to_i
-}
-
-puts
-puts "Memory actually used by apps: #{format_memory(apps_used_memory)}"
-puts
