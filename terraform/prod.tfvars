@@ -14,6 +14,7 @@ tenant_cidrs = [
   "52.19.165.178/32",
   # DIT
   "52.49.20.243/32",
+  "81.149.93.91/32",
   # HMPO trial
   "52.18.106.146/32",
   # Usability Jenkins EIP
