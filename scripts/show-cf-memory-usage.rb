@@ -44,19 +44,19 @@ orgs.each { |org|
   puts "Memory reserved by apps in org '#{org['entity']['name']}': #{org_apps_reserved_memory} MB"
 }
 
+# ADR017 requires capacity for 50% of orgs_reserved_memory in the case of a region failure.
+# So we require 50% * 3/2 when all 3 regions are running.
+required_cell_memory = (orgs_reserved_memory / 2) * 3 / 2
+
+def format_memory(amount)
+  "#{amount} MB (#{amount / 1024} GB)"
+end
+
 puts
 puts "Allocated services: #{allocated_services}"
 puts "Allocated routes: #{allocated_routes}"
 puts
-puts "Memory reserved by orgs: #{orgs_reserved_memory} MB (#{orgs_reserved_memory / 1024} GB)"
-puts "Memory reserved by apps: #{apps_reserved_memory} MB (#{apps_reserved_memory / 1024} GB)"
-
-apps_used_memory = 0
-apps = JSON.load(`cf curl /v2/apps`)['resources']
-apps.each { |app|
-  apps_used_memory += app['entity']['memory'].to_i
-}
-
+puts "Memory reserved by orgs: #{format_memory(orgs_reserved_memory)}"
+puts "Memory reserved by apps: #{format_memory(apps_reserved_memory)}"
 puts
-puts "Memory actually used by apps: #{apps_used_memory} (#{apps_used_memory / 1024} GB)"
-puts
+puts "Total cell memory required to meet ADR017: #{format_memory(required_cell_memory)}"
