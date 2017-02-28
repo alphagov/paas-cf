@@ -2322,12 +2322,6 @@ jobs:
           put: cf-secrets
           params:
             file: modified-secrets/cf-secrets.yml
-      - task: clear-ssh-keys
-        file: paas-cf/concourse/tasks/delete-ssh-keys.yml
-        params:
-          AWS_DEFAULT_REGION: {{aws_region}}
-          BUCKET: {{state_bucket}}
-          SSH_KEY_PREFIX: ""
 
   - name: generate-git-keys
     plan:
