@@ -207,6 +207,8 @@ jobs:
         release: cf
       - name: datadog-consul
         release: datadog-for-cloudfoundry
+      - name: datadog-bbs
+        release: datadog-for-cloudfoundry
       - name: bbs
         release: diego
       - name: cfdot
