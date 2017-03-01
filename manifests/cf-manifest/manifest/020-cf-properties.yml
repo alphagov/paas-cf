@@ -7,6 +7,8 @@ meta:
   secrets:
     consul_ca_cert: (( grab secrets.bosh_ca_cert ))
     bbs_ca_cert: (( grab secrets.bosh_ca_cert ))
+  bbs:
+    api_location: bbs.service.cf.internal:8889
 
   consul_servers: (( grab jobs.consul.networks.cf.static_ips ))
 
@@ -493,7 +495,7 @@ properties:
         use_ssl: (( grab properties.diego.bbs.require_ssl ))
     auctioneer:
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
@@ -533,7 +535,7 @@ properties:
     rep:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
@@ -544,7 +546,7 @@ properties:
     route_emitter:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
@@ -558,7 +560,7 @@ properties:
     ssh_proxy:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
@@ -582,7 +584,7 @@ properties:
     nsync:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
@@ -597,7 +599,7 @@ properties:
     stager:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
@@ -616,7 +618,7 @@ properties:
         staging_upload_user: (( grab properties.cc.staging_upload_user ))
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
       bbs:
-        api_location: bbs.service.cf.internal:8889
+        api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))

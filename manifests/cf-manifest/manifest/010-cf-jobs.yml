@@ -224,6 +224,9 @@ jobs:
       - name: cf
     update:
       serial: true
+    properties:
+      bbs:
+          url: (( concat "https://" meta.bbs.api_location "/v1/actual_lrp_groups/list" ))
 
   - name: uaa
     azs: [z1, z2]
