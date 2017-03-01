@@ -41,9 +41,6 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
-      - reset-cloudfoundry-passwords
-      - reset-concourse-keys
-      - reset-bosh-passwords
   - name: tests
     jobs:
       - availability-tests
@@ -55,7 +52,9 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
-
+  - name: credentials
+    jobs:
+      - clear-cloudfoundry-credentials
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -2292,11 +2291,11 @@ jobs:
         params:
           release: pipeline-pool
 
-  - name: reset-cloudfoundry-passwords
+  - name: clear-cloudfoundry-credentials
     plan:
       - get: cf-secrets
       - get: paas-cf
-      - task: reset-passwords
+      - task: clear-passwords
         config:
           platform: linux
           image_resource:
@@ -2316,96 +2315,13 @@ jobs:
               - |
                 spruce merge \
                   cf-secrets/cf-secrets.yml \
-                  paas-cf/concourse/resources/cf-secrets-deleter.yml \
+                  paas-cf/concourse/resources/cf-secrets-keep.yml | \
+                  spruce merge - paas-cf/concourse/resources/finalize.yml \
                   > modified-secrets/cf-secrets.yml
         on_success:
           put: cf-secrets
           params:
             file: modified-secrets/cf-secrets.yml
-
-  - name: reset-concourse-keys
-    plan:
-      - get: paas-cf
-      - task: clear-ssh-keys
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-          inputs:
-            - name: paas-cf
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            BUCKET: {{state_bucket}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if aws s3 ls s3://${BUCKET}/concourse_id_rsa > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/concourse_id_rsa
-                fi
-                if aws s3 ls s3://${BUCKET}/concourse_id_rsa.pub > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/concourse_id_rsa.pub
-                fi
-                echo "Done"
-
-  - name: reset-bosh-passwords
-    plan:
-      - get: bosh-secrets
-      - get: paas-cf
-      - task: reset-passwords
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/spruce
-          inputs:
-            - name: paas-cf
-            - name: bosh-secrets
-          outputs:
-            - name: modified-secrets
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-
-                spruce merge \
-                  bosh-secrets/bosh-secrets.yml \
-                  paas-cf/concourse/resources/bosh-secrets-deleter.yml \
-                  > modified-secrets/bosh-secrets.yml
-        on_success:
-          put: bosh-secrets
-          params:
-            file: modified-secrets/bosh-secrets.yml
-      - task: clear-ssh-keys
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-          params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            BUCKET: {{state_bucket}}
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if aws s3 ls s3://${BUCKET}/bosh_id_rsa > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/bosh_id_rsa
-                fi
-                if aws s3 ls s3://${BUCKET}/bosh_id_rsa.pub > /dev/null; then
-                  aws s3 rm s3://${BUCKET}/bosh_id_rsa.pub
-                fi
-                echo "Done"
 
   - name: generate-git-keys
     plan:
