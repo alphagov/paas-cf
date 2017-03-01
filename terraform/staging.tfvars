@@ -5,7 +5,7 @@ cf_db_multi_az = "true"
 bosh_db_multi_az = "true"
 cf_db_backup_retention_period = "35"
 cf_db_skip_final_snapshot = "false"
-cf_db_maintenance_window = "Wed:04:00-Wed:05:00"
+cf_db_maintenance_window = "Wed:07:00-Wed:08:00"
 web_access_cidrs = [
   "0.0.0.0/0",
 ]
