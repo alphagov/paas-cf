@@ -56,7 +56,7 @@ resource "datadog_monitor" "cc_api_healthy" {
 resource "datadog_monitor" "cc_failed_job_count_total_increase" {
   name                = "${format("%s Cloud Controller API failed job count", var.env)}"
   type                = "query alert"
-  message             = "Amount of failed jobs in Cloud Controller API grew considerably, check the API health."
+  message             = "${format("Amount of failed jobs in Cloud Controller API grew considerably, check the API health. {{#is_alert}}%s{{/is_alert}}", var.datadog_notification_in_hours)}"
   escalation_message  = "Amount of failed jobs in Cloud Controller API still growing considerably, check the API health."
   require_full_window = false
 
@@ -67,13 +67,13 @@ resource "datadog_monitor" "cc_failed_job_count_total_increase" {
     critical = "5"
   }
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
+  tags = ["deployment:${var.env}", "job:api"]
 }
 
 resource "datadog_monitor" "cc_log_count_error_increase" {
   name                = "${format("%s Cloud Controller API log error count", var.env)}"
   type                = "query alert"
-  message             = "Amount of logged errors in Cloud Controller API grew considerably, check the API health."
+  message             = "${format("Amount of logged errors in Cloud Controller API grew considerably, check the API health. {{#is_alert}}%s{{/is_alert}}", var.datadog_notification_in_hours)}"
   escalation_message  = "Amount of logged errors in Cloud Controller API still growing considerably, check the API health."
   require_full_window = false
 
@@ -84,7 +84,7 @@ resource "datadog_monitor" "cc_log_count_error_increase" {
     critical = "5"
   }
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
+  tags = ["deployment:${var.env}", "job:api"]
 }
 
 resource "datadog_monitor" "cc_job_queue_length" {
