@@ -60,6 +60,8 @@ tenant_cidrs = [
   "52.213.245.135/32",
   # mod-dbs-trial org
   "82.6.141.121/32",
+  # Innovision/DIT Horizon
+  "87.224.83.58/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
