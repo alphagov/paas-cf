@@ -62,6 +62,10 @@ tenant_cidrs = [
   "82.6.141.121/32",
   # Innovision/DIT Horizon
   "87.224.83.58/32",
+  # Notify NAT IPs to export data to paas
+  "52.18.54.222/32",
+  "52.208.148.20/32",
+  "52.208.3.206/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
