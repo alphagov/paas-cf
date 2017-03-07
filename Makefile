@@ -139,7 +139,6 @@ prod: globals ## Set Environment to Production
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
-	$(eval export DEPLOY_ROADMAP=true)
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
 	$(eval export DEPLOY_RUBBERNECKER=true)
 	$(eval export DEPLOY_ENV=prod)

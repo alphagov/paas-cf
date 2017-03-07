@@ -120,7 +120,6 @@ datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
-deploy_roadmap: ${DEPLOY_ROADMAP:-false}
 deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
 tracker_token: ${tracker_token:-}
 pivotal_project_id: ${PIVOTAL_PROJECT_ID:-1275640}
