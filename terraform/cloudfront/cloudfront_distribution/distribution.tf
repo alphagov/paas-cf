@@ -3,9 +3,13 @@ resource "aws_route53_record" "cdn_domain" {
 
   zone_id = "${var.system_dns_zone_id}"
   name    = "${element(var.aliases, count.index)}."
-  type    = "CNAME"
-  ttl     = "60"
-  records = ["${aws_cloudfront_distribution.cdn_instance.domain_name}"]
+  type    = "A"
+
+  alias {
+    name                   = "${aws_cloudfront_distribution.cdn_instance.domain_name}"
+    zone_id                = "${aws_cloudfront_distribution.cdn_instance.hosted_zone_id}"
+    evaluate_target_health = true
+  }
 }
 
 resource "aws_cloudfront_distribution" "cdn_instance" {
