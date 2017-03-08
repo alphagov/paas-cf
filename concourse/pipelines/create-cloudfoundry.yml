@@ -2476,3 +2476,74 @@ jobs:
               uuid=$(bosh status --uuid)
               sed -e "s/^director_uuid:.*$/director_uuid: ${uuid}/" cf-manifest/cf-manifest.yml > cf-manifest-with-uuid.yml
               bosh deployment ./cf-manifest-with-uuid.yml
+
+  - name: cf-psql
+    plan:
+      - aggregate:
+          - get: paas-cf
+          - get: cf-tfstate
+          - get: cf-secrets
+      - task: extract-terraform-variables
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+                < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
+      - task: extract-cf-terraform-outputs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          outputs:
+            - name: cf-terraform-outputs
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                SCPATH="./paas-cf/concourse/scripts"
+                SCFILE="extract_tf_vars_from_terraform_state.rb"
+                $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
+      - task: run-cf-psql
+        config:
+          platform: linux
+          image: docker:///governmentpaas/psql
+          inputs:
+            - name: paas-cf
+            - name: terraform-variables
+            - name: cf-terraform-outputs
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/cf-secrets.tfvars.sh
+                . cf-terraform-outputs/cf.tfstate.sh
+
+                cat <<EOF > ./psql_adm.sh
+                export PGPASSWORD="${TF_VAR_secrets_cf_db_readonly_password:?}"
+                psql -h "${TF_VAR_cf_db_address:?}" -U u_readonly postgres
+                EOF

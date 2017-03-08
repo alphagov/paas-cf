@@ -148,6 +148,9 @@ prod: globals ## Set Environment to Production
 bosh-cli: check-env ## Create interactive connnection to BOSH container
 	concourse/scripts/bosh-cli.sh
 
+cf-psql: check-env ## Create interactive connnection to the CF RDS instance
+	concourse/scripts/cf-psql.sh
+
 .PHONY: pipelines
 pipelines: check-env ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-cloudfoundry.sh
