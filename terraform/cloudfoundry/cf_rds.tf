@@ -40,7 +40,7 @@ resource "aws_db_instance" "cf" {
   allocated_storage    = 10
   engine               = "postgres"
   engine_version       = "9.5.4"
-  instance_class       = "db.t2.small"
+  instance_class       = "db.m3.medium"
   username             = "dbadmin"
   password             = "${var.secrets_cf_db_master_password}"
   db_subnet_group_name = "${aws_db_subnet_group.cf_rds.name}"
