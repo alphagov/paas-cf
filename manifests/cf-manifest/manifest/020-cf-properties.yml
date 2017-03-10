@@ -374,6 +374,25 @@ properties:
     links:
       passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
       signup: (( concat "https://login." properties.system_domain "/create_account" ))
+    oauth:
+      providers:
+        google:
+          type: oidc1.0
+          authUrl: https://accounts.google.com/o/oauth2/v2/auth
+          tokenUrl: https://www.googleapis.com/oauth2/v4/token
+          issuer: https://accounts.google.com
+          redirectUrl: (( concat "https://login." properties.system_domain "/uaa" ))
+          scopes:
+            - openid
+            - email
+          linkText: Login with Google
+          showLinkText: true
+          addShadowUserOnLogin: false
+          relyingPartyId: (( grab $OAUTH_CLIENT_ID ))
+          relyingPartySecret: (( grab $OAUTH_CLIENT_SECRET ))
+          skipSslValidation: false
+          attributeMappings:
+            user_name: email
   uaa:
     url: (( concat "https://uaa." properties.system_domain ))
     issuer: (( grab properties.uaa.url ))

@@ -9,6 +9,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 # shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/datadog.sh"
 
+# shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/google-oauth.sh"
+
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
@@ -62,6 +65,7 @@ prepare_environment() {
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
   get_datadog_secrets
+  get_google_oauth_secrets
 
   if [ "${ENABLE_DATADOG}" = "true" ] ; then
     # shellcheck disable=SC2154
@@ -124,6 +128,8 @@ deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
 tracker_token: ${tracker_token:-}
 pivotal_project_id: ${PIVOTAL_PROJECT_ID:-1275640}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
+oauth_client_id: ${oauth_client_id:-}
+oauth_client_secret: ${oauth_client_secret:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
