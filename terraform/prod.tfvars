@@ -66,6 +66,9 @@ tenant_cidrs = [
   "52.18.54.222/32",
   "52.208.148.20/32",
   "52.208.3.206/32",
+  # BEIS platform team
+  "193.240.203.38/32",
+  "82.45.99.124/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
