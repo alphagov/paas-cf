@@ -35,7 +35,7 @@ tenant_cidrs = [
   # Accessing Government Services team Jenkins server
   "52.214.76.50/32",
   # GOV.UK Pay CI node
-  "52.210.67.64/32",
+  "34.251.16.209/32",
   # GOV.UK Notify egress IPs (for metrics gathering)
   "52.209.11.109/32",
   "52.212.153.196/32",
