@@ -174,6 +174,7 @@ properties:
       password: (( grab secrets.router_password ))
     drain_wait: 15
     route_services_secret: (( grab secrets.route_services_secret ))
+    max_idle_connections: 0
 
   cc:
     jobs:
