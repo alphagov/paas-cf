@@ -24,6 +24,10 @@ if File.exist?(config_path)
   end
 end
 
+def format_memory(amount)
+  "#{amount} MB (#{(amount.to_f / 1024).round(1).to_s.chomp('.0')} GB)"
+end
+
 orgs = JSON.load(`cf curl /v2/organizations`)['resources']
 quotas = JSON.load(`cf curl /v2/quota_definitions`)['resources']
 
@@ -35,22 +39,23 @@ allocated_routes = 0
 orgs.each { |org|
   quota_id = org['entity']['quota_definition_guid']
   quota_def = quotas.select { |quota| quota['metadata']['guid'] == quota_id }[0]
-  orgs_reserved_memory += quota_def['entity']['memory_limit'].to_i
+
+  org_memory_quota = quota_def['entity']['memory_limit'].to_i
+  orgs_reserved_memory += org_memory_quota if org_memory_quota > 0
+
   allocated_services += quota_def['entity']['total_services'].to_i
   allocated_routes += quota_def['entity']['total_routes'].to_i
+
   org_id = org['metadata']['guid']
-  org_apps_reserved_memory = JSON.load(`cf curl /v2/organizations/#{org_id}/memory_usage`)['memory_usage_in_mb']
-  apps_reserved_memory += org_apps_reserved_memory.to_i
-  puts "Memory reserved by apps in org '#{org['entity']['name']}': #{org_apps_reserved_memory} MB"
+  org_apps_reserved_memory = JSON.load(`cf curl /v2/organizations/#{org_id}/memory_usage`)['memory_usage_in_mb'].to_i
+  apps_reserved_memory += org_apps_reserved_memory
+
+  puts "Org '#{org['entity']['name']}': #{format_memory(org_apps_reserved_memory)} reserved by apps / #{format_memory(org_memory_quota)} quota"
 }
 
 # ADR017 requires capacity for 50% of orgs_reserved_memory in the case of a region failure.
 # So we require 50% * 3/2 when all 3 regions are running.
 required_cell_memory = (orgs_reserved_memory / 2) * 3 / 2
-
-def format_memory(amount)
-  "#{amount} MB (#{amount / 1024} GB)"
-end
 
 puts
 puts "Allocated services: #{allocated_services}"
