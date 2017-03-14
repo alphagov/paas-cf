@@ -24,12 +24,23 @@ if File.exist?(config_path)
   end
 end
 
+# Fetch all resources from the path, iterating over all pages of responses.
+def cf_curl_all_resources(path)
+  page = JSON.load(`cf curl "#{path}"`)
+  results = page['resources']
+  until page['next_url'].nil?
+    page = JSON.load(`cf curl "#{page['next_url']}"`)
+    results += page['resources']
+  end
+  results
+end
+
 def format_memory(amount)
   "#{amount} MB (#{(amount.to_f / 1024).round(1).to_s.chomp('.0')} GB)"
 end
 
-orgs = JSON.load(`cf curl /v2/organizations`)['resources']
-quotas = JSON.load(`cf curl /v2/quota_definitions`)['resources']
+orgs = cf_curl_all_resources('/v2/organizations')
+quotas = cf_curl_all_resources('/v2/quota_definitions')
 
 orgs_reserved_memory = 0
 apps_reserved_memory = 0
