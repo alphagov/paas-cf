@@ -207,6 +207,8 @@ jobs:
         release: cf
       - name: datadog-consul
         release: datadog-for-cloudfoundry
+      - name: datadog-bbs
+        release: datadog-for-cloudfoundry
       - name: bbs
         release: diego
       - name: cfdot
@@ -222,6 +224,9 @@ jobs:
       - name: cf
     update:
       serial: true
+    properties:
+      bbs:
+          url: (( concat "https://" meta.bbs.api_location "/v1/actual_lrp_groups/list" ))
 
   - name: uaa
     azs: [z1, z2]

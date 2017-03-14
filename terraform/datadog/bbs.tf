@@ -22,3 +22,20 @@ resource "datadog_monitor" "bbs_lock_held_once" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:bbs"]
 }
+
+resource "datadog_monitor" "bbs_healthy" {
+  name                = "${format("%s bbs healthy", var.env)}"
+  type                = "query alert"
+  message             = "${format("BBS health check failed. Check BBS status immediately. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  escalation_message  = "BBS health check still failing. Check BBS status immediately."
+  notify_no_data      = true
+  require_full_window = false
+
+  query = "${format("min(last_1m):min:cf.bbs.Healthy{bosh-deployment:%s} < 1", var.env)}"
+
+  thresholds {
+    critical = "1"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:bbs"]
+}
