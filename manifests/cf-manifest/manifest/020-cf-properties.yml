@@ -442,6 +442,7 @@ properties:
       doppler:
         override: true
         authorities: uaa.resource
+        authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_doppler_secret ))
       cloud_controller_username_lookup:
         authorities: scim.userids
