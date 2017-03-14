@@ -25,7 +25,7 @@ if File.exist?(config_path)
 end
 
 def format_memory(amount)
-  "#{amount} MB (#{amount / 1024} GB)"
+  "#{amount} MB (#{(amount.to_f / 1024).round(1).to_s.chomp('.0')} GB)"
 end
 
 orgs = JSON.load(`cf curl /v2/organizations`)['resources']
