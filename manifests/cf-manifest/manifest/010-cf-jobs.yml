@@ -14,7 +14,7 @@ meta:
     consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: statsd-injector
+  - name: statsd_injector
     release: (( grab meta.release.name ))
   - name: java-buildpack
     release: (( grab meta.release.name ))
@@ -157,7 +157,7 @@ meta:
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: statsd-injector
+  - name: statsd_injector
     release: (( grab meta.release.name ))
 
 jobs:
