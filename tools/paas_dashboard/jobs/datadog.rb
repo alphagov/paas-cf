@@ -38,7 +38,9 @@ def get_and_emit_data_for_env(service_tag:, data_id_prefix:)
 end
 
 def get_monitor_results(service_tag)
-  dog.get_all_monitors[1].select { |monitor| monitor['tags'].include?(service_tag) }
+  dog.get_all_monitors[1].select { |monitor|
+    monitor['tags'].include?(service_tag) && monitor['options']['silenced'].empty?
+  }
 end
 
 def get_counts(results)
