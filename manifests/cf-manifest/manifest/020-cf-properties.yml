@@ -110,6 +110,10 @@ properties:
       statsd_injector:
         cert: (( grab secrets.statsd_injector_cert  ))
         key: (( grab secrets.statsd_injector_key  ))
+      syslogdrainbinder:
+        cert: (( grab secrets.cc_client_cert  ))
+        key: (( grab secrets.cc_client_key  ))
+
     etcd:
       machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
       require_ssl: (( grab properties.etcd.require_ssl ))
@@ -340,6 +344,11 @@ properties:
         restart_if_consistently_above_mb: ~
         restart_if_above_mb: ~
     external_protocol: ~
+
+    mutual_tls:
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      public_cert: (( grab secrets.cc_server_cert ))
+      private_key: (( grab secrets.cc_server_key ))
 
   ccdb:
     db_scheme: postgres
@@ -621,6 +630,9 @@ properties:
         basic_auth_password: (( grab properties.cc.internal_api_password ))
         staging_upload_user: (( grab properties.cc.staging_upload_user ))
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
+        client_cert: (( grab secrets.cc_client_cert ))
+        client_key: (( grab secrets.cc_client_key ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab meta.secrets.bbs_ca_cert ))
