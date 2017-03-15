@@ -34,6 +34,8 @@ metron,
 trafficcontroller,
 saml,
 statsd_injector,
+cc_server,cloud-controller-ng.service.cf.internal
+cc_client,
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"
