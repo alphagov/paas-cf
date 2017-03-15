@@ -12,6 +12,9 @@ meta:
   - name: cloud_controller_ng
     release: (( grab meta.release.name ))
     consumes: {nats: nil}
+  - name: cloud_controller_clock
+    release: (( grab meta.release.name ))
+    consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd_injector
@@ -52,18 +55,6 @@ meta:
     release: datadog-for-cloudfoundry
   - name: datadog-cc-worker
     release: datadog-for-cloudfoundry
-
-  clock_templates:
-  - name: consul_agent
-    release: (( grab meta.release.name ))
-    consumes: {consul: nil}
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
-  - name: cloud_controller_clock
-    release: (( grab meta.release.name ))
-    consumes: {nats: nil}
-  - name: metron_agent
-    release: (( grab meta.release.name ))
 
   consul_templates:
   - name: consul_agent
@@ -276,17 +267,6 @@ jobs:
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
-
-  - name: clock_global
-    azs: [z1]
-    templates: (( grab meta.clock_templates ))
-    instances: 1
-    vm_type: medium
-    vm_extensions:
-      - cf_cc_security_groups
-    stemcell: default
-    networks:
-      - name: cf
 
   - name: api_worker
     azs: [z1, z2]
