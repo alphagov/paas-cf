@@ -27,7 +27,7 @@ def load_admin_user_list(filename)
     {
       username: u.fetch("username", u.fetch("email")),
       email: u["email"] || raise("User #{i} defined in file #{filename} is missing email"),
-      gpg_key: u["gpg_key"] || raise("User #{i} defined in file #{filename} is missing gpg_key"),
+      origin: u.fetch("origin", "uaa"),
     }
   }
 end
@@ -52,8 +52,8 @@ uaa_sync_admin_users.request_token
 created_users, deleted_users = uaa_sync_admin_users.update_admin_users(users)
 
 created_users.each { |user|
-  puts "Sending credentials to new user #{user.fetch(:username)}"
-  EmailCredentialsHelper.send_admin_credentials(api_url, user, source_address)
+  puts "Sending notification to new user #{user.fetch(:username)}"
+  EmailCredentialsHelper.send_notification(api_url, user, source_address)
 }
 
 puts "Created users: #{created_users.length}"

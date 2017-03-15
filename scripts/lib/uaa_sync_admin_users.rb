@@ -84,13 +84,15 @@ class UaaSyncAdminUsers
 
   # Creates a user with the given username, email and password
   # params:
-  # - user: Hash as {username: ..., password: ..., email:...}
+  # - user: Hash as {username: ..., password: ..., email:..., origin: ...}
   def create_user(user)
     self.get_logger.info("Creating user #{user.fetch(:username)}")
+    user[:password] = (user[:origin] == "uaa") ? SecureRandom.hex : nil
     info = {
       userName: user.fetch(:username),
       password: user.fetch(:password),
       emails: [{ value: user.fetch(:email) }],
+      origin: user.fetch(:origin),
     }
     self.ua.add(:user, info)
   end
@@ -121,14 +123,8 @@ class UaaSyncAdminUsers
     users = users.clone
     users << {
       username: "admin",
-      email: "admin"
-    }
-
-    # Get all the admin groups info
-    groups_info = {}
-    self.admin_groups.each { |group_name|
-      groups_info[group_name] = get_group_by_name(group_name)
-      groups_info[group_name]["members"] ||= []
+      email: "admin",
+      origin: "uaa"
     }
 
     # Get/Create users if required
@@ -136,11 +132,22 @@ class UaaSyncAdminUsers
     users.each { |user|
       user_info = self.get_user_by_username(user.fetch(:username))
       if user_info.nil?
-        user[:password] ||= SecureRandom.hex
+        user_info = self.create_user(user)
+        created_users << user
+      elsif user_info.fetch("origin") != user[:origin]
+        self.ua.delete(:user, user_info.fetch("id"))
+        deleted_users << user
         user_info = self.create_user(user)
         created_users << user
       end
       users_info[user.fetch(:username)] = user_info
+    }
+
+    # Get all the admin groups info
+    groups_info = {}
+    self.admin_groups.each { |group_name|
+      groups_info[group_name] = get_group_by_name(group_name)
+      groups_info[group_name]["members"] ||= []
     }
 
     # Add users to groups if required
