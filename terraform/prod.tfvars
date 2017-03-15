@@ -60,6 +60,7 @@ tenant_cidrs = [
   "52.213.245.135/32",
   # mod-dbs-trial org
   "82.6.141.121/32",
+  "31.122.47.191/32",
   # Innovision/DIT Horizon
   "87.224.83.58/32",
   # Notify NAT IPs to export data to paas
