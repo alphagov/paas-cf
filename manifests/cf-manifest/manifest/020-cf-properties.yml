@@ -4,9 +4,6 @@ meta:
     provider: AWS
     use_iam_profile: true
     region: (( grab terraform_outputs.region ))
-  secrets:
-    consul_ca_cert: (( grab secrets.bosh_ca_cert ))
-    bbs_ca_cert: (( grab secrets.bosh_ca_cert ))
   bbs:
     api_location: bbs.service.cf.internal:8889
 
@@ -39,7 +36,7 @@ properties:
       dns_config:
         allow_stale: true
         max_stale: "30s"
-    ca_cert: (( grab meta.secrets.consul_ca_cert ))
+    ca_cert: (( grab secrets.bosh_ca_cert ))
     agent_cert: (( grab secrets.consul_agent_cert ))
     agent_key: (( grab secrets.consul_agent_key ))
     encrypt_keys: (( grab secrets.consul_encrypt_keys ))
@@ -506,14 +503,14 @@ properties:
       starting_container_weight: 0.25
     cfdot:
       bbs:
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         use_ssl: (( grab properties.diego.bbs.require_ssl ))
     auctioneer:
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
@@ -524,7 +521,7 @@ properties:
       encryption_keys:
         - label: key-2017-01
           passphrase: (( grab secrets.bbs_encryption_key ))
-      ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+      ca_cert: (( grab secrets.bosh_ca_cert ))
       server_cert: (( grab secrets.bbs_server_cert ))
       server_key: (( grab secrets.bbs_server_key ))
       auctioneer:
@@ -553,7 +550,7 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
@@ -564,7 +561,7 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
@@ -578,7 +575,7 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
@@ -602,7 +599,7 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
@@ -617,7 +614,7 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
@@ -639,7 +636,7 @@ properties:
         client_key: (( grab secrets.cc_client_key ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab meta.secrets.bbs_ca_cert ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert ))
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
