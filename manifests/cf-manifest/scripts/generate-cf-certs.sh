@@ -12,6 +12,13 @@ CA_NAME="bosh-CA"
 APPS_DOMAINS="*.${APPS_DNS_ZONE_NAME},${APPS_DNS_ZONE_NAME}"
 SYSTEM_DOMAINS="*.${SYSTEM_DNS_ZONE_NAME},${SYSTEM_DNS_ZONE_NAME}"
 
+# List of certs to generate
+# Format:
+#
+# <name_cert>,<domain1>[,domain2,domain3,...]
+#
+# Note: ALWAYS add a comma after <name_cert>, even if there are no domains
+#
 CERTS_TO_GENERATE="
 bbs_server,bbs.service.cf.internal
 bbs_client,
@@ -25,7 +32,8 @@ system_domain,${SYSTEM_DOMAINS}
 doppler,
 metron,
 trafficcontroller,
-saml
+saml,
+statsd_injector,
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"

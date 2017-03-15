@@ -107,6 +107,9 @@ properties:
       trafficcontroller:
         cert: (( grab secrets.trafficcontroller_cert  ))
         key: (( grab secrets.trafficcontroller_key  ))
+      statsd_injector:
+        cert: (( grab secrets.statsd_injector_cert  ))
+        key: (( grab secrets.statsd_injector_key  ))
     etcd:
       machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
       require_ssl: (( grab properties.etcd.require_ssl ))
