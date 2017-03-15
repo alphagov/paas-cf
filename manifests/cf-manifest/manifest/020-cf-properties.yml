@@ -151,6 +151,9 @@ properties:
   metron_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
 
+  statsd_injector:
+    deployment: (( grab meta.environment ))
+
   traffic_controller:
     outgoing_port: 8080
     etcd:
