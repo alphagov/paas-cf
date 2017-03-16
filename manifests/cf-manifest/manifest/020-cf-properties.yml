@@ -279,7 +279,7 @@ properties:
       cdn: ~
     quota_definitions:
       default:
-        memory_limit: 2048
+        memory_limit: 5120
         total_services: 10
         non_basic_services_allowed: false
         total_routes: 1000
