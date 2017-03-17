@@ -8,11 +8,16 @@ meta:
   api_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: cloud_controller_ng
     release: (( grab meta.release.name ))
+    consumes: {nats: nil}
+  - name: cloud_controller_clock
+    release: (( grab meta.release.name ))
+    consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: statsd-injector
+  - name: statsd_injector
     release: (( grab meta.release.name ))
   - name: java-buildpack
     release: (( grab meta.release.name ))
@@ -40,8 +45,10 @@ meta:
   api_worker_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: cloud_controller_worker
     release: (( grab meta.release.name ))
+    consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: datadog-consul
@@ -49,19 +56,10 @@ meta:
   - name: datadog-cc-worker
     release: datadog-for-cloudfoundry
 
-  clock_templates:
-  - name: consul_agent
-    release: (( grab meta.release.name ))
-  - name: datadog-consul
-    release: datadog-for-cloudfoundry
-  - name: cloud_controller_clock
-    release: (( grab meta.release.name ))
-  - name: metron_agent
-    release: (( grab meta.release.name ))
-
   consul_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: metron_agent
@@ -70,6 +68,7 @@ meta:
   etcd_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: etcd
@@ -82,6 +81,7 @@ meta:
   loggregator_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: doppler
@@ -94,6 +94,7 @@ meta:
   loggregator_trafficcontroller_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: loggregator_trafficcontroller
@@ -104,6 +105,7 @@ meta:
   nats_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: nats
@@ -119,10 +121,12 @@ meta:
   router_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: gorouter
     release: (( grab meta.release.name ))
+    consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: haproxy
@@ -137,13 +141,14 @@ meta:
   uaa_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
+    consumes: {consul: nil}
   - name: datadog-consul
     release: datadog-for-cloudfoundry
   - name: uaa
     release: (( grab meta.release.name ))
   - name: metron_agent
     release: (( grab meta.release.name ))
-  - name: statsd-injector
+  - name: statsd_injector
     release: (( grab meta.release.name ))
 
 jobs:
@@ -262,17 +267,6 @@ jobs:
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
-
-  - name: clock_global
-    azs: [z1]
-    templates: (( grab meta.clock_templates ))
-    instances: 1
-    vm_type: medium
-    vm_extensions:
-      - cf_cc_security_groups
-    stemcell: default
-    networks:
-      - name: cf
 
   - name: api_worker
     azs: [z1, z2]
