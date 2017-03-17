@@ -1926,7 +1926,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: cf_6_21_1
             params:
               DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
             inputs:
