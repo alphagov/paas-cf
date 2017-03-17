@@ -12,11 +12,16 @@
                     critical<span data-hideif="criticals | equals 1">s</span>
                 </h4>
             </div>
-
             <div data-hideif="warnings | equals 0" class="floated">
                 <h3 data-bind="warnings"></h3>
                 <h4>
                     warning<span data-hideif="warnings | equals 1">s</span>
+                </h4>
+            </div>
+            <div data-hideif="unknowns | equals 0" class="floated">
+                <h3 data-bind="unknowns"></h3>
+                <h4>
+                    unknown<span data-hideif="unknowns | equals 1">s</span>
                 </h4>
             </div>
             <div data-showif="status | equals 'green'">
