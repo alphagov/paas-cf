@@ -28,9 +28,14 @@ def get_and_emit_data_for_env(service_tag:, data_id_prefix:)
 
   begin
     results = get_monitor_results(service_tag)
-    critical_count, warning_count = get_counts(results)
+    critical_count, warning_count, unknown_count = get_counts(results)
 
-    send_event(data_id, criticals: critical_count, warnings: warning_count)
+    send_event(
+      data_id,
+      criticals: critical_count,
+      warnings: warning_count,
+      unknowns: unknown_count
+    )
   rescue RuntimeError => e
     puts "Error getting data for #{data_id_prefix}: #{e}"
     check_history_for_stale_data(data_id)
@@ -45,11 +50,13 @@ end
 
 def get_counts(results)
   critical_states = ['Alert']
-  warning_states = ['No Data', 'Warn']
+  warning_states = ['Warn']
+  unknown_states = ['No Data']
 
   criticals = results.select { |monitor| critical_states.include?(monitor['overall_state']) }.size
   warnings = results.select { |monitor| warning_states.include?(monitor['overall_state']) }.size
-  [criticals, warnings]
+  unknowns = results.select { |monitor| unknown_states.include?(monitor['overall_state']) }.size
+  [criticals, warnings, unknowns]
 end
 
 def check_history_for_stale_data(data_id)

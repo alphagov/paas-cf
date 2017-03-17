@@ -1,6 +1,7 @@
 $background: #444;
 $text: #fff;
 $success: #0E8F00;
+$unknown: #9B9B9B;
 $warning: #F25F00;
 $failure: #AF0900;
 $error: #5B0274;
@@ -41,6 +42,16 @@ $error: #5B0274;
       p {
         &.updated-at {
           color: lighten($success, 20%);
+        }
+      }
+    }
+
+    &.grey {
+      background-color: $unknown;
+
+      p {
+        &.updated-at {
+          color: lighten($unknown, 60%);
         }
       }
     }
