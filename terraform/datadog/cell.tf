@@ -19,8 +19,8 @@ resource "datadog_monitor" "cell-available-memory" {
 resource "datadog_monitor" "rep_process_running" {
   name                = "${format("%s Cell rep process running", var.env)}"
   type                = "service check"
-  message             = "Cell rep process not running. Check router state."
-  escalation_message  = "Cell rep process still not running. Check router state."
+  message             = "Cell rep process not running."
+  escalation_message  = "Cell rep process still not running."
   notify_no_data      = false
   require_full_window = true
 
@@ -55,8 +55,8 @@ resource "datadog_monitor" "rep_healthy" {
 resource "datadog_monitor" "garden_process_running" {
   name                = "${format("%s Cell garden process running", var.env)}"
   type                = "service check"
-  message             = "Cell garden process not running. Check router state."
-  escalation_message  = "Cell garden process still not running. Check router state."
+  message             = "Cell garden process not running."
+  escalation_message  = "Cell garden process still not running."
   notify_no_data      = false
   require_full_window = true
 
