@@ -441,11 +441,11 @@ jobs:
       - name: datadog-consul
         release: datadog-for-cloudfoundry
       - name: ssh_proxy
-        release: diego
+        release: diego-patched
       - name: metron_agent
         release: cf
       - name: file_server
-        release: diego
+        release: diego-patched
       - name: cfdot
         release: diego
     instances: 2
