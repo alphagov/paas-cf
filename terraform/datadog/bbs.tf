@@ -31,7 +31,7 @@ resource "datadog_monitor" "bbs_healthy" {
   notify_no_data      = true
   require_full_window = false
 
-  query = "${format("min(last_1m):min:cf.bbs.Healthy{bosh-deployment:%s} < 1", var.env)}"
+  query = "${format("min(last_1m):min:cf.bbs.Healthy{deploy_env:%s} < 1", var.env)}"
 
   thresholds {
     critical = "1"
