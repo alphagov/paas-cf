@@ -169,6 +169,15 @@ upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
 
+.PHONY: upload-google-oauth-secrets
+upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
+	$(eval export OAUTH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	# FIXME After it has been tested, we'd like to restrict its usage in dev.
+	# $(if ${AWS_ACCOUNT},,$(error Must set environment to ci/staging/prod))
+	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
+	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-google-oauth-secrets.sh
+
 upload-tracker-token: check-env ## Decrypt and upload Pivotal tracker API token to S3
 	pass pivotal/tracker_token | aws s3 cp - "s3://${DEPLOY_ENV}-state/tracker_token"
 

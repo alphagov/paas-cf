@@ -112,18 +112,6 @@ RSpec.describe UaaSyncAdminUsers do
     }
   end
 
-  context "when encrypting a message" do
-    let(:key) { "1F6BEEE5" }
-    let(:message) { "plaintext" }
-
-    it "does not output plaintext" do
-      stub_request(:get, "http://pgp.mit.edu/pks/lookup?op=get&options=mr&search=0x" + key).
-           to_return(File.new('spec/test_pubkey.pub'))
-
-      expect(EmailCredentialsHelper.encrypt_message_to(message, key)).to_not eq message
-    end
-  end
-
   context "when connecting to a fake server" do
     let(:target) { "https://test.uaa.target" }
     let(:admin_user) { "admin" }
@@ -150,8 +138,8 @@ RSpec.describe UaaSyncAdminUsers do
     context "when updating from a list with existing and new users" do
       let(:users) {
         [
-          { username: "existing_user", email: "existing_user@example.com", password: "123" },
-          { username: "new_user", email: "new_user@example.com", password: "123" },
+          { username: "existing_user", email: "existing_user@example.com", origin: "uaa" },
+          { username: "new_user", email: "new_user@example.com", origin: "uaa" },
         ]
       }
 
@@ -290,6 +278,82 @@ RSpec.describe UaaSyncAdminUsers do
         expect(@created_users[0]).to include(username: "new_user")
         expect(@deleted_users.length).to be(1)
         expect(@deleted_users[0]).to include(username: "removed_user")
+      end
+    end
+
+    context "when changing authentication origin" do
+      let(:users) {
+        [
+          { username: "google_user", email: "google_user@example.com", origin: "google" },
+        ]
+      }
+
+      before(:each) do
+        %w(admin google_user).each { |user_to_match|
+          WebMock.stub_request(:get, %r{#{target}/Users\?filter=username eq "#{user_to_match}".*}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_query_responses([
+                json_user_response(user_to_match, "#{user_to_match}@example.com"),
+              ])
+          )
+          WebMock.stub_request(:get, %r{#{target}/Users\?filter=id eq "#{user_uuid(user_to_match)}".*}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_query_responses([
+                json_user_response(user_to_match, "#{user_to_match}@example.com"),
+              ])
+          )
+        }
+
+        WebMock.stub_request(:post, %r{^#{target}/Users.*}).
+          with(
+            body: /"userName":"google_user".*"emails":\[{"value":"google_user@example\.com"}/,
+          ).
+          to_return(
+            status: 200,
+            headers: { "content-type" => "application/json" },
+            body: json_user_response("google_user", "google_user@example.com"),
+          )
+
+        uaa_sync_admin_users.admin_groups.each { |group_name|
+          WebMock.stub_request(:get, %r{^#{target}/Groups\?filter=displayName eq "#{group_name}".*}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_query_responses([
+                json_group_response(group_name, %w(admin google_user))
+              ])
+            )
+          WebMock.stub_request(:put, %r{^#{target}/Groups/#{group_uuid(group_name)}$}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_group_response(group_name, %w(admin google_user))
+          )
+        }
+
+        WebMock.stub_request(:delete, "#{target}/Users/__user__google_user__uuid__").
+          to_return(
+            status: 200,
+            headers: { "content-type" => "application/json" },
+            body: json_user_response("google_user", "google_user@example.com"),
+        )
+
+        @created_users, @deleted_users = uaa_sync_admin_users.update_admin_users(users)
+      end
+
+      it "recreates the user" do
+        expect(WebMock).to have_requested(
+          :delete, "#{target}/Users/__user__google_user__uuid__"
+        )
+        expect(WebMock).to have_requested(
+          :post, "#{target}/Users"
+        ).with(
+          body: /"userName":"google_user"/
+        ).once
       end
     end
   end

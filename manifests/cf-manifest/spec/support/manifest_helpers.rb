@@ -43,6 +43,8 @@ private
     ENV["AWS_ACCOUNT"] = "dev"
     ENV["DATADOG_API_KEY"] = "abcd1234"
     ENV["ENABLE_DATADOG"] = "true"
+    ENV["OAUTH_CLIENT_ID"] = "abcd1234"
+    ENV["OAUTH_CLIENT_SECRET"] = "abcd1234"
   end
 
   def render(arg_list)

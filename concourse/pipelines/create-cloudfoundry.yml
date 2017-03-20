@@ -366,6 +366,7 @@ jobs:
               - |
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ipsec-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
@@ -997,6 +998,8 @@ jobs:
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}
+              OAUTH_CLIENT_ID: {{oauth_client_id}}
+              OAUTH_CLIENT_SECRET: {{oauth_client_secret}}
             run:
               path: sh
               args:
