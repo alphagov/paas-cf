@@ -13,6 +13,10 @@ releases:
     version: 1.8.1
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.8.1
     sha1: a8c9fdecf59a1fceb2837ac0cfbde6a939427adb
+  - name: diego-patched
+    version: 1.8.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/diego-patched-1.8.1.tgz
+    sha1: 26f7599cfe41db8ecd335f19d7c8337cd2ac20e2
   - name: garden-runc
     version: 1.2.0
     url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.2.0
