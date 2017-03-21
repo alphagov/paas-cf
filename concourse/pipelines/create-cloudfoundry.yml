@@ -998,6 +998,7 @@ jobs:
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}
+              DISABLE_USER_CREATION: {{disable_user_creation}}
               OAUTH_CLIENT_ID: {{oauth_client_id}}
               OAUTH_CLIENT_SECRET: {{oauth_client_secret}}
             run:
@@ -1032,6 +1033,11 @@ jobs:
                   if [ "${ENABLE_DATADOG}" = "true" ] ; then
                      MANIFEST_STUBS="${MANIFEST_STUBS}
                                     ./paas-cf/manifests/cf-manifest/stubs/datadog-nozzle.yml"
+                  fi
+
+                  if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
+                     MANIFEST_STUBS="${MANIFEST_STUBS}
+                                    ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
                   fi
 
                   # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
