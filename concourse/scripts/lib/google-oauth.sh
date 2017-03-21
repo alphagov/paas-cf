@@ -7,7 +7,8 @@ get_google_oauth_secrets() {
   secrets_uri="s3://${state_bucket}/google-oauth-secrets.yml"
   export oauth_client_id
   export oauth_client_secret
-  if aws s3 ls "${secrets_uri}" > /dev/null ; then
+  secrets_size=$(aws s3 ls "${secrets_uri}" | awk '{print $3}')
+  if [ "${secrets_size}" != 0 ] && [ -n "${secrets_size}" ]  ; then
     secrets_file=$(mktemp -t google-oauth-secrets.XXXXXX)
 
     aws s3 cp "${secrets_uri}" "${secrets_file}"
