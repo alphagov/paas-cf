@@ -70,6 +70,9 @@ list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 		fi;\
 	done
 
+# pass password store unhelpfully dumps it's not-found message to stdout, so we're using a macro to grep the output and remove it
+get_from_pass_or_default = $(eval export $(1)=$(shell paas-pass $(2) | grep -v not\ in\ the || echo $(3)))
+
 .PHONY: globals
 PASSWORD_STORE_DIR?=${HOME}/.paas-pass
 globals:
@@ -82,8 +85,8 @@ dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
+	$(call get_from_pass_or_default,SYSTEM_DNS_ZONE_NAME,paas-cf/dev-sys-domain,${DEPLOY_ENV}.dev.cloudpipeline.digital)
+	$(call get_from_pass_or_default,APPS_DNS_ZONE_NAME,paas-cf/dev-app-domain,${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export DISABLE_HEALTHCHECK_DB=true)
@@ -98,9 +101,9 @@ ci: globals ## Set Environment to CI
 	$(eval export AWS_ACCOUNT=ci)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export TAG_PREFIX=staging-)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
+	$(call get_from_pass_or_default,SYSTEM_DNS_ZONE_NAME,paas-cf/ci-sys-domain,${DEPLOY_ENV}.ci.cloudpipeline.digital)
+	$(call get_from_pass_or_default,APPS_DNS_ZONE_NAME,paas-cf/ci-app-domain,${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
+	$(call get_from_pass_or_default,ALERT_EMAIL_ADDRESS,paas-cf/ci-alert-email-address,the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export ENABLE_DATADOG=true)
@@ -115,9 +118,9 @@ staging: globals ## Set Environment to Staging
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=prod-)
 	$(eval export PAAS_CF_TAG_FILTER=staging-*)
-	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
+	$(call get_from_pass_or_default,SYSTEM_DNS_ZONE_NAME,paas-cf/staging-sys-domain,staging.cloudpipeline.digital)
+	$(call get_from_pass_or_default,APPS_DNS_ZONE_NAME,paas-cf/staging-app-domain,staging.cloudpipelineapps.digital)
+	$(call get_from_pass_or_default,ALERT_EMAIL_ADDRESS,paas-cf/staging-alert-email-address,the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
@@ -132,9 +135,9 @@ prod: globals ## Set Environment to Production
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
-	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
-	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk)
+	$(call get_from_pass_or_default,SYSTEM_DNS_ZONE_NAME,paas-cf/prod-sys-domain,cloud.service.gov.uk)
+	$(call get_from_pass_or_default,APPS_DNS_ZONE_NAME,paas-cf/prod-app-domain,cloudapps.digital)
+	$(call get_from_pass_or_default,ALERT_EMAIL_ADDRESS,paas-cf/prod-alert-email-address,the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
