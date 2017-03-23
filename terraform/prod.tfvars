@@ -71,6 +71,8 @@ tenant_cidrs = [
   "193.240.203.38/32",
   "82.45.99.124/32",
   # DWP Carer's Allowance
+  "194.159.238.241/32",
+  "212.250.23.69/32",
   "212.250.43.3/32",
 ]
 bosh_db_backup_retention_period = "35"
