@@ -236,6 +236,6 @@ shake_concourse_volumes: check-env ## Restarts concourse services and workers an
 	@./scripts/ssh.sh scp concourse/scripts/shake_concourse_volumes.sh /tmp/
 	@./scripts/ssh.sh ssh bash -i /tmp/shake_concourse_volumes.sh
 
-show-cf-memory-usage: ## Show the memory usage of the current CF cluster
+show-cf-memory-usage: check-env ## Show the memory usage of the current CF cluster
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
 	@./scripts/show-cf-memory-usage.rb
