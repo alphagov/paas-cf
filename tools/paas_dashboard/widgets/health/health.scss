@@ -6,6 +6,8 @@ $warning: #F25F00;
 $failure: #AF0900;
 $error: #5B0274;
 
+$small: 34em;
+
 
 .widget-health {
   li {
@@ -22,14 +24,22 @@ $error: #5B0274;
     }
 
     h3 {
-      font-size: 7vh;
+      font-size: 5vh;
       font-weight: bold;
+
+      @media screen and (min-width: $small) {
+        font-size: 7vh;
+      }
     }
 
     h4 {
-      font-size: 3vh;
+      font-size: 2.5vh;
       font-weight: bold;
       text-transform: uppercase;
+
+      @media screen and (min-width: $small) {
+        font-size: 3vh;
+      }
     }
 
     p &.updated-at {
@@ -88,8 +98,21 @@ $error: #5B0274;
 
     div.floated {
       display: inline-block;
-      margin-left: 20px;
-      margin-right: 20px;
+      margin-left: 10px;
+      margin-right: 10px;
+
+      @media screen and (min-width: $small) {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+      &:last-of-type {
+        margin-right: 0;
+      }
     }
   }
 }
