@@ -86,6 +86,13 @@ resource "aws_lb_ssl_negotiation_policy" "cf_uaa" {
   }
 }
 
+resource "aws_app_cookie_stickiness_policy" "cf_uaa" {
+  name          = "cf-uaa"
+  load_balancer = "${aws_elb.cf_uaa.id}"
+  lb_port       = 443
+  cookie_name   = "JSESSIONID"
+}
+
 resource "aws_elb" "cf_loggregator" {
   name                      = "${var.env}-cf-loggregator"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]

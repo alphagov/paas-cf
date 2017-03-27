@@ -44,7 +44,7 @@ A CF admin user has been created for you with the following details:
 
 You can log in by executing:
 
-  cf login -a #{api_url} -u #{user.fetch(:username)} --sso
+  cf login -a #{api_url} --sso
 
 Regards,
 The Government PaaS Team.
