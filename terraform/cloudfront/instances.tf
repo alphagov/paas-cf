@@ -9,8 +9,8 @@ module "cloudfront_paas_product_page" {
 
   name    = "PaaS Product Page"
   aliases = ["www.${var.system_dns_zone_name}"]
-  origin  = "govuk-paas.cloudapps.digital"
-  comment = "Serve the govuk-paas under the gov.uk domain."
+  origin  = "paas-product-page.cloudapps.digital"
+  comment = "Serve the paas-product-page under the gov.uk domain."
 
   env                   = "${var.env}"
   system_dns_zone_name  = "${var.system_dns_zone_name}"
