@@ -103,7 +103,7 @@ ci: globals ## Set Environment to CI
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
-	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-ci.yml)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export TEST_HEAVY_LOAD=true)
 	@true
