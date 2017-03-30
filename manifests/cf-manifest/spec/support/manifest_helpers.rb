@@ -78,7 +78,7 @@ private
         cf_secrets_file,
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
         grafana_dashboards_manifest,
-        File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
+        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
     ])
 
@@ -92,6 +92,7 @@ private
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../cloud-config/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         cf_secrets_file,
     ])
     deep_freeze(YAML.load(manifest))
