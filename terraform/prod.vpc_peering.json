@@ -1,0 +1,8 @@
+[
+    {
+        "peer_name": "dit",
+        "account_id": "513071381340",
+        "vpc_id": "vpc-4b0c122f",
+        "subnet_cidr": "172.16.1.0/24"
+    }
+]
