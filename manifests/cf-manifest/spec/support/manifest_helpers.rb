@@ -15,7 +15,7 @@ module ManifestHelpers
   end
 
   def manifest_with_defaults
-    Cache.instance.manifest_with_defaults ||= load_default_manifest
+    Cache.instance.manifest_with_defaults ||= render_manifest
   end
 
   def cloud_config
@@ -69,7 +69,7 @@ private
     file
   end
 
-  def load_default_manifest(environment = "default")
+  def render_manifest(environment = "default")
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../manifest/*.yml", __FILE__),
