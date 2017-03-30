@@ -22,7 +22,7 @@ RSpec.describe "generic manifest validations" do
         vm_types
       ).each do |resource_type|
         specify "all #{resource_type} have a unique name" do
-          all_resource_names = cloud_config.fetch(resource_type).map { |r| r["name"] }
+          all_resource_names = cloud_config_with_defaults.fetch(resource_type).map { |r| r["name"] }
 
           duplicated_names = all_resource_names.select { |n| all_resource_names.count(n) > 1 }.uniq
           expect(duplicated_names).to be_empty,
@@ -61,7 +61,7 @@ RSpec.describe "generic manifest validations" do
 
   describe "jobs cross-references" do
     specify "all jobs reference vm_types that exist" do
-      vm_type_names = cloud_config["vm_types"].map { |r| r["name"] }
+      vm_type_names = cloud_config_with_defaults["vm_types"].map { |r| r["name"] }
       manifest["jobs"].each do |job|
         expect(vm_type_names).to include(job["vm_type"]),
           "vm_type #{job['vm_type']} not found for job #{job['name']}"
@@ -69,7 +69,7 @@ RSpec.describe "generic manifest validations" do
     end
 
     specify "all jobs reference vm_extensions that exist" do
-      vm_extension_names = cloud_config.fetch("vm_extensions", []).map { |r| r["name"] }
+      vm_extension_names = cloud_config_with_defaults.fetch("vm_extensions", []).map { |r| r["name"] }
       manifest["jobs"].each do |job|
         job.fetch("vm_extensions", []).each do |extension|
           expect(vm_extension_names).to include(extension),
@@ -89,7 +89,7 @@ RSpec.describe "generic manifest validations" do
     end
 
     specify "all jobs reference availability zones that exist" do
-      azs_names = cloud_config["azs"].map { |r| r["name"] }
+      azs_names = cloud_config_with_defaults["azs"].map { |r| r["name"] }
       manifest["jobs"].each do |job|
         expect(job.has_key?("azs")).to be(true),
           "No azs key defined for job #{job['name']}. You must add some availability zones."
@@ -113,7 +113,7 @@ RSpec.describe "generic manifest validations" do
 
     describe "networks" do
       let(:networks_by_name) {
-        cloud_config["networks"].each_with_object({}) { |net, result| result[net["name"]] = net }
+        cloud_config_with_defaults["networks"].each_with_object({}) { |net, result| result[net["name"]] = net }
       }
       let(:network_names) { networks_by_name.keys }
 
@@ -157,7 +157,7 @@ RSpec.describe "generic manifest validations" do
     end
 
     specify "all jobs reference disk_types that exist" do
-      disk_type_names = cloud_config.fetch("disk_types", {}).map { |p| p["name"] }
+      disk_type_names = cloud_config_with_defaults.fetch("disk_types", {}).map { |p| p["name"] }
 
       manifest["jobs"].each do |job|
         next unless job["persistent_disk_type"]

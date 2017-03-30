@@ -8,7 +8,7 @@ module ManifestHelpers
   class Cache
     include Singleton
     attr_accessor :manifest_with_defaults
-    attr_accessor :cloud_config
+    attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
     attr_accessor :grafana_dashboards_manifest
@@ -18,8 +18,8 @@ module ManifestHelpers
     Cache.instance.manifest_with_defaults ||= render_manifest
   end
 
-  def cloud_config
-    Cache.instance.cloud_config ||= render_cloud_config
+  def cloud_config_with_defaults
+    Cache.instance.cloud_config_with_defaults ||= render_cloud_config
   end
 
   def terraform_fixture(key)
@@ -87,7 +87,7 @@ private
     deep_freeze(YAML.load(manifest))
   end
 
-  def render_cloud_config
+  def render_cloud_config(environment = "default")
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../cloud-config/*.yml", __FILE__),
