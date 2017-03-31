@@ -12,11 +12,13 @@ resource "aws_nat_gateway" "cf" {
 resource "aws_route_table" "internet" {
   vpc_id = "${var.vpc_id}"
   count  = "${var.zone_count}"
+}
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = "${element(aws_nat_gateway.cf.*.id, count.index)}"
-  }
+resource "aws_route" "internet" {
+  count                  = "${var.zone_count}"
+  route_table_id         = "${element(aws_route_table.internet.*.id, count.index)}"
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = "${element(aws_nat_gateway.cf.*.id, count.index)}"
 }
 
 resource "aws_route_table_association" "internet" {
