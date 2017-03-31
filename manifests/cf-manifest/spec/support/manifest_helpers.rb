@@ -8,18 +8,18 @@ module ManifestHelpers
   class Cache
     include Singleton
     attr_accessor :manifest_with_defaults
-    attr_accessor :cloud_config
+    attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
     attr_accessor :grafana_dashboards_manifest
   end
 
   def manifest_with_defaults
-    Cache.instance.manifest_with_defaults ||= load_default_manifest
+    Cache.instance.manifest_with_defaults ||= render_manifest
   end
 
-  def cloud_config
-    Cache.instance.cloud_config ||= render_cloud_config
+  def cloud_config_with_defaults
+    Cache.instance.cloud_config_with_defaults ||= render_cloud_config
   end
 
   def terraform_fixture(key)
@@ -69,7 +69,7 @@ private
     file
   end
 
-  def load_default_manifest(environment = "default")
+  def render_manifest(environment = "default")
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../manifest/*.yml", __FILE__),
@@ -78,7 +78,7 @@ private
         cf_secrets_file,
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
         grafana_dashboards_manifest,
-        File.expand_path("../../../manifest/env-specific/cf-#{environment}.yml", __FILE__),
+        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
     ])
 
@@ -87,11 +87,12 @@ private
     deep_freeze(YAML.load(manifest))
   end
 
-  def render_cloud_config
+  def render_cloud_config(environment = "default")
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../cloud-config/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         cf_secrets_file,
     ])
     deep_freeze(YAML.load(manifest))

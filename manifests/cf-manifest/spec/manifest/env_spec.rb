@@ -1,7 +1,7 @@
 
 RSpec.describe "Environment specific configuration" do
   let(:default_manifest) { manifest_with_defaults }
-  let(:prod_manifest) { load_default_manifest("prod") }
+  let(:prod_manifest) { render_manifest("prod") }
 
   def get_job_instances(manifest, job_name)
     manifest["jobs"].select { |j| j["name"] == job_name }.first["instances"]
