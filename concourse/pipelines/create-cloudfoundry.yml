@@ -811,8 +811,13 @@ jobs:
                 mkdir generated-certificates
                 tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
 
+                # FIXME: remove this once it's run everywhere.
+                wget -O tf_aws_route_migrator https://github.com/alext/tf_aws_route_migrator/releases/download/0.0.1/tf_aws_route_migrator_linux_amd64
+                chmod +x tf_aws_route_migrator
+                ./tf_aws_route_migrator < cf-tfstate/cf.tfstate > migrated-cf.tfstate
+
                 terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                  -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
+                  -state=migrated-cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
