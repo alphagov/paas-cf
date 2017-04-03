@@ -32,6 +32,8 @@ spec:
 		bundle exec rspec
 	cd platform-tests/bosh-template-renderer &&\
 		bundle exec rspec
+	cd terraform/scripts &&\
+		go test
 
 lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
