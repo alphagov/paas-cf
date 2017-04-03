@@ -149,3 +149,23 @@ variable "assets_prefix" {
   description = "Prefix for global assests like S3 buckets"
   default     = "gds-paas"
 }
+
+variable "peer_names" {
+  description = "The name of the peer"
+  default     = []
+}
+
+variable "peer_account_ids" {
+  description = "The account ID's that contains the VPC to peer with"
+  default     = []
+}
+
+variable "peer_vpc_ids" {
+  description = "The VPC to peer with"
+  default     = []
+}
+
+variable "peer_cidrs" {
+  description = "The CIDR of the VPC to peer with"
+  default     = []
+}

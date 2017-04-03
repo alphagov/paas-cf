@@ -775,6 +775,30 @@ jobs:
                 < cf-certs-tfstate/cf-certs.tfstate > terraform-variables/cf-certs.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
                 < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
+
+      - task: generate-peer-tfvars
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+          outputs:
+            - name: vpc-peering-tfvars
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb paas-cf/terraform/{{aws_account}}.vpc_peering.json \
+                > vpc-peering-tfvars/vpc-peers.tfvars
+
+                cat vpc-peering-tfvars/vpc-peers.tfvars
+
       - task: terraform-apply
         config:
           platform: linux
@@ -788,6 +812,7 @@ jobs:
             - name: cf-tfstate
             - name: cf-certs
             - name: pingdom-probes-ips
+            - name: vpc-peering-tfvars
           outputs:
             - name: updated-tfstate
           params:
@@ -811,8 +836,14 @@ jobs:
                 mkdir generated-certificates
                 tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
 
+                # FIXME: remove this once it's run everywhere.
+                wget -O tf_aws_route_migrator https://github.com/alext/tf_aws_route_migrator/releases/download/0.0.1/tf_aws_route_migrator_linux_amd64
+                chmod +x tf_aws_route_migrator
+                ./tf_aws_route_migrator < cf-tfstate/cf.tfstate > migrated-cf.tfstate
+
                 terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
-                  -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
+                  -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
+                  -state=migrated-cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
@@ -936,6 +967,29 @@ jobs:
                   ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-manifest.rb ${CF_MANIFEST_DIR}/grafana \
                     > grafana-dashboards-manifest/grafana-dashboards-manifest.yml
 
+      - task: generate-peer-manifest
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+          outputs:
+            - name: vpc-peering-manifest
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb paas-cf/terraform/{{aws_account}}.vpc_peering.json \
+                > vpc-peering-manifest/vpc-peers.yml
+
+                cat vpc-peering-manifest/vpc-peers.yml
+
       - aggregate:
         - task: generate-cloud-config
           config:
@@ -986,6 +1040,7 @@ jobs:
               - name: bosh-CA
               - name: ipsec-CA
               - name: grafana-dashboards-manifest
+              - name: vpc-peering-manifest
             outputs:
               - name: cf-manifest
             params:
@@ -997,6 +1052,7 @@ jobs:
                 ./certs/*.yml
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
                 ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
+                ./vpc-peering-manifest/*.yml
               AWS_ACCOUNT: {{aws_account}}
               ENABLE_DATADOG: {{enable_datadog}}
               DATADOG_API_KEY: {{datadog_api_key}}
