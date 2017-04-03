@@ -140,9 +140,6 @@ properties:
 
   metron_agent:
     deployment: (( grab meta.environment ))
-    preferred_protocol: ~
-    enable_buffer: ~
-    buffer_size: ~
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
 
   metron_endpoint:
