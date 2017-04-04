@@ -416,6 +416,10 @@ properties:
           refreshTokenValiditySeconds: 604800
 
     clients:
+      documentation:
+        app-icon: (( grab meta.docs_app_icon ))
+        app-launch-url: https://docs.cloud.service.gov.uk/#get-started
+        show-on-homepage: true
       login:
         override: true
         scope: openid,oauth.approvals
