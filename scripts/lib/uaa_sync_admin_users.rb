@@ -18,6 +18,7 @@ class UaaSyncAdminUsers
     "uaa.admin",
     "scim.read",
     "scim.write",
+    "scim.invite",
     "doppler.firehose"
   ].freeze
 
