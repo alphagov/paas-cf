@@ -11,11 +11,11 @@ source "${SCRIPT_DIR}/common.sh"
 DEFAULT_SPACE=sandbox
 FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
 # shellcheck disable=SC2016
-SUBJECT='Welcome to the Government PaaS'
+SUBJECT='Welcome to GOV.UK PaaS'
 # shellcheck disable=SC2016,SC1078
 MESSAGE='Hello,
 
-Your account for the Government PaaS service is ready:
+Your account for GOV.UK PaaS is ready:
 
  - username: ${EMAIL}
  - organisation: ${ORG}
