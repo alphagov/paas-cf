@@ -62,10 +62,9 @@ they didn't previously have an account.
 
 To print the invite URL instead of emailing, supply the '--no-email' flag (useful for development)
 
-Nothing will change if the organisation or the user already exists
-(unless the -r flag is used, which recreates the user with a new password).
-This way you can add a user to multiple organisations by running the script
-multiple times.
+Nothing will change if the organisation or the user already exists. This way
+you can add a user to multiple organisations by running the script multiple
+times.
 
 Requirements:
 
@@ -73,8 +72,7 @@ Requirements:
  * You must have a functional aws client with credentials configured.
 
 Where:
-  -r           Delete/recreate the user. The user will be recreated
-               and the password reset.
+  -r           Mark the user as "unverified" and send a new invite link.
 
   -m           Make the user an Org Manager
 
@@ -142,14 +140,6 @@ create_org_space() {
 }
 
 create_user() {
-  if [[ "${RESET_USER}" == "true" ]]; then
-    if cf delete-user "${EMAIL}" -f 2>&1 | tee "${TMP_OUTPUT}"; then
-      if grep -q "does not exist" "${TMP_OUTPUT}"; then
-        abort "Trying to reset password for non-existing user. Is someone trying to trick you into getting an account?"
-      fi
-    fi
-  fi
-
   export INVITE_URL
   local uaa_endpoint auth_token ssl_arg uaa_uuid
 
@@ -170,7 +160,23 @@ create_user() {
 
   if jq -e '.resources | length == 1' "${TMP_OUTPUT}" >/dev/null; then
     uaa_uuid=$(jq -er '.resources[0].id' "${TMP_OUTPUT}")
-  else
+
+    if [[ "${RESET_USER}" == "true" ]]; then
+      curl -sf "${ssl_arg}" \
+        -X PATCH \
+        -H "Authorization: ${auth_token}" \
+        -H "Accept: application/json" -H "Content-Type: application/json" \
+        -H "If-Match: *" \
+        -d "{\"verified\": false}" \
+        "${uaa_endpoint}/Users/${uaa_uuid}" >"${TMP_OUTPUT}"
+    fi
+  fi
+
+  if [[ -z "${uaa_uuid}" ]] && [[ "${RESET_USER}" == "true" ]]; then
+    abort "Trying to reset invite for non-existing user. Is someone trying to trick you into getting an account?"
+  fi
+
+  if [[ -z "${uaa_uuid}" ]] || [[ "${RESET_USER}" == "true" ]]; then
     curl -sf "${ssl_arg}" \
       -X POST \
       -H "Authorization: ${auth_token}" \
@@ -258,7 +264,7 @@ emit_invite() {
       send_mail
     fi
   else
-    echo "No new users created. Use -r to force password reset for existing users."
+    echo "No new users created. Use -r to force new invites for existing users."
   fi
 }
 
