@@ -29,13 +29,6 @@ success() {
   echo -e "${COL_GREEN:-}SUCCESSFUL:${COL_RESET:-} $*"
 }
 
-generate_password() {
-  PASSWORD=$(LC_CTYPE=C tr -cd '[:alpha:]0-9.,;:!?_/-' < /dev/urandom | head -c32 || true)
-  if [[ -z "${PASSWORD}" ]]; then
-    abort "Failure generating password"
-  fi
-}
-
 check_aws_account_used() {
   required_account="${1}"
   account_alias=$(aws iam list-account-aliases | grep gov-paas | tr -d '" ')

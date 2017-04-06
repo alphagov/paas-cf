@@ -11,27 +11,33 @@ source "${SCRIPT_DIR}/common.sh"
 DEFAULT_SPACE=sandbox
 FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
 # shellcheck disable=SC2016
-SUBJECT='Welcome to the Government PaaS'
+SUBJECT='Welcome to GOV.UK PaaS'
 # shellcheck disable=SC2016,SC1078
 MESSAGE='Hello,
 
-Your account for the Government PaaS service has been created.
+Your account for GOV.UK PaaS is ready:
 
-Your organisation is \"${ORG}\" and your login and password are:
+ - username: ${EMAIL}
+ - organisation: ${ORG}
 
- - login: ${EMAIL}
- - password: ${PASSWORD}
+Please use this link to activate your account and set a password. The link will only work once:
+${INVITE_URL}
+
+You can find advice about choosing a password:
+https://docs.cloud.service.gov.uk/#choosing-passwords
 
 To get started, look at our Quick Setup Guide:
 https://docs.cloud.service.gov.uk/#quick-setup-guide
-
-You should make sure to change your password, as explained in the Quick Setup Guide.
 
 You can find our privacy policy here:
 https://docs.cloud.service.gov.uk/#privacy-policy
 
 Regards,
 Government PaaS team.
+
+PS Some departmental email systems will check links in inbound emails as part of
+their virus protection. This may have invalidated your one-time link. If this is
+the case please contact support to set your password another way.
 '
 NOTIFICATION='
 As the account has been created now please remeber to update gov-uk-paas-announce
@@ -51,14 +57,14 @@ Usage:
   $SCRIPT [-r] [-m] -e <email> -o <orgname> [--no-email]
 
 $SCRIPT will create a user and organisation in the CF service where you
-are currently logged in and send an email to the user if the password changes.
+are currently logged in and send an email to the user with an invite URL if
+they didn't previously have an account.
 
-To print the password instead of emailing, supply the '--no-email' flag (useful for development)
+To print the invite URL instead of emailing, supply the '--no-email' flag (useful for development)
 
-Nothing will change if the organisation or the user already exists
-(unless the -r flag is used, which recreates the user with a new password).
-This way you can add a user to multiple organisations by running the script
-multiple times.
+Nothing will change if the organisation or the user already exists. This way
+you can add a user to multiple organisations by running the script multiple
+times.
 
 Requirements:
 
@@ -66,8 +72,7 @@ Requirements:
  * You must have a functional aws client with credentials configured.
 
 Where:
-  -r           Delete/recreate the user. The user will be recreated
-               and the password reset.
+  -r           Mark the user as "unverified" and send a new invite link.
 
   -m           Make the user an Org Manager
 
@@ -102,6 +107,10 @@ check_params_and_environment() {
     abort_usage "Org must be defined"
   fi
 
+  if ! jq -V >/dev/null 2>&1; then
+    abort "You need to have jq installed"
+  fi
+
   if ! cf orgs >/dev/null 2>&1; then
     abort "You need to be logged into CF CLI"
   fi
@@ -110,13 +119,6 @@ check_params_and_environment() {
     abort "You must have AWS cli installed and configured with valid credentials. Test it with: aws ses get-send-quota"
   fi
 
-}
-
-generate_password() {
-  PASSWORD=$(LC_CTYPE=C tr -cd '[:alpha:]0-9.,;:!?_/-' < /dev/urandom | head -c32 || true)
-  if [[ -z "${PASSWORD}" ]]; then
-    abort "Failure generating password"
-  fi
 }
 
 create_org_space() {
@@ -138,19 +140,67 @@ create_org_space() {
 }
 
 create_user() {
-  if [[ "${RESET_USER}" == "true" ]]; then
-    if cf delete-user "${EMAIL}" -f 2>&1 | tee "${TMP_OUTPUT}"; then
-      if grep -q "does not exist" "${TMP_OUTPUT}"; then
-        abort "Trying to reset password for non-existing user. Is someone trying to trick you into getting an account?"
-      fi
+  export INVITE_URL
+  local uaa_endpoint auth_token ssl_arg uaa_uuid
+
+  uaa_endpoint=$(cf curl /v2/info | jq -er '.authorization_endpoint')
+  auth_token=$(cf oauth-token)
+  ssl_arg=$(if jq -e '.SSLDisabled == true' ~/.cf/config.json >/dev/null; then echo "-k"; fi)
+
+  curl -sf "${ssl_arg}" \
+    -H "Authorization: ${auth_token}" \
+    -H "Accept: application/json" -H "Content-Type: application/json" \
+    -G --data-urlencode "filter=userName eq \"${EMAIL}\"" \
+    "${uaa_endpoint}/Users" >"${TMP_OUTPUT}"
+
+  if jq -e '.resources | length > 1' "${TMP_OUTPUT}" >/dev/null; then
+    cat "${TMP_OUTPUT}"
+    abort "Multiple UAA users found for: ${EMAIL}"
+  fi
+
+  if jq -e '.resources | length == 1' "${TMP_OUTPUT}" >/dev/null; then
+    uaa_uuid=$(jq -er '.resources[0].id' "${TMP_OUTPUT}")
+
+    if [[ "${RESET_USER}" == "true" ]]; then
+      curl -sf "${ssl_arg}" \
+        -X PATCH \
+        -H "Authorization: ${auth_token}" \
+        -H "Accept: application/json" -H "Content-Type: application/json" \
+        -H "If-Match: *" \
+        -d "{\"verified\": false}" \
+        "${uaa_endpoint}/Users/${uaa_uuid}" >"${TMP_OUTPUT}"
     fi
   fi
 
-  if cf create-user "${EMAIL}" "${PASSWORD}" 2>&1 | tee "${TMP_OUTPUT}"; then
-    if ! grep -q "already exists" "${TMP_OUTPUT}"; then
-      USER_CREATED=true
+  if [[ -z "${uaa_uuid}" ]] && [[ "${RESET_USER}" == "true" ]]; then
+    abort "Trying to reset invite for non-existing user. Is someone trying to trick you into getting an account?"
+  fi
+
+  if [[ -z "${uaa_uuid}" ]] || [[ "${RESET_USER}" == "true" ]]; then
+    curl -sf "${ssl_arg}" \
+      -X POST \
+      -H "Authorization: ${auth_token}" \
+      -H "Accept: application/json" -H "Content-Type: application/json" \
+      -d "{\"emails\": [\"${EMAIL}\"]}" \
+      "${uaa_endpoint}/invite_users?redirect_uri=" >"${TMP_OUTPUT}"
+
+    if ! jq -e '.new_invites | length == 1' "${TMP_OUTPUT}" >/dev/null; then
+      cat "${TMP_OUTPUT}"
+      abort "Error creating invite for ${EMAIL}"
     fi
-  else
+
+    uaa_uuid=$(jq -er '.new_invites[0].userId' "${TMP_OUTPUT}")
+    INVITE_URL=$(jq -er '.new_invites[0].inviteLink' "${TMP_OUTPUT}")
+    USER_CREATED=true
+  fi
+
+  cf curl \
+    -X POST \
+    -d "{\"guid\": \"${uaa_uuid}\"}" \
+    /v2/users >"${TMP_OUTPUT}"
+
+  if ! jq -e '(.metadata.guid != null) or (.error_code == "CF-UaaIdTaken")' "${TMP_OUTPUT}" >/dev/null; then
+    cat "${TMP_OUTPUT}"
     abort "Error creating user ${EMAIL}"
   fi
 }
@@ -202,19 +252,19 @@ send_mail() {
   show_notification
 }
 
-print_password() {
-  success "${EMAIL} has had their password changed to ${PASSWORD}"
+print_invite() {
+  success "Created invite ${INVITE_URL} for ${EMAIL}"
 }
 
-emit_password() {
+emit_invite() {
   if [ "${USER_CREATED}" = "true" ]; then
     if [ "${NO_EMAIL:-}" = "true" ]; then
-      print_password
+      print_invite
     else
       send_mail
     fi
   else
-    echo "No new users created. Use -r to force password reset for existing users."
+    echo "No new users created. Use -r to force new invites for existing users."
   fi
 }
 
@@ -261,8 +311,7 @@ done
 load_colors
 check_params_and_environment
 
-generate_password
 create_org_space
 create_user
 set_user_roles
-emit_password
+emit_invite
