@@ -37,6 +37,10 @@ releases:
     version: 0.1.2
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.2.tgz
     sha1: b9799935c22965443f3ddfc9ccdacd9c2cccfa5f
+  - name: nginx
+    version: 1.11.7
+    url: https://github.com/cloudfoundry-community/nginx-release/releases/download/v1.11.7/nginx-1.11.7.tgz
+    sha1: 133bb2260411b197924fff08d4cbd923cc8ec7eb
 
 stemcells:
   - alias: default
