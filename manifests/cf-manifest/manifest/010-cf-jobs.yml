@@ -265,7 +265,11 @@ jobs:
             server 127.0.0.1:8080;
           }
           server {
-            listen 8090;
+            listen 9443;
+            ssl on;
+            ssl_certificate_key /var/vcap/jobs/nginx/etc/ssl.key.pem;
+            ssl_certificate  /var/vcap/jobs/nginx/etc/ssl_chained.crt.pem;
+
             location / {
               rewrite ^/create_account(.do)?$ /create_account_disabled break;
               rewrite ^/forgot_password(.do)?$ /create_account_disabled break;
@@ -278,6 +282,8 @@ jobs:
             }
           }
         }
+      ssl_key: (( grab secrets.uaa_internal_key ))
+      ssl_chained_cert: (( grab secrets.uaa_internal_cert ))
       consul:
         agent:
           services:
