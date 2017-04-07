@@ -59,7 +59,7 @@ resource "aws_elb" "cf_uaa" {
   }
 
   health_check {
-    target              = "HTTP:8080/healthz"
+    target              = "HTTPS:9443/healthz"
     interval            = "${var.health_check_interval}"
     timeout             = "${var.health_check_timeout}"
     healthy_threshold   = "${var.health_check_healthy}"
@@ -67,8 +67,8 @@ resource "aws_elb" "cf_uaa" {
   }
 
   listener {
-    instance_port      = 8080
-    instance_protocol  = "http"
+    instance_port      = 9443
+    instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = "${var.system_domain_cert_arn}"
