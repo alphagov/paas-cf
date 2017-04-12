@@ -107,15 +107,15 @@ variable "admin_cidrs" {
   ]
 }
 
-/* Note: This is overridden in prod.tfvars to allow specific tenant access */
-variable "tenant_cidrs" {
-  description = "List of CIDR addresses of tenants with access to CloudFoundry API"
+/* Note: This is overridden in prod.tfvars to allow world access */
+variable "api_access_cidrs" {
+  description = "List of CIDR addresses with access to CloudFoundry API"
   default     = []
 }
 
 /* Note: This is overridden in prod.tfvars to allow world access */
 variable "web_access_cidrs" {
-  description = "List of CIDR addresses with access to "
+  description = "List of CIDR addresses with access to CloudFoundry web interfaces"
   default     = []
 }
 
