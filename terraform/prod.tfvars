@@ -76,6 +76,10 @@ tenant_cidrs = [
   "212.250.43.3/32",
   # DWP Overseas Healthcare Service Trial
   "217.33.141.90/32",
+  # DIT Services
+  "81.128.182.170/32",
+  "52.56.227.174/32",
+  "52.49.20.243/32,
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
