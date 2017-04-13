@@ -79,7 +79,6 @@ tenant_cidrs = [
   # DIT Services
   "81.128.182.170/32",
   "52.56.227.174/32",
-  "52.49.20.243/32",
 ]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
