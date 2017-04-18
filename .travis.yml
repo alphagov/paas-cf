@@ -50,3 +50,7 @@ before_install:
 
 script:
   - make test
+
+notifications:
+  email:
+    on_success: never
