@@ -27,7 +27,7 @@ resource "aws_security_group" "cf_api_elb" {
 
     cidr_blocks = [
       "${compact(var.admin_cidrs)}",
-      "${compact(var.tenant_cidrs)}",
+      "${compact(var.api_access_cidrs)}",
       "${var.concourse_elastic_ip}/32",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
     ]
@@ -94,7 +94,6 @@ resource "aws_security_group" "web" {
 
     cidr_blocks = [
       "${compact(var.admin_cidrs)}",
-      "${compact(var.tenant_cidrs)}",
       "${compact(var.web_access_cidrs)}",
       "${var.concourse_elastic_ip}/32",
       "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
@@ -125,7 +124,7 @@ resource "aws_security_group" "sshproxy" {
 
     cidr_blocks = [
       "${compact(var.admin_cidrs)}",
-      "${compact(var.tenant_cidrs)}",
+      "${compact(var.api_access_cidrs)}",
       "${var.concourse_elastic_ip}/32",
     ]
   }
