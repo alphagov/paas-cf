@@ -598,6 +598,9 @@ properties:
         basic_auth_password: (( grab properties.cc.internal_api_password ))
         staging_upload_user: (( grab properties.cc.staging_upload_user ))
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
+        ca_cert: (( grab secrets.bosh_ca_cert ))
+        client_cert: (( grab secrets.cc_client_cert ))
+        client_key: (( grab secrets.cc_client_key ))
 
     nsync:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
