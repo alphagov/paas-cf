@@ -6,21 +6,21 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "253"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=253
-    sha1: 8e0ea926929bdb1ff16a366e2154d017c637a137
+    version: "256"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=256
+    sha1: 7eb583eb6dd08dfce8858d891b2571aebeb6b52c
   - name: diego
-    version: 1.8.1
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.8.1
-    sha1: a8c9fdecf59a1fceb2837ac0cfbde6a939427adb
+    version: 1.12.0
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.12.0
+    sha1: 6fe4073431ac2dcb7072493fae0f6c22f780e8a2
   - name: garden-runc
-    version: 1.2.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.2.0
-    sha1: 37d46f41d187dbd90e1bf0748fa5c1fb60870bff
+    version: 1.4.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.4.0
+    sha1: 1d6020e761806d7f355ceda06c889c582b47dc32
   - name: cflinuxfs2-rootfs
-    version: 1.53.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.53.0
-    sha1: 93950d5d2071fdb395b7b1c958b8abddb8fdcfa0
+    version: 1.60.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-rootfs-release?v=1.60.0
+    sha1: 12b7e2473d0f4e9edc90bc3da873f51e70ede942
   - name: paas-haproxy
     version: 0.1.3
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.3.tgz
@@ -41,7 +41,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3363.12"
+    version: "3363.19"
 
 update:
   canaries: 0
