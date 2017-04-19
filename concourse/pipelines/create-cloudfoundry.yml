@@ -2018,6 +2018,9 @@ jobs:
                     SLEEPTIME=90
                     echo "Sleeping for ${SLEEPTIME} seconds..."
                     for i in $(seq $SLEEPTIME); do echo -ne "$i"'\r'; sleep 1; done; echo
+                    # FIXME. Should be removed after solving:
+                    # https://github.com/cloudfoundry/cf-release/issues/1188
+                    sed -i '/install-plugin/d' /var/vcap/jobs/acceptance-tests/bin/run
                     /var/vcap/jobs/acceptance-tests/bin/run
                   fi
 
