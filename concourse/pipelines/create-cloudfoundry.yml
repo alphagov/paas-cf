@@ -2004,23 +2004,6 @@ jobs:
                 - -e
                 - -c
                 - |
-                  # FIXME: Remove this once
-                  # https://github.com/cloudfoundry/cf-acceptance-tests/pull/188 has been merged
-                  # and we use the new version.
-                  (
-                    cd  cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/
-                    expected_commit_hash="b3f4485c8fb874b5c6be969c916f6b8a5922c0bc"
-                    current_commit_hash="$(git log --pretty=format:'%H' -n 1)"
-                    if [ "${expected_commit_hash}" != "${current_commit_hash}" ]; then
-                      echo "ERROR: Current commit for cf-acceptance-test is different than expected one: ${expected_commit_hash} != ${current_commit_hash}"
-                      echo "Double check if we still need to pull our branch"
-                      exit 1
-                    fi
-                    git remote add alphagov https://github.com/alphagov/paas-cf-acceptance-tests.git
-                    git fetch alphagov
-                    git checkout fix_v3_helper_doppler
-                  )
-
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   mkdir -p /var/vcap/sys
                   ln -s $(pwd)/artifacts /var/vcap/sys/log
