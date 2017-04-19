@@ -75,6 +75,7 @@ meta:
     release: datadog-for-cloudfoundry
   - name: etcd
     release: (( grab meta.release.name ))
+    consumes: {etcd: nil}
   - name: etcd_metrics_server
     release: (( grab meta.release.name ))
   - name: metron_agent
@@ -101,6 +102,7 @@ meta:
     release: datadog-for-cloudfoundry
   - name: loggregator_trafficcontroller
     release: (( grab meta.release.name ))
+    consumes: {doppler: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
 
