@@ -37,6 +37,14 @@ releases:
     version: 1.11.7
     url: https://github.com/cloudfoundry-community/nginx-release/releases/download/v1.11.7/nginx-1.11.7.tgz
     sha1: 133bb2260411b197924fff08d4cbd923cc8ec7eb
+    #FIXME: using a patched UAA release due to CVEs:
+    # https://www.cloudfoundry.org/cve-2017-4972/
+    # https://www.cloudfoundry.org/cve-2017-4973/
+    # Remove once CF is upgraded to >= v257
+  - name: uaa
+    version: "30"
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=30
+    sha1: 90b034c0d9a8282a47d0409e561ffb1b9abf626b
 
 stemcells:
   - alias: default

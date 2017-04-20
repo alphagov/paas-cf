@@ -149,7 +149,11 @@ meta:
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: uaa
-    release: (( grab meta.release.name ))
+    #FIXME: using a patched UAA release due to CVEs:
+    # https://www.cloudfoundry.org/cve-2017-4972/
+    # https://www.cloudfoundry.org/cve-2017-4973/
+    # Remove once CF is upgraded to >= v257
+    release: uaa
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd_injector
