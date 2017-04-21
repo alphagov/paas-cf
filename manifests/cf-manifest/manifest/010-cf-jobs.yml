@@ -75,6 +75,7 @@ meta:
     release: datadog-for-cloudfoundry
   - name: etcd
     release: (( grab meta.release.name ))
+    consumes: {etcd: nil}
   - name: etcd_metrics_server
     release: (( grab meta.release.name ))
   - name: metron_agent
@@ -101,6 +102,7 @@ meta:
     release: datadog-for-cloudfoundry
   - name: loggregator_trafficcontroller
     release: (( grab meta.release.name ))
+    consumes: {doppler: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
 
@@ -147,7 +149,11 @@ meta:
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: uaa
-    release: (( grab meta.release.name ))
+    #FIXME: using a patched UAA release due to CVEs:
+    # https://www.cloudfoundry.org/cve-2017-4972/
+    # https://www.cloudfoundry.org/cve-2017-4973/
+    # Remove once CF is upgraded to >= v257
+    release: uaa
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: statsd_injector
@@ -480,11 +486,11 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: ssh_proxy
-        release: diego-patched
+        release: diego
       - name: metron_agent
         release: cf
       - name: file_server
-        release: diego-patched
+        release: diego
       - name: cfdot
         release: diego
     instances: 2
