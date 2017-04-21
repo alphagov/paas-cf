@@ -57,7 +57,8 @@ resource "aws_db_instance" "cf" {
   auto_minor_version_upgrade = false
 
   tags {
-    Name = "${var.env}-cf"
+    Name       = "${var.env}-cf"
+    deploy_env = "${var.env}"
   }
 }
 
