@@ -20,7 +20,7 @@ resource "datadog_monitor" "rds-cpu-credits" {
   type           = "query alert"
   message        = "${format("Instance is {{#is_warning}}low on{{/is_warning}}{{#is_alert}}out of{{/is_alert}} CPU credits and may perform badly. See: %s#cpu-credits @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
   notify_no_data = false
-  query          = "${format("avg(last_30m):avg:aws.rds.cpucredit_balance{deploy_env:%s,!created_by:aws_rds_service_broker} by {dbinstanceidentifier} <= 1", var.env)}"
+  query          = "${format("avg(last_30m):avg:aws.rds.cpucredit_balance{deploy_env:%s,!created_by:aws_rds_service_broker} by {dbinstanceidentifier} <= 1", "master")}"
 
   thresholds {
     warning  = "20"
