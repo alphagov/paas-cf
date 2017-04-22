@@ -16,6 +16,15 @@ addons:
       - git
       - gnupg
 
+cache:
+  bundler: true
+  pip: true
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.rvm
+    - $HOME/gopath
+    - $HOME/vendor/bundle
+
 before_install:
   - |
     mkdir ~/bin
