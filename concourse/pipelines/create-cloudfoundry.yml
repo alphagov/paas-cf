@@ -2049,6 +2049,10 @@ jobs:
           - get: bosh-CA
           - get: cf-secrets
             passed: ['cf-deploy']
+          - get: cf-release
+            params:
+              submodules:
+                - src/github.com/cloudfoundry/cf-acceptance-tests
 
       - do:
         - task: create-temp-user
