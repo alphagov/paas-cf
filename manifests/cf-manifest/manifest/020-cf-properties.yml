@@ -662,3 +662,4 @@ properties:
     certificate_authority_private_key: (( grab secrets.ipsec_ca_key ))
     verify_certificate: "on"
     level: require
+    disabled: true
