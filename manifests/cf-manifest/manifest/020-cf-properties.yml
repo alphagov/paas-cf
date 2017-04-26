@@ -656,6 +656,7 @@ properties:
     trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
 
   garden:
+    network_mtu: 1500
     log_level: error
   racoon:
     certificate_authority_cert: (( grab secrets.ipsec_ca_cert ))

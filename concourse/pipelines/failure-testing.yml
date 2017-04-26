@@ -397,6 +397,11 @@ jobs:
           - get: pipeline-trigger
             passed: ['init']
             trigger: true
+          - get: cf-release
+            params:
+              submodules:
+                - src/github.com/cloudfoundry/cf-acceptance-tests
+
       - task: get-instance-id
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
