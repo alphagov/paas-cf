@@ -25,3 +25,8 @@ variable "datadog_notification_24x7" {
 variable "datadog_notification_in_hours" {
   description = "Datadog notification for in hours alerts: empty string for no notification, email address (start with @) or pagerduty service name (start with @)"
 }
+
+variable "datadog_documentation_url" {
+  description = "URL that documents how to respond to specific DataDog alerts. Anchors can be appended to refer to specific alerts."
+  default     = "https://government-paas-team-manual.readthedocs.io/en/latest/support/responding_to_alerts/"
+}
