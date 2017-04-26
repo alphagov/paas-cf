@@ -17,7 +17,7 @@ import (
 
 const (
 	availabilityTestRate             = 10
-	availabilityTestMaxDuration      = 2 * time.Hour
+	availabilityTestMaxDuration      = 12 * time.Hour
 	availabilityTestMaxLatency       = 300 * time.Millisecond
 	availabilityTestMaxErrors        = 0
 	availabilitySuccessRateThreshold = 100.0
