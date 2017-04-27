@@ -1740,11 +1740,25 @@ jobs:
                   - -e
                   - -c
                   - |
+                    if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
+                      echo "Datadog disabled but keys present, running check cleanup..."
+                      terraform destroy -force \
+                         -state=datadog-tfstate/datadog.tfstate \
+                         -state-out=updated-tfstate/datadog.tfstate \
+                         -var-file=paas-cf/terraform/${TF_VAR_aws_account}.tfvars \
+                         paas-cf/terraform/datadog
+                      exit 0
+                    fi
+
+                    if [ "${ENABLE_DATADOG}" = "true" ]; then
                       terraform apply \
-                        -target datadog_monitor.rds-cpu-credits \
                         -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                         -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
                         -var-file=config/job_instances.tfvars paas-cf/terraform/datadog
+                    else
+                      echo "Datadog disabled, skipping terraform run..."
+                      cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                    fi
             ensure:
               put: datadog-tfstate
               params:
