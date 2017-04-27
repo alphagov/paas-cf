@@ -42,8 +42,16 @@ output "cf_rds_client_security_group" {
   value = "${aws_security_group.cf_rds_client.name}"
 }
 
+output "cdn_rds_client_security_group" {
+  value = "${aws_security_group.cdn_rds_client.name}"
+}
+
 output "cf_db_address" {
   value = "${aws_db_instance.cf.address}"
+}
+
+output "cdn_db_connection_string" {
+  value = "${format("postgresql://%v:%v@%v/%v", aws_db_instance.cdn.username, var.secrets_cdn_db_master_password, aws_db_instance.cdn.address, aws_db_instance.cdn.name)}"
 }
 
 output "cf_router_elb_name" {
@@ -100,6 +108,10 @@ output "aws_backing_service_cidr_all" {
 
 output "rds_broker_db_clients_security_group" {
   value = "${aws_security_group.rds_broker_db_clients.name}"
+}
+
+output "cdn_broker_db_clients_security_group" {
+  value = "${aws_security_group.cdn_rds_client.name}"
 }
 
 output "rds_broker_dbs_security_group_id" {
