@@ -23,6 +23,28 @@ resource "aws_elb" "cdn_broker" {
   }
 }
 
+resource "aws_s3_bucket" "cdn_broker_bucket" {
+  bucket        = "gds-paas-${var.env}-cdn-broker-challenge"
+  acl           = "private"
+  force_destroy = "true"
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+	  "Resource": "arn:aws:s3:::gds-paas-${var.env}-cdn-broker-challenge/*",
+      "Principal": "*"
+    }
+  ]
+}
+POLICY
+}
+
 resource "aws_db_subnet_group" "cdn_rds" {
   name        = "${var.env}-cdn"
   description = "Subnet group for CF CDN"
