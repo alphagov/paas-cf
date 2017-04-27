@@ -10,7 +10,7 @@ resource "datadog_monitor" "ec2-cpu-credits" {
     critical = "1"
   }
 
-  require_full_window = true
+  require_full_window = false
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }
@@ -27,7 +27,7 @@ resource "datadog_monitor" "rds-cpu-credits" {
     critical = "1"
   }
 
-  require_full_window = true
+  require_full_window = false
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }
