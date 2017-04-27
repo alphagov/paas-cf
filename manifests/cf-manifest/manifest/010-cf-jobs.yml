@@ -327,9 +327,9 @@ jobs:
       - name: cf
 
   - name: doppler
-    azs: [z1, z2]
+    azs: [z1, z2, z3]
     templates: (( grab meta.loggregator_templates ))
-    instances: 2
+    instances: 3
     vm_type: medium
     stemcell: default
     networks:
