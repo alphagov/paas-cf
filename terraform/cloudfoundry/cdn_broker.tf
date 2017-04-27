@@ -1,3 +1,28 @@
+resource "aws_elb" "cdn_broker" {
+  name                      = "${var.env}-cdn-broker"
+  subnets                   = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout              = "${var.elb_idle_timeout}"
+  cross_zone_load_balancing = "true"
+  internal                  = true
+  security_groups           = ["${aws_security_group.service_brokers.id}"]
+
+  health_check {
+    target              = "HTTP:3000/healthcheck"
+    interval            = "${var.health_check_interval}"
+    timeout             = "${var.health_check_timeout}"
+    healthy_threshold   = "${var.health_check_healthy}"
+    unhealthy_threshold = "${var.health_check_unhealthy}"
+  }
+
+  listener {
+    instance_port      = 3000
+    instance_protocol  = "http"
+    lb_port            = 443
+    lb_protocol        = "https"
+    ssl_certificate_id = "${var.system_domain_cert_arn}"
+  }
+}
+
 resource "aws_db_subnet_group" "cdn_rds" {
   name        = "${var.env}-cdn"
   description = "Subnet group for CF CDN"

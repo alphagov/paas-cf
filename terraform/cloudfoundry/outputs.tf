@@ -134,6 +134,14 @@ output "rds_broker_elb_dns_name" {
   value = "${aws_route53_record.rds_broker.fqdn}"
 }
 
+output "cdn_broker_elb_name" {
+  value = "${aws_elb.cdn_broker.name}"
+}
+
+output "cdn_broker_elb_dns_name" {
+  value = "${aws_route53_record.cdn_broker.fqdn}"
+}
+
 output "cloud_controller_security_group" {
   value = "${aws_security_group.cloud_controller.name}"
 }
