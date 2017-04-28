@@ -8,7 +8,6 @@ properties:
     test_password: (( grab secrets.test_user_password ))
     skip_ssl_validation: false
     backend: "diego"
-    client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
     skip_diego_unsupported_tests: true
     include_tasks: true
     include_v3: false
