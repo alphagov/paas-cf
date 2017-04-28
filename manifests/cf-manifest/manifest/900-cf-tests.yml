@@ -22,8 +22,8 @@ properties:
     include_diego_ssh: true
     include_docker: true
     include_route_services: true
-    artifacts_directory: "/var/vcap/sys/log/test_artifacts"
     nodes: 5
+    artifacts_directory: "/tmp/artifacts"
 
   smoke_tests:
     api: (( grab properties.acceptance_tests.api ))
