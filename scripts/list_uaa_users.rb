@@ -2,8 +2,7 @@
 
 # Configuration
 # export TARGET="https://uaa.<SYSTEM DOMAIN>"
-# export UAA_CLIENT_USERNAME=admin
-# export UAA_CLIENT_PASSWORD=xxx # uaa_admin_client_secret
+# export TOKEN=$(cf oauth-token)
 # export SKIP_SSL_VALIDATION=true
 
 # Uncomment and edit queries below
@@ -11,16 +10,14 @@
 # Run within paas-cf/scripts
 # ./force_user_reset_password.rb | sort -f
 
-require './lib/uaa_sync_admin_users.rb'
+require 'uaa'
 
 target=ENV.fetch("TARGET")
-admin_user=ENV.fetch("UAA_CLIENT_USERNAME")
-admin_password=ENV.fetch("UAA_CLIENT_PASSWORD")
+token=ENV.fetch("TOKEN")
 options = {}
 options[:skip_ssl_validation] = ENV.fetch("SKIP_SSL_VALIDATION") == "true"
 
-uaa_sync_admin_users = UaaSyncAdminUsers.new(target, admin_user, admin_password, options)
-uaa_sync_admin_users.request_token
+uaac = CF::UAA::Scim.new(target, token, options)
 
 # doesn't work :(
 # query = { filter: "previouslogontime pr" }
@@ -30,7 +27,7 @@ uaa_sync_admin_users.request_token
 query = { }
 # 1 user
 # query = { filter: "userName eq 'colin-test'"}
-users = uaa_sync_admin_users.ua.all_pages(:user, query)
+users = uaac.all_pages(:user, query)
 
 users.each{ |u|
   # Users who never changed password
