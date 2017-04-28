@@ -30,9 +30,26 @@ query = { }
 users = uaac.all_pages(:user, query)
 
 users.each{ |u|
+  # Ignore users created by tests in the pipeline
+  next if u.fetch('username').start_with?(
+    "CATS-USER-",
+    "custom-acceptance-test-user-",
+    "smoketest-user-",
+    "cont-smoketest-user-",
+  )
+
+  # Ignore SSO users
+  next if u.fetch('origin') != "uaa"
+
+  # Ignore users with outstanding invites
+  next if u.fetch('verified') == false
+
+  # Ignore locked users
+  next if u.fetch('active') == false
+
   # Users who never changed password
-  if Time.parse(u['passwordlastmodified']).to_i == Time.parse(u['meta']['created']).to_i and u["origin"] == "uaa"
-    puts "#{u['username']}"
+  if Time.parse(u.fetch('passwordlastmodified')).to_i == Time.parse(u.fetch('meta').fetch('created')).to_i
+    puts "#{u.fetch('username')}"
   end
 
   # Users who logged in at least twice
