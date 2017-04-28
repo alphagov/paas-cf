@@ -15,7 +15,7 @@ require 'uaa'
 target=ENV.fetch("TARGET")
 token=ENV.fetch("TOKEN")
 options = {}
-options[:skip_ssl_validation] = ENV.fetch("SKIP_SSL_VALIDATION") == "true"
+options[:skip_ssl_validation] = ENV.fetch("SKIP_SSL_VALIDATION", "false") == "true"
 
 uaac = CF::UAA::Scim.new(target, token, options)
 
