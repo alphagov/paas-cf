@@ -14,7 +14,6 @@ properties:
     include_v3: false
     include_security_groups: true
     include_routing: true
-    skip_regex: 'routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|uses\sa\sbuildpack\sfrom\sa\sgit\surl|when\sapp\shas\smultiple\sports\smapped'
     include_internet_dependent: true
     include_logging: true
     include_operator: true
@@ -22,7 +21,6 @@ properties:
     include_diego_ssh: true
     include_docker: true
     include_route_services: true
-    nodes: 5
     artifacts_directory: "/tmp/artifacts"
 
   smoke_tests:
