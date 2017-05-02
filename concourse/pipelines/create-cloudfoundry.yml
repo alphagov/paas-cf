@@ -1962,8 +1962,8 @@ jobs:
                   ruby -e "require 'yaml'
 
                   my = {'properties' => {'acceptance_tests' => YAML.load_file('cf-manifest/cf-manifest.yml')['properties']['acceptance_tests']}}
-                  my['properties']['acceptance_tests']['user'] = File.read('admin-creds/username').strip()
-                  my['properties']['acceptance_tests']['password'] = File.read('admin-creds/password').strip()
+                  my['properties']['acceptance_tests']['admin_user'] = File.read('admin-creds/username').strip()
+                  my['properties']['acceptance_tests']['admin_password'] = File.read('admin-creds/password').strip()
 
                   puts YAML.dump(my)" > acceptance_test_properties.yml
 
