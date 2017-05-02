@@ -11,17 +11,25 @@ source "${SCRIPT_DIR}/common.sh"
 DEFAULT_SPACE=sandbox
 FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
 # shellcheck disable=SC2016
-SUBJECT='Welcome to GOV.UK PaaS'
+SUBJECT='Your GOV.UK PaaS account'
 # shellcheck disable=SC2016,SC1078
 MESSAGE='Hello,
 
-Your account for GOV.UK PaaS is ready:
+We'"'"'ve noticed that you have not yet reset the password for your GOV.UK PaaS
+account since it was first created.
 
- - username: ${EMAIL}
- - organisation: ${ORG}
+To keep your account secure, please follow this link to activate it and set
+a new password: ${INVITE_URL}
 
-Please use this link to activate your account and set a password. The link will only work once:
-${INVITE_URL}
+This link will only work once.
+
+If you do not activate your account within 7 days it will automatically be
+locked. If you wish to reactivate it after this time, please email us at
+gov-uk-paas-support@digital.cabinet-office.gov.uk
+
+If you’ve not yet signed up to our mailing list to receive important
+notifications about GOV.UK PaaS, please do so here:
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
 
 You can find advice about choosing a password:
 https://docs.cloud.service.gov.uk/#choosing-passwords
@@ -33,11 +41,12 @@ You can find our privacy policy here:
 https://docs.cloud.service.gov.uk/#privacy-policy
 
 Regards,
-Government PaaS team.
+GOV.UK PaaS team
 
-PS Some departmental email systems will check links in inbound emails as part of
-their virus protection. This may have invalidated your one-time link. If this is
-the case please contact support to set your password another way.
+PS Some departmental email systems will check links in inbound emails as
+part of their virus protection. This may have invalidated your one-time
+link. If this is the case please contact support to set your password
+another way.
 '
 
 ###########################################################################
