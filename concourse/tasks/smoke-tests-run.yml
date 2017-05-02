@@ -12,18 +12,4 @@ inputs:
 outputs:
   - name: artifacts
 run:
-  path: bash
-  args:
-    - -e
-    - -c
-    - |
-      ./paas-cf/concourse/scripts/import_bosh_ca.sh
-      mkdir -p /var/vcap/sys
-      ln -s $(pwd)/artifacts /var/vcap/sys/log
-      mkdir -p /var/vcap/jobs/smoke-tests/bin/ /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry
-      ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/smoke-tests/bin/config.json
-      ln -snf $(pwd)/test-config/run /var/vcap/jobs/smoke-tests/bin/run
-      ln -snf /usr/local/go /var/vcap/packages/golang1.7
-      ln -snf $(pwd)/cf-release/src/smoke-tests /var/vcap/packages/smoke-tests/src/github.com/cloudfoundry/cf-smoke-tests
-      set -o pipefail
-      /var/vcap/jobs/smoke-tests/bin/run
+  path: ./paas-cf/platform-tests/upstream/run_smoke_tests.sh

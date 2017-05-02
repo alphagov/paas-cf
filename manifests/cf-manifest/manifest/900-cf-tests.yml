@@ -33,4 +33,4 @@ properties:
     use_existing_org: false
     use_existing_space: false
     skip_ssl_validation: false
-    artifacts_directory: "/var/vcap/sys/log/smoke_tests"
+    artifacts_directory: "/tmp/artifacts"

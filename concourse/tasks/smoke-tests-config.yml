@@ -26,14 +26,6 @@ run:
       puts YAML.dump(my)" > smoke_test_properties.yml
 
       ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
-        ./cf-release/jobs/smoke-tests/templates/run.erb \
-        ./cf-release/jobs/smoke-tests/spec \
-        smoke_test_properties.yml \
-          > ./test-config/run
-
-      chmod +x ./test-config/run
-
-      ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
         ./cf-release/jobs/smoke-tests/templates/config.json.erb \
         ./cf-release/jobs/smoke-tests/spec \
         smoke_test_properties.yml \
