@@ -40,11 +40,12 @@ releases:
     #FIXME: using a patched UAA release due to CVEs:
     # https://www.cloudfoundry.org/cve-2017-4972/
     # https://www.cloudfoundry.org/cve-2017-4973/
+    # https://www.cloudfoundry.org/cve-2017-4974/
     # Remove once CF is upgraded to >= v257
   - name: uaa
-    version: "30"
-    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=30
-    sha1: 90b034c0d9a8282a47d0409e561ffb1b9abf626b
+    version: "30.1"
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=30.1
+    sha1: dde2405c7c909b3c30a18a6f16e0a13a3f26dede
 
 stemcells:
   - alias: default
