@@ -17,11 +17,11 @@ run:
     - -e
     - -c
     - |
-      ruby -ryaml -rjson -e '
-        config = YAML.load(STDIN)["properties"]["acceptance_tests"]
-        config["admin_user"] = File.read("admin-creds/username").strip()
-        config["admin_password"] = File.read("admin-creds/password").strip()
-        puts config.to_json()
-      ' \
+      ruby -ryaml -rjson -e "
+        config = YAML.load(STDIN)['properties']['$TEST_PROPERTIES']
+        config['admin_user'] = File.read('admin-creds/username').strip()
+        config['admin_password'] = File.read('admin-creds/password').strip()
+        puts JSON.pretty_generate(config)
+      " \
       < cf-manifest/cf-manifest.yml \
       > test-config/config.json

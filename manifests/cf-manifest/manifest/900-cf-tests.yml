@@ -17,10 +17,11 @@ properties:
     include_logging: true
     include_operator: true
     include_services: true
-    include_diego_ssh: true
+    include_ssh: true
     include_docker: true
     include_route_services: true
     artifacts_directory: "/tmp/artifacts"
+    use_existing_user: false
 
   smoke_tests:
     api: (( grab properties.acceptance_tests.api ))
@@ -33,3 +34,8 @@ properties:
     use_existing_space: false
     skip_ssl_validation: false
     artifacts_directory: "/tmp/artifacts"
+    suite_name: CF_SMOKE_TESTS
+    logging_app: ''
+    runtime_app: ''
+    ginkgo_opts: ''
+    backend: ''

@@ -1899,7 +1899,9 @@ jobs:
             PREFIX: smoketest-user
 
         - task: smoke-tests-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
 
         - task: smoke-tests-run
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
@@ -1940,38 +1942,9 @@ jobs:
             DISABLE_ADMIN_USER_CREATION: {{disable_cf_acceptance_tests}}
 
         - task: generate-test-config
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli
-            inputs:
-              - name: cf-release
-              - name: paas-cf
-              - name: cf-manifest
-              - name: admin-creds
-            outputs:
-              - name: test-config
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ruby -e "require 'yaml'
-
-                  my = {'properties' => {'acceptance_tests' => YAML.load_file('cf-manifest/cf-manifest.yml')['properties']['acceptance_tests']}}
-                  my['properties']['acceptance_tests']['admin_user'] = File.read('admin-creds/username').strip()
-                  my['properties']['acceptance_tests']['admin_password'] = File.read('admin-creds/password').strip()
-
-                  puts YAML.dump(my)" > acceptance_test_properties.yml
-
-                  ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
-                    ./cf-release/jobs/acceptance-tests/templates/config.json.erb \
-                    ./cf-release/jobs/acceptance-tests/spec \
-                    acceptance_test_properties.yml \
-                      > ./test-config/config.json
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
 
         - task: run-tests
           config:
@@ -2031,6 +2004,8 @@ jobs:
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
 
         - task: "Run custom acceptance tests"
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
@@ -2127,6 +2102,8 @@ jobs:
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
 
         - task: run-tests
           config:
@@ -2430,7 +2407,9 @@ jobs:
             PREFIX: cont-smoketest-user
 
         - task: smoke-tests-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
 
         - task: smoke-tests-run
           file: paas-cf/concourse/tasks/smoke-tests-run.yml

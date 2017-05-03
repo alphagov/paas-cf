@@ -127,7 +127,9 @@ jobs:
           params:
             PREFIX: controller-smoketest-user
         - task: generate-test-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
@@ -175,7 +177,9 @@ jobs:
           params:
             PREFIX: nats-smoketest-user
         - task: generate-test-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
@@ -223,7 +227,9 @@ jobs:
           params:
             PREFIX: router-smoketest-user
         - task: generate-test-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
@@ -271,7 +277,9 @@ jobs:
           params:
             PREFIX: etcd-smoketest-user
         - task: generate-test-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
@@ -319,7 +327,9 @@ jobs:
           params:
             PREFIX: consul-smoketest-user
         - task: generate-test-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
@@ -367,7 +377,9 @@ jobs:
           params:
             PREFIX: cell-smoketest-user
         - task: generate-test-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
         - task: run-tests
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
