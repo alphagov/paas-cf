@@ -30,8 +30,6 @@ spec:
 		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
-	cd platform-tests/bosh-template-renderer &&\
-		bundle exec rspec
 	cd terraform/scripts &&\
 		go test
 
