@@ -1899,7 +1899,9 @@ jobs:
             PREFIX: smoketest-user
 
         - task: smoke-tests-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
 
         - task: smoke-tests-run
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
@@ -1940,46 +1942,9 @@ jobs:
             DISABLE_ADMIN_USER_CREATION: {{disable_cf_acceptance_tests}}
 
         - task: generate-test-config
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli
-            inputs:
-              - name: cf-release
-              - name: paas-cf
-              - name: cf-manifest
-              - name: admin-creds
-            outputs:
-              - name: test-config
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ruby -e "require 'yaml'
-
-                  my = {'properties' => {'acceptance_tests' => YAML.load_file('cf-manifest/cf-manifest.yml')['properties']['acceptance_tests']}}
-                  my['properties']['acceptance_tests']['user'] = File.read('admin-creds/username').strip()
-                  my['properties']['acceptance_tests']['password'] = File.read('admin-creds/password').strip()
-
-                  puts YAML.dump(my)" > acceptance_test_properties.yml
-
-                  ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
-                    ./cf-release/jobs/acceptance-tests/templates/run.erb \
-                    ./cf-release/jobs/acceptance-tests/spec \
-                    acceptance_test_properties.yml \
-                      > ./test-config/run
-
-                  chmod +x ./test-config/run
-
-                  ./paas-cf/platform-tests/bosh-template-renderer/render.rb \
-                    ./cf-release/jobs/acceptance-tests/templates/config.json.erb \
-                    ./cf-release/jobs/acceptance-tests/spec \
-                    acceptance_test_properties.yml \
-                      > ./test-config/config.json
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
 
         - task: run-tests
           config:
@@ -1993,36 +1958,12 @@ jobs:
             inputs:
               - name: paas-cf
               - name: cf-release
-              - name: cf-manifest
               - name: test-config
               - name: bosh-CA
             outputs:
               - name: artifacts
             run:
-              path: bash
-              args:
-                - -e
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  mkdir -p /var/vcap/sys
-                  ln -s $(pwd)/artifacts /var/vcap/sys/log
-                  mkdir -p /var/vcap/jobs/acceptance-tests/bin/ /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry
-                  ln -snf $(pwd)/test-config/config.json /var/vcap/jobs/acceptance-tests/bin/config.json
-                  ln -snf $(pwd)/test-config/run /var/vcap/jobs/acceptance-tests/bin/run
-                  ln -snf /usr/local/go /var/vcap/packages/golang1.7
-                  ln -snf $(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests /var/vcap/packages/acceptance-tests/src/github.com/cloudfoundry/
-                  if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
-                    echo "WARNING: The acceptance tests have been disabled. Unset DISABLE_CF_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
-                  else
-                    SLEEPTIME=90
-                    echo "Sleeping for ${SLEEPTIME} seconds..."
-                    for i in $(seq $SLEEPTIME); do echo -ne "$i"'\r'; sleep 1; done; echo
-                    # FIXME. Should be removed after solving:
-                    # https://github.com/cloudfoundry/cf-release/issues/1188
-                    sed -i '/install-plugin/d' /var/vcap/jobs/acceptance-tests/bin/run
-                    /var/vcap/jobs/acceptance-tests/bin/run
-                  fi
+              path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
 
           ensure:
             task: upload-test-artifacts
@@ -2063,6 +2004,8 @@ jobs:
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
 
         - task: "Run custom acceptance tests"
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
@@ -2159,6 +2102,8 @@ jobs:
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
 
         - task: run-tests
           config:
@@ -2462,7 +2407,9 @@ jobs:
             PREFIX: cont-smoketest-user
 
         - task: smoke-tests-config
-          file: paas-cf/concourse/tasks/smoke-tests-config.yml
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: smoke_tests
 
         - task: smoke-tests-run
           file: paas-cf/concourse/tasks/smoke-tests-run.yml

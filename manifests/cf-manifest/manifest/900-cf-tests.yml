@@ -8,22 +8,20 @@ properties:
     test_password: (( grab secrets.test_user_password ))
     skip_ssl_validation: false
     backend: "diego"
-    client_secret: (( grab secrets.uaa_clients_gorouter_secret ))
     skip_diego_unsupported_tests: true
     include_tasks: true
     include_v3: false
     include_security_groups: true
     include_routing: true
-    skip_regex: 'routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|uses\sa\sbuildpack\sfrom\sa\sgit\surl|when\sapp\shas\smultiple\sports\smapped'
     include_internet_dependent: true
     include_logging: true
     include_operator: true
     include_services: true
-    include_diego_ssh: true
+    include_ssh: true
     include_docker: true
     include_route_services: true
-    artifacts_directory: "/var/vcap/sys/log/test_artifacts"
-    nodes: 5
+    artifacts_directory: "/tmp/artifacts"
+    use_existing_user: false
 
   smoke_tests:
     api: (( grab properties.acceptance_tests.api ))
@@ -35,4 +33,9 @@ properties:
     use_existing_org: false
     use_existing_space: false
     skip_ssl_validation: false
-    artifacts_directory: "/var/vcap/sys/log/smoke_tests"
+    artifacts_directory: "/tmp/artifacts"
+    suite_name: CF_SMOKE_TESTS
+    logging_app: ''
+    runtime_app: ''
+    ginkgo_opts: ''
+    backend: ''
