@@ -2,5 +2,5 @@
 
 set -eu
 
-go test -timeout 130m -ginkgo.v
+go test -timeout 12h -ginkgo.v
 
