@@ -408,7 +408,7 @@ jobs:
       - name: garden
         release: garden-runc
       - name: cflinuxfs2-rootfs-setup
-        release: cflinuxfs2-rootfs
+        release: cflinuxfs2
       - name: cfdot
         release: diego
       - name: metron_agent
