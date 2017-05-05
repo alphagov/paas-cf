@@ -30,6 +30,15 @@ for i in $(seq $SLEEPTIME 1); do echo -ne "$i"'\r'; sleep 1; done; echo
 
 cd "${CF_GOPATH}/cf-acceptance-tests"
 
+# FIXME: Remove this once we've upgraded to CF 257+
+if [ "$(git rev-parse HEAD)" != "8fcde18d9b514fcf695f10049880aabe32910eb5" ]; then
+  echo "Unexpected revision of acceptance tests repo. Check FIXME in ${BASH_SOURCE[0]}"
+  exit 1
+fi
+# Checkout SHA of merge with updates for cf-cli 6.26
+# This is the only change from the existing commit.
+git checkout 407abdc
+
 echo "Starting acceptace tests"
 ./bin/test \
   -keepGoing \
