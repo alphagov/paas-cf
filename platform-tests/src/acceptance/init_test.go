@@ -12,6 +12,14 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
+const (
+	BYTE     = int64(1)
+	KILOBYTE = 1024 * BYTE
+	MEGABYTE = 1024 * KILOBYTE
+	GIGABYTE = 1024 * MEGABYTE
+	TERABYTE = 1024 * GIGABYTE
+)
+
 var (
 	DEFAULT_TIMEOUT      = 30 * time.Second
 	CF_PUSH_TIMEOUT      = 2 * time.Minute
