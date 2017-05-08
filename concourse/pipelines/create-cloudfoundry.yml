@@ -719,32 +719,6 @@ jobs:
           params:
             file: updated-tfstate/cf-certs.tfstate
 
-      - task: retrieve-pingdom-probes-ips
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/curl-ssl
-          inputs:
-            - name: paas-cf
-          outputs:
-            - name: pingdom-probes-ips
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                curl -Lfqs https://www.pingdom.com/rss/probe_servers.xml > probe_servers.xml
-                IPS_PER_BLOCK=32
-                # shellcheck disable=SC2002
-                cat probe_servers.xml | \
-                  grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | \
-                  sort | uniq | sed 's/$/\/32/' | xargs -n ${IPS_PER_BLOCK} | tr ' ' ',' | \
-                  awk '{print "export TF_VAR_pingdom_probe_cidrs_" NR-1 "=" $0}' \
-                  > pingdom-probes-ips/pingdom-probes-ips.sh
-
       - task: extract-terraform-variables
         config:
           platform: linux
@@ -811,7 +785,6 @@ jobs:
             - name: paas-cf
             - name: cf-tfstate
             - name: cf-certs
-            - name: pingdom-probes-ips
             - name: vpc-peering-tfvars
           outputs:
             - name: updated-tfstate
@@ -830,8 +803,6 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/cf-certs.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
-
-                . pingdom-probes-ips/pingdom-probes-ips.sh
 
                 mkdir generated-certificates
                 tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
