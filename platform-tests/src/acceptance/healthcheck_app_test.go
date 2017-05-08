@@ -32,5 +32,9 @@ var _ = Describe("healthcheck app deployed by pipeline", func() {
 
 			Expect(buf.Len()).To(BeNumerically(">", 50*KILOBYTE))
 		})
+
+		It("has response string used by Pingdom check", func() {
+			Expect(response).To(ContainSubstring("END OF THIS PROJECT GUTENBERG EBOOK"))
+		})
 	})
 })
