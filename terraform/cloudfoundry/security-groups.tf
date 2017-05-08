@@ -92,12 +92,7 @@ resource "aws_security_group" "web" {
     to_port   = 443
     protocol  = "tcp"
 
-    cidr_blocks = [
-      "${compact(var.admin_cidrs)}",
-      "${compact(var.web_access_cidrs)}",
-      "${var.concourse_elastic_ip}/32",
-      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
-    ]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags {
