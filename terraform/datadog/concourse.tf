@@ -4,7 +4,7 @@ resource "datadog_monitor" "concourse-load" {
   message            = "${format("Concourse load is too high: {{value}}. Check VM health. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "Concourse load still too high: {{value}}."
   notify_no_data     = false
-  query              = "${format("avg(last_5m):avg:system.load.5{bosh-job:concourse,deploy_env:%s} > 200", var.env)}"
+  query              = "${format("max(last_1m):max:system.load.1{bosh-job:concourse,deploy_env:%s} > 200", var.env)}"
 
   thresholds {
     warning  = "150.0"
@@ -50,6 +50,24 @@ resource "datadog_monitor" "continuous-smoketests-failures" {
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
+}
+
+resource "datadog_monitor" "concourse-btrfs" {
+  name    = "${format("%s concourse excess btrfs processes running", var.env)}"
+  type    = "query alert"
+  message = "${format("Large number of btrfs processes running on the concourse host. It may perform badly. See: %s#btrfs-processes @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
+
+  notify_no_data      = false
+  require_full_window = false
+
+  query = "${format("max(last_1m):max:system.processes.number{deploy_env:%s,process_name:btrfs} > 100", var.env)}"
+
+  thresholds {
+    warning  = 30
+    critical = 100
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:concourse"]
 }
 
 resource "datadog_timeboard" "concourse-jobs" {
