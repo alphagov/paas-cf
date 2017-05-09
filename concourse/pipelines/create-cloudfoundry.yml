@@ -1485,41 +1485,14 @@ jobs:
 
                   cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
                   cd paas-compose-broker/
-                  cf push --no-start
-                  cf set-env compose-broker LOG_LEVEL DEBUG
-                  cf set-env compose-broker USERNAME compose-broker
-                  cf set-env compose-broker PASSWORD "$COMPOSE_BROKER_PASS"
+                  ruby -ryaml -e "
+                    manifest = YAML.load_file('manifest.yml')
+                    env = { 'env' => {'LOG_LEVEL' => 'DEBUG' , 'USERNAME' => 'compose-broker', 'PASSWORD' => '${COMPOSE_BROKER_PASS}'} }
+                    manifest['applications'].each { |app| app.merge!(env) }
+                    File.write('manifest.yml', manifest.to_yaml)
+                  "
                   cf blue-green-deploy compose-broker
-
-        - task: register-compose-broker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            params:
-              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-
-                  if cf service-brokers | grep "compose-broker\s"; then
-                    cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                  else
-                    cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                  fi
+                  cf delete -f compose-broker-old
 
         - task: deploy-simulated-load-application
           config:
@@ -1685,62 +1658,6 @@ jobs:
 
                   ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
 
-        - task: update-kibana-timezone
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: 2.2-slim
-            params:
-              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-              DEPLOY_ENV: {{deploy_env}}
-            inputs:
-            - name: paas-cf
-            - name: cf-tfstate
-            run:
-              path: sh
-              args:
-              - -e
-              - -c
-              - |
-                SCRIPT_DIR="./paas-cf/concourse/scripts"
-
-                ruby "${SCRIPT_DIR}/extract_terraform_state_to_yaml.rb" \
-                  < cf-tfstate/cf.tfstate \
-                  > cf-tfstate.yaml
-
-                export ES_HOST
-                ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
-                export ES_PORT="9200"
-                ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
-
-        - task: enable-elasticsearch-shard-reallocation
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/curl-ssl
-                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
-            inputs:
-            - name: paas-cf
-            - name: cf-terraform-outputs
-            run:
-              path: sh
-              args:
-              - -e
-              - -c
-              - |
-                export TF_VAR_logsearch_elastic_master_elb_dns_name
-                . cf-terraform-outputs/cf.tfstate.sh
-
-                curl -s \
-                  -X PUT \
-                  -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
-                  "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
-
         - task: deploy-healthcheck
           config:
             platform: linux
@@ -1819,6 +1736,94 @@ jobs:
                   ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
 
                   bosh cleanup --all
+
+      - aggregate:
+        - task: register-compose-broker
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            params:
+              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+
+                  if cf service-brokers | grep "compose-broker\s"; then
+                    cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  else
+                    cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  fi
+
+        - task: update-kibana-timezone
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
+            params:
+              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+              DEPLOY_ENV: {{deploy_env}}
+            inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                SCRIPT_DIR="./paas-cf/concourse/scripts"
+
+                ruby "${SCRIPT_DIR}/extract_terraform_state_to_yaml.rb" \
+                  < cf-tfstate/cf.tfstate \
+                  > cf-tfstate.yaml
+
+                export ES_HOST
+                ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
+                export ES_PORT="9200"
+                ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
+
+        - task: enable-elasticsearch-shard-reallocation
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/curl-ssl
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+            inputs:
+            - name: paas-cf
+            - name: cf-terraform-outputs
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                export TF_VAR_logsearch_elastic_master_elb_dns_name
+                . cf-terraform-outputs/cf.tfstate.sh
+
+                curl -s \
+                  -X PUT \
+                  -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
+                  "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
 
         - do:
           - task: datadog-terraform-apply
