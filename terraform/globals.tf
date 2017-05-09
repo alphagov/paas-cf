@@ -113,12 +113,6 @@ variable "api_access_cidrs" {
   default     = []
 }
 
-/* Note: This is overridden in prod.tfvars to allow world access */
-variable "web_access_cidrs" {
-  description = "List of CIDR addresses with access to CloudFoundry web interfaces"
-  default     = []
-}
-
 # See https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html
 variable "default_elb_security_policy" {
   description = "Which Security policy to use for ELBs. This controls things like available SSL protocols/ciphers."

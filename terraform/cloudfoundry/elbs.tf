@@ -187,13 +187,7 @@ resource "aws_elb" "cf_router" {
   idle_timeout              = "${var.elb_idle_timeout}"
   cross_zone_load_balancing = "true"
 
-  security_groups = [
-    "${aws_security_group.web.id}",
-    "${aws_security_group.pingdom-probes-0.id}",
-    "${aws_security_group.pingdom-probes-1.id}",
-    "${aws_security_group.pingdom-probes-2.id}",
-    "${aws_security_group.pingdom-probes-3.id}",
-  ]
+  security_groups = ["${aws_security_group.web.id}"]
 
   access_logs {
     bucket        = "${aws_s3_bucket.elb_access_log.id}"
