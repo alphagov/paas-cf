@@ -566,7 +566,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             run:
               path: sh
               args:
@@ -617,7 +616,6 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: cf_cli_6.26
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -1268,7 +1266,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             inputs:
               - name: paas-cf
               - name: config
@@ -1292,7 +1289,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             inputs:
               - name: paas-cf
               - name: config
@@ -1328,7 +1324,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             run:
               path: sh
               args:
@@ -1355,7 +1350,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             run:
               path: sh
               args:
@@ -1382,7 +1376,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             run:
               path: sh
               args:
@@ -1405,7 +1398,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             params:
               TEST_HEAVY_LOAD: {{test_heavy_load}}
             inputs:
@@ -1511,7 +1503,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             run:
               path: sh
               args:
@@ -1624,7 +1615,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             params:
               DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
             inputs:
@@ -1787,7 +1777,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             inputs:
               - name: paas-cf
               - name: config
@@ -1823,7 +1812,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
-                tag: cf_cli_6.26
             inputs:
               - name: paas-cf
               - name: config
@@ -1936,7 +1924,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: cf_cli_6.26
             params:
               DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
             inputs:
@@ -2096,7 +2083,6 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: cf_cli_6.26
             inputs:
               - name: paas-cf
               - name: test-config
