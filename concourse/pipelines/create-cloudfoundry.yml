@@ -249,6 +249,11 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-rubbernecker
 
+  - name: paas-compose-broker
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-compose-broker
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1116,6 +1121,7 @@ jobs:
           - get: graphite-nozzle
           - get: datadog-tfstate
           - get: paas-rubbernecker
+          - get: paas-compose-broker
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -1269,8 +1275,9 @@ jobs:
                 RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
                 CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
                 CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
+                COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
 
-                for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS CDN_BROKER_SERVER CDN_BROKER_PASS; do
+                for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS CDN_BROKER_SERVER CDN_BROKER_PASS COMPOSE_BROKER_PASS; do
                   echo export "${var_name}"=\"$(eval echo \$${var_name})\"
                 done > config/config.sh
 
@@ -1280,7 +1287,7 @@ jobs:
                 ls -l config/*
 
       - aggregate:
-        - task: create-admin-org-space
+        - task: create-orgs
           config:
             platform: linux
             image_resource:
@@ -1303,6 +1310,9 @@ jobs:
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
                   echo | cf create-org admin
                   cf create-space admin -o admin
+                  cf create-org service-brokers
+                  cf set-quota service-brokers small
+                  cf create-space compose -o service-brokers
 
         - task: register-rds-broker
           config:
@@ -1447,6 +1457,70 @@ jobs:
                   cf enable-feature-flag diego_docker
 
       - aggregate:
+        - task: deploy-compose-service-broker
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+            inputs:
+              - name: paas-cf
+              - name: paas-compose-broker
+              - name: config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  cf target -o service-brokers -s compose
+
+                  cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
+                  cd paas-compose-broker/
+                  cf push --no-start
+                  cf set-env compose-broker LOG_LEVEL DEBUG
+                  cf set-env compose-broker USERNAME compose-broker
+                  cf set-env compose-broker PASSWORD "$COMPOSE_BROKER_PASS"
+                  cf blue-green-deploy compose-broker
+
+        - task: register-compose-broker
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            params:
+              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+
+                  if cf service-brokers | grep "compose-broker\s"; then
+                    cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  else
+                    cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  fi
+
         - task: deploy-simulated-load-application
           config:
             platform: linux

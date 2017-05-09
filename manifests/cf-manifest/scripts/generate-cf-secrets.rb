@@ -40,6 +40,7 @@ generator = SecretGenerator.new(
   "rds_broker_state_encryption_key" => :simple,
   "cdn_broker_admin_password" => :simple,
   "cdn_db_master_password" => :simple,
+  "compose_broker_admin_password" => :simple,
   "ssh_proxy_host_key" => :ssh_key,
   "kibana_admin_password" => :simple,
   "bbs_encryption_key" => :simple,
