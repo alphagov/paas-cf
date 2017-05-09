@@ -39,9 +39,7 @@ var _ = Describe("CF SSH", func() {
 	})
 
 	It("allows uploading a large payload via standard ssh client", func() {
-		// FIXME: Increase to 10GB once the following issue is solved:
-		// https://github.com/cloudfoundry/cli/issues/1098
-		const payloadSize = 1*GIGABYTE + 900*MEGABYTE
+		const payloadSize = 10 * GIGABYTE
 		timeout := 600
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
