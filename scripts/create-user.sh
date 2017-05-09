@@ -60,8 +60,6 @@ $SCRIPT will create a user and organisation in the CF service where you
 are currently logged in and send an email to the user with an invite URL if
 they didn't previously have an account.
 
-To print the invite URL instead of emailing, supply the '--no-email' flag (useful for development)
-
 Nothing will change if the organisation or the user already exists. This way
 you can add a user to multiple organisations by running the script multiple
 times.
@@ -82,6 +80,8 @@ Where:
 
   -o <orgname> Organisation to create and add the user to. If the
                organisation already exists the script will carry on.
+
+  --no-email   Print the invite URL instead of emailing (useful for development)
 
 EOF
   exit 1
