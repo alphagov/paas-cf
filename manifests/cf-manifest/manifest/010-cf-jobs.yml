@@ -257,7 +257,7 @@ jobs:
     properties:
       nginx_conf: |
         worker_processes  2;
-        error_log syslog:server=127.0.0.1 info;
+        error_log syslog:server=127.0.0.1 error;
         events {
           worker_connections  1024;
         }
