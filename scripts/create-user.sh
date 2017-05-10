@@ -253,7 +253,12 @@ send_mail() {
 }
 
 print_invite() {
-  success "Created invite ${INVITE_URL} for ${EMAIL}"
+  success "Created invite for ${EMAIL}"
+
+  echo "Invitation email:"
+  echo "Subject: $(get_subject)"
+  # shellcheck disable=SC2059
+  printf "$(get_body)"
 }
 
 emit_invite() {
