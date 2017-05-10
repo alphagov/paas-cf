@@ -26,6 +26,7 @@ resource "pingdom_check" "paas_http_healthcheck" {
   name                     = "PaaS HTTPS - ${var.env}"
   host                     = "healthcheck.${var.apps_dns_zone_name}"
   url                      = "/"
+  shouldcontain            = "END OF THIS PROJECT GUTENBERG EBOOK"
   encryption               = true
   resolution               = 1
   uselegacynotifications   = true
@@ -40,6 +41,7 @@ resource "pingdom_check" "paas_db_healthcheck" {
   name                     = "PaaS DB - ${var.env}"
   host                     = "healthcheck.${var.apps_dns_zone_name}"
   url                      = "/db"
+  shouldcontain            = "\"success\": true"
   encryption               = true
   resolution               = 1
   uselegacynotifications   = true
