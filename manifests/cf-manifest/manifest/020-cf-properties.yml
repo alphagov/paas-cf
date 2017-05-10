@@ -454,14 +454,14 @@ properties:
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_cc_routing_secret ))
       gorouter:
-        authorities: routing.routes.read
+        authorities: routing.routes.read, routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
         secret: (( grab secrets.uaa_clients_gorouter_secret ))
       tcp_emitter:
         authorities: routing.routes.write,routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
       tcp_router:
-        authorities: routing.routes.read
+        authorities: routing.routes.read, routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
       ssh-proxy:
         authorized-grant-types: authorization_code
