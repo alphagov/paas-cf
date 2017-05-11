@@ -662,6 +662,8 @@ properties:
   garden:
     network_mtu: 1500
     log_level: error
+    # to be removed after upgrade of Diago to 1.14
+    cleanup_process_dirs_on_wait: true
   racoon:
     certificate_authority_cert: (( grab secrets.ipsec_ca_cert ))
     certificate_authority_private_key: (( grab secrets.ipsec_ca_key ))
