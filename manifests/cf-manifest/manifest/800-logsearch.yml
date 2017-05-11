@@ -185,6 +185,15 @@ properties:
           '
         }
       }
+      if [@source][component] == "vcap_nginx_access" {
+        grok {
+          match => {
+            "@message" =>
+            '%{IPORHOST:[nginx][clientip]} - \[%{HTTPDATE:[nginx][timestamp]}\] "%{WORD:[nginx][verb]} %{URIPATHPARAM:[nginx][request]} HTTP/%{NUMBER:[nginx][httpversion]}" %{NUMBER:[nginx][response]} (?:%{NUMBER:[nginx][bytes]}|-) (?:"(?:%{URI:[nginx][referrer]}|-)"|%{QS:[nginx][referrer]}) %{QS:[nginx][agent]} %{DATA:[nginx][x_forwarded_for]} vcap_request_id:%{UUID:[nginx][vcap_request_id]} response_time:%{NUMBER:[nginx][response_time]}'
+            }
+        }
+      }
+
   curator:
     purge_logs:
       retention_period: 30
