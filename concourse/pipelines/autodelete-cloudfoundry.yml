@@ -4,11 +4,13 @@ resource_types:
   type: docker-image
   source:
     repository: governmentpaas/s3-resource
+    tag: 9e7cf1dd32699c091e22e46b349e050443d9ac1a
 
 - name: semver-iam
   type: docker-image
   source:
     repository: governmentpaas/semver-resource
+    tag: dc33fee5c9061263e83159a893340f46728d93b5
 
 resources:
   - name: paas-cf
@@ -113,6 +115,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           run:
             path: sh
             args:
