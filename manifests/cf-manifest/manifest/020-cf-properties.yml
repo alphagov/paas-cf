@@ -454,14 +454,14 @@ properties:
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_cc_routing_secret ))
       gorouter:
-        authorities: routing.routes.read
+        authorities: routing.routes.read, routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
         secret: (( grab secrets.uaa_clients_gorouter_secret ))
       tcp_emitter:
         authorities: routing.routes.write,routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
       tcp_router:
-        authorities: routing.routes.read
+        authorities: routing.routes.read, routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
       ssh-proxy:
         authorized-grant-types: authorization_code
@@ -597,6 +597,10 @@ properties:
   capi:
     cc_uploader:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
+      mutual_tls:
+        ca_cert: (( grab secrets.bosh_ca_cert ))
+        server_cert: (( grab secrets.cc_server_cert ))
+        server_key: (( grab secrets.cc_server_key ))
       cc:
         base_url: (( grab properties.cc.srv_api_uri ))
         basic_auth_password: (( grab properties.cc.internal_api_password ))
@@ -658,6 +662,8 @@ properties:
   garden:
     network_mtu: 1500
     log_level: error
+    # to be removed after upgrade of Diago to 1.14
+    cleanup_process_dirs_on_wait: true
   racoon:
     certificate_authority_cert: (( grab secrets.ipsec_ca_cert ))
     certificate_authority_private_key: (( grab secrets.ipsec_ca_key ))

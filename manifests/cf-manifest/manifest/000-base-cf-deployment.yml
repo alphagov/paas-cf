@@ -6,17 +6,17 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "256"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=256
-    sha1: 7eb583eb6dd08dfce8858d891b2571aebeb6b52c
+    version: "257"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=257
+    sha1: d25c454f551017196a5aa4690d80fd261561ac49
   - name: diego
-    version: 1.12.0
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.12.0
-    sha1: 6fe4073431ac2dcb7072493fae0f6c22f780e8a2
+    version: 1.13.0
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.13.0
+    sha1: e067f76ea02e2c88a16d56d7cce5a7a44f254762
   - name: garden-runc
-    version: 1.4.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.4.0
-    sha1: 1d6020e761806d7f355ceda06c889c582b47dc32
+    version: 1.5.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.5.0
+    sha1: c86150d54162e80597cfa2959137014c41512bbf
   - name: cflinuxfs2
     version: 1.117.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.117.0
