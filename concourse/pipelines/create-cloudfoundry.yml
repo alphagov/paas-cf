@@ -60,11 +60,13 @@ resource_types:
   type: docker-image
   source:
     repository: governmentpaas/s3-resource
+    tag: 9e7cf1dd32699c091e22e46b349e050443d9ac1a
 
 - name: semver-iam
   type: docker-image
   source:
     repository: governmentpaas/semver-resource
+    tag: dc33fee5c9061263e83159a893340f46728d93b5
 
 resources:
   - name: pipeline-trigger
@@ -262,6 +264,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/git-ssh
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
             - name: git-ssh-private-key
@@ -324,6 +327,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
           params:
@@ -356,6 +360,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/curl-ssl
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
           run:
@@ -401,6 +406,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -435,6 +441,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/git-ssh
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: ssh-private-key
@@ -475,6 +482,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: bosh-CA
               - name: paas-cf
@@ -566,6 +574,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             run:
               path: sh
               args:
@@ -616,6 +625,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -679,6 +689,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
             - name: cf-certs-tfstate
@@ -780,6 +791,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -845,6 +857,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -919,6 +932,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/json-minify
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
             outputs:
@@ -964,6 +978,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/spruce
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -998,6 +1013,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/spruce
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1133,6 +1149,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/bosh-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: bosh-secrets
               - name: paas-cf
@@ -1168,6 +1185,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/bosh-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: cloud-config
               - name: bosh-secrets
@@ -1188,6 +1206,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: cf-release
             - name: paas-cf
@@ -1266,6 +1285,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: config
@@ -1289,6 +1309,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: config
@@ -1324,6 +1345,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             run:
               path: sh
               args:
@@ -1350,6 +1372,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             run:
               path: sh
               args:
@@ -1376,6 +1399,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             run:
               path: sh
               args:
@@ -1398,6 +1422,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             params:
               TEST_HEAVY_LOAD: {{test_heavy_load}}
             inputs:
@@ -1503,6 +1528,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             run:
               path: sh
               args:
@@ -1591,6 +1617,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/curl-ssl
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
             - name: paas-cf
             - name: cf-terraform-outputs
@@ -1615,6 +1642,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             params:
               DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
             inputs:
@@ -1672,6 +1700,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/bosh-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: bosh-secrets
@@ -1693,6 +1722,7 @@ jobs:
                 type: docker-image
                 source:
                   repository: governmentpaas/terraform
+                  tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
               inputs:
                 - name: datadog-tfstate
                 - name: paas-cf
@@ -1777,6 +1807,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: config
@@ -1812,6 +1843,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: config
@@ -1924,6 +1956,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             params:
               DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
             inputs:
@@ -2036,6 +2069,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
           - name: paas-cf
           - name: cf-manifest
@@ -2083,6 +2117,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             inputs:
               - name: paas-cf
               - name: test-config
@@ -2123,6 +2158,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/git-ssh
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           platform: linux
           params:
             aws_account: {{aws_account}}
@@ -2159,6 +2195,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/git-ssh
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           platform: linux
           params:
             DATADOG_API_KEY: {{datadog_api_key}}
@@ -2230,6 +2267,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/git-ssh
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           platform: linux
           inputs:
           - name: pipeline-pool
@@ -2276,6 +2314,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
             - name: cf-secrets
@@ -2305,6 +2344,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/git-ssh
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           platform: linux
           outputs:
           - name: generated-git-keys
@@ -2392,6 +2432,7 @@ jobs:
                 type: docker-image
                 source:
                   repository: governmentpaas/awscli
+                  tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
               params:
                 AWS_DEFAULT_REGION: {{aws_region}}
                 DEPLOY_ENV: {{deploy_env}}
@@ -2428,7 +2469,7 @@ jobs:
         config:
           platform: linux
           # FIXME: use image_resource once https://github.com/concourse/fly/issues/98 is implemented
-          image: docker:///governmentpaas/bosh-cli
+          image: docker:///governmentpaas/bosh-cli#895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
             - name: cf-manifest
