@@ -92,7 +92,7 @@ class OrgReset(object):
                 raise SubprocessException('Aborting: \'%s\' failed with exit code %d\n%s' % (err.cmd, err.returncode, err.output))
 
     def parse_current_user(self, target_output):
-        match = re.search(r'User:\s+(\S+)', target_output)
+        match = re.search(r'[Uu]ser:\s+(\S+)', target_output)
         return match.group(1)
 
 

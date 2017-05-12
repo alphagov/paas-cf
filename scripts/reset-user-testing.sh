@@ -29,9 +29,9 @@ check_logged_in_cf "${TARGET_ENVIRONMENT_API}"
 	--space-developers \
 	--quota small
 
-"${SCRIPT_DIR}"/rotate-user-password.sh -e "${TARGET_ENVIRONMENT}" -u "${TARGET_EMAIL_USER}+1@digital.cabinet-office.gov.uk"
-"${SCRIPT_DIR}"/rotate-user-password.sh -e "${TARGET_ENVIRONMENT}" -u "${TARGET_EMAIL_USER}+2@digital.cabinet-office.gov.uk"
-"${SCRIPT_DIR}"/rotate-user-password.sh -e "${TARGET_ENVIRONMENT}" -u "${TARGET_EMAIL_USER}+3@digital.cabinet-office.gov.uk"
-"${SCRIPT_DIR}"/rotate-user-password.sh -e "${TARGET_ENVIRONMENT}" -u "${TARGET_EMAIL_USER}+4@digital.cabinet-office.gov.uk"
-"${SCRIPT_DIR}"/rotate-user-password.sh -e "${TARGET_ENVIRONMENT}" -u "${TARGET_EMAIL_USER}+5@digital.cabinet-office.gov.uk"
-"${SCRIPT_DIR}"/rotate-user-password.sh -e "${TARGET_ENVIRONMENT}" -u "${TARGET_EMAIL_USER}+6@digital.cabinet-office.gov.uk"
+"${SCRIPT_DIR}"/create-user.sh -r -m -o paas_user_research -e "${TARGET_EMAIL_USER}+1@digital.cabinet-office.gov.uk"
+"${SCRIPT_DIR}"/create-user.sh -r -m -o paas_user_research -e "${TARGET_EMAIL_USER}+2@digital.cabinet-office.gov.uk"
+"${SCRIPT_DIR}"/create-user.sh -r -m -o paas_user_research -e "${TARGET_EMAIL_USER}+3@digital.cabinet-office.gov.uk"
+"${SCRIPT_DIR}"/create-user.sh -r -m -o paas_user_research -e "${TARGET_EMAIL_USER}+4@digital.cabinet-office.gov.uk"
+"${SCRIPT_DIR}"/create-user.sh -r -m -o paas_user_research -e "${TARGET_EMAIL_USER}+5@digital.cabinet-office.gov.uk"
+"${SCRIPT_DIR}"/create-user.sh -r -m -o paas_user_research -e "${TARGET_EMAIL_USER}+6@digital.cabinet-office.gov.uk"
