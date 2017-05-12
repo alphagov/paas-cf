@@ -201,6 +201,13 @@ properties:
           }
         }
       }
+      date {
+        match => [ "[nginx][timestamp]", "dd/MMMM/yyyy:HH:mm:ss Z", "dd/MMM/yyyy:HH:mm:ss Z", "ISO8601" ]
+        target => "@timestamp"
+      }
+      mutate {
+        remove_field => [ "[nginx][timestamp]" ]
+      }
 
   curator:
     purge_logs:
