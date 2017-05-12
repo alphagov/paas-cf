@@ -89,7 +89,7 @@ The certificates and the intermediate CA cert need to be stored in the
 
 Currently the process requires a `system_domain` and `apps_domain` cert.
 
-[credentials-high]: https://github.gds/government-paas/credentials-high
+[credentials-high]: https://github.digital.cabinet-office.gov.uk/government-paas/credentials-high
 
 ### Initial deployment of an environment
 
