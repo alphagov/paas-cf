@@ -17,8 +17,8 @@ MESSAGE='Hello,
 
 Your account for GOV.UK PaaS is ready:
 
- - username: ${EMAIL}
- - organisation: ${ORG}
+ - username: ${EMAIL}${ORG:+
+ - organisation: ${ORG}}
 
 Please use this link to activate your account and set a password. The link will only work once:
 ${INVITE_URL}
@@ -54,13 +54,11 @@ usage() {
   cat <<EOF
 Usage:
 
-  $SCRIPT [-r] [-m] -e <email> -o <orgname> [--no-email]
+  $SCRIPT [-r] [-m] -e <email> [-o <orgname>] [--no-email]
 
 $SCRIPT will create a user and organisation in the CF service where you
 are currently logged in and send an email to the user with an invite URL if
 they didn't previously have an account.
-
-To print the invite URL instead of emailing, supply the '--no-email' flag (useful for development)
 
 Nothing will change if the organisation or the user already exists. This way
 you can add a user to multiple organisations by running the script multiple
@@ -82,6 +80,9 @@ Where:
 
   -o <orgname> Organisation to create and add the user to. If the
                organisation already exists the script will carry on.
+               This is required unless -r is specified.
+
+  --no-email   Print the invite URL instead of emailing (useful for development)
 
 EOF
   exit 1
@@ -103,7 +104,7 @@ check_params_and_environment() {
     abort "You must specify a valid email"
   fi
 
-  if [ -z "${ORG:-}" ]; then
+  if [ -z "${ORG:-}" ] && [ "${RESET_USER}" = "false" ]; then
     abort_usage "Org must be defined"
   fi
 
@@ -253,7 +254,12 @@ send_mail() {
 }
 
 print_invite() {
-  success "Created invite ${INVITE_URL} for ${EMAIL}"
+  success "Created invite for ${EMAIL}"
+
+  echo "Invitation email:"
+  echo "Subject: $(get_subject)"
+  # shellcheck disable=SC2059
+  printf "$(get_body)"
 }
 
 emit_invite() {
@@ -311,7 +317,7 @@ done
 load_colors
 check_params_and_environment
 
-create_org_space
+[ -n "${ORG:-}" ] && create_org_space
 create_user
-set_user_roles
+[ -n "${ORG:-}" ] && set_user_roles
 emit_invite
