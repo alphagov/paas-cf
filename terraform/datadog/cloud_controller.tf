@@ -67,7 +67,7 @@ resource "datadog_monitor" "cc_failed_job_count_total_increase" {
     critical = "5"
   }
 
-  tags = ["deployment:${var.env}", "job:api"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_log_count_error_increase" {
@@ -84,7 +84,7 @@ resource "datadog_monitor" "cc_log_count_error_increase" {
     critical = "5"
   }
 
-  tags = ["deployment:${var.env}", "job:api"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
 resource "datadog_monitor" "cc_job_queue_length" {
