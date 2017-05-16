@@ -107,10 +107,10 @@ variable "admin_cidrs" {
   ]
 }
 
-/* Note: This is overridden in prod.tfvars to allow world access */
+/* Note: This is overridden in dev.tfvars to disallow world access */
 variable "api_access_cidrs" {
   description = "List of CIDR addresses with access to CloudFoundry API"
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 
 # See https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html

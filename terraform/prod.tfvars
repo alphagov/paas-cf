@@ -10,9 +10,6 @@ cdn_db_multi_az = "true"
 cdn_db_backup_retention_period = "35"
 cdn_db_skip_final_snapshot = "false"
 cdn_db_maintenance_window = "Thu:07:00-Thu:08:00"
-api_access_cidrs = [
-  "0.0.0.0/0",
-]
 bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="gov-uk-paas-support@digital.cabinet-office.gov.uk"
