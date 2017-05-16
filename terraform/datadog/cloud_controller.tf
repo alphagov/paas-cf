@@ -77,11 +77,11 @@ resource "datadog_monitor" "cc_log_count_error_increase" {
   escalation_message  = "Amount of logged errors in Cloud Controller API still growing considerably, check the API health."
   require_full_window = false
 
-  query = "${format("change(max(last_1m),last_30m):sum:cf.cc.log_count.error{deployment:%s}.rollup(avg, 30) > 5", var.env)}"
+  query = "${format("change(max(last_1m),last_30m):sum:cf.cc.log_count.error{deployment:%s}.rollup(avg, 30) > 15", var.env)}"
 
   thresholds {
-    warning  = "3"
-    critical = "5"
+    warning  = "10"
+    critical = "15"
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
