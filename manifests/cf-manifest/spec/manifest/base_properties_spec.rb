@@ -128,6 +128,7 @@ RSpec.describe "base properties" do
           "graphite-nozzle",
           "datadog-nozzle",
           "cc-service-dashboards",
+          "cdn_broker",
         )
       }
 

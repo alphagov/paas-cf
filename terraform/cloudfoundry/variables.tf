@@ -85,20 +85,40 @@ variable "secrets_cf_db_master_password" {
   description = "Master password for CF database"
 }
 
+variable "secrets_cdn_db_master_password" {
+  description = "Master password for CDN database"
+}
+
 variable "cf_db_multi_az" {
   description = "CF database multi availabiliy zones"
+}
+
+variable "cdn_db_multi_az" {
+  description = "CDN database multi availabiliy zones"
 }
 
 variable "cf_db_backup_retention_period" {
   description = "CF database backup retention period"
 }
 
+variable "cdn_db_backup_retention_period" {
+  description = "CDN database backup retention period"
+}
+
 variable "cf_db_skip_final_snapshot" {
+  description = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
+}
+
+variable "cdn_db_skip_final_snapshot" {
   description = "Whether to skip final RDS snapshot (just before destroy). Differs per environment."
 }
 
 variable "cf_db_maintenance_window" {
   description = "The window during which updates to the CF database instance can occur."
+}
+
+variable "cdn_db_maintenance_window" {
+  description = "The window during which updates to the CDN database instance can occur."
 }
 
 variable "system_dns_zone_id" {

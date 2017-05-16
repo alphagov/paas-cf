@@ -6,6 +6,10 @@ bosh_db_multi_az = "true"
 cf_db_backup_retention_period = "35"
 cf_db_skip_final_snapshot = "false"
 cf_db_maintenance_window = "Thu:07:00-Thu:08:00"
+cdn_db_multi_az = "true"
+cdn_db_backup_retention_period = "35"
+cdn_db_skip_final_snapshot = "false"
+cdn_db_maintenance_window = "Thu:07:00-Thu:08:00"
 api_access_cidrs = [
   "0.0.0.0/0",
 ]

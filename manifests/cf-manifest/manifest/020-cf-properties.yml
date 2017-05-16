@@ -482,6 +482,12 @@ properties:
         scope: openid,cloud_controller_service_permissions.read
         authorities: clients.read,clients.write,clients.admin
         authorized-grant-types: authorization_code,client_credentials
+      cdn_broker:
+        authorities: uaa.none
+        authorized-grant-types: password
+        id: cdn_broker
+        scope: cloud_controller.admin_read_only
+        secret: (( grab secrets.uaa_clients_cdn_broker_secret ))
 
     zones:
       internal:
