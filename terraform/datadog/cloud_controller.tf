@@ -73,8 +73,8 @@ resource "datadog_monitor" "cc_failed_job_count_total_increase" {
 resource "datadog_monitor" "cc_log_count_error_increase" {
   name                = "${format("%s Cloud Controller API log error count", var.env)}"
   type                = "query alert"
-  message             = "${format("Amount of logged errors in Cloud Controller API grew considerably, check the API health. {{#is_alert}}%s{{/is_alert}}", var.datadog_notification_in_hours)}"
-  escalation_message  = "Amount of logged errors in Cloud Controller API still growing considerably, check the API health."
+  message             = "${format("Amount of logged errors in Cloud Controller API grew considerably. See logsearch: '@source.component:cloud_controller_ng AND @level:ERROR' {{#is_alert}}%s{{/is_alert}}", var.datadog_notification_in_hours)}"
+  escalation_message  = "Amount of logged errors in Cloud Controller API still growing considerably. See logsearch: '@source.component:cloud_controller_ng AND @level:ERROR'"
   require_full_window = false
 
   query = "${format("change(max(last_1m),last_30m):sum:cf.cc.log_count.error{deployment:%s}.rollup(avg, 30) > 15", var.env)}"
