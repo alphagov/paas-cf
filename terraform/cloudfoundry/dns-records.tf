@@ -105,3 +105,11 @@ resource "aws_route53_record" "cdn_broker" {
   ttl     = "60"
   records = ["${aws_elb.cdn_broker.dns_name}"]
 }
+
+resource "aws_route53_record" "status" {
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "status.${var.system_dns_zone_name}."
+  type    = "CNAME"
+  ttl     = "300"
+  records = ["h4wt7brwsqr0.stspg-customer.com"]
+}
