@@ -60,11 +60,11 @@ resource "datadog_monitor" "concourse-btrfs" {
   notify_no_data      = false
   require_full_window = false
 
-  query = "${format("max(last_1m):max:system.processes.number{deploy_env:%s,process_name:btrfs} > 100", var.env)}"
+  query = "${format("max(last_1m):max:system.processes.number{deploy_env:%s,process_name:btrfs,deployment:concourse} > 150", var.env)}"
 
   thresholds {
-    warning  = 30
-    critical = 100
+    warning  = 100
+    critical = 150
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:concourse"]
