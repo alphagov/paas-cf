@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"crypto/tls"
+	"log"
 	"net"
 	"net/http"
 	"os"
@@ -116,7 +117,10 @@ func buildsWithVersion(team concourse.Team, pipelineName, resourceName, resource
 	}
 
 	resourceVersions, _, resourceExists, err := team.ResourceVersions(pipelineName, resourceName, page)
-	ExpectWithOffset(2, err).NotTo(HaveOccurred())
+	if err != nil {
+		log.Println(err)
+		return make([]atc.Build, 0)
+	}
 	ExpectWithOffset(2, resourceExists).To(BeTrue())
 
 	for _, version := range resourceVersions {
