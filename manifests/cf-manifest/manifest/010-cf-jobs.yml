@@ -257,13 +257,13 @@ jobs:
     properties:
       nginx_conf: |
         worker_processes  2;
-        error_log syslog:server=127.0.0.1 info;
+        error_log syslog:server=127.0.0.1,severity=error,tag=uaa_nginx_error error;
         events {
           worker_connections  1024;
         }
         http {
           include /var/vcap/packages/nginx/conf/mime.types;
-          access_log syslog:server=127.0.0.1 combined;
+          access_log syslog:server=127.0.0.1,severity=info,tag=uaa_nginx_access combined;
           sendfile on;
           keepalive_timeout 20s;
           upstream uaa {
