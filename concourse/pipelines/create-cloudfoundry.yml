@@ -2115,7 +2115,13 @@ jobs:
               ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
               bosh deployment cf-manifest/cf-manifest.yml
               bosh vms {{deploy_env}} | tee vms.txt
-              [ $(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)") -eq 0 ]
+              vms_not_running=$(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)" || true)
+              if [ ${vms_not_running} -gt "0" ]; then
+                echo "Error: Number of not running VMs: ${vms_not_running}."
+                exit 1
+              else
+                echo "Success: All VMs are up and running."
+              fi
 
   - name: performance-tests
     plan:
