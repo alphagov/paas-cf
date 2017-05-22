@@ -42,11 +42,12 @@ releases:
     # https://www.cloudfoundry.org/cve-2017-4973/
     # https://www.cloudfoundry.org/cve-2017-4974/
     # https://www.cloudfoundry.org/cve-2017-4991/
+    # https://www.cloudfoundry.org/cve-2017-4992/
     # Remove once CF is upgraded to >= v260
   - name: uaa
-    version: "30.2"
-    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=30.2
-    sha1: 14f34a93e21c2723ccde11bff5b693a465cb72df
+    version: "30.3"
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=30.3
+    sha1: b869e72627df2131930e3da4dd3f3a732fc8679c
 
 stemcells:
   - alias: default
