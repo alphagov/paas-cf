@@ -42,7 +42,7 @@ vm_types:
     cloud_properties:
       instance_type: r4.xlarge
       ephemeral_disk:
-        size: 102400
+        size: 204800
         type: gp2
       security_groups:
         - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
