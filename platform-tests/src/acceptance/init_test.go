@@ -8,7 +8,10 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/gbytes"
+	. "github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 )
 
@@ -58,6 +61,13 @@ func TestSuite(t *testing.T) {
 
 	BeforeSuite(func() {
 		environment.Setup()
+		// FIXME this should be removed once the broker is generally available.
+		org := context.RegularUserContext().Org
+		cf.AsUser(context.AdminUserContext(), context.ShortTimeout(), func() {
+			enableServiceAccess := cf.Cf("enable-service-access", "mongo", "-o", org).Wait(DEFAULT_TIMEOUT)
+			Expect(enableServiceAccess).To(Exit(0))
+			Expect(enableServiceAccess).To(Say("OK"))
+		})
 	})
 
 	AfterSuite(func() {
