@@ -44,13 +44,13 @@ var _ = Describe("X-Forwarded headers", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", config.GoBuildpackName,
-			"-p", "../../example-apps/print_request_headers",
+			"-p", "../../example-apps/http_tester",
 			"-d", config.AppsDomain,
-			"-c", "./bin/debug_app; sleep 1; echo 'done'",
+			"-c", "./bin/http_tester; sleep 1; echo 'done'",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", fmt.Sprintf("X-Forwarded-For: %s", fakeProxyIP)}
-		jsonData := helpers.CurlApp(appName, "/", curlArgs...)
+		jsonData := helpers.CurlApp(appName, "/print-headers", curlArgs...)
 
 		err = json.Unmarshal([]byte(jsonData), &headers)
 		Expect(err).NotTo(HaveOccurred())
