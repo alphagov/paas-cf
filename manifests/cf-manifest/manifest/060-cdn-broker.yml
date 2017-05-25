@@ -13,6 +13,8 @@ jobs:
     templates:
       - name: cdn-broker
         release: cdn-broker
+      - name: datadog-cdn-broker
+        release: datadog-for-cloudfoundry
     networks:
       - name: cf
     properties:
