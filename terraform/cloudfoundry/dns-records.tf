@@ -60,8 +60,15 @@ resource "aws_route53_record" "apps_apex" {
   type    = "A"
 
   alias {
-    name                   = "${aws_elb.cf_router.dns_name}"
-    zone_id                = "${aws_elb.cf_router.zone_id}"
+    name = "${aws_elb.cf_router.dns_name}."
+
+    # FIXME: Workaround for the issue described in
+    # https://github.com/hashicorp/terraform/issues/10007#issuecomment-281417653
+    # We would use a hardcoded zone_id rather than the one reported by
+    # the ELB terraform resource
+    # zone_id                = "${aws_elb.cf_router.zone_id}"
+    zone_id = "${lookup(var.elb_zone_ids, var.region)}"
+
     evaluate_target_health = true
   }
 }
