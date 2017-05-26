@@ -234,3 +234,6 @@ shake_concourse_volumes: check-env ## Restarts concourse services and workers an
 show-cf-memory-usage: ## Show the memory usage of the current CF cluster
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
 	@./scripts/show-cf-memory-usage.rb
+
+fix_sso_url: check-env
+	@./scripts/fix_sso_url.rb
