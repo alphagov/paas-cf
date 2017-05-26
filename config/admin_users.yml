@@ -1,8 +1,6 @@
 ---
 - email: "alex.tomlins@digital.cabinet-office.gov.uk"
   origin: "google"
-- email: "colin.saliceti@digital.cabinet-office.gov.uk"
-  origin: "google"
 - email: "dan.carley@digital.cabinet-office.gov.uk"
   origin: "google"
 - email: "graham.bleach@digital.cabinet-office.gov.uk"
