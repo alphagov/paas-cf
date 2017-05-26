@@ -75,13 +75,13 @@ RSpec.describe "base properties" do
     describe "app_usage_events" do
       subject(:app_usage_events) { cc.fetch("app_usage_events") }
 
-      it { is_expected.to include("cutoff_age_in_days" => 31), "We expect retention period for data to be 31 days." }
+      it { is_expected.to include("cutoff_age_in_days" => 45), "We expect retention period for data to be 45 days." }
     end
 
     describe "service_usage_events" do
       subject(:service_usage_events) { cc.fetch("service_usage_events") }
 
-      it { is_expected.to include("cutoff_age_in_days" => 31), "We expect retention period for data to be 31 days." }
+      it { is_expected.to include("cutoff_age_in_days" => 45), "We expect retention period for data to be 45 days." }
     end
 
     describe "audit_events" do

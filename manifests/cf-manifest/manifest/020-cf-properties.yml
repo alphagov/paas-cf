@@ -204,9 +204,9 @@ properties:
     app_events:
       cutoff_age_in_days: 31
     app_usage_events:
-      cutoff_age_in_days: 31
+      cutoff_age_in_days: 45
     service_usage_events:
-      cutoff_age_in_days: 31
+      cutoff_age_in_days: 45
     audit_events:
       cutoff_age_in_days: 31
 
