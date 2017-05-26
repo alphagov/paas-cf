@@ -7,7 +7,7 @@ resource "aws_elb" "cdn_broker" {
   security_groups           = ["${aws_security_group.service_brokers.id}"]
 
   health_check {
-    target              = "HTTP:3000/healthcheck"
+    target              = "HTTP:3000/healthcheck/http"
     interval            = "${var.health_check_interval}"
     timeout             = "${var.health_check_timeout}"
     healthy_threshold   = "${var.health_check_healthy}"
