@@ -270,6 +270,9 @@ jobs:
             keepalive 10;
             server 127.0.0.1:8080;
           }
+          set_real_ip_from  10.0.0.0/16;
+          real_ip_header    X-Forwarded-For;
+          real_ip_recursive on;
           server {
             listen 9443;
             ssl on;
