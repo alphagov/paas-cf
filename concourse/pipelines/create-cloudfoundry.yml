@@ -1299,6 +1299,8 @@ jobs:
               - name: paas-cf
               - name: config
               - name: bosh-CA
+            params:
+              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
             run:
               path: sh
               args:
@@ -1308,11 +1310,17 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  echo | cf create-org admin
+                  cf create-org admin
                   cf create-space admin -o admin
                   cf create-org service-brokers
                   cf set-quota service-brokers small
                   cf create-space compose -o service-brokers
+                  cf create-org govuk-paas
+                  cf create-space docs -o govuk-paas
+                  cf target -o govuk-paas
+                  cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
+                  cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
+                  cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname status
 
         - task: register-rds-broker
           config:
