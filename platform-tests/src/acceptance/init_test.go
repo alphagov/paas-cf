@@ -64,7 +64,7 @@ func TestSuite(t *testing.T) {
 		// FIXME this should be removed once the broker is generally available.
 		org := context.RegularUserContext().Org
 		cf.AsUser(context.AdminUserContext(), context.ShortTimeout(), func() {
-			enableServiceAccess := cf.Cf("enable-service-access", "mongo", "-o", org).Wait(DEFAULT_TIMEOUT)
+			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(DEFAULT_TIMEOUT)
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 		})

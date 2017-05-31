@@ -1,43 +1,31 @@
 {
-   "services":[
-      {
-      "id":"76066f82-5388-48c8-9daf-044cf7b432f2",
-         "name":"mongo",
-         "description":"Compose MongoDB instance",
-         "requires":[],
-         "tags":[
-            "mongo",
-            "compose"
-         ],
-         "metadata":{
-            "displayName":"mongo",
-            "imageUrl":"https://webassets.mongodb.com/_com_assets/cms/MongoDB-Logo-5c3a7405a85675366beb3a5ec4c032348c390b3f142f5e6dddf1d78e2df5cb5c.png",
-            "longDescription":"Compose MongoDB instance",
-            "providerDisplayName":"GOV.UK PaaS",
-            "documentationUrl":"https://compose.com/mongodb",
-            "supportUrl":"https://www.cloud.service.gov.uk/support.html"
-         },
-         "plans":[
-            {
-               "id":"6c09a422-5f0e-4c8e-9c2d-92710b594589",
-               "name":"Mongo small",
-               "description":"Small plan",
-               "metadata":{
-                  "bullets":[
-                     "1 unit"
-                  ],
-                  "costs":[
-                     {
-                        "amount":{
-                           "GBP":1
-                        },
-                        "unit":"MONTHLY"
-                    }
-                  ],
-                  "displayName":"Mongo small"
-	       }
-	    }
-         ]
+  "services": [{
+    "id": "36f8bf47-c9e7-46d9-880f-5dfc838d05cb",
+    "name": "mongodb",
+    "bindable": true,
+    "description": "Compose MongoDB instance",
+    "requires": [],
+    "tags": [
+      "mongo",
+      "compose"
+    ],
+    "metadata": {
+      "displayName": "MongoDB",
+      "imageUrl": "https://webassets.mongodb.com/_com_assets/cms/MongoDB-Logo-5c3a7405a85675366beb3a5ec4c032348c390b3f142f5e6dddf1d78e2df5cb5c.png",
+      "longDescription": "Compose MongoDB instance",
+      "providerDisplayName": "GOV.UK PaaS",
+      "documentationUrl": "https://compose.com/mongodb",
+      "supportUrl": "https://www.cloud.service.gov.uk/support.html"
+    },
+    "plans": [{
+      "id": "fdfd4fc1-ce69-451c-a436-c2e2795b9abe",
+      "name": "tiny",
+      "description": "1GB Storage / 102MB RAM.",
+      "metadata": {
+        "displayName": "Mongo Tiny",
+        "bullets": [],
+        "units": 1
       }
-   ]
+    }]
+  }]
 }
