@@ -26,12 +26,9 @@ const (
 	utfchars = "スタック・オーバーフロー はプログラマ"
 )
 
-var (
-	appName string
-)
-
 var _ = Describe("HTTP edge cases", func() {
 	Describe("Using dora", func() {
+		var appName string
 
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName("CATS-APP-DORA-")
@@ -65,10 +62,9 @@ var _ = Describe("HTTP edge cases", func() {
 			appName = generator.PrefixedRandomName("CATS-APP-HTTP-TESTER-")
 			Expect(cf.Cf(
 				"push", appName,
-				"-b", config.GoBuildpackName,
 				"-p", "../../example-apps/http_tester",
+				"-f", "../../example-apps/http_tester/manifest.yml",
 				"-d", config.AppsDomain,
-				"-c", "./bin/http_tester; sleep 1; echo 'done'",
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 		})
 
@@ -133,10 +129,9 @@ var _ = Describe("HTTP edge cases", func() {
 			appName2 := generator.PrefixedRandomName("CATS-APP-HTTP-TESTER-")
 			Expect(cf.Cf(
 				"push", appName2,
-				"-b", config.GoBuildpackName,
 				"-p", "../../example-apps/http_tester",
+				"-f", "../../example-apps/http_tester/manifest.yml",
 				"-d", config.AppsDomain,
-				"-c", "./bin/http_tester; sleep 1; echo 'done'",
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 			curlArgs := []string{"-k"}
 			response := helpers.CurlApp(appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, config.AppsDomain), curlArgs...)
