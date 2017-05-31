@@ -7,6 +7,7 @@ require File.expand_path("../../../shared/lib/secret_generator", __FILE__)
 generator = SecretGenerator.new(
   "vcap_password" => :sha512_crypted,
   "cf_db_master_password" => :simple,
+  "cf_db_readonly_password" => :simple,
   "cf_db_api_password" => :simple,
   "cf_db_uaa_password" => :simple,
   "cf_db_bbs_password" => :simple,
