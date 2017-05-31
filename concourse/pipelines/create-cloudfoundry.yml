@@ -83,6 +83,7 @@ resources:
       branch: {{branch_name}}
       tag_filter: {{paas_cf_tag_filter}}
       commit_verification_key_ids: {{gpg_ids}}
+      gpg_keyserver: hkp://eu.pool.sks-keyservers.net/
 
   - name: graphite-nozzle
     type: git
