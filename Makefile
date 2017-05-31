@@ -12,6 +12,7 @@ DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
 check-env:
+	$(if ${RAN_MAKE_ENV_TARGET},,$(error Must run an environment target, e.g. `make dev $(MAKECMDGOALS)`))
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
 	$(if ${DEPLOY_ENV_VALID_CHARS},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) must use only alphanumeric chars and hyphens, otherwise derived names will be malformatted))
@@ -91,6 +92,7 @@ dev: globals ## Set Environment to DEV
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
 	$(eval export DISABLE_PIPELINE_LOCKING=true)
 	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export RAN_MAKE_ENV_TARGET=true)
 	@true
 
 .PHONY: ci
@@ -106,6 +108,7 @@ ci: globals ## Set Environment to CI
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-ci.yml)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export RAN_MAKE_ENV_TARGET=true)
 	@true
 
 .PHONY: staging
@@ -124,6 +127,7 @@ staging: globals ## Set Environment to Staging
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=staging)
 	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export RAN_MAKE_ENV_TARGET=true)
 	@true
 
 .PHONY: prod
@@ -142,6 +146,7 @@ prod: globals ## Set Environment to Production
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
 	$(eval export DEPLOY_RUBBERNECKER=true)
 	$(eval export DEPLOY_ENV=prod)
+	$(eval export RAN_MAKE_ENV_TARGET=true)
 	@true
 
 .PHONY: bosh-cli
@@ -231,6 +236,6 @@ shake_concourse_volumes: check-env ## Restarts concourse services and workers an
 	@./scripts/ssh.sh scp concourse/scripts/shake_concourse_volumes.sh /tmp/
 	@./scripts/ssh.sh ssh bash -i /tmp/shake_concourse_volumes.sh
 
-show-cf-memory-usage: ## Show the memory usage of the current CF cluster
+show-cf-memory-usage: check-env ## Show the memory usage of the current CF cluster
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
 	@./scripts/show-cf-memory-usage.rb

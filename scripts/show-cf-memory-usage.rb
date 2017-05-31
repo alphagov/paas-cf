@@ -1,6 +1,14 @@
 #!/usr/bin/env ruby
 
 require 'json'
+require 'uri'
+
+datadog_url = URI("https://app.datadoghq.com/metric/explorer")
+datadog_url.query = URI.encode_www_form(
+  exp_agg: "sum",
+  exp_metric: "system.mem.total",
+  exp_scope: "bosh-job:cell,bosh-deployment:#{ENV.fetch('DEPLOY_ENV')}",
+)
 
 config_path = File.expand_path('~/.cf/config.json')
 if File.exist?(config_path)
@@ -76,3 +84,4 @@ puts "Memory reserved by orgs: #{format_memory(orgs_reserved_memory)}"
 puts "Memory reserved by apps: #{format_memory(apps_reserved_memory)}"
 puts
 puts "Total cell memory required to meet ADR017: #{format_memory(required_cell_memory)}"
+puts "Compare this against: #{datadog_url}"
