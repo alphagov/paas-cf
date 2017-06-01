@@ -43,10 +43,9 @@ var _ = Describe("X-Forwarded headers", func() {
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
 			"push", appName,
-			"-b", config.GoBuildpackName,
 			"-p", "../../example-apps/http_tester",
+			"-f", "../../example-apps/http_tester/manifest.yml",
 			"-d", config.AppsDomain,
-			"-c", "./bin/http_tester; sleep 1; echo 'done'",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", fmt.Sprintf("X-Forwarded-For: %s", fakeProxyIP)}
