@@ -26,7 +26,7 @@ const (
 	utfchars = "スタック・オーバーフロー はプログラマ"
 )
 
-var _ = Describe("HTTP edge cases", func() {
+var _ = XDescribe("HTTP edge cases", func() {
 	Describe("Using dora", func() {
 		var appName string
 
