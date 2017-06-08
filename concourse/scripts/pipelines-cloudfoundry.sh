@@ -10,6 +10,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 . "${SCRIPT_DIR}/lib/datadog.sh"
 
 # shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/compose.sh"
+
+# shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/google-oauth.sh"
 
 download_git_id_rsa() {
@@ -65,6 +68,7 @@ prepare_environment() {
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
   get_datadog_secrets
+  get_compose_secrets
   get_google_oauth_secrets
 
   if [ "${ENABLE_DATADOG}" = "true" ] ; then
@@ -73,6 +77,12 @@ prepare_environment() {
       echo "Datadog enabled but could not retrieve api or app key. Did you do run \`make dev upload-datadog-secrets\`?"
       exit 1
     fi
+  fi
+
+  # shellcheck disable=SC2154
+  if [ -z "${compose_account_id+x}" ] || [ -z "${compose_access_token+x}" ] ; then
+    echo "Could not retrieve access token or account id for compose. Did you do run \`make dev upload-compose-secrets\`?"
+    exit 1
   fi
 
   export EXPOSE_PIPELINE=1
@@ -122,6 +132,8 @@ disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
+compose_account_id: ${compose_account_id:-}
+compose_access_token: ${compose_access_token:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
 deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
