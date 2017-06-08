@@ -24,6 +24,17 @@ resource "aws_security_group" "cf_rds" {
     ]
   }
 
+  ingress {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+
+    security_groups = [
+      "${aws_security_group.cf_rds_client.id}",
+      "${var.concourse_security_group_id}",
+    ]
+  }
+  
   tags {
     Name = "${var.env}-cf-rds"
   }

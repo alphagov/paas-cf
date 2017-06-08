@@ -58,6 +58,16 @@ resource "aws_security_group" "rds_broker_dbs" {
     ]
   }
 
+  ingress {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+
+    security_groups = [
+      "${aws_security_group.rds_broker_db_clients.id}",
+    ]
+  }
+
   tags {
     Name = "${var.env}-rds-broker-dbs"
   }
