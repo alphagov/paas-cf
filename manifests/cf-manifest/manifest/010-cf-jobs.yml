@@ -302,7 +302,7 @@ jobs:
     azs: [z1, z2]
     templates: (( grab meta.api_templates ))
     instances: 2
-    vm_type: medium
+    vm_type: large
     vm_extensions:
       - 64g_ephemeral_disk
       - cf_cc_instance_profile
