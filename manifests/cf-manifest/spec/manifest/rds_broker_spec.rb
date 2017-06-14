@@ -83,7 +83,7 @@ RSpec.describe "RDS broker properties" do
           let(:rds_properties) { subject.fetch("rds_properties") }
 
           it "uses postgres 9.5" do
-            expect(rds_properties["engine_version"]).to start_with("9.5.")
+            expect(rds_properties["engine_version"]).to eq("9.5")
           end
           it "uses solid state storage" do
             expect(rds_properties).to include("storage_type" => "gp2")

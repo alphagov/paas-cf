@@ -2,7 +2,7 @@ meta:
   rds_broker:
     default_postgres_rds_properties:
       engine: "postgres"
-      engine_version: "9.5.4"
+      engine_version: "9.5"
       storage_type: "gp2"
       auto_minor_version_upgrade: true
       multi_az: false
