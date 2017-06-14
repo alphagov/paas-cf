@@ -1500,7 +1500,13 @@ jobs:
                   cd paas-compose-broker/
                   ruby -ryaml -e "
                     manifest = YAML.load_file('manifest.yml')
-                    env = { 'env' => {'LOG_LEVEL' => 'DEBUG' , 'USERNAME' => 'compose-broker', 'PASSWORD' => '${COMPOSE_BROKER_PASS}', 'ACCESS_TOKEN' => '${COMPOSE_ACCESS_TOKEN}', 'ACCOUNT_ID' => '${COMPOSE_ACCOUNT_ID}'} }
+                    env = { 'env' => {
+                      'LOG_LEVEL' => 'DEBUG',
+                      'USERNAME' => 'compose-broker',
+                      'PASSWORD' => '${COMPOSE_BROKER_PASS}',
+                      'ACCESS_TOKEN' => '${COMPOSE_ACCESS_TOKEN}',
+                      'ACCOUNT_ID' => '${COMPOSE_ACCOUNT_ID}',
+                    }}
                     manifest['applications'].each { |app| app.merge!(env) }
                     File.write('manifest.yml', manifest.to_yaml)
                   "
