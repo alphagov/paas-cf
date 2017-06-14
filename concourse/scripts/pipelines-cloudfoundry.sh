@@ -81,7 +81,7 @@ prepare_environment() {
 
   # shellcheck disable=SC2154
   if [ -z "${compose_account_id+x}" ] || [ -z "${compose_access_token+x}" ] ; then
-    echo "Could not retrieve access token or account id for compose. Did you do run \`make dev upload-compose-secrets\`?"
+    echo "Could not retrieve access token or account id for compose. Did you do run \`make ${AWS_ACCOUNT} upload-compose-secrets\`?"
     exit 1
   fi
 
