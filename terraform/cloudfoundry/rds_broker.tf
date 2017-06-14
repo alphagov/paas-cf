@@ -58,6 +58,16 @@ resource "aws_security_group" "rds_broker_dbs" {
     ]
   }
 
+  ingress {
+    from_port = 3306
+    to_port   = 3306
+    protocol  = "tcp"
+
+    security_groups = [
+      "${aws_security_group.rds_broker_db_clients.id}",
+    ]
+  }
+
   tags {
     Name = "${var.env}-rds-broker-dbs"
   }
@@ -73,4 +83,10 @@ resource "aws_db_parameter_group" "rds_broker_postgres95" {
     name         = "rds.force_ssl"
     value        = "1"
   }
+}
+
+resource "aws_db_parameter_group" "rds_broker_mysql57" {
+  name        = "rdsbroker-mysql57-${var.env}"
+  family      = "mysql5.7"
+  description = "RDS Broker MySQL 5.7 parameter group"
 }

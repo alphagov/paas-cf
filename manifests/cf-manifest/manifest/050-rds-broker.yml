@@ -226,6 +226,9 @@ properties:
           - protocol: tcp
             destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
             ports: '5432'
+          - protocol: tcp
+            destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
+            ports: '3306'
 
     default_running_security_groups:
       - (( append ))
