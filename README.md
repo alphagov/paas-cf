@@ -42,8 +42,15 @@ services for the platform.
 
 You will need a working [Deployer Concourse](#deployer-concourse).
 
+Upload the necessary credentials:
+
+```
+make dev upload-compose-secrets
+```
+
 Deploy the pipeline configurations using `make`. Select the target based on
 which AWS account you want to work with. For instance, execute:
+
 ```
 make dev pipelines
 ```
