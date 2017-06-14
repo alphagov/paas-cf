@@ -7,13 +7,15 @@ import (
 	"net/url"
 	"os"
 
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
 	ssl := r.FormValue("ssl") != "false"
+	service := r.FormValue("service")
 
-	err := testDBConnection(ssl)
+	err := testDBConnection(ssl, service)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -24,18 +26,24 @@ func dbHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func testDBConnection(ssl bool) error {
-	dbURL, err := url.Parse(os.Getenv("DATABASE_URL"))
-	if err != nil {
-		return err
-	}
-	if ssl {
-		dbURL.RawQuery = dbURL.RawQuery + "&sslmode=verify-full"
-	} else {
-		dbURL.RawQuery = dbURL.RawQuery + "&sslmode=disable"
+func testDBConnection(ssl bool, service string) error {
+	var err error
+	var db *sql.DB
+
+	dbu := os.Getenv("DATABASE_URL")
+
+	if service == "" {
+		service = "postgres"
 	}
 
-	db, err := sql.Open("postgres", dbURL.String())
+	switch service {
+	case "mysql":
+		db, err = mysqlOpen(dbu, ssl)
+	case "postgres":
+		db, err = postgresOpen(dbu, ssl)
+	default:
+		return fmt.Errorf("unknown service: " + service)
+	}
 	if err != nil {
 		return err
 	}
@@ -64,4 +72,36 @@ func testDBConnection(ssl bool) error {
 	}
 
 	return nil
+}
+
+func postgresOpen(dbu string, ssl bool) (*sql.DB, error) {
+	u, err := url.Parse(dbu)
+	if err != nil {
+		return nil, err
+	}
+
+	if ssl {
+		u.RawQuery = "sslmode=verify-full"
+	} else {
+		u.RawQuery = "sslmode=disable"
+	}
+
+	return sql.Open("postgres", u.String())
+}
+
+func mysqlOpen(dbu string, ssl bool) (*sql.DB, error) {
+	u, err := url.Parse(dbu)
+	if err != nil {
+		return nil, err
+	}
+
+	if ssl {
+		u.RawQuery = "tls=skip-verify"
+	} else {
+		u.RawQuery = "tls=false"
+	}
+
+	connString := fmt.Sprintf("%s@tcp(%s:%s)%s?%s", u.User.String(), u.Hostname(), u.Port(), u.EscapedPath(), u.RawQuery)
+
+	return sql.Open("mysql", connString)
 }
