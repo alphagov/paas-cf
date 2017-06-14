@@ -28,6 +28,34 @@ meta:
       db_instance_class: "db.m4.2xlarge"
       allocated_storage: 20
 
+    default_mysql_rds_properties:
+      engine: "mysql"
+      engine_version: "5.7"
+      storage_type: "gp2"
+      auto_minor_version_upgrade: true
+      multi_az: false
+      storage_encrypted: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+      vpc_security_group_ids:
+        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
+      db_parameter_group_name: (( grab terraform_outputs.rds_broker_mysql57_db_parameter_group ))
+    small_mysql_rds_properties:
+      inject: (( inject meta.rds_broker.default_mysql_rds_properties ))
+      db_instance_class: "db.t2.small"
+      allocated_storage: 20
+    medium_mysql_rds_properties:
+      inject: (( inject meta.rds_broker.default_mysql_rds_properties ))
+      db_instance_class: "db.m4.large"
+      allocated_storage: 20
+    large_mysql_rds_properties:
+      inject: (( inject meta.rds_broker.default_mysql_rds_properties ))
+      db_instance_class: "db.m4.2xlarge"
+      allocated_storage: 20
+
 releases:
   - name: rds-broker
     version: 0.1.8
@@ -218,6 +246,167 @@ jobs:
                     inject: (( inject meta.rds_broker.large_postgres_rds_properties ))
                     multi_az: true
                     storage_encrypted: true
+
+            - id: 4b888513-1dc3-4b9b-bdcd-51f4c03675a4
+              name: "mysql"
+              description: "AWS RDS MySQL service"
+              bindable: true
+              tags:
+                - "mysql"
+                - "relational"
+              metadata:
+                displayName: "AWS RDS MySQL"
+                imageUrl: ""
+                longDescription: "AWS RDS MySQL service"
+                providerDisplayName: "Amazon Web Services"
+                documentationUrl: "https://aws.amazon.com/documentation/rds/"
+                supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
+              plan_updateable: true
+              plans:
+                - id: 69977068-8ef5-4172-bfdb-e8cea3c14d01
+                  name: "Free"
+                  description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.micro."
+                  free: true
+                  metadata:
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.default_mysql_rds_properties ))
+                    db_instance_class: "db.t2.micro"
+                    allocated_storage: 5
+                    backup_retention_period: 0
+                    skip_final_snapshot: true
+
+                - id: "7fdde6ea-cc27-466c-86aa-46181fc20d25"
+                  name: "S-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.small."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.036
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.small_mysql_rds_properties ))
+
+                - id: "72279ebd-6001-4e38-aaef-72b68c4fa6fd"
+                  name: "S-HA-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.t2.small."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.072
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.small_mysql_rds_properties ))
+                    multi_az: true
+
+                - id: "4eb35ca9-a7ec-46c6-b137-d819848536cd"
+                  name: "M-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.large."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.193
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.medium_mysql_rds_properties ))
+
+                - id: "e60edf62-b701-4e38-846f-b0b3db728349"
+                  name: "M-HA-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.large."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.386
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.medium_mysql_rds_properties ))
+                    multi_az: true
+
+                - id: "8d139b9e-bc82-4749-8ad6-7733980292d6"
+                  name: "M-HA-enc-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.386
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "Storage Encrypted"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.medium_mysql_rds_properties ))
+                    multi_az: true
+                    storage_encrypted: true
+
+                - id: "6725bf1f-71e8-447a-b6a1-659247fcc03c"
+                  name: "L-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.772
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.large_mysql_rds_properties ))
+
+                - id: "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6"
+                  name: "L-HA-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 1.544
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.4 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.large_mysql_rds_properties ))
+                    multi_az: true
+
+                - id: "d5efbf83-5e00-47a5-a668-2ef1307d5a23"
+                  name: "L-HA-enc-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 1.544
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "Storage Encrypted"
+                      - "AWS RDS"
+                  rds_properties:
+                    inject: (( inject meta.rds_broker.large_mysql_rds_properties ))
+                    multi_az: true
+                    storage_encrypted: true
+
 properties:
   cc:
     security_group_definitions:
