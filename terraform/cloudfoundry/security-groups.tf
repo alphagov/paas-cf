@@ -10,7 +10,7 @@ resource "aws_security_group" "cloud_controller" {
 
 resource "aws_security_group" "cf_api_elb" {
   name        = "${var.env}-cf-api-elb"
-  description = "Security group for CF API public endpoints that allows web traffic from whitelisted IPs"
+  description = "Security group for CF API public endpoints"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -40,7 +40,7 @@ resource "aws_security_group" "cf_api_elb" {
 
 resource "aws_security_group" "metrics_elb" {
   name        = "${var.env}-metrics"
-  description = "Security group for graphite/grafana ELB"
+  description = "Security group for graphite/grafana ELB. Allows access from admin IP ranges."
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -77,7 +77,7 @@ resource "aws_security_group" "metrics_elb" {
 
 resource "aws_security_group" "web" {
   name        = "${var.env}-cf-web"
-  description = "Security group for web that allows web traffic from the office"
+  description = "Security group for web that allows HTTPS traffic from anywhere"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -102,7 +102,7 @@ resource "aws_security_group" "web" {
 
 resource "aws_security_group" "sshproxy" {
   name        = "${var.env}-sshproxy-cf"
-  description = "Security group for web that allows TCP/2222 for ssh-proxy from the office"
+  description = "Security group that allows TCP/2222 for cf ssh support"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -131,7 +131,7 @@ resource "aws_security_group" "sshproxy" {
 
 resource "aws_security_group" "service_brokers" {
   name        = "${var.env}-service-brokers"
-  description = "Group for service brokers"
+  description = "Group for service brokers that allows CloudController to connect"
   vpc_id      = "${var.vpc_id}"
 
   egress {
