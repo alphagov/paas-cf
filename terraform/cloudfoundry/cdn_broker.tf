@@ -86,7 +86,7 @@ resource "aws_db_instance" "cdn" {
   identifier           = "${var.env}-cdn"
   allocated_storage    = 10
   engine               = "postgres"
-  engine_version       = "9.5.4"
+  engine_version       = "9.5"
   instance_class       = "db.t2.small"
   name                 = "cdn"
   username             = "dbadmin"
@@ -102,7 +102,7 @@ resource "aws_db_instance" "cdn" {
   final_snapshot_identifier  = "${var.env}-cf-cdn-final-snapshot"
   skip_final_snapshot        = "${var.cf_db_skip_final_snapshot}"
   vpc_security_group_ids     = ["${aws_security_group.cdn_rds.id}"]
-  auto_minor_version_upgrade = false
+  auto_minor_version_upgrade = true
 
   tags {
     Name = "${var.env}-cdn"

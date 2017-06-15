@@ -39,7 +39,7 @@ resource "aws_db_instance" "cf" {
   identifier           = "${var.env}-cf"
   allocated_storage    = 10
   engine               = "postgres"
-  engine_version       = "9.5.4"
+  engine_version       = "9.5"
   instance_class       = "db.m3.medium"
   username             = "dbadmin"
   password             = "${var.secrets_cf_db_master_password}"
@@ -54,7 +54,7 @@ resource "aws_db_instance" "cf" {
   final_snapshot_identifier  = "${var.env}-cf-rds-final-snapshot"
   skip_final_snapshot        = "${var.cf_db_skip_final_snapshot}"
   vpc_security_group_ids     = ["${aws_security_group.cf_rds.id}"]
-  auto_minor_version_upgrade = false
+  auto_minor_version_upgrade = true
 
   tags {
     Name       = "${var.env}-cf"
