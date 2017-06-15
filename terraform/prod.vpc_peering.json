@@ -4,5 +4,11 @@
         "account_id": "513071381340",
         "vpc_id": "vpc-c1f83da6",
         "subnet_cidr": "172.16.1.0/24"
+    },
+    {
+        "peer_name": "dit_services",
+        "account_id": "650575079077",
+        "vpc_id": "vpc-82c913e5",
+        "subnet_cidr": "172.17.0.0/22"
     }
 ]
