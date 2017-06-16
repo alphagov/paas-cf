@@ -9,8 +9,8 @@ resource "aws_security_group" "cloud_controller" {
 }
 
 resource "aws_security_group" "cf_api_elb" {
-  name        = "${var.env}-cf-api-elb"
-  description = "Security group for CF API public endpoints that allows web traffic from whitelisted IPs"
+  name_prefix = "${var.env}-cf-api-elb-"
+  description = "Security group for CF API public endpoints"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -36,11 +36,15 @@ resource "aws_security_group" "cf_api_elb" {
   tags {
     Name = "${var.env}-cf-api"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "metrics_elb" {
-  name        = "${var.env}-metrics"
-  description = "Security group for graphite/grafana ELB"
+  name_prefix = "${var.env}-metrics-"
+  description = "Security group for graphite/grafana ELB. Allows access from admin IP ranges."
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -73,11 +77,15 @@ resource "aws_security_group" "metrics_elb" {
   tags {
     Name = "${var.env}-metrics_elb"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "web" {
-  name        = "${var.env}-cf-web"
-  description = "Security group for web that allows web traffic from the office"
+  name_prefix = "${var.env}-cf-web-"
+  description = "Security group for web that allows HTTPS traffic from anywhere"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -98,11 +106,15 @@ resource "aws_security_group" "web" {
   tags {
     Name = "${var.env}-cf-web"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "sshproxy" {
-  name        = "${var.env}-sshproxy-cf"
-  description = "Security group for web that allows TCP/2222 for ssh-proxy from the office"
+  name_prefix = "${var.env}-sshproxy-cf-"
+  description = "Security group that allows TCP/2222 for cf ssh support"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -127,11 +139,15 @@ resource "aws_security_group" "sshproxy" {
   tags {
     Name = "${var.env}-cf-sshproxy"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group" "service_brokers" {
-  name        = "${var.env}-service-brokers"
-  description = "Group for service brokers"
+  name_prefix = "${var.env}-service-brokers-"
+  description = "Group for service brokers that allows CloudController to connect"
   vpc_id      = "${var.vpc_id}"
 
   egress {
@@ -153,5 +169,9 @@ resource "aws_security_group" "service_brokers" {
 
   tags {
     Name = "${var.env}-service-brokers"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
