@@ -1354,6 +1354,7 @@ jobs:
                     cf create-service-broker rds-broker rds-broker $RDS_BROKER_PASS https://$RDS_BROKER_SERVER
                   fi
                   cf enable-service-access postgres
+                  cf enable-service-access mysql
 
         - task: register-cdn-broker
           config:
