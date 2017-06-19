@@ -11,7 +11,7 @@ import (
 var _ = Describe("ComposeBroker", func() {
 
 	const (
-		serviceName = "mongo"
+		serviceName = "mongodb"
 	)
 
 	It("is registered in the marketplace", func() {

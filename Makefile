@@ -169,6 +169,14 @@ upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
 
+.PHONY: upload-compose-secrets
+upload-compose-secrets: check-env ## Decrypt and upload Datadog credentials to S3
+	$(eval export COMPOSE_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	$(if ${AWS_ACCOUNT},,$(error Must set environment to dev/ci/staging/prod))
+	$(if ${COMPOSE_PASSWORD_STORE_DIR},,$(error Must pass COMPOSE_PASSWORD_STORE_DIR=<path_to_password_store>))
+	$(if $(wildcard ${COMPOSE_PASSWORD_STORE_DIR}),,$(error Password store ${COMPOSE_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-compose-secrets.sh
+
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
 	$(eval export OAUTH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
