@@ -1124,6 +1124,7 @@ jobs:
           - get: datadog-tfstate
           - get: paas-rubbernecker
           - get: paas-compose-broker
+            version: "04d277d7c20d8674df40d355a2c1a6a109b15d5a"
 
       - aggregate:
         - task: extract-cf-terraform-outputs
