@@ -91,6 +91,7 @@ dev: globals ## Set Environment to DEV
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
 	$(eval export DISABLE_PIPELINE_LOCKING=true)
 	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export ENABLE_MORNING_DEPLOYMENT=true)
 	@true
 
 .PHONY: ci
@@ -151,6 +152,10 @@ bosh-cli: check-env ## Create interactive connnection to BOSH container
 .PHONY: pipelines
 pipelines: check-env ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-cloudfoundry.sh
+
+.PHONY: trigger-deploy
+trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
+	concourse/scripts/trigger-deploy.sh
 
 .PHONY: showenv
 showenv: check-env ## Display environment information
