@@ -1482,6 +1482,7 @@ jobs:
               - name: bosh-CA
             params:
               COMPOSE_ACCESS_TOKEN: {{compose_access_token}}
+              DB_PREFIX: {{deploy_env}}
             run:
               path: sh
               args:
@@ -1504,6 +1505,7 @@ jobs:
                       'USERNAME' => 'compose-broker',
                       'PASSWORD' => '${COMPOSE_BROKER_PASS}',
                       'ACCESS_TOKEN' => '${COMPOSE_ACCESS_TOKEN}',
+                      'DB_PREFIX' => '${DB_PREFIX}',
                     }}
                     manifest['applications'].each { |app| app.merge!(env) }
                     File.write('manifest.yml', manifest.to_yaml)
