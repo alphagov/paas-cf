@@ -1047,7 +1047,6 @@ jobs:
               DISABLE_USER_CREATION: {{disable_user_creation}}
               OAUTH_CLIENT_ID: {{oauth_client_id}}
               OAUTH_CLIENT_SECRET: {{oauth_client_secret}}
-              COMPOSE_ACCOUNT_ID: {{compose_account_id}}
               COMPOSE_ACCESS_TOKEN: {{compose_access_token}}
             run:
               path: sh
@@ -1483,7 +1482,6 @@ jobs:
               - name: bosh-CA
             params:
               COMPOSE_ACCESS_TOKEN: {{compose_access_token}}
-              COMPOSE_ACCOUNT_ID: {{compose_account_id}}
             run:
               path: sh
               args:
@@ -1506,7 +1504,6 @@ jobs:
                       'USERNAME' => 'compose-broker',
                       'PASSWORD' => '${COMPOSE_BROKER_PASS}',
                       'ACCESS_TOKEN' => '${COMPOSE_ACCESS_TOKEN}',
-                      'ACCOUNT_ID' => '${COMPOSE_ACCOUNT_ID}',
                     }}
                     manifest['applications'].each { |app| app.merge!(env) }
                     File.write('manifest.yml', manifest.to_yaml)
