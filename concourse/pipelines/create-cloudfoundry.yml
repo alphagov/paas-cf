@@ -253,6 +253,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-compose-broker
+      tag_filter: v0.1.0
 
 jobs:
   - name: pipeline-lock
@@ -1046,7 +1047,6 @@ jobs:
               DISABLE_USER_CREATION: {{disable_user_creation}}
               OAUTH_CLIENT_ID: {{oauth_client_id}}
               OAUTH_CLIENT_SECRET: {{oauth_client_secret}}
-              COMPOSE_ACCOUNT_ID: {{compose_account_id}}
               COMPOSE_ACCESS_TOKEN: {{compose_access_token}}
             run:
               path: sh
@@ -1124,7 +1124,6 @@ jobs:
           - get: datadog-tfstate
           - get: paas-rubbernecker
           - get: paas-compose-broker
-            version: "04d277d7c20d8674df40d355a2c1a6a109b15d5a"
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -1483,7 +1482,7 @@ jobs:
               - name: bosh-CA
             params:
               COMPOSE_ACCESS_TOKEN: {{compose_access_token}}
-              COMPOSE_ACCOUNT_ID: {{compose_account_id}}
+              DB_PREFIX: {{deploy_env}}
             run:
               path: sh
               args:
@@ -1506,7 +1505,7 @@ jobs:
                       'USERNAME' => 'compose-broker',
                       'PASSWORD' => '${COMPOSE_BROKER_PASS}',
                       'ACCESS_TOKEN' => '${COMPOSE_ACCESS_TOKEN}',
-                      'ACCOUNT_ID' => '${COMPOSE_ACCOUNT_ID}',
+                      'DB_PREFIX' => '${DB_PREFIX}',
                     }}
                     manifest['applications'].each { |app| app.merge!(env) }
                     File.write('manifest.yml', manifest.to_yaml)

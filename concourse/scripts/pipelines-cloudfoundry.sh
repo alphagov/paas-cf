@@ -80,8 +80,8 @@ prepare_environment() {
   fi
 
   # shellcheck disable=SC2154
-  if [ -z "${compose_account_id+x}" ] || [ -z "${compose_access_token+x}" ] ; then
-    echo "Could not retrieve access token or account id for compose. Did you do run \`make ${AWS_ACCOUNT} upload-compose-secrets\`?"
+  if [ -z "${compose_access_token+x}" ] ; then
+    echo "Could not retrieve access token for compose. Did you do run \`make ${AWS_ACCOUNT} upload-compose-secrets\`?"
     exit 1
   fi
 
@@ -132,7 +132,6 @@ disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
-compose_account_id: ${compose_account_id:-}
 compose_access_token: ${compose_access_token:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
