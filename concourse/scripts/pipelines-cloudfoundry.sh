@@ -45,6 +45,14 @@ get_tracker_token() {
   fi
 }
 
+get_pagerduty_api_token() {
+  secrets_uri="s3://${state_bucket}/pagerduty_api_token"
+  export pagerduty_api_token
+  if aws s3 ls "${secrets_uri}" > /dev/null ; then
+    pagerduty_api_token=$(aws s3 cp "${secrets_uri}" -)
+  fi
+}
+
 prepare_environment() {
   "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
@@ -88,6 +96,7 @@ prepare_environment() {
   export EXPOSE_PIPELINE=1
 
   get_tracker_token
+  get_pagerduty_api_token
   if [ "${DEPLOY_RUBBERNECKER:-false}" = "true" ] ; then
     if [ -z "${tracker_token+x}" ] ; then
       echo "Rubbernecker deployment enabled but could not retrieve the API token. Did you run \`make <env> upload-tracker-token\`?"
@@ -141,6 +150,7 @@ pivotal_project_id: ${PIVOTAL_PROJECT_ID:-1275640}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
+pagerduty_api_token: ${pagerduty_api_token:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
