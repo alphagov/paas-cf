@@ -102,6 +102,12 @@ jobs:
           params:
             file: updated-datadog-tfstate/datadog.tfstate
 
+
+      - task: await-turn
+        file: paas-cf/concourse/tasks/splay.yml
+        params:
+          DEPLOY_ENV: {{deploy_env}}
+
       - task: delete-deployment
         config:
           platform: linux
@@ -121,17 +127,7 @@ jobs:
             args:
               - -e
               - -c
-              # The following sleep monstrosity deterministically sleeps for a
-              # period of time between 0-20mins in order to prevent all our
-              # deletion jobs running at the same time. See the commit message for
-              # how it works.
               - |
-                sum=$(echo {{deploy_env}} | md5sum);
-                short=$(echo $sum | cut -b 1-15)
-                decimal=$((0x$short));
-                sleeptime=$((${decimal##-} % 60*20));
-                echo "Sleeping for $sleeptime seconds before deletion.."
-                sleep $sleeptime
                 ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
                 bosh -n delete deployment {{deploy_env}} --force
 
