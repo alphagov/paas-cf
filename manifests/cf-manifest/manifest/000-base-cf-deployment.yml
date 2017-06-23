@@ -18,9 +18,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.5.0
     sha1: c86150d54162e80597cfa2959137014c41512bbf
   - name: cflinuxfs2
-    version: 1.126.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.126.0
-    sha1: f6765799fe9b92bce2c1ceaf1c99103bcaaa832f
+    version: 1.133.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.133.0
+    sha1: caf2f0488f844fb6ea7937299b33b2a4e64b23b0
   - name: paas-haproxy
     version: 0.1.3
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.3.tgz
