@@ -7,6 +7,11 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.3",
+			"Rev": "a0583e0143b1624142adab07e0e97fe106d99561"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Comment": "go1.0-cutoff-86-gdd3290b",
 			"Rev": "dd3290b2f71a8b30bee8e4e75a337a825263d26f"
