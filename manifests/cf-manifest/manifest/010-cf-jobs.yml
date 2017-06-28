@@ -349,7 +349,7 @@ jobs:
     instances: 2
     vm_type: medium
     vm_extensions:
-      - cf_loggregator_elbs
+      - cf_doppler_elbs
     stemcell: default
     networks:
       - name: cf

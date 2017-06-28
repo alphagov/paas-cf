@@ -39,11 +39,10 @@ vm_extensions:
       elbs:
         - (( grab terraform_outputs.cf_uaa_elb_name ))
 
-  - name: cf_loggregator_elbs
+  - name: cf_doppler_elbs
     cloud_properties:
       elbs:
         - (( grab terraform_outputs.cf_doppler_elb_name ))
-        - (( grab terraform_outputs.cf_loggregator_elb_name ))
 
   - name: ssh_proxy_elb
     cloud_properties:
