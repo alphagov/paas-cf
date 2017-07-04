@@ -1,6 +1,8 @@
 package scripts_test
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -28,6 +30,7 @@ var _ = Describe("KibanaSetUtc", func() {
 	const (
 		KibanaConfigPath = "/.kibana/config/4.4.0"
 		KibanaIndexPath  = "/.kibana"
+		SessionTimeout   = 5 * time.Second
 	)
 
 	var (
@@ -75,7 +78,7 @@ var _ = Describe("KibanaSetUtc", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, SessionTimeout).Should(gexec.Exit(0))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err.Contents()).To(BeEmpty())
 
@@ -103,7 +106,7 @@ var _ = Describe("KibanaSetUtc", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, SessionTimeout).Should(gexec.Exit(0))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err.Contents()).To(BeEmpty())
 
@@ -132,7 +135,7 @@ var _ = Describe("KibanaSetUtc", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, SessionTimeout).Should(gexec.Exit(0))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err.Contents()).To(BeEmpty())
 
@@ -152,7 +155,7 @@ var _ = Describe("KibanaSetUtc", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, SessionTimeout).Should(gexec.Exit(1))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err).To(gbytes.Say("Connection refused"))
 		})
@@ -175,7 +178,7 @@ var _ = Describe("KibanaSetUtc", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(0))
+			Eventually(session, SessionTimeout).Should(gexec.Exit(0))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err.Contents()).To(BeEmpty())
 
@@ -200,7 +203,7 @@ var _ = Describe("KibanaSetUtc", func() {
 			session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 			Expect(err).ToNot(HaveOccurred())
 
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, SessionTimeout).Should(gexec.Exit(1))
 			Expect(session.Out.Contents()).To(BeEmpty())
 			Expect(session.Err).To(gbytes.Say("Unexpected response code: 500"))
 
