@@ -96,7 +96,7 @@ func mysqlOpen(dbu string, ssl bool) (*sql.DB, error) {
 	}
 
 	if ssl {
-		u.RawQuery = "tls=skip-verify"
+		u.RawQuery = "tls=true"
 	} else {
 		u.RawQuery = "tls=false"
 	}
