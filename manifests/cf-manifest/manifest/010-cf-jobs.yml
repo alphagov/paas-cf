@@ -21,8 +21,6 @@ meta:
     release: (( grab meta.release.name ))
   - name: java-buildpack
     release: (( grab meta.release.name ))
-  - name: java-offline-buildpack
-    release: (( grab meta.release.name ))
   - name: go-buildpack
     release: (( grab meta.release.name ))
   - name: binary-buildpack
