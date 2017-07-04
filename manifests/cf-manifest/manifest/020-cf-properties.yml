@@ -549,9 +549,16 @@ properties:
         db_port: 5432
         db_schema: bbs
         db_driver: postgres
-        max_open_connections: 100
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
+    locket:
+      sql:
+        db_username: locket
+        db_password: (( grab secrets.cf_db_locket_password ))
+        db_host: (( grab terraform_outputs.cf_db_address ))
+        db_port: 5432
+        db_schema: locket
+        db_driver: postgres
 
     file_server:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
