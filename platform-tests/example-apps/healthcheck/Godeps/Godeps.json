@@ -8,8 +8,8 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/go-sql-driver/mysql",
-			"Comment": "v1.3",
-			"Rev": "a0583e0143b1624142adab07e0e97fe106d99561"
+			"Comment": "v1.3-27-gbf7f34f",
+			"Rev": "bf7f34fef176d890dfcc6e94319ac747291bc09a"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
