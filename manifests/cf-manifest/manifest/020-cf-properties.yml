@@ -141,6 +141,8 @@ properties:
   metron_agent:
     deployment: (( grab meta.environment ))
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
+    # Remove this after logregator v90.1 upgrade
+    health_port: 14824
 
   metron_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
