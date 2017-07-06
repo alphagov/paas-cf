@@ -680,7 +680,6 @@ properties:
     trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
 
   garden:
-    network_mtu: 1500
     log_level: error
     # to be removed after upgrade of Diago to 1.14
     cleanup_process_dirs_on_wait: true
