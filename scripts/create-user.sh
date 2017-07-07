@@ -32,8 +32,13 @@ https://docs.cloud.service.gov.uk/#quick-setup-guide
 You can find our privacy policy here:
 https://docs.cloud.service.gov.uk/#privacy-policy
 
+To check the status of GOV.UK PaaS, and see the availability of live
+applications and database connectivity, visit
+https://status.cloud.service.gov.uk.  We recommend you sign up to this service
+to get alerts and incident updates.
+
 Regards,
-Government PaaS team.
+The GOV.UK PaaS team
 
 PS Some departmental email systems will check links in inbound emails as part of
 their virus protection. This may have invalidated your one-time link. If this is
