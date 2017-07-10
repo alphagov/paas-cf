@@ -253,7 +253,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-compose-broker
-      tag_filter: v0.2.0
+      tag_filter: v0.3.0
 
 jobs:
   - name: pipeline-lock
