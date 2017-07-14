@@ -44,7 +44,7 @@ Example:
 
 or:
 
-    CF_RELEASE_DIR=~/workspace/cf-release/ GITHUB_USER=keymon GITHUB_TOKEN=1234567891234567890 $0 v251 v253
+    CF_RELEASE_DIR=~/workspace/cf-release/ GITHUB_USER=keymon GITHUB_API_TOKEN=1234567891234567890 $0 v251 v253
 
 EOF
     exit 1
