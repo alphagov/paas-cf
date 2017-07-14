@@ -88,14 +88,14 @@ var _ = Describe("RDS broker - Postgres", func() {
 
 		It("binds a DB instance to the Healthcheck app that matches our criteria", func() {
 			By("allowing connections from the Healthcheck app")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/db"))
+			resp, err := httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s", serviceName)))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
 			By("disallowing connections from the Healthcheck app without TLS")
-			resp, err = httpClient.Get(helpers.AppUri(appName, "/db?ssl=false"))
+			resp, err = httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s&ssl=false", serviceName)))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
@@ -173,11 +173,19 @@ var _ = Describe("RDS broker - MySQL", func() {
 
 		It("binds a DB instance to the Healthcheck app that matches our criteria", func() {
 			By("allowing connections from the Healthcheck app")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/db?service=mysql"))
-			Expect(err).NotTo(HaveOccurred(), "Couldn't get the correct response")
+			resp, err := httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s", serviceName)))
+			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred(), "Couldn't read the correct body")
+			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+
+			By("disallowing connections from the Healthcheck app without TLS")
+			resp, err = httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s&ssl=false", serviceName)))
+			Expect(err).NotTo(HaveOccurred())
+			body, err = ioutil.ReadAll(resp.Body)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(resp.StatusCode).NotTo(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+			Expect(body).To(MatchRegexp("Error 1045: Access denied for user"), "Connection without TLS did not report a TLS error")
 		})
 	})
 })
