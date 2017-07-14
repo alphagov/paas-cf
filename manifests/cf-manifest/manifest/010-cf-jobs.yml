@@ -28,7 +28,7 @@ meta:
   - name: binary-buildpack
     release: (( grab meta.release.name ))
   - name: nodejs-buildpack
-    release: (( grab meta.release.name ))
+    release: nodejs-buildpack
   - name: ruby-buildpack
     release: (( grab meta.release.name ))
   - name: php-buildpack

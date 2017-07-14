@@ -76,6 +76,9 @@ for buildpack_release in src/*buildpack-release; do
         dotnet-core-buildpack*)
         continue # Ignore dotnet ones
         ;;
+        nodejs-buildpack*)
+        continue # Upgraded independent of cf-release
+        ;;
     esac
 
     commit_a=$(git diff "${CF_RELEASE_VERSION_A}..${CF_RELEASE_VERSION_B}" "${buildpack_release}" | grep "Subproject commit" | cut -f 3 -d " " | head -n 1)
