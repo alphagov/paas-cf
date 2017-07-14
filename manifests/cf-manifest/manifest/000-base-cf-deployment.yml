@@ -21,6 +21,10 @@ releases:
     version: 1.133.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.133.0
     sha1: caf2f0488f844fb6ea7937299b33b2a4e64b23b0
+  - name: nodejs-buildpack
+    version: 1.6.2
+    url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.2
+    sha1: aca4bdea51e8a10a410312db629b7ba3f0a15b7e
   - name: paas-haproxy
     version: 0.1.3
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.3.tgz

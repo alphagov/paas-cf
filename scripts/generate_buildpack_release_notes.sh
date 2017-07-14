@@ -44,7 +44,7 @@ Example:
 
 or:
 
-    CF_RELEASE_DIR=~/workspace/cf-release/ GITHUB_USER=keymon GITHUB_TOKEN=1234567891234567890 $0 v251 v253
+    CF_RELEASE_DIR=~/workspace/cf-release/ GITHUB_USER=keymon GITHUB_API_TOKEN=1234567891234567890 $0 v251 v253
 
 EOF
     exit 1
@@ -75,6 +75,9 @@ for buildpack_release in src/*buildpack-release; do
         ;;
         dotnet-core-buildpack*)
         continue # Ignore dotnet ones
+        ;;
+        nodejs-buildpack*)
+        continue # Upgraded independent of cf-release
         ;;
     esac
 
