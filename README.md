@@ -40,9 +40,10 @@ services for the platform.
 
 ### Prerequisites
 
-You will need a working [Deployer Concourse](#deployer-concourse).
+* **You will need a working [Deployer Concourse](#deployer-concourse).** which will be responsible for provisioning and deploying your infrastructure. (Follow the instructions in [paas-bootstrap](https://github.com/alphagov/paas-bootstrap#readme) to create a `deployer concourse`).
+* **You will need access to the credentials store.** 
 
-Upload the necessary credentials:
+Upload the necessary credentials. _This step assumes that the credentials repository and tooling (paas-pass) has been installed. If you do not currently have access to the credentials store you may ask a team member to do this step on your behalf._
 
 ```
 make dev upload-compose-secrets
