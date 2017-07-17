@@ -40,3 +40,4 @@ properties:
         secret: (( grab secrets.uaa_clients_datadog_firehose_password ))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
+        redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
