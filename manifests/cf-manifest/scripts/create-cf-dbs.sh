@@ -6,6 +6,7 @@ export PGPASSWORD=${TF_VAR_secrets_cf_db_master_password:?}
 api_pass=${TF_VAR_secrets_cf_db_api_password:?}
 uaa_pass=${TF_VAR_secrets_cf_db_uaa_password:?}
 bbs_pass=${TF_VAR_secrets_cf_db_bbs_password:?}
+locket_pass=${TF_VAR_secrets_cf_db_locket_password:?}
 db_address=${TF_VAR_cf_db_address:?}
 
 # See: https://github.com/koalaman/shellcheck/wiki/SC2086#exceptions
@@ -22,12 +23,16 @@ psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'uaa'" \
 psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'bbs'" \
   | grep -q 'bbs' || psql_adm -d postgres -c "CREATE USER bbs WITH ROLE dbadmin"
 
+psql_adm -d postgres -c "SELECT rolname FROM pg_roles WHERE rolname = 'locket'" \
+  | grep -q 'locket' || psql_adm -d postgres -c "CREATE USER locket WITH ROLE dbadmin"
+
 # Always update passwords
 psql_adm -d postgres -c "ALTER USER api WITH PASSWORD '${api_pass}'"
 psql_adm -d postgres -c "ALTER USER uaa WITH PASSWORD '${uaa_pass}'"
 psql_adm -d postgres -c "ALTER USER bbs WITH PASSWORD '${bbs_pass}'"
+psql_adm -d postgres -c "ALTER USER locket WITH PASSWORD '${locket_pass}'"
 
-for db in api uaa bbs; do
+for db in api uaa bbs locket; do
 
   # Create database
   psql_adm -d postgres -l | grep -q " ${db} " || \

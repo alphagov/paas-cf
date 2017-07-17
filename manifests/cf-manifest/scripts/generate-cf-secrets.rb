@@ -10,6 +10,7 @@ generator = SecretGenerator.new(
   "cf_db_api_password" => :simple,
   "cf_db_uaa_password" => :simple,
   "cf_db_bbs_password" => :simple,
+  "cf_db_locket_password" => :simple,
   "staging_upload_password" => :simple,
   "bulk_api_password" => :simple,
   "nats_password" => :simple,

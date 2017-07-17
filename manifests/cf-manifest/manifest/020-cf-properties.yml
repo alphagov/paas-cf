@@ -141,6 +141,8 @@ properties:
   metron_agent:
     deployment: (( grab meta.environment ))
     dropsonde_incoming_port: (( grab properties.loggregator.dropsonde_incoming_port ))
+    # Remove this after logregator v90.1 upgrade
+    health_port: 14824
 
   metron_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
@@ -211,6 +213,8 @@ properties:
       cutoff_age_in_days: 31
 
     users_can_select_backend: true
+    # FIXME: this can be removed when the default becomes `true`
+    # See Github issue: https://github.com/cloudfoundry/cloud_controller_ng/issues/841
     default_to_diego_backend: true
     allow_app_ssh_access: true
     default_app_memory: 1024
@@ -314,7 +318,7 @@ properties:
       - name: staticfile_buildpack
         package: staticfile-buildpack
       - name: java_buildpack
-        package: java-offline-buildpack
+        package: java-buildpack
       - name: ruby_buildpack
         package: ruby-buildpack
       - name: nodejs_buildpack
@@ -421,6 +425,9 @@ properties:
         app-icon: (( grab meta.docs_app_icon ))
         app-launch-url: https://docs.cloud.service.gov.uk/#get-started
         show-on-homepage: true
+        authorized-grant-types: client_credentials
+        secret: ''
+        authorities: uaa.none
       login:
         override: true
         scope: openid,oauth.approvals
@@ -436,6 +443,7 @@ properties:
         authorities: uaa.none
         access-token-validity: 600
         refresh-token-validity: 604800
+        secret: ''
       notifications:
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials
@@ -454,20 +462,22 @@ properties:
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_cc_routing_secret ))
       gorouter:
-        authorities: routing.routes.read, routing.router_groups.read
-        authorized-grant-types: client_credentials,refresh_token
+        authorities: routing.routes.read
+        authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_gorouter_secret ))
       tcp_emitter:
         authorities: routing.routes.write,routing.routes.read
-        authorized-grant-types: client_credentials,refresh_token
+        authorized-grant-types: client_credentials
+        secret: ''
       tcp_router:
-        authorities: routing.routes.read, routing.router_groups.read
-        authorized-grant-types: client_credentials,refresh_token
+        authorities: routing.routes.read
+        authorized-grant-types: client_credentials
+        secret: ''
       ssh-proxy:
         authorized-grant-types: authorization_code
         autoapprove: true
         override: true
-        redirect-uri: /login
+        redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
         scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
         secret: (( grab secrets.uaa_clients_ssh_proxy_secret ))
       graphite-nozzle:
@@ -477,11 +487,12 @@ properties:
         secret: (( grab secrets.uaa_clients_firehose_password ))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
+        redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
       cc-service-dashboards:
         secret: (( grab secrets.uaa_clients_cc_service_dashboards_password ))
-        scope: openid,cloud_controller_service_permissions.read
         authorities: clients.read,clients.write,clients.admin
-        authorized-grant-types: authorization_code,client_credentials
+        authorized-grant-types: client_credentials
+        redirect-uri: (( concat "https://login." properties.system_domain ))
       cdn_broker:
         authorities: uaa.none
         authorized-grant-types: password
@@ -549,9 +560,16 @@ properties:
         db_port: 5432
         db_schema: bbs
         db_driver: postgres
-        max_open_connections: 100
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       require_ssl: true
+    locket:
+      sql:
+        db_username: locket
+        db_password: (( grab secrets.cf_db_locket_password ))
+        db_host: (( grab terraform_outputs.cf_db_address ))
+        db_port: 5432
+        db_schema: locket
+        db_driver: postgres
 
     file_server:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
@@ -666,9 +684,7 @@ properties:
     trusted_certs: (( grab meta.ca_certs.aws_rds_combined_ca_bundle ))
 
   garden:
-    network_mtu: 1500
     log_level: error
-    # to be removed after upgrade of Diago to 1.14
     cleanup_process_dirs_on_wait: true
   racoon:
     certificate_authority_cert: (( grab secrets.ipsec_ca_cert ))

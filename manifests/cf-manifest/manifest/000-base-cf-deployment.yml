@@ -6,17 +6,17 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "257"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=257
-    sha1: d25c454f551017196a5aa4690d80fd261561ac49
+    version: "264"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=264
+    sha1: 37f93b7064a15d5fdc942e0dcaf4bb9f002dc8d6
   - name: diego
-    version: 1.13.0
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.13.0
-    sha1: e067f76ea02e2c88a16d56d7cce5a7a44f254762
+    version: 1.18.1
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.18.1
+    sha1: 6c862da40ca7418a7defa47005de3d52e7a66948
   - name: garden-runc
-    version: 1.5.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.5.0
-    sha1: c86150d54162e80597cfa2959137014c41512bbf
+    version: 1.8.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.8.0
+    sha1: 0c112d0bdcb52e61db7251e99b2a116982201c99
   - name: cflinuxfs2
     version: 1.133.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.133.0
@@ -41,24 +41,11 @@ releases:
     version: 1.11.7
     url: https://github.com/cloudfoundry-community/nginx-release/releases/download/v1.11.7/nginx-1.11.7.tgz
     sha1: 133bb2260411b197924fff08d4cbd923cc8ec7eb
-    #FIXME: using a patched UAA release due to CVEs:
-    # https://www.cloudfoundry.org/cve-2017-4972/
-    # https://www.cloudfoundry.org/cve-2017-4973/
-    # https://www.cloudfoundry.org/cve-2017-4974/
-    # https://www.cloudfoundry.org/cve-2017-4991/
-    # https://www.cloudfoundry.org/cve-2017-4992/
-    # https://www.cloudfoundry.org/cve-2017-4994/
-    # https://www.cloudfoundry.org/cve-2017-8032/
-    # Remove once CF is upgraded to >= v264
-  - name: uaa
-    version: "30.5"
-    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=30.5
-    sha1: 6eedd46ebf1d37ca6f0a8731fe3792e85ad01589
 
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3363.26"
+    version: "3421.11"
 
 update:
   canaries: 0
