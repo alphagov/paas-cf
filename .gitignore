@@ -2,3 +2,4 @@
 bin/fly*
 .idea/
 platform-tests/pkg
+platform-tests/src/results
