@@ -81,7 +81,7 @@ for the public facing endpoints, instead of using self signed certificates. In
 that case, the operator must manually upload the certificates:
 
 The certificates and the intermediate CA cert need to be stored in the
-[credentials-high][] password store, using this naming convention:
+[alphagov/paas-credentials-high][] repo, using this naming convention:
 
  * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.crt`
  * `certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/${CERT_NAME}.key`
@@ -89,7 +89,7 @@ The certificates and the intermediate CA cert need to be stored in the
 
 Currently the process requires a `system_domain` and `apps_domain` cert.
 
-[credentials-high]: https://github.digital.cabinet-office.gov.uk/government-paas/credentials-high
+[alphagov/paas-credentials-high]: https://github.com/alphagov/paas-credentials-high
 
 ### Initial deployment of an environment
 
