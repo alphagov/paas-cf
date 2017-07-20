@@ -10,10 +10,10 @@ meta:
     release: (( grab meta.consul_templates.consul_agent.release ))
     consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: cloud_controller_ng
-    release: (( grab meta.release.name ))
+    release: capi
     consumes: {nats: nil}
   - name: cloud_controller_clock
-    release: (( grab meta.release.name ))
+    release: capi
     consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
@@ -45,7 +45,7 @@ meta:
     release: (( grab meta.consul_templates.consul_agent.release ))
     consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: cloud_controller_worker
-    release: (( grab meta.release.name ))
+    release: capi
     consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
@@ -437,13 +437,13 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: stager
-        release: cf
+        release: capi
       - name: nsync
-        release: cf
+        release: capi
       - name: tps
-        release: cf
+        release: capi
       - name: cc_uploader
-        release: cf
+        release: capi
       - name: cfdot
         release: diego
       - name: metron_agent
