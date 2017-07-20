@@ -31,6 +31,7 @@ Example:
   "admin_user": "admin",
   "admin_password": "secret",
   "apps_domain": "foo.cf-apps.example.com",
+  "test_password": "meowmeow",
   "skip_ssl_validation": true,
   "use_http": false
 }
