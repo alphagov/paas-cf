@@ -3,7 +3,6 @@ package acceptance_test
 import (
 	"fmt"
 	"io/ioutil"
-	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
@@ -45,7 +44,7 @@ var _ = Describe("Compose broker - MongoDB", func() {
 			dbInstanceName = generator.PrefixedRandomName("test-db-")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
-			pollForMongoDbCreationCompletion(dbInstanceName)
+			pollForServiceCreationCompletion(dbInstanceName)
 
 			fmt.Fprintf(GinkgoWriter, "Created MongoDB instance: %s\n", dbInstanceName)
 
@@ -69,7 +68,7 @@ var _ = Describe("Compose broker - MongoDB", func() {
 			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			// Poll until destruction is complete, otherwise the org cleanup (in AfterSuite) fails.
-			pollForMongoDbDeletionCompletion(dbInstanceName)
+			pollForServiceDeletionCompletion(dbInstanceName)
 		})
 
 		It("is accessible from the healthcheck app", func() {
@@ -90,25 +89,3 @@ var _ = Describe("Compose broker - MongoDB", func() {
 		})
 	})
 })
-
-func pollForMongoDbCreationCompletion(dbInstanceName string) {
-	fmt.Fprint(GinkgoWriter, "Polling for MongoDb creation to complete")
-	Eventually(func() *Buffer {
-		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
-		Expect(command).To(Exit(0))
-		return command.Out
-	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
-	fmt.Fprint(GinkgoWriter, "done\n")
-}
-
-func pollForMongoDbDeletionCompletion(dbInstanceName string) {
-	fmt.Fprint(GinkgoWriter, "Polling for MongoDb destruction to complete")
-	Eventually(func() *Buffer {
-		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "services").Wait(DEFAULT_TIMEOUT)
-		Expect(command).To(Exit(0))
-		return command.Out
-	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
-	fmt.Fprint(GinkgoWriter, "done\n")
-}

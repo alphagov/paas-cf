@@ -2,6 +2,7 @@ package acceptance_test
 
 import (
 	"crypto/tls"
+	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -80,4 +81,26 @@ func TestSuite(t *testing.T) {
 	}
 
 	RunSpecs(t, componentName)
+}
+
+func pollForServiceCreationCompletion(dbInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for service creation to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
+		Expect(command).To(Exit(0))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func pollForServiceDeletionCompletion(dbInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for service destruction to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "services").Wait(DEFAULT_TIMEOUT)
+		Expect(command).To(Exit(0))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
+	fmt.Fprint(GinkgoWriter, "done\n")
 }

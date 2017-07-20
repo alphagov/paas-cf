@@ -58,7 +58,7 @@ var _ = Describe("RDS broker - Postgres", func() {
 			dbInstanceName = generator.PrefixedRandomName("test-db-")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
-			pollForRDSCreationCompletion(dbInstanceName)
+			pollForServiceCreationCompletion(dbInstanceName)
 
 			rdsInstanceName = getRDSInstanceName(dbInstanceName)
 			fmt.Fprintf(GinkgoWriter, "Created RDS instance: %s\n", rdsInstanceName)
@@ -83,7 +83,7 @@ var _ = Describe("RDS broker - Postgres", func() {
 			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			// Poll until destruction is complete, otherwise the org cleanup (in AfterSuite) fails.
-			pollForRDSDeletionCompletion(dbInstanceName)
+			pollForServiceDeletionCompletion(dbInstanceName)
 		})
 
 		It("binds a DB instance to the Healthcheck app that matches our criteria", func() {
@@ -143,7 +143,7 @@ var _ = Describe("RDS broker - MySQL", func() {
 			dbInstanceName = generator.PrefixedRandomName("test-db-")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
-			pollForRDSCreationCompletion(dbInstanceName)
+			pollForServiceCreationCompletion(dbInstanceName)
 
 			rdsInstanceName = getRDSInstanceName(dbInstanceName)
 			fmt.Fprintf(GinkgoWriter, "Created RDS instance: %s\n", rdsInstanceName)
@@ -168,7 +168,7 @@ var _ = Describe("RDS broker - MySQL", func() {
 			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			// Poll until destruction is complete, otherwise the org cleanup (in AfterSuite) fails.
-			pollForRDSDeletionCompletion(dbInstanceName)
+			pollForServiceDeletionCompletion(dbInstanceName)
 		})
 
 		It("binds a DB instance to the Healthcheck app that matches our criteria", func() {
@@ -189,28 +189,6 @@ var _ = Describe("RDS broker - MySQL", func() {
 		})
 	})
 })
-
-func pollForRDSCreationCompletion(dbInstanceName string) {
-	fmt.Fprint(GinkgoWriter, "Polling for RDS creation to complete")
-	Eventually(func() *Buffer {
-		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
-		Expect(command).To(Exit(0))
-		return command.Out
-	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
-	fmt.Fprint(GinkgoWriter, "done\n")
-}
-
-func pollForRDSDeletionCompletion(dbInstanceName string) {
-	fmt.Fprint(GinkgoWriter, "Polling for RDS destruction to complete")
-	Eventually(func() *Buffer {
-		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "services").Wait(DEFAULT_TIMEOUT)
-		Expect(command).To(Exit(0))
-		return command.Out
-	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
-	fmt.Fprint(GinkgoWriter, "done\n")
-}
 
 func getRDSInstanceName(dbInstanceName string) string {
 	serviceOutput := cf.Cf("service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
