@@ -1,14 +1,22 @@
 package main
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"database/sql"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func dbHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,26 +38,41 @@ func testDBConnection(ssl bool, service string) error {
 	var err error
 	var db *sql.DB
 
-	dbu := os.Getenv("DATABASE_URL")
-
 	if service == "" {
 		service = "postgres"
 	}
 
 	switch service {
 	case "mysql":
+		dbu := os.Getenv("DATABASE_URL")
 		db, err = mysqlOpen(dbu, ssl)
+		if err != nil {
+			return err
+		}
+		return testSQLConnection(db)
 	case "postgres":
+		dbu := os.Getenv("DATABASE_URL")
 		db, err = postgresOpen(dbu, ssl)
+		if err != nil {
+			return err
+		}
+		return testSQLConnection(db)
+	case "mongodb":
+		vcap_services := os.Getenv("VCAP_SERVICES")
+		session, err := mongoDBOpen(vcap_services, ssl)
+		if err != nil {
+			return err
+		}
+		return testMongoDBConnection(session)
 	default:
 		return fmt.Errorf("unknown service: " + service)
 	}
-	if err != nil {
-		return err
-	}
+}
+
+func testSQLConnection(db *sql.DB) error {
 	defer db.Close()
 
-	_, err = db.Exec("CREATE TABLE foo(id integer)")
+	_, err := db.Exec("CREATE TABLE foo(id integer)")
 	if err != nil {
 		return err
 	}
@@ -104,4 +127,102 @@ func mysqlOpen(dbu string, ssl bool) (*sql.DB, error) {
 	connString := fmt.Sprintf("%s@tcp(%s:%s)%s?%s", u.User.String(), u.Hostname(), u.Port(), u.EscapedPath(), u.RawQuery)
 
 	return sql.Open("mysql", connString)
+}
+
+func testMongoDBConnection(session *mgo.Session) error {
+	defer session.Close()
+
+	type Person struct {
+		Name  string
+		Phone string
+	}
+
+	input := &Person{Name: "John Jones", Phone: "+447777777777"}
+	db := session.DB("test").C("people")
+	err := db.Insert(input)
+	if err != nil {
+		return err
+	}
+
+	var result Person
+	err = db.Find(bson.M{"name": "John Jones"}).One(&result)
+	if err != nil {
+		return err
+	}
+	if result.Name != input.Name {
+		return fmt.Errorf("Name unexpectedly changed to %s in MongoDB test.", result.Name)
+	}
+	if result.Phone != input.Phone {
+		return fmt.Errorf("Phone unexpectedly changed to %s in MongoDB test.", result.Phone)
+	}
+	return nil
+}
+
+func mongoDBOpen(vcap_services_str string, ssl bool) (*mgo.Session, error) {
+	type VCAPService struct {
+		Credentials struct {
+			URI                 string `json:"uri"`
+			CACertificateBase64 string `json:"ca_certificate_base64"`
+		} `json:"credentials"`
+	}
+
+	type VCAPServices struct {
+		MongoDB []VCAPService `json:"mongodb"`
+	}
+
+	// Retrieve the MongoDB connection URI and the CA Certificate from the `VCAP_SERVICES`
+	// environment variable.
+	var vcap_services VCAPServices
+	if err := json.Unmarshal([]byte(vcap_services_str), &vcap_services); err != nil {
+		return nil, err
+	}
+	mongodb_credentials := vcap_services.MongoDB[0].Credentials
+	dbu := mongodb_credentials.URI
+	ca_certificate_base64 := mongodb_credentials.CACertificateBase64
+
+	// This is work around for https://github.com/go-mgo/mgo/issues/84
+	u, _ := url.Parse(dbu)
+	values := u.Query()
+	if _, ok := values["ssl"]; ok {
+		delete(values, "ssl")
+	}
+	u.RawQuery = values.Encode()
+	uri := u.String()
+
+	mongourl, err := mgo.ParseURL(uri)
+	if err != nil {
+		return nil, err
+	}
+
+	if !ssl {
+		session, err := mgo.DialWithTimeout(uri, 5 * time.Second)
+		if err != nil {
+			return nil, err
+		}
+		return session, nil
+	}
+
+	// Compose has self-signed certs for mongo. Make sure we verify it against CA certificate provided in binding.
+	ca, err := base64.StdEncoding.DecodeString(ca_certificate_base64)
+	if err != nil {
+		return nil, err
+	}
+	roots := x509.NewCertPool()
+	roots.AppendCertsFromPEM(ca)
+
+	tlsConfig := &tls.Config{RootCAs: roots}
+	if tlsConfig.InsecureSkipVerify {
+		return nil, fmt.Errorf("Verification was skipped.")
+	}
+
+	mongourl.DialServer = func(addr *mgo.ServerAddr) (net.Conn, error) {
+		return tls.Dial("tcp", addr.String(), tlsConfig)
+	}
+	mongourl.Timeout = 10 * time.Second
+	session, err := mgo.DialWithInfo(mongourl)
+	if err != nil {
+		return nil, err
+	}
+
+	return session, nil
 }
