@@ -213,7 +213,7 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-bbs
@@ -223,7 +223,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: cf
+        release: (( grab meta.release.name ))
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -378,7 +378,7 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: auctioneer
@@ -386,7 +386,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: cf
+        release: (( grab meta.release.name ))
     instances: 2
     vm_type: medium
     stemcell: default
@@ -397,7 +397,7 @@ jobs:
     azs: [z1, z2, z3]
     templates:
       - name: consul_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: rep
@@ -409,7 +409,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-rep
         release: datadog-for-cloudfoundry
       - name: datadog-garden
@@ -433,7 +433,7 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: stager
@@ -447,7 +447,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: cf
+        release: (( grab meta.release.name ))
     instances: 2
     vm_type: medium
     stemcell: default
@@ -458,7 +458,7 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: route_emitter
@@ -466,7 +466,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-route-emitter
         release: datadog-for-cloudfoundry
     instances: 2
@@ -479,13 +479,13 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: ssh_proxy
         release: diego
       - name: metron_agent
-        release: cf
+        release: (( grab meta.release.name ))
       - name: file_server
         release: diego
       - name: cfdot
