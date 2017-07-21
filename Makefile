@@ -107,6 +107,7 @@ ci: globals ## Set Environment to CI
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-ci.yml)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	@true
 
 .PHONY: staging
