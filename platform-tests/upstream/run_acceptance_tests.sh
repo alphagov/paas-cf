@@ -7,6 +7,23 @@ if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
   exit 0
 fi
 
+# FIXME: Remove this once we are deploying a version of cf-release
+# that includes capi-release >= 1.35.0.
+(
+  cd  "$(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/"
+  expected_commit_hash="4a6c59b27bf09aac222ffa02628d1fd47b3a708d"
+  current_commit_hash="$(git log --pretty=format:'%H' -n 1)"
+  if [ "${expected_commit_hash}" != "${current_commit_hash}" ]; then
+    echo "ERROR: Current commit for cf-acceptance-test is different than expected one: ${expected_commit_hash} != ${current_commit_hash}"
+    echo "Double check if we still need to pull our branch"
+    exit 1
+  fi
+  git remote add alphagov https://github.com/alphagov/paas-cf-acceptance-tests.git
+  git fetch alphagov
+  git checkout fix-v3-app-delete
+)
+
+
 SLEEPTIME=90
 NODES=5
 SKIP_REGEX='routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|uses\sa\sbuildpack\sfrom\sa\sgit\surl|when\sapp\shas\smultiple\sports\smapped'
