@@ -26,7 +26,7 @@ fi
 
 SLEEPTIME=90
 NODES=5
-SKIP_REGEX='routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|uses\sa\sbuildpack\sfrom\sa\sgit\surl|when\sapp\shas\smultiple\sports\smapped'
+SKIP_REGEX='routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|when\sapp\shas\smultiple\sports\smapped'
 SLOW_SPEC_THRESHOLD=120
 
 export CONFIG
