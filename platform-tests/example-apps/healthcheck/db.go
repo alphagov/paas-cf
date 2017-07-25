@@ -59,11 +59,15 @@ func testDBConnection(ssl bool, service string) error {
 		return testSQLConnection(db)
 	case "mongodb":
 		vcap_services := os.Getenv("VCAP_SERVICES")
-		session, err := mongoDBOpen(vcap_services, ssl)
+		credentials, err := mongoDBCredentials(vcap_services)
 		if err != nil {
 			return err
 		}
-		return testMongoDBConnection(session)
+		session, err := mongoDBOpen(credentials.URI, credentials.CACertificateBase64, ssl)
+		if err != nil {
+			return err
+		}
+		return testMongoDBConnection(session, credentials.Name)
 	default:
 		return fmt.Errorf("unknown service: " + service)
 	}
@@ -129,7 +133,7 @@ func mysqlOpen(dbu string, ssl bool) (*sql.DB, error) {
 	return sql.Open("mysql", connString)
 }
 
-func testMongoDBConnection(session *mgo.Session) error {
+func testMongoDBConnection(session *mgo.Session, db_name string) error {
 	defer session.Close()
 
 	type Person struct {
@@ -138,7 +142,7 @@ func testMongoDBConnection(session *mgo.Session) error {
 	}
 
 	input := &Person{Name: "John Jones", Phone: "+447777777777"}
-	db := session.DB("test").C("people")
+	db := session.DB(db_name).C("people")
 	err := db.Insert(input)
 	if err != nil {
 		return err
@@ -158,12 +162,9 @@ func testMongoDBConnection(session *mgo.Session) error {
 	return nil
 }
 
-func mongoDBOpen(vcap_services_str string, ssl bool) (*mgo.Session, error) {
+func mongoDBCredentials(vcap_services_str string) (*Credentials, error) {
 	type VCAPService struct {
-		Credentials struct {
-			URI                 string `json:"uri"`
-			CACertificateBase64 string `json:"ca_certificate_base64"`
-		} `json:"credentials"`
+		Credentials Credentials `json:"credentials"`
 	}
 
 	type VCAPServices struct {
@@ -177,11 +178,12 @@ func mongoDBOpen(vcap_services_str string, ssl bool) (*mgo.Session, error) {
 		return nil, err
 	}
 	mongodb_credentials := vcap_services.MongoDB[0].Credentials
-	dbu := mongodb_credentials.URI
-	ca_certificate_base64 := mongodb_credentials.CACertificateBase64
+	return &mongodb_credentials, nil
+}
 
+func mongoDBOpen(db_url string, ca_certificate_base64 string, ssl bool) (*mgo.Session, error) {
 	// This is work around for https://github.com/go-mgo/mgo/issues/84
-	u, _ := url.Parse(dbu)
+	u, _ := url.Parse(db_url)
 	values := u.Query()
 	if _, ok := values["ssl"]; ok {
 		delete(values, "ssl")
@@ -195,7 +197,7 @@ func mongoDBOpen(vcap_services_str string, ssl bool) (*mgo.Session, error) {
 	}
 
 	if !ssl {
-		session, err := mgo.DialWithTimeout(uri, 5 * time.Second)
+		session, err := mgo.DialWithTimeout(uri, 5*time.Second)
 		if err != nil {
 			return nil, err
 		}
@@ -225,4 +227,10 @@ func mongoDBOpen(vcap_services_str string, ssl bool) (*mgo.Session, error) {
 	}
 
 	return session, nil
+}
+
+type Credentials struct {
+	Name                string `json:"name"`
+	URI                 string `json:"uri"`
+	CACertificateBase64 string `json:"ca_certificate_base64"`
 }
