@@ -246,7 +246,7 @@ properties:
 
     directories: ~
 
-    disable_custom_buildpacks: true
+    disable_custom_buildpacks: false
 
     broker_client_timeout_seconds: 70
     broker_client_default_async_poll_interval_seconds: ~
