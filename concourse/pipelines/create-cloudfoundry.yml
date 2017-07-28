@@ -1313,7 +1313,12 @@ jobs:
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
                   cf create-org admin
-                  cf create-space admin -o admin
+
+                  # FIXME: remove this once it's been renamed everywhere.
+                  cf target -o admin
+                  cf rename-space admin monitoring || true
+
+                  cf create-space monitoring -o admin
                   cf create-org service-brokers
                   cf set-quota service-brokers small
                   cf create-space compose -o service-brokers
@@ -1640,10 +1645,9 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
-                  cf target -o admin -s admin
+                  cf target -o admin -s monitoring
 
                   cat <<EOF > graphite-nozzle.json
                   [
@@ -1651,7 +1655,7 @@ jobs:
                   ]
                   EOF
                   cf create-security-group graphite-nozzle graphite-nozzle.json
-                  cf bind-security-group graphite-nozzle admin admin
+                  cf bind-security-group graphite-nozzle admin monitoring
 
                   cd graphite-nozzle
 
@@ -1960,7 +1964,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
+                    -o admin -s monitoring
                   cd paas-cf/tools/paas_dashboard
                   cf push --no-start paas-dashboard
                   echo Setting DD_API_KEY...
@@ -2000,7 +2004,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
+                    -o admin -s monitoring
 
                   cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
                   echo Setting PIVOTAL_API_KEY...
