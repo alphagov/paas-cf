@@ -1324,6 +1324,7 @@ jobs:
                   cf create-space compose -o service-brokers
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
+                  cf create-space tools -o govuk-paas
                   cf target -o govuk-paas
                   cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
                   cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
@@ -2004,7 +2005,12 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s monitoring
+                    -o govuk-paas -s tools
+
+                  # FIXME: remove this once it's been moved everywhere
+                  cf target -o admin -s monitoring
+                  cf delete -r -f rubbernecker
+                  cf target -o govuk-paas -s tools
 
                   cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
                   echo Setting PIVOTAL_API_KEY...
