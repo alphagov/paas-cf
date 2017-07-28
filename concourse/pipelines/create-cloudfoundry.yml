@@ -1319,9 +1319,11 @@ jobs:
                   cf rename-space admin monitoring || true
 
                   cf create-space monitoring -o admin
-                  cf create-org service-brokers
-                  cf set-quota service-brokers small
-                  cf create-space compose -o service-brokers
+                  cf create-space service-brokers -o admin
+
+                  # FIXME: remove this once it's been cleaned up everywhere.
+                  cf delete-org -f service-brokers
+
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
                   cf create-space tools -o govuk-paas
@@ -1501,8 +1503,8 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  cf target -o service-brokers -s compose
+                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                    -o admin -s service-brokers
 
                   cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
                   cd paas-compose-broker/
