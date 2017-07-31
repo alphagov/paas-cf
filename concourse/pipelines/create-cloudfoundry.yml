@@ -1717,10 +1717,19 @@ jobs:
 
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  cf create-org testers
-                  cf set-quota testers test_apps
-                  cf create-space healthcheck -o testers
-                  cf target -o testers -s healthcheck
+
+                  # FIXME: remove this once it's been cleaned up everywhere.
+                  if [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] && cf target -o testers -s healthcheck ; then
+                    cf unbind-service healthcheck healthcheck-db
+                    cf delete-service healthcheck-db -f
+                    while cf services | grep -q 'healthcheck-db'; do
+                      echo "Waiting for deletion of old healthcheck-db..."
+                      sleep 30
+                    done
+                  fi
+                  cf delete-org -f testers
+
+                  cf target -o admin -s healthchecks
                   BUILD_ROOT=$(pwd)
                   cd paas-cf/platform-tests/example-apps/healthcheck
 
