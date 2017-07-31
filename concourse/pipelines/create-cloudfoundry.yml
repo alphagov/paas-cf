@@ -1313,6 +1313,7 @@ jobs:
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
                   cf create-org admin
+                  cf set-quota admin medium
 
                   # FIXME: remove this once it's been renamed everywhere.
                   cf target -o admin
@@ -1320,6 +1321,7 @@ jobs:
 
                   cf create-space monitoring -o admin
                   cf create-space service-brokers -o admin
+                  cf create-space healthchecks -o admin
 
                   # FIXME: remove this once it's been cleaned up everywhere.
                   cf delete-org -f service-brokers
@@ -1554,10 +1556,11 @@ jobs:
 
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  cf create-org heavy-testers
-                  cf set-quota heavy-testers medium
-                  cf create-space test-application -o heavy-testers
-                  cf target -o heavy-testers -s test-application
+
+                  # FIXME: remove this once it's cleaned up everywhere.
+                  cf delete-org -f heavy-testers
+
+                  cf target -o admin -s healthchecks
 
                   cd paas-cf/platform-tests/example-apps/healthcheck
                   cf push simulated-load -i 180
