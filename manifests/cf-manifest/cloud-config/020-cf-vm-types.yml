@@ -9,7 +9,7 @@ vm_types:
     network: cf
     env: (( grab meta.default_env ))
     cloud_properties:
-      instance_type: t2.small
+      instance_type: t2.medium
       ephemeral_disk:
         size: 10240
         type: gp2
