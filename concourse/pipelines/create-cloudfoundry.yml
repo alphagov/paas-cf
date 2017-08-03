@@ -1313,12 +1313,22 @@ jobs:
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
                   cf create-org admin
-                  cf create-space admin -o admin
-                  cf create-org service-brokers
-                  cf set-quota service-brokers small
-                  cf create-space compose -o service-brokers
+                  cf set-quota admin medium
+
+                  # FIXME: remove this once it's been renamed everywhere.
+                  cf target -o admin
+                  cf rename-space admin monitoring || true
+
+                  cf create-space monitoring -o admin
+                  cf create-space service-brokers -o admin
+                  cf create-space healthchecks -o admin
+
+                  # FIXME: remove this once it's been cleaned up everywhere.
+                  cf delete-org -f service-brokers
+
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
+                  cf create-space tools -o govuk-paas
                   cf target -o govuk-paas
                   cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
                   cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
@@ -1495,8 +1505,8 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  cf target -o service-brokers -s compose
+                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                    -o admin -s service-brokers
 
                   cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
                   cd paas-compose-broker/
@@ -1546,10 +1556,11 @@ jobs:
 
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  cf create-org heavy-testers
-                  cf set-quota heavy-testers medium
-                  cf create-space test-application -o heavy-testers
-                  cf target -o heavy-testers -s test-application
+
+                  # FIXME: remove this once it's cleaned up everywhere.
+                  cf delete-org -f heavy-testers
+
+                  cf target -o admin -s healthchecks
 
                   cd paas-cf/platform-tests/example-apps/healthcheck
                   cf push simulated-load -i 180
@@ -1640,10 +1651,9 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
-                  cf target -o admin -s admin
+                  cf target -o admin -s monitoring
 
                   cat <<EOF > graphite-nozzle.json
                   [
@@ -1651,7 +1661,7 @@ jobs:
                   ]
                   EOF
                   cf create-security-group graphite-nozzle graphite-nozzle.json
-                  cf bind-security-group graphite-nozzle admin admin
+                  cf bind-security-group graphite-nozzle admin monitoring
 
                   cd graphite-nozzle
 
@@ -1707,10 +1717,19 @@ jobs:
 
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-                  cf create-org testers
-                  cf set-quota testers test_apps
-                  cf create-space healthcheck -o testers
-                  cf target -o testers -s healthcheck
+
+                  # FIXME: remove this once it's been cleaned up everywhere.
+                  if [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] && cf target -o testers -s healthcheck ; then
+                    cf unbind-service healthcheck healthcheck-db
+                    cf delete-service healthcheck-db -f
+                    while cf services | grep -q 'healthcheck-db'; do
+                      echo "Waiting for deletion of old healthcheck-db..."
+                      sleep 30
+                    done
+                  fi
+                  cf delete-org -f testers
+
+                  cf target -o admin -s healthchecks
                   BUILD_ROOT=$(pwd)
                   cd paas-cf/platform-tests/example-apps/healthcheck
 
@@ -1960,7 +1979,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
+                    -o admin -s monitoring
                   cd paas-cf/tools/paas_dashboard
                   cf push --no-start paas-dashboard
                   echo Setting DD_API_KEY...
@@ -2000,7 +2019,12 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
-                    -o admin -s admin
+                    -o govuk-paas -s tools
+
+                  # FIXME: remove this once it's been moved everywhere
+                  cf target -o admin -s monitoring
+                  cf delete -r -f rubbernecker
+                  cf target -o govuk-paas -s tools
 
                   cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
                   echo Setting PIVOTAL_API_KEY...
