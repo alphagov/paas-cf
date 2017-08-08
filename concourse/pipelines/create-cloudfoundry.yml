@@ -1315,16 +1315,9 @@ jobs:
                   cf create-org admin
                   cf set-quota admin medium
 
-                  # FIXME: remove this once it's been renamed everywhere.
-                  cf target -o admin
-                  cf rename-space admin monitoring || true
-
                   cf create-space monitoring -o admin
                   cf create-space service-brokers -o admin
                   cf create-space healthchecks -o admin
-
-                  # FIXME: remove this once it's been cleaned up everywhere.
-                  cf delete-org -f service-brokers
 
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
@@ -1557,9 +1550,6 @@ jobs:
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
 
-                  # FIXME: remove this once it's cleaned up everywhere.
-                  cf delete-org -f heavy-testers
-
                   cf target -o admin -s healthchecks
 
                   cd paas-cf/platform-tests/example-apps/healthcheck
@@ -1717,17 +1707,6 @@ jobs:
 
                   . ./config/config.sh
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
-
-                  # FIXME: remove this once it's been cleaned up everywhere.
-                  if [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] && cf target -o testers -s healthcheck ; then
-                    cf unbind-service healthcheck healthcheck-db
-                    cf delete-service healthcheck-db -f
-                    while cf services | grep -q 'healthcheck-db'; do
-                      echo "Waiting for deletion of old healthcheck-db..."
-                      sleep 30
-                    done
-                  fi
-                  cf delete-org -f testers
 
                   cf target -o admin -s healthchecks
                   BUILD_ROOT=$(pwd)
@@ -2020,11 +1999,6 @@ jobs:
                   . ./config/config.sh
                   cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
                     -o govuk-paas -s tools
-
-                  # FIXME: remove this once it's been moved everywhere
-                  cf target -o admin -s monitoring
-                  cf delete -r -f rubbernecker
-                  cf target -o govuk-paas -s tools
 
                   cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
                   echo Setting PIVOTAL_API_KEY...
