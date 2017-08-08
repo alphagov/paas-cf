@@ -219,7 +219,7 @@ setup_cdn_instances: check-env ## Setup the CloudFront Distribution instances, b
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))
-	./scripts/merge_pr.rb --pr ${PR}
+	bundle exec github_merge_sign --pr ${PR}
 
 find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
 	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))

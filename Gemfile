@@ -5,6 +5,7 @@ gem 'bosh_cli'
 gem 'webmock', "~> 1.24"
 gem 'govuk-lint', "~> 1.2.1"
 gem 'json-minify', '~> 0.0.2'
+gem 'github_merge_sign', '1.0.0'
 
 group :datadog do
   gem 'dogapi'
