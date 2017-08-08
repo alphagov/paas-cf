@@ -6,7 +6,7 @@ groups:
       - init
       - pre-deploy
       - generate-secrets
-      - availability-tests
+      - app-availability-tests
       - cf-terraform
       - generate-cf-config
       - cf-deploy
@@ -21,7 +21,7 @@ groups:
     jobs:
       - pre-deploy
       - generate-secrets
-      - availability-tests
+      - app-availability-tests
       - cf-terraform
       - generate-cf-config
       - cf-deploy
@@ -43,7 +43,7 @@ groups:
       - pipeline-release-lock
   - name: tests
     jobs:
-      - availability-tests
+      - app-availability-tests
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -564,7 +564,7 @@ jobs:
           - get: bosh-CA
             passed: ['generate-secrets']
       - try:
-          task: wait-for-availability-test
+          task: wait-for-app-availability-tests
           config:
             platform: linux
             inputs:
@@ -590,7 +590,7 @@ jobs:
                 - |
                   HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
                   if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                    echo "Skipping availability tests because the healthcheck is not deployed"
+                    echo "Skipping wait-for-app-availability-tests because the healthcheck is not deployed"
                     exit 0
                   fi
 
@@ -603,7 +603,7 @@ jobs:
                   echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} > /dev/null
                   cf target -o testers -s healthcheck > /dev/null
 
-                  echo "Waiting two minutes for availability test to start:"
+                  echo "Waiting two minutes for app-availability-tests to start:"
                   for i in $(seq 24); do
                     if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
                       echo "Request detected"
@@ -614,7 +614,7 @@ jobs:
                   done
 
 
-  - name: availability-tests
+  - name: app-availability-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -653,7 +653,7 @@ jobs:
               - |
                 HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
                 if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                  echo "Skipping availability tests because the healthcheck is not deployed"
+                  echo "Skipping app-availability-tests because the healthcheck is not deployed"
                   exit 0
                 fi
 
@@ -664,7 +664,7 @@ jobs:
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo "Running tests"
+                echo "Running app-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability
 
   - name: cf-terraform
@@ -2014,7 +2014,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -2022,7 +2022,7 @@ jobs:
                 - src/smoke-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2056,7 +2056,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -2064,7 +2064,7 @@ jobs:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2119,10 +2119,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2168,10 +2168,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
       - task: test-bosh-cli
