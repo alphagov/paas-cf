@@ -8,7 +8,7 @@ if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
 fi
 
 # FIXME: Remove this once we are deploying a version of cf-release
-# that includes capi-release >= 1.35.0.
+# that includes capi-release >= 1.38.0.
 (
   cd  "$(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/"
   expected_commit_hash="4a6c59b27bf09aac222ffa02628d1fd47b3a708d"
@@ -20,7 +20,7 @@ fi
   fi
   git remote add alphagov https://github.com/alphagov/paas-cf-acceptance-tests.git
   git fetch alphagov
-  git checkout fix-v3-app-delete
+  git checkout bugfix/backport_for_capi_1.38.0
 )
 
 
