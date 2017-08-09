@@ -3,7 +3,7 @@
     "id": "36f8bf47-c9e7-46d9-880f-5dfc838d05cb",
     "name": "mongodb",
     "bindable": true,
-    "description": "Compose MongoDB instance",
+    "description": "MongoDB instance",
     "requires": [],
     "tags": [
       "mongo",
@@ -12,7 +12,7 @@
     "metadata": {
       "displayName": "MongoDB",
       "imageUrl": "https://webassets.mongodb.com/_com_assets/cms/MongoDB-Logo-5c3a7405a85675366beb3a5ec4c032348c390b3f142f5e6dddf1d78e2df5cb5c.png",
-      "longDescription": "Compose MongoDB instance",
+      "longDescription": "MongoDB instance",
       "providerDisplayName": "GOV.UK PaaS",
       "documentationUrl": "https://compose.com/mongodb",
       "supportUrl": "https://www.cloud.service.gov.uk/support.html"
@@ -23,6 +23,34 @@
       "description": "1GB Storage / 102MB RAM.",
       "metadata": {
         "displayName": "Mongo Tiny",
+        "bullets": [],
+        "units": 1
+      }
+    }]
+  },{
+    "id": "6307bd82-2b6b-4e32-83c7-90d200334728",
+    "name": "elastic_search",
+    "bindable": true,
+    "description": "Elasticsearch instance",
+    "requires": [],
+    "tags": [
+    "elasticsearch",
+    "compose"
+    ],
+    "metadata": {
+      "displayName": "Elasticsearch",
+      "imageUrl": "https://static-www.elastic.co/assets/blt9a26f88bfbd20eb5/icon-elasticsearch-bb.svg",
+      "longDescription": "Elasticsearch instance",
+      "providerDisplayName": "GOV.UK PaaS",
+      "documentationUrl": "https://compose.com/databases/elasticsearch",
+      "supportUrl": "https://www.cloud.service.gov.uk/support.html"
+    },
+    "plans": [{
+      "id": "b0a58205-9cdb-4d6f-9d00-003be5ef1b73",
+      "name": "tiny",
+      "description": "2GB Storage / 2048MB RAM.",
+      "metadata": {
+        "displayName": "Elasticsearch Tiny",
         "bullets": [],
         "units": 1
       }
