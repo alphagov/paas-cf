@@ -1,6 +1,6 @@
 ---
 meta:
   cell:
-    instances: 21
+    instances: 24
   elasticsearch_master:
     disk_size: 768000
