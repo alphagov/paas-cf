@@ -4,7 +4,7 @@
 
 The checks are defined in terraform configuration file `terraform/pingdom/pingdom.tf`.
 
-The IDs of the contacts to be notified are stored as a comma-delimited string in variable `$PINGDOM_CONTACT_IDS` in the Makefile.
+The IDs of the contacts to be notified are stored in `paas-cf/terraform/${AWS_ACCOUNT}.tfvars`.
 
 ### Requirements
 
@@ -27,7 +27,7 @@ make <ENV> pingdom ACTION=apply
 
 #### Requirements
 You must have a [golang environment](https://golang.org/doc/install) configured. We currently test with Go 1.6.
- 
+
 #### Download
 Download the provider and its dependencies:
 

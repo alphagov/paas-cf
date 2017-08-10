@@ -41,4 +41,5 @@ terraform "${TERRAFORM_ACTION}" \
 	-var "pingdom_api_key=${PINGDOM_API_KEY}" \
 	-var "pingdom_account_email=${PINGDOM_ACCOUNT_EMAIL}" \
 	-var "apps_dns_zone_name=${APPS_DNS_ZONE_NAME}" \
+	-var "system_dns_zone_name=${SYSTEM_DNS_ZONE_NAME}" \
   "${PAAS_CF_DIR}"/terraform/pingdom

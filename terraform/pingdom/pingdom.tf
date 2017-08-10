@@ -7,6 +7,7 @@ variable "pingdom_api_key" {}
 variable "pingdom_account_email" {}
 
 variable "apps_dns_zone_name" {}
+variable "system_dns_zone_name" {}
 
 variable "env" {}
 
@@ -42,6 +43,21 @@ resource "pingdom_check" "paas_db_healthcheck" {
   host                     = "healthcheck.${var.apps_dns_zone_name}"
   url                      = "/db"
   shouldcontain            = "\"success\": true"
+  encryption               = true
+  resolution               = 1
+  uselegacynotifications   = true
+  sendtoemail              = true
+  sendnotificationwhendown = 2
+  notifywhenbackup         = true
+  contactids               = ["${var.pingdom_contact_ids}"]
+}
+
+resource "pingdom_check" "cf_api_healthcheck" {
+  type                     = "http"
+  name                     = "PaaS CF API - ${var.env}"
+  host                     = "api.${var.system_dns_zone_name}"
+  url                      = "/v2/info"
+  shouldcontain            = "api_version"
   encryption               = true
   resolution               = 1
   uselegacynotifications   = true
