@@ -14,12 +14,13 @@ releases:
     # https://www.cloudfoundry.org/cve-2017-8033/
     # https://www.cloudfoundry.org/cve-2017-8035/
     # https://www.cloudfoundry.org/cve-2017-8036/
+    # https://www.cloudfoundry.org/cve-2017-8037/
     # This can be reverted once we are using a cf-release version that ships with
-    # capi-release >=1.35.0
+    # capi-release >=1.38.0
   - name: capi
-    version: 1.35.0
-    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.35.0
-    sha1: 253d0da57fcc20d4ef3b0b172656f1107e0099dc
+    version: 1.38.0
+    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.38.0
+    sha1: 24811687a9690c3de21ec2920237be9a662cfd3b
   - name: diego
     version: 1.18.1
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.18.1
