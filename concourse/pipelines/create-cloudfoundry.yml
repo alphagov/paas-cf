@@ -6,7 +6,8 @@ groups:
       - init
       - pre-deploy
       - generate-secrets
-      - availability-tests
+      - app-availability-tests
+      - api-availability-tests
       - cf-terraform
       - generate-cf-config
       - cf-deploy
@@ -21,7 +22,8 @@ groups:
     jobs:
       - pre-deploy
       - generate-secrets
-      - availability-tests
+      - app-availability-tests
+      - api-availability-tests
       - cf-terraform
       - generate-cf-config
       - cf-deploy
@@ -43,7 +45,8 @@ groups:
       - pipeline-release-lock
   - name: tests
     jobs:
-      - availability-tests
+      - app-availability-tests
+      - api-availability-tests
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -563,58 +566,104 @@ jobs:
             passed: ['generate-secrets']
           - get: bosh-CA
             passed: ['generate-secrets']
-      - try:
-          task: wait-for-availability-test
-          config:
-            platform: linux
-            inputs:
-              - name: bosh-CA
-              - name: paas-cf
-              - name: cf-secrets
-              - name: deployed-healthcheck
-              - name: pipeline-trigger
-            params:
-              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-              CF_ADMIN: admin
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
-                  if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                    echo "Skipping availability tests because the healthcheck is not deployed"
+      - task: wait-for-app-availability-tests
+        config:
+          platform: linux
+          inputs:
+            - name: bosh-CA
+            - name: paas-cf
+            - name: cf-secrets
+            - name: deployed-healthcheck
+            - name: pipeline-trigger
+          params:
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            CF_ADMIN: admin
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping wait-for-app-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
+
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+
+                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} > /dev/null
+                cf target -o admin -s healthchecks > /dev/null
+
+                echo "Waiting for ~2mins for app-availability-tests job to start:"
+                for i in $(seq 24); do
+                  if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
+                    echo "Request detected"
                     exit 0
                   fi
+                  printf "."
+                  sleep 5
+                done
 
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                echo "timeout waiting for app-availability-tests job to start"
+                exit 1
+      - task: wait-for-api-availability-tests
+        config:
+          platform: linux
+          inputs:
+            - name: bosh-CA
+            - name: paas-cf
+            - name: cf-secrets
+            - name: deployed-healthcheck
+            - name: pipeline-trigger
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping wait-for-api-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
 
-                  CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
-                  API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                  PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} > /dev/null
-                  cf target -o testers -s healthcheck > /dev/null
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+                export AWS_DEFAULT_REGION="eu-west-1"
+                bucket={{state_bucket}}
 
-                  echo "Waiting two minutes for availability test to start:"
-                  for i in $(seq 24); do
-                    if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
-                      echo "Request detected"
-                      break
-                    fi
-                    printf "."
-                    sleep 5
-                  done
+                echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
+                for i in $(seq 24); do
+                  if aws s3 ls "s3://${bucket}/${JOB_FILE}" ; then
+                    echo "$JOB_FILE detected"
+                    exit 0
+                  fi
+                  printf "."
+                  sleep 5
+                done
 
+                echo "timeout waiting for api-availability-tests job to start"
+                exit 1
 
-  - name: availability-tests
+  - name: app-availability-tests
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -653,7 +702,7 @@ jobs:
               - |
                 HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
                 if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                  echo "Skipping availability tests because the healthcheck is not deployed"
+                  echo "Skipping app-availability-tests because the healthcheck is not deployed"
                   exit 0
                 fi
 
@@ -664,8 +713,77 @@ jobs:
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo "Running tests"
+                echo "Running app-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability
+
+  - name: api-availability-tests
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['generate-secrets']
+            trigger: true
+          - get: deployed-healthcheck
+          - get: cf-secrets
+            passed: ['generate-secrets']
+          - get: paas-cf
+            passed: ['generate-secrets']
+          - get: bosh-CA
+      - task: run-tests
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-acceptance-tests
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+            - name: bosh-CA
+            - name: deployed-healthcheck
+            - name: cf-secrets
+          params:
+            SKIP_SSL_VALIDATION: true
+            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            CONCOURSE_ATC_USERNAME: admin
+            DEPLOY_ENV: {{deploy_env}}
+            BRANCH: {{branch_name}}
+            CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping api-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                export CONCOURSE_ATC_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
+                export CF_USER="admin"
+                export CF_PASS
+                CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                export PIPELINE_TRIGGER_VERSION
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export AWS_DEFAULT_REGION="eu-west-1"
+                export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+
+                cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
+
+                JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+
+                echo "Writing $JOB_FILE to S3 to signal job start"
+                apt-get update && apt-get install -y awscli
+                bucket={{state_bucket}}
+                echo 'started' > ./jobstate
+                aws s3 cp ./jobstate "s3://${bucket}/$JOB_FILE"
+                trap 'aws s3 rm "s3://${bucket}/${JOB_FILE}"' EXIT
+                
+                echo "Running api-availability-tests"
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/api
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
@@ -2014,7 +2132,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -2022,7 +2140,7 @@ jobs:
                 - src/smoke-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2056,7 +2174,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -2064,7 +2182,7 @@ jobs:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2119,10 +2237,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2168,10 +2286,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','availability-tests']
+            passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
       - task: test-bosh-cli
