@@ -113,8 +113,6 @@ meta:
   - name: nats
     consumes: {nats: nil}
     release: (( grab meta.release.name ))
-  - name: nats_stream_forwarder
-    release: (( grab meta.release.name ))
   - name: datadog-nats
     release: datadog-for-cloudfoundry
   - name: metron_agent

@@ -17,25 +17,6 @@ resource "datadog_monitor" "nats_process_running" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:nats"]
 }
 
-resource "datadog_monitor" "nats_stream_forwarded_process_running" {
-  name                = "${format("%s NATS stream forwarder process running", var.env)}"
-  type                = "service check"
-  message             = "NATS stream forwarder process not running. Check nats state."
-  escalation_message  = "NATS stream forwarder process still not running. Check NATS state."
-  notify_no_data      = false
-  require_full_window = true
-
-  query = "${format("'process.up'.over('deploy_env:%s','process:nats_stream_forwarder').last(4).count_by_status()", var.env)}"
-
-  thresholds {
-    ok       = 1
-    warning  = 2
-    critical = 3
-  }
-
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:nats"]
-}
-
 resource "datadog_monitor" "nats_service_open" {
   name                = "${format("%s NATS service is accepting connections", var.env)}"
   type                = "service check"
