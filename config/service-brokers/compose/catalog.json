@@ -28,7 +28,7 @@
       }
     }]
   },{
-    "id": "6307bd82-2b6b-4e32-83c7-90d200334728",
+    "id": "6e9202f2-c2e1-4de8-8d4a-a8c898fc2d8c",
     "name": "elastic_search",
     "bindable": true,
     "description": "Elasticsearch instance",
@@ -46,7 +46,7 @@
       "supportUrl": "https://www.cloud.service.gov.uk/support.html"
     },
     "plans": [{
-      "id": "b0a58205-9cdb-4d6f-9d00-003be5ef1b73",
+      "id": "6d051078-0913-403c-9763-1d03ecee50d9",
       "name": "tiny",
       "description": "2GB Storage / 2048MB RAM.",
       "metadata": {
