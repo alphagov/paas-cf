@@ -776,6 +776,7 @@ jobs:
                 JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
 
                 echo "Writing $JOB_FILE to S3 to signal job start"
+                export DEBIAN_FRONTEND=noninteractive
                 apt-get -qq update && apt-get install -y awscli > /dev/null
                 bucket={{state_bucket}}
                 echo 'started' > ./jobstate
