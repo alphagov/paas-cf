@@ -16,7 +16,7 @@ const (
 )
 
 func lg(things ...interface{}) {
-	fmt.Fprintln(GinkgoWriter, things...)
+	fmt.Fprintln(os.Stdout, things...)
 }
 
 var _ = Describe("API Availability Monitoring", func() {
