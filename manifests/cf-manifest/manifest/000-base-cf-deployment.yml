@@ -30,9 +30,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.8.0
     sha1: 0c112d0bdcb52e61db7251e99b2a116982201c99
   - name: cflinuxfs2
-    version: 1.133.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.133.0
-    sha1: caf2f0488f844fb6ea7937299b33b2a4e64b23b0
+    version: 1.145.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.145.0
+    sha1: 7d987fb36e3d303f1b88970a3532d0babd8555b1
   - name: nodejs-buildpack
     version: 1.6.2
     url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.2
