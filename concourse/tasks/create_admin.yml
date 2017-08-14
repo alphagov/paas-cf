@@ -1,3 +1,4 @@
+
 ---
 platform: linux
 image_resource:
@@ -48,7 +49,7 @@ run:
       add_member(){
         GID=$(uaac group get $1 -a id | awk '{print $2}')
         uaac curl -k "/Groups/${GID}/members" -XPOST -H'Content-Type: application/json' \
-                  -d'{"origin":"uaa","type":"USER","value":"'${2}'"}' | tee result | grep -q '201 Created'
+                  -d'{"origin":"uaa","type":"USER","value":"'${2}'"}' | tee result | grep -q '^201$'
         [ $? != 0 ] && cat result && exit 1
         echo "Added $2 to $1"
       }
