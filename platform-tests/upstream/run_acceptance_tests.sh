@@ -11,7 +11,7 @@ fi
 # that includes capi-release >= 1.38.0.
 (
   cd  "$(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/"
-  expected_commit_hash="4a6c59b27bf09aac222ffa02628d1fd47b3a708d"
+  expected_commit_hash="8965930580fb4808fd2b7d617eeed7f64b5ec2bb"
   current_commit_hash="$(git log --pretty=format:'%H' -n 1)"
   if [ "${expected_commit_hash}" != "${current_commit_hash}" ]; then
     echo "ERROR: Current commit for cf-acceptance-test is different than expected one: ${expected_commit_hash} != ${current_commit_hash}"
