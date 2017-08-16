@@ -1,5 +1,6 @@
 **/*.tfstate
 bin/fly*
 .idea/
+cf-release/
 platform-tests/pkg
 platform-tests/src/results
