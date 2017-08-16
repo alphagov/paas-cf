@@ -307,6 +307,11 @@ properties:
         total_services: 10
         non_basic_services_allowed: true
         total_routes: 1000
+      xlarge:
+        memory_limit: 204800
+        total_services: 10
+        non_basic_services_allowed: true
+        total_routes: 1000
       test_apps:
         memory_limit: 2048
         total_services: 10
