@@ -24,15 +24,6 @@ To use it, you must first clone the cf-release repo:
 
 You can override the path by setting \$CF_RELEASE_DIR
 
-You will need to get a read token from github in
-
- - https://github.com/settings/tokens
-
-and export the variables:
-
-    export GITHUB_USER=keymon
-    export GITHUB_API_TOKEN=1234567890123456789012345678901234567890
-
 
 Finally run the program passing the versions to check:
 
@@ -44,7 +35,7 @@ Example:
 
 or:
 
-    CF_RELEASE_DIR=~/workspace/cf-release/ GITHUB_USER=keymon GITHUB_API_TOKEN=1234567891234567890 $0 v251 v253
+    CF_RELEASE_DIR=~/workspace/cf-release/ $0 v251 v253
 
 EOF
     exit 1
@@ -52,10 +43,6 @@ EOF
 
 if [ $# -lt 2 ]; then
     echo -e "Error: Missing versions to compare\n"
-    print_help
-fi
-if [ -z "${GITHUB_USER:-}" ] || [ -z "${GITHUB_API_TOKEN:-}" ]; then
-    echo -e "Error: Missing variables \$GITHUB_USER \$GITHUB_API_TOKEN\n"
     print_help
 fi
 
@@ -69,6 +56,7 @@ echo -e "# Buildpack updates summary\n" > "${TMP_DIR}"/summary.md
 echo -e "# Buildpack updates defailed\n" > "${TMP_DIR}"/detailed.md
 
 for buildpack_release in src/*buildpack-release; do
+    echo -e "Buildpack release: ${buildpack_release}"
     case "$buildpack_release" in
         *offline*)
         continue # Ignore offline ones
@@ -106,7 +94,7 @@ for buildpack_release in src/*buildpack-release; do
 
         for v in ${versions}; do
             echo -e "### ${buildpack_name} ${v}\n"
-            curl -qs -u "$GITHUB_USER:$GITHUB_API_TOKEN" "https://api.github.com/repos/cloudfoundry/${buildpack_name}/releases/tags/v${v}" | jq -r .body
+            curl -qs "https://api.github.com/repos/cloudfoundry/${buildpack_name}/releases/tags/v${v}" | jq -r .body
         done
     fi
 

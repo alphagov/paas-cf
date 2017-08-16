@@ -26,7 +26,7 @@ meta:
   - name: binary-buildpack
     release: (( grab meta.release.name ))
   - name: nodejs-buildpack
-    release: nodejs-buildpack
+    release: (( grab meta.release.name ))
   - name: ruby-buildpack
     release: (( grab meta.release.name ))
   - name: php-buildpack
@@ -112,8 +112,6 @@ meta:
     release: datadog-for-cloudfoundry
   - name: nats
     consumes: {nats: nil}
-    release: (( grab meta.release.name ))
-  - name: nats_stream_forwarder
     release: (( grab meta.release.name ))
   - name: datadog-nats
     release: datadog-for-cloudfoundry

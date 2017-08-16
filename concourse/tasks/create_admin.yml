@@ -1,3 +1,4 @@
+
 ---
 platform: linux
 image_resource:
@@ -48,9 +49,8 @@ run:
       add_member(){
         GID=$(uaac group get $1 -a id | awk '{print $2}')
         uaac curl -k "/Groups/${GID}/members" -XPOST -H'Content-Type: application/json' \
-                  -d'{"origin":"uaa","type":"USER","value":"'${2}'"}' | tee result | grep -q '201 Created'
-        [ $? != 0 ] && cat result && exit 1
-        echo "Added $2 to $1"
+                  -d'{"origin":"uaa","type":"USER","value":"'${2}'"}'
+        echo "May have added $2 to $1"
       }
 
       add_member cloud_controller.admin "${USERID}"
