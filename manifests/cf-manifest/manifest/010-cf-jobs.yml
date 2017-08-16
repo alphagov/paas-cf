@@ -304,6 +304,7 @@ jobs:
     networks:
       - name: cf
     properties:
+      max_in_flight: 1
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
@@ -320,6 +321,8 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      max_in_flight: 1
 
   - name: doppler
     azs: [z1, z2, z3]
