@@ -26,7 +26,7 @@ meta:
   - name: binary-buildpack
     release: (( grab meta.release.name ))
   - name: nodejs-buildpack
-    release: nodejs-buildpack
+    release: (( grab meta.release.name ))
   - name: ruby-buildpack
     release: (( grab meta.release.name ))
   - name: php-buildpack
@@ -112,8 +112,6 @@ meta:
     release: datadog-for-cloudfoundry
   - name: nats
     consumes: {nats: nil}
-    release: (( grab meta.release.name ))
-  - name: nats_stream_forwarder
     release: (( grab meta.release.name ))
   - name: datadog-nats
     release: datadog-for-cloudfoundry
@@ -306,6 +304,7 @@ jobs:
     networks:
       - name: cf
     properties:
+      max_in_flight: 1
       consul:
         agent:
           services: (( grab meta.api_consul_services ))
@@ -322,6 +321,8 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+    properties:
+      max_in_flight: 1
 
   - name: doppler
     azs: [z1, z2, z3]

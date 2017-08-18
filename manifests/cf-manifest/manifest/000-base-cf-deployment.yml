@@ -6,9 +6,9 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "264"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=264
-    sha1: 37f93b7064a15d5fdc942e0dcaf4bb9f002dc8d6
+    version: "269"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=269
+    sha1: 3f7f0e600e2711315df2cb57a3e4edad52f2f713
 
     # FIXME: capi-release has been split from cf-release due to these CVEs:
     # https://www.cloudfoundry.org/cve-2017-8033/
@@ -22,21 +22,17 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.38.0
     sha1: 24811687a9690c3de21ec2920237be9a662cfd3b
   - name: diego
-    version: 1.18.1
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.18.1
-    sha1: 6c862da40ca7418a7defa47005de3d52e7a66948
+    version: 1.23.2
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.23.2
+    sha1: 9ba94ee14cb0660e233001ca3ddaea12be638744
   - name: garden-runc
-    version: 1.8.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.8.0
-    sha1: 0c112d0bdcb52e61db7251e99b2a116982201c99
+    version: 1.9.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.0
+    sha1: 77bfe8bdb2c3daec5b40f5116a6216badabd196c
   - name: cflinuxfs2
-    version: 1.145.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.145.0
-    sha1: 7d987fb36e3d303f1b88970a3532d0babd8555b1
-  - name: nodejs-buildpack
-    version: 1.6.2
-    url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.2
-    sha1: aca4bdea51e8a10a410312db629b7ba3f0a15b7e
+    version: 1.148.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.148.0
+    sha1: 65436c83d2ac05f7c1fc37e9073c8a665a63ef4c
   - name: paas-haproxy
     version: 0.1.3
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.3.tgz
@@ -57,7 +53,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3421.18"
+    version: "3421.19"
 
 update:
   canaries: 0
