@@ -18,12 +18,18 @@ PAAS_CF_DIR=$(pwd)
 WORKING_DIR=$(mktemp -d terraform-pingdom.XXXXXX)
 trap 'rm -r "${PAAS_CF_DIR}/${WORKING_DIR}"' EXIT
 
-wget "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${VERSION}/${BINARY}" \
-  -O "${WORKING_DIR}"/terraform-provider-pingdom
-chmod +x "${WORKING_DIR}"/terraform-provider-pingdom
+if [ ! -d bin/ ]; then
+  mkdir bin/
+fi
+
+#wget can only check timestamp on a file in work dir
+cd bin/
+wget -N "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${VERSION}/${BINARY}" 
+cp ./"${BINARY}" "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
+chmod +x "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
 
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
-cd "${WORKING_DIR}"
+cd "${PAAS_CF_DIR}"/"${WORKING_DIR}"
 
 # Configure Terraform remote state
 terraform remote config \
