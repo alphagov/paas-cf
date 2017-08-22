@@ -1,17 +1,12 @@
 <script type='text/javascript'>
 $(function() {
-  var rows = 3;
+  var rows = 2;
   Dashing.numColumns = 1;
   Dashing.widget_base_dimensions = [window.innerWidth - 20, (window.innerHeight - 10) / rows - 10];
 });
 </script>
 <div class="gridster">
   <ul>
-    <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-      <a href="https://app.datadoghq.com/monitors#triggered?query=service:master_monitors" target="_blank">
-        <div data-title="CI" data-id="ci_counts" data-view="Health"></div>
-      </a>
-    </li>
     <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
       <a href="https://app.datadoghq.com/monitors#triggered?query=service:staging_monitors" target="_blank">
         <div data-title="Staging" data-id="staging_counts" data-view="Health"></div>
