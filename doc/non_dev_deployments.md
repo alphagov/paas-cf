@@ -6,19 +6,19 @@ deployments. There are a few details that are different though:
 ## Access Keys
 
 To deploy to a different account, you'll need to export AWS access keys
-and secrets for the account. eg to deploy/use the CI account:
+and secrets for the account. eg to deploy/use the staging account:
 
 ```
-export AWS_ACCESS_KEY_ID=your_ci_access_key
-export AWS_SECRET_ACCESS_KEY=your_ci_secret_key
+export AWS_ACCESS_KEY_ID=your_staging_access_key
+export AWS_SECRET_ACCESS_KEY=your_staging_secret_key
 ```
 
 ## DNS names
 
 The [README](../README.md) instructions contain domain names for the dev
 deployments. For other deployments these will be different. For example, the
-deployer concourse in a ci environment has the URL
-`https://deployer.${DEPLOY_ENV}.ci.cloudpipeline.digital/`, and in production
+deployer concourse in the staging environment has the URL
+`https://deployer.staging.cloudpipeline.digital/`, and in production
 has the URL `https://deployer.cloud.service.gov.uk/`
 
 The deployment scripts will output the URLs of the targets they're operating
@@ -50,9 +50,8 @@ destroyed.
 
 ### Environments that create tags in git.
 
-Some deployments create release tags in git (eg the ci master deployment, and
-the staging deployment). These therefore need write access to the git repo.
-This is done as follows:
+Some deployments create release tags in git (eg the staging deployment). These
+therefore need write access to the git repo.  This is done as follows:
 
 * Run the `generate-git-keys` job on the deployer concourse (found in the
   `release` group of the `create-cloudfoundry` pipeline)

@@ -94,21 +94,6 @@ dev: globals ## Set Environment to DEV
 	$(eval export ENABLE_MORNING_DEPLOYMENT=true)
 	@true
 
-.PHONY: ci
-ci: globals ## Set Environment to CI
-	$(eval export AWS_ACCOUNT=ci)
-	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export TAG_PREFIX=staging-)
-	$(eval export DEPLOY_ENV=master)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.ci.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+ci@digital.cabinet-office.gov.uk)
-	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
-	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-ci.yml)
-	$(eval export ENABLE_DATADOG=true)
-	$(eval export TEST_HEAVY_LOAD=true)
-	@true
-
 .PHONY: staging
 staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
@@ -167,7 +152,7 @@ showenv: check-env ## Display environment information
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
 	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to ci/staging/prod))
+	$(if ${AWS_ACCOUNT},,$(error Must set environment to staging/prod))
 	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
@@ -175,7 +160,7 @@ upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S
 .PHONY: upload-compose-secrets
 upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S3
 	$(eval export COMPOSE_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to dev/ci/staging/prod))
+	$(if ${AWS_ACCOUNT},,$(error Must set environment to dev/staging/prod))
 	$(if ${COMPOSE_PASSWORD_STORE_DIR},,$(error Must pass COMPOSE_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${COMPOSE_PASSWORD_STORE_DIR}),,$(error Password store ${COMPOSE_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-compose-secrets.sh
@@ -184,7 +169,7 @@ upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
 	$(eval export OAUTH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	# FIXME After it has been tested, we'd like to restrict its usage in dev.
-	# $(if ${AWS_ACCOUNT},,$(error Must set environment to ci/staging/prod))
+	# $(if ${AWS_ACCOUNT},,$(error Must set environment to staging/prod))
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-google-oauth-secrets.sh
