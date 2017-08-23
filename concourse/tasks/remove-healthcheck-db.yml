@@ -25,11 +25,7 @@ run:
         echo "Login failed.  Skipping..."
         exit 0
       fi
-      if ! cf org testers > /dev/null; then
-        echo "Org 'testers' not found. Skipping..."
-        exit 0
-      fi
-      cf target -o testers -s healthcheck
+      cf target -o admin -s healthchecks
       cf delete healthcheck -f -r
       if cf services | grep -q healthcheck-db; then
         cf delete-service healthcheck-db -f
