@@ -40,11 +40,14 @@ before_install:
     mv spruce-linux-amd64 ~/bin/spruce && chmod +x ~/bin/spruce
     set +e
   - pip install --user yamllint
-  - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
-
-  - eval "$(gimme 1.6)"
+  - GIMME_OUTPUT=$(gimme 1.8 | tee -a $HOME/.bashrc) && eval "$GIMME_OUTPUT"
   - export GOPATH=$HOME/gopath
   - export PATH=$HOME/gopath/bin:$PATH
+  - mkdir -p $HOME/gopath/src/github.com/alphagov/paas-cf
+  - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/alphagov/paas-cf/
+  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/alphagov/paas-cf
+  - cd $HOME/gopath/src/github.com/alphagov/paas-cf
+  - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
   - go get github.com/onsi/ginkgo/ginkgo
   - go get github.com/onsi/gomega/...
 

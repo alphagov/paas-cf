@@ -1,0 +1,10 @@
+---
+applications:
+ - name: paas-metrics
+   memory: 128M
+   disk_quota: 100M
+   instances: 1
+   buildpack: go_buildpack
+   env:
+     GOPACKAGENAME: paas-metrics-reporter
+   command: ./bin/paas-metrics-reporter

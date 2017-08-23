@@ -398,6 +398,9 @@ properties:
             - openid
             - cloud_controller.admin
             - doppler.firehose
+      groups:
+        cloud_controller.global_auditor: 'Global Auditor read only group'
+
 
     port: 8080
     ssl:
@@ -491,6 +494,14 @@ properties:
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
         redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
+      paas-metrics:
+        access-token-validity: 1209600
+        authorized-grant-types: client_credentials,refresh_token
+        override: true
+        secret: (( grab secrets.uaa_clients_paas_metrics_secret ))
+        scope: openid,oauth.approvals,cloud_controller.global_auditor
+        authorities: oauth.login,cloud_controller.global_auditor
+        redirect-uri: (( concat "https://login." properties.system_domain ))
       cc-service-dashboards:
         secret: (( grab secrets.uaa_clients_cc_service_dashboards_password ))
         authorities: clients.read,clients.write,clients.admin

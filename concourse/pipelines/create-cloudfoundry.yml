@@ -149,7 +149,6 @@ resources:
       versioned_file: id_rsa.pub
       region_name: {{aws_region}}
 
-
   - name: git-ssh-private-key
     type: s3-iam
     source:
@@ -1798,6 +1797,27 @@ jobs:
 
                   ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
 
+        - task: run-bosh-cleanup
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+            inputs:
+              - name: paas-cf
+              - name: bosh-secrets
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+
+                  bosh cleanup --all
+
         - task: deploy-healthcheck
           config:
             platform: linux
@@ -2126,6 +2146,69 @@ jobs:
                   echo Setting PIVOTAL_PROJECT_ID...
                   cf set-env rubbernecker PIVOTAL_PROJECT_ID ${PIVOTAL_PROJECT_ID}
                   cf start rubbernecker
+
+        - task: deploy-paas-metrics
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+            params:
+              ENABLE_METRICS: {{enable_metrics}}
+              DATADOG_API_KEY: {{datadog_api_key}}
+              DATADOG_APP_KEY: {{datadog_app_key}}
+              SYSTEM_DNS_NAME: {{system_dns_zone_name}}
+              DEPLOY_ENV: {{deploy_env}}
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: cf-secrets
+              - name: cf-manifest
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  if  [ "${ENABLE_METRICS:-}" != "true" ] ; then
+                    echo "ENABLE_METRICS=${ENABLE_METRICS} so skipping paas-metrics deploy"
+                    exit 0
+                  fi
+
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  METRICS_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} -o admin -s monitoring
+
+                  BUILD_ROOT=$(pwd)
+                  cd paas-cf/tools/metrics
+
+                  ruby -ryaml -e "
+                    env = {
+                      'CF_CLIENT_ID' => 'paas-metrics',
+                      'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
+                      'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                      'CF_SKIP_SSL_VALIDATION' => 'true',
+                      'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
+                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
+                      'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                    }
+                    manifest = YAML.load_file('manifest.yml')
+                    manifest['applications'].each { |app|
+                      app['env'] = {} unless app['env']
+                      app['env'].merge!(env)
+                    }
+                    File.write('manifest.yml', manifest.to_yaml)
+                  "
+
+                  cf blue-green-deploy paas-metrics
+                  cf delete -f paas-metrics-old
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
