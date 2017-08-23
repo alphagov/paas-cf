@@ -16,13 +16,6 @@ SCHEDULER.every '10s', allow_overlapping: false do
   )
 end
 
-SCHEDULER.every '10s', allow_overlapping: false do
-  get_and_emit_data_for_env(
-    service_tag: "service:master_monitors",
-    data_id_prefix: 'ci'
-  )
-end
-
 def get_and_emit_data_for_env(service_tag:, data_id_prefix:)
   data_id = "#{data_id_prefix}_counts"
 
