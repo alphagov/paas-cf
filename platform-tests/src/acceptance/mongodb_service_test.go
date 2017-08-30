@@ -13,7 +13,7 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("Compose broker - MongoDB", func() {
+var _ = Describe("MongoDB backing service", func() {
 	const (
 		serviceName  = "mongodb"
 		testPlanName = "tiny"
