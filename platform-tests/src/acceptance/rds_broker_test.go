@@ -3,9 +3,7 @@ package acceptance_test
 import (
 	"fmt"
 	"io/ioutil"
-	"os/exec"
 	"regexp"
-	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
@@ -14,10 +12,6 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
-)
-
-const (
-	DB_CREATE_TIMEOUT = 30 * time.Minute
 )
 
 var _ = Describe("RDS broker - Postgres", func() {
@@ -195,13 +189,4 @@ func getRDSInstanceName(dbInstanceName string) string {
 	Expect(serviceOutput).To(Exit(0))
 	rxp, _ := regexp.Compile("rdsbroker-([a-z0-9-]+)")
 	return string(rxp.Find(serviceOutput.Out.Contents()))
-}
-
-// quietCf is an equivelent of cf.Cf that doesn't send the output to
-// GinkgoWriter. Used when you don't want the output, even in verbose mode (eg
-// when polling the API)
-func quietCf(program string, args ...string) *Session {
-	command, err := Start(exec.Command(program, args...), nil, nil)
-	Expect(err).NotTo(HaveOccurred())
-	return command
 }
