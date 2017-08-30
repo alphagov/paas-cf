@@ -151,6 +151,7 @@ concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
 pagerduty_api_token: ${pagerduty_api_token:-}
+enable_metrics: ${ENABLE_METRICS}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }

@@ -22,6 +22,8 @@ test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lin
 spec:
 	cd scripts &&\
 		BUNDLE_GEMFILE=Gemfile bundle exec rspec
+	cd tools/metrics &&\
+		go test
 	cd concourse/scripts &&\
 		go test
 	cd concourse/scripts &&\
@@ -80,6 +82,8 @@ globals:
 .PHONY: dev
 dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
+	$(eval export ENABLE_METRICS ?= false)
+	$(eval export CF_SKIP_SSL_VALIDATION=true)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
@@ -97,6 +101,7 @@ dev: globals ## Set Environment to DEV
 .PHONY: staging
 staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
+	$(eval export ENABLE_METRICS=false)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=prod-)
@@ -113,6 +118,7 @@ staging: globals ## Set Environment to Staging
 .PHONY: prod
 prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
+	$(eval export ENABLE_METRICS=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)

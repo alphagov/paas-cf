@@ -33,6 +33,7 @@ generator = SecretGenerator.new(
   "uaa_clients_datadog_firehose_password" => :simple,
   "uaa_clients_cc_service_dashboards_password" => :simple,
   "uaa_clients_cdn_broker_secret" => :simple,
+  "uaa_clients_paas_metrics_secret" => :simple,
   "loggregator_endpoint_shared_secret" => :simple,
   "consul_encrypt_keys" => :simple_in_array,
   "grafana_admin_password" => :simple,
