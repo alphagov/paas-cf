@@ -13,6 +13,7 @@ func main() {
 	fmt.Println("Listening on", addr)
 	http.HandleFunc("/", staticHandler)
 	http.HandleFunc("/db", dbHandler)
+	http.HandleFunc("/mongo-test", mongoHandler)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal(err)

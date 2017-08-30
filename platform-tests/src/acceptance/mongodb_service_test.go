@@ -73,14 +73,14 @@ var _ = Describe("MongoDB backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s&ssl=true", serviceName)))
+			resp, err := httpClient.Get(helpers.AppUri(appName, "/mongo-test?ssl=true"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
 			By("disallowing connections without TLS")
-			resp, err = httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s&ssl=false", serviceName)))
+			resp, err = httpClient.Get(helpers.AppUri(appName, "/mongo-test?ssl=false"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
