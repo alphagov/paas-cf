@@ -4,12 +4,10 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
 
 	mgo "gopkg.in/mgo.v2"
@@ -31,7 +29,12 @@ func mongoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func testMongoDBConnection(ssl bool) error {
-	credentials, err := mongoDBCredentials(os.Getenv("VCAP_SERVICES"))
+	var credentials struct {
+		Name                string `json:"name"`
+		URI                 string `json:"uri"`
+		CACertificateBase64 string `json:"ca_certificate_base64"`
+	}
+	err := getVCAPServiceCredentials("mongodb", &credentials)
 	if err != nil {
 		return err
 	}
@@ -65,25 +68,6 @@ func testMongoDBConnection(ssl bool) error {
 		return fmt.Errorf("Phone unexpectedly changed to %s in MongoDB test.", result.Phone)
 	}
 	return nil
-}
-
-func mongoDBCredentials(vcap_services_str string) (*Credentials, error) {
-	type VCAPService struct {
-		Credentials Credentials `json:"credentials"`
-	}
-
-	type VCAPServices struct {
-		MongoDB []VCAPService `json:"mongodb"`
-	}
-
-	// Retrieve the MongoDB connection URI and the CA Certificate from the `VCAP_SERVICES`
-	// environment variable.
-	var vcap_services VCAPServices
-	if err := json.Unmarshal([]byte(vcap_services_str), &vcap_services); err != nil {
-		return nil, err
-	}
-	mongodb_credentials := vcap_services.MongoDB[0].Credentials
-	return &mongodb_credentials, nil
 }
 
 func mongoDBOpen(db_url string, ca_certificate_base64 string, ssl bool) (*mgo.Session, error) {
@@ -132,10 +116,4 @@ func mongoDBOpen(db_url string, ca_certificate_base64 string, ssl bool) (*mgo.Se
 	}
 
 	return session, nil
-}
-
-type Credentials struct {
-	Name                string `json:"name"`
-	URI                 string `json:"uri"`
-	CACertificateBase64 string `json:"ca_certificate_base64"`
 }
