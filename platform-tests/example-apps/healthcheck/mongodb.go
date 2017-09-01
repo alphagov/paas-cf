@@ -2,8 +2,6 @@ package main
 
 import (
 	"crypto/tls"
-	"crypto/x509"
-	"encoding/base64"
 	"fmt"
 	"net"
 	"net/http"
@@ -94,14 +92,10 @@ func mongoDBOpen(db_url string, ca_certificate_base64 string, ssl bool) (*mgo.Se
 	}
 
 	// Compose has self-signed certs for mongo. Make sure we verify it against CA certificate provided in binding.
-	ca, err := base64.StdEncoding.DecodeString(ca_certificate_base64)
+	tlsConfig, err := buildTLSConfigWithCACert(ca_certificate_base64)
 	if err != nil {
 		return nil, err
 	}
-	roots := x509.NewCertPool()
-	roots.AppendCertsFromPEM(ca)
-
-	tlsConfig := &tls.Config{RootCAs: roots}
 	if tlsConfig.InsecureSkipVerify {
 		return nil, fmt.Errorf("Verification was skipped.")
 	}

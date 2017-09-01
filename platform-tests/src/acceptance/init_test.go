@@ -64,10 +64,14 @@ func TestSuite(t *testing.T) {
 
 	BeforeSuite(func() {
 		environment.Setup()
-		// FIXME this should be removed once the broker is generally available.
+		// FIXME this should be removed once these services are generally available.
 		org := context.RegularUserContext().Org
 		cf.AsUser(context.AdminUserContext(), context.ShortTimeout(), func() {
 			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(DEFAULT_TIMEOUT)
+			Expect(enableServiceAccess).To(Exit(0))
+			Expect(enableServiceAccess).To(Say("OK"))
+
+			enableServiceAccess = cf.Cf("enable-service-access", "elasticsearch", "-o", org).Wait(DEFAULT_TIMEOUT)
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 		})
