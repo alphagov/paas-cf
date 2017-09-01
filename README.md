@@ -199,41 +199,6 @@ updating pipelines, or you'll get strange terraform errors during cf-terraform.
 ENABLE_DATADOG=true make dev pipelines
 ```
 
-## Using the bosh cli and `bosh ssh`
-
-There's a Makefile target that starts an interactive session on the deployer concourse
-to allow running bosh CLI commands targeting MicroBOSH:
-
-```
-make dev bosh-cli
-```
-
-You can use any environment supported by Makefile.
-
-This connects you to a one-off task in concourse that's already logged into
-bosh and has the deployment set using the CF manifest.
-
-**Note:** `bosh ssh` no longer asks for a sudo password. By default it sets
-this to blank (just press enter when asked for the sudo password within the VM)
-
-## SSH to Deployer Concourse and MicroBOSH
-
-In the `create-deployer` pipeline when creating the initial VPC,
-a keypair is generated and uploaded to AWS to be used by deployed instances.
-`bosh-init` needs this key to be able to create a SSH tunnel to
-forward some ports to the agent of the new VM.
-
-Both public and private keys are also uploaded to S3 to be consumed by
-other jobs in the pipelines as resources and/or by us for troubleshooting.
-
-To ssh to the *Deployer Concourse*, use makefile target ssh_concourse, e.g.
-`make dev ssh_concourse`. This will retrieve required keys and print a sudo
-password before ssh-ing to the concourse VM.
-
-To ssh to the *BOSH*, use makefile target ssh_bosh, e.g.
-`make dev ssh_bosh`. This will retrieve required keys and print a sudo password for
-bosh server before opening the ssh session.
-
 ## Concourse credentials
 
 By default, the environment setup script retrieves the admin user password set
