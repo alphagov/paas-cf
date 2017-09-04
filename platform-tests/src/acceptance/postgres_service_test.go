@@ -13,13 +13,13 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("Compose broker - MongoDB", func() {
+var _ = Describe("Postgres backing service", func() {
 	const (
-		serviceName  = "mongodb"
-		testPlanName = "tiny"
+		serviceName  = "postgres"
+		testPlanName = "Free"
 	)
 
-	It("is registered in the marketplace", func() {
+	It("should have registered the postgres service", func() {
 		plans := cf.Cf("marketplace").Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
 		Expect(plans).To(Say(serviceName))
@@ -28,7 +28,13 @@ var _ = Describe("Compose broker - MongoDB", func() {
 	It("has the expected plans available", func() {
 		plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
-		Expect(plans.Out.Contents()).To(ContainSubstring("tiny"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("Free"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-9.5"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("S-HA-dedicated-9.5"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("M-dedicated-9.5"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("M-HA-dedicated-9.5"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("L-dedicated-9.5"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("L-HA-dedicated-9.5"))
 	})
 
 	Context("creating a database instance", func() {
@@ -46,7 +52,7 @@ var _ = Describe("Compose broker - MongoDB", func() {
 
 			pollForServiceCreationCompletion(dbInstanceName)
 
-			fmt.Fprintf(GinkgoWriter, "Created MongoDB instance: %s\n", dbInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Created database instance: %s\n", dbInstanceName)
 
 			Expect(cf.Cf(
 				"push", appName,
@@ -71,21 +77,21 @@ var _ = Describe("Compose broker - MongoDB", func() {
 			pollForServiceDeletionCompletion(dbInstanceName)
 		})
 
-		It("is accessible from the healthcheck app", func() {
-			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s&ssl=true", serviceName)))
+		It("binds a DB instance to the Healthcheck app that matches our criteria", func() {
+			By("allowing connections from the Healthcheck app")
+			resp, err := httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s", serviceName)))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
-			By("disallowing connections without TLS")
+			By("disallowing connections from the Healthcheck app without TLS")
 			resp, err = httpClient.Get(helpers.AppUri(appName, fmt.Sprintf("/db?service=%s&ssl=false", serviceName)))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(500), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
-			Expect(string(body)).To(ContainSubstring("no reachable servers"), "Connection without TLS did not report a connection error")
+			Expect(resp.StatusCode).NotTo(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+			Expect(body).To(MatchRegexp("no pg_hba.conf entry for .* SSL off"), "Connection without TLS did not report a TLS error")
 		})
 	})
 })

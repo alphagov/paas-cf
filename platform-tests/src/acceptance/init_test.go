@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
+	"os/exec"
 	"testing"
 	"time"
 
@@ -30,6 +31,7 @@ var (
 	LONG_CURL_TIMEOUT    = 2 * time.Minute
 	CF_JAVA_TIMEOUT      = 10 * time.Minute
 	DEFAULT_MEMORY_LIMIT = "256M"
+	DB_CREATE_TIMEOUT    = 30 * time.Minute
 
 	context    helpers.SuiteContext
 	config     helpers.Config
@@ -62,10 +64,14 @@ func TestSuite(t *testing.T) {
 
 	BeforeSuite(func() {
 		environment.Setup()
-		// FIXME this should be removed once the broker is generally available.
+		// FIXME this should be removed once these services are generally available.
 		org := context.RegularUserContext().Org
 		cf.AsUser(context.AdminUserContext(), context.ShortTimeout(), func() {
 			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(DEFAULT_TIMEOUT)
+			Expect(enableServiceAccess).To(Exit(0))
+			Expect(enableServiceAccess).To(Say("OK"))
+
+			enableServiceAccess = cf.Cf("enable-service-access", "elasticsearch", "-o", org).Wait(DEFAULT_TIMEOUT)
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 		})
@@ -81,6 +87,15 @@ func TestSuite(t *testing.T) {
 	}
 
 	RunSpecs(t, componentName)
+}
+
+// quietCf is an equivelent of cf.Cf that doesn't send the output to
+// GinkgoWriter. Used when you don't want the output, even in verbose mode (eg
+// when polling the API)
+func quietCf(program string, args ...string) *Session {
+	command, err := Start(exec.Command(program, args...), nil, nil)
+	Expect(err).NotTo(HaveOccurred())
+	return command
 }
 
 func pollForServiceCreationCompletion(dbInstanceName string) {
