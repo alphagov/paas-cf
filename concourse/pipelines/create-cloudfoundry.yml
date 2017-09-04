@@ -1620,17 +1620,21 @@ jobs:
 
                   cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
                   cd paas-compose-broker/
+
                   ruby -ryaml -e "
-                    manifest = YAML.load_file('manifest.yml')
-                    env = { 'env' => {
+                    env = {
                       'LOG_LEVEL' => 'DEBUG',
                       'USERNAME' => 'compose-broker',
                       'PASSWORD' => '${COMPOSE_BROKER_PASS}',
                       'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
                       'DB_PREFIX' => '${DB_PREFIX}',
                       'CLUSTER_NAME' => '${CLUSTER_NAME}',
-                    }}
-                    manifest['applications'].each { |app| app.merge!(env) }
+                    }
+                    manifest = YAML.load_file('manifest.yml')
+                    manifest['applications'].each { |app|
+                      app['env'] ||= app['env']
+                      app['env'].merge!(env)
+                    }
                     File.write('manifest.yml', manifest.to_yaml)
                   "
                   cf blue-green-deploy compose-broker
