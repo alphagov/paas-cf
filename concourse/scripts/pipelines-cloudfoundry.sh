@@ -185,6 +185,8 @@ update_pipeline() {
   case $pipeline_name in
     create-cloudfoundry)
       upload_pipeline
+      "${SCRIPT_DIR}/set_pipeline_ordering.rb" "${pipeline_name}"
+      echo "ordered '${pipeline_name}' pipeline first"
     ;;
     deployment-kick-off)
       if [ "${ENABLE_MORNING_DEPLOYMENT:-}" = "true" ]; then
