@@ -47,9 +47,10 @@ type Task struct {
 }
 
 type result struct {
-	task     *Task
-	err      error
-	elaspsed time.Duration
+	task    *Task
+	err     error
+	started time.Time
+	ended   time.Time
 }
 
 // Monitor continuously runs each Task given to Add in parallel
@@ -87,6 +88,13 @@ func (m *Monitor) statsCollector() {
 				}
 				report.Errors[result.task][msg]++
 				report.Failures++
+				fmt.Printf(
+					"%s - %s %s: %s\n",
+					result.started.Format("2006-01-02 15:04:05.00 MST"),
+					result.ended.Format("2006-01-02 15:04:05.00 MST"),
+					result.task.name,
+					msg,
+				)
 			} else {
 				report.Successes++
 			}
@@ -118,8 +126,11 @@ func (m *Monitor) worker() {
 	for {
 		select {
 		case task := <-m.queue:
-			started := time.Now()
-			err := func() error {
+			res := &result{
+				task:    task,
+				started: time.Now(),
+			}
+			res.err = func() error {
 				var cfg = *m.clientCfg
 				cf, err := cfclient.NewClient(&cfg)
 				if err != nil {
@@ -127,11 +138,8 @@ func (m *Monitor) worker() {
 				}
 				return task.fn(cf)
 			}()
-			m.results <- &result{
-				task:     task,
-				err:      err,
-				elaspsed: time.Since(started),
-			}
+			res.ended = time.Now()
+			m.results <- res
 		case <-m.halt:
 			return
 		}
