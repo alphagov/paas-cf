@@ -2813,8 +2813,11 @@ jobs:
       - task: run-bosh-cli
         config:
           platform: linux
-          # FIXME: use image_resource once https://github.com/concourse/fly/issues/98 is implemented
-          image: docker:///governmentpaas/bosh-cli#895cf6752c8ec64af05a3a735186b90acd3db65a
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
           inputs:
             - name: paas-cf
             - name: cf-manifest
