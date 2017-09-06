@@ -40,3 +40,11 @@
 [[constraint]]
   name = "github.com/concourse/atc"
   revision = "406261dbd7681e0ed1c8de6366994a4e935e0b55"
+
+[[constraint]]
+  name = "github.com/cloudfoundry-community/go-cfclient"
+  revision = "dbe382d68b57a2345f60b71935eb6e8cfa7e5895"
+
+[[constraint]]
+  name = "github.com/cloudfoundry-incubator/cf-test-helpers"
+  revision = "473573daddfa74cde9779ac421e120f1020aa775"

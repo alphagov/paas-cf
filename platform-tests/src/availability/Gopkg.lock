@@ -7,6 +7,16 @@
   revision = "c068ca2f0aacee5ac3681d68e4d0a003b7d1fd2c"
 
 [[projects]]
+  name = "github.com/cloudfoundry-community/go-cfclient"
+  packages = ["."]
+  revision = "dbe382d68b57a2345f60b71935eb6e8cfa7e5895"
+
+[[projects]]
+  name = "github.com/cloudfoundry-incubator/cf-test-helpers"
+  packages = ["cf","commandreporter","commandstarter","generator","internal"]
+  revision = "473573daddfa74cde9779ac421e120f1020aa775"
+
+[[projects]]
   name = "github.com/concourse/atc"
   packages = [".","event"]
   revision = "406261dbd7681e0ed1c8de6366994a4e935e0b55"
@@ -38,6 +48,12 @@
   revision = "281073eb9eb092240d33ef253c404f1cca550309"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/nu7hatch/gouuid"
+  packages = ["."]
+  revision = "179d4d0c4d8d407a32af483c2354df1d2c91e6c3"
+
+[[projects]]
   name = "github.com/onsi/ginkgo"
   packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
   revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
@@ -45,7 +61,7 @@
 
 [[projects]]
   name = "github.com/onsi/gomega"
-  packages = [".","format","ghttp","internal/assertion","internal/asyncassertion","internal/oraclematcher","internal/testingtsupport","matchers","matchers/support/goraph/bipartitegraph","matchers/support/goraph/edge","matchers/support/goraph/node","matchers/support/goraph/util","types"]
+  packages = [".","format","gbytes","gexec","ghttp","internal/assertion","internal/asyncassertion","internal/oraclematcher","internal/testingtsupport","matchers","matchers/support/goraph/bipartitegraph","matchers/support/goraph/edge","matchers/support/goraph/node","matchers/support/goraph/util","types"]
   revision = "c893efa28eb45626cdaa76c9f653b62488858837"
   version = "v1.2.0"
 
@@ -54,6 +70,12 @@
   packages = ["."]
   revision = "d1cebc7ea14a5fc0de7cb4a45acae773161642c6"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   branch = "master"
@@ -80,8 +102,14 @@
 
 [[projects]]
   name = "golang.org/x/net"
-  packages = ["html","html/atom","html/charset","http2","http2/hpack"]
+  packages = ["context","context/ctxhttp","html","html/atom","html/charset","http2","http2/hpack"]
   revision = "af4fee9d05b66edc24197d189e6118f8ebce8c2b"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/oauth2"
+  packages = [".","clientcredentials","internal"]
+  revision = "d89af98d7c6bba047c5a2622f36bc14b8766df85"
 
 [[projects]]
   branch = "master"
@@ -96,6 +124,12 @@
   revision = "bd91bbf73e9a4a801adbfb97133c992678533126"
 
 [[projects]]
+  name = "google.golang.org/appengine"
+  packages = ["internal","internal/base","internal/datastore","internal/log","internal/remote_api","internal/urlfetch","urlfetch"]
+  revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
+  version = "v1.0.0"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "a83829b6f1293c91addabc89d0571c246397bbf4"
@@ -103,6 +137,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "880ad5f1763a921c4333312130b58ff5f203c3add718ce67e49c9ad934acdd42"
+  inputs-digest = "4f170939b8afcd1bae8c74454ed87ceed2ce92c91cccaae4285fbce4e821c9c5"
   solver-name = "gps-cdcl"
   solver-version = 1
