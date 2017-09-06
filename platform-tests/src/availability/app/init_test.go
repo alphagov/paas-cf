@@ -1,4 +1,4 @@
-package availability_test
+package app_availability_test
 
 import (
 	"testing"
