@@ -112,8 +112,11 @@ var _ = Describe("Availability test", func() {
 		var resultChannel <-chan *vegeta.Result
 
 		BeforeEach(func() {
+			deployment := helpers.ConcourseDeployment()
 			stopAttackCriteria = func() bool {
-				if helpers.DeploymentHasFinishedInConcourse() {
+				complete, err := deployment.Complete()
+				Expect(err).NotTo(HaveOccurred())
+				if complete {
 					return true
 				}
 				metricsLock.Lock()
@@ -126,7 +129,7 @@ var _ = Describe("Availability test", func() {
 		})
 
 		It(fmt.Sprintf("does not get request success rate less than %.2f%%", availabilitySuccessRateThreshold), func() {
-			appUri := "https://healthcheck." + helpers.GetAppsDomainZoneName() + "/?availability-test=" + helpers.GetResourceVersion()
+			appUri := "https://healthcheck." + helpers.MustGetenv("APPS_DNS_ZONE_NAME") + "/?availability-test=" + helpers.MustGetenv("PIPELINE_TRIGGER_VERSION")
 
 			attacker, resultChannel = loadTest(appUri, availabilityTestRate)
 			defer attacker.Stop()

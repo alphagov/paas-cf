@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"availability/helpers"
+
 	"github.com/cloudfoundry-community/go-cfclient"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -23,29 +25,13 @@ var _ = Describe("API Availability Monitoring", func() {
 
 	It("should have uninterupted access to cloudfoundry api during deploy", func() {
 
-		cfg := &cfclient.Config{
-			ApiAddress:        fmt.Sprintf("https://api.%s", os.Getenv("SYSTEM_DNS_ZONE_NAME")),
-			Username:          os.Getenv("CF_USER"),
-			Password:          os.Getenv("CF_PASS"),
-			SkipSslValidation: os.Getenv("SKIP_SSL_VALIDATION") == "true",
-		}
-		Expect(cfg.ApiAddress).ToNot(Equal(""), "SYSTEM_DNS_ZONE_NAME environment variable must be set")
-		Expect(cfg.Username).ToNot(Equal(""), "CF_USER environment variable must be set")
-		Expect(cfg.Password).ToNot(Equal(""), "CF_PASS environment variable must be set")
-
-		deployment := &Deployment{
-			AtcAddress: os.Getenv("CONCOURSE_ATC_URL"),
-			Password:   os.Getenv("CONCOURSE_ATC_PASSWORD"),
-			Username:   os.Getenv("CONCOURSE_ATC_USERNAME"),
-			Version:    os.Getenv("PIPELINE_TRIGGER_VERSION"),
-			Team:       "main",
-		}
-		Expect(deployment.AtcAddress).ToNot(Equal(""), "CONCOURSE_ATC_URL environment variable must be set")
-		Expect(deployment.Password).ToNot(Equal(""), "CONCOURSE_ATC_PASSWORD environment variable must be set")
-		Expect(deployment.Username).ToNot(Equal(""), "CONCOURSE_ATC_USERNAME environment variable must be set")
-		Expect(deployment.Version).ToNot(Equal(""), "PIPELINE_TRIGGER_VERSION environment variable must be set")
-
-		monitor := NewMonitor(cfg)
+		monitor := NewMonitor(&cfclient.Config{
+			ApiAddress:        fmt.Sprintf("https://api.%s", helpers.MustGetenv("SYSTEM_DNS_ZONE_NAME")),
+			Username:          helpers.MustGetenv("CF_USER"),
+			Password:          helpers.MustGetenv("CF_PASS"),
+			SkipSslValidation: helpers.MustGetenv("SKIP_SSL_VALIDATION") == "true",
+		})
+		deployment := helpers.ConcourseDeployment()
 
 		monitor.Add("Listing all apps in a space", func(cf *cfclient.Client) error {
 			org, err := cf.GetOrgByName("admin")
