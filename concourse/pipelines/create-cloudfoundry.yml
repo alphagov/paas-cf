@@ -257,6 +257,13 @@ resources:
       uri: https://github.com/alphagov/paas-compose-broker
       tag_filter: v0.11.0
 
+  - name: paas-compose-scraper
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-compose-scraper
+      branch: 149806558-compose-metric-alerting
+      # TODO: Are we going to add tagging to this one?
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1241,6 +1248,7 @@ jobs:
           - get: datadog-tfstate
           - get: paas-rubbernecker
           - get: paas-compose-broker
+          - get: paas-compose-scraper
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -1877,6 +1885,63 @@ jobs:
             put: deployed-healthcheck
             params:
               file: deployed-healthcheck/healthcheck-deployed
+
+        - task: deploy-paas-compose-scraper
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+            params:
+              ENABLE_COMPOSE_SCRAPER: {{enable_compose_scraper}}
+              COMPOSE_EMAIL: {{compose_email}}
+              COMPOSE_PASSWORD: {{compose_password}}
+              DATADOG_API_KEY: {{datadog_api_key}}
+              DATADOG_APP_KEY: {{datadog_app_key}}
+              DEPLOY_ENV: {{deploy_env}}
+            inputs:
+              - name: paas-cf
+              - name: paas-compose-scraper
+              - name: config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  if [ "${ENABLE_COMPOSE_SCRAPER:-}" != "true" ] ; then
+                    echo "ENABLE_COMPOSE_SCRAPER=${ENABLE_COMPOSE_SCRAPER} so skipping paas-compose-scraper deploy"
+                    exit 0
+                  fi
+
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} -o admin -s monitoring
+
+                  cd paas-compose-scraper/
+
+                  ruby -ryaml -e "
+                    env = {
+                      'COMPOSE_EMAIL' => '${COMPOSE_EMAIL}',
+                      'COMPOSE_PASSWORD' => '${COMPOSE_PASSWORD}',
+                      'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
+                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
+                      'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                    }
+                    manifest = YAML.load_file('manifest.yml')
+                    manifest['applications'].each { |app|
+                      app['env'] = {} unless app['env']
+                      app['env'].merge!(env)
+                    }
+                    File.write('manifest.yml', manifest.to_yaml)
+                  "
+
+                  cf push paas-compose-scraper
 
         - task: run-bosh-cleanup
           config:
