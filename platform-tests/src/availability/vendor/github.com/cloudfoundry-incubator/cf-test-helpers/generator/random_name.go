@@ -1,19 +1,21 @@
 package generator
 
 import (
+	"crypto/rand"
+	"fmt"
 	"strconv"
 
-	uuid "github.com/nu7hatch/gouuid"
 	"github.com/onsi/ginkgo/config"
 )
 
 func randomName() string {
-	guid, err := uuid.NewV4()
+	b := make([]byte, 8)
+	_, err := rand.Read(b)
 	if err != nil {
 		panic(err)
 	}
 
-	return guid.String()[0:20]
+	return fmt.Sprintf("%x", b)
 }
 
 func PrefixedRandomName(prefixName, resourceName string) string {

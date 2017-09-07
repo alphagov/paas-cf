@@ -47,4 +47,4 @@
 
 [[constraint]]
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
-  revision = "473573daddfa74cde9779ac421e120f1020aa775"
+  revision = "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"

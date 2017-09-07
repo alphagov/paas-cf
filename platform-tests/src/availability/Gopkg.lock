@@ -14,7 +14,7 @@
 [[projects]]
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
   packages = ["cf","commandreporter","commandstarter","generator","internal"]
-  revision = "473573daddfa74cde9779ac421e120f1020aa775"
+  revision = "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
 
 [[projects]]
   name = "github.com/concourse/atc"
@@ -46,12 +46,6 @@
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   revision = "281073eb9eb092240d33ef253c404f1cca550309"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/nu7hatch/gouuid"
-  packages = ["."]
-  revision = "179d4d0c4d8d407a32af483c2354df1d2c91e6c3"
 
 [[projects]]
   name = "github.com/onsi/ginkgo"
@@ -137,6 +131,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4f170939b8afcd1bae8c74454ed87ceed2ce92c91cccaae4285fbce4e821c9c5"
+  inputs-digest = "1cedecdc3f203365d765905153a14231cef3e64ce390adfb598a191f16d9da81"
   solver-name = "gps-cdcl"
   solver-version = 1
