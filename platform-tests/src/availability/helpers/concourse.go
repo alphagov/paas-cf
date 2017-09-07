@@ -2,7 +2,7 @@ package helpers
 
 import (
 	"crypto/tls"
-	"log"
+	"fmt"
 	"net"
 	"net/http"
 	"os"
@@ -11,8 +11,6 @@ import (
 
 	"github.com/concourse/atc"
 	"github.com/concourse/go-concourse/concourse"
-
-	. "github.com/onsi/gomega"
 )
 
 const (
@@ -34,34 +32,92 @@ type basicAuthTransport struct {
 	base     http.RoundTripper
 }
 
-func getConfigFromEnvironment(varName string) string {
-	configValue := os.Getenv(varName)
-	ExpectWithOffset(2, configValue).NotTo(BeEmpty(), "Environment variable $%s is not set", varName)
-	return configValue
+func (t basicAuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	r.SetBasicAuth(t.username, t.password)
+	return t.base.RoundTrip(r)
 }
 
-func GetAppsDomainZoneName() string {
-	return getConfigFromEnvironment("APPS_DNS_ZONE_NAME")
+func newConcourseClient() concourse.Client {
+	var transport http.RoundTripper
+
+	tlsConfig := &tls.Config{InsecureSkipVerify: os.Getenv("SKIP_SSL_VALIDATION") == "true"}
+	transport = &http.Transport{
+		TLSClientConfig: tlsConfig,
+		Dial: (&net.Dialer{
+			Timeout: 10 * time.Second,
+		}).Dial,
+		Proxy: http.ProxyFromEnvironment,
+	}
+
+	client := concourse.NewClient(
+		mustGetenv(2, "CONCOURSE_ATC_URL"),
+		&http.Client{
+			Transport: basicAuthTransport{
+				username: mustGetenv(2, "CONCOURSE_ATC_USERNAME"),
+				password: mustGetenv(2, "CONCOURSE_ATC_PASSWORD"),
+				base:     transport,
+			},
+		},
+	)
+	return client
 }
 
-func GetResourceVersion() string {
-	return getConfigFromEnvironment("PIPELINE_TRIGGER_VERSION")
+// Deployment represents a full run of a concourse pipeline.
+type Deployment struct {
+	Version string
+	client  concourse.Client
 }
 
-func getConcourseAtcUrl() string {
-	return getConfigFromEnvironment("CONCOURSE_ATC_URL")
+func ConcourseDeployment() *Deployment {
+	return &Deployment{
+		Version: mustGetenv(1, "PIPELINE_TRIGGER_VERSION"),
+		client:  newConcourseClient(),
+	}
 }
 
-func getConcourseUserName() string {
-	return getConfigFromEnvironment("CONCOURSE_ATC_USERNAME")
+func (d *Deployment) Complete() (bool, error) {
+	team := d.client.Team(teamName)
+	builds, err := buildsWithVersion(team, pipelineName, resourceName, d.Version)
+	if err != nil {
+		return false, err
+	}
+	if len(builds) != 0 && (builds[0].Status == "succeeded" || builds[0].Status == "failed") {
+		return true, nil
+	}
+	return false, nil
 }
 
-func getConcoursePassword() string {
-	return getConfigFromEnvironment("CONCOURSE_ATC_PASSWORD")
-}
+func buildsWithVersion(team concourse.Team, pipelineName, resourceName, resourceVersion string) ([]atc.Build, error) {
+	var resourceVersionID int
 
-func getSkipSSLValidation() bool {
-	return getConfigFromEnvironment("SKIP_SSL_VALIDATION") == "true"
+	page := concourse.Page{
+		Since: 0,
+		Until: 0,
+		Limit: 10,
+	}
+
+	resourceVersions, _, resourceExists, err := team.ResourceVersions(pipelineName, resourceName, page)
+	if err != nil {
+		return nil, err
+	} else if !resourceExists {
+		return nil, fmt.Errorf("Resource: %s did not exist in Concourse", resourceVersions)
+	}
+
+	for _, version := range resourceVersions {
+		if resourceVersion == version.Version["number"] {
+			resourceVersionID = version.ID
+		}
+	}
+	if resourceVersionID == 0 {
+		return nil, fmt.Errorf("Resource: %s with version: %s did not exist in Concourse", resourceName, resourceVersion)
+	}
+
+	builds, _, err := team.BuildsWithVersionAsInput(pipelineName, resourceName, resourceVersionID)
+	if err != nil {
+		return nil, err
+	}
+
+	return filterBuildsByNameAndSortByTime(builds, jobName), nil
 }
 
 func filterBuildsByNameAndSortByTime(builds []atc.Build, jobName string) []atc.Build {
@@ -73,73 +129,4 @@ func filterBuildsByNameAndSortByTime(builds []atc.Build, jobName string) []atc.B
 	}
 	sort.Sort(byStartTime(filteredBuilds))
 	return filteredBuilds
-}
-
-func (t basicAuthTransport) RoundTrip(r *http.Request) (*http.Response, error) {
-	r.SetBasicAuth(t.username, t.password)
-	return t.base.RoundTrip(r)
-}
-
-func newConcourseClient(atcUrl, username, password string) concourse.Client {
-	var transport http.RoundTripper
-
-	var tlsConfig *tls.Config
-	tlsConfig = &tls.Config{InsecureSkipVerify: getSkipSSLValidation()}
-
-	transport = &http.Transport{
-		TLSClientConfig: tlsConfig,
-		Dial: (&net.Dialer{
-			Timeout: 10 * time.Second,
-		}).Dial,
-		Proxy: http.ProxyFromEnvironment,
-	}
-
-	client := concourse.NewClient(
-		atcUrl,
-		&http.Client{
-			Transport: basicAuthTransport{
-				username: username,
-				password: password,
-				base:     transport,
-			},
-		},
-	)
-	return client
-}
-
-func buildsWithVersion(team concourse.Team, pipelineName, resourceName, resourceVersion string) []atc.Build {
-	var resourceVersionID int
-
-	page := concourse.Page{
-		Since: 0,
-		Until: 0,
-		Limit: 10,
-	}
-
-	resourceVersions, _, resourceExists, err := team.ResourceVersions(pipelineName, resourceName, page)
-	if err != nil {
-		log.Println(err)
-		return make([]atc.Build, 0)
-	}
-	ExpectWithOffset(2, resourceExists).To(BeTrue())
-
-	for _, version := range resourceVersions {
-		if resourceVersion == version.Version["number"] {
-			resourceVersionID = version.ID
-		}
-	}
-	ExpectWithOffset(2, resourceVersionID).NotTo(Equal(0), "Resource: %s with version: %s should exist in Concourse", resourceName, resourceVersion)
-
-	builds, _, err := team.BuildsWithVersionAsInput(pipelineName, resourceName, resourceVersionID)
-
-	return filterBuildsByNameAndSortByTime(builds, jobName)
-}
-
-func DeploymentHasFinishedInConcourse() bool {
-	team := newConcourseClient(getConcourseAtcUrl(), getConcourseUserName(), getConcoursePassword()).Team(teamName)
-	builds := buildsWithVersion(team, pipelineName, resourceName, GetResourceVersion())
-	if len(builds) != 0 && (builds[0].Status == "succeeded" || builds[0].Status == "failed") {
-		return true
-	}
-	return false
 }

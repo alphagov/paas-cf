@@ -713,7 +713,7 @@ jobs:
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
                 echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability/app
 
   - name: api-availability-tests
     plan:
@@ -781,9 +781,9 @@ jobs:
                 echo 'started' > ./jobstate
                 aws s3 cp ./jobstate "s3://${bucket}/$JOB_FILE"
                 trap 'aws s3 rm "s3://${bucket}/${JOB_FILE}"' EXIT
-                
+
                 echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/api
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability/api
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
