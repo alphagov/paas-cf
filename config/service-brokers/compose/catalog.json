@@ -30,7 +30,38 @@
         "databaseType": "mongodb"
       }
     }]
-  },{
+  }, {
+    "id": "1356eeeb-7c5d-4d9d-9a04-c035a2c709b3",
+    "name": "redis",
+    "bindable": true,
+    "description": "Redis instance",
+    "requires": [],
+    "tags": [
+      "redis",
+      "compose"
+    ],
+    "metadata": {
+      "displayName": "Redis",
+      "imageUrl": "https://redis.io/images/redis-logo.svg",
+      "longDescription": "Redis instance",
+      "providerDisplayName": "GOV.UK PaaS",
+      "documentationUrl": "https://compose.com/databases/redis",
+      "supportUrl": "https://www.cloud.service.gov.uk/support.html"
+    },
+    "plans": [{
+      "id": "a8574a4b-9c6c-40ea-a0df-e9b7507948c8",
+      "name": "tiny",
+      "description": "256MB Storage / 256MB RAM",
+      "compose": {
+        "units": 1,
+        "databaseType": "redis"
+      },
+      "metadata": {
+        "displayName": "Redis Tiny",
+        "bullets": []
+      }
+    }]
+  }, {
     "id": "6e9202f2-c2e1-4de8-8d4a-a8c898fc2d8c",
     "name": "elasticsearch",
     "bindable": true,

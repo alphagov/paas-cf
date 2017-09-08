@@ -1,13 +1,14 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"fmt"
 	"net/http"
 	"net/url"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
+	mysql "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
@@ -104,7 +105,11 @@ func mysqlOpen(dbu string, ssl bool) (*sql.DB, error) {
 	}
 
 	if ssl {
-		u.RawQuery = "tls=true"
+		u.RawQuery = "tls=custom"
+		if err := mysql.RegisterTLSConfig("custom", &tls.Config{ServerName: u.Hostname()}); err != nil {
+			return nil, err
+		}
+
 	} else {
 		u.RawQuery = "tls=false"
 	}

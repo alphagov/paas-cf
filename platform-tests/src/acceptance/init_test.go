@@ -74,6 +74,10 @@ func TestSuite(t *testing.T) {
 			enableServiceAccess = cf.Cf("enable-service-access", "elasticsearch", "-o", org).Wait(DEFAULT_TIMEOUT)
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
+
+			enableServiceAccess = cf.Cf("enable-service-access", "redis", "-o", org).Wait(DEFAULT_TIMEOUT)
+			Expect(enableServiceAccess).To(Exit(0))
+			Expect(enableServiceAccess).To(Say("OK"))
 		})
 	})
 
