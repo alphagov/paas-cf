@@ -2073,6 +2073,7 @@ jobs:
                 TF_VAR_datadog_app_key: {{datadog_app_key}}
                 TF_VAR_aws_account: {{aws_account}}
                 ENABLE_DATADOG: {{enable_datadog}}
+                ENABLE_COMPOSE_SCRAPER: {{enable_compose_scraper}}
               run:
                 path: sh
                 args:
@@ -2090,6 +2091,7 @@ jobs:
                     fi
 
                     if [ "${ENABLE_DATADOG}" = "true" ]; then
+                      [ "${ENABLE_COMPOSE_SCRAPER}" = "true" ] && export TF_VAR_enable_compose_scraper=1
                       terraform apply \
                         -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                         -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
