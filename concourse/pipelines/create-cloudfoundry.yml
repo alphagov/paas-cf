@@ -1896,8 +1896,8 @@ jobs:
                 tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             params:
               ENABLE_COMPOSE_SCRAPER: {{enable_compose_scraper}}
-              COMPOSE_EMAIL: {{compose_email}}
-              COMPOSE_PASSWORD: {{compose_password}}
+              COMPOSE_BILLING_EMAIL: {{compose_billing_email}}
+              COMPOSE_BILLING_PASSWORD: {{compose_billing_password}}
               DATADOG_API_KEY: {{datadog_api_key}}
               DATADOG_APP_KEY: {{datadog_app_key}}
               DEPLOY_ENV: {{deploy_env}}
@@ -1927,8 +1927,8 @@ jobs:
 
                   ruby -ryaml -e "
                     env = {
-                      'COMPOSE_EMAIL' => '${COMPOSE_EMAIL}',
-                      'COMPOSE_PASSWORD' => '${COMPOSE_PASSWORD}',
+                      'COMPOSE_EMAIL' => '${COMPOSE_BILLING_EMAIL}',
+                      'COMPOSE_PASSWORD' => '${COMPOSE_BILLING_PASSWORD}',
                       'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
                       'DEPLOY_ENV' => '${DEPLOY_ENV}',
