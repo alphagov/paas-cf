@@ -116,7 +116,13 @@ func NewMultiMetricReader(rs ...MetricReader) MetricReadCloser {
 		}
 	}()
 	for _, r := range rs {
-		go CopyMetrics(buf, r)
+		go func(r MetricReader) {
+			for {
+				if err := CopyMetrics(buf, r); err != nil {
+					buf.events <- event{err: err}
+				}
+			}
+		}(r)
 	}
 	return buf
 }

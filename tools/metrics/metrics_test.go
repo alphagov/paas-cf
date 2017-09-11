@@ -169,36 +169,53 @@ func TestCopyMetrics(t *testing.T) {
 }
 
 func TestMultiMetricReader(t *testing.T) {
-	buffers := []MetricReader{
+	buffers := []*MetricBuffer{
 		NewMetricBuffer(4),
 		NewMetricBuffer(4),
 		NewMetricBuffer(4),
 	}
-	multi := NewMultiMetricReader(buffers...)
+	readers := make([]MetricReader, len(buffers))
+	for i := 0; i < len(readers); i++ {
+		readers[i] = buffers[i]
+	}
+	multi := NewMultiMetricReader(readers...)
+
+	expectedError := fmt.Errorf("BANG!")
+	buffers[0].events <- event{
+		metric: Metric{Name: "should not be seen"},
+		err:    expectedError,
+	}
 
 	for i := 0; i < len(buffers); i++ {
-		buffers[i].(MetricWriter).WriteMetrics([]Metric{
+		buffers[i].WriteMetrics([]Metric{
 			{Name: fmt.Sprintf("test.multi.buf%d", i)},
 		})
 	}
 
-	out := map[string]bool{}
-	for i := 0; i < len(buffers); i++ {
+	metrics := map[string]bool{}
+	errors := []error{}
+	for i := 0; i < len(buffers)+1; i++ {
 		m, err := multi.ReadMetric()
 		if err != nil {
-			t.Fatal(err)
+			errors = append(errors, err)
+		} else {
+			metrics[m.Name] = true
 		}
-		out[m.Name] = true
 	}
 
 	t.Run("reading", func(t *testing.T) {
-		if len(out) != len(buffers) {
-			t.Fatalf("expected to read %d metrics out from the MultiReader got: %v", len(buffers), len(out))
+		if !reflect.DeepEqual(errors, []error{expectedError}) {
+			t.Fatalf("expected error(s) %q got: %q", expectedError, errors)
 		}
+
+		if len(metrics) != len(buffers) {
+			t.Fatalf("expected to read %d metrics out from the MultiReader got: %v", len(buffers), len(metrics))
+		}
+
 		for i := 0; i < len(buffers); i++ {
 			name := fmt.Sprintf("test.multi.buf%d", i)
 			t.Run(name, func(t *testing.T) {
-				if !out[name] {
+				if !metrics[name] {
 					t.Fatalf("%s metric not read from MultiReader", name)
 				}
 			})
