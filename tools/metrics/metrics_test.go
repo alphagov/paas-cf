@@ -183,7 +183,7 @@ func TestMultiMetricReader(t *testing.T) {
 	}
 
 	out := map[string]bool{}
-	for i := 0; i < 3; i++ {
+	for i := 0; i < len(buffers); i++ {
 		m, err := multi.ReadMetric()
 		if err != nil {
 			t.Fatal(err)
@@ -192,10 +192,10 @@ func TestMultiMetricReader(t *testing.T) {
 	}
 
 	t.Run("reading", func(t *testing.T) {
-		if len(out) != 3 {
-			t.Fatalf("expected to read 3 metrics out from the MultiReader got: %v", len(out))
+		if len(out) != len(buffers) {
+			t.Fatalf("expected to read %d metrics out from the MultiReader got: %v", len(buffers), len(out))
 		}
-		for i := 0; i < 3; i++ {
+		for i := 0; i < len(buffers); i++ {
 			name := fmt.Sprintf("test.multi.buf%d", i)
 			t.Run(name, func(t *testing.T) {
 				if !out[name] {
