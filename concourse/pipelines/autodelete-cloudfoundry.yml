@@ -20,6 +20,7 @@ resources:
       branch: master
       tag_filter: {{paas_cf_tag_filter}}
       commit_verification_key_ids: {{gpg_ids}}
+      gpg_keyserver: hkp://ipv4.pool.sks-keyservers.net/
 
   - name: cf-secrets
     type: s3-iam
