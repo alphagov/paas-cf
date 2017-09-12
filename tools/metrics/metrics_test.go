@@ -225,7 +225,7 @@ func TestMultiMetricReader(t *testing.T) {
 	t.Run("closing", func(t *testing.T) {
 		multi.Close()
 		if _, err := multi.ReadMetric(); err != EOS {
-			t.Fatal("expected MultReader to be closed")
+			t.Fatal("expected MultiReader to be closed")
 		}
 		for i := 0; i < len(buffers); i++ {
 			if _, err := buffers[i].ReadMetric(); err != EOS {
