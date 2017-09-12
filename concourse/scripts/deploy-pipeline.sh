@@ -31,12 +31,12 @@ echo "Concourse API target ${FLY_TARGET}"
 echo "Pipeline ${pipeline}"
 echo "Config file ${config}"
 
-yes y | \
-   $FLY_CMD -t "${FLY_TARGET}" \
+$FLY_CMD -t "${FLY_TARGET}" \
    set-pipeline \
    --config "${config}" \
    --pipeline "${pipeline}" \
-   --load-vars-from "${varsfile}"
+   --load-vars-from "${varsfile}" \
+   --non-interactive
 
 $FLY_CMD -t "${FLY_TARGET}" \
   unpause-pipeline \

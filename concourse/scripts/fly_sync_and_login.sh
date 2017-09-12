@@ -14,8 +14,7 @@ curl "$FLY_CMD_URL" -# -L -f -z "$FLY_CMD" -o "$FLY_CMD" -u "${CONCOURSE_ATC_USE
 chmod +x "$FLY_CMD"
 
 echo "Doing fly login"
-echo -e "${CONCOURSE_ATC_USER}\n${CONCOURSE_ATC_PASSWORD}" | \
-  $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}"
+$FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}" -u "${CONCOURSE_ATC_USER}" -p "${CONCOURSE_ATC_PASSWORD}"
 
 echo "Doing fly sync"
-  $FLY_CMD -t "${FLY_TARGET}" sync
+$FLY_CMD -t "${FLY_TARGET}" sync

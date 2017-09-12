@@ -25,11 +25,20 @@ jobs:
       - get: paas-cf
 
       - task: await-turn
-        file: paas-cf/concourse/tasks/splay.yml
-        inputs:
-          - name: deployment-timer
-        params:
-          DEPLOY_ENV: {{deploy_env}}
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+          inputs:
+            - name: paas-cf
+            - name: deployment-timer
+          params:
+            DEPLOY_ENV: {{deploy_env}}
+          run:
+            path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
       - task: kick-off-create-cloudfoundry-pipeline
         config:
