@@ -17,17 +17,28 @@ type StartedEvents map[string]UsageEvent
 
 func main() {
 	org := flag.String("org", "", "Org GUID to report on (required)")
+	start := flag.String("start", "", "RFC3339 date to start reporting on")
+	finish := flag.String("finish", "", "RFC3339 date to finish reporting on")
 	flag.Parse()
+
+	startTime, err := time.Parse(time.RFC3339, *start)
+	if err != nil {
+		log.Fatal(err)
+	}
+	finishTime, err := time.Parse(time.RFC3339, *finish)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if *org == "" {
 		flag.Usage()
 		os.Exit(2)
 	}
 
-	processEvents(os.Stdin, *org, os.Stdout)
+	processEvents(os.Stdin, *org, os.Stdout, startTime, finishTime)
 }
 
-func processEvents(input io.Reader, org string, output io.Writer) {
+func processEvents(input io.Reader, org string, output io.Writer, startTime, finishTime time.Time) {
 	var (
 		firstEvent, lastEvent time.Time
 		startedEvents         = make(StartedEvents)
@@ -55,6 +66,10 @@ func processEvents(input io.Reader, org string, output io.Writer) {
 		}
 
 		if usageEvent.Entity.OrgGuid != org {
+			continue
+		}
+
+		if usageEvent.MetaData.CreatedAt.Before(startTime) || usageEvent.MetaData.CreatedAt.After(finishTime) {
 			continue
 		}
 
