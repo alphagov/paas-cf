@@ -52,24 +52,6 @@ resource "datadog_monitor" "continuous-smoketests-failures" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
 }
 
-resource "datadog_monitor" "concourse-btrfs" {
-  name    = "${format("%s concourse excess btrfs processes running", var.env)}"
-  type    = "query alert"
-  message = "${format("Large number of btrfs processes running on the concourse host. It may perform badly. See: %s#btrfs-processes @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
-
-  notify_no_data      = false
-  require_full_window = false
-
-  query = "${format("max(last_1m):max:system.processes.number{deploy_env:%s,process_name:btrfs,deployment:concourse} > 150", var.env)}"
-
-  thresholds {
-    warning  = 100
-    critical = 150
-  }
-
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:concourse"]
-}
-
 resource "datadog_timeboard" "concourse-jobs" {
   title       = "${format("%s job runtime difference", var.env) }"
   description = "vs previous hour"
