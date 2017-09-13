@@ -1895,7 +1895,7 @@ jobs:
                 repository: governmentpaas/cf-cli
                 tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
             params:
-              ENABLE_COMPOSE_SCRAPER: {{enable_compose_scraper}}
+              ENABLE_DATADOG: {{enable_datadog}}
               COMPOSE_BILLING_EMAIL: {{compose_billing_email}}
               COMPOSE_BILLING_PASSWORD: {{compose_billing_password}}
               DATADOG_API_KEY: {{datadog_api_key}}
@@ -1913,8 +1913,8 @@ jobs:
                 - -u
                 - -c
                 - |
-                  if [ "${ENABLE_COMPOSE_SCRAPER:-}" != "true" ] ; then
-                    echo "ENABLE_COMPOSE_SCRAPER=${ENABLE_COMPOSE_SCRAPER} so skipping paas-compose-scraper deploy"
+                  if [ "${ENABLE_DATADOG:-}" != "true" ] ; then
+                    echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-compose-scraper deploy"
                     exit 0
                   fi
 
@@ -2073,7 +2073,6 @@ jobs:
                 TF_VAR_datadog_app_key: {{datadog_app_key}}
                 TF_VAR_aws_account: {{aws_account}}
                 ENABLE_DATADOG: {{enable_datadog}}
-                ENABLE_COMPOSE_SCRAPER: {{enable_compose_scraper}}
               run:
                 path: sh
                 args:
@@ -2091,7 +2090,6 @@ jobs:
                     fi
 
                     if [ "${ENABLE_DATADOG}" = "true" ]; then
-                      [ "${ENABLE_COMPOSE_SCRAPER}" = "true" ] && export TF_VAR_enable_compose_scraper=1
                       terraform apply \
                         -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
                         -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \

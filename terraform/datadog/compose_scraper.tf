@@ -1,5 +1,4 @@
 resource "datadog_monitor" "compose_scraper" {
-  count              = "${var.enable_compose_scraper}"
   name               = "${format("%s compose-scraper", var.env)}"
   type               = "service check"
   message            = "${format("{{#is_alert}} No data from compose-scraper. Check the compose-scraper application in org admin space monitoring, account: %s. It should be up and running. {{/is_alert}}", var.aws_account)}"
@@ -18,7 +17,6 @@ resource "datadog_monitor" "compose_scraper" {
 }
 
 resource "datadog_monitor" "compose_host_ram_in_use" {
-  count             = "${var.enable_compose_scraper}"
   name              = "${format("%s High memory utilisation on a Compose cluster host", var.env)}"
   type              = "metric alert"
   message           = "Host {{host.name}} in the Compose cluster is using {{value}}% of RAM. As this is above {{#is_alert}}{{threshold}}%{{/is_alert}}{{#is_warning}}{{warn_threshold}}%{{/is_warning}} the cluster may need scaling."
@@ -36,7 +34,6 @@ resource "datadog_monitor" "compose_host_ram_in_use" {
 }
 
 resource "datadog_monitor" "compose_host_disk_in_use" {
-  count             = "${var.enable_compose_scraper}"
   name              = "${format("%s High disk utilisation on a Compose cluster host", var.env)}"
   type              = "metric alert"
   message           = "Host {{host.name}} in the Compose cluster is using {{value}}% of disk. As this is above {{#is_alert}}{{threshold}}%{{/is_alert}}{{#is_warning}}{{warn_threshold}}%{{/is_warning}} the cluster may need scaling."
