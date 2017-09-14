@@ -185,6 +185,23 @@ properties:
           '
         }
       }
+      if [@source][component] == "gorouter" {
+        mutate { replace => { "type" => "gorouter" } }
+        grok {
+          match => {
+            "@message" =>
+              '%{HOSTNAME:[gorouter][host]} - \[%{TIMESTAMP_ISO8601:[gorouter][timestamp]}\] "%{WORD:[gorouter][method]} %{URIPATHPARAM:[gorouter][request]} %{NOTSPACE:[gorouter][httpversion]}" %{BASE10NUM:[gorouter][status]} %{BASE10NUM:[gorouter][bytesreceived]} %{BASE10NUM:[gorouter][bytessent]} %{QUOTEDSTRING:[gorouter][referer]} %{QUOTEDSTRING:[gorouter][useragent]} %{QUOTEDSTRING:[gorouter][clientaddr]} %{QUOTEDSTRING:[gorouter][upstreamaddr]} %{GREEDYDATA:routerkeys}'
+            }
+          tag_on_failure => ["fail/cloudfoundry/gorouter/grok"]
+          add_tag => ["gorouter"]
+        }
+        kv {
+          source => "router_keys"
+          target => "[gorouter][header]"
+          value_split => ":"
+          remove_field => "router_keys"
+        }
+      }
       if [@source][component] == "vcap_nginx_access" {
         grok {
           match => {
