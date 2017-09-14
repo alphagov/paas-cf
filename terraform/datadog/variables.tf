@@ -8,6 +8,11 @@ variable "support_email" {
   default     = "govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 }
 
+variable "enable_compose_scraper" {
+  description = "Enable Compose scraper. 1 to enable, 0 to disable."
+  default     = 0
+}
+
 variable "enable_pagerduty_notifications" {
   description = "Selector to enable/disable the pagerduty notifications."
   default     = 0

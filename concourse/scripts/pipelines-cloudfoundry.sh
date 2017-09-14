@@ -142,6 +142,8 @@ disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 datadog_api_key: ${datadog_api_key:-}
 datadog_app_key: ${datadog_app_key:-}
 compose_api_key: ${compose_api_key:-}
+compose_billing_email: ${compose_billing_email:-}
+compose_billing_password: ${compose_billing_password:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
 deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
@@ -152,6 +154,7 @@ oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
 pagerduty_api_token: ${pagerduty_api_token:-}
 enable_metrics: ${ENABLE_METRICS}
+enable_compose_scraper: ${ENABLE_COMPOSE_SCRAPER}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
