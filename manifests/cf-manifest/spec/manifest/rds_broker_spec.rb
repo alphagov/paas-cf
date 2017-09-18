@@ -92,15 +92,22 @@ RSpec.describe "RDS broker properties" do
     shared_examples "medium sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
-      it { expect(rds_properties).to include("allocated_storage" => 20) }
+      it { expect(rds_properties).to include("allocated_storage" => 100) }
       it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
     end
 
     shared_examples "large sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
-      it { expect(rds_properties).to include("allocated_storage" => 20) }
+      it { expect(rds_properties).to include("allocated_storage" => 512) }
       it { expect(rds_properties).to include("db_instance_class" => "db.m4.2xlarge") }
+    end
+
+    shared_examples "xlarge sized plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it { expect(rds_properties).to include("allocated_storage" => 2048) }
+      it { expect(rds_properties).to include("db_instance_class" => "db.m4.4xlarge") }
     end
 
     shared_examples "backup enabled plans" do
@@ -154,7 +161,7 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "M-HA-enc-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5", "L-HA-enc-dedicated-9.5")
+        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "M-HA-enc-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5", "L-HA-enc-dedicated-9.5", "XL-dedicated-9.5", "XL-HA-dedicated-9.5", "XL-HA-enc-dedicated-9.5")
       end
 
       describe "plan rds_properties" do
@@ -255,6 +262,36 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
+        describe "XL-dedicated-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "XL-dedicated-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "XL-HA-dedicated-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "XL-HA-dedicated-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "XL-HA-enc-dedicated-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "XL-HA-enc-dedicated-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "free plan" do
           subject { pg_plans.find { |p| p["name"] == "Free" } }
 
@@ -277,7 +314,7 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         my_plan_names = my_plans.map { |p| p["name"] }
-        expect(my_plan_names).to contain_exactly("Free", "S-dedicated-5.7", "S-HA-dedicated-5.7", "M-dedicated-5.7", "M-HA-dedicated-5.7", "M-HA-enc-dedicated-5.7", "L-dedicated-5.7", "L-HA-dedicated-5.7", "L-HA-enc-dedicated-5.7")
+        expect(my_plan_names).to contain_exactly("Free", "S-dedicated-5.7", "S-HA-dedicated-5.7", "M-dedicated-5.7", "M-HA-dedicated-5.7", "M-HA-enc-dedicated-5.7", "L-dedicated-5.7", "L-HA-dedicated-5.7", "L-HA-enc-dedicated-5.7", "XL-dedicated-5.7", "XL-HA-dedicated-5.7", "XL-HA-enc-dedicated-5.7")
       end
 
       describe "plan rds_properties" do
@@ -373,6 +410,36 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all mysql plans"
           it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "XL-dedicated-5.7" do
+          subject { my_plans.find { |p| p["name"] == "XL-dedicated-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "XL-HA-dedicated-5.7" do
+          subject { my_plans.find { |p| p["name"] == "XL-HA-dedicated-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "XL-HA-enc-dedicated-5.7" do
+          subject { my_plans.find { |p| p["name"] == "XL-HA-enc-dedicated-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
