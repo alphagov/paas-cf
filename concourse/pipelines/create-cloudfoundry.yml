@@ -261,8 +261,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-compose-scraper
-      branch: 149806558-compose-metric-alerting
-      # TODO: Are we going to add tagging to this one?
+      tag_filter: v0.1.0
 
 jobs:
   - name: pipeline-lock
