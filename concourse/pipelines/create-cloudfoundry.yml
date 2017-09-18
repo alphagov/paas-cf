@@ -1934,6 +1934,7 @@ jobs:
                       'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
                       'DATADOG_TAGS' => 'deployment:${DEPLOY_ENV}',
+                      'CHECK_INTERVAL_SECONDS' => '300',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
