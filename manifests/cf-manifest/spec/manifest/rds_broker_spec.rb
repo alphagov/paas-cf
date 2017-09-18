@@ -75,6 +75,79 @@ RSpec.describe "RDS broker properties" do
       }
     end
 
+    shared_examples "free sized plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it { expect(rds_properties).to include("allocated_storage" => 5) }
+      it { expect(rds_properties).to include("db_instance_class" => "db.t2.micro") }
+    end
+
+    shared_examples "small sized plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it { expect(rds_properties).to include("allocated_storage" => 20) }
+      it { expect(rds_properties).to include("db_instance_class" => "db.t2.small") }
+    end
+
+    shared_examples "medium sized plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it { expect(rds_properties).to include("allocated_storage" => 20) }
+      it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
+    end
+
+    shared_examples "large sized plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it { expect(rds_properties).to include("allocated_storage" => 20) }
+      it { expect(rds_properties).to include("db_instance_class" => "db.m4.2xlarge") }
+    end
+
+    shared_examples "backup enabled plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it "has a backup retention period of 7 days" do
+        expect(rds_properties).to include(
+          "backup_retention_period" => 7
+        )
+      end
+    end
+
+    shared_examples "backup disabled plans" do
+      it "calls out that it's not backed up in the description" do
+        expect(subject.fetch("description")).to include("NOT BACKED UP")
+      end
+
+      let(:rds_properties) { subject.fetch("rds_properties") }
+
+      it "has all snapshots disabled" do
+        expect(rds_properties).to include(
+          "backup_retention_period" => 0,
+          "skip_final_snapshot" => true,
+        )
+      end
+    end
+
+    shared_examples "HA plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+      it { expect(rds_properties).to include("multi_az" => true) }
+    end
+
+    shared_examples "non-HA plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+      it { expect(rds_properties).to include("multi_az" => false) }
+    end
+
+    shared_examples "Encryption disabled plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+      it { expect(rds_properties).to include("storage_encrypted" => false) }
+    end
+
+    shared_examples "Encryption enabled plans" do
+      let(:rds_properties) { subject.fetch("rds_properties") }
+      it { expect(rds_properties).to include("storage_encrypted" => true) }
+    end
+
     describe "postgres service" do
       let(:pg_service) { services.find { |s| s["name"] == "postgres" } }
       let(:pg_plans) { pg_service.fetch("plans") }
@@ -102,91 +175,11 @@ RSpec.describe "RDS broker properties" do
           end
         end
 
-        shared_examples "free sized postgres plans" do
-          it_behaves_like "all postgres plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 5) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.t2.micro") }
-        end
-
-        shared_examples "small sized postgres plans" do
-          it_behaves_like "all postgres plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 20) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.t2.small") }
-        end
-
-        shared_examples "medium sized postgres plans" do
-          it_behaves_like "all postgres plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 20) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
-        end
-
-        shared_examples "large sized postgres plans" do
-          it_behaves_like "all postgres plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 20) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.m4.2xlarge") }
-        end
-
-        shared_examples "backup enabled plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it "has a backup retention period of 7 days" do
-            expect(rds_properties).to include(
-              "backup_retention_period" => 7
-            )
-          end
-        end
-
-        shared_examples "backup disabled plans" do
-          it "calls out that it's not backed up in the description" do
-            expect(subject.fetch("description")).to include("NOT BACKED UP")
-          end
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it "has all snapshots disabled" do
-            expect(rds_properties).to include(
-              "backup_retention_period" => 0,
-              "skip_final_snapshot" => true,
-            )
-          end
-        end
-
-        shared_examples "HA plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("multi_az" => true) }
-        end
-
-        shared_examples "non-HA plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("multi_az" => false) }
-        end
-
-        shared_examples "Encryption disabled plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("storage_encrypted" => false) }
-        end
-
-        shared_examples "Encryption enabled plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("storage_encrypted" => true) }
-        end
-
         describe "S-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "S-dedicated-9.5" } }
 
-          it_behaves_like "small sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -195,7 +188,8 @@ RSpec.describe "RDS broker properties" do
         describe "S-HA-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "S-HA-dedicated-9.5" } }
 
-          it_behaves_like "small sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -204,7 +198,8 @@ RSpec.describe "RDS broker properties" do
         describe "M-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
 
-          it_behaves_like "medium sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -213,7 +208,8 @@ RSpec.describe "RDS broker properties" do
         describe "M-HA-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "M-HA-dedicated-9.5" } }
 
-          it_behaves_like "medium sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -222,7 +218,8 @@ RSpec.describe "RDS broker properties" do
         describe "M-HA-enc-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "M-HA-enc-dedicated-9.5" } }
 
-          it_behaves_like "medium sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -231,7 +228,8 @@ RSpec.describe "RDS broker properties" do
         describe "L-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "L-dedicated-9.5" } }
 
-          it_behaves_like "large sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -240,7 +238,8 @@ RSpec.describe "RDS broker properties" do
         describe "L-HA-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "L-HA-dedicated-9.5" } }
 
-          it_behaves_like "large sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -249,7 +248,8 @@ RSpec.describe "RDS broker properties" do
         describe "L-HA-enc-dedicated-9.5" do
           subject { pg_plans.find { |p| p["name"] == "L-HA-enc-dedicated-9.5" } }
 
-          it_behaves_like "large sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -262,7 +262,8 @@ RSpec.describe "RDS broker properties" do
             expect(subject.fetch("free")).to eq(true)
           end
 
-          it_behaves_like "free sized postgres plans"
+          it_behaves_like "all postgres plans"
+          it_behaves_like "free sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -297,91 +298,11 @@ RSpec.describe "RDS broker properties" do
           end
         end
 
-        shared_examples "free sized mysql plans" do
-          it_behaves_like "all mysql plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 5) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.t2.micro") }
-        end
-
-        shared_examples "small sized mysql plans" do
-          it_behaves_like "all mysql plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 20) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.t2.small") }
-        end
-
-        shared_examples "medium sized mysql plans" do
-          it_behaves_like "all mysql plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 20) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
-        end
-
-        shared_examples "large sized mysql plans" do
-          it_behaves_like "all mysql plans"
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it { expect(rds_properties).to include("allocated_storage" => 20) }
-          it { expect(rds_properties).to include("db_instance_class" => "db.m4.2xlarge") }
-        end
-
-        shared_examples "backup enabled plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it "has a backup retention period of 7 days" do
-            expect(rds_properties).to include(
-              "backup_retention_period" => 7
-            )
-          end
-        end
-
-        shared_examples "backup disabled plans" do
-          it "calls out that it's not backed up in the description" do
-            expect(subject.fetch("description")).to include("NOT BACKED UP")
-          end
-
-          let(:rds_properties) { subject.fetch("rds_properties") }
-
-          it "has all snapshots disabled" do
-            expect(rds_properties).to include(
-              "backup_retention_period" => 0,
-              "skip_final_snapshot" => true,
-            )
-          end
-        end
-
-        shared_examples "HA plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("multi_az" => true) }
-        end
-
-        shared_examples "non-HA plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("multi_az" => false) }
-        end
-
-        shared_examples "Encryption disabled plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("storage_encrypted" => false) }
-        end
-
-        shared_examples "Encryption enabled plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          it { expect(rds_properties).to include("storage_encrypted" => true) }
-        end
-
         describe "S-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "S-dedicated-5.7" } }
 
-          it_behaves_like "small sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -390,7 +311,8 @@ RSpec.describe "RDS broker properties" do
         describe "S-HA-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "S-HA-dedicated-5.7" } }
 
-          it_behaves_like "small sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -399,7 +321,8 @@ RSpec.describe "RDS broker properties" do
         describe "M-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "M-dedicated-5.7" } }
 
-          it_behaves_like "medium sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -408,7 +331,8 @@ RSpec.describe "RDS broker properties" do
         describe "M-HA-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "M-HA-dedicated-5.7" } }
 
-          it_behaves_like "medium sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -417,7 +341,8 @@ RSpec.describe "RDS broker properties" do
         describe "M-HA-enc-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "M-HA-enc-dedicated-5.7" } }
 
-          it_behaves_like "medium sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -426,7 +351,8 @@ RSpec.describe "RDS broker properties" do
         describe "L-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "L-dedicated-5.7" } }
 
-          it_behaves_like "large sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -435,7 +361,8 @@ RSpec.describe "RDS broker properties" do
         describe "L-HA-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "L-HA-dedicated-5.7" } }
 
-          it_behaves_like "large sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -444,7 +371,8 @@ RSpec.describe "RDS broker properties" do
         describe "L-HA-enc-dedicated-5.7" do
           subject { my_plans.find { |p| p["name"] == "L-HA-enc-dedicated-5.7" } }
 
-          it_behaves_like "large sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -457,7 +385,8 @@ RSpec.describe "RDS broker properties" do
             expect(subject.fetch("free")).to eq(true)
           end
 
-          it_behaves_like "free sized mysql plans"
+          it_behaves_like "all mysql plans"
+          it_behaves_like "free sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
