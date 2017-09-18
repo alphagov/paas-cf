@@ -1935,7 +1935,7 @@ jobs:
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
-                      app['env'] = {} unless app['env']
+                      app['env'] ||= {}
                       app['env'].merge!(env)
                     }
                     File.write('manifest.yml', manifest.to_yaml)
