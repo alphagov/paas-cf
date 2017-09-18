@@ -1929,9 +1929,11 @@ jobs:
                     env = {
                       'COMPOSE_EMAIL' => '${COMPOSE_BILLING_EMAIL}',
                       'COMPOSE_PASSWORD' => '${COMPOSE_BILLING_PASSWORD}',
+                      'COMPOSE_ACCOUNT_NAME' => 'gds',
+                      'COMPOSE_CLUSTER_ID' => '5941cf9f859d2c0015000021',
                       'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
-                      'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                      'DATADOG_TAGS' => 'deployment:${DEPLOY_ENV}',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
