@@ -113,6 +113,7 @@ staging: globals ## Set Environment to Staging
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=staging)
 	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	@true
 
 .PHONY: prod
@@ -132,6 +133,7 @@ prod: globals ## Set Environment to Production
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
 	$(eval export DEPLOY_RUBBERNECKER=true)
 	$(eval export DEPLOY_ENV=prod)
+	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	@true
 
 .PHONY: bosh-cli
