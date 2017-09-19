@@ -39,11 +39,7 @@ func main() {
 }
 
 func processEvents(input io.Reader, org string, output io.Writer, startTime, finishTime time.Time) {
-	var (
-		firstEvent, lastEvent time.Time
-		startedEvents         = make(StartedEvents)
-	)
-
+	startedEvents := make(StartedEvents)
 	encoder := csv.NewWriter(output)
 	decoder := json.NewDecoder(input)
 
@@ -59,12 +55,6 @@ func processEvents(input io.Reader, org string, output io.Writer, startTime, fin
 			log.Fatal(err)
 		}
 
-		// Record (roughly) the beginning and end of the reporting period.
-		lastEvent = usageEvent.MetaData.CreatedAt
-		if firstEvent.IsZero() {
-			firstEvent = usageEvent.MetaData.CreatedAt
-		}
-
 		if usageEvent.Entity.OrgGuid != org {
 			continue
 		}
@@ -75,9 +65,9 @@ func processEvents(input io.Reader, org string, output io.Writer, startTime, fin
 
 		switch {
 		case usageEvent.Entity.AppGuid != "":
-			processApp(usageEvent, startedEvents, firstEvent, encoder)
+			processApp(usageEvent, startedEvents, startTime, encoder)
 		case usageEvent.Entity.ServiceInstanceGuid != "":
-			processService(usageEvent, startedEvents, firstEvent, encoder)
+			processService(usageEvent, startedEvents, startTime, encoder)
 		}
 	}
 
@@ -89,14 +79,14 @@ func processEvents(input io.Reader, org string, output io.Writer, startTime, fin
 	// Fake end events for resources that are still running at the end of the
 	// reporting period.
 	for _, usageEvent := range startedEvents {
-		usageEvent.MetaData.CreatedAt = lastEvent
+		usageEvent.MetaData.CreatedAt = finishTime
 		switch {
 		case usageEvent.Entity.AppGuid != "":
 			usageEvent.Entity.State = "STOPPED"
-			processApp(usageEvent, startedEvents, firstEvent, encoder)
+			processApp(usageEvent, startedEvents, startTime, encoder)
 		case usageEvent.Entity.ServiceInstanceGuid != "":
 			usageEvent.Entity.State = "DELETED"
-			processService(usageEvent, startedEvents, firstEvent, encoder)
+			processService(usageEvent, startedEvents, startTime, encoder)
 		}
 	}
 
@@ -109,7 +99,7 @@ func processEvents(input io.Reader, org string, output io.Writer, startTime, fin
 func processApp(
 	usageEvent UsageEvent,
 	startedEvents StartedEvents,
-	firstEvent time.Time,
+	windowBegin time.Time,
 	encoder *csv.Writer,
 ) {
 	guid := usageEvent.Entity.AppGuid
@@ -127,7 +117,7 @@ func processApp(
 			startTime = previous.MetaData.CreatedAt
 			delete(startedEvents, guid)
 		} else {
-			startTime = firstEvent
+			startTime = windowBegin
 		}
 	}
 
@@ -146,7 +136,7 @@ func processApp(
 func processService(
 	usageEvent UsageEvent,
 	startedEvents StartedEvents,
-	firstEvent time.Time,
+	windowBegin time.Time,
 	encoder *csv.Writer,
 ) {
 	// Ignore user provided services
@@ -165,14 +155,14 @@ func processService(
 			startTime = previous.MetaData.CreatedAt
 			startedEvents[guid] = usageEvent
 		} else {
-			startTime = firstEvent
+			startTime = windowBegin
 		}
 	case "DELETED":
 		if previous, ok := startedEvents[guid]; ok {
 			startTime = previous.MetaData.CreatedAt
 			delete(startedEvents, guid)
 		} else {
-			startTime = firstEvent
+			startTime = windowBegin
 		}
 	}
 
