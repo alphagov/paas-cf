@@ -5,6 +5,7 @@ meta:
   access_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: ssh_proxy
@@ -71,6 +72,7 @@ meta:
   brain_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: auctioneer
@@ -83,6 +85,7 @@ meta:
   cc_bridge_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: stager
@@ -101,6 +104,7 @@ meta:
   cell_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: rep
@@ -136,6 +140,7 @@ meta:
   database_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: datadog-bbs
@@ -223,6 +228,7 @@ meta:
   route_emitter_templates:
   - name: consul_agent
     release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: route_emitter

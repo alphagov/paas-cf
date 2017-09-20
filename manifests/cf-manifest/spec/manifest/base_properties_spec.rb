@@ -129,6 +129,7 @@ RSpec.describe "base properties" do
           "paas-metrics",
           "datadog-nozzle",
           "cc-service-dashboards",
+          "cc_service_key_client",
           "cdn_broker",
         )
       }

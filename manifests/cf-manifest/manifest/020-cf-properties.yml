@@ -101,6 +101,9 @@ properties:
       metron:
         cert: (( grab secrets.metron_cert  ))
         key: (( grab secrets.metron_key  ))
+      cc_trafficcontroller:
+        cert: (( grab secrets.cc_trafficcontroller_cert  ))
+        key: (( grab secrets.cc_trafficcontroller_key  ))
       trafficcontroller:
         cert: (( grab secrets.trafficcontroller_cert  ))
         key: (( grab secrets.trafficcontroller_key  ))
@@ -230,6 +233,7 @@ properties:
     external_host: api
     external_port: 9022
     srv_api_uri: (( concat "https://" properties.cc.external_host "." properties.system_domain ))
+    internal_service_hostname: "cloud-controller-ng.service.cf.internal"
 
     bulk_api_password: (( grab secrets.bulk_api_password ))
     internal_api_user: "internal_user"
@@ -350,6 +354,7 @@ properties:
         restart_if_above_mb: ~
     external_protocol: ~
 
+    tls_port: 9023
     mutual_tls:
       ca_cert: (( grab secrets.bosh_ca_cert ))
       public_cert: (( grab secrets.cc_server_cert ))
@@ -383,6 +388,7 @@ properties:
 
   uaa:
     url: (( concat "https://uaa." properties.system_domain ))
+    internal_url: "https://uaa.service.cf.internal:8443"
     issuer: (( grab properties.uaa.url ))
     token_url: (( concat properties.uaa.url "/oauth/token" ))
     require_https: false
@@ -464,6 +470,10 @@ properties:
         authorities: scim.userids
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_cloud_controller_username_lookup_secret ))
+      cc_service_key_client:
+        authorities: credhub.read,credhub.write
+        authorized-grant-types: client_credentials
+        secret: (( grab secrets.uaa_clients_cc_service_key_client_secret ))
       cc_routing:
         authorities: routing.router_groups.read
         authorized-grant-types: client_credentials

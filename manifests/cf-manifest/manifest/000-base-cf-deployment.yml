@@ -6,14 +6,13 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "273"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=273
-    sha1: 228a06b6e99b8a6a17c27d5bf383eae13c9e21cd
-
+    version: "275"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=275
+    sha1: 87410553bea310476ea44641bccf8c6cc3280180
   - name: diego
-    version: 1.25.3
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.25.3
-    sha1: a4b880bb1d6a064655ff9bd13daaafd5c09373a0
+    version: 1.26.0
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.26.0
+    sha1: e089f6559343c91745e4ba59a614f544a85c8619
   - name: garden-runc
     version: 1.9.3
     url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.3
@@ -42,11 +41,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-<<<<<<< HEAD
-    version: "3421.26"
-=======
-    version: "3445.7"
->>>>>>> Upgrade stemcell and releases to CloudFoundry v273
+    version: "3445.11"
 
 update:
   canaries: 0
