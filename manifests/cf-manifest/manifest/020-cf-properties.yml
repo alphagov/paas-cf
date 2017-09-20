@@ -173,6 +173,7 @@ properties:
 
   router:
     enable_ssl: false
+    enable_access_log_streaming: true
     status:
       user: router_user
       password: (( grab secrets.router_password ))
