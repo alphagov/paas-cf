@@ -109,7 +109,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli
-              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
           inputs:
             - name: paas-cf
           params:
@@ -130,7 +130,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli
-              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
           run:
             path: sh
             args:
