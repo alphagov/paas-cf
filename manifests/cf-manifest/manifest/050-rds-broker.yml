@@ -134,6 +134,24 @@ jobs:
                     plan: (( inject meta.rds_broker.small_plan_rds_properties ))
                     multi_az: true
 
+                - id: "d9f1d61d-0a65-45ad-8fc9-88c921d038d2"
+                  name: "S-HA-enc-dedicated-9.5"
+                  description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.078
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated Postgres 9.5 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
+                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    multi_az: true
+                    storage_encrypted: true
+
                 - id: "9b882524-ab58-4c18-b501-d2a3f4619104"
                   name: "M-dedicated-9.5"
                   description: "100GB Storage, Dedicated Instance, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
@@ -350,6 +368,24 @@ jobs:
                     defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
                     plan: (( inject meta.rds_broker.small_plan_rds_properties ))
                     multi_az: true
+
+                - id: "6aa563c1-5aeb-46a1-9509-badcf5995c96"
+                  name: "S-HA-enc-dedicated-5.7"
+                  description: "20GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
+                  free: false
+                  metadata:
+                    costs:
+                      - amount:
+                          usd: 0.072
+                        unit: "HOUR"
+                    bullets:
+                      - "Dedicated MySQL 5.7 server"
+                      - "AWS RDS"
+                  rds_properties:
+                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
+                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    multi_az: true
+                    storage_encrypted: true
 
                 - id: "4eb35ca9-a7ec-46c6-b137-d819848536cd"
                   name: "M-dedicated-5.7"
