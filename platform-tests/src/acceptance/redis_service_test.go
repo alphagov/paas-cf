@@ -41,7 +41,7 @@ var _ = Describe("Redis backing service", func() {
 		)
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName("CATS-APP-")
-			dbInstanceName = generator.PrefixedRandomName("test-es-")
+			dbInstanceName = generator.PrefixedRandomName("test-redis-")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
