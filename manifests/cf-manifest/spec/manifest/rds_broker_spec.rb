@@ -161,7 +161,7 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "M-HA-enc-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5", "L-HA-enc-dedicated-9.5", "XL-dedicated-9.5", "XL-HA-dedicated-9.5", "XL-HA-enc-dedicated-9.5")
+        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "S-HA-enc-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "M-HA-enc-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5", "L-HA-enc-dedicated-9.5", "XL-dedicated-9.5", "XL-HA-dedicated-9.5", "XL-HA-enc-dedicated-9.5")
       end
 
       describe "plan rds_properties" do
@@ -200,6 +200,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "S-HA-enc-dedicated-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "S-HA-enc-dedicated-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "M-dedicated-9.5" do
@@ -314,7 +324,7 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         my_plan_names = my_plans.map { |p| p["name"] }
-        expect(my_plan_names).to contain_exactly("Free", "S-dedicated-5.7", "S-HA-dedicated-5.7", "M-dedicated-5.7", "M-HA-dedicated-5.7", "M-HA-enc-dedicated-5.7", "L-dedicated-5.7", "L-HA-dedicated-5.7", "L-HA-enc-dedicated-5.7", "XL-dedicated-5.7", "XL-HA-dedicated-5.7", "XL-HA-enc-dedicated-5.7")
+        expect(my_plan_names).to contain_exactly("Free", "S-dedicated-5.7", "S-HA-dedicated-5.7", "S-HA-enc-dedicated-5.7", "M-dedicated-5.7", "M-HA-dedicated-5.7", "M-HA-enc-dedicated-5.7", "L-dedicated-5.7", "L-HA-dedicated-5.7", "L-HA-enc-dedicated-5.7", "XL-dedicated-5.7", "XL-HA-dedicated-5.7", "XL-HA-enc-dedicated-5.7")
       end
 
       describe "plan rds_properties" do
@@ -353,6 +363,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "S-HA-enc-dedicated-5.7" do
+          subject { my_plans.find { |p| p["name"] == "S-HA-enc-dedicated-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "M-dedicated-5.7" do
