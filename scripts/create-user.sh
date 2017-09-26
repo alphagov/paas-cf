@@ -178,11 +178,11 @@ create_user() {
     fi
   fi
 
-  if [[ -z "${uaa_uuid}" ]] && [[ "${RESET_USER}" == "true" ]]; then
+  if [[ -z "${uaa_uuid:-}" ]] && [[ "${RESET_USER}" == "true" ]]; then
     abort "Trying to reset invite for non-existing user. Is someone trying to trick you into getting an account?"
   fi
 
-  if [[ -z "${uaa_uuid}" ]] || [[ "${RESET_USER}" == "true" ]]; then
+  if [[ -z "${uaa_uuid:-}" ]] || [[ "${RESET_USER}" == "true" ]]; then
     curl -sf "${ssl_arg}" \
       -X POST \
       -H "Authorization: ${auth_token}" \
