@@ -32,8 +32,12 @@ go run event.go process_events.go \
 ## `generate_service_events`
 
 To generate usage events for service instances that were created prior
-`cutoff_age_in_days` and are still running. This isn't needed after we set a
-billing epoch and regularly extract the data:
+`cutoff_age_in_days` and are still running. You will need to manually merge
+these with dump of service usage events to make sure that orgs aren't double
+billed for services that they created within the month.
+
+This isn't needed after we set a billing epoch and regularly extract the
+data:
 
 - http://apidocs.cloudfoundry.org/258/app_usage_events/purge_and_reseed_app_usage_events.html
 - http://apidocs.cloudfoundry.org/258/service_usage_events/purge_and_reseed_service_usage_events.html
