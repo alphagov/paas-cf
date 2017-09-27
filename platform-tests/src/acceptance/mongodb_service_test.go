@@ -31,7 +31,7 @@ var _ = Describe("MongoDB backing service", func() {
 		Expect(plans.Out.Contents()).To(ContainSubstring("tiny"))
 	})
 
-	Context("creating a database instance", func() {
+	PContext("creating a database instance", func() {
 		// Avoid creating additional tests in this block because this setup and
 		// teardown is slow (several minutes).
 
