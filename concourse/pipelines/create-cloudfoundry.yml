@@ -685,7 +685,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -740,7 +740,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -2359,7 +2359,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
             params:
               DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
             inputs:
@@ -2528,7 +2528,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
             inputs:
               - name: paas-cf
               - name: test-config
