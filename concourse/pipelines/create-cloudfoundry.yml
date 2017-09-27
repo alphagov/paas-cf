@@ -2365,10 +2365,12 @@ jobs:
             inputs:
               - name: paas-cf
               - name: cf-release
+                path: src/github.com/cloudfoundry/cf-release
               - name: test-config
               - name: bosh-CA
             outputs:
               - name: artifacts
+                path: /tmp/artifacts
             run:
               path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
 
