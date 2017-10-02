@@ -40,4 +40,4 @@ echo
 echo "You are now in a subshell with CF_HOME set to ${CF_HOME}"
 echo "This will be cleaned up when this shell is closed."
 echo
-bash -il
+${SHELL:-bash} -il
