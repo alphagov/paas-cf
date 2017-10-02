@@ -21,6 +21,8 @@ test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lin
 
 spec:
 	cd scripts &&\
+		go test
+	cd scripts &&\
 		BUNDLE_GEMFILE=Gemfile bundle exec rspec
 	cd tools/metrics &&\
 		go test
