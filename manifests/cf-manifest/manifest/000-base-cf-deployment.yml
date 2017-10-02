@@ -6,29 +6,17 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "269"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=269
-    sha1: 3f7f0e600e2711315df2cb57a3e4edad52f2f713
-
-    # FIXME: capi-release has been split from cf-release due to these CVEs:
-    # https://www.cloudfoundry.org/cve-2017-8033/
-    # https://www.cloudfoundry.org/cve-2017-8035/
-    # https://www.cloudfoundry.org/cve-2017-8036/
-    # https://www.cloudfoundry.org/cve-2017-8037/
-    # This can be reverted once we are using a cf-release version that ships with
-    # capi-release >=1.38.0
-  - name: capi
-    version: 1.38.0
-    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.38.0
-    sha1: 24811687a9690c3de21ec2920237be9a662cfd3b
+    version: "275"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=275
+    sha1: 87410553bea310476ea44641bccf8c6cc3280180
   - name: diego
-    version: 1.23.2
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.23.2
-    sha1: 9ba94ee14cb0660e233001ca3ddaea12be638744
+    version: 1.26.0
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.26.0
+    sha1: e089f6559343c91745e4ba59a614f544a85c8619
   - name: garden-runc
-    version: 1.9.0
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.0
-    sha1: 77bfe8bdb2c3daec5b40f5116a6216badabd196c
+    version: 1.9.3
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.3
+    sha1: a153fd2b9d85d01772e9c6907b8c9e5005059c9e
   - name: cflinuxfs2
     version: 1.156.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.156.0
@@ -53,7 +41,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3421.26"
+    version: "3445.11"
 
 update:
   canaries: 0

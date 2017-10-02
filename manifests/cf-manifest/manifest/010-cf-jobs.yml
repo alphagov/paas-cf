@@ -2,6 +2,21 @@ meta:
   release:
     name: cf
 
+  access_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+  - name: datadog-consul-agent-client
+    release: datadog-for-cloudfoundry
+  - name: ssh_proxy
+    release: diego
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: file_server
+    release: diego
+  - name: cfdot
+    release: diego
+
   api_consul_services:
     cloud_controller_ng: {}
 
@@ -10,10 +25,10 @@ meta:
     release: (( grab meta.consul_templates.consul_agent.release ))
     consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: cloud_controller_ng
-    release: capi
+    release: (( grab meta.release.name ))
     consumes: {nats: nil}
   - name: cloud_controller_clock
-    release: capi
+    release: (( grab meta.release.name ))
     consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
@@ -45,13 +60,70 @@ meta:
     release: (( grab meta.consul_templates.consul_agent.release ))
     consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
   - name: cloud_controller_worker
-    release: capi
+    release: (( grab meta.release.name ))
     consumes: {nats: nil}
   - name: metron_agent
     release: (( grab meta.release.name ))
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: datadog-cc-worker
+    release: datadog-for-cloudfoundry
+
+  brain_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+  - name: datadog-consul-agent-client
+    release: datadog-for-cloudfoundry
+  - name: auctioneer
+    release: diego
+  - name: cfdot
+    release: diego
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+
+  cc_bridge_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+  - name: datadog-consul-agent-client
+    release: datadog-for-cloudfoundry
+  - name: stager
+    release: cf
+  - name: nsync
+    release: cf
+  - name: tps
+    release: cf
+  - name: cc_uploader
+    release: cf
+  - name: cfdot
+    release: diego
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+
+  cell_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+  - name: datadog-consul-agent-client
+    release: datadog-for-cloudfoundry
+  - name: rep
+    release: diego
+  - name: garden
+    release: garden-runc
+  - name: cflinuxfs2-rootfs-setup
+    release: cflinuxfs2
+  - name: cfdot
+    release: diego
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: datadog-rep
+    release: datadog-for-cloudfoundry
+  - name: datadog-garden
+    release: datadog-for-cloudfoundry
+  - name: racoon
+    release: ipsec
+  - name: datadog-ipsec
     release: datadog-for-cloudfoundry
 
   consul_templates:
@@ -62,6 +134,21 @@ meta:
     release: datadog-for-cloudfoundry
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+
+  database_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+  - name: datadog-consul-agent-client
+    release: datadog-for-cloudfoundry
+  - name: datadog-bbs
+    release: datadog-for-cloudfoundry
+  - name: bbs
+    release: diego
+  - name: cfdot
+    release: diego
   - name: metron_agent
     release: (( grab meta.release.name ))
 
@@ -138,6 +225,21 @@ meta:
   - name: datadog-ipsec
     release: datadog-for-cloudfoundry
 
+  route_emitter_templates:
+  - name: consul_agent
+    release: (( grab meta.release.name ))
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+  - name: datadog-consul-agent-client
+    release: datadog-for-cloudfoundry
+  - name: route_emitter
+    release: diego
+  - name: cfdot
+    release: diego
+  - name: metron_agent
+    release: (( grab meta.release.name ))
+  - name: datadog-route-emitter
+    release: datadog-for-cloudfoundry
+
   uaa_templates:
   - name: consul_agent
     release: (( grab meta.consul_templates.consul_agent.release ))
@@ -209,19 +311,7 @@ jobs:
 
   - name: database
     azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: datadog-bbs
-        release: datadog-for-cloudfoundry
-      - name: bbs
-        release: diego
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: (( grab meta.release.name ))
+    templates: (( grab meta.database_templates ))
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -377,17 +467,7 @@ jobs:
 
   - name: brain
     azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: auctioneer
-        release: diego
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: (( grab meta.release.name ))
+    templates: (( grab meta.brain_templates ))
     instances: 2
     vm_type: medium
     stemcell: default
@@ -396,29 +476,7 @@ jobs:
 
   - name: cell
     azs: [z1, z2, z3]
-    templates:
-      - name: consul_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: rep
-        release: diego
-      - name: garden
-        release: garden-runc
-      - name: cflinuxfs2-rootfs-setup
-        release: cflinuxfs2
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-rep
-        release: datadog-for-cloudfoundry
-      - name: datadog-garden
-        release: datadog-for-cloudfoundry
-      - name: racoon
-        release: ipsec
-      - name: datadog-ipsec
-        release: datadog-for-cloudfoundry
+    templates: (( grab meta.cell_templates ))
     instances: (( grab meta.cell.instances ))
     vm_type: cell
     stemcell: default
@@ -432,23 +490,7 @@ jobs:
 
   - name: cc_bridge
     azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: stager
-        release: capi
-      - name: nsync
-        release: capi
-      - name: tps
-        release: capi
-      - name: cc_uploader
-        release: capi
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: (( grab meta.release.name ))
+    templates: (( grab meta.cc_bridge_templates ))
     instances: 2
     vm_type: medium
     stemcell: default
@@ -457,19 +499,7 @@ jobs:
 
   - name: route_emitter
     azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: route_emitter
-        release: diego
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-route-emitter
-        release: datadog-for-cloudfoundry
+    templates: (( grab meta.route_emitter_templates ))
     instances: 2
     vm_type: medium
     stemcell: default
@@ -478,19 +508,7 @@ jobs:
 
   - name: access
     azs: [z1, z2]
-    templates:
-      - name: consul_agent
-        release: (( grab meta.release.name ))
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: ssh_proxy
-        release: diego
-      - name: metron_agent
-        release: (( grab meta.release.name ))
-      - name: file_server
-        release: diego
-      - name: cfdot
-        release: diego
+    templates: (( grab meta.access_templates ))
     instances: 2
     vm_type: small
     vm_extensions:

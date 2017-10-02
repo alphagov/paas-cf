@@ -32,8 +32,13 @@ system_domain,${SYSTEM_DOMAINS}
 doppler,
 metron,
 trafficcontroller,
+cc_trafficcontroller,
+reverse_log_proxy,
 saml,
 statsd_injector,
+scalablesyslog_adapter,
+scalablesyslog_adapter_scheduler_api,
+scalablesyslog_adapter_scheduler_client,
 cc_server,cloud-controller-ng.service.cf.internal
 cc_client,
 "

@@ -17,20 +17,14 @@ CONFIG="$(pwd)/test-config/config.json"
 
 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-echo "Linking acceptance-tests directory inside $GOPATH"
-CF_GOPATH=/go/src/github.com/cloudfoundry
-mkdir -p $CF_GOPATH
-ln -s "$(pwd)/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests" "${CF_GOPATH}/cf-acceptance-tests"
-
-echo "Linking test artifacts directory"
-ln -s "$(pwd)/artifacts" /tmp/artifacts
-
 echo "Sleeping for ${SLEEPTIME} seconds..."
 for i in $(seq $SLEEPTIME 1); do echo -ne "$i"'\r'; sleep 1; done; echo
 
-cd "${CF_GOPATH}/cf-acceptance-tests"
+GOPATH="${GOPATH}:$(pwd)"
+export GOPATH
 
 echo "Starting acceptace tests"
+cd "src/github.com/cloudfoundry/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests"
 ./bin/test \
   -keepGoing \
   -randomizeAllSpecs \

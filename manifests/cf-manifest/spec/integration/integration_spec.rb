@@ -14,6 +14,31 @@ RSpec.describe "generic manifest validations" do
     end
   end
 
+  describe "there are no leftover spruce substitutions" do
+    def no_values_contain c, s
+      case c
+      when Hash
+        c.each do |_, v|
+          no_values_contain v, s
+        end
+      when Array
+        c.each do |v|
+          no_values_contain v, s
+        end
+      when String
+        expect(c).not_to include(s)
+      end
+    end
+
+    # Spruce leaves entries like `key: (( "value" ))` alone. This led
+    # to URLs of "(( \"value\" ))" being passed to nozzle during one
+    # cf upgrade. We have some entries that legitimately have )) in,
+    # but it seems unlikely we will have ones with a legitimate )).
+    specify "where '((' is present in output values" do
+      no_values_contain manifest, "(("
+    end
+  end
+
   describe "name uniqueness" do
     context "cloud-config" do
       %w(

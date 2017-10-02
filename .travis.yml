@@ -5,7 +5,7 @@ rvm:
 env:
   global:
     - TF_VERSION="0.8.5"
-    - SPRUCE_VERSION="1.8.9"
+    - SPRUCE_VERSION="1.12.1"
     - DEPLOY_ENV="travis"
 
 addons:
