@@ -40,6 +40,24 @@ jobs:
           run:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
+      - task: startup-rds-instances
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+          params:
+            AWS_DEFAULT_REGION: {{aws_region}}
+            DEPLOY_ENV: {{deploy_env}}
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          run:
+            path: ./paas-cf/concourse/scripts/rds_instances.sh
+            args:
+              - start
+
       - task: kick-off-create-cloudfoundry-pipeline
         config:
           platform: linux
