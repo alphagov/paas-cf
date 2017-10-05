@@ -12,6 +12,7 @@ jobs:
               - -e
               - -c
               - |
+                echo "((test))"
                 if [ "red" == "blue" ]; then
                   echo "colour error!"
                 fi

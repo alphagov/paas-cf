@@ -17,99 +17,99 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: {{branch_name}}
-      tag_filter: {{paas_cf_tag_filter}}
-      commit_verification_key_ids: {{gpg_ids}}
+      branch: ((branch_name))
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_key_ids: ((gpg_ids))
 
   - name: cf-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: cf.tfstate
-      region_name: {{aws_region}}
+      region_name: ((aws_region))
 
   - name: cf-certs-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: cf-certs.tfstate
       region_name: eu-west-1
 
   - name: datadog-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: datadog.tfstate
       region_name: eu-west-1
 
   - name: concourse-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: concourse.tfstate
-      region_name: {{aws_region}}
+      region_name: ((aws_region))
 
   - name: vpc-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: vpc.tfstate
-      region_name: {{aws_region}}
+      region_name: ((aws_region))
 
   - name: pipeline-trigger
     type: semver-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      key: {{pipeline_trigger_file}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      key: ((pipeline_trigger_file))
 
   - name: bosh-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-secrets.yml
 
   - name: bosh-CA
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-CA.tar.gz
 
   - name: cf-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-secrets.yml
 
   - name: cf-manifest
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-manifest.yml
 
   - name: cf-certs
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-certs.tar.gz
 
   - name: concourse-manifest
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: concourse-manifest.yml
 
   - name: deployed-healthcheck
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: healthcheck-deployed
 
 jobs:
@@ -130,12 +130,12 @@ jobs:
             - name: paas-cf
             - name: concourse-manifest
           params:
-            DEPLOY_ENV: {{deploy_env}}
-            BRANCH: {{branch_name}}
-            AWS_ACCOUNT: {{aws_account}}
-            SELF_UPDATE_PIPELINE: {{self_update_pipeline}}
-            PIPELINES_TO_UPDATE: {{pipeline_name}}
-            ENABLE_DESTROY: {{enable_destroy}}
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            AWS_ACCOUNT: ((aws_account))
+            SELF_UPDATE_PIPELINE: ((self_update_pipeline))
+            PIPELINES_TO_UPDATE: ((pipeline_name))
+            ENABLE_DESTROY: ((enable_destroy))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
@@ -166,11 +166,11 @@ jobs:
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
         params:
-          TF_VAR_datadog_api_key: {{datadog_api_key}}
-          TF_VAR_datadog_app_key: {{datadog_app_key}}
-          TF_VAR_env: {{deploy_env}}
-          TF_VAR_aws_account: {{aws_account}}
-          ENABLE_DATADOG: {{enable_datadog}}
+          TF_VAR_datadog_api_key: ((datadog_api_key))
+          TF_VAR_datadog_app_key: ((datadog_app_key))
+          TF_VAR_env: ((deploy_env))
+          TF_VAR_aws_account: ((aws_account))
+          ENABLE_DATADOG: ((enable_datadog))
         ensure:
           put: datadog-tfstate
           params:
@@ -195,8 +195,8 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-                bosh -n delete deployment --force {{deploy_env}}
+                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
+                bosh -n delete deployment --force "((deploy_env))"
                 echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
           put: deployed-healthcheck
@@ -276,11 +276,11 @@ jobs:
           outputs:
             - name: updated-cf-tfstate
           params:
-            TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
-            TF_VAR_apps_dns_zone_name: {{apps_dns_zone_name}}
+            TF_VAR_system_dns_zone_name: ((system_dns_zone_name))
+            TF_VAR_apps_dns_zone_name: ((apps_dns_zone_name))
             TF_VAR_system_domain_cert_arn: ""
             TF_VAR_apps_domain_cert_arn: ""
-            AWS_DEFAULT_REGION: {{aws_region}}
+            AWS_DEFAULT_REGION: ((aws_region))
           run:
             path: sh
             args:
@@ -296,7 +296,7 @@ jobs:
                 mkdir generated-certificates
                 tar xzvf cf-certs/cf-certs.tar.gz -C generated-certificates
 
-                terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                terraform destroy -force -var env="((deploy_env))" -var-file=paas-cf/terraform/((aws_account)).tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
@@ -317,15 +317,15 @@ jobs:
           outputs:
             - name: updated-tfstate
           params:
-            TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
-            TF_VAR_apps_dns_zone_name: {{apps_dns_zone_name}}
+            TF_VAR_system_dns_zone_name: ((system_dns_zone_name))
+            TF_VAR_apps_dns_zone_name: ((apps_dns_zone_name))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                terraform destroy -force -var env={{deploy_env}} -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                terraform destroy -force -var env="((deploy_env))" -var-file=paas-cf/terraform/((aws_account)).tfvars \
                   -var system_domain_crt="irrelevant" \
                   -var system_domain_key="irrelevant" \
                   -var system_domain_intermediate_crt="irrelevant" \
