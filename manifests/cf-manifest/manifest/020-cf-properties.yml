@@ -609,10 +609,6 @@ properties:
         require_ssl: true
       preloaded_rootfses:
         - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
-      tls:
-        ca_cert: (( grab secrets.bosh_ca_cert ))
-        cert: (( grab secrets.cc_client_cert ))
-        key: (( grab secrets.cc_client_key ))
 
     route_emitter:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))

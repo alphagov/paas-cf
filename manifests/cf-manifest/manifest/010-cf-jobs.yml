@@ -412,6 +412,10 @@ jobs:
         ports:
         - name: cell
           targets: (( grab terraform_outputs.router_subnet_cidr_blocks ))
+      tls:
+        ca_cert: (( grab secrets.bosh_ca_cert ))
+        cert: (( grab secrets.cc_client_cert ))
+        key: (( grab secrets.cc_client_key ))
 
   - name: cc_bridge
     azs: [z1, z2]
