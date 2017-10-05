@@ -635,7 +635,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/awscli
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
           run:
             path: sh
             args:
@@ -2843,7 +2843,7 @@ jobs:
                 type: docker-image
                 source:
                   repository: governmentpaas/awscli
-                  tag: 465642da06051a55630d39c899697b678f66a7f7
+                  tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
               params:
                 AWS_DEFAULT_REGION: {{aws_region}}
                 DEPLOY_ENV: {{deploy_env}}
