@@ -554,6 +554,9 @@ properties:
         client_key: (( grab secrets.bbs_client_key  ))
         use_ssl: (( grab properties.diego.bbs.require_ssl ))
     auctioneer:
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      server_cert: (( grab secrets.auctioneer_server_cert ))
+      server_key: (( grab secrets.auctioneer_server_key ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab secrets.bosh_ca_cert ))
@@ -578,6 +581,11 @@ properties:
       server_key: (( grab secrets.bbs_server_key ))
       auctioneer:
         api_location: auctioneer.service.cf.internal:9016
+        ca_cert: (( grab properties.diego.auctioneer.ca_cert ))
+        client_cert: (( grab secrets.auctioneer_client_cert ))
+        client_key: (( grab secrets.auctioneer_client_key ))
+        # FIXME: set this to true once certs have been rolled out.
+        require_tls: false
       etcd:
         machines: []
         ca_cert: ""

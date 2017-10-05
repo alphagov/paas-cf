@@ -20,6 +20,8 @@ SYSTEM_DOMAINS="*.${SYSTEM_DNS_ZONE_NAME},${SYSTEM_DNS_ZONE_NAME}"
 # Note: ALWAYS add a comma after <name_cert>, even if there are no domains
 #
 CERTS_TO_GENERATE="
+auctioneer_server,auctioneer.service.cf.internal
+auctioneer_client,
 bbs_server,bbs.service.cf.internal
 bbs_client,
 router_internal,${APPS_DOMAINS}
