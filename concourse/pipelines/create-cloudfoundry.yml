@@ -1129,8 +1129,7 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
-                  # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
@@ -1210,8 +1209,7 @@ jobs:
                                     ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
                   fi
 
-                  # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:
@@ -1726,13 +1724,15 @@ jobs:
               - name: cf-secrets
               - name: cf-manifest
               - name: bosh-CA
+            params:
+              DISABLE_USER_CREATION: ((disable_user_creation))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  ((disable_user_creation)) && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
+                  ${DISABLE_USER_CREATION} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
 
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 

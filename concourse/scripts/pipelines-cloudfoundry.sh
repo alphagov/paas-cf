@@ -154,19 +154,15 @@ oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
 pagerduty_api_token: ${pagerduty_api_token:-}
 enable_metrics: ${ENABLE_METRICS}
+auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
+continuous_smoke_tests_trigger: $([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
+disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
 
 generate_manifest_file() {
-  # This exists because concourse does not support boolean value interpolation by design
-  enable_auto_deploy=$([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
-  continuous_smoke_tests_trigger=$([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
-  disable_user_creation=$([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
-  sed -e "s/((auto_deploy))/${enable_auto_deploy}/" \
-      -e "s/((continuous_smoke_tests_trigger))/${continuous_smoke_tests_trigger}/" \
-      -e "s/((gpg_ids))/${gpg_ids}/" \
-      -e "s/((disable_user_creation))/${disable_user_creation}/" \
+  sed -e "s/((gpg_ids))/${gpg_ids}/" \
     < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 
