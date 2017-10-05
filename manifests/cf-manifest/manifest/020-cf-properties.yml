@@ -560,6 +560,12 @@ properties:
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
+      rep:
+        ca_cert: (( grab properties.diego.rep.ca_cert ))
+        client_cert: (( grab secrets.rep_client_cert ))
+        client_key: (( grab secrets.rep_client_key ))
+        # FIXME: set this to true once certs have been rolled out.
+        require_tls: false
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     bbs:
@@ -578,6 +584,12 @@ properties:
         client_cert: ""
         client_key: ""
         require_ssl: false
+      rep:
+        ca_cert: (( grab properties.diego.rep.ca_cert ))
+        client_cert: (( grab secrets.rep_client_cert ))
+        client_key: (( grab secrets.rep_client_key ))
+        # FIXME: set this to true once certs have been rolled out.
+        require_tls: false
       sql:
         db_username: bbs
         db_password: (( grab secrets.cf_db_bbs_password ))
@@ -600,6 +612,10 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     rep:
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      server_cert: (( grab secrets.rep_server_cert ))
+      server_key: (( grab secrets.rep_server_key ))
+      require_tls: true
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
