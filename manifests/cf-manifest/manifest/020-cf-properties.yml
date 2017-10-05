@@ -253,7 +253,7 @@ properties:
 
     broker_client_timeout_seconds: 70
     broker_client_default_async_poll_interval_seconds: ~
-    broker_client_max_async_poll_duration_minutes: ~
+    broker_client_max_async_poll_duration_minutes: 11520
 
     resource_pool:
       resource_directory_key: (( concat meta.environment "-cf-resources" ))
