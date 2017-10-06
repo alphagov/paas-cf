@@ -425,16 +425,10 @@ jobs:
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
-      - name: stager
-        release: cf
-      - name: nsync
-        release: cf
       - name: tps
         release: cf
       - name: cc_uploader
         release: cf
-      - name: cfdot
-        release: diego
       - name: metron_agent
         release: (( grab meta.release.name ))
     instances: 2

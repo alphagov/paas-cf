@@ -685,40 +685,11 @@ properties:
         client_cert: (( grab secrets.cc_client_cert ))
         client_key: (( grab secrets.cc_client_key ))
 
-    nsync:
-      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-      bbs:
-        api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab secrets.bosh_ca_cert ))
-        client_cert: (( grab secrets.bbs_client_cert  ))
-        client_key: (( grab secrets.bbs_client_key  ))
-        require_ssl: true
-
-      cc:
-        base_url:  (( grab properties.cc.srv_api_uri ))
-        basic_auth_password: (( grab properties.cc.internal_api_password ))
-        staging_upload_user: (( grab properties.cc.staging_upload_user ))
-        staging_upload_password: (( grab properties.cc.staging_upload_password ))
-
-    stager:
-      dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
-      bbs:
-        api_location: (( grab meta.bbs.api_location ))
-        ca_cert: (( grab secrets.bosh_ca_cert ))
-        client_cert: (( grab secrets.bbs_client_cert ))
-        client_key: (( grab secrets.bbs_client_key ))
-        require_ssl: true
-      cc:
-        base_url: (( grab properties.cc.srv_api_uri ))
-        basic_auth_password: (( grab properties.cc.internal_api_password ))
-        staging_upload_user: (( grab properties.cc.staging_upload_user ))
-        staging_upload_password: (( grab properties.cc.staging_upload_password ))
-
     tps:
+      listener_enabled: false
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       cc:
         base_url: (( grab properties.cc.srv_api_uri ))
-        basic_auth_password: (( grab properties.cc.internal_api_password ))
         staging_upload_user: (( grab properties.cc.staging_upload_user ))
         staging_upload_password: (( grab properties.cc.staging_upload_password ))
         ca_cert: (( grab secrets.bosh_ca_cert ))
