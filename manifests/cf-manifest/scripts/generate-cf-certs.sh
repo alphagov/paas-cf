@@ -45,6 +45,7 @@ scalablesyslog_adapter_scheduler_api,
 scalablesyslog_adapter_scheduler_client,
 cc_server,cloud-controller-ng.service.cf.internal
 cc_client,
+cc_uploader_server,cc-uploader.service.cf.internal
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"

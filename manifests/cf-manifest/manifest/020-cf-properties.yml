@@ -668,8 +668,8 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       mutual_tls:
         ca_cert: (( grab secrets.bosh_ca_cert ))
-        server_cert: (( grab secrets.cc_server_cert ))
-        server_key: (( grab secrets.cc_server_key ))
+        server_cert: (( grab secrets.cc_uploader_server_cert ))
+        server_key: (( grab secrets.cc_uploader_server_key ))
       cc:
         base_url: (( grab properties.cc.srv_api_uri ))
         basic_auth_password: (( grab properties.cc.internal_api_password ))
