@@ -630,6 +630,7 @@ properties:
       server_cert: (( grab secrets.rep_server_cert ))
       server_key: (( grab secrets.rep_server_key ))
       require_tls: true
+      enable_legacy_api_endpoints: false
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
