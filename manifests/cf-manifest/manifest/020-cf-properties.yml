@@ -554,12 +554,21 @@ properties:
         client_key: (( grab secrets.bbs_client_key  ))
         use_ssl: (( grab properties.diego.bbs.require_ssl ))
     auctioneer:
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      server_cert: (( grab secrets.auctioneer_server_cert ))
+      server_key: (( grab secrets.auctioneer_server_key ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
         ca_cert: (( grab secrets.bosh_ca_cert ))
         client_cert: (( grab secrets.bbs_client_cert  ))
         client_key: (( grab secrets.bbs_client_key  ))
         require_ssl: true
+      rep:
+        ca_cert: (( grab properties.diego.rep.ca_cert ))
+        client_cert: (( grab secrets.rep_client_cert ))
+        client_key: (( grab secrets.rep_client_key ))
+        # FIXME: set this to true once certs have been rolled out.
+        require_tls: false
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     bbs:
@@ -572,12 +581,23 @@ properties:
       server_key: (( grab secrets.bbs_server_key ))
       auctioneer:
         api_location: auctioneer.service.cf.internal:9016
+        ca_cert: (( grab properties.diego.auctioneer.ca_cert ))
+        client_cert: (( grab secrets.auctioneer_client_cert ))
+        client_key: (( grab secrets.auctioneer_client_key ))
+        # FIXME: set this to true once certs have been rolled out.
+        require_tls: false
       etcd:
         machines: []
         ca_cert: ""
         client_cert: ""
         client_key: ""
         require_ssl: false
+      rep:
+        ca_cert: (( grab properties.diego.rep.ca_cert ))
+        client_cert: (( grab secrets.rep_client_cert ))
+        client_key: (( grab secrets.rep_client_key ))
+        # FIXME: set this to true once certs have been rolled out.
+        require_tls: false
       sql:
         db_username: bbs
         db_password: (( grab secrets.cf_db_bbs_password ))
@@ -600,6 +620,10 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     rep:
+      ca_cert: (( grab secrets.bosh_ca_cert ))
+      server_cert: (( grab secrets.rep_server_cert ))
+      server_key: (( grab secrets.rep_server_key ))
+      require_tls: true
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
         api_location: (( grab meta.bbs.api_location ))
@@ -609,10 +633,6 @@ properties:
         require_ssl: true
       preloaded_rootfses:
         - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
-      tls:
-        ca_cert: (( grab secrets.bosh_ca_cert ))
-        cert: (( grab secrets.cc_client_cert ))
-        key: (( grab secrets.cc_client_key ))
 
     route_emitter:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
@@ -648,8 +668,8 @@ properties:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       mutual_tls:
         ca_cert: (( grab secrets.bosh_ca_cert ))
-        server_cert: (( grab secrets.cc_server_cert ))
-        server_key: (( grab secrets.cc_server_key ))
+        server_cert: (( grab secrets.cc_uploader_server_cert ))
+        server_key: (( grab secrets.cc_uploader_server_key ))
       cc:
         base_url: (( grab properties.cc.srv_api_uri ))
         basic_auth_password: (( grab properties.cc.internal_api_password ))

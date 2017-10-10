@@ -20,6 +20,8 @@ SYSTEM_DOMAINS="*.${SYSTEM_DNS_ZONE_NAME},${SYSTEM_DNS_ZONE_NAME}"
 # Note: ALWAYS add a comma after <name_cert>, even if there are no domains
 #
 CERTS_TO_GENERATE="
+auctioneer_server,auctioneer.service.cf.internal
+auctioneer_client,
 bbs_server,bbs.service.cf.internal
 bbs_client,
 router_internal,${APPS_DOMAINS}
@@ -33,6 +35,8 @@ doppler,
 metron,
 trafficcontroller,
 cc_trafficcontroller,
+rep_server,*.cell.service.cf.internal,cell.service.cf.internal
+rep_client,
 reverse_log_proxy,
 saml,
 statsd_injector,
@@ -41,6 +45,7 @@ scalablesyslog_adapter_scheduler_api,
 scalablesyslog_adapter_scheduler_client,
 cc_server,cloud-controller-ng.service.cf.internal
 cc_client,
+cc_uploader_server,cc-uploader.service.cf.internal
 "
 
 WORKING_DIR="$(mktemp -dt generate-cf-certs.XXXXXX)"
