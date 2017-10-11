@@ -360,6 +360,15 @@ properties:
       public_cert: (( grab secrets.cc_server_cert ))
       private_key: (( grab secrets.cc_server_key ))
 
+    diego:
+      temporary_local_staging: true
+      temporary_local_tasks: true
+      temporary_local_apps: true
+      temporary_local_tps: true
+      temporary_local_sync: true
+      temporary_cc_uploader_mtls: true
+      temporary_droplet_download_mtls: true
+
   ccdb:
     db_scheme: postgres
     address: (( grab terraform_outputs.cf_db_address ))
@@ -567,8 +576,7 @@ properties:
         ca_cert: (( grab properties.diego.rep.ca_cert ))
         client_cert: (( grab secrets.rep_client_cert ))
         client_key: (( grab secrets.rep_client_key ))
-        # FIXME: set this to true once certs have been rolled out.
-        require_tls: false
+        require_tls: true
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
 
     bbs:
@@ -584,8 +592,7 @@ properties:
         ca_cert: (( grab properties.diego.auctioneer.ca_cert ))
         client_cert: (( grab secrets.auctioneer_client_cert ))
         client_key: (( grab secrets.auctioneer_client_key ))
-        # FIXME: set this to true once certs have been rolled out.
-        require_tls: false
+        require_tls: true
       etcd:
         machines: []
         ca_cert: ""
@@ -596,8 +603,7 @@ properties:
         ca_cert: (( grab properties.diego.rep.ca_cert ))
         client_cert: (( grab secrets.rep_client_cert ))
         client_key: (( grab secrets.rep_client_key ))
-        # FIXME: set this to true once certs have been rolled out.
-        require_tls: false
+        require_tls: true
       sql:
         db_username: bbs
         db_password: (( grab secrets.cf_db_bbs_password ))
