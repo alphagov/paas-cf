@@ -18,21 +18,21 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-cf.git
       branch: master
-      tag_filter: {{paas_cf_tag_filter}}
-      commit_verification_key_ids: {{gpg_ids}}
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_key_ids: ((gpg_ids))
 
   - name: cf-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-secrets.yml
 
   - name: cf-manifest
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-manifest.yml
 
   - name: delete-timer
@@ -45,28 +45,28 @@ resources:
   - name: bosh-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-secrets.yml
 
   - name: bosh-CA
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-CA.tar.gz
 
   - name: deployed-healthcheck
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: healthcheck-deployed
 
   - name: datadog-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: datadog.tfstate
       region_name: eu-west-1
 
@@ -92,11 +92,11 @@ jobs:
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
         params:
-          TF_VAR_datadog_api_key: {{datadog_api_key}}
-          TF_VAR_datadog_app_key: {{datadog_app_key}}
-          TF_VAR_env: {{deploy_env}}
-          TF_VAR_aws_account: {{aws_account}}
-          ENABLE_DATADOG: {{enable_datadog}}
+          TF_VAR_datadog_api_key: ((datadog_api_key))
+          TF_VAR_datadog_app_key: ((datadog_app_key))
+          TF_VAR_env: ((deploy_env))
+          TF_VAR_aws_account: ((aws_account))
+          ENABLE_DATADOG: ((enable_datadog))
         ensure:
           put: datadog-tfstate
           params:
@@ -113,7 +113,7 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            DEPLOY_ENV: {{deploy_env}}
+            DEPLOY_ENV: ((deploy_env))
           run:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
@@ -137,8 +137,8 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
-                bosh -n delete deployment {{deploy_env}} --force
+                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
+                bosh -n delete deployment "((deploy_env))" --force
 
                 echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
@@ -152,8 +152,8 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            DEPLOY_ENV: {{deploy_env}}
+            AWS_DEFAULT_REGION: ((aws_region))
+            DEPLOY_ENV: ((deploy_env))
           image_resource:
             type: docker-image
             source:

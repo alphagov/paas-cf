@@ -17,56 +17,56 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: {{branch_name}}
-      tag_filter: {{paas_cf_tag_filter}}
-      commit_verification_key_ids: {{gpg_ids}}
+      branch: ((branch_name))
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_key_ids: ((gpg_ids))
 
   - name: pipeline-trigger
     type: semver-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      key: {{pipeline_trigger_file}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      key: ((pipeline_trigger_file))
 
   - name: bosh-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-secrets.yml
 
   - name: cf-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-release
-      tag_filter: {{cf_release_version}}
+      tag_filter: ((cf_release_version))
 
   - name: cf-manifest
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-manifest.yml
 
   - name: bosh-CA
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-CA.tar.gz
 
   - name: concourse-manifest
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: concourse-manifest.yml
 
   - name: cf-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-secrets.yml
 
 jobs:
@@ -87,11 +87,11 @@ jobs:
             - name: paas-cf
             - name: concourse-manifest
           params:
-            DEPLOY_ENV: {{deploy_env}}
-            BRANCH: {{branch_name}}
-            AWS_ACCOUNT: {{aws_account}}
-            SELF_UPDATE_PIPELINE: {{self_update_pipeline}}
-            PIPELINES_TO_UPDATE: {{pipeline_name}}
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            AWS_ACCOUNT: ((aws_account))
+            SELF_UPDATE_PIPELINE: ((self_update_pipeline))
+            PIPELINES_TO_UPDATE: ((pipeline_name))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
@@ -105,7 +105,7 @@ jobs:
       - aggregate:
           - get: cf-release
             version:
-              ref: {{cf_release_version}}
+              ref: ((cf_release_version))
             params:
               submodules:
                 - src/smoke-tests
@@ -121,7 +121,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: api/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -139,13 +139,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -171,7 +171,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: nats/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -189,13 +189,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -221,7 +221,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: router/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -239,13 +239,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -271,7 +271,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: etcd/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -289,13 +289,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -321,7 +321,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: consul/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -339,13 +339,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -371,7 +371,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: cell/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -389,13 +389,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
 
@@ -421,7 +421,7 @@ jobs:
         file: paas-cf/concourse/tasks/get-instance-id.yml
         params:
           VM_NAME: rds_broker/0
-          BOSH_FQDN: {{bosh_fqdn}}
+          BOSH_FQDN: ((bosh_fqdn))
       - task: kill-instance
         file: paas-cf/concourse/tasks/kill-instance.yml
       - do:
@@ -442,13 +442,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           aggregate:
             - task: recover
               file: paas-cf/concourse/tasks/recover.yml
               params:
-                BOSH_FQDN: {{bosh_fqdn}}
+                BOSH_FQDN: ((bosh_fqdn))
             - task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml

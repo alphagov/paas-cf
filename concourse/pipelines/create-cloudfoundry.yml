@@ -75,17 +75,17 @@ resources:
   - name: pipeline-trigger
     type: semver-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
-      key: {{pipeline_trigger_file}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      key: ((pipeline_trigger_file))
 
   - name: paas-cf
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: {{branch_name}}
-      tag_filter: {{paas_cf_tag_filter}}
-      commit_verification_key_ids: {{gpg_ids}}
+      branch: ((branch_name))
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_key_ids: ((gpg_ids))
 
   - name: graphite-nozzle
     type: git
@@ -96,150 +96,150 @@ resources:
   - name: vpc-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: vpc.tfstate
 
   - name: concourse-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: concourse.tfstate
       region_name: eu-west-1
 
   - name: bosh-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh.tfstate
 
   - name: bosh-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-secrets.yml
 
   - name: bosh-CA
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: bosh-CA.tar.gz
 
   - name: ipsec-CA
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: ipsec-CA.tar.gz
 
   - name: ssh-private-key
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: id_rsa
-      region_name: {{aws_region}}
+      region_name: ((aws_region))
 
   - name: ssh-public-key
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: id_rsa.pub
-      region_name: {{aws_region}}
+      region_name: ((aws_region))
 
   - name: git-ssh-private-key
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: git_id_rsa
-      region_name: {{aws_region}}
+      region_name: ((aws_region))
 
   - name: cf-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: cf.tfstate
       region_name: eu-west-1
 
   - name: datadog-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: datadog.tfstate
       region_name: eu-west-1
 
   - name: cf-secrets
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-secrets.yml
 
   - name: cf-certs
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-certs.tar.gz
 
   - name: cf-certs-tfstate
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
+      bucket: ((state_bucket))
       versioned_file: cf-certs.tfstate
       region_name: eu-west-1
 
   - name: cf-manifest
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cf-manifest.yml
 
   - name: cloud-config
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: cloud-config.yml
 
   - name: deployed-healthcheck
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: healthcheck-deployed
 
   - name: cf-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-release
-      tag_filter: {{cf_release_version}}
+      tag_filter: ((cf_release_version))
 
   - name: git-keys
     type: s3-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       versioned_file: git-keys.tar.gz
 
   - name: release-version
     type: semver-iam
     source:
-      bucket: {{state_bucket}}
-      region_name: {{aws_region}}
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
       key: release-version
       initial_version: 0.0.0
 
   - name: pipeline-pool
     type: pool
     source:
-      uri: {{git_concourse_pool_clone_full_url_ssh}}
+      uri: ((git_concourse_pool_clone_full_url_ssh))
       branch: master
-      pool: {{pipeline_name}}
-      private_key: {{pipeline_lock_git_private_key}}
+      pool: ((pipeline_name))
+      private_key: ((pipeline_lock_git_private_key))
 
   - name: smoke-tests-timer
     type: time
@@ -269,7 +269,7 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-          trigger: {{auto_deploy}}
+          trigger: ((auto_deploy))
         - get: git-ssh-private-key
       - task: init-pipeline-pool
         config:
@@ -283,9 +283,9 @@ jobs:
             - name: paas-cf
             - name: git-ssh-private-key
           params:
-            DEPLOY_ENV: {{deploy_env}}
-            AWS_ACCOUNT: {{aws_account}}
-            DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+            DEPLOY_ENV: ((deploy_env))
+            AWS_ACCOUNT: ((aws_account))
+            DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
           run:
             path: sh
             args:
@@ -302,9 +302,9 @@ jobs:
               git config --global user.name "Concourse server ${DEPLOY_ENV} in ${AWS_ACCOUNT}"
 
               ./paas-cf/concourse/scripts/create_pool_lock.sh \
-                {{git_concourse_pool_clone_full_url_ssh}} \
+                "((git_concourse_pool_clone_full_url_ssh))" \
                 $(pwd)/git-ssh-private-key/git_id_rsa \
-                {{pipeline_name}} lock
+                "((pipeline_name))" lock
 
       - try:
           task: lock-the-pipeline
@@ -316,7 +316,7 @@ jobs:
                 tag: "3.4"
             platform: linux
             params:
-              DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+              DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
             run:
               path: sh
               args:
@@ -345,12 +345,12 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            DEPLOY_ENV: {{deploy_env}}
-            BRANCH: {{branch_name}}
-            AWS_ACCOUNT: {{aws_account}}
-            SELF_UPDATE_PIPELINE: {{self_update_pipeline}}
-            PIPELINES_TO_UPDATE: {{pipeline_name}}
-            BOSH_AZ: {{bosh_az}}
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            AWS_ACCOUNT: ((aws_account))
+            SELF_UPDATE_PIPELINE: ((self_update_pipeline))
+            PIPELINES_TO_UPDATE: ((pipeline_name))
+            BOSH_AZ: ((bosh_az))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
@@ -383,17 +383,17 @@ jobs:
               - -e
               - -c
               - |
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} ipsec-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} id_rsa.pub paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh {{state_bucket}} healthcheck-deployed paas-cf/concourse/init_files/string-no
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" ipsec-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -504,8 +504,8 @@ jobs:
             outputs:
               - name: generated-cf-certs
             params:
-              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
               path: sh
               args:
@@ -581,7 +581,7 @@ jobs:
             - name: deployed-healthcheck
             - name: pipeline-trigger
           params:
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CF_ADMIN: admin
           image_resource:
             type: docker-image
@@ -653,7 +653,7 @@ jobs:
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
                 export AWS_DEFAULT_REGION="eu-west-1"
-                bucket={{state_bucket}}
+                bucket=((state_bucket))
 
                 echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
                 for i in $(seq 24); do
@@ -693,12 +693,12 @@ jobs:
             - name: deployed-healthcheck
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_ATC_USERNAME: admin
-            DEPLOY_ENV: {{deploy_env}}
-            BRANCH: {{branch_name}}
-            CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
           run:
             path: sh
             args:
@@ -749,12 +749,12 @@ jobs:
             - name: cf-secrets
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_ATC_USERNAME: admin
-            DEPLOY_ENV: {{deploy_env}}
-            BRANCH: {{branch_name}}
-            CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
           run:
             path: sh
             args:
@@ -783,7 +783,7 @@ jobs:
                 echo "Writing $JOB_FILE to S3 to signal job start"
                 export DEBIAN_FRONTEND=noninteractive
                 apt-get -qq update && apt-get install -y awscli > /dev/null
-                bucket={{state_bucket}}
+                bucket=((state_bucket))
                 echo 'started' > ./jobstate
                 aws s3 cp ./jobstate "s3://${bucket}/$JOB_FILE"
                 trap 'aws s3 rm "s3://${bucket}/${JOB_FILE}"' EXIT
@@ -828,8 +828,8 @@ jobs:
           outputs:
             - name: updated-tfstate
           params:
-            TF_VAR_env: {{deploy_env}}
-            SKIP_UPLOAD_GENERATED_CERTS: {{skip_upload_generated_certs}}
+            TF_VAR_env: ((deploy_env))
+            SKIP_UPLOAD_GENERATED_CERTS: ((skip_upload_generated_certs))
           run:
             path: sh
             args:
@@ -844,7 +844,7 @@ jobs:
                   tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
                   tar xzf bosh-CA/bosh-CA.tar.gz
 
-                  terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                  terraform apply -var-file=paas-cf/terraform/((aws_account)).tfvars \
                     -var system_domain_crt="$(cat generated-certificates/system_domain.crt)" \
                     -var system_domain_key="$(cat generated-certificates/system_domain.key)" \
                     -var system_domain_intermediate_crt="$(cat bosh-CA.crt)" \
@@ -909,7 +909,7 @@ jobs:
               - -e
               - -c
               - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb paas-cf/terraform/{{aws_account}}.vpc_peering.json \
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb paas-cf/terraform/((aws_account)).vpc_peering.json \
                 > vpc-peering-tfvars/vpc-peers.tfvars
 
                 cat vpc-peering-tfvars/vpc-peers.tfvars
@@ -931,10 +931,10 @@ jobs:
           outputs:
             - name: updated-tfstate
           params:
-            TF_VAR_env: {{deploy_env}}
-            TF_VAR_system_dns_zone_name: {{system_dns_zone_name}}
-            TF_VAR_apps_dns_zone_name: {{apps_dns_zone_name}}
-            AWS_DEFAULT_REGION: {{aws_region}}
+            TF_VAR_env: ((deploy_env))
+            TF_VAR_system_dns_zone_name: ((system_dns_zone_name))
+            TF_VAR_apps_dns_zone_name: ((apps_dns_zone_name))
+            AWS_DEFAULT_REGION: ((aws_region))
           run:
             path: sh
             args:
@@ -949,7 +949,7 @@ jobs:
                 mkdir generated-certificates
                 tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
 
-                terraform apply -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                terraform apply -var-file=paas-cf/terraform/((aws_account)).tfvars \
                   -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
                   -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
@@ -1095,7 +1095,7 @@ jobs:
               - -e
               - -c
               - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb paas-cf/terraform/{{aws_account}}.vpc_peering.json \
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb paas-cf/terraform/((aws_account)).vpc_peering.json \
                 > vpc-peering-manifest/vpc-peers.yml
 
                 cat vpc-peering-manifest/vpc-peers.yml
@@ -1120,7 +1120,7 @@ jobs:
                 ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
+                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
             run:
               path: sh
               args:
@@ -1129,8 +1129,7 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
-                  # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
@@ -1163,14 +1162,14 @@ jobs:
                 ./cf-secrets/cf-secrets.yml
                 ./certs/*.yml
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/{{cf_env_specific_manifest}}
+                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
                 ./vpc-peering-manifest/*.yml
-              AWS_ACCOUNT: {{aws_account}}
-              ENABLE_DATADOG: {{enable_datadog}}
-              DATADOG_API_KEY: {{datadog_api_key}}
-              DISABLE_USER_CREATION: {{disable_user_creation}}
-              OAUTH_CLIENT_ID: {{oauth_client_id}}
-              OAUTH_CLIENT_SECRET: {{oauth_client_secret}}
+              AWS_ACCOUNT: ((aws_account))
+              ENABLE_DATADOG: ((enable_datadog))
+              DATADOG_API_KEY: ((datadog_api_key))
+              DISABLE_USER_CREATION: ((disable_user_creation))
+              OAUTH_CLIENT_ID: ((oauth_client_id))
+              OAUTH_CLIENT_SECRET: ((oauth_client_secret))
             run:
               path: sh
               args:
@@ -1210,8 +1209,7 @@ jobs:
                                     ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
                   fi
 
-                  # FIXME: Remove eval after https://github.com/concourse/concourse/issues/360
-                  eval ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:
@@ -1224,7 +1222,7 @@ jobs:
       - aggregate:
           - get: cf-release
             version:
-              ref: {{cf_release_version}}
+              ref: ((cf_release_version))
             params:
               submodules:
                 - src/smoke-tests
@@ -1304,7 +1302,7 @@ jobs:
                     STEMCELL_NAME=$($VAL_FROM_YAML "stemcells.${stemcell_index}.name" cf-manifest/cf-manifest.yml)
 
                     wget https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION} -O stemcell.tgz
-                    ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                    ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
                     bosh upload stemcell stemcell.tgz --skip-if-exists
 
                     stemcell_index=$((stemcell_index + 1))
@@ -1328,7 +1326,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
                   bosh update cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
@@ -1352,7 +1350,7 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
                 sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
                 bosh deployment updated-cf-manifest/cf-manifest.yml
                 bosh -n deploy
@@ -1426,7 +1424,7 @@ jobs:
               - name: config
               - name: bosh-CA
             params:
-              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
               path: sh
               args:
@@ -1609,8 +1607,8 @@ jobs:
               - name: config
               - name: bosh-CA
             params:
-              COMPOSE_API_KEY: {{compose_api_key}}
-              DB_PREFIX: {{deploy_env}}
+              COMPOSE_API_KEY: ((compose_api_key))
+              DB_PREFIX: ((deploy_env))
               CLUSTER_NAME: "gds-eu-west1-c00"
             run:
               path: sh
@@ -1656,7 +1654,7 @@ jobs:
                 repository: governmentpaas/cf-cli
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             params:
-              TEST_HEAVY_LOAD: {{test_heavy_load}}
+              TEST_HEAVY_LOAD: ((test_heavy_load))
             inputs:
               - name: paas-cf
               - name: config
@@ -1726,13 +1724,15 @@ jobs:
               - name: cf-secrets
               - name: cf-manifest
               - name: bosh-CA
+            params:
+              DISABLE_USER_CREATION: ((disable_user_creation))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  {{disable_user_creation}} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
+                  ${DISABLE_USER_CREATION} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
 
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
@@ -1743,7 +1743,7 @@ jobs:
                   UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
                   cd paas-cf/scripts
                   bundle
-                  bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "{{NEW_ACCOUNT_EMAIL_ADDRESS}}"
+                  bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
 
         - task: deploy-graphite-nozzle
           config:
@@ -1825,7 +1825,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
 
                   bosh cleanup --all
 
@@ -1838,7 +1838,7 @@ jobs:
                 repository: governmentpaas/cf-cli
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             params:
-              DISABLE_HEALTHCHECK_DB: {{disable_healthcheck_db}}
+              DISABLE_HEALTHCHECK_DB: ((disable_healthcheck_db))
             inputs:
               - name: paas-cf
               - name: config
@@ -1894,12 +1894,12 @@ jobs:
                 repository: governmentpaas/cf-cli
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             params:
-              ENABLE_DATADOG: {{enable_datadog}}
-              COMPOSE_BILLING_EMAIL: {{compose_billing_email}}
-              COMPOSE_BILLING_PASSWORD: {{compose_billing_password}}
-              DATADOG_API_KEY: {{datadog_api_key}}
-              DATADOG_APP_KEY: {{datadog_app_key}}
-              DEPLOY_ENV: {{deploy_env}}
+              ENABLE_DATADOG: ((enable_datadog))
+              COMPOSE_BILLING_EMAIL: ((compose_billing_email))
+              COMPOSE_BILLING_PASSWORD: ((compose_billing_password))
+              DATADOG_API_KEY: ((datadog_api_key))
+              DATADOG_APP_KEY: ((datadog_app_key))
+              DEPLOY_ENV: ((deploy_env))
             inputs:
               - name: paas-cf
               - name: paas-compose-scraper
@@ -1930,8 +1930,8 @@ jobs:
                       'COMPOSE_PASSWORD' => '${COMPOSE_BILLING_PASSWORD}',
                       'COMPOSE_ACCOUNT_NAME' => 'gds',
                       'COMPOSE_CLUSTER_ID' => '5941cf9f859d2c0015000021',
-                      'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
-                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
+                      'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
+                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                       'DATADOG_TAGS' => 'deployment:${DEPLOY_ENV}',
                       'CHECK_INTERVAL_SECONDS' => '300',
                     }
@@ -1962,7 +1962,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+                  ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
 
                   bosh cleanup --all
 
@@ -1980,7 +1980,7 @@ jobs:
               - name: config
               - name: bosh-CA
             params:
-              APPS_DNS_ZONE_NAME: {{apps_dns_zone_name}}
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
               path: sh
               args:
@@ -2007,8 +2007,8 @@ jobs:
                 repository: ruby
                 tag: 2.2-slim
             params:
-              SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-              DEPLOY_ENV: {{deploy_env}}
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
             inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -2070,11 +2070,11 @@ jobs:
               outputs:
                 - name: updated-tfstate
               params:
-                TF_VAR_env: {{deploy_env}}
-                TF_VAR_datadog_api_key: {{datadog_api_key}}
-                TF_VAR_datadog_app_key: {{datadog_app_key}}
-                TF_VAR_aws_account: {{aws_account}}
-                ENABLE_DATADOG: {{enable_datadog}}
+                TF_VAR_env: ((deploy_env))
+                TF_VAR_datadog_api_key: ((datadog_api_key))
+                TF_VAR_datadog_app_key: ((datadog_app_key))
+                TF_VAR_aws_account: ((aws_account))
+                ENABLE_DATADOG: ((enable_datadog))
               run:
                 path: sh
                 args:
@@ -2093,7 +2093,7 @@ jobs:
 
                     if [ "${ENABLE_DATADOG}" = "true" ]; then
                       terraform apply \
-                        -var-file=paas-cf/terraform/{{aws_account}}.tfvars \
+                        -var-file=paas-cf/terraform/((aws_account)).tfvars \
                         -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
                         -var-file=config/job_instances.tfvars paas-cf/terraform/datadog
                     else
@@ -2117,11 +2117,11 @@ jobs:
                 - name: datadog-tfstate
                 - name: paas-cf
               params:
-                TF_VAR_env: {{deploy_env}}
-                TF_VAR_datadog_api_key: {{datadog_api_key}}
-                TF_VAR_datadog_app_key: {{datadog_app_key}}
-                TF_VAR_aws_account: {{aws_account}}
-                ENABLE_DATADOG: {{enable_datadog}}
+                TF_VAR_env: ((deploy_env))
+                TF_VAR_datadog_api_key: ((datadog_api_key))
+                TF_VAR_datadog_app_key: ((datadog_app_key))
+                TF_VAR_aws_account: ((aws_account))
+                ENABLE_DATADOG: ((enable_datadog))
               run:
                 path: sh
                 args:
@@ -2153,7 +2153,9 @@ jobs:
               - name: config
               - name: bosh-CA
             params:
-              ENABLE_PAAS_DASHBOARD: {{enable_paas_dashboard}}
+              ENABLE_PAAS_DASHBOARD: ((enable_paas_dashboard))
+              DATADOG_API_KEY: ((datadog_api_key))
+              DATADOG_APP_KEY: ((datadog_app_key))
             run:
               path: sh
               args:
@@ -2171,9 +2173,9 @@ jobs:
                   cd paas-cf/tools/paas_dashboard
                   cf push --no-start paas-dashboard
                   echo Setting DD_API_KEY...
-                  cf set-env paas-dashboard DD_API_KEY {{datadog_api_key}} > /dev/null
+                  cf set-env paas-dashboard DD_API_KEY ${DATADOG_API_KEY} > /dev/null
                   echo Setting DD_APP_KEY...
-                  cf set-env paas-dashboard DD_APP_KEY {{datadog_app_key}} > /dev/null
+                  cf set-env paas-dashboard DD_APP_KEY ${DATADOG_APP_KEY} > /dev/null
                   cf start paas-dashboard
 
         - task: deploy-rubbernecker
@@ -2190,10 +2192,10 @@ jobs:
               - name: bosh-CA
               - name: paas-rubbernecker
             params:
-              DEPLOY_RUBBERNECKER: {{deploy_rubbernecker}}
-              PIVOTAL_PROJECT_ID: {{pivotal_project_id}}
-              TRACKER_TOKEN: {{tracker_token}}
-              PAGERDUTY_API_TOKEN: {{pagerduty_api_token}}
+              DEPLOY_RUBBERNECKER: ((deploy_rubbernecker))
+              PIVOTAL_PROJECT_ID: ((pivotal_project_id))
+              TRACKER_TOKEN: ((tracker_token))
+              PAGERDUTY_API_TOKEN: ((pagerduty_api_token))
             run:
               path: sh
               args:
@@ -2227,10 +2229,10 @@ jobs:
                 repository: governmentpaas/cf-cli
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             params:
-              ENABLE_METRICS: {{enable_metrics}}
-              DATADOG_API_KEY: {{datadog_api_key}}
-              DATADOG_APP_KEY: {{datadog_app_key}}
-              DEPLOY_ENV: {{deploy_env}}
+              ENABLE_METRICS: ((enable_metrics))
+              DATADOG_API_KEY: ((datadog_api_key))
+              DATADOG_APP_KEY: ((datadog_app_key))
+              DEPLOY_ENV: ((deploy_env))
             inputs:
               - name: paas-cf
               - name: config
@@ -2263,8 +2265,8 @@ jobs:
                       'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
                       'CF_API_ADDRESS' => '${API_ENDPOINT}',
                       'CF_SKIP_SSL_VALIDATION' => 'true',
-                      'DATADOG_API_KEY' => '${DATADOG_API_KEY}',
-                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY}',
+                      'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
+                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                       'DEPLOY_ENV' => '${DEPLOY_ENV}',
                     }
                     manifest = YAML.load_file('manifest.yml')
@@ -2315,7 +2317,7 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           task: remove-temp-user
@@ -2345,7 +2347,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: acceptance-test-user
-            DISABLE_ADMIN_USER_CREATION: {{disable_cf_acceptance_tests}}
+            DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
@@ -2361,7 +2363,7 @@ jobs:
                 repository: governmentpaas/cf-acceptance-tests
                 tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
             params:
-              DISABLE_CF_ACCEPTANCE_TESTS: {{disable_cf_acceptance_tests}}
+              DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
             inputs:
               - name: paas-cf
               - name: cf-release
@@ -2378,13 +2380,13 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            DISABLE_ADMIN_USER_CREATION: {{disable_cf_acceptance_tests}}
+            DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
   - name: custom-acceptance-tests
     plan:
@@ -2409,7 +2411,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: custom-acceptance-test-user
-            DISABLE_ADMIN_USER_CREATION: {{disable_custom_acceptance_tests}}
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
 
         - task: generate-test-config
           file: paas-cf/concourse/tasks/generate-test-config.yml
@@ -2419,21 +2421,21 @@ jobs:
         - task: "Run custom acceptance tests"
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
           params:
-            DISABLE_CUSTOM_ACCEPTANCE_TESTS: {{disable_custom_acceptance_tests}}
-            DEPLOY_ENV: {{deploy_env}}
-            AWS_REGION: {{aws_region}}
+            DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+            DEPLOY_ENV: ((deploy_env))
+            AWS_REGION: ((aws_region))
 
           ensure:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            DISABLE_ADMIN_USER_CREATION: {{disable_custom_acceptance_tests}}
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
 
   - name: bosh-tests
     plan:
@@ -2454,9 +2456,9 @@ jobs:
               repository: ruby
               tag: "2.2"
           params:
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-            DEPLOY_ENV: {{deploy_env}}
-            CONCOURSE_ATC_PASSWORD: {{concourse_atc_password}}
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+            CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
           inputs:
           - name: paas-cf
           run:
@@ -2485,9 +2487,9 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/concourse/scripts/bosh_login.sh {{bosh_fqdn}} bosh-secrets/bosh-secrets.yml
+              ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
               bosh deployment cf-manifest/cf-manifest.yml
-              bosh vms {{deploy_env}} | tee vms.txt
+              bosh vms ((deploy_env)) | tee vms.txt
               vms_not_running=$(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)" || true)
               if [ ${vms_not_running} -gt "0" ]; then
                 echo "Error: Number of not running VMs: ${vms_not_running}."
@@ -2572,10 +2574,10 @@ jobs:
               tag: 465642da06051a55630d39c899697b678f66a7f7
           platform: linux
           params:
-            aws_account: {{aws_account}}
-            deploy_env: {{deploy_env}}
-            TAG_PREFIX: {{TAG_PREFIX}}
-            TAG_FILTER: {{paas_cf_tag_filter}}
+            aws_account: ((aws_account))
+            deploy_env: ((deploy_env))
+            TAG_PREFIX: ((TAG_PREFIX))
+            TAG_FILTER: ((paas_cf_tag_filter))
           inputs:
           - name: paas-cf
           - name: release-version
@@ -2609,11 +2611,11 @@ jobs:
               tag: 465642da06051a55630d39c899697b678f66a7f7
           platform: linux
           params:
-            DATADOG_API_KEY: {{datadog_api_key}}
-            ENV: {{deploy_env}}
-            AWS_ACCOUNT: {{aws_account}}
-            ENABLE_DATADOG: {{enable_datadog}}
-            PIPELINE_NAME: {{pipeline_name}}
+            DATADOG_API_KEY: ((datadog_api_key))
+            ENV: ((deploy_env))
+            AWS_ACCOUNT: ((aws_account))
+            ENABLE_DATADOG: ((enable_datadog))
+            PIPELINE_NAME: ((pipeline_name))
           inputs:
           - name: pipeline-pool
           run:
@@ -2653,7 +2655,7 @@ jobs:
                 tag: "3.4"
             platform: linux
             params:
-              DISABLE_PIPELINE_LOCKING: {{disable_pipeline_locking}}
+              DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
             run:
               path: sh
               args:
@@ -2688,12 +2690,12 @@ jobs:
             - -e
             - -c
             - |
-              if [ -f pipeline-pool/{{pipeline_name}}/claimed/lock ]; then
+              if [ -f pipeline-pool/((pipeline_name))/claimed/lock ]; then
                 current_status_message="LOCKED"
-              elif [ -f pipeline-pool/{{pipeline_name}}/unclaimed/lock ]; then
+              elif [ -f pipeline-pool/((pipeline_name))/unclaimed/lock ]; then
                 current_status_message="UNLOCKED"
               else
-                echo "Error: Cannot find lock in pool: pipeline-pool/{{pipeline_name}}/{un,}claimed/lock"
+                echo "Error: Cannot find lock in pool: pipeline-pool/((pipeline_name))/{un,}claimed/lock"
                 exit 1
               fi
 
@@ -2818,7 +2820,7 @@ jobs:
           passed: ['cf-deploy']
         - get: bosh-CA
         - get: smoke-tests-timer
-          trigger: {{continuous_smoke_tests_trigger}}
+          trigger: ((continuous_smoke_tests_trigger))
         - get: cf-secrets
           passed: ['cf-deploy']
 
@@ -2845,10 +2847,10 @@ jobs:
                   repository: governmentpaas/awscli
                   tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
               params:
-                AWS_DEFAULT_REGION: {{aws_region}}
-                DEPLOY_ENV: {{deploy_env}}
-                SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
-                ALERT_EMAIL_ADDRESS: {{ALERT_EMAIL_ADDRESS}}
+                AWS_DEFAULT_REGION: ((aws_region))
+                DEPLOY_ENV: ((deploy_env))
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
               inputs:
                 - name: paas-cf
               run:
@@ -2863,7 +2865,7 @@ jobs:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
-              TEST_ARTIFACTS_BUCKET: {{test_artifacts_bucket}}
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           task: remove-temp-user
@@ -2889,7 +2891,7 @@ jobs:
             - name: cf-manifest
             - name: bosh-secrets
           params:
-            SYSTEM_DNS_ZONE_NAME: {{system_dns_zone_name}}
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
           run:
             path: sh
             args:

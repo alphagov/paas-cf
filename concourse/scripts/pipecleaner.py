@@ -42,7 +42,7 @@ class Pipecleaner(object):
 
     def load_pipeline(self, filename):
         raw = open(filename).read()
-        raw = re.sub('\{\{.*?\}\}', 'DUMMY', raw)
+        raw = re.sub('\(\(.*?\)\)', 'DUMMY', raw)
         return yaml.load(raw)
 
     def call_shellcheck(self, shell, args, variables):

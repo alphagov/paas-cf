@@ -4,9 +4,9 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: {{branch_name}}
-      tag_filter: {{paas_cf_tag_filter}}
-      commit_verification_key_ids: {{gpg_ids}}
+      branch: ((branch_name))
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_key_ids: ((gpg_ids))
 
   - name: deployment-timer
     type: time
@@ -36,7 +36,7 @@ jobs:
             - name: paas-cf
             - name: deployment-timer
           params:
-            DEPLOY_ENV: {{deploy_env}}
+            DEPLOY_ENV: ((deploy_env))
           run:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
@@ -46,8 +46,8 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            AWS_DEFAULT_REGION: {{aws_region}}
-            DEPLOY_ENV: {{deploy_env}}
+            AWS_DEFAULT_REGION: ((aws_region))
+            DEPLOY_ENV: ((deploy_env))
           image_resource:
             type: docker-image
             source:
@@ -69,8 +69,8 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            AWS_ACCOUNT: {{aws_account}}
-            DEPLOY_ENV: {{deploy_env}}
+            AWS_ACCOUNT: ((aws_account))
+            DEPLOY_ENV: ((deploy_env))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
             path: sh
