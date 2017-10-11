@@ -1808,27 +1808,6 @@ jobs:
 
                   ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
 
-        - task: run-bosh-cleanup
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli
-                tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
-            inputs:
-              - name: paas-cf
-              - name: bosh-secrets
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-
-                  bosh cleanup --all
-
         - task: deploy-healthcheck
           config:
             platform: linux
