@@ -1,8 +1,8 @@
 releases:
   - name: cdn-broker
-    version: 0.1.4
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.4.tgz
-    sha1: 5b42b6240c04db1943de89d44157bd34351da9f1
+    version: 0.1.5
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.5.tgz
+    sha1: 9d0cef5c10677fa9d9bf921c8af36e205ad910ab
 
 jobs:
   - name: cdn_broker
@@ -12,6 +12,8 @@ jobs:
     stemcell: default
     templates:
       - name: cdn-broker
+        release: cdn-broker
+      - name: cdn-cron
         release: cdn-broker
       - name: datadog-cdn-broker
         release: datadog-for-cloudfoundry
