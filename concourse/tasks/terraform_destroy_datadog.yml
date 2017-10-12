@@ -17,7 +17,7 @@ run:
     - -c
     - |
       cleanup=false
-      if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
+      if [ "null" != "${TF_VAR_datadog_api_key:-null}" ] && [ "null" != "${TF_VAR_datadog_app_key:-null}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
         cleanup=true
         echo "Datadog disabled but keys present, running check cleanup..."
       fi
