@@ -127,7 +127,8 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: uaa
-        release: (( grab meta.release.name ))
+        # FIXME: remove once CF is upgrade to >= v276
+        release: uaa
       - name: metron_agent
         release: (( grab meta.release.name ))
       - name: statsd_injector
