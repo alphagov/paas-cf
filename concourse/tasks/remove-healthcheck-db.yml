@@ -26,7 +26,7 @@ run:
         exit 0
       fi
       cf target -o admin -s healthchecks
-      cf delete healthcheck -f -r
       if cf services | grep -q healthcheck-db; then
+        cf unbind-service healthcheck healthcheck-db || true
         cf delete-service healthcheck-db -f
       fi
