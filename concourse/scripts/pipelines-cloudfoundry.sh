@@ -157,19 +157,15 @@ enable_metrics: ${ENABLE_METRICS}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 continuous_smoke_tests_trigger: $([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
+gpg_ids: ${gpg_ids}
 EOF
   echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
-}
-
-generate_manifest_file() {
-  sed -e "s/((gpg_ids))/${gpg_ids}/" \
-    < "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml"
 }
 
 upload_pipeline() {
   bash "${SCRIPT_DIR}/deploy-pipeline.sh" \
         "${pipeline_name}" \
-        <(generate_manifest_file) \
+        "${SCRIPT_DIR}/../pipelines/${pipeline_name}.yml" \
         <(generate_vars_file)
 }
 
