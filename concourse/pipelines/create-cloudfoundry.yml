@@ -263,6 +263,11 @@ resources:
       uri: https://github.com/alphagov/paas-compose-scraper
       tag_filter: v0.1.0
 
+  - name: paas-usage-events-collector
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-usage-events-collector
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1246,6 +1251,7 @@ jobs:
           - get: paas-rubbernecker
           - get: paas-compose-broker
           - get: paas-compose-scraper
+          - get: paas-usage-events-collector
 
       - aggregate:
         - task: extract-cf-terraform-outputs
@@ -1440,6 +1446,7 @@ jobs:
                   cf create-space monitoring -o admin
                   cf create-space service-brokers -o admin
                   cf create-space healthchecks -o admin
+                  cf create-space billing -o admin
 
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
@@ -1863,6 +1870,71 @@ jobs:
             put: deployed-healthcheck
             params:
               file: deployed-healthcheck/healthcheck-deployed
+
+        - task: deploy-paas-usage-events-collector
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            params:
+              ENABLE_USAGE_EVENTS_COLLECTION: ((enable_usage_events_collection))
+              CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
+            inputs:
+              - name: paas-cf
+              - name: paas-usage-events-collector
+              - name: config
+              - name: cf-secrets
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  if  [ "${ENABLE_USAGE_EVENTS_COLLECTION:-}" != "true" ] ; then
+                    echo "ENABLE_USAGE_EVENTS_COLLECTION=${ENABLE_USAGE_EVENTS_COLLECTION} so skipping paas-usage-events-collector deploy"
+                    exit 0
+                  fi
+
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_usage_events_collector_secret cf-secrets/cf-secrets.yml)
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} -o admin -s billing
+
+                  if ! cf service billing-db > /dev/null; then
+                    cf create-service postgres M-dedicated-9.5 billing-db
+                    while ! cf service billing-db | grep -q 'Status: create succeeded'; do
+                      echo "Waiting for creation of service to complete..."
+                      sleep 30
+                    done
+                  fi
+
+                  cd paas-usage-events-collector
+
+                  ruby -ryaml -e "
+                    env = {
+                      'CF_CLIENT_ID' => 'paas-usage-events-collector',
+                      'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
+                      'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                      'CF_SKIP_SSL_VALIDATION' => '${CF_SKIP_SSL_VALIDATION}',
+                    }
+                    manifest = YAML.load_file('manifest.yml')
+                    manifest['applications'].each { |app|
+                      app['env'] = {} unless app['env']
+                      app['env'].merge!(env)
+                      app['services'] = ['billing-db']
+                    }
+                    File.write('manifest.yml', manifest.to_yaml)
+                  "
+
+                  cf blue-green-deploy paas-usage-events-collector
+                  cf delete -f paas-usage-events-collector-old
 
         - task: deploy-paas-compose-scraper
           config:
