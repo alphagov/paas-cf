@@ -1933,8 +1933,7 @@ jobs:
                     File.write('manifest.yml', manifest.to_yaml)
                   "
 
-                  cf blue-green-deploy paas-usage-events-collector
-                  cf delete -f paas-usage-events-collector-old
+                  cf push paas-usage-events-collector
 
         - task: deploy-paas-compose-scraper
           config:
