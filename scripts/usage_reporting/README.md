@@ -25,6 +25,8 @@ Example:
 ```
 go run event.go process_events.go \
   -org "<ORG_UUID>" \
+  -start "2017-10-01T00:00:00Z" \
+  -finish "2017-11-01T00:00:00Z" \
   < events.json \
   | tee usage.csv
 ```
