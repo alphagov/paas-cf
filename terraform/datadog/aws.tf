@@ -31,3 +31,20 @@ resource "datadog_monitor" "rds-cpu-credits" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }
+
+resource "datadog_monitor" "rds-disk-utilisation" {
+  name           = "${format("%s RDS Disk utilisation", var.env)}"
+  type           = "query alert"
+  message        = "${format("Instance is {{#is_warning}}low on{{/is_warning}}{{#is_alert}}critically low on{{/is_alert}} storage space. See: %s#rds-disk-utilisation @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
+  notify_no_data = false
+  query          = "${format("min(last_1h):min:aws.rds.free_storage_space{aws_account:%s} by {hostname} / min:aws.rds.total_storage_space{aws_account:%s} by {hostname} <= 0.1", var.aws_account, var.aws_account)}"
+
+  thresholds {
+    warning  = "0.2"
+    critical = "0.1"
+  }
+
+  require_full_window = false
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
+}
