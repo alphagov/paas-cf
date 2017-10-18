@@ -10,12 +10,17 @@ export TARGET_CONCOURSE=deployer
 $("${SCRIPT_DIR}/environment.sh")
 "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
-OUTPUT_FILE=$(mktemp -t bosh-cli.XXXXXX)
-trap 'rm -f "${OUTPUT_FILE}"' EXIT
+BUILD_NUMBER=$($FLY_CMD -t "${FLY_TARGET}" trigger-job -j create-cloudfoundry/bosh-cli | \
+	awk '/started create-cloudfoundry\/bosh-cli/ { print $3 }' | \
+	tr -d '#')
 
-$FLY_CMD -t "${FLY_TARGET}" trigger-job -j create-cloudfoundry/bosh-cli -w | tee "${OUTPUT_FILE}"
+while $FLY_CMD -t "${FLY_TARGET}" builds -j create-cloudfoundry/bosh-cli | awk '{print $3 $4}' | grep "${BUILD_NUMBER}pending" >/dev/null; do
+	echo "waiting for create-cloudfoundry/bosh-cli container (${BUILD_NUMBER}) to start..."
+	sleep 2
+done
+sleep 8 # required since even after status is 'started' it takes a few seconds
 
-BUILD_NUMBER=$(awk '/started create-cloudfoundry\/bosh-cli/ { print $3 }' "${OUTPUT_FILE}" | tr -d '#')
-
+echo "hijacking create-cloudfoundry/bosh-cli container (${BUILD_NUMBER})..."
+trap '$FLY_CMD -t "${FLY_TARGET}" abort-build -j create-cloudfoundry/bosh-cli -b "${BUILD_NUMBER}"' EXIT
 $FLY_CMD -t "${FLY_TARGET}" intercept -j create-cloudfoundry/bosh-cli -b "${BUILD_NUMBER}" \
    -s run-bosh-cli "${@:-ash}"

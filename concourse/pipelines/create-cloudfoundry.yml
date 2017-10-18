@@ -2882,3 +2882,11 @@ jobs:
               uuid=$(bosh status --uuid)
               sed -e "s/^director_uuid:.*$/director_uuid: ${uuid}/" cf-manifest/cf-manifest.yml > cf-manifest-with-uuid.yml
               bosh deployment ./cf-manifest-with-uuid.yml
+              # FIXME: this wait loop and keep-alive hackery is a workaround for: https://github.com/concourse/concourse/issues/1269
+              # If the issue is resolved upstream then this block can likely be removed and the bosh-cli.sh script simplified.
+              echo "Waiting for 5mins for a connection to bosh-cli job"
+              sleep 300
+              while test "$(find /dev/pts/ | wc -l)" -gt "2"; do
+                echo "There is at least one connection to the bosh-cli job, keeping alive..."
+                sleep 300
+              done
