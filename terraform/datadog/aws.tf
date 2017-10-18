@@ -48,3 +48,13 @@ resource "datadog_monitor" "rds-disk-utilisation" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }
+
+resource "datadog_monitor" "rds-failure" {
+  name           = "${format("%s RDS Failure", var.env)}"
+  type           = "event alert"
+  message        = "${format("Instance has failed. See: %s#rds-failure @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
+  notify_no_data = false
+  query          = "${format("events('sources:rds priority:all tags:aws_account:%s,event_type:failure').by('hostname').rollup('count').last('5m') > 0", var.aws_account)}"
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
+}
