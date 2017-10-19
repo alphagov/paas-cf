@@ -173,6 +173,7 @@ properties:
       http-response add-header Strict-Transport-Security max-age=31536000;\ includeSubDomains;\ preload unless { capture.res.hdr(0) -m found }
     enable_healthcheck_frontend: true
     ssl_pem: (( concat secrets.router_internal_cert secrets.router_internal_key ))
+    enable_http_redirect_frontend: true
 
   router:
     enable_ssl: false

@@ -166,6 +166,13 @@ resource "aws_elb" "cf_router" {
     lb_protocol        = "ssl"
     ssl_certificate_id = "${var.apps_domain_cert_arn}"
   }
+
+  listener {
+    lb_port           = "80"
+    lb_protocol       = "http"
+    instance_port     = "83"
+    instance_protocol = "http"
+  }
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_router" {
