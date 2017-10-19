@@ -33,6 +33,10 @@ var _ = Describe("plain HTTP requests", func() {
 
 			Expect(resp.StatusCode).To(Equal(301))
 			Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", config.AppsDomain)))
+
+			By("does not include an HSTS header")
+			// See https://tools.ietf.org/html/rfc6797#section-7.2
+			Expect(resp.Header.Get("Strict-Transport-Security")).To(BeEmpty())
 		})
 
 		It("has any path and query components removed when redirecting", func() {
