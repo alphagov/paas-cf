@@ -2,6 +2,4 @@
 
 set -eu
 
-godep restore
-
 go test
