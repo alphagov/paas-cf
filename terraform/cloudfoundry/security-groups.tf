@@ -85,13 +85,22 @@ resource "aws_security_group" "metrics_elb" {
 
 resource "aws_security_group" "web" {
   name_prefix = "${var.env}-cf-web-"
-  description = "Security group for web that allows HTTPS traffic from anywhere"
+  description = "Security group for web that allows HTTP(S) traffic from anywhere"
   vpc_id      = "${var.vpc_id}"
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // Allow for HTTP redirects
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+
     cidr_blocks = ["0.0.0.0/0"]
   }
 
