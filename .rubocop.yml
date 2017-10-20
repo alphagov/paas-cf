@@ -2,4 +2,5 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'scripts/vendor/**/*'
+    - 'platform-tests/src/platform/vendor/**/*'
   TargetRubyVersion: 2.2
