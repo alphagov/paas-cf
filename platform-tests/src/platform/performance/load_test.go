@@ -22,7 +22,7 @@ const (
 )
 
 func loadTest(appName string, rate uint64, duration time.Duration, keepalive bool) (m *vegeta.Metrics, latency time.Duration) {
-	appUri := helpers.AppRootUri(appName)
+	appUri := helpers.AppUri(appName, "/", testConfig)
 	targeter := vegeta.NewStaticTargeter(vegeta.Target{
 		Method: "GET",
 		URL:    appUri,
@@ -53,21 +53,21 @@ var _ = Describe("Load performance", func() {
 	var appName string
 
 	BeforeEach(func() {
-		appName = generator.PrefixedRandomName("CATS-APP-")
+		appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 
 		Expect(cf.Cf("push", appName,
 			"--no-start",
-			"-b", config.StaticFileBuildpackName,
+			"-b", testConfig.StaticFileBuildpackName,
 			"-m", DEFAULT_MEMORY_LIMIT,
 			"-p", "../../../example-apps/static-app/",
-			"-d", config.AppsDomain,
-		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+			"-d", testConfig.AppsDomain,
+		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
-		Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+		Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 	})
 
 	AfterEach(func() {
-		Expect(cf.Cf("delete", appName, "-f", "-r").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+		Expect(cf.Cf("delete", appName, "-f", "-r").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 	})
 	Context("without HTTP Keep-Alive", func() {
 		It("has a response latency within our threshold", func() {
