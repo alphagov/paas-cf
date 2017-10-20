@@ -25,16 +25,12 @@ const (
 	MEGABYTE = 1024 * KILOBYTE
 	GIGABYTE = 1024 * MEGABYTE
 	TERABYTE = 1024 * GIGABYTE
+
+	DEFAULT_MEMORY_LIMIT = "256M"
+	DB_CREATE_TIMEOUT    = 30 * time.Minute
 )
 
 var (
-	DEFAULT_TIMEOUT      = 30 * time.Second
-	CF_PUSH_TIMEOUT      = 2 * time.Minute
-	LONG_CURL_TIMEOUT    = 2 * time.Minute
-	CF_JAVA_TIMEOUT      = 10 * time.Minute
-	DEFAULT_MEMORY_LIMIT = "256M"
-	DB_CREATE_TIMEOUT    = 30 * time.Minute
-
 	testConfig *config.Config
 	httpClient *http.Client
 )
@@ -43,16 +39,6 @@ func TestSuite(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	testConfig = config.LoadConfig()
-
-	if testConfig.DefaultTimeout > 0 {
-		DEFAULT_TIMEOUT = testConfig.DefaultTimeoutDuration()
-	}
-	if testConfig.CfPushTimeout > 0 {
-		CF_PUSH_TIMEOUT = testConfig.CfPushTimeoutDuration()
-	}
-	if testConfig.LongCurlTimeout > 0 {
-		LONG_CURL_TIMEOUT = testConfig.LongCurlTimeoutDuration()
-	}
 
 	httpClient = &http.Client{
 		Transport: &http.Transport{
@@ -67,15 +53,15 @@ func TestSuite(t *testing.T) {
 		// FIXME this should be removed once these services are generally available.
 		org := testContext.GetOrganizationName()
 		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
-			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(DEFAULT_TIMEOUT)
+			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 
-			enableServiceAccess = cf.Cf("enable-service-access", "elasticsearch", "-o", org).Wait(DEFAULT_TIMEOUT)
+			enableServiceAccess = cf.Cf("enable-service-access", "elasticsearch", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 
-			enableServiceAccess = cf.Cf("enable-service-access", "redis", "-o", org).Wait(DEFAULT_TIMEOUT)
+			enableServiceAccess = cf.Cf("enable-service-access", "redis", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 		})
@@ -106,7 +92,7 @@ func pollForServiceCreationCompletion(dbInstanceName string) {
 	fmt.Fprint(GinkgoWriter, "Polling for service creation to complete")
 	Eventually(func() *Buffer {
 		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "service", dbInstanceName).Wait(DEFAULT_TIMEOUT)
+		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(command).To(Exit(0))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
@@ -117,7 +103,7 @@ func pollForServiceDeletionCompletion(dbInstanceName string) {
 	fmt.Fprint(GinkgoWriter, "Polling for service destruction to complete")
 	Eventually(func() *Buffer {
 		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "services").Wait(DEFAULT_TIMEOUT)
+		command := quietCf("cf", "services").Wait(testConfig.DefaultTimeoutDuration())
 		Expect(command).To(Exit(0))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))

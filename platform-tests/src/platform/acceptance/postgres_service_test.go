@@ -20,13 +20,13 @@ var _ = Describe("Postgres backing service", func() {
 	)
 
 	It("should have registered the postgres service", func() {
-		plans := cf.Cf("marketplace").Wait(DEFAULT_TIMEOUT)
+		plans := cf.Cf("marketplace").Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
 		Expect(plans).To(Say(serviceName))
 	})
 
 	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
+		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
 		Expect(plans.Out.Contents()).To(ContainSubstring("Free"))
 		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-9.5"))
@@ -48,7 +48,7 @@ var _ = Describe("Postgres backing service", func() {
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-db")
-			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
 
@@ -61,17 +61,17 @@ var _ = Describe("Postgres backing service", func() {
 				"-p", "../../../example-apps/healthcheck",
 				"-f", "../../../example-apps/healthcheck/manifest.yml",
 				"-d", testConfig.AppsDomain,
-			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
-			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
-			Expect(cf.Cf("start", appName).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
 
 		AfterEach(func() {
-			cf.Cf("delete", appName, "-f").Wait(DEFAULT_TIMEOUT)
+			cf.Cf("delete", appName, "-f").Wait(testConfig.DefaultTimeoutDuration())
 
-			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 			// Poll until destruction is complete, otherwise the org cleanup (in AfterSuite) fails.
 			pollForServiceDeletionCompletion(dbInstanceName)

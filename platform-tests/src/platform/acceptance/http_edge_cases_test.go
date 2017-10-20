@@ -39,7 +39,7 @@ var _ = Describe("HTTP edge cases", func() {
 				"-d", testConfig.AppsDomain,
 				"-i", "1",
 				"-m", "256M",
-			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
 
 		It("should serve response bodies of increasing sizes", func() {
@@ -66,7 +66,7 @@ var _ = Describe("HTTP edge cases", func() {
 				"-p", "../../../example-apps/http_tester",
 				"-f", "../../../example-apps/http_tester/manifest.yml",
 				"-d", testConfig.AppsDomain,
-			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
 
 		It("should accept large request body sizes", func() {
@@ -133,7 +133,7 @@ var _ = Describe("HTTP edge cases", func() {
 				"-p", "../../../example-apps/http_tester",
 				"-f", "../../../example-apps/http_tester/manifest.yml",
 				"-d", testConfig.AppsDomain,
-			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			curlArgs := []string{"-k"}
 			response := helpers.CurlApp(testConfig, appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, testConfig.AppsDomain), curlArgs...)
 

@@ -24,7 +24,7 @@ var _ = Describe("X-Forwarded headers", func() {
 			"-p", "../../../example-apps/http_tester",
 			"-f", "../../../example-apps/http_tester/manifest.yml",
 			"-d", testConfig.AppsDomain,
-		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", "X-Forwarded-Proto: IPoAC"}
 		jsonData := helpers.CurlApp(testConfig, appName, "/print-headers", curlArgs...)

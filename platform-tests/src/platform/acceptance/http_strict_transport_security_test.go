@@ -32,7 +32,7 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "64M",
-		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		headers := curlAppHeaders(appName, "/")
 
@@ -50,7 +50,7 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "128M",
-		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		headers := curlAppHeaders(appName, "/")
 

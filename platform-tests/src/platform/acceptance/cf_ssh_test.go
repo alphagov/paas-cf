@@ -24,8 +24,8 @@ var _ = Describe("CF SSH", func() {
 			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "64M",
-		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
-		cfSSH := cf.Cf("ssh", appName, "-c", "uptime").Wait(DEFAULT_TIMEOUT)
+		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+		cfSSH := cf.Cf("ssh", appName, "-c", "uptime").Wait(testConfig.DefaultTimeoutDuration())
 		Expect(cfSSH).To(Exit(0))
 		Expect(cfSSH).To(Say("load average:"))
 	})
@@ -41,7 +41,7 @@ var _ = Describe("CF SSH", func() {
 			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "64M",
-		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
+		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		cfSSHCommand := exec.Command("/usr/bin/cf", "ssh", appName, "-c", "cat > /dev/null")
 		sshStdin, err := cfSSHCommand.StdinPipe()

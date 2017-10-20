@@ -31,7 +31,7 @@ var _ = Describe("AccountManagement", func() {
 		password = generator.PrefixedRandomName(testConfig.NamePrefix, "PASSWORD")
 
 		infoCommand := cf.Cf("curl", "/v2/info")
-		Expect(infoCommand.Wait(DEFAULT_TIMEOUT)).To(Exit(0))
+		Expect(infoCommand.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 		var infoResp struct {
 			AuthorizationEndpoint string `json:"authorization_endpoint"`
