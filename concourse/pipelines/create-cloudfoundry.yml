@@ -267,6 +267,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-usage-events-collector
+      tag_filter: v0.1.0
 
 jobs:
   - name: pipeline-lock
