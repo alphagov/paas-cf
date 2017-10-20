@@ -13,13 +13,13 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("Postgres backing service", func() {
+var _ = Describe("MySQL backing service", func() {
 	const (
-		serviceName  = "postgres"
+		serviceName  = "mysql"
 		testPlanName = "Free"
 	)
 
-	It("should have registered the postgres service", func() {
+	It("should have registered the mysql service", func() {
 		plans := cf.Cf("marketplace").Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
 		Expect(plans).To(Say(serviceName))
@@ -29,17 +29,17 @@ var _ = Describe("Postgres backing service", func() {
 		plans := cf.Cf("marketplace", "-s", serviceName).Wait(DEFAULT_TIMEOUT)
 		Expect(plans).To(Exit(0))
 		Expect(plans.Out.Contents()).To(ContainSubstring("Free"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("S-HA-dedicated-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("M-dedicated-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("M-HA-dedicated-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("L-dedicated-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("L-HA-dedicated-9.5"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("S-HA-dedicated-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("M-dedicated-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("M-HA-dedicated-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("L-dedicated-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("L-HA-dedicated-5.7"))
 	})
 
 	Context("creating a database instance", func() {
-		// Avoid creating additional tests in this block because this setup and
-		// teardown is slow (several minutes).
+		// Avoid creating additional tests in this block because this setup and teardown is
+		// slow (several minutes).
 
 		var (
 			appName        string
@@ -58,8 +58,8 @@ var _ = Describe("Postgres backing service", func() {
 				"push", appName,
 				"--no-start",
 				"-b", config.GoBuildpackName,
-				"-p", "../../example-apps/healthcheck",
-				"-f", "../../example-apps/healthcheck/manifest.yml",
+				"-p", "../../../example-apps/healthcheck",
+				"-f", "../../../example-apps/healthcheck/manifest.yml",
 				"-d", config.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
@@ -91,7 +91,7 @@ var _ = Describe("Postgres backing service", func() {
 			body, err = ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(resp.StatusCode).NotTo(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
-			Expect(body).To(MatchRegexp("no pg_hba.conf entry for .* SSL off"), "Connection without TLS did not report a TLS error")
+			Expect(body).To(MatchRegexp("Error 1045: Access denied for user"), "Connection without TLS did not report a TLS error")
 		})
 	})
 })

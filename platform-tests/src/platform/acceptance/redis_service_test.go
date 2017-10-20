@@ -52,8 +52,8 @@ var _ = Describe("Redis backing service", func() {
 				"push", appName,
 				"--no-start",
 				"-b", config.GoBuildpackName,
-				"-p", "../../example-apps/healthcheck",
-				"-f", "../../example-apps/healthcheck/manifest.yml",
+				"-p", "../../../example-apps/healthcheck",
+				"-f", "../../../example-apps/healthcheck/manifest.yml",
 				"-d", config.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 

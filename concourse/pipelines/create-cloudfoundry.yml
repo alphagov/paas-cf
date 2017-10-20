@@ -725,7 +725,7 @@ jobs:
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
                 echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability/app
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
 
   - name: api-availability-tests
     plan:
@@ -795,7 +795,7 @@ jobs:
                 trap 'aws s3 rm "s3://${bucket}/${JOB_FILE}"' EXIT
 
                 echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/availability/api
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
@@ -2597,7 +2597,7 @@ jobs:
                   echo "Running tests"
                   export CONFIG
                   CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/performance/
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/performance/
 
         ensure:
           task: remove-temp-user

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"availability/helpers"
+	"platform/availability/helpers"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	. "github.com/onsi/ginkgo"

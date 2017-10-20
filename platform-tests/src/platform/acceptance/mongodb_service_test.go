@@ -13,9 +13,9 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("Elasticsearch backing service", func() {
+var _ = Describe("MongoDB backing service", func() {
 	const (
-		serviceName  = "elasticsearch"
+		serviceName  = "mongodb"
 		testPlanName = "tiny"
 	)
 
@@ -41,19 +41,19 @@ var _ = Describe("Elasticsearch backing service", func() {
 		)
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName("CATS-APP-")
-			dbInstanceName = generator.PrefixedRandomName("test-es-")
+			dbInstanceName = generator.PrefixedRandomName("test-db-")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
 
-			fmt.Fprintf(GinkgoWriter, "Created Elasticsearch instance: %s\n", dbInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Created MongoDB instance: %s\n", dbInstanceName)
 
 			Expect(cf.Cf(
 				"push", appName,
 				"--no-start",
 				"-b", config.GoBuildpackName,
-				"-p", "../../example-apps/healthcheck",
-				"-f", "../../example-apps/healthcheck/manifest.yml",
+				"-p", "../../../example-apps/healthcheck",
+				"-f", "../../../example-apps/healthcheck/manifest.yml",
 				"-d", config.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
@@ -73,21 +73,19 @@ var _ = Describe("Elasticsearch backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test"))
+			resp, err := httpClient.Get(helpers.AppUri(appName, "/mongo-test?ssl=true"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
-			resp.Body.Close()
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
 			By("disallowing connections without TLS")
-			resp, err = httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test?tls=false"))
+			resp, err = httpClient.Get(helpers.AppUri(appName, "/mongo-test?ssl=false"))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
-			resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(500), "Expected 500, got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
-			Expect(string(body)).To(ContainSubstring("EOF"), "Connection without TLS did not report a connection error")
+			Expect(resp.StatusCode).To(Equal(500), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+			Expect(string(body)).To(ContainSubstring("no reachable servers"), "Connection without TLS did not report a connection error")
 		})
 	})
 })

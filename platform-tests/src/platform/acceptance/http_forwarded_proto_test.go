@@ -21,8 +21,8 @@ var _ = Describe("X-Forwarded headers", func() {
 		appName := generator.PrefixedRandomName("CATS-APP-")
 		Expect(cf.Cf(
 			"push", appName,
-			"-p", "../../example-apps/http_tester",
-			"-f", "../../example-apps/http_tester/manifest.yml",
+			"-p", "../../../example-apps/http_tester",
+			"-f", "../../../example-apps/http_tester/manifest.yml",
 			"-d", config.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 

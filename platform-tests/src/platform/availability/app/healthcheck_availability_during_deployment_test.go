@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"availability/helpers"
+	"platform/availability/helpers"
 
 	"github.com/onsi/gomega/ghttp"
 	vegeta "github.com/tsenart/vegeta/lib"
