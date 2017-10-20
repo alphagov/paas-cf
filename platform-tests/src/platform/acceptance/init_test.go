@@ -39,6 +39,7 @@ func TestSuite(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	testConfig = config.LoadConfig()
+	testConfig.NamePrefix = "ACC"
 
 	httpClient = &http.Client{
 		Transport: &http.Transport{
