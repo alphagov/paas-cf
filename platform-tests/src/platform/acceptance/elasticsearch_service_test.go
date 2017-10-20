@@ -40,8 +40,8 @@ var _ = Describe("Elasticsearch backing service", func() {
 			dbInstanceName string
 		)
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName("CATS-APP-")
-			dbInstanceName = generator.PrefixedRandomName("test-es-")
+			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
+			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-es")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
@@ -51,10 +51,10 @@ var _ = Describe("Elasticsearch backing service", func() {
 			Expect(cf.Cf(
 				"push", appName,
 				"--no-start",
-				"-b", config.GoBuildpackName,
+				"-b", testConfig.GoBuildpackName,
 				"-p", "../../../example-apps/healthcheck",
 				"-f", "../../../example-apps/healthcheck/manifest.yml",
-				"-d", config.AppsDomain,
+				"-d", testConfig.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
@@ -73,7 +73,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test"))
+			resp, err := httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test", testConfig))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
@@ -81,7 +81,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
 			By("disallowing connections without TLS")
-			resp, err = httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test?tls=false"))
+			resp, err = httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test?tls=false", testConfig))
 			Expect(err).NotTo(HaveOccurred())
 			body, err = ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())

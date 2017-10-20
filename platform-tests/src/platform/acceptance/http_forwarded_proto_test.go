@@ -18,16 +18,16 @@ var _ = Describe("X-Forwarded headers", func() {
 	}
 
 	var _ = BeforeEach(func() {
-		appName := generator.PrefixedRandomName("CATS-APP-")
+		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 		Expect(cf.Cf(
 			"push", appName,
 			"-p", "../../../example-apps/http_tester",
 			"-f", "../../../example-apps/http_tester/manifest.yml",
-			"-d", config.AppsDomain,
+			"-d", testConfig.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", "X-Forwarded-Proto: IPoAC"}
-		jsonData := helpers.CurlApp(appName, "/print-headers", curlArgs...)
+		jsonData := helpers.CurlApp(testConfig, appName, "/print-headers", curlArgs...)
 
 		err := json.Unmarshal([]byte(jsonData), &headers)
 		Expect(err).NotTo(HaveOccurred())

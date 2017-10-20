@@ -16,12 +16,12 @@ import (
 
 var _ = Describe("CF SSH", func() {
 	It("should be enabled", func() {
-		appName := generator.PrefixedRandomName("CATS-APP-")
+		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 		Expect(cf.Cf(
 			"push", appName,
-			"-b", config.StaticFileBuildpackName,
+			"-b", testConfig.StaticFileBuildpackName,
 			"-p", "../../../example-apps/static-app",
-			"-d", config.AppsDomain,
+			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "64M",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
@@ -33,12 +33,12 @@ var _ = Describe("CF SSH", func() {
 	It("allows uploading a large payload via standard ssh client", func() {
 		const payloadSize = 10 * GIGABYTE
 		timeout := 600
-		appName := generator.PrefixedRandomName("CATS-APP-")
+		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 		Expect(cf.Cf(
 			"push", appName,
-			"-b", config.StaticFileBuildpackName,
+			"-b", testConfig.StaticFileBuildpackName,
 			"-p", "../../../example-apps/static-app",
-			"-d", config.AppsDomain,
+			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "64M",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))

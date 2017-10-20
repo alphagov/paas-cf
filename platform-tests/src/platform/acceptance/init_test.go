@@ -14,7 +14,9 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/config"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 )
 
 const (
@@ -33,40 +35,38 @@ var (
 	DEFAULT_MEMORY_LIMIT = "256M"
 	DB_CREATE_TIMEOUT    = 30 * time.Minute
 
-	context    helpers.SuiteContext
-	config     helpers.Config
+	testConfig *config.Config
 	httpClient *http.Client
 )
 
 func TestSuite(t *testing.T) {
 	RegisterFailHandler(Fail)
 
-	config = helpers.LoadConfig()
+	testConfig = config.LoadConfig()
 
-	if config.DefaultTimeout > 0 {
-		DEFAULT_TIMEOUT = config.DefaultTimeout * time.Second
+	if testConfig.DefaultTimeout > 0 {
+		DEFAULT_TIMEOUT = testConfig.DefaultTimeoutDuration()
 	}
-	if config.CfPushTimeout > 0 {
-		CF_PUSH_TIMEOUT = config.CfPushTimeout * time.Second
+	if testConfig.CfPushTimeout > 0 {
+		CF_PUSH_TIMEOUT = testConfig.CfPushTimeoutDuration()
 	}
-	if config.LongCurlTimeout > 0 {
-		LONG_CURL_TIMEOUT = config.LongCurlTimeout * time.Second
+	if testConfig.LongCurlTimeout > 0 {
+		LONG_CURL_TIMEOUT = testConfig.LongCurlTimeoutDuration()
 	}
 
 	httpClient = &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: config.SkipSSLValidation},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: testConfig.SkipSSLValidation},
 		},
 	}
 
-	context = helpers.NewContext(config)
-	environment := helpers.NewEnvironment(context)
+	testContext := workflowhelpers.NewTestSuiteSetup(testConfig)
 
 	BeforeSuite(func() {
-		environment.Setup()
+		testContext.Setup()
 		// FIXME this should be removed once these services are generally available.
-		org := context.RegularUserContext().Org
-		cf.AsUser(context.AdminUserContext(), context.ShortTimeout(), func() {
+		org := testContext.GetOrganizationName()
+		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
 			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(DEFAULT_TIMEOUT)
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
@@ -82,12 +82,12 @@ func TestSuite(t *testing.T) {
 	})
 
 	AfterSuite(func() {
-		environment.Teardown()
+		testContext.Teardown()
 	})
 
 	componentName := "Custom-Acceptance-Tests"
-	if config.ArtifactsDirectory != "" {
-		helpers.EnableCFTrace(config, componentName)
+	if testConfig.ArtifactsDirectory != "" {
+		helpers.EnableCFTrace(testConfig, componentName)
 	}
 
 	RunSpecs(t, componentName)

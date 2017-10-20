@@ -40,16 +40,16 @@ var _ = Describe("X-Forwarded headers", func() {
 		egressIP = strings.TrimSpace(fmt.Sprintf("%s", body))
 		Expect(net.ParseIP(egressIP)).ToNot(BeNil(), "Unable to parse egress IP from %s: %s", egressURL, egressIP)
 
-		appName := generator.PrefixedRandomName("CATS-APP-")
+		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 		Expect(cf.Cf(
 			"push", appName,
 			"-p", "../../../example-apps/http_tester",
 			"-f", "../../../example-apps/http_tester/manifest.yml",
-			"-d", config.AppsDomain,
+			"-d", testConfig.AppsDomain,
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", fmt.Sprintf("X-Forwarded-For: %s", fakeProxyIP)}
-		jsonData := helpers.CurlApp(appName, "/print-headers", curlArgs...)
+		jsonData := helpers.CurlApp(testConfig, appName, "/print-headers", curlArgs...)
 
 		err = json.Unmarshal([]byte(jsonData), &headers)
 		Expect(err).NotTo(HaveOccurred())

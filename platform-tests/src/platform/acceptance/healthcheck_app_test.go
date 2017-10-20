@@ -15,7 +15,7 @@ var _ = Describe("healthcheck app deployed by pipeline", func() {
 	var response string
 
 	BeforeEach(func() {
-		response = helpers.CurlApp(appName, "/", "-f")
+		response = helpers.CurlApp(testConfig, appName, "/", "-f")
 	})
 
 	Describe("/ endpoint", func() {

@@ -28,7 +28,7 @@ var _ = Describe("AccountManagement", func() {
 		params.Set("client_id", "")
 		params.Set("redirect_uri", "")
 
-		password = generator.PrefixedRandomName("CATS-PASSWORD-")
+		password = generator.PrefixedRandomName(testConfig.NamePrefix, "PASSWORD")
 
 		infoCommand := cf.Cf("curl", "/v2/info")
 		Expect(infoCommand.Wait(DEFAULT_TIMEOUT)).To(Exit(0))

@@ -12,7 +12,6 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/runner"
 )
 
 var _ = Describe("Strict-Transport-Security headers", func() {
@@ -25,12 +24,12 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 
 	It("should add the header if it is not present", func() {
 
-		appName := generator.PrefixedRandomName("CATS-APP-")
+		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 		Expect(cf.Cf(
 			"push", appName,
-			"-b", config.StaticFileBuildpackName,
+			"-b", testConfig.StaticFileBuildpackName,
 			"-p", "../../../example-apps/static-app",
-			"-d", config.AppsDomain,
+			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "64M",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
@@ -43,12 +42,12 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 
 	It("should not override the header if set by an app", func() {
 
-		appName := generator.PrefixedRandomName("CATS-APP-")
+		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
 		Expect(cf.Cf(
 			"push", appName,
-			"-b", config.PhpBuildpackName,
+			"-b", testConfig.PhpBuildpackName,
 			"-p", "../../../example-apps/strict-transport-security-app",
-			"-d", config.AppsDomain,
+			"-d", testConfig.AppsDomain,
 			"-i", "1",
 			"-m", "128M",
 		).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
@@ -63,7 +62,7 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 })
 
 func curlAppHeaders(appName, path string, args ...string) textproto.MIMEHeader {
-	curlResponse := helpers.CurlApp(appName, path, append(args, "-I")...)
+	curlResponse := helpers.CurlApp(testConfig, appName, path, append(args, "-I")...)
 
 	reader := textproto.NewReader(bufio.NewReader(bytes.NewBufferString(curlResponse)))
 	reader.ReadLine()
@@ -75,9 +74,9 @@ func curlAppHeaders(appName, path string, args ...string) textproto.MIMEHeader {
 }
 
 func curlApexDomainUrl() textproto.MIMEHeader {
-	appsDomain := config.AppsDomain
-	apexDomainUrl := config.Protocol() + appsDomain + "/"
-	curlCmd := runner.Curl(apexDomainUrl, "-I").Wait(helpers.CURL_TIMEOUT)
+	appsDomain := testConfig.AppsDomain
+	apexDomainUrl := testConfig.Protocol() + appsDomain + "/"
+	curlCmd := helpers.Curl(testConfig, apexDomainUrl, "-I").Wait(testConfig.DefaultTimeout)
 	Expect(curlCmd).To(Exit(0))
 	Expect(string(curlCmd.Err.Contents())).To(HaveLen(0))
 	curlResponse := string(curlCmd.Out.Contents())

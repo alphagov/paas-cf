@@ -17,7 +17,7 @@ var _ = Describe("plain HTTP requests", func() {
 
 	Describe("to the API", func() {
 		It("has the connection refused", func() {
-			uri := config.ApiEndpoint + ":80"
+			uri := testConfig.ApiEndpoint + ":80"
 			_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
 			Expect(err).To(HaveOccurred(), "should not connect")
 			Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
@@ -26,13 +26,13 @@ var _ = Describe("plain HTTP requests", func() {
 
 	Describe("to an app", func() {
 		It("is redirected to the https endpoint", func() {
-			req, err := http.NewRequest("GET", fmt.Sprintf("http://foo.%s/", config.AppsDomain), nil)
+			req, err := http.NewRequest("GET", fmt.Sprintf("http://foo.%s/", testConfig.AppsDomain), nil)
 			Expect(err).NotTo(HaveOccurred())
 			resp, err := http.DefaultTransport.RoundTrip(req)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(resp.StatusCode).To(Equal(301))
-			Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", config.AppsDomain)))
+			Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", testConfig.AppsDomain)))
 
 			By("does not include an HSTS header")
 			// See https://tools.ietf.org/html/rfc6797#section-7.2
@@ -40,13 +40,13 @@ var _ = Describe("plain HTTP requests", func() {
 		})
 
 		It("has any path and query components removed when redirecting", func() {
-			req, err := http.NewRequest("GET", fmt.Sprintf("http://foo.%s/bar?baz=qux", config.AppsDomain), nil)
+			req, err := http.NewRequest("GET", fmt.Sprintf("http://foo.%s/bar?baz=qux", testConfig.AppsDomain), nil)
 			Expect(err).NotTo(HaveOccurred())
 			resp, err := http.DefaultTransport.RoundTrip(req)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(resp.StatusCode).To(Equal(301))
-			Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", config.AppsDomain)))
+			Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", testConfig.AppsDomain)))
 		})
 	})
 })

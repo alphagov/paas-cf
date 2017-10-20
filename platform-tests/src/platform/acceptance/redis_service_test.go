@@ -40,8 +40,8 @@ var _ = Describe("Redis backing service", func() {
 			dbInstanceName string
 		)
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName("CATS-APP-")
-			dbInstanceName = generator.PrefixedRandomName("test-redis-")
+			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
+			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-redis")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
@@ -51,10 +51,10 @@ var _ = Describe("Redis backing service", func() {
 			Expect(cf.Cf(
 				"push", appName,
 				"--no-start",
-				"-b", config.GoBuildpackName,
+				"-b", testConfig.GoBuildpackName,
 				"-p", "../../../example-apps/healthcheck",
 				"-f", "../../../example-apps/healthcheck/manifest.yml",
-				"-d", config.AppsDomain,
+				"-d", testConfig.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 
 			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(DEFAULT_TIMEOUT)).To(Exit(0))
@@ -73,7 +73,7 @@ var _ = Describe("Redis backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/redis-test"))
+			resp, err := httpClient.Get(helpers.AppUri(appName, "/redis-test", testConfig))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())

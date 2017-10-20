@@ -1,25 +1,38 @@
 {
 	"ImportPath": "acceptance",
 	"GoVersion": "go1.5",
+	"GodepVersion": "v78",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/cf",
-			"Rev": "41e1e261d084de8b61dd52482fce9ea1049fe82b"
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
 		},
 		{
 			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/generator",
-			"Rev": "41e1e261d084de8b61dd52482fce9ea1049fe82b"
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
 		},
 		{
 			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/helpers",
-			"Rev": "41e1e261d084de8b61dd52482fce9ea1049fe82b"
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
 		},
 		{
-			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/runner",
-			"Rev": "41e1e261d084de8b61dd52482fce9ea1049fe82b"
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/commandstarter",
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/internal",
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/commandreporter",
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry-incubator/cf-test-helpers/helpers/internal",
+			"Rev": "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
 		},
 		{
 			"ImportPath": "github.com/nu7hatch/gouuid",

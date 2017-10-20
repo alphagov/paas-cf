@@ -31,12 +31,12 @@ var _ = Describe("HTTP edge cases", func() {
 		var appName string
 
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName("CATS-APP-DORA-")
+			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP-DORA")
 			Expect(cf.Cf(
 				"push", appName,
-				"-b", config.RubyBuildpackName,
+				"-b", testConfig.RubyBuildpackName,
 				"-p", "../../../../../cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/assets/dora",
-				"-d", config.AppsDomain,
+				"-d", testConfig.AppsDomain,
 				"-i", "1",
 				"-m", "256M",
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
@@ -46,6 +46,7 @@ var _ = Describe("HTTP edge cases", func() {
 			for responsekB := 1; responsekB <= 200; responsekB += 10 {
 				By(fmt.Sprintf("response size of %d kB", responsekB))
 				response := helpers.CurlAppWithTimeout(
+					testConfig,
 					appName,
 					fmt.Sprintf("/largetext/%d", responsekB),
 					5*time.Second,
@@ -59,12 +60,12 @@ var _ = Describe("HTTP edge cases", func() {
 		var appName string
 
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName("CATS-APP-HTTP-TESTER-")
+			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName,
 				"-p", "../../../example-apps/http_tester",
 				"-f", "../../../example-apps/http_tester/manifest.yml",
-				"-d", config.AppsDomain,
+				"-d", testConfig.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 		})
 
@@ -80,7 +81,7 @@ var _ = Describe("HTTP edge cases", func() {
 				Expect(err).NotTo(HaveOccurred())
 				fmt.Fprintf(GinkgoWriter, "Successfully copied %d bytes\n", copied)
 
-				appUri := helpers.AppUri(appName, "/body-size")
+				appUri := helpers.AppUri(appName, "/body-size", testConfig)
 
 				req, err := http.NewRequest("POST", appUri, buffer)
 				Expect(err).NotTo(HaveOccurred())
@@ -100,7 +101,7 @@ var _ = Describe("HTTP edge cases", func() {
 				By(fmt.Sprintf("request header size of %d kB", headerkB))
 
 				curlArgs := []string{"-H", fmt.Sprintf("test-header: %s", randStringBytes(headerkB*int(KILOBYTE)))}
-				response := helpers.CurlApp(appName, "/header-size", curlArgs...)
+				response := helpers.CurlApp(testConfig, appName, "/header-size", curlArgs...)
 
 				Expect(response).To(BeEquivalentTo(strconv.Itoa(headerkB * int(KILOBYTE))))
 			}
@@ -110,7 +111,7 @@ var _ = Describe("HTTP edge cases", func() {
 			for headerkB := 1; headerkB <= 7; headerkB += 1 {
 				By(fmt.Sprintf("response header size of %d kB", headerkB))
 
-				appUri := helpers.AppUri(appName, fmt.Sprintf("/big-header?size=%d", headerkB))
+				appUri := helpers.AppUri(appName, fmt.Sprintf("/big-header?size=%d", headerkB), testConfig)
 
 				response, err := httpClient.Get(appUri)
 				Expect(err).NotTo(HaveOccurred())
@@ -120,21 +121,21 @@ var _ = Describe("HTTP edge cases", func() {
 		})
 
 		It("allow egress connectivity", func() {
-			response := helpers.CurlApp(appName, "/egress?domain=www.gov.uk")
+			response := helpers.CurlApp(testConfig, appName, "/egress?domain=www.gov.uk")
 
 			Expect(response).To(BeEquivalentTo("OK"))
 		})
 
 		It("can connect to other app in the paas", func() {
-			appName2 := generator.PrefixedRandomName("CATS-APP-HTTP-TESTER-")
+			appName2 := generator.PrefixedRandomName(testConfig.NamePrefix, "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName2,
 				"-p", "../../../example-apps/http_tester",
 				"-f", "../../../example-apps/http_tester/manifest.yml",
-				"-d", config.AppsDomain,
+				"-d", testConfig.AppsDomain,
 			).Wait(CF_PUSH_TIMEOUT)).To(Exit(0))
 			curlArgs := []string{"-k"}
-			response := helpers.CurlApp(appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, config.AppsDomain), curlArgs...)
+			response := helpers.CurlApp(testConfig, appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, testConfig.AppsDomain), curlArgs...)
 
 			Expect(response).To(BeEquivalentTo("OK"))
 		})
@@ -146,7 +147,7 @@ var _ = Describe("HTTP edge cases", func() {
 			parameters := url.Values{}
 			parameters.Add("text", requesttext)
 			requestURL.RawQuery = parameters.Encode()
-			response := helpers.CurlApp(appName, requestURL.RequestURI())
+			response := helpers.CurlApp(testConfig, appName, requestURL.RequestURI())
 			Expect(response).To(Equal(requesttext))
 		})
 
@@ -163,7 +164,7 @@ var _ = Describe("HTTP edge cases", func() {
 				parameters.Add(keyName, randStringBytes(valueLength))
 			}
 			requestURL.RawQuery = parameters.Encode()
-			response := helpers.CurlApp(appName, requestURL.RequestURI())
+			response := helpers.CurlApp(testConfig, appName, requestURL.RequestURI())
 			Expect(response).To(BeEquivalentTo(requestURL.RawQuery))
 			Expect(response).To(HaveLen(queryLength - len("?")))
 		})
@@ -174,7 +175,7 @@ var _ = Describe("HTTP edge cases", func() {
 			parameters := url.Values{}
 			parameters.Add("q", utfchars)
 			requestURL.RawQuery = parameters.Encode()
-			response := helpers.CurlApp(appName, requestURL.RequestURI())
+			response := helpers.CurlApp(testConfig, appName, requestURL.RequestURI())
 			parsedQuery, err := url.ParseQuery(response)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(parsedQuery["q"][0]).To(BeEquivalentTo(utfchars))
