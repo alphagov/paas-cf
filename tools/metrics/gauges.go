@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/url"
 	"time"
 
@@ -116,32 +117,41 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return err
 		}
-		started := 0
-		stopped := 0
+
+		counters := map[string]map[bool]int{
+			"started": map[bool]int{},
+			"stopped": map[bool]int{},
+		}
 		for _, app := range apps {
+			org_quota, err := findOrgQuotaFromSpaceGUID(c, app.SpaceGuid)
+			if err != nil {
+				continue
+			}
+			org_is_trial := isOrgQuotaTrial(org_quota)
 			if app.State == "STARTED" {
-				started += 1
+				counters["started"][org_is_trial]++
 			}
 			if app.State == "STOPPED" {
-				stopped += 1
+				counters["stopped"][org_is_trial]++
 			}
 		}
-		return w.WriteMetrics([]Metric{
-			{
-				Kind:  Gauge,
-				Time:  time.Now(),
-				Name:  "apps.count",
-				Value: float64(started),
-				Tags:  []string{"state:running"},
-			},
-			{
-				Kind:  Gauge,
-				Time:  time.Now(),
-				Name:  "apps.count",
-				Value: float64(stopped),
-				Tags:  []string{"state:stopped"},
-			},
-		})
+
+		metrics := []Metric{}
+		for state, count_by_trial := range counters {
+			for org_is_trial, count := range count_by_trial {
+				metrics = append(metrics, Metric{
+					Kind:  Gauge,
+					Time:  time.Now(),
+					Name:  "apps.count",
+					Value: float64(count),
+					Tags: []string{
+						"state:" + state,
+						fmt.Sprintf("trial_org:%t", org_is_trial),
+					},
+				})
+			}
+		}
+		return w.WriteMetrics(metrics)
 	})
 }
 
@@ -155,27 +165,56 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return nil
 		}
-		counters := map[string]int{}
+		service_plans, err := c.cf.ListServicePlans()
+		if err != nil {
+			return nil
+		}
+
+		counters := map[bool]map[bool]map[string]int{
+			true: map[bool]map[string]int{
+				true:  map[string]int{},
+				false: map[string]int{},
+			},
+			false: map[bool]map[string]int{
+				true:  map[string]int{},
+				false: map[string]int{},
+			},
+		}
 		for _, instance := range serviceInstances {
 			service := findService(services, instance.ServiceGuid)
-			if service == nil {
+			if service == nil || service.Label == "" {
 				continue
 			}
-			if service.Label == "" {
+			service_plan := findServicePlan(service_plans, instance.ServicePlanGuid)
+			if service_plan == nil {
 				continue
 			}
-			counters[service.Label]++
+			org_quota, err := findOrgQuotaFromSpaceGUID(c, instance.SpaceGuid)
+			if err != nil {
+				continue
+			}
+			org_is_trial := isOrgQuotaTrial(org_quota)
+			service_plan_is_free := isServicePlanFree(service_plan)
+			counters[org_is_trial][service_plan_is_free][service.Label]++
 		}
-		metrics := []Metric{}
-		for serviceName, count := range counters {
-			metrics = append(metrics, Metric{
-				Kind:  Gauge,
-				Time:  time.Now(),
-				Name:  "services.provisioned",
-				Value: float64(count),
-				Tags:  []string{"type:" + serviceName},
-			})
 
+		metrics := []Metric{}
+		for org_is_trial, x := range counters {
+			for service_plan_is_free, y := range x {
+				for service_label, count := range y {
+					metrics = append(metrics, Metric{
+						Kind:  Gauge,
+						Time:  time.Now(),
+						Name:  "services.provisioned",
+						Value: float64(count),
+						Tags: []string{
+							"type:" + service_label,
+							fmt.Sprintf("trial_org:%t", org_is_trial),
+							fmt.Sprintf("free_service:%t", service_plan_is_free),
+						},
+					})
+				}
+			}
 		}
 		return w.WriteMetrics(metrics)
 	})
@@ -191,10 +230,9 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		for _, org := range orgs {
 			quota, err := org.Quota()
 			if err != nil {
-				return err
+				continue
 			}
 			counters[quota.Name]++
-
 		}
 		metrics := []Metric{}
 		for name, count := range counters {
@@ -273,4 +311,39 @@ func findService(services []cfclient.Service, guid string) *cfclient.Service {
 		}
 	}
 	return nil
+}
+
+func findServicePlan(service_plans []cfclient.ServicePlan, guid string) *cfclient.ServicePlan {
+	for _, service_plan := range service_plans {
+		if service_plan.Guid == guid {
+			return &service_plan
+		}
+	}
+	return nil
+}
+
+func findOrgQuotaFromSpaceGUID(c *Client, guid string) (*cfclient.OrgQuota, error) {
+	space, err := c.cf.GetSpaceByGuid(guid)
+	if err != nil {
+		return nil, err
+	}
+	org, err := space.Org()
+	if err != nil {
+		return nil, err
+	}
+	org_quota, err := org.Quota()
+	if err != nil {
+		return nil, err
+	}
+	return org_quota, nil
+}
+
+// Determine if an organisation is on a trial plan.
+func isOrgQuotaTrial(quota *cfclient.OrgQuota) bool {
+	return quota.Name == "default"
+}
+
+// Determine if a service plan is free.
+func isServicePlanFree(plan *cfclient.ServicePlan) bool {
+	return plan.Name == "Free"
 }
