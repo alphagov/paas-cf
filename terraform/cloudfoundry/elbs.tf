@@ -59,7 +59,7 @@ resource "aws_elb" "cf_uaa" {
   }
 
   health_check {
-    target              = "HTTPS:9443/healthz"
+    target              = "HTTP:82/"
     interval            = "${var.health_check_interval}"
     timeout             = "${var.health_check_timeout}"
     healthy_threshold   = "${var.health_check_healthy}"
@@ -67,10 +67,10 @@ resource "aws_elb" "cf_uaa" {
   }
 
   listener {
-    instance_port      = 9443
-    instance_protocol  = "https"
+    instance_port      = 443
+    instance_protocol  = "ssl"
     lb_port            = 443
-    lb_protocol        = "https"
+    lb_protocol        = "ssl"
     ssl_certificate_id = "${var.system_domain_cert_arn}"
   }
 }
@@ -86,11 +86,9 @@ resource "aws_lb_ssl_negotiation_policy" "cf_uaa" {
   }
 }
 
-resource "aws_app_cookie_stickiness_policy" "cf_uaa" {
-  name          = "cf-uaa"
-  load_balancer = "${aws_elb.cf_uaa.id}"
-  lb_port       = 443
-  cookie_name   = "JSESSIONID"
+resource "aws_proxy_protocol_policy" "cf_uaa_haproxy" {
+  load_balancer  = "${aws_elb.cf_uaa.name}"
+  instance_ports = ["443"]
 }
 
 resource "aws_elb" "cf_doppler" {
