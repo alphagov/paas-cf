@@ -34,11 +34,6 @@ vm_extensions:
       elbs:
         - (( grab terraform_outputs.cf_cc_elb_name ))
 
-  - name: cf_uaa_elb
-    cloud_properties:
-      elbs:
-        - (( grab terraform_outputs.cf_uaa_elb_name ))
-
   - name: cf_doppler_elbs
     cloud_properties:
       elbs:
