@@ -163,6 +163,9 @@ jobs:
       - task: remove-healthcheck-db
         file: paas-cf/concourse/tasks/remove-healthcheck-db.yml
 
+      - task: remove-billing-db
+        file: paas-cf/concourse/tasks/remove-billing-db.yml
+
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
         params:

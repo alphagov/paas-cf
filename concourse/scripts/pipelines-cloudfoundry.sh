@@ -124,6 +124,7 @@ debug: ${DEBUG:-}
 cf_release_version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
+cf_skip_ssl_validation: ${CF_SKIP_SSL_VALIDATION:-}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
@@ -154,6 +155,7 @@ oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
 pagerduty_api_token: ${pagerduty_api_token:-}
 enable_metrics: ${ENABLE_METRICS}
+enable_usage_events_collection: ${ENABLE_USAGE_EVENTS_COLLECTION}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 continuous_smoke_tests_trigger: $([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")

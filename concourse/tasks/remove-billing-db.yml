@@ -1,0 +1,34 @@
+---
+platform: linux
+inputs:
+  - name: paas-cf
+  - name: bosh-CA
+  - name: config
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-cli
+    tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      ./paas-cf/concourse/scripts/import_bosh_ca.sh
+      . ./config/config.sh
+      if ! curl -I -f $API_ENDPOINT/info; then
+        echo "CF API unavailable. Skipping..."
+        exit 0
+      fi
+      if ! echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}; then
+        echo "Login failed.  Skipping..."
+        exit 0
+      fi
+      cf target -o admin -s billing
+      if cf apps | grep -q paas-usage-events-collector; then
+        cf delete paas-usage-events-collector -f -r
+      fi
+      if cf services | grep -q billing-db; then
+        cf delete-service billing-db -f
+      fi
