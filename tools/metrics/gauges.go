@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 	"time"
 
@@ -129,6 +130,7 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		for _, app := range apps {
 			org_quota, err := findOrgQuotaFromSpaceGUID(c, app.SpaceGuid)
 			if err != nil {
+				log.Printf("Error finding org quota for space %s for app %s: %s\n", app.SpaceGuid, app.Guid, err)
 				continue
 			}
 			org_is_trial := isOrgQuotaTrial(org_quota)
@@ -191,15 +193,22 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		}
 		for _, instance := range serviceInstances {
 			service := findService(services, instance.ServiceGuid)
-			if service == nil || service.Label == "" {
+			if service == nil {
+				log.Printf("Service was not found for service instance %s\n", instance.Guid)
+				continue
+			}
+			if service.Label == "" {
+				log.Printf("Service label was empty for service %s and service instance %s\n", service.Guid, instance.Guid)
 				continue
 			}
 			service_plan := findServicePlan(service_plans, instance.ServicePlanGuid)
 			if service_plan == nil {
+				log.Printf("Error finding service plan for service instance %s: %s\n", instance.Guid, err)
 				continue
 			}
 			org_quota, err := findOrgQuotaFromSpaceGUID(c, instance.SpaceGuid)
 			if err != nil {
+				log.Printf("Error finding org quota for space %s for service instance %s: %s\n", instance.SpaceGuid, instance.Guid, err)
 				continue
 			}
 			org_is_trial := isOrgQuotaTrial(org_quota)
@@ -239,6 +248,7 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		for _, org := range orgs {
 			quota, err := org.Quota()
 			if err != nil {
+				log.Printf("Error finding org quota for org %s: %s\n", org.Guid, err)
 				continue
 			}
 			counters[quota.Name]++
