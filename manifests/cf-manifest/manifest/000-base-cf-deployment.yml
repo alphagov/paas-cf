@@ -42,6 +42,12 @@ releases:
     version: "51"
     url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=51
     sha1: 869b8e6bf58f5431b3579f730f142814aae39d71
+    # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
+    # is merged - It is used ONLY for the route-registrar and gorouter
+  - name: routing
+    version: 0.1.2
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/routing-0.1.2.tgz
+    sha1: 9b56da7b99ddbbb8313756f146a06d781d8d0230
 
   ### buildpacks
   - name: binary-buildpack

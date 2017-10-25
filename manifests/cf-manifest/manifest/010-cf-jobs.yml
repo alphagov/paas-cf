@@ -136,7 +136,9 @@ jobs:
       - name: nginx
         release: nginx
       - name: route_registrar
-        release: (( grab meta.release.name ))
+      # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
+      # is merged - It is used ONLY for the route-registrar and gorouter
+        release: routing
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -351,7 +353,9 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
-        release: (( grab meta.release.name ))
+      # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
+      # is merged - It is used ONLY for the route-registrar and gorouter
+        release: routing
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
