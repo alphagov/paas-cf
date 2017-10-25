@@ -118,6 +118,18 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return err
 		}
+		spaces, err := c.cf.ListSpaces()
+		if err != nil {
+			return err
+		}
+		orgs, err := c.cf.ListOrgs()
+		if err != nil {
+			return err
+		}
+		org_quotas, err := c.cf.ListOrgQuotas()
+		if err != nil {
+			return err
+		}
 
 		// Number of relevant apps in
 		// - APP_STATE: string of whether each app is "started" or "stopped"
@@ -128,9 +140,19 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			"stopped": map[bool]int{},
 		}
 		for _, app := range apps {
-			org_quota, err := findOrgQuotaFromSpaceGUID(c, app.SpaceGuid)
-			if err != nil {
-				log.Printf("Error finding org quota for space %s for app %s: %s\n", app.SpaceGuid, app.Guid, err)
+			space := findSpace(spaces, app.SpaceGuid)
+			if space == nil {
+				log.Printf("Space was not found for app %s\n", app.Guid)
+				continue
+			}
+			org := findOrg(orgs, space.OrganizationGuid)
+			if org == nil {
+				log.Printf("Org was not found for app %s in space %s\n", app.Guid, space.Guid)
+				continue
+			}
+			org_quota := findOrgQuota(org_quotas, org.QuotaDefinitionGuid)
+			if org_quota == nil {
+				log.Printf("Org Quota was not found for app %s in org %s\n", app.Guid, org.Guid)
 				continue
 			}
 			org_is_trial := isOrgQuotaTrial(org_quota)
@@ -175,6 +197,18 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return nil
 		}
+		spaces, err := c.cf.ListSpaces()
+		if err != nil {
+			return err
+		}
+		orgs, err := c.cf.ListOrgs()
+		if err != nil {
+			return err
+		}
+		org_quotas, err := c.cf.ListOrgQuotas()
+		if err != nil {
+			return err
+		}
 
 		// Number of relevant service instances in
 		// - ORG_IS_TRIAL: boolean of whether each instance is owned by a trial organisation
@@ -206,9 +240,19 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				log.Printf("Error finding service plan for service instance %s: %s\n", instance.Guid, err)
 				continue
 			}
-			org_quota, err := findOrgQuotaFromSpaceGUID(c, instance.SpaceGuid)
+			space := findSpace(spaces, instance.SpaceGuid)
+			if space == nil {
+				log.Printf("Space was not found for service instance %s\n", instance.Guid)
+				continue
+			}
+			org := findOrg(orgs, space.OrganizationGuid)
+			if org == nil {
+				log.Printf("Org was not found for service instance %s in space %s\n", instance.Guid, space.Guid)
+				continue
+			}
+			org_quota := findOrgQuota(org_quotas, org.QuotaDefinitionGuid)
 			if err != nil {
-				log.Printf("Error finding org quota for space %s for service instance %s: %s\n", instance.SpaceGuid, instance.Guid, err)
+				log.Printf("Org Quota was not found for service instance %s in org %s\n", instance.Guid, org.Guid)
 				continue
 			}
 			org_is_trial := isOrgQuotaTrial(org_quota)
@@ -341,20 +385,31 @@ func findServicePlan(service_plans []cfclient.ServicePlan, guid string) *cfclien
 	return nil
 }
 
-func findOrgQuotaFromSpaceGUID(c *Client, guid string) (*cfclient.OrgQuota, error) {
-	space, err := c.cf.GetSpaceByGuid(guid)
-	if err != nil {
-		return nil, err
+func findSpace(spaces []cfclient.Space, guid string) *cfclient.Space {
+	for _, space := range spaces {
+		if space.Guid == guid {
+			return &space
+		}
 	}
-	org, err := space.Org()
-	if err != nil {
-		return nil, err
+	return nil
+}
+
+func findOrg(orgs []cfclient.Org, guid string) *cfclient.Org {
+	for _, org := range orgs {
+		if org.Guid == guid {
+			return &org
+		}
 	}
-	org_quota, err := org.Quota()
-	if err != nil {
-		return nil, err
+	return nil
+}
+
+func findOrgQuota(org_quotas []cfclient.OrgQuota, guid string) *cfclient.OrgQuota {
+	for _, org_quota := range org_quotas {
+		if org_quota.Guid == guid {
+			return &org_quota
+		}
 	}
-	return org_quota, nil
+	return nil
 }
 
 // Determine if an organisation is on a trial plan.
