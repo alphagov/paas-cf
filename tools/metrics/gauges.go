@@ -118,6 +118,10 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			return err
 		}
 
+		// Number of relevant apps in
+		// - APP_STATE: string of whether each app is "started" or "stopped"
+		// - ORG_IS_TRIAL: boolean of whether each app is owned by a trial organisation
+		// counters[APP_STATE][ORG_IS_TRIAL]
 		counters := map[string]map[bool]int{
 			"started": map[bool]int{},
 			"stopped": map[bool]int{},
@@ -170,6 +174,11 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			return nil
 		}
 
+		// Number of relevant service instances in
+		// - ORG_IS_TRIAL: boolean of whether each app is owned by a trial organisation
+		// - SERVICE_PLAN_IS_FREE: whether the instance's service plan is free
+		// - NAME_OF_SERVICE: e.g., "mysql" or "postgres"
+		// counters[ORG_IS_TRIAL][SERVICE_PLAN_IS_FREE][NAME_OF_SERVICE]
 		counters := map[bool]map[bool]map[string]int{
 			true: map[bool]map[string]int{
 				true:  map[string]int{},
