@@ -177,7 +177,7 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		}
 
 		// Number of relevant service instances in
-		// - ORG_IS_TRIAL: boolean of whether each app is owned by a trial organisation
+		// - ORG_IS_TRIAL: boolean of whether each instance is owned by a trial organisation
 		// - SERVICE_PLAN_IS_FREE: whether the instance's service plan is free
 		// - NAME_OF_SERVICE: e.g., "mysql" or "postgres"
 		// counters[ORG_IS_TRIAL][SERVICE_PLAN_IS_FREE][NAME_OF_SERVICE]
