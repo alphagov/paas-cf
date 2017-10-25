@@ -126,7 +126,7 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return err
 		}
-		org_quotas, err := c.cf.ListOrgQuotas()
+		orgQuotas, err := c.cf.ListOrgQuotas()
 		if err != nil {
 			return err
 		}
@@ -150,23 +150,23 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				log.Printf("Org was not found for app %s in space %s\n", app.Guid, space.Guid)
 				continue
 			}
-			org_quota := findOrgQuota(org_quotas, org.QuotaDefinitionGuid)
-			if org_quota == nil {
+			orgQuota := findOrgQuota(orgQuotas, org.QuotaDefinitionGuid)
+			if orgQuota == nil {
 				log.Printf("Org Quota was not found for app %s in org %s\n", app.Guid, org.Guid)
 				continue
 			}
-			org_is_trial := isOrgQuotaTrial(org_quota)
+			orgIsTrial := isOrgQuotaTrial(orgQuota)
 			if app.State == "STARTED" {
-				counters["started"][org_is_trial]++
+				counters["started"][orgIsTrial]++
 			}
 			if app.State == "STOPPED" {
-				counters["stopped"][org_is_trial]++
+				counters["stopped"][orgIsTrial]++
 			}
 		}
 
 		metrics := []Metric{}
-		for state, count_by_trial := range counters {
-			for org_is_trial, count := range count_by_trial {
+		for state, countByTrial := range counters {
+			for orgIsTrial, count := range countByTrial {
 				metrics = append(metrics, Metric{
 					Kind:  Gauge,
 					Time:  time.Now(),
@@ -174,7 +174,7 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 					Value: float64(count),
 					Tags: []string{
 						"state:" + state,
-						fmt.Sprintf("trial_org:%t", org_is_trial),
+						fmt.Sprintf("trial_org:%t", orgIsTrial),
 					},
 				})
 			}
@@ -193,7 +193,7 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return nil
 		}
-		service_plans, err := c.cf.ListServicePlans()
+		servicePlans, err := c.cf.ListServicePlans()
 		if err != nil {
 			return nil
 		}
@@ -205,7 +205,7 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		if err != nil {
 			return err
 		}
-		org_quotas, err := c.cf.ListOrgQuotas()
+		orgQuotas, err := c.cf.ListOrgQuotas()
 		if err != nil {
 			return err
 		}
@@ -235,8 +235,8 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				log.Printf("Service label was empty for service %s and service instance %s\n", service.Guid, instance.Guid)
 				continue
 			}
-			service_plan := findServicePlan(service_plans, instance.ServicePlanGuid)
-			if service_plan == nil {
+			servicePlan := findServicePlan(servicePlans, instance.ServicePlanGuid)
+			if servicePlan == nil {
 				log.Printf("Error finding service plan for service instance %s: %s\n", instance.Guid, err)
 				continue
 			}
@@ -250,29 +250,29 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				log.Printf("Org was not found for service instance %s in space %s\n", instance.Guid, space.Guid)
 				continue
 			}
-			org_quota := findOrgQuota(org_quotas, org.QuotaDefinitionGuid)
+			orgQuota := findOrgQuota(orgQuotas, org.QuotaDefinitionGuid)
 			if err != nil {
 				log.Printf("Org Quota was not found for service instance %s in org %s\n", instance.Guid, org.Guid)
 				continue
 			}
-			org_is_trial := isOrgQuotaTrial(org_quota)
-			service_plan_is_free := isServicePlanFree(service_plan)
-			counters[org_is_trial][service_plan_is_free][service.Label]++
+			orgIsTrial := isOrgQuotaTrial(orgQuota)
+			servicePlanIsFree := isServicePlanFree(servicePlan)
+			counters[orgIsTrial][servicePlanIsFree][service.Label]++
 		}
 
 		metrics := []Metric{}
-		for org_is_trial, x := range counters {
-			for service_plan_is_free, y := range x {
-				for service_label, count := range y {
+		for orgIsTrial, x := range counters {
+			for servicePlanIsFree, y := range x {
+				for serviceLabel, count := range y {
 					metrics = append(metrics, Metric{
 						Kind:  Gauge,
 						Time:  time.Now(),
 						Name:  "services.provisioned",
 						Value: float64(count),
 						Tags: []string{
-							"type:" + service_label,
-							fmt.Sprintf("trial_org:%t", org_is_trial),
-							fmt.Sprintf("free_service:%t", service_plan_is_free),
+							"type:" + serviceLabel,
+							fmt.Sprintf("trial_org:%t", orgIsTrial),
+							fmt.Sprintf("free_service:%t", servicePlanIsFree),
 						},
 					})
 				}
@@ -376,10 +376,10 @@ func findService(services []cfclient.Service, guid string) *cfclient.Service {
 	return nil
 }
 
-func findServicePlan(service_plans []cfclient.ServicePlan, guid string) *cfclient.ServicePlan {
-	for _, service_plan := range service_plans {
-		if service_plan.Guid == guid {
-			return &service_plan
+func findServicePlan(servicePlans []cfclient.ServicePlan, guid string) *cfclient.ServicePlan {
+	for _, servicePlan := range servicePlans {
+		if servicePlan.Guid == guid {
+			return &servicePlan
 		}
 	}
 	return nil
@@ -403,10 +403,10 @@ func findOrg(orgs []cfclient.Org, guid string) *cfclient.Org {
 	return nil
 }
 
-func findOrgQuota(org_quotas []cfclient.OrgQuota, guid string) *cfclient.OrgQuota {
-	for _, org_quota := range org_quotas {
-		if org_quota.Guid == guid {
-			return &org_quota
+func findOrgQuota(orgQuotas []cfclient.OrgQuota, guid string) *cfclient.OrgQuota {
+	for _, orgQuota := range orgQuotas {
+		if orgQuota.Guid == guid {
+			return &orgQuota
 		}
 	}
 	return nil
