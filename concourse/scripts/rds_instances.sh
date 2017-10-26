@@ -24,6 +24,11 @@ case $ACTION in
   ;;
 esac
 
+get_instance_ids_with_status() {
+  aws rds describe-db-instances \
+    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` && DBInstanceStatus == \`${1}\` && MultiAZ == \`false\` && ReadReplicaDBInstanceIdentifiers == \`[]\`].DBInstanceIdentifier" --output text | tr '\t' '\n' | sort
+}
+
 # Obtain the VPC ID from the AWS API and make sure there is only one that we can
 # use.
 vpc_ids=$(
@@ -42,22 +47,23 @@ fi
 
 # Make a list of RDS Instances that are assigned to the specific VPC ID, are not
 # MultiAZ and are/do not contain any replicas.
-instance_ids=$(
+all_instance_ids=$(
   aws rds describe-db-instances \
-    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` && DBInstanceStatus == \`${STATE_BEFORE}\` && MultiAZ == \`false\` && ReadReplicaDBInstanceIdentifiers == \`[]\`].DBInstanceIdentifier" --output text | tr '\t' '\n' | sort
+    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` && MultiAZ == \`false\` && ReadReplicaDBInstanceIdentifiers == \`[]\`].DBInstanceIdentifier" --output text | tr '\t' '\n' | sort
 )
+
+# Make a sublist of RDS Instances that not in the desired state
+instance_ids=$(get_instance_ids_with_status ${STATE_BEFORE})
+
 
 for instance_id in $instance_ids; do
   aws rds "${CMD}" --db-instance-identifier "${instance_id}"
 done
 
 for _ in $(seq 1 20); do
-  instance_ids_after=$(
-    aws rds describe-db-instances \
-      --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` && DBInstanceStatus == \`${STATE_AFTER}\` && MultiAZ == \`false\` && ReadReplicaDBInstanceIdentifiers == \`[]\`].DBInstanceIdentifier" --output text | tr '\t' '\n' | sort
-  )
+  instance_ids_after=$(get_instance_ids_with_status ${STATE_AFTER})
 
-  if [ "${instance_ids}" = "${instance_ids_after}" ]; then
+  if [ "${all_instance_ids}" = "${instance_ids_after}" ]; then
     echo "All done. Happy days."
     exit 0
   fi
@@ -68,5 +74,5 @@ for _ in $(seq 1 20); do
 done
 
 echo "We have waited for too long. Nothing we can do. Check it out yourself..."
-echo "${instance_ids_after}"
+echo "${all_instance_ids}"
 exit 1
