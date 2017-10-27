@@ -309,7 +309,7 @@ jobs:
 
               ./paas-cf/concourse/scripts/create_pool_lock.sh \
                 "((git_concourse_pool_clone_full_url_ssh))" \
-                $(pwd)/git-ssh-private-key/git_id_rsa \
+                "$(pwd)/git-ssh-private-key/git_id_rsa" \
                 "((pipeline_name))" lock
 
       - try:
@@ -613,7 +613,7 @@ jobs:
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} > /dev/null
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
                 cf target -o admin -s healthchecks > /dev/null
 
                 echo "Waiting for ~2mins for app-availability-tests job to start:"
@@ -1135,6 +1135,7 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
+                  # shellcheck disable=SC2086
                   ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
@@ -1192,11 +1193,11 @@ jobs:
                   cd certs
                   for file in *.crt; do
                     cn=${file%.crt}
-                    yaml_key_name=$(echo ${cn} | tr A-Z- a-z_)
+                    yaml_key_name=$(echo "${cn}" | tr A-Z- a-z_)
 
                     echo "Converting ${cn} certs to YAML"
-                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets ${yaml_key_name}_key ${cn}.key > ${cn}_key.yml
-                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets ${yaml_key_name}_cert ${cn}.crt > ${cn}_cert.yml
+                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_key" "${cn}.key" > "${cn}_key.yml"
+                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_cert" "${cn}.crt" > "${cn}_cert.yml"
                   done
 
                   ../paas-cf/concourse/scripts/file_to_yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
@@ -1215,6 +1216,7 @@ jobs:
                                     ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
                   fi
 
+                  # shellcheck disable=SC2086
                   ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
@@ -1308,7 +1310,7 @@ jobs:
                     STEMCELL_VERSION=$($VAL_FROM_YAML "stemcells.${stemcell_index}.version" cf-manifest/cf-manifest.yml)
                     STEMCELL_NAME=$($VAL_FROM_YAML "stemcells.${stemcell_index}.name" cf-manifest/cf-manifest.yml)
 
-                    wget https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION} -O stemcell.tgz
+                    wget "https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION}" -O stemcell.tgz
                     ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
                     bosh upload stemcell stemcell.tgz --skip-if-exists
 
@@ -1409,7 +1411,7 @@ jobs:
                 COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
 
                 for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS CDN_BROKER_SERVER CDN_BROKER_PASS COMPOSE_BROKER_PASS; do
-                  echo export "${var_name}"=\"$(eval echo \$${var_name})\"
+                  echo "export \"${var_name}\"=\"$(eval echo \$${var_name})\""
                 done > config/config.sh
 
                 paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
@@ -1440,7 +1442,7 @@ jobs:
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
                   cf create-org admin
                   cf set-quota admin medium
 
@@ -1478,12 +1480,12 @@ jobs:
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
                   if cf service-brokers | grep "rds-broker\s"; then
-                    cf update-service-broker rds-broker rds-broker $RDS_BROKER_PASS https://$RDS_BROKER_SERVER
+                    cf update-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
                   else
-                    cf create-service-broker rds-broker rds-broker $RDS_BROKER_PASS https://$RDS_BROKER_SERVER
+                    cf create-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
                   fi
                   cf enable-service-access postgres
                   cf enable-service-access mysql
@@ -1508,13 +1510,13 @@ jobs:
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  cf api ${API_ENDPOINT}
-                  cf auth ${CF_ADMIN} ${CF_PASS}
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                   if cf service-brokers | grep "cdn-broker\s"; then
-                    cf update-service-broker cdn-broker cdn-broker $CDN_BROKER_PASS https://$CDN_BROKER_SERVER
+                    cf update-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
                   else
-                    cf create-service-broker cdn-broker cdn-broker $CDN_BROKER_PASS https://$CDN_BROKER_SERVER
+                    cf create-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
                   fi
                   cf enable-service-access cdn-route
 
@@ -1628,7 +1630,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
                     -o admin -s service-brokers
 
                   cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
@@ -1682,7 +1684,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
                   cf target -o admin -s healthchecks
 
@@ -1708,7 +1710,7 @@ jobs:
                     sleep 5
                     echo "Retrying $((timeout - (deadline - $(date +%s))))s..."
 
-                    if [ "$(date +%s)" -gt ${deadline} ] ; then
+                    if [ "$(date +%s)" -gt "${deadline}" ] ; then
                       echo "We're expecting ${EXPECTED} number of instance(s) to run."
                       echo "Only ${RUNNING} instance(s) running..."
 
@@ -1751,7 +1753,7 @@ jobs:
                   UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
                   cd paas-cf/scripts
                   bundle
-                  bundle exec sync-admin-users.rb ${API_ENDPOINT} ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
+                  bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
 
         - task: deploy-graphite-nozzle
           config:
@@ -1777,7 +1779,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
                   cf target -o admin -s monitoring
 
@@ -1842,7 +1844,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
                   cf target -o admin -s healthchecks
                   BUILD_ROOT=$(pwd)
@@ -1865,7 +1867,7 @@ jobs:
                   cf blue-green-deploy healthcheck
                   cf delete -f healthcheck-old
 
-                  cd $BUILD_ROOT
+                  cd "${BUILD_ROOT}"
                   echo "yes" > deployed-healthcheck/healthcheck-deployed
           on_success:
             put: deployed-healthcheck
@@ -1906,7 +1908,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} -o admin -s billing
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
                   if ! cf service billing-db > /dev/null; then
                     cf create-service postgres M-dedicated-9.5 billing-db
@@ -1971,7 +1973,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} -o admin -s monitoring
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
                   cd paas-compose-scraper/
 
@@ -2041,7 +2043,7 @@ jobs:
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
                   if cf service-brokers | grep "compose-broker\s"; then
                     cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
@@ -2137,14 +2139,14 @@ jobs:
                       terraform destroy -force \
                          -state=datadog-tfstate/datadog.tfstate \
                          -state-out=updated-tfstate/datadog.tfstate \
-                         -var-file=paas-cf/terraform/${TF_VAR_aws_account}.tfvars \
+                         -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
                          paas-cf/terraform/datadog
                       exit 0
                     fi
 
                     if [ "${ENABLE_DATADOG}" = "true" ]; then
                       terraform apply \
-                        -var-file=paas-cf/terraform/((aws_account)).tfvars \
+                        -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                         -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
                         -var-file=config/job_instances.tfvars paas-cf/terraform/datadog
                     else
@@ -2219,14 +2221,14 @@ jobs:
                   fi
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
                     -o admin -s monitoring
                   cd paas-cf/tools/paas_dashboard
                   cf push --no-start paas-dashboard
                   echo Setting DD_API_KEY...
-                  cf set-env paas-dashboard DD_API_KEY ${DATADOG_API_KEY} > /dev/null
+                  cf set-env paas-dashboard DD_API_KEY "${DATADOG_API_KEY}" > /dev/null
                   echo Setting DD_APP_KEY...
-                  cf set-env paas-dashboard DD_APP_KEY ${DATADOG_APP_KEY} > /dev/null
+                  cf set-env paas-dashboard DD_APP_KEY "${DATADOG_APP_KEY}" > /dev/null
                   cf start paas-dashboard
 
         - task: deploy-rubbernecker
@@ -2259,16 +2261,16 @@ jobs:
                   fi
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
-                  cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} \
+                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
                     -o govuk-paas -s tools
 
                   cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
                   echo Setting PIVOTAL_API_KEY...
-                  cf set-env rubbernecker PIVOTAL_API_KEY ${TRACKER_TOKEN} > /dev/null
+                  cf set-env rubbernecker PIVOTAL_API_KEY "${TRACKER_TOKEN}" > /dev/null
                   echo Setting PAGERDUTY_API_TOKEN...
-                  cf set-env rubbernecker PAGERDUTY_API_TOKEN ${PAGERDUTY_API_TOKEN} > /dev/null
+                  cf set-env rubbernecker PAGERDUTY_API_TOKEN "${PAGERDUTY_API_TOKEN}" > /dev/null
                   echo Setting PIVOTAL_PROJECT_ID...
-                  cf set-env rubbernecker PIVOTAL_PROJECT_ID ${PIVOTAL_PROJECT_ID}
+                  cf set-env rubbernecker PIVOTAL_PROJECT_ID "${PIVOTAL_PROJECT_ID}"
                   cf start rubbernecker
 
         - task: deploy-paas-metrics
@@ -2306,7 +2308,7 @@ jobs:
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                   . ./config/config.sh
-                  echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS} -o admin -s monitoring
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
                   cd paas-cf/tools/metrics
 
@@ -2542,7 +2544,7 @@ jobs:
               bosh deployment cf-manifest/cf-manifest.yml
               bosh vms ((deploy_env)) | tee vms.txt
               vms_not_running=$(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)" || true)
-              if [ ${vms_not_running} -gt "0" ]; then
+              if [ "${vms_not_running}" -gt "0" ]; then
                 echo "Error: Number of not running VMs: ${vms_not_running}."
                 exit 1
               else
@@ -2644,7 +2646,7 @@ jobs:
                 exit 0
               fi
               paas-cf/concourse/scripts/tag_release.sh \
-                ${TAG_PREFIX} ${aws_account} ${deploy_env} ${TAG_FILTER}
+                "${TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${TAG_FILTER}"
 
   - name: pipeline-unlock
     serial: true
@@ -2911,7 +2913,7 @@ jobs:
                 - -c
                 - |
                   paas-cf/concourse/scripts/smoke_tests_email.sh \
-                    ${DEPLOY_ENV} ${SYSTEM_DNS_ZONE_NAME} ${ALERT_EMAIL_ADDRESS}
+                    "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
           ensure:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
@@ -2947,7 +2949,7 @@ jobs:
             - -c
             - -e
             - |
-              ./paas-cf/concourse/scripts/bosh_login.sh bosh.${SYSTEM_DNS_ZONE_NAME} bosh-secrets/bosh-secrets.yml
+              ./paas-cf/concourse/scripts/bosh_login.sh "bosh.${SYSTEM_DNS_ZONE_NAME}" bosh-secrets/bosh-secrets.yml
 
               bosh download manifest "((deploy_env))" ./cf-manifest.yml
               bosh deployment ./cf-manifest.yml

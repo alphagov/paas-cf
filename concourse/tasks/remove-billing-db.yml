@@ -17,11 +17,11 @@ run:
     - |
       ./paas-cf/concourse/scripts/import_bosh_ca.sh
       . ./config/config.sh
-      if ! curl -I -f $API_ENDPOINT/info; then
+      if ! curl -I -f "$API_ENDPOINT/info"; then
         echo "CF API unavailable. Skipping..."
         exit 0
       fi
-      if ! echo | cf login -a ${API_ENDPOINT} -u ${CF_ADMIN} -p ${CF_PASS}; then
+      if ! echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"; then
         echo "Login failed.  Skipping..."
         exit 0
       fi

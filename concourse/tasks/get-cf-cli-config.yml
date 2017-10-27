@@ -23,5 +23,5 @@ run:
       API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
 
       for var_name in CF_ADMIN CF_PASS API_ENDPOINT; do
-        echo export "${var_name}"=\"$(eval echo \$${var_name})\"
+        echo "export \"${var_name}\"=\"$(eval echo \$${var_name})\""
       done > config/config.sh
