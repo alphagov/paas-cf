@@ -617,7 +617,7 @@ jobs:
                 cf target -o admin -s healthchecks > /dev/null
 
                 echo "Waiting for ~2mins for app-availability-tests job to start:"
-                for i in $(seq 24); do
+                for _ in $(seq 24); do
                   if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
                     echo "Request detected"
                     exit 0
@@ -662,7 +662,7 @@ jobs:
                 bucket=((state_bucket))
 
                 echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
-                for i in $(seq 24); do
+                for _ in $(seq 24); do
                   if aws s3 ls "s3://${bucket}/${JOB_FILE}" ; then
                     echo "$JOB_FILE detected"
                     exit 0
@@ -1396,23 +1396,21 @@ jobs:
                   < cf-tfstate/cf.tfstate \
                   > cf-terraform-outputs.yml
 
-                CF_ADMIN=admin
-                CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
-                FIREHOSE_USER=graphite-nozzle
-                FIREHOSE_PASS=$($VAL_FROM_YAML secrets.uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
-                API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
-                UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
-                DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
-                GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
-                RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.rds_broker_elb_dns_name cf-terraform-outputs.yml)
-                RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
-                CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
-                CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
-                COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
-
-                for var_name in CF_ADMIN CF_PASS FIREHOSE_USER FIREHOSE_PASS API_ENDPOINT UAA_ENDPOINT DOPPLER_ENDPOINT GRAPHITE_SERVER RDS_BROKER_SERVER RDS_BROKER_PASS CDN_BROKER_SERVER CDN_BROKER_PASS COMPOSE_BROKER_PASS; do
-                  echo "export \"${var_name}\"=\"$(eval echo \$${var_name})\""
-                done > config/config.sh
+                cat << EOT > config/config.sh
+                export CF_ADMIN=admin
+                export CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+                export FIREHOSE_USER=graphite-nozzle
+                export FIREHOSE_PASS=$($VAL_FROM_YAML secrets.uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
+                export API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+                export UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
+                export DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
+                export GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
+                export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.rds_broker_elb_dns_name cf-terraform-outputs.yml)
+                export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
+                export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
+                export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
+                export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
+                EOT
 
                 paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
                   > config/job_instances.tfvars

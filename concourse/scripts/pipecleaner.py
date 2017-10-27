@@ -42,8 +42,11 @@ class Pipecleaner(object):
 
     def load_pipeline(self, filename):
         raw = open(filename).read()
-        # Include $(date) so that shellcheck doesn't assume these substitutions have safe contents
-        raw = re.sub('\(\(.*?\)\)', 'DUMMY-$(date)', raw)
+        # Regexp taken from https://github.com/cloudfoundry/bosh-cli/blob/21639e8/director/template/template.go#L90
+        # (Fly uses bosh-cli's template package to do the interpolation.
+        #
+        # Include $(date) in the replacement so that shellcheck doesn't assume these substitutions have safe contents
+        raw = re.sub('\(\((!?[-/\.\w\pL]+)\)\)', 'DUMMY-$(date)', raw)
         return yaml.load(raw)
 
     def call_shellcheck(self, shell, args, variables):
