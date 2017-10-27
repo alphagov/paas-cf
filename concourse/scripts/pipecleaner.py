@@ -42,7 +42,8 @@ class Pipecleaner(object):
 
     def load_pipeline(self, filename):
         raw = open(filename).read()
-        raw = re.sub('\(\(.*?\)\)', 'DUMMY', raw)
+        # Include $(date) so that shellcheck doesn't assume these substitutions have safe contents
+        raw = re.sub('\(\(.*?\)\)', 'DUMMY-$(date)', raw)
         return yaml.load(raw)
 
     def call_shellcheck(self, shell, args, variables):
