@@ -44,9 +44,9 @@ meta:
 
 releases:
   - name: rds-broker
-    version: 0.1.19
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.19.tgz
-    sha1: 33d5545c0558fd432c62344dc9ed46aa00df8829
+    version: 0.1.20
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.20.tgz
+    sha1: d6914b5c274cea55ee06755f8a885bc483892116
 
 jobs:
   - name: rds_broker
