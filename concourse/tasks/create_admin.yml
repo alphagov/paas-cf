@@ -55,7 +55,10 @@ run:
             -d '{"origin":"uaa","type":"USER","value":"'${2}'"}'
         )
         # Check that `uaac` output a 201 HTTP status code.
-        if [ $? = 0 ] && echo "${result}" | grep '^201'; then
+        # N.B., It stopped printing `201 Created` during the upgrade to 
+        # CF v269, and now just prints the `201` code on its own line
+        # followed by a space.
+        if [ $? = 0 ] && echo "${result}" | grep '^201 $'; then
           echo "${result}"
           echo "Added $2 to $1"
         else
