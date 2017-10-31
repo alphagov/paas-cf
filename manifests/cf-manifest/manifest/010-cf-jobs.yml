@@ -135,10 +135,13 @@ jobs:
         release: (( grab meta.release.name ))
       - name: nginx
         release: nginx
+      - name: route_registrar
+      # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
+      # is merged - It is used ONLY for the route-registrar and gorouter
+        release: routing
     instances: 2
     vm_type: medium
     vm_extensions:
-      - cf_uaa_elb
       - cf_rds_client_sg
     stemcell: default
     networks:
@@ -160,6 +163,7 @@ jobs:
             server 127.0.0.1:8080;
           }
           set_real_ip_from  10.0.0.0/16;
+          set_real_ip_from  127.0.0.1/32;
           real_ip_header    X-Forwarded-For;
           real_ip_recursive on;
           server {
@@ -186,6 +190,24 @@ jobs:
         agent:
           services:
             uaa: {}
+      route_registrar:
+        routes:
+          - name: uaa
+            registration_interval: 10s
+            health_check:
+              name: cf_uaa_health_check
+              script_path: /var/vcap/jobs/uaa/bin/health_check
+              timeout: "5s"
+            port: 8081
+            tls_port: 9443
+            server_cert_domain_san: "uaa.service.cf.internal"
+            tags:
+              component: uaa
+            uris:
+              - (( concat "uaa." properties.system_domain ))
+              - (( concat "*.uaa." properties.system_domain ))
+              - (( concat "login." properties.system_domain ))
+              - (( concat "*.login." properties.system_domain ))
 
   - name: api
     azs: [z1, z2]
@@ -330,7 +352,9 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
-        release: (( grab meta.release.name ))
+      # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
+      # is merged - It is used ONLY for the route-registrar and gorouter
+        release: routing
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
