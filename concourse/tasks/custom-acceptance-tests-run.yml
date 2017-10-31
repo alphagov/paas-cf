@@ -19,7 +19,7 @@ run:
     - -c
     - |
       ./paas-cf/concourse/scripts/import_bosh_ca.sh
-      ln -s $(pwd)/artifacts /tmp/artifacts
+      ln -s "$(pwd)/artifacts" /tmp/artifacts
       echo "Running tests"
       export CONFIG
       CONFIG="$(pwd)/test-config/config.json"

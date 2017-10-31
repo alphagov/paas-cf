@@ -18,10 +18,9 @@ run:
     - -c
     - |
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-      CF_ADMIN=admin
-      CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
-      API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
 
-      for var_name in CF_ADMIN CF_PASS API_ENDPOINT; do
-        echo export "${var_name}"=\"$(eval echo \$${var_name})\"
-      done > config/config.sh
+      cat << EOT > config/config.sh
+      export CF_ADMIN=admin
+      export CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+      export API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+      EOT

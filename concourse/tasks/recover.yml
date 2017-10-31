@@ -14,6 +14,6 @@ run:
     - -e
     - -c
     - |
-      ./paas-cf/concourse/scripts/bosh_login.sh $BOSH_FQDN bosh-secrets/bosh-secrets.yml
+      ./paas-cf/concourse/scripts/bosh_login.sh "${BOSH_FQDN}" bosh-secrets/bosh-secrets.yml
       bosh deployment cf-manifest/cf-manifest.yml
       bosh cck --auto

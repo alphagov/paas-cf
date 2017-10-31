@@ -13,5 +13,5 @@ run:
     - -e
     - -c
     - |
-      aws ec2 terminate-instances --region eu-west-1 --instance-ids $(cat instance-id/id)
+      aws ec2 terminate-instances --region eu-west-1 --instance-ids "$(cat instance-id/id)"
       sleep 30

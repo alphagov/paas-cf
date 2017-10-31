@@ -26,7 +26,7 @@ run:
         terraform destroy -force \
           -state=datadog-tfstate/datadog.tfstate \
           -state-out=updated-datadog-tfstate/datadog.tfstate \
-          -var-file=paas-cf/terraform/${TF_VAR_aws_account}.tfvars \
+          -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
         paas-cf/terraform/datadog
       else
         echo "Datadog disabled, skipping terraform run..."
