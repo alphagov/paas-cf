@@ -204,21 +204,21 @@ jobs:
       - name: statsd_injector
         release: (( grab meta.release.name ))
       - name: java-buildpack
-        release: (( grab meta.release.name ))
+        release: java-buildpack
       - name: go-buildpack
-        release: (( grab meta.release.name ))
+        release: go-buildpack
       - name: binary-buildpack
-        release: (( grab meta.release.name ))
+        release: binary-buildpack
       - name: nodejs-buildpack
-        release: (( grab meta.release.name ))
+        release: nodejs-buildpack
       - name: ruby-buildpack
-        release: (( grab meta.release.name ))
+        release: ruby-buildpack
       - name: php-buildpack
-        release: (( grab meta.release.name ))
+        release: php-buildpack
       - name: python-buildpack
-        release: (( grab meta.release.name ))
+        release: python-buildpack
       - name: staticfile-buildpack
-        release: (( grab meta.release.name ))
+        release: staticfile-buildpack
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-cc
