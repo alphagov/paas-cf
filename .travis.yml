@@ -23,7 +23,7 @@ before_install:
   - |
     echo "Fetching shellcheck"
     set -e
-    wget -O ~/bin/shellcheck https://github.com/alphagov/paas-cf/releases/download/shellcheck_binary_0.4.4/shellcheck_linux_amd64
+    wget -O ~/bin/shellcheck https://github.com/alphagov/paas-cf/releases/download/shellcheck_binary_0.4.6/shellcheck_linux_amd64
     chmod +x ~/bin/shellcheck
     set +e
   - |

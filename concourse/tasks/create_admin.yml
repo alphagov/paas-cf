@@ -58,6 +58,7 @@ run:
         # N.B., It stopped printing `201 Created` during the upgrade to 
         # CF v269, and now just prints the `201` code on its own line
         # followed by a space.
+        # shellcheck disable=SC2181
         if [ $? = 0 ] && echo "${result}" | grep '^201 $'; then
           echo "${result}"
           echo "Added $2 to $1"
