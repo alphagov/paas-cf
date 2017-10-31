@@ -4,9 +4,6 @@
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-SHELLCHECK=shellcheck
-YAMLLINT=yamllint
-
 DEPLOY_ENV_MAX_LENGTH=12
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
@@ -38,7 +35,7 @@ spec:
 		go test
 
 lint_yaml:
-	find . -name '*.yml' -not -path '*/vendor/*' | xargs $(YAMLLINT) -c yamllint.yml
+	find . -name '*.yml' -not -path '*/vendor/*' | xargs yamllint -c yamllint.yml
 
 .PHONY: lint_terraform
 lint_terraform: dev ## Lint the terraform files.
@@ -47,7 +44,7 @@ lint_terraform: dev ## Lint the terraform files.
 	@terraform/scripts/lint.sh
 
 lint_shellcheck:
-	find . -name '*.sh' -not -path '*/vendor/*' | xargs $(SHELLCHECK)
+	find . -name '*.sh' -not -path '*/vendor/*' | xargs shellcheck
 
 lint_concourse:
 	cd .. && SHELLCHECK_OPTS="-e SC1091" python paas-cf/concourse/scripts/pipecleaner.py --fatal-warnings paas-cf/concourse/pipelines/*.yml
