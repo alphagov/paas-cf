@@ -43,6 +43,40 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=51
     sha1: 869b8e6bf58f5431b3579f730f142814aae39d71
 
+  ### buildpacks
+  - name: binary-buildpack
+    version: "1.0.14"
+    url: https://bosh.io/d/github.com/cloudfoundry/binary-buildpack-release?v=1.0.14
+    sha1: c5ba6b6d99b972ec34dece478302351d8b4f6bbc
+  - name: go-buildpack
+    version: "1.8.11"
+    url: https://bosh.io/d/github.com/cloudfoundry/go-buildpack-release?v=1.8.11
+    sha1: ddd8bbbd73af4ba02063905094f50f36ee78c6ef
+  - name: java-buildpack
+    version: "4.6"
+    url: https://bosh.io/d/github.com/cloudfoundry/java-buildpack-release?v=4.6
+    sha1: e9f6b1e7fe51079af70e7c42198f5e5201b7b663
+  - name: nodejs-buildpack
+    version: "1.6.8"
+    url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.8
+    sha1: 767d39e4ccdc971b017264cad6eb0d2afc60b74f
+  - name: php-buildpack
+    version: "4.3.42"
+    url: https://bosh.io/d/github.com/cloudfoundry/php-buildpack-release?v=4.3.42
+    sha1: 8161798443f31242968797da14f2aa905672cac3
+  - name: python-buildpack
+    version: "1.5.26"
+    url: https://bosh.io/d/github.com/cloudfoundry/python-buildpack-release?v=1.5.26
+    sha1: a8b679f5c1da6f71a9c5f9ef5dcd985366c3e38a
+  - name: ruby-buildpack
+    version: "1.7.3"
+    url: https://bosh.io/d/github.com/cloudfoundry/ruby-buildpack-release?v=1.7.3
+    sha1: 079d84993e3a854f8e3938f7a4761a0d76fee295
+  - name: staticfile-buildpack
+    version: "1.4.16"
+    url: https://bosh.io/d/github.com/cloudfoundry/staticfile-buildpack-release?v=1.4.16
+    sha1: 8fd958f62024be957604277bc104bbef3dd3bfc2
+
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
