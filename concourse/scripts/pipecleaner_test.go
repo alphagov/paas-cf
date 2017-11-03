@@ -1,16 +1,18 @@
 package scripts_test
 
 import (
+	"os/exec"
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-
-	"os/exec"
-
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("PipeCleaner", func() {
+	const runTimeout = 2 * time.Second
+
 	var (
 		command *exec.Cmd
 		session *gexec.Session
@@ -20,6 +22,7 @@ var _ = Describe("PipeCleaner", func() {
 		var err error
 		session, err = gexec.Start(command, GinkgoWriter, GinkgoWriter)
 		Expect(err).ToNot(HaveOccurred())
+		session.Wait(runTimeout)
 	})
 
 	Context("when run with no arguments, get usage", func() {
@@ -28,7 +31,7 @@ var _ = Describe("PipeCleaner", func() {
 		})
 
 		It("should return non-zero, with Usage on STDOUT, nothing on STDERR", func() {
-			Eventually(session).Should(gexec.Exit(2))
+			Expect(session).To(gexec.Exit(2))
 			Expect(session.Out).To(gbytes.Say("pipecleaner.py [--ignore-types=unused_fetch,unused_resource]"))
 			Expect(session.Err.Contents()).To(BeEmpty())
 		})
@@ -41,7 +44,7 @@ var _ = Describe("PipeCleaner", func() {
 			})
 
 			It("should not report anything", func() {
-				Eventually(session).Should(gexec.Exit(0))
+				Expect(session).To(gexec.Exit(0))
 				Expect(session.Err.Contents()).To(BeEmpty())
 				Expect(session.Out.Contents()).To(BeEmpty())
 			})
@@ -53,7 +56,7 @@ var _ = Describe("PipeCleaner", func() {
 			})
 
 			It("should fatal with non-portable compare", func() {
-				Eventually(session).Should(gexec.Exit(10))
+				Expect(session).To(gexec.Exit(10))
 				Expect(session.Out).To(gbytes.Say("ERROR.*?job='shellcheck', task='bad-compare'"))
 				Expect(session.Err.Contents()).To(BeEmpty())
 			})
@@ -65,7 +68,7 @@ var _ = Describe("PipeCleaner", func() {
 			})
 
 			It("should not report an issue", func() {
-				Eventually(session).Should(gexec.Exit(0))
+				Expect(session).To(gexec.Exit(0))
 				Expect(session.Out.Contents()).To(BeEmpty())
 				Expect(session.Err.Contents()).To(BeEmpty())
 			})
