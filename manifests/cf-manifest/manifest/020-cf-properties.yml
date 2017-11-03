@@ -176,6 +176,10 @@ properties:
     enable_http_redirect_frontend: true
 
   router:
+    backends:
+      enable_tls: true
+      cert_chain: (( grab secrets.router_internal_cert ))
+      private_key: (( grab secrets.router_internal_key ))
     enable_ssl: false
     enable_access_log_streaming: true
     status:
