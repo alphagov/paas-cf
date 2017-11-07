@@ -58,3 +58,34 @@ resource "datadog_monitor" "rds-failure" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
 }
+
+resource "datadog_monitor" "ec2-cpu-utilisation-warning" {
+  name                = "${format("%s CPU utilisation has been moderately high for a long time on {{bosh-job.name}}/{{bosh-index.name}}", var.env)}"
+  type                = "metric alert"
+  query               = "${format("avg(last_2h):avg:aws.ec2.cpuutilization{deploy_env:%s} by {bosh-job,bosh-index} > 100", var.env)}"
+  message             = "Instance has more than {{warn_threshold}}% CPU usage over 2 hours."
+  notify_no_data      = false
+  require_full_window = false
+
+  thresholds {
+    warning  = "50"
+    critical = "100"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
+}
+
+resource "datadog_monitor" "ec2-cpu-utilisation-critical" {
+  name                = "${format("%s CPU utilisation has been high on {{bosh-job.name}}/{{bosh-index.name}}", var.env)}"
+  type                = "metric alert"
+  query               = "${format("avg(last_30m):avg:aws.ec2.cpuutilization{deploy_env:%s} by {bosh-job,bosh-index} > 80", var.env)}"
+  message             = "Instance has more than {{threshold}}% CPU usage."
+  notify_no_data      = false
+  require_full_window = false
+
+  thresholds {
+    critical = "80"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
+}
