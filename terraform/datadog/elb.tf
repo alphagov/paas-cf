@@ -3,11 +3,11 @@ resource "datadog_monitor" "abnormal_api_latency_cc" {
   type    = "query alert"
   message = "${format("{{#is_alert}}We're experiencing >= {{threshold}} change in ELB Latency.{{/is_alert}} \n{{#is_warning}}We're experiencing >= {{warn_threshold}} change in ELB Latency.{{/is_warning}} \n\nVisit the [Team Manual > Responding to alerts > API Latency](%s#api-latency) for more info.", var.datadog_documentation_url)}"
 
-  query = "${format("avg(last_15m):anomalies(avg:aws.elb.latency{name:%s-cf-cc}, 'basic', 2, direction='both') > 0.3", var.env)}"
+  query = "${format("max(last_1h):avg:aws.elb.latency{name:%s-cf-cc} > 2", var.env)}"
 
   thresholds {
-    warning  = 0.15
-    critical = 0.3
+    warning  = 1
+    critical = 2
   }
 
   require_full_window = true
@@ -20,7 +20,7 @@ resource "datadog_monitor" "abnormal_api_latency_doppler" {
   type    = "query alert"
   message = "${format("{{#is_alert}}We're experiencing >= {{threshold}} change in ELB Latency.{{/is_alert}} \n{{#is_warning}}We're experiencing >= {{warn_threshold}} change in ELB Latency.{{/is_warning}} \n\nVisit the [Team Manual > Responding to alerts > API Latency](%s#api-latency) for more info.", var.datadog_documentation_url)}"
 
-  query = "${format("avg(last_15m):anomalies(avg:aws.elb.latency{name:%s-cf-doppler}, 'basic', 2, direction='both') > 0.3", var.env)}"
+  query = "${format("avg(last_1h):anomalies(avg:aws.elb.latency{name:%s-cf-doppler}, 'basic', 2, direction='above') > 0.3", var.env)}"
 
   require_full_window = true
 
@@ -37,7 +37,7 @@ resource "datadog_monitor" "abnormal_api_latency_uaa" {
   type    = "query alert"
   message = "${format("{{#is_alert}}We're experiencing >= {{threshold}} change in ELB Latency.{{/is_alert}} \n{{#is_warning}}We're experiencing >= {{warn_threshold}} change in ELB Latency.{{/is_warning}} \n\nVisit the [Team Manual > Responding to alerts > API Latency](%s#api-latency) for more info.", var.datadog_documentation_url)}"
 
-  query = "${format("avg(last_15m):anomalies(avg:aws.elb.latency{name:%s-cf-uaa}, 'basic', 2, direction='both') > 0.3", var.env)}"
+  query = "${format("avg(last_1h):anomalies(avg:aws.elb.latency{name:%s-cf-uaa}, 'basic', 2, direction='above') > 0.3", var.env)}"
 
   require_full_window = true
 
