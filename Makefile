@@ -139,8 +139,8 @@ prod: globals ## Set Environment to Production
 	@true
 
 .PHONY: bosh-cli
-bosh-cli: check-env ## Create interactive connnection to BOSH container
-	concourse/scripts/bosh-cli.sh
+bosh-cli:
+	@echo "bosh-cli has moved to paas-bootstrap 🐝"
 
 .PHONY: ssh_bosh
 ssh_bosh: ## SSH to the bosh server

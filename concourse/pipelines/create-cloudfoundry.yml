@@ -2498,28 +2498,6 @@ jobs:
             passed: ['cf-deploy','app-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
-      - task: test-bosh-cli
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: "2.2"
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-            CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
-          inputs:
-          - name: paas-cf
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              echo Looking for non running VMs
-              ./paas-cf/concourse/scripts/bosh-cli.sh bosh status
       - task: test-bosh-vms
         config:
           platform: linux
@@ -2921,41 +2899,3 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
-
-  - name: bosh-cli
-    plan:
-      - aggregate:
-          - get: paas-cf
-          - get: bosh-secrets
-
-      - task: run-bosh-cli
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/bosh-cli
-              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
-          inputs:
-            - name: paas-cf
-            - name: bosh-secrets
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          run:
-            path: sh
-            args:
-            - -c
-            - -e
-            - |
-              ./paas-cf/concourse/scripts/bosh_login.sh "bosh.${SYSTEM_DNS_ZONE_NAME}" bosh-secrets/bosh-secrets.yml
-
-              bosh download manifest "((deploy_env))" ./cf-manifest.yml
-              bosh deployment ./cf-manifest.yml
-              # FIXME: this wait loop and keep-alive hackery is a workaround for: https://github.com/concourse/concourse/issues/1269
-              # If the issue is resolved upstream then this block can likely be removed and the bosh-cli.sh script simplified.
-              echo "Waiting for 5mins for a connection to bosh-cli job"
-              sleep 300
-              while test "$(find /dev/pts/ | wc -l)" -gt "2"; do
-                echo "There is at least one connection to the bosh-cli job, keeping alive..."
-                sleep 300
-              done
