@@ -6,17 +6,17 @@ director_uuid: ~
 
 releases:
   - name: cf
-    version: "275"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=275
-    sha1: 87410553bea310476ea44641bccf8c6cc3280180
+    version: "278"
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=278
+    sha1: 7e05e98a9333b187807501ab4252e52058859a2c
   - name: diego
-    version: 1.26.0
-    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.26.0
-    sha1: e089f6559343c91745e4ba59a614f544a85c8619
+    version: 1.28.0
+    url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.28.0
+    sha1: f78e142e051ca8fd7a186dc321931531ab879a1c
   - name: garden-runc
-    version: 1.9.3
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.3
-    sha1: a153fd2b9d85d01772e9c6907b8c9e5005059c9e
+    version: 1.9.6
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.6
+    sha1: 55fdcc0f2bda526f126d28827fbae7b21c6b0d1c
   - name: cflinuxfs2
     version: 1.161.0
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.161.0
@@ -87,7 +87,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3445.16"
+    version: "3468"
 
 update:
   canaries: 0
