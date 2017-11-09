@@ -101,8 +101,6 @@ variable "admin_cidrs" {
   description = "List of CIDR addresses with access to operator/admin endpoints"
 
   default = [
-    "80.194.77.90/32",
-    "80.194.77.100/32",
     "85.133.67.244/32",
     "213.86.153.212/32",
     "213.86.153.213/32",
