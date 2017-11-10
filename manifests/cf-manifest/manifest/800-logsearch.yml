@@ -210,14 +210,6 @@ properties:
             }
         }
       }
-      if [@source][component] == "uaa_nginx_access" {
-        grok {
-          match => {
-            "@message" =>
-            '%{IPORHOST:[nginx][clientip]} - %{USER:[nginx][auth]} \[%{HTTPDATE:[nginx][timestamp]}\] "%{WORD:[nginx][verb]} %{URIPATHPARAM:[nginx][request]} HTTP/%{NUMBER:[nginx][httpversion]}" %{NUMBER:[nginx][response]} (?:%{NUMBER:[nginx][bytes]}|-) (?:"(?:%{URI:[nginx][referrer]}|-)"|%{QS:[nginx][referrer]}) %{QS:[nginx][agent]}'
-          }
-        }
-      }
       date {
         match => [ "[nginx][timestamp]", "dd/MMMM/yyyy:HH:mm:ss Z", "dd/MMM/yyyy:HH:mm:ss Z", "ISO8601" ]
         target => "@timestamp"
