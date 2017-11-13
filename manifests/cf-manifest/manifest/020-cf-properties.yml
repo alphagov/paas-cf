@@ -395,7 +395,7 @@ properties:
       serviceProviderCertificate: ((grab secrets.saml_cert))
     enabled: true
     brand: oss
-    self_service_links_enabled: "false"
+    self_service_links_enabled: false
     links:
       passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
       signup: (( concat "https://login." properties.system_domain "/create_account" ))
