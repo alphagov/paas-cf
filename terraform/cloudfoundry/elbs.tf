@@ -47,6 +47,7 @@ resource "aws_elb" "cf_uaa" {
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout              = 19
   cross_zone_load_balancing = "true"
+  connection_draining       = true
 
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",
