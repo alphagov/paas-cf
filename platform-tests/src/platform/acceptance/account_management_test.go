@@ -79,13 +79,13 @@ var _ = Describe("AccountManagement", func() {
 	})
 
 	Describe("login server /forgot_password endpoint", func() {
-		It("should not allow anonymous users to initiate password resets", func() {
+		It("should not allow access to the forgot password page", func() {
 			resetPasswordURL := authURL
-			resetPasswordURL.Path = "/forgot_password.do"
+			resetPasswordURL.Path = "/forgot_password"
 
 			params.Set("email", email)
 
-			resp, err := httpClient.PostForm(resetPasswordURL.String(), params)
+			resp, err := httpClient.Get(resetPasswordURL.String())
 			Expect(err).NotTo(HaveOccurred())
 
 			defer resp.Body.Close()
@@ -94,13 +94,14 @@ var _ = Describe("AccountManagement", func() {
 			Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "wrong status code, body:\n\n %s", body)
 			Expect(body).To(ContainSubstring("Something went amiss"))
 		})
-		It("should not allow anonymous users to initiate password resets page", func() {
+
+		It("should not allow users to reset forgotten passwords", func() {
 			resetPasswordURL := authURL
-			resetPasswordURL.Path = "/forgot_password"
+			resetPasswordURL.Path = "/forgot_password.do"
 
 			params.Set("email", email)
 
-			resp, err := httpClient.Get(resetPasswordURL.String())
+			resp, err := httpClient.PostForm(resetPasswordURL.String(), params)
 			Expect(err).NotTo(HaveOccurred())
 
 			defer resp.Body.Close()
