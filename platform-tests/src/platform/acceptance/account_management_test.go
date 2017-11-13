@@ -83,7 +83,7 @@ var _ = Describe("AccountManagement", func() {
 			resetPasswordURL := authURL
 			resetPasswordURL.Path = "/forgot_password"
 
-			params.Set("email", email)
+			params.Set("username", email)
 
 			resp, err := httpClient.Get(resetPasswordURL.String())
 			Expect(err).NotTo(HaveOccurred())
@@ -99,7 +99,7 @@ var _ = Describe("AccountManagement", func() {
 			resetPasswordURL := authURL
 			resetPasswordURL.Path = "/forgot_password.do"
 
-			params.Set("email", email)
+			params.Set("username", email)
 
 			resp, err := httpClient.PostForm(resetPasswordURL.String(), params)
 			Expect(err).NotTo(HaveOccurred())
