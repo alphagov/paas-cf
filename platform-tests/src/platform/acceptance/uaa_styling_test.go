@@ -1,6 +1,7 @@
 package acceptance_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
@@ -8,10 +9,12 @@ import (
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 	"io/ioutil"
+	"net/http"
 	"net/url"
+	"strings"
 )
 
-var _ = Describe("UAA Styling", func() {
+var _ = FDescribe("UAA Styling", func() {
 	var uaaURL *url.URL
 	var uaaLoginURL url.URL
 	var uaaStylesheetURL url.URL
@@ -85,5 +88,41 @@ var _ = Describe("UAA Styling", func() {
 		expectedBody, err := ioutil.ReadFile("expected_login_page.html")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(string(canonicalReturnedBody)).To(Equal(string(expectedBody)))
+	})
+
+	It("should have the expected HTML on the accept invitation page", func() {
+		uaaUsersURL := *uaaURL
+		uaaUsersURL.Path = "/Users"
+
+		oauthTokenCommand := cf.Cf("oauth-token")
+		Expect(oauthTokenCommand.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+		oauthToken := strings.TrimSpace(string(oauthTokenCommand.Buffer().Contents()))
+
+		req := &http.Request{
+			Method: "POST",
+			URL:    &uaaUsersURL,
+			Header: map[string][]string{
+				"Accept":        []string{"application/json"},
+				"Content-Type":  []string{"application/json"},
+				"Authorization": []string{oauthToken},
+			},
+			Body: ioutil.NopCloser(bytes.NewBufferString(`{
+			  "userName" : "example@gov.uk",
+			  "name" : {
+			    "formatted" : "GOV.UK",
+			    "familyName" : "Gov",
+			    "givenName" : "UK"
+			  },
+			  "emails" : [ {
+			    "value" : "example@gov.uk",
+			    "primary" : true
+			  } ],
+			  "active" : true,
+			  "verified" : true,
+			  "password" : "secret",
+			}`)),
+		}
+		_, err := httpClient.Do(req)
+		Expect(err).NotTo(HaveOccurred())
 	})
 })
