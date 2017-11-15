@@ -139,8 +139,12 @@ prod: globals ## Set Environment to Production
 	@true
 
 .PHONY: bosh-cli
-bosh-cli: check-env ## Create interactive connnection to BOSH container
-	concourse/scripts/bosh-cli.sh
+bosh-cli:
+	@echo "bosh-cli has moved to paas-bootstrap 🐝"
+
+.PHONY: ssh_bosh
+ssh_bosh: ## SSH to the bosh server
+	@echo "ssh_bosh has moved to paas-bootstrap 🐝"
 
 .PHONY: pipelines
 pipelines: check-env ## Upload pipelines to Concourse
@@ -223,18 +227,14 @@ run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 
-ssh_bosh: check-env ## SSH to the bosh server
-	@./scripts/ssh_bosh.sh
-
 ssh_concourse: check-env ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
-	@./scripts/ssh.sh ssh ${SSH_CMD}
+	@echo "ssh_concourse has moved to paas-bootstrap 🐝"
 
 tunnel: check-env ## SSH tunnel to internal IPs
-	$(if ${TUNNEL},,$(error Must pass TUNNEL=SRC_PORT:HOST:DST_PORT))
-	@./scripts/ssh.sh tunnel ${TUNNEL}
+	@echo "tunnel has moved to paas-bootstrap 🐝"
 
 stop-tunnel: check-env ## Stop SSH tunnel
-	@./scripts/ssh.sh tunnel stop
+	@echo "stop-tunnel has moved to paas-bootstrap 🐝"
 
 show-cf-memory-usage: ## Show the memory usage of the current CF cluster
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})

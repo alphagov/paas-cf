@@ -283,9 +283,6 @@ aws ses verify-email-identity --email-address support@email.com --region eu-west
 
 and click on the link in the resulting email.
 
-## BOSH failover
-Visit [BOSH failover page](https://github.com/alphagov/paas-cf/blob/master/doc/bosh_failover.md)
-
 ## Pingdom checks
 Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/pingdom.md)
 
