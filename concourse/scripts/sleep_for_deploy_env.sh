@@ -2,7 +2,7 @@
 
 set -eu
 
-splay=$((60*20))
+splay=$((60*60))
 # The following sleep monstrosity deterministically sleeps for a
 # period of time between 0-${splay} seconds in order to prevent all our
 # deletion jobs running at the same time. See the commit message for
