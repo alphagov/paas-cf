@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/PuerkitoBio/goquery"
+  packages = ["."]
+  revision = "e1271ee34c6a305e38566ecd27ae374944907ee9"
+  version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/andybalholm/cascadia"
+  packages = ["."]
+  revision = "349dd0209470eabd9514242c688c403c0926d266"
+
+[[projects]]
   name = "github.com/aws/aws-sdk-go"
   packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/stscreds","aws/defaults","aws/ec2metadata","aws/request","aws/session","aws/signer/v4","private/endpoints","private/protocol","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/restxml","private/protocol/xml/xmlutil","private/waiter","service/s3","service/sts"]
   revision = "6c577e9e7b08a6d10bad1c9703227cd0403a8dd7"
@@ -149,6 +161,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9db221a2d11d99de90b26e639437e0af59d0d27420be2d0dc74471d066d941da"
+  inputs-digest = "893563c18be3aa636e9b9fee891641a1b6f3cb7284226d305271ce4b2cedd5d6"
   solver-name = "gps-cdcl"
   solver-version = 1
