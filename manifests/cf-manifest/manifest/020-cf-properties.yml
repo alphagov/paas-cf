@@ -185,7 +185,7 @@ properties:
     status:
       user: router_user
       password: (( grab secrets.router_password ))
-    drain_wait: 30
+    drain_wait: 120
     route_services_secret: (( grab secrets.route_services_secret ))
     max_idle_connections: 0
 
