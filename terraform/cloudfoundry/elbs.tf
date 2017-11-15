@@ -48,7 +48,7 @@ resource "aws_elb" "cf_uaa" {
   idle_timeout                = 19
   cross_zone_load_balancing   = "true"
   connection_draining         = true
-  connection_draining_timeout = 15
+  connection_draining_timeout = 20
 
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",
