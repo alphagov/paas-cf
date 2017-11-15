@@ -68,4 +68,22 @@ var _ = Describe("UAA Styling", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(string(returnedBody)).To(Equal(string(expectedBody)))
 	})
+
+	It("should have the expected HTML on the login page", func() {
+		response, err := httpClient.Get(uaaLoginURL.String())
+		Expect(err).NotTo(HaveOccurred())
+
+		uaaLoginDoc, err := goquery.NewDocumentFromResponse(response)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(uaaLoginDoc.Find("link").SetAttr("href", "dummy://href").Length()).To(Equal(3))
+		Expect(uaaLoginDoc.Find("meta[name=copyright]").SetAttr("content", "DUMMY COPYRIGHT").Length()).To(Equal(1))
+		Expect(uaaLoginDoc.Find("input[name=X-Uaa-Csrf]").SetAttr("value", "DUMMY CSRF TOKEN").Length()).To(Equal(1))
+		Expect(uaaLoginDoc.Find(".copyright").SetAttr("title", "DUMMY COPYRIGHT TITLE").SetText("DUMMY COPYRIGHT TEXT").Length()).To(Equal(1))
+		canonicalReturnedBody, err := uaaLoginDoc.Html()
+		Expect(err).NotTo(HaveOccurred())
+
+		expectedBody, err := ioutil.ReadFile("expected_login_page.html")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(canonicalReturnedBody)).To(Equal(string(expectedBody)))
+	})
 })
