@@ -3,6 +3,7 @@ package acceptance_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/onsi/ginkgo"
@@ -91,13 +92,13 @@ var _ = FDescribe("UAA Styling", func() {
 	})
 
 	It("should have the expected HTML on the accept invitation page", func() {
-		uaaUsersURL := *uaaURL
-		uaaUsersURL.Path = "/Users"
-
 		oauthTokenCommand := cf.Cf("oauth-token")
 		Expect(oauthTokenCommand.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 		oauthToken := strings.TrimSpace(string(oauthTokenCommand.Buffer().Contents()))
+		Expect(oauthToken).To(MatchRegexp(`bearer [0-9a-zA-Z]+`))
 
+		uaaUsersURL := *uaaURL
+		uaaUsersURL.Path = "/Users"
 		req := &http.Request{
 			Method: "POST",
 			URL:    &uaaUsersURL,
@@ -122,7 +123,79 @@ var _ = FDescribe("UAA Styling", func() {
 			  "password" : "secret",
 			}`)),
 		}
-		_, err := httpClient.Do(req)
+		response, err := httpClient.Do(req)
 		Expect(err).NotTo(HaveOccurred())
+		returnedBody, err := ioutil.ReadAll(response.Body)
+		Expect(err).NotTo(HaveOccurred())
+
+		var createUserResp struct {
+			ID string `json:"id"`
+		}
+		err = json.Unmarshal(returnedBody, &createUserResp)
+		Expect(err).NotTo(HaveOccurred())
+
+		defer func(userID string) {
+			uaaDeleteUserURL := *uaaURL
+			uaaDeleteUserURL.Path = fmt.Sprintf("/Users/%s", userID)
+			req := &http.Request{
+				Method: "DELETE",
+				URL:    &uaaDeleteUserURL,
+				Header: map[string][]string{
+					"Accept":        []string{"application/json"},
+					"Content-Type":  []string{"application/json"},
+					"Authorization": []string{oauthToken},
+				},
+			}
+			_, err := httpClient.Do(req)
+			Expect(err).NotTo(HaveOccurred())
+		}(createUserResp.ID)
+
+		uaaInviteUsersURL := *uaaURL
+		uaaInviteUsersURL.Path = "/invite_users?redirect_uri="
+		req = &http.Request{
+			Method: "POST",
+			URL:    &uaaInviteUsersURL,
+			Header: map[string][]string{
+				"Accept":        []string{"application/json"},
+				"Content-Type":  []string{"application/json"},
+				"Authorization": []string{oauthToken},
+			},
+			Body: ioutil.NopCloser(bytes.NewBufferString(`{
+				"emails": ["example@gov.uk"]
+			}`)),
+		}
+		response, err = httpClient.Do(req)
+		Expect(err).NotTo(HaveOccurred())
+		returnedBody, err = ioutil.ReadAll(response.Body)
+		Expect(err).NotTo(HaveOccurred())
+
+		var inviteUsersResp struct {
+			NewInvites []struct {
+				UserID     string `json:"userId"`
+				InviteLink string `json:"inviteLink"`
+			} `json:"new_invites"`
+		}
+		err = json.Unmarshal(returnedBody, &inviteUsersResp)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(inviteUsersResp.NewInvites).To(HaveLen(1))
+
+		uaaAcceptURL, err := url.Parse(inviteUsersResp.NewInvites[0].InviteLink)
+		Expect(err).NotTo(HaveOccurred())
+
+		response, err = httpClient.Get(uaaAcceptURL.String())
+		Expect(err).NotTo(HaveOccurred())
+
+		uaaAcceptDoc, err := goquery.NewDocumentFromResponse(response)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(uaaAcceptDoc.Find("link").SetAttr("href", "dummy://href").Length()).To(Equal(3))
+		Expect(uaaAcceptDoc.Find("meta[name=copyright]").SetAttr("content", "DUMMY COPYRIGHT").Length()).To(Equal(1))
+		Expect(uaaAcceptDoc.Find("input[name=X-Uaa-Csrf]").SetAttr("value", "DUMMY CSRF TOKEN").Length()).To(Equal(1))
+		Expect(uaaAcceptDoc.Find(".copyright").SetAttr("title", "DUMMY COPYRIGHT TITLE").SetText("DUMMY COPYRIGHT TEXT").Length()).To(Equal(1))
+		canonicalReturnedBody, err := uaaAcceptDoc.Html()
+		Expect(err).NotTo(HaveOccurred())
+
+		expectedBody, err := ioutil.ReadFile("expected_accept_page.html")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(canonicalReturnedBody)).To(Equal(string(expectedBody)))
 	})
 })
