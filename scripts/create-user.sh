@@ -8,11 +8,11 @@ source "${SCRIPT_DIR}/common.sh"
 
 ###########################################################################
 # Defaults
+TEMPLATES_DIR="${SCRIPT_DIR}/templates"
 DEFAULT_SPACE=sandbox
 FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
-# shellcheck disable=SC2016
-SUBJECT='Create your GOV.UK PaaS account'
-# shellcheck disable=SC2016,SC1078
+SUBJECT_CREATE='Create your GOV.UK PaaS account'
+SUBJECT_RESET='Reset your password on GOV.UK PaaS'
 NOTIFICATION='
 As the account has been created now please remeber to update gov-uk-paas-announce
 mailing list. You can do that by inviting the user to the group by usng this URL:
@@ -190,18 +190,33 @@ set_user_roles() {
 
 # Expand variables from subject, escaping quotes
 get_subject() {
+  if [[ "${RESET_USER}" == "true" ]]; then
+    SUBJECT=${SUBJECT_RESET}
+  else
+    SUBJECT=${SUBJECT_CREATE}
+  fi
   eval "echo ${SUBJECT}" | \
     awk '{gsub(/"/, "\\\""); print }'
 }
 
 # Expand variables from message body, escaping new lines and quotes
 get_body() {
-  erb email="${EMAIL}" org="${ORG:-}" invite_url="${INVITE_URL}" "${SCRIPT_DIR}/templates/create_user_plain.erb" | \
+  if [[ "${RESET_USER}" == "true" ]]; then
+    TEMPLATE="reset_password_plain.erb"
+  else
+    TEMPLATE="create_user_plain.erb"
+  fi
+  erb email="${EMAIL}" org="${ORG:-}" invite_url="${INVITE_URL}" "${TEMPLATES_DIR}/${TEMPLATE}" | \
     awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}'
 }
 
 get_html_body() {
-  erb email="${EMAIL}" org="${ORG:-}" invite_url="${INVITE_URL}" "${SCRIPT_DIR}/templates/create_user_html.erb" | \
+  if [[ "${RESET_USER}" == "true" ]]; then
+    TEMPLATE="reset_password_html.erb"
+  else
+    TEMPLATE="create_user_html.erb"
+  fi
+  erb body="${TEMPLATES_DIR}/${TEMPLATE}" email="${EMAIL}" org="${ORG:-}" invite_url="${INVITE_URL}" "${TEMPLATES_DIR}/email_template.erb" | \
     awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}'
 }
 

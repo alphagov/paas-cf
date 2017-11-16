@@ -1,9 +1,4 @@
-Hi,
-
-This is your account on GOV.UK PaaS:
-
-Username: <%= email %><% if defined?(org) && org != "" %>
-Organisation: <%= org %><% end %>
+Hello,
 
 Open this link to create your account and set your password. It only works once.
 
@@ -12,3 +7,9 @@ Open this link to create your account and set your password. It only works once.
 In some departments antivirus systems check and invalidate links in inbound
 emails. If you’re unable to access the URL above, please contact
 gov-uk-paas-support@digital.cabinet-office.gov.uk.
+
+We’ve added your account to the following organisation:
+
+<%= org %>
+
+Read more about organisations: https://docs.cloud.service.gov.uk/#organisations
