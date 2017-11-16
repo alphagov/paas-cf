@@ -43,10 +43,12 @@ resource "aws_lb_ssl_negotiation_policy" "cf_cc" {
 }
 
 resource "aws_elb" "cf_uaa" {
-  name                      = "${var.env}-cf-uaa"
-  subnets                   = ["${split(",", var.infra_subnet_ids)}"]
-  idle_timeout              = 19
-  cross_zone_load_balancing = "true"
+  name                        = "${var.env}-cf-uaa"
+  subnets                     = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout                = 19
+  cross_zone_load_balancing   = "true"
+  connection_draining         = true
+  connection_draining_timeout = 20
 
   security_groups = [
     "${aws_security_group.cf_api_elb.id}",

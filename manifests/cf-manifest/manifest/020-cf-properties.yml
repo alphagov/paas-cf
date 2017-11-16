@@ -185,7 +185,7 @@ properties:
     status:
       user: router_user
       password: (( grab secrets.router_password ))
-    drain_wait: 15
+    drain_wait: 120
     route_services_secret: (( grab secrets.route_services_secret ))
     max_idle_connections: 0
 
@@ -395,7 +395,7 @@ properties:
       serviceProviderCertificate: ((grab secrets.saml_cert))
     enabled: true
     brand: oss
-    self_service_links_enabled: "false"
+    self_service_links_enabled: false
     links:
       passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
       signup: (( concat "https://login." properties.system_domain "/create_account" ))
