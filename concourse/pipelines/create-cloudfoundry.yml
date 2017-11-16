@@ -1448,6 +1448,7 @@ jobs:
                   cf create-space service-brokers -o admin
                   cf create-space healthchecks -o admin
                   cf create-space billing -o admin
+                  cf create-space assets -o admin
 
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
@@ -2330,6 +2331,38 @@ jobs:
 
                   cf blue-green-deploy paas-metrics
                   cf delete -f paas-metrics-old
+
+        - task: deploy-paas-uaa-assets
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            params:
+              DEPLOY_ENV: ((deploy_env))
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: cf-secrets
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s assets
+
+                  cd paas-cf/tools/paas-uaa-assets
+
+                  cf blue-green-deploy paas-uaa-assets
+                  cf delete -f paas-uaa-assets-old
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
