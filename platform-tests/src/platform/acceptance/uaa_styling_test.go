@@ -108,19 +108,18 @@ var _ = FDescribe("UAA Styling", func() {
 				"Authorization": []string{oauthToken},
 			},
 			Body: ioutil.NopCloser(bytes.NewBufferString(`{
-			  "userName" : "example@gov.uk",
-			  "name" : {
-			    "formatted" : "GOV.UK",
-			    "familyName" : "Gov",
-			    "givenName" : "UK"
+			  "userName": "example@gov.uk",
+			  "name": {
+			    "formatted": "GOV.UK",
+			    "familyName": "Gov",
+			    "givenName": "UK"
 			  },
-			  "emails" : [ {
-			    "value" : "example@gov.uk",
-			    "primary" : true
+			  "emails": [ {
+			    "value": "example@gov.uk",
+			    "primary": true
 			  } ],
-			  "active" : true,
-			  "verified" : true,
-			  "password" : "secret",
+			  "active": true,
+			  "verified": false
 			}`)),
 		}
 		response, err := httpClient.Do(req)
@@ -161,7 +160,7 @@ var _ = FDescribe("UAA Styling", func() {
 				"Authorization": []string{oauthToken},
 			},
 			Body: ioutil.NopCloser(bytes.NewBufferString(`{
-				"emails": ["example@gov.uk"]
+				"emails": ["example2@gov.uk"]
 			}`)),
 		}
 		response, err = httpClient.Do(req)
