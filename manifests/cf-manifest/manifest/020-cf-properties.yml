@@ -168,6 +168,7 @@ properties:
     go_router:
       servers: [ "127.0.0.1" ]
       port: 80
+      healthcheck_port: (( grab properties.router.status.port ))
     additional_frontend_config: |
       capture response header strict-transport-security len 128
       http-response add-header Strict-Transport-Security max-age=31536000;\ includeSubDomains;\ preload unless { capture.res.hdr(0) -m found }
@@ -185,6 +186,7 @@ properties:
     status:
       user: router_user
       password: (( grab secrets.router_password ))
+      port: 8080
     drain_wait: 120
     route_services_secret: (( grab secrets.route_services_secret ))
     max_idle_connections: 0
