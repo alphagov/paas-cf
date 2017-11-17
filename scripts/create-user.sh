@@ -86,6 +86,10 @@ check_params_and_environment() {
     abort "You need to have jq installed"
   fi
 
+  if ! command -v erb >/dev/null 2>&1; then
+    abort "You need to have ruby installed to run erb"
+  fi
+
   if ! cf orgs >/dev/null 2>&1; then
     abort "You need to be logged into CF CLI"
   fi
