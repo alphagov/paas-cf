@@ -10,7 +10,7 @@ def remove_passed(obj)
     if obj.has_key?('get') && obj['get'] == 'paas-cf'
       obj.delete('passed')
     else
-      obj.each { |k, v| remove_passed(v) if k == 'do' || k == 'aggregate' }
+      obj.each { |k, v| remove_passed(v) if %w[do aggregate].include?(k) }
     end
   end
 end
