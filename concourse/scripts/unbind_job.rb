@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'yaml'
-pipe = YAML.load(STDIN)
+pipe = YAML.safe_load(STDIN)
 
 def remove_passed(obj)
   case obj

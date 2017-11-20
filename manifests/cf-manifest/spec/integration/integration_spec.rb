@@ -74,7 +74,7 @@ RSpec.describe "generic manifest validations" do
 
   describe "IP address uniqueness" do
     specify "all jobs should use a unique IP address" do
-      all_ips = manifest["jobs"].map {|job|
+      all_ips = manifest["jobs"].map { |job|
         job["networks"].map { |net| net["static_ips"] }
       }.flatten.compact
 

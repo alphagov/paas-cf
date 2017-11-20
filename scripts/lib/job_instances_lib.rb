@@ -2,10 +2,10 @@ require 'yaml'
 
 class JobInstances
   def self.generate(manifest_yaml)
-    manifest = YAML.load(manifest_yaml)
+    manifest = YAML.safe_load(manifest_yaml)
     return "" unless manifest
 
-    jobs = YAML.load(manifest_yaml)['jobs']
+    jobs = YAML.safe_load(manifest_yaml)['jobs']
     jobs_list = Array.new
 
     if jobs

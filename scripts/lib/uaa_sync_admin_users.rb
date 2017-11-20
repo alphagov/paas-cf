@@ -88,7 +88,7 @@ class UaaSyncAdminUsers
   # - user: Hash as {username: ..., password: ..., email:..., origin: ...}
   def create_user(user)
     self.get_logger.info("Creating user #{user.fetch(:username)}")
-    user[:password] = (user[:origin] == "uaa") ? SecureRandom.hex : nil
+    user[:password] = user[:origin] == "uaa" ? SecureRandom.hex : nil
     info = {
       userName: user.fetch(:username),
       password: user.fetch(:password),

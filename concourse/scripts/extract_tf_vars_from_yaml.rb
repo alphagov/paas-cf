@@ -27,4 +27,4 @@ def process_yaml(yaml_tree, prefix_chain)
   end
 end
 
-process_yaml(YAML.load($stdin), ["export TF_VAR"])
+process_yaml(YAML.safe_load($stdin), ["export TF_VAR"])
