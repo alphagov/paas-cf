@@ -1,8 +1,8 @@
-package api_availability_test
+package monitor_test
 
 import (
 	"errors"
-	. "platform/availability/api"
+	. "platform/availability/monitor"
 	"regexp"
 	"time"
 
@@ -14,7 +14,7 @@ import (
 var _ = Describe("Monitor", func() {
 	Context("When a task is registered", func() {
 
-		It("should collect successful runs", func() {
+		It("should handle successful runs", func() {
 			monitor := NewMonitor(&cfclient.Config{}, GinkgoWriter, 2, []*regexp.Regexp{})
 			monitor.Add("test", func(cfg *cfclient.Config) error {
 				<-time.After(1 * time.Second)
@@ -30,7 +30,7 @@ var _ = Describe("Monitor", func() {
 			Expect(report.WarningCount).To(Equal(int64(0)))
 		}, 4)
 
-		It("should collect errors", func() {
+		It("should handle errors", func() {
 			monitor := NewMonitor(&cfclient.Config{}, GinkgoWriter, 2, []*regexp.Regexp{})
 			monitor.Add("test", func(cfg *cfclient.Config) error {
 				<-time.After(1 * time.Second)

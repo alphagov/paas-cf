@@ -33,6 +33,8 @@ spec:
 		bundle exec rspec
 	cd terraform/scripts &&\
 		go test
+	cd platform-tests &&\
+		./run_tests.sh src/platform/availability/monitor/
 
 lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' | xargs yamllint -c yamllint.yml

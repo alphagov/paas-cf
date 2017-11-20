@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"platform/availability/helpers"
+	"platform/availability/monitor"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	. "github.com/onsi/ginkgo"
@@ -37,7 +38,7 @@ var _ = Describe("API Availability Monitoring", func() {
 			Password:          helpers.MustGetenv("CF_PASS"),
 			SkipSslValidation: helpers.MustGetenv("SKIP_SSL_VALIDATION") == "true",
 		}
-		monitor := NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers)
+		monitor := monitor.NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers)
 		deployment := helpers.ConcourseDeployment()
 
 		monitor.Add("Listing all apps in a space", func(cfg *cfclient.Config) error {

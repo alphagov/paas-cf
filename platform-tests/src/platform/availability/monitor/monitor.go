@@ -1,4 +1,4 @@
-package api_availability
+package monitor
 
 import (
 	"fmt"
