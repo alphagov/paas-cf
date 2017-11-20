@@ -33,6 +33,8 @@ spec:
 		bundle exec rspec
 	cd terraform/scripts &&\
 		go test
+	cd platform-tests/src/platform &&\
+		dep ensure
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
 
