@@ -3,7 +3,7 @@
 require 'json'
 require 'yaml'
 
-outputs = JSON.load($stdin)
+outputs = JSON.parse($stdin.read)
 
 terraform_outputs = { 'terraform_outputs' => {} }
 outputs['modules'][0]['outputs'].each { |k, v|

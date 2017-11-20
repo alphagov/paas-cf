@@ -3,7 +3,7 @@
 require 'json'
 require 'dogapi'
 
-tfstate = JSON.load($stdin)
+tfstate = JSON.parse($stdin.read)
 
 def to_boolean(str)
   str == 'true'

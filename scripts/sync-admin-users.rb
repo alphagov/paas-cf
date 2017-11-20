@@ -17,7 +17,7 @@ def get_uaa_target(api_url)
   if response.code != "200"
     raise "Error connecting to API endpoint #{uri}: #{response}"
   end
-  api_info = JSON.load(response.body)
+  api_info = JSON.parse(response.body)
   api_info.fetch("token_endpoint")
 end
 
