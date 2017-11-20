@@ -2,6 +2,7 @@ package api_availability
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 
 	"github.com/cloudfoundry-community/go-cfclient"
@@ -12,20 +13,24 @@ const (
 )
 
 type Report struct {
-	Successes int64
-	Failures  int64
-	Errors    map[*Task]map[string]int // number of errors by error message by task
-	Elapsed   time.Duration
+	SuccessCount int64
+	FailureCount int64
+	WarningCount int64
+	Errors       map[*Task]map[string]int // number of errors by error message by task
+	Warnings     map[*Task]map[string]int // number of warnings by error message by task
+	Elapsed      time.Duration
 }
 
 func (r *Report) String() string {
+	total := r.SuccessCount + r.FailureCount + r.WarningCount
 	s := "\nReport:\n"
 	s += "==============\n"
-	s += fmt.Sprintf("Total task executions: %d\n", r.Successes+r.Failures)
-	s += fmt.Sprintf("Total Successes: %d\n", r.Successes)
-	s += fmt.Sprintf("Total failures: %d\n", r.Failures)
+	s += fmt.Sprintf("Total task executions: %d\n", total)
+	s += fmt.Sprintf("Total successes: %d\n", r.SuccessCount)
+	s += fmt.Sprintf("Total failures: %d\n", r.FailureCount)
+	s += fmt.Sprintf("Total warnings: %d\n", r.WarningCount)
 	s += fmt.Sprintf("Elaspsed time: %s\n", r.Elapsed.String())
-	s += fmt.Sprintf("Average rate: %.2f tasks/sec\n", float64(r.Successes+r.Failures)/r.Elapsed.Seconds())
+	s += fmt.Sprintf("Average rate: %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
 
 	if len(r.Errors) > 0 {
 		s += fmt.Sprintf("\nErrors:\n")
@@ -33,6 +38,15 @@ func (r *Report) String() string {
 			s += fmt.Sprintf("\n    %s:\n", task.name)
 			for err, count := range errCounts {
 				s += fmt.Sprintf("        %s (%d failures)\n", err, count)
+			}
+		}
+	}
+	if len(r.Warnings) > 0 {
+		s += fmt.Sprintf("\nWarnings:\n")
+		for task, warningCounts := range r.Warnings {
+			s += fmt.Sprintf("\n    %s:\n", task.name)
+			for warning, count := range warningCounts {
+				s += fmt.Sprintf("        %s (%d warnings)\n", warning, count)
 			}
 		}
 	}
@@ -56,12 +70,13 @@ type result struct {
 // Monitor continuously runs each Task given to Add in parallel
 // and gathers basic statistics on
 type Monitor struct {
-	tasks     []*Task
-	reporter  chan *Report
-	queue     chan *Task
-	results   chan *result
-	halt      chan bool
-	clientCfg *cfclient.Config
+	tasks           []*Task
+	reporter        chan *Report
+	queue           chan *Task
+	results         chan *result
+	halt            chan bool
+	clientCfg       *cfclient.Config
+	warningMatchers []*regexp.Regexp
 }
 
 func (m *Monitor) Add(name string, fn TaskFunc) {
@@ -73,7 +88,8 @@ func (m *Monitor) Add(name string, fn TaskFunc) {
 
 func (m *Monitor) statsCollector() {
 	report := &Report{
-		Errors: map[*Task]map[string]int{},
+		Errors:   map[*Task]map[string]int{},
+		Warnings: map[*Task]map[string]int{},
 	}
 	started := time.Now()
 	for {
@@ -83,11 +99,27 @@ func (m *Monitor) statsCollector() {
 			err := result.err
 			if err != nil {
 				msg := err.Error()
-				if report.Errors[result.task] == nil {
-					report.Errors[result.task] = map[string]int{}
+
+				ignored := false
+				for _, warningMatcher := range m.warningMatchers {
+					if warningMatcher.MatchString(msg) {
+						ignored = true
+						break
+					}
 				}
-				report.Errors[result.task][msg]++
-				report.Failures++
+				if !ignored {
+					if report.Errors[result.task] == nil {
+						report.Errors[result.task] = map[string]int{}
+					}
+					report.Errors[result.task][msg]++
+					report.FailureCount++
+				} else {
+					if report.Warnings[result.task] == nil {
+						report.Warnings[result.task] = map[string]int{}
+					}
+					report.Warnings[result.task][msg]++
+					report.WarningCount++
+				}
 				fmt.Printf(
 					"%s - %s %s: %s\n",
 					result.started.Format("2006-01-02 15:04:05.00 MST"),
@@ -96,7 +128,7 @@ func (m *Monitor) statsCollector() {
 					msg,
 				)
 			} else {
-				report.Successes++
+				report.SuccessCount++
 			}
 		case <-m.halt:
 			report.Elapsed = time.Since(started)
@@ -169,11 +201,12 @@ func (m *Monitor) Stop() {
 	}
 }
 
-func NewMonitor(clientCfg *cfclient.Config) *Monitor {
+func NewMonitor(clientCfg *cfclient.Config, warningMatchers []*regexp.Regexp) *Monitor {
 	m := &Monitor{
-		reporter:  make(chan *Report),
-		results:   make(chan *result, numWorkers),
-		clientCfg: clientCfg,
+		reporter:        make(chan *Report),
+		results:         make(chan *result, numWorkers),
+		clientCfg:       clientCfg,
+		warningMatchers: warningMatchers,
 	}
 	return m
 }
