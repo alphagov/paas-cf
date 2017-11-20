@@ -2336,7 +2336,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -2344,7 +2344,7 @@ jobs:
                 - src/smoke-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2378,7 +2378,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-release
             params:
@@ -2386,7 +2386,7 @@ jobs:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2443,10 +2443,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2492,10 +2492,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests']
+            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
       - task: test-bosh-vms
