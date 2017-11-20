@@ -2,14 +2,11 @@ package api_availability
 
 import (
 	"fmt"
+	"io"
 	"regexp"
 	"time"
 
 	"github.com/cloudfoundry-community/go-cfclient"
-)
-
-const (
-	numWorkers = 16
 )
 
 type Report struct {
@@ -53,7 +50,7 @@ func (r *Report) String() string {
 	return s
 }
 
-type TaskFunc func(cf *cfclient.Client) error
+type TaskFunc func(cfg *cfclient.Config) error
 
 type Task struct {
 	name string
@@ -76,6 +73,8 @@ type Monitor struct {
 	results         chan *result
 	halt            chan bool
 	clientCfg       *cfclient.Config
+	logger          io.Writer
+	numWorkers      int
 	warningMatchers []*regexp.Regexp
 }
 
@@ -120,7 +119,8 @@ func (m *Monitor) statsCollector() {
 					report.Warnings[result.task][msg]++
 					report.WarningCount++
 				}
-				fmt.Printf(
+				fmt.Fprintf(
+					m.logger,
 					"%s - %s %s: %s\n",
 					result.started.Format("2006-01-02 15:04:05.00 MST"),
 					result.ended.Format("2006-01-02 15:04:05.00 MST"),
@@ -143,9 +143,9 @@ func (m *Monitor) Run() *Report {
 	if m.halt != nil {
 		panic("Run() called twice")
 	}
-	m.queue = make(chan *Task, numWorkers)
+	m.queue = make(chan *Task, m.numWorkers)
 	m.halt = make(chan bool)
-	for i := 0; i < numWorkers; i++ {
+	for i := 0; i < m.numWorkers; i++ {
 		go m.worker()
 	}
 	go m.statsCollector()
@@ -164,11 +164,7 @@ func (m *Monitor) worker() {
 			}
 			res.err = func() error {
 				var cfg = *m.clientCfg
-				cf, err := cfclient.NewClient(&cfg)
-				if err != nil {
-					return err
-				}
-				return task.fn(cf)
+				return task.fn(&cfg)
 			}()
 			res.ended = time.Now()
 			m.results <- res
@@ -201,12 +197,19 @@ func (m *Monitor) Stop() {
 	}
 }
 
-func NewMonitor(clientCfg *cfclient.Config, warningMatchers []*regexp.Regexp) *Monitor {
+func NewMonitor(
+	clientCfg *cfclient.Config,
+	logger io.Writer,
+	numWorkers int,
+	warningMatchers []*regexp.Regexp,
+) *Monitor {
 	m := &Monitor{
 		reporter:        make(chan *Report),
 		results:         make(chan *result, numWorkers),
 		clientCfg:       clientCfg,
+		numWorkers:      numWorkers,
 		warningMatchers: warningMatchers,
+		logger:          logger,
 	}
 	return m
 }

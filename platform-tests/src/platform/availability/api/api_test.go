@@ -17,6 +17,7 @@ import (
 const (
 	maxConcourseConnectionFailures = 5
 	maxWarnings                    = 5
+	numWorkers                     = 16
 )
 
 func lg(things ...interface{}) {
@@ -36,10 +37,14 @@ var _ = Describe("API Availability Monitoring", func() {
 			Password:          helpers.MustGetenv("CF_PASS"),
 			SkipSslValidation: helpers.MustGetenv("SKIP_SSL_VALIDATION") == "true",
 		}
-		monitor := NewMonitor(cfConfig, warningMatchers)
+		monitor := NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers)
 		deployment := helpers.ConcourseDeployment()
 
-		monitor.Add("Listing all apps in a space", func(cf *cfclient.Client) error {
+		monitor.Add("Listing all apps in a space", func(cfg *cfclient.Config) error {
+			cf, err := cfclient.NewClient(cfg)
+			if err != nil {
+				return fmt.Errorf("Failed to connect to Cloud Foundry API: %s", err)
+			}
 			org, err := cf.GetOrgByName("admin")
 			if err != nil {
 				return fmt.Errorf("Failed to fetch 'admin' org: %s", err)
@@ -62,7 +67,11 @@ var _ = Describe("API Availability Monitoring", func() {
 			return nil
 		})
 
-		monitor.Add("Fetching detailed app information", func(cf *cfclient.Client) error {
+		monitor.Add("Fetching detailed app information", func(cfg *cfclient.Config) error {
+			cf, err := cfclient.NewClient(cfg)
+			if err != nil {
+				return fmt.Errorf("Failed to connect to Cloud Foundry API: %s", err)
+			}
 			org, err := cf.GetOrgByName("admin")
 			if err != nil {
 				return fmt.Errorf("Failed to fetch 'admin' org")
