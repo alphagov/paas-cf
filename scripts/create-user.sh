@@ -8,42 +8,11 @@ source "${SCRIPT_DIR}/common.sh"
 
 ###########################################################################
 # Defaults
+TEMPLATES_DIR="${SCRIPT_DIR}/templates"
 DEFAULT_SPACE=sandbox
 FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
-# shellcheck disable=SC2016
-SUBJECT='Welcome to GOV.UK PaaS'
-# shellcheck disable=SC2016,SC1078
-MESSAGE='Hello,
-
-Your account for GOV.UK PaaS is ready:
-
- - username: ${EMAIL}${ORG:+
- - organisation: ${ORG}}
-
-Please use this link to activate your account and set a password. The link will only work once:
-${INVITE_URL}
-
-You can find advice about choosing a password:
-https://docs.cloud.service.gov.uk/#choosing-passwords
-
-To get started, look at our Quick Setup Guide:
-https://docs.cloud.service.gov.uk/#quick-setup-guide
-
-You can find our privacy policy here:
-https://docs.cloud.service.gov.uk/#privacy-policy
-
-To check the status of GOV.UK PaaS, and see the availability of live
-applications and database connectivity, visit
-https://status.cloud.service.gov.uk.  We recommend you sign up to this service
-to get alerts and incident updates.
-
-Regards,
-The GOV.UK PaaS team
-
-PS Some departmental email systems will check links in inbound emails as part of
-their virus protection. This may have invalidated your one-time link. If this is
-the case please contact support to set your password another way.
-'
+SUBJECT_CREATE='Create your GOV.UK PaaS account'
+SUBJECT_RESET='Reset your password on GOV.UK PaaS'
 NOTIFICATION='
 As the account has been created now please remeber to update gov-uk-paas-announce
 mailing list. You can do that by inviting the user to the group by usng this URL:
@@ -115,6 +84,10 @@ check_params_and_environment() {
 
   if ! jq -V >/dev/null 2>&1; then
     abort "You need to have jq installed"
+  fi
+
+  if ! command -v erb >/dev/null 2>&1; then
+    abort "You need to have ruby installed to run erb"
   fi
 
   if ! cf orgs >/dev/null 2>&1; then
@@ -221,13 +194,33 @@ set_user_roles() {
 
 # Expand variables from subject, escaping quotes
 get_subject() {
+  if [[ "${RESET_USER}" == "true" ]]; then
+    SUBJECT=${SUBJECT_RESET}
+  else
+    SUBJECT=${SUBJECT_CREATE}
+  fi
   eval "echo ${SUBJECT}" | \
     awk '{gsub(/"/, "\\\""); print }'
 }
 
 # Expand variables from message body, escaping new lines and quotes
 get_body() {
-  eval "echo \"${MESSAGE}\"" | \
+  if [[ "${RESET_USER}" == "true" ]]; then
+    TEMPLATE="reset_password_plain.erb"
+  else
+    TEMPLATE="create_user_plain.erb"
+  fi
+  erb email="${EMAIL}" org="${ORG:-}" invite_url="${INVITE_URL}" "${TEMPLATES_DIR}/${TEMPLATE}" | \
+    awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}'
+}
+
+get_html_body() {
+  if [[ "${RESET_USER}" == "true" ]]; then
+    TEMPLATE="reset_password_html.erb"
+  else
+    TEMPLATE="create_user_html.erb"
+  fi
+  erb body="${TEMPLATES_DIR}/${TEMPLATE}" email="${EMAIL}" org="${ORG:-}" invite_url="${INVITE_URL}" "${TEMPLATES_DIR}/email_template.erb" | \
     awk '{gsub(/"/, "\\\""); printf "%s\\n", $0}'
 }
 
@@ -241,6 +234,10 @@ send_mail() {
     \"Body\": {
       \"Text\": {
         \"Data\": \"$(get_body)\",
+        \"Charset\": \"utf8\"
+      },
+      \"Html\": {
+        \"Data\": \"$(get_html_body)\",
         \"Charset\": \"utf8\"
       }
     }
