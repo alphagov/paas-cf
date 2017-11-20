@@ -10,3 +10,6 @@ Metrics/BlockLength:
   Enabled: true
   Exclude:
     - "**/spec/**/*"
+Layout/IndentHeredoc:
+  # FIXME: Remove when we've upgraded to Ruby 2.3
+  Enabled: false
