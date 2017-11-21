@@ -1,0 +1,6 @@
+---
+applications:
+ - name: paas-uaa-assets
+   memory: 64M
+   disk_quota: 100M
+   instances: 2
