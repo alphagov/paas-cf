@@ -26,7 +26,7 @@ func (r *Report) String() string {
 	s += fmt.Sprintf("Total successes: %d\n", r.SuccessCount)
 	s += fmt.Sprintf("Total failures: %d\n", r.FailureCount)
 	s += fmt.Sprintf("Total warnings: %d\n", r.WarningCount)
-	s += fmt.Sprintf("Elaspsed time: %s\n", r.Elapsed.String())
+	s += fmt.Sprintf("Elapsed time: %s\n", r.Elapsed.String())
 	s += fmt.Sprintf("Average rate: %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
 
 	if len(r.Errors) > 0 {
