@@ -58,6 +58,7 @@ groups:
   - name: credentials
     jobs:
       - clear-cloudfoundry-credentials
+      - rotate-cloudfoundry-credentials
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -2836,6 +2837,58 @@ jobs:
                   paas-cf/concourse/resources/cf-secrets-keep.yml | \
                   spruce merge - paas-cf/concourse/resources/finalize.yml \
                   > modified-secrets/cf-secrets.yml
+        on_success:
+          put: cf-secrets
+          params:
+            file: modified-secrets/cf-secrets.yml
+
+  - name: rotate-cloudfoundry-credentials
+    plan:
+      - get: paas-cf
+      - get: cf-secrets
+      - get: cf-manifest
+      - task: update-uaa-admin-password
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-uaac
+              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+          inputs:
+            - name: paas-cf
+            - name: cf-secrets
+            - name: cf-manifest
+          outputs:
+            - name: modified-secrets
+          params:
+            CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                sed "s/  uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
+                  > modified-secrets/cf-secrets-cleared.yml
+
+                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                  --existing-secrets modified-secrets/cf-secrets-cleared.yml \
+                  > modified-secrets/cf-secrets.yml
+
+                SKIP_SSL_VALIDATION_OPTION=""
+                if [ "${CF_SKIP_SSL_VALIDATION}" = "true" ]; then
+                  SKIP_SSL_VALIDATION_OPTION="--skip-ssl-validation"
+                fi
+                UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
+                UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password modified-secrets/cf-secrets.yml)
+
+                uaac target "${SKIP_SSL_VALIDATION_OPTION}" "${UAA_ENDPOINT}"
+                uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
+                uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
         on_success:
           put: cf-secrets
           params:
