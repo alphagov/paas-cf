@@ -6,6 +6,12 @@ resource "aws_elb" "rds_broker" {
   internal                  = true
   security_groups           = ["${aws_security_group.service_brokers.id}"]
 
+  access_logs {
+    bucket        = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-broker-rds"
+    interval      = 5
+  }
+
   health_check {
     target              = "HTTP:80/healthcheck"
     interval            = "${var.health_check_interval}"
