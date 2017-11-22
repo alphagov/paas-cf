@@ -50,7 +50,6 @@ before_install:
   - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
   - go get github.com/onsi/ginkgo/ginkgo
   - go get github.com/onsi/gomega/...
-  - go get github.com/golang/dep/cmd/dep
 
 script:
   - make test
