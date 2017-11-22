@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
 	"time"
 
 	"platform/availability/helpers"
+	"platform/availability/monitor"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	. "github.com/onsi/ginkgo"
@@ -15,25 +17,35 @@ import (
 
 const (
 	maxConcourseConnectionFailures = 5
+	maxWarnings                    = 5
+	numWorkers                     = 16
 )
 
 func lg(things ...interface{}) {
 	fmt.Fprintln(os.Stdout, things...)
 }
 
+var warningMatchers = []*regexp.Regexp{
+	regexp.MustCompile("cannot fetch token: 503 Service Unavailable"),
+}
+
 var _ = Describe("API Availability Monitoring", func() {
 
 	It("should have uninterupted access to cloudfoundry api during deploy", func() {
-
-		monitor := NewMonitor(&cfclient.Config{
+		cfConfig := &cfclient.Config{
 			ApiAddress:        fmt.Sprintf("https://api.%s", helpers.MustGetenv("SYSTEM_DNS_ZONE_NAME")),
 			Username:          helpers.MustGetenv("CF_USER"),
 			Password:          helpers.MustGetenv("CF_PASS"),
 			SkipSslValidation: helpers.MustGetenv("SKIP_SSL_VALIDATION") == "true",
-		})
+		}
+		monitor := monitor.NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers)
 		deployment := helpers.ConcourseDeployment()
 
-		monitor.Add("Listing all apps in a space", func(cf *cfclient.Client) error {
+		monitor.Add("Listing all apps in a space", func(cfg *cfclient.Config) error {
+			cf, err := cfclient.NewClient(cfg)
+			if err != nil {
+				return fmt.Errorf("Failed to connect to Cloud Foundry API: %s", err)
+			}
 			org, err := cf.GetOrgByName("admin")
 			if err != nil {
 				return fmt.Errorf("Failed to fetch 'admin' org: %s", err)
@@ -56,7 +68,11 @@ var _ = Describe("API Availability Monitoring", func() {
 			return nil
 		})
 
-		monitor.Add("Fetching detailed app information", func(cf *cfclient.Client) error {
+		monitor.Add("Fetching detailed app information", func(cfg *cfclient.Config) error {
+			cf, err := cfclient.NewClient(cfg)
+			if err != nil {
+				return fmt.Errorf("Failed to connect to Cloud Foundry API: %s", err)
+			}
 			org, err := cf.GetOrgByName("admin")
 			if err != nil {
 				return fmt.Errorf("Failed to fetch 'admin' org")
@@ -113,8 +129,8 @@ var _ = Describe("API Availability Monitoring", func() {
 		report := monitor.Run()
 		lg(report.String())
 		Expect(report.Errors).To(BeEmpty(), "expected no errors")
-		Expect(report.Successes).To(BeNumerically(">", 0), "expected at least one success")
-		Expect(report.Failures).To(Equal(int64(0)), "expected 0 failures")
-
+		Expect(report.SuccessCount).To(BeNumerically(">", int64(0)), "expected at least one success")
+		Expect(report.FailureCount).To(Equal(int64(0)), "expected 0 failures")
+		Expect(report.WarningCount).To(BeNumerically("<=", int64(maxWarnings)), "expected at most %d warnings", maxWarnings)
 	})
 })

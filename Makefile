@@ -33,6 +33,8 @@ spec:
 		bundle exec rspec
 	cd terraform/scripts &&\
 		go test
+	cd platform-tests &&\
+		./run_tests.sh src/platform/availability/monitor/
 
 lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' | xargs yamllint -c yamllint.yml
@@ -44,7 +46,7 @@ lint_terraform: dev ## Lint the terraform files.
 	@terraform/scripts/lint.sh
 
 lint_shellcheck:
-	find . -name '*.sh' -not -path '*/vendor/*' | xargs shellcheck
+	find . -name '*.sh' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*' | xargs shellcheck
 
 lint_concourse:
 	cd .. && SHELLCHECK_OPTS="-e SC1091" python paas-cf/concourse/scripts/pipecleaner.py --fatal-warnings paas-cf/concourse/pipelines/*.yml
