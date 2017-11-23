@@ -45,6 +45,11 @@ releases:
     version: 0.1.2
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/routing-0.1.2.tgz
     sha1: 9b56da7b99ddbbb8313756f146a06d781d8d0230
+    # FIXME: Remove once CF is upgraded to >= v280
+  - name: capi
+    version: "1.45.0"
+    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.45.0
+    sha1: 3ca25a7853302bdb9cabcd77ad3a4a3879dfe016
 
   ### buildpacks
   - name: binary-buildpack
