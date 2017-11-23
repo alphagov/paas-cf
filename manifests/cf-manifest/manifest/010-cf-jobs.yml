@@ -177,10 +177,10 @@ jobs:
         release: (( grab jobs.consul.templates.consul_agent.release ))
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_ng
-        release: (( grab meta.release.name ))
+        release: capi
         consumes: {nats: nil}
       - name: cloud_controller_clock
-        release: (( grab meta.release.name ))
+        release: capi
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
@@ -230,7 +230,7 @@ jobs:
         release: (( grab jobs.consul.templates.consul_agent.release ))
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_worker
-        release: (( grab meta.release.name ))
+        release: capi
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
@@ -412,9 +412,9 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: tps
-        release: cf
+        release: capi
       - name: cc_uploader
-        release: cf
+        release: capi
       - name: metron_agent
         release: (( grab meta.release.name ))
     instances: 2
