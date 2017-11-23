@@ -132,6 +132,7 @@ RSpec.describe "base properties" do
           "cc_service_key_client",
           "cdn_broker",
           "paas-usage-events-collector",
+          "user_invitation",
         )
       }
 
