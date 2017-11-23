@@ -58,7 +58,7 @@ private
   end
 end
 
-if __FILE__ == $0
+if $0 == __FILE__
   abort "Usage: #{$0} /path/to/manifest.yml" unless ARGV.size == 1
   manifest = YAML.load_file(ARGV[0])
   SecurityGroupsSetter.new(manifest).apply!

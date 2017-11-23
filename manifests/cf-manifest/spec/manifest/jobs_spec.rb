@@ -100,8 +100,8 @@ RSpec.describe "the jobs definitions block" do
   end
 
   it "should list consul_agent first if present" do
-    jobs_with_consul = jobs.select { |j|
-      not j["templates"].select { |t|
+    jobs_with_consul = jobs.reject { |j|
+      j["templates"].select { |t|
         t["name"] == "consul_agent"
       }.empty?
     }

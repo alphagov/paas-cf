@@ -20,7 +20,6 @@ RSpec.describe UaaSyncAdminUsers do
     CF::UAA::Util.json(reply)
   end
 
-
   def json_query_responses(json_resources)
     %{
       {

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
+gem 'aws-sdk'
+gem 'cf-uaac'
+gem 'mail'
 gem 'rspec', '~> 3.3'
 gem 'webmock', "~> 1.24"
-gem 'cf-uaac'
-gem 'aws-sdk'
-gem 'mail'

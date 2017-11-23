@@ -4,7 +4,7 @@ require 'json'
 
 config_path = File.expand_path('~/.cf/config.json')
 if File.exist?(config_path)
-  current_target = JSON.load(File.read(config_path))["Target"]
+  current_target = JSON.parse(File.read(config_path))["Target"]
   if current_target != ENV['API_ENDPOINT']
     puts
     puts "WARNING: This script runs against the environment you are currently logged into, not the one you are targetting."
@@ -26,10 +26,10 @@ end
 
 # Fetch all resources from the path, iterating over all pages of responses.
 def cf_curl_all_resources(path)
-  page = JSON.load(`cf curl "#{path}"`)
+  page = JSON.parse(`cf curl "#{path}"`)
   results = page['resources']
   until page['next_url'].nil?
-    page = JSON.load(`cf curl "#{page['next_url']}"`)
+    page = JSON.parse(`cf curl "#{page['next_url']}"`)
     results += page['resources']
   end
   results
@@ -58,7 +58,7 @@ orgs.each { |org|
   allocated_routes += quota_def['entity']['total_routes'].to_i
 
   org_id = org['metadata']['guid']
-  org_apps_reserved_memory = JSON.load(`cf curl /v2/organizations/#{org_id}/memory_usage`)['memory_usage_in_mb'].to_i
+  org_apps_reserved_memory = JSON.parse(`cf curl /v2/organizations/#{org_id}/memory_usage`)['memory_usage_in_mb'].to_i
   apps_reserved_memory += org_apps_reserved_memory
 
   puts "Org '#{org['entity']['name']}': #{format_memory(org_apps_reserved_memory)} reserved by apps / #{format_memory(org_memory_quota)} quota"

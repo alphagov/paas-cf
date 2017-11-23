@@ -7,7 +7,7 @@ class PropertyTree
   end
 
   def self.load_yaml(yaml_string)
-    PropertyTree.new(YAML.load(yaml_string))
+    PropertyTree.new(YAML.safe_load(yaml_string))
   end
 
   def recursive_get(tree, key_array)
@@ -18,7 +18,7 @@ class PropertyTree
                  when Hash
                    tree[current_key]
                  when Array
-                   if /\A[-+]?\d+\z/ === current_key # If the key is an int, access by index
+                   if current_key === /\A[-+]?\d+\z/ # If the key is an int, access by index
                      tree[current_key.to_i]
                    else # if not, search for a element with `name: current_key`
                      tree.select { |x| x.is_a?(Hash) && x['name'] == current_key }.first
@@ -39,7 +39,7 @@ class PropertyTree
   end
 end
 
-if __FILE__ == $0 # Only execute if called directly as command
+if $0 == __FILE__ # Only execute if called directly as command
   key = ARGV[0] || abort("Usage: #{$PROGRAM_NAME} <key.dot.delimited> [input.yml]")
 
   property_tree = if ARGV[1]

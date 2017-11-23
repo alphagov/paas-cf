@@ -46,8 +46,8 @@ name                                    total memory   instance memory   routes 
       end
 
       it "creates the quotas" do
-        expect_cf_quota_create("default", *%w(-m 2048M -s 10 -r 1000 --disallow-paid-service-plans))
-        expect_cf_quota_create("large", *%w(-m 10240M -s 100 -r 10000 --allow-paid-service-plans))
+        expect_cf_quota_create("default", '-m', '2048M', '-s', '10', '-r', '1000', '--disallow-paid-service-plans')
+        expect_cf_quota_create("large", '-m', '10240M', '-s', '100', '-r', '10000', '--allow-paid-service-plans')
 
         subject.apply!
       end
@@ -68,12 +68,12 @@ default                                 2G             unlimited         1000   
       end
 
       it "updates an existing quota" do
-        expect_cf_quota_update("default", *%w(-m 2048M -s 10 -r 1000 --disallow-paid-service-plans))
+        expect_cf_quota_update("default", '-m', '2048M', '-s', '10', '-r', '1000', '--disallow-paid-service-plans')
         subject.apply!
       end
 
       it "creates a quota that doesn't already exist" do
-        expect_cf_quota_create("large", *%w(-m 10240M -s 100 -r 10000 --allow-paid-service-plans))
+        expect_cf_quota_create("large", '-m', '10240M', '-s', '100', '-r', '10000', '--allow-paid-service-plans')
         subject.apply!
       end
     end

@@ -56,10 +56,7 @@ private
 
   def render_grafana_dashboards_manifest
     file = Tempfile.new(['test-grafana-dashboards', '.yml'])
-    output, error, status = Open3.capture3(*[
-      File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__),
-      File.expand_path("../../../grafana", __FILE__),
-    ])
+    output, error, status = Open3.capture3(File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__), File.expand_path("../../../grafana", __FILE__))
     unless status.success?
       raise "Error generating grafana dashboards, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
     end
@@ -84,7 +81,7 @@ private
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
-    deep_freeze(YAML.load(manifest))
+    deep_freeze(YAML.safe_load(manifest))
   end
 
   def render_cloud_config(environment = "default")
@@ -95,7 +92,7 @@ private
         File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         cf_secrets_file,
     ])
-    deep_freeze(YAML.load(manifest))
+    deep_freeze(YAML.safe_load(manifest))
   end
 
   def load_terraform_fixture
