@@ -550,6 +550,14 @@ properties:
         id: cdn_broker
         scope: cloud_controller.admin_read_only
         secret: (( grab secrets.uaa_clients_cdn_broker_secret ))
+      user_invitation:
+        authorities: oauth.login,scim.write,emails.write,scim.userids
+        authorized-grant-types: password,refresh_token
+        id: user_invitation
+        override: true
+        redirect-uri: "https://www.cloud.service.gov.uk/next-steps?success"
+        scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
+        secret: (( grab secrets.uaa_clients_login_secret ))
 
     zones:
       internal:

@@ -22,6 +22,7 @@ https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/
 As a welcome message you can use the text from here:
 https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
 '
+REDIRECT_URI="https://www.cloud.service.gov.uk/next-steps?success"
 
 ###########################################################################
 usage() {
@@ -161,7 +162,7 @@ create_user() {
       -H "Authorization: ${auth_token}" \
       -H "Accept: application/json" -H "Content-Type: application/json" \
       -d "{\"emails\": [\"${EMAIL}\"]}" \
-      "${uaa_endpoint}/invite_users?redirect_uri=" >"${TMP_OUTPUT}"
+      "${uaa_endpoint}/invite_users?redirect_uri=${REDIRECT_URI}&client_id=user_invitation" >"${TMP_OUTPUT}"
 
     if ! jq -e '.new_invites | length == 1' "${TMP_OUTPUT}" >/dev/null; then
       cat "${TMP_OUTPUT}"
