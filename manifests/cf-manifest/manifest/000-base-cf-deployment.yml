@@ -18,9 +18,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.9.6
     sha1: 55fdcc0f2bda526f126d28827fbae7b21c6b0d1c
   - name: cflinuxfs2
-    version: 1.166.0
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.166.0
-    sha1: 283fcf78d0d2d68bc502523320c9ad973f6fa679
+    version: 1.168.0
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.168.0
+    sha1: cd5cfc8c73520b1d0c3a13b4ffaee7170edac762
   - name: paas-haproxy
     version: 0.1.5
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.5.tgz
@@ -88,7 +88,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3468.5"
+    version: "3468.11"
 
 update:
   canaries: 0
