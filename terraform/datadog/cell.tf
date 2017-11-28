@@ -16,6 +16,24 @@ resource "datadog_monitor" "cell-available-memory" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }
 
+resource "datadog_monitor" "cell-idle-cpu" {
+  name               = "${format("%s cell idle CPU", var.env)}"
+  type               = "query alert"
+  message            = "${format("Less than {{threshold}}%% CPU idle on cells. There is only {{value}}%% CPU idle on average on cells. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  escalation_message = "There is only {{value}}% CPU idle on average on cells. Check the deployment!"
+  no_data_timeframe  = "7"
+  query              = "${format("avg(last_2h):ewma_5(avg:system.cpu.idle{deploy_env:%s,bosh-job:cell}) < 50", var.env)}"
+
+  thresholds {
+    warning  = "55.0"
+    critical = "50.0"
+  }
+
+  require_full_window = true
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+}
+
 resource "datadog_monitor" "rep_process_running" {
   name                = "${format("%s Cell rep process running", var.env)}"
   type                = "service check"
