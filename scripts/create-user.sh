@@ -102,7 +102,17 @@ check_params_and_environment() {
 }
 
 create_org_space() {
-  cf create-org "${ORG}"
+  if ! cf org "${ORG}" 2&> /dev/null; then
+    read -p "The org $ORG doesn't exist yet. Do you want to create it? [Yy] " -n 1 -r
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      echo
+      cf create-org "${ORG}"
+    else
+      echo
+      echo "The org and user have not been created. Exiting."
+      exit 0
+    fi
+  fi
   cf create-space "${DEFAULT_SPACE}" -o "${ORG}"
 
   # cf create-{org|space} has the side-effect of giving roles in the org/space
