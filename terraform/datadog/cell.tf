@@ -70,6 +70,24 @@ resource "datadog_monitor" "rep_healthy" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }
 
+resource "datadog_monitor" "rep-container-capacity" {
+  name               = "${format("%s rep container capacity", var.env)}"
+  type               = "query alert"
+  message            = "${format("More than {{threshold}}%% of container capacity across reps is utilised. There is {{value}}%% of container capacity in use. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  escalation_message = "There is {{value}}% container capacity in use. Check the deployment!"
+  no_data_timeframe  = "7"
+  query              = "${format("avg(last_2h):( ewma_5(sum:cf.rep.ContainerCount{deployment:%s,job:cell}) / ewma_5(sum:cf.rep.CapacityTotalContainers{deployment:%s,job:cell}) ) * 100 > 80", var.env, var.env)}"
+
+  thresholds {
+    warning  = "75.0"
+    critical = "80.0"
+  }
+
+  require_full_window = true
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+}
+
 resource "datadog_monitor" "garden_process_running" {
   name                = "${format("%s Cell garden process running", var.env)}"
   type                = "service check"
