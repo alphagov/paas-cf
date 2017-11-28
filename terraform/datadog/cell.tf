@@ -88,6 +88,24 @@ resource "datadog_monitor" "rep-container-capacity" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
 }
 
+resource "datadog_monitor" "rep-memory-capacity" {
+  name               = "${format("%s rep advertised memory capacity", var.env)}"
+  type               = "query alert"
+  message            = "${format("Less than {{threshold}}%% of rep advertised memory capacity. There is {{value}}%% of rep advertised remaining memory capacity. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  escalation_message = "There is only {{value}}% of rep advertised memory capacity. Check the deployment!"
+  no_data_timeframe  = "7"
+  query              = "${format("avg(last_2h):( ewma_5(sum:cf.rep.CapacityRemainingMemory{deployment:%s,job:cell}) / ewma_5(sum:cf.rep.CapacityTotalMemory{deployment:%s,job:cell}) ) * 100 < 33", var.env, var.env)}"
+
+  thresholds {
+    warning  = "35.0"
+    critical = "33.0"
+  }
+
+  require_full_window = true
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+}
+
 resource "datadog_monitor" "garden_process_running" {
   name                = "${format("%s Cell garden process running", var.env)}"
   type                = "service check"
