@@ -120,4 +120,16 @@ val2: b
 			Expect(session.Err.Contents()).To(BeEmpty())
 		})
 	})
+
+	Context("argument references a string value within an array indexed by position", func() {
+		BeforeEach(func() {
+			cmdArg = "foo.array1.0.val"
+		})
+
+		It("returns a single string", func() {
+			Eventually(session).Should(gexec.Exit(0))
+			Expect(session.Out.Contents()).To(Equal([]byte("array1_item1_value\n")))
+			Expect(session.Err.Contents()).To(BeEmpty())
+		})
+	})
 })

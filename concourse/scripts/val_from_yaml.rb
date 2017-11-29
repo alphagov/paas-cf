@@ -18,7 +18,7 @@ class PropertyTree
                  when Hash
                    tree[current_key]
                  when Array
-                   if current_key === /\A[-+]?\d+\z/ # If the key is an int, access by index
+                   if current_key =~ /\A[-+]?\d+\z/ # If the key is an int, access by index
                      tree[current_key.to_i]
                    else # if not, search for a element with `name: current_key`
                      tree.select { |x| x.is_a?(Hash) && x['name'] == current_key }.first
