@@ -1410,6 +1410,8 @@ jobs:
                 export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
                 export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
                 export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
+                export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets.elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
+                export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
                 EOT
 
                 paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
@@ -2019,36 +2021,66 @@ jobs:
                   bosh cleanup --all
 
       - aggregate:
-        - task: register-compose-broker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            params:
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+        - do:
+          - task: register-compose-broker
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/cf-cli
+                  tag: 465642da06051a55630d39c899697b678f66a7f7
+              inputs:
+                - name: paas-cf
+                - name: config
+                - name: bosh-CA
+              params:
+                APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                    . ./config/config.sh
+                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  if cf service-brokers | grep "compose-broker\s"; then
-                    cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                  else
-                    cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                  fi
+                    if cf service-brokers | grep "compose-broker\s"; then
+                      cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                    else
+                      cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                    fi
+
+          - task: register-elasticache-broker
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/cf-cli
+                  tag: 465642da06051a55630d39c899697b678f66a7f7
+              inputs:
+                - name: paas-cf
+                - name: config
+                - name: bosh-CA
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                    . ./config/config.sh
+                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                    if cf service-brokers | grep "elasticache-broker\s"; then
+                      cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
+                    else
+                      cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
+                    fi
 
         - task: update-kibana-timezone
           config:

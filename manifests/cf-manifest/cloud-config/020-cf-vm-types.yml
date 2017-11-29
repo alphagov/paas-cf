@@ -65,4 +65,5 @@ vm_types:
         type: gp2
       security_groups:
         - (( grab terraform_outputs.rds_broker_db_clients_security_group ))
+        - (( grab terraform_outputs.elasticache_broker_clients_security_group ))
         - (( grab terraform_outputs.default_security_group ))

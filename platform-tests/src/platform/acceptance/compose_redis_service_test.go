@@ -13,9 +13,9 @@ import (
 	. "github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("Redis backing service", func() {
+var _ = Describe("Compose Redis backing service", func() {
 	const (
-		serviceName  = "redis"
+		serviceName  = "compose-redis"
 		testPlanName = "tiny"
 	)
 
@@ -31,7 +31,7 @@ var _ = Describe("Redis backing service", func() {
 		Expect(plans.Out.Contents()).To(ContainSubstring("tiny"))
 	})
 
-	Context("creating a database instance", func() {
+	PContext("creating a database instance", func() {
 		// Avoid creating additional tests in this block because this setup and
 		// teardown is slow (several minutes).
 
@@ -41,12 +41,12 @@ var _ = Describe("Redis backing service", func() {
 		)
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
-			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-redis")
+			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-compose-redis")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
 
-			fmt.Fprintf(GinkgoWriter, "Created Redis instance: %s\n", dbInstanceName)
+			fmt.Fprintf(GinkgoWriter, "Created Compose Redis instance: %s\n", dbInstanceName)
 
 			Expect(cf.Cf(
 				"push", appName,
@@ -73,7 +73,7 @@ var _ = Describe("Redis backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/redis-test", testConfig))
+			resp, err := httpClient.Get(helpers.AppUri(appName, "/compose-redis-test", testConfig))
 			Expect(err).NotTo(HaveOccurred())
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())

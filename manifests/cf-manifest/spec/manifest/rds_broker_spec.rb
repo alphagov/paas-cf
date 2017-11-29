@@ -24,13 +24,13 @@ RSpec.describe "RDS broker properties" do
     it "adds to default_running_security_groups" do
       sgs = properties.fetch("cc").fetch("default_running_security_groups")
       expect(sgs.length).to be > 1 # Ensure the default ones haven't been replaced
-      expect(sgs.last).to eq("rds_broker_instances")
+      expect(sgs).to include("rds_broker_instances")
     end
 
     it "adds to default_staging_security_groups" do
       sgs = properties.fetch("cc").fetch("default_staging_security_groups")
       expect(sgs.length).to be > 1 # Ensure the default ones haven't been replaced
-      expect(sgs.last).to eq("rds_broker_instances")
+      expect(sgs).to include("rds_broker_instances")
     end
   end
 

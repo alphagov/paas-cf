@@ -134,6 +134,26 @@ output "rds_broker_elb_dns_name" {
   value = "${aws_route53_record.rds_broker.fqdn}"
 }
 
+output "elasticache_broker_elb_name" {
+  value = "${aws_elb.elasticache_broker.name}"
+}
+
+output "elasticache_broker_elb_dns_name" {
+  value = "${aws_route53_record.elasticache_broker.fqdn}"
+}
+
+output "elasticache_broker_subnet_group_name" {
+  value = "${aws_elasticache_subnet_group.elasticache_broker.name}"
+}
+
+output "elasticache_broker_clients_security_group" {
+  value = "${aws_security_group.elasticache_broker_clients.name}"
+}
+
+output "elasticache_broker_instances_security_group_id" {
+  value = "${aws_security_group.elasticache_broker_instances.id}"
+}
+
 output "cdn_broker_elb_name" {
   value = "${aws_elb.cdn_broker.name}"
 }
