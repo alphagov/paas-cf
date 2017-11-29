@@ -14,8 +14,9 @@ FROM_ADDRESS='gov-uk-paas-support@digital.cabinet-office.gov.uk'
 SUBJECT_CREATE='Create your GOV.UK PaaS account'
 SUBJECT_RESET='Reset your password on GOV.UK PaaS'
 NOTIFICATION='
-As the account has been created now please remeber to update gov-uk-paas-announce
-mailing list. You can do that by inviting the user to the group by usng this URL:
+As a new account has been created please remember to update the
+gov-uk-paas-announce mailing list. You can do that by inviting the user to the
+group by using this URL:
 
 https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/gov-uk-paas-announce/invite
 
