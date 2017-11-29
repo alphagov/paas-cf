@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/url"
 	"time"
 
+	"code.cloudfoundry.org/lager"
+	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
 )
 
@@ -49,31 +52,31 @@ func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "quota.services.reserved", // number of services reserved by quotas
+				Name:  "op.quota.services.reserved", // number of services reserved by quotas
 				Value: float64(reservedServices),
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "quota.services.allocated", // number of services in use
+				Name:  "op.quota.services.allocated", // number of services in use
 				Value: float64(allocatedServices),
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "quota.memory.reserved", // memory reserved by org quotas
+				Name:  "op.quota.memory.reserved", // memory reserved by org quotas
 				Value: float64(reservedMemory),
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "quota.memory.allocated", // memory allocated to apps
+				Name:  "op.quota.memory.allocated", // memory allocated to apps
 				Value: float64(allocatedMemory),
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "quota.routes.reserved", // number of routes reserved
+				Name:  "op.quota.routes.reserved", // number of routes reserved
 				Value: float64(reservedRoutes),
 			},
 		})
@@ -105,7 +108,7 @@ func UserCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "users.count",
+				Name:  "op.users.count",
 				Value: float64(len(userGuids)),
 			},
 		})
@@ -170,7 +173,7 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				metrics = append(metrics, Metric{
 					Kind:  Gauge,
 					Time:  time.Now(),
-					Name:  "apps.count",
+					Name:  "op.apps.count",
 					Value: float64(count),
 					Tags: []string{
 						"state:" + state,
@@ -267,7 +270,7 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 					metrics = append(metrics, Metric{
 						Kind:  Gauge,
 						Time:  time.Now(),
-						Name:  "services.provisioned",
+						Name:  "op.services.provisioned",
 						Value: float64(count),
 						Tags: []string{
 							"type:" + serviceLabel,
@@ -302,12 +305,44 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			metrics = append(metrics, Metric{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "orgs.count",
+				Name:  "op.orgs.count",
 				Value: float64(count),
 				Tags:  []string{"quota:" + name},
 			})
 		}
 		return w.WriteMetrics(metrics)
+	})
+}
+
+func ELBNodeFailureCountGauge(logger lager.Logger, target string, resolvers []*net.Resolver, interval time.Duration) MetricReadCloser {
+	return NewMetricPoller(interval, func(w MetricWriter) error {
+		r, err := pingdumb.GetReport(target, resolvers)
+		if err != nil {
+			return err
+		}
+		failures := r.Failures()
+		for _, failedCheck := range failures {
+			logger.Info("elb-node-failure", lager.Data{
+				"addr":  failedCheck.Addr,
+				"start": failedCheck.Start.Format(time.RFC3339Nano),
+				"stop":  failedCheck.Start.Format(time.RFC3339Nano),
+				"err":   failedCheck.Err().Error(),
+			})
+		}
+		return w.WriteMetrics([]Metric{
+			{
+				Kind:  Gauge,
+				Time:  time.Now(),
+				Name:  "aws.elb.unhealthy_node_count",
+				Value: float64(len(failures)),
+			},
+			{
+				Kind:  Gauge,
+				Time:  time.Now(),
+				Name:  "aws.elb.healthy_node_count",
+				Value: float64(len(r.Checks) - len(failures)),
+			},
+		})
 	})
 }
 
@@ -321,7 +356,7 @@ func SpaceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
-				Name:  "spaces.count",
+				Name:  "op.spaces.count",
 				Value: float64(len(spaces)),
 			},
 		})
@@ -345,7 +380,7 @@ func EventCountGauge(c *Client, eventType string, interval time.Duration) Metric
 		gauge := Metric{
 			Time: time.Now(),
 			Kind: Gauge,
-			Name: "events." + eventType,
+			Name: "op.events." + eventType,
 		}
 		for batchUrl != "" {
 			var batch struct {

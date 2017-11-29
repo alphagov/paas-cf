@@ -6,5 +6,5 @@ applications:
    instances: 1
    buildpack: go_buildpack
    env:
-     GOPACKAGENAME: paas-metrics-reporter
-   command: ./bin/paas-metrics-reporter
+     GOPACKAGENAME: github.com/alphagov/paas-cf/tools/metrics
+   command: ./bin/metrics
