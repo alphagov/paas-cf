@@ -32,18 +32,18 @@
     }]
   }, {
     "id": "1356eeeb-7c5d-4d9d-9a04-c035a2c709b3",
-    "name": "redis",
+    "name": "compose-redis",
     "bindable": true,
-    "description": "Redis instance",
+    "description": "Compose Redis instance",
     "requires": [],
     "tags": [
-      "redis",
+      "compose-redis",
       "compose"
     ],
     "metadata": {
-      "displayName": "Redis",
+      "displayName": "Compose Redis",
       "imageUrl": "https://redis.io/images/redis-logo.svg",
-      "longDescription": "Redis instance",
+      "longDescription": "Compose Redis instance",
       "providerDisplayName": "GOV.UK PaaS",
       "documentationUrl": "https://compose.com/databases/redis",
       "supportUrl": "https://www.cloud.service.gov.uk/support.html"

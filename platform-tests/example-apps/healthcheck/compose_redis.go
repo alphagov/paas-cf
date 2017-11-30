@@ -9,8 +9,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func redisHandler(w http.ResponseWriter, r *http.Request) {
-	err := testRedisConnection()
+func composeRedisHandler(w http.ResponseWriter, r *http.Request) {
+	err := testComposeRedisConnection()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -21,18 +21,18 @@ func redisHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func testRedisConnection() error {
+func testComposeRedisConnection() error {
 	var credentials struct {
 		URI string `json:"uri"`
 	}
 
-	err := getVCAPServiceCredentials("redis", &credentials)
+	err := getVCAPServiceCredentials("compose-redis", &credentials)
 	if err != nil {
 		return errors.Wrap(err, "failed to parse VCAP_SERVICES")
 	}
 
-	if !strings.HasPrefix(credentials.URI, "rediss://") {
-		return fmt.Errorf("expected Redis URI with TLS")
+	if !strings.HasPrefix(credentials.URI, "redis://") {
+		return fmt.Errorf("expected Redis URI without TLS")
 	}
 
 	conn, err := redis.DialURL(credentials.URI)

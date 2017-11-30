@@ -62,6 +62,10 @@ func TestSuite(t *testing.T) {
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
 
+			enableServiceAccess = cf.Cf("enable-service-access", "compose-redis", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(enableServiceAccess).To(Exit(0))
+			Expect(enableServiceAccess).To(Say("OK"))
+
 			enableServiceAccess = cf.Cf("enable-service-access", "redis", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))

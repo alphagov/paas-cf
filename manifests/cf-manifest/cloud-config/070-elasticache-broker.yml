@@ -1,0 +1,15 @@
+---
+vm_types:
+  - name: elasticache_broker
+    network: cf
+    env: (( grab meta.default_env ))
+    cloud_properties:
+      instance_type: t2.nano
+      iam_instance_profile: elasticache-broker
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      security_groups:
+        - (( grab terraform_outputs.default_security_group ))
+      elbs:
+        - (( grab terraform_outputs.elasticache_broker_elb_name ))

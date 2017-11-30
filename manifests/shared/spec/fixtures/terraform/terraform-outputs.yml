@@ -39,6 +39,11 @@ terraform_outputs:
   rds_broker_mysql57_db_parameter_group: stub_rds_broker_mysql57_db_parameter_group
   rds_broker_elb_dns_name: rds-broker.com
   rds_broker_elb_name: rds_broker_elb
+  elasticache_broker_clients_security_group: stub_elasticache_broker_clients_security_group
+  elasticache_broker_instances_security_group_id: stub_elasticache_broker_instances_security_group_id
+  elasticache_broker_subnet_group_name: stub_elasticache_broker_subnet_group_name
+  elasticache_broker_elb_dns_name: elastiche-broker.com
+  elasticache_broker_elb_name: elasticache_broker_elb
   cdn_rds_client_security_group: stub_cdn_rds_client_security_group
   cdn_broker_db_clients_security_group: stub_cdn_broker_db_clients_security_group
   cdn_db_connection_string: stub_cdn_db_connection_string
