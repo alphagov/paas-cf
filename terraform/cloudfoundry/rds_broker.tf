@@ -89,6 +89,11 @@ resource "aws_db_parameter_group" "rds_broker_postgres95" {
     name         = "rds.force_ssl"
     value        = "1"
   }
+
+  parameter {
+    name  = "rds.log_retention_period"
+    value = "10080"                    // 7 days in minutes
+  }
 }
 
 resource "aws_db_parameter_group" "rds_broker_mysql57" {
