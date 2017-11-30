@@ -129,7 +129,6 @@ var _ = Describe("API Availability Monitoring", func() {
 		report := monitor.Run()
 		lg(report.String())
 		Expect(report.Errors).To(BeEmpty(), "expected no errors")
-		Expect(report.SuccessCount).To(BeNumerically(">", int64(0)), "expected at least one success")
 		Expect(report.FailureCount).To(Equal(int64(0)), "expected 0 failures")
 		Expect(report.WarningCount).To(BeNumerically("<=", int64(maxWarnings)), "expected at most %d warnings", maxWarnings)
 	})
