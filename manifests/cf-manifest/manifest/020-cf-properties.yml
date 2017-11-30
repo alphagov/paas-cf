@@ -666,6 +666,9 @@ properties:
       preloaded_rootfses:
         - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
 
+    executor:
+      memory_capacity_mb: (( calc "floor(meta.cell.rep_commit_percentage * meta.cell.instance_memory_mb)" ))
+
     route_emitter:
       dropsonde_port: (( grab properties.metron_agent.dropsonde_incoming_port ))
       bbs:
