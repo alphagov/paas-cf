@@ -26,7 +26,11 @@ esac
 
 get_instance_ids_with_status() {
   aws rds describe-db-instances \
-    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` && DBInstanceStatus == \`${1}\` && MultiAZ == \`false\` && ReadReplicaDBInstanceIdentifiers == \`[]\`].DBInstanceIdentifier" --output text | tr '\t' '\n' | sort
+    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` \
+             && DBInstanceStatus == \`${1}\` \
+             && MultiAZ == \`false\` \
+             && DBInstanceIdentifier != \`${DEPLOY_ENV}-bosh\`].DBInstanceIdentifier" \
+    --output text | tr '\t' '\n' | sort
 }
 
 # Obtain the VPC ID from the AWS API and make sure there is only one that we can
@@ -49,7 +53,11 @@ fi
 # MultiAZ and are/do not contain any replicas.
 all_instance_ids=$(
   aws rds describe-db-instances \
-    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` && MultiAZ == \`false\` && ReadReplicaDBInstanceIdentifiers == \`[]\`].DBInstanceIdentifier" --output text | tr '\t' '\n' | sort
+    --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` \
+             && MultiAZ == \`false\` \
+             && ReadReplicaDBInstanceIdentifiers == \`[]\` \
+             && DBInstanceIdentifier != \`${DEPLOY_ENV}-bosh\`].DBInstanceIdentifier" \
+    --output text | tr '\t' '\n' | sort
 )
 
 # Make a sublist of RDS Instances that not in the desired state
