@@ -51,16 +51,20 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
+
 	// Combine all metrics into single stream
 	metrics := NewMultiMetricReader(
-		AppCountGauge(c, 5*time.Minute),                                                                       // poll number of apps
-		ServiceCountGauge(c, 5*time.Minute),                                                                   // poll number of provisioned services
-		OrgCountGauge(c, 5*time.Minute),                                                                       // poll number of orgs
-		SpaceCountGauge(c, 5*time.Minute),                                                                     // poll number of spaces
-		UserCountGauge(c, 5*time.Minute),                                                                      // poll number of users
-		QuotaGauge(c, 5*time.Minute),                                                                          // poll quota usage
-		EventCountGauge(c, "app.crash", 10*time.Minute),                                                       // count number of times an event is seen within the interval
-		ELBNodeFailureCountGauge(logger, os.Getenv("ELB_ADDRESS"), pingdumb.DefaultResolvers, 30*time.Second), // poll ELB nodes for failures
+		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
+		ServiceCountGauge(c, 5*time.Minute),             // poll number of provisioned services
+		OrgCountGauge(c, 5*time.Minute),                 // poll number of orgs
+		SpaceCountGauge(c, 5*time.Minute),               // poll number of spaces
+		UserCountGauge(c, 5*time.Minute),                // poll number of users
+		QuotaGauge(c, 5*time.Minute),                    // poll quota usage
+		EventCountGauge(c, "app.crash", 10*time.Minute), // count number of times an event is seen within the interval
+		ELBNodeFailureCountGauge(logger, pingdumb.ReportConfig{
+			Target:  os.Getenv("ELB_ADDRESS"),
+			Timeout: 5 * time.Second,
+		}, 30*time.Second),
 	)
 	defer metrics.Close()
 	// create a reporter

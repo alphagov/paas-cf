@@ -13,32 +13,39 @@ import (
 	"time"
 )
 
-const (
-	timeout = 5 * time.Second
-)
+type ReportConfig struct {
+	Resolvers []*net.Resolver
+	Timeout   time.Duration
+	Target    string
+}
 
-var DefaultResolvers = []*net.Resolver{
-	net.DefaultResolver,
-	&net.Resolver{
-		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
-			dialer := &net.Dialer{
-				Timeout:   timeout,
-				KeepAlive: timeout,
-				DualStack: true,
-			}
-			return dialer.DialContext(ctx, "tcp", "8.8.8.8:53")
+func (config ReportConfig) resolvers() []*net.Resolver {
+	if config.Resolvers != nil {
+		return config.Resolvers
+	}
+	return []*net.Resolver{
+		net.DefaultResolver,
+		&net.Resolver{
+			Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
+				dialer := &net.Dialer{
+					Timeout:   config.Timeout,
+					KeepAlive: config.Timeout,
+					DualStack: true,
+				}
+				return dialer.DialContext(ctx, network, "8.8.8.8:53")
+			},
 		},
-	},
-	&net.Resolver{
-		Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
-			dialer := &net.Dialer{
-				Timeout:   timeout,
-				KeepAlive: timeout,
-				DualStack: true,
-			}
-			return dialer.DialContext(ctx, "tcp", "8.8.4.4:53")
+		&net.Resolver{
+			Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
+				dialer := &net.Dialer{
+					Timeout:   config.Timeout,
+					KeepAlive: config.Timeout,
+					DualStack: true,
+				}
+				return dialer.DialContext(ctx, network, "8.8.4.4:53")
+			},
 		},
-	},
+	}
 }
 
 type Check struct {
@@ -82,10 +89,10 @@ func (r *Report) OK() bool {
 }
 
 // doRequest makes an HTTP GET request to target but dials the IP specified by addr
-func doRequest(target string, addr string) (*http.Response, error) {
+func doRequest(config ReportConfig, addr string) (*http.Response, error) {
 	dialer := &net.Dialer{
-		Timeout:   timeout,
-		KeepAlive: timeout,
+		Timeout:   config.Timeout,
+		KeepAlive: config.Timeout,
 		DualStack: true,
 	}
 	client := http.Client{
@@ -95,23 +102,22 @@ func doRequest(target string, addr string) (*http.Response, error) {
 			},
 			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 			DisableKeepAlives:     true,
-			IdleConnTimeout:       timeout,
-			TLSHandshakeTimeout:   timeout,
+			IdleConnTimeout:       config.Timeout,
+			TLSHandshakeTimeout:   config.Timeout,
 			ExpectContinueTimeout: 1 * time.Second,
 		},
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 		},
 	}
-	req, err := http.NewRequest("HEAD", target, nil)
+	req, err := http.NewRequest("HEAD", config.Target, nil)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := client.Do(req)
-	if err != nil {
-		return resp, err
-	}
-	return resp, err
+	ctx, cancel := context.WithTimeout(context.Background(), config.Timeout)
+	defer cancel()
+	req = req.WithContext(ctx)
+	return client.Do(req)
 }
 
 // lookupAddrs finds as many IP addresses as possible for the target url
@@ -164,15 +170,15 @@ func lookupAddrs(target string, resolvers []*net.Resolver) ([]string, error) {
 
 // getReport makes multiple HTTP GET requests to a target url (one request
 // per IP addr found from DNS lookup)
-func GetReport(target string, resolvers []*net.Resolver) (*Report, error) {
-	addrs, err := lookupAddrs(target, resolvers)
+func GetReport(config ReportConfig) (*Report, error) {
+	addrs, err := lookupAddrs(config.Target, config.resolvers())
 	if err != nil {
 		return nil, err
 	}
 	var wg sync.WaitGroup
 	r := &Report{
 		Start:  time.Now(),
-		Target: target,
+		Target: config.Target,
 	}
 	for _, addr := range addrs {
 		check := &Check{
@@ -182,7 +188,7 @@ func GetReport(target string, resolvers []*net.Resolver) (*Report, error) {
 		go func(check *Check) {
 			defer wg.Done()
 			check.Start = time.Now()
-			check.Response, check.err = doRequest(target, check.Addr)
+			check.Response, check.err = doRequest(config, check.Addr)
 			check.Stop = time.Now()
 		}(check)
 		r.Checks = append(r.Checks, check)

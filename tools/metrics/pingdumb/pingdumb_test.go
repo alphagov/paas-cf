@@ -49,7 +49,12 @@ var _ = Describe("Pingdumb", func() {
 	})
 
 	It("produces a report", func() {
-		r, err := GetReport("http://local.test:8080/", resolvers)
+		config := ReportConfig{
+			Target:    "http://local.test:8080/",
+			Resolvers: resolvers,
+			Timeout:   1 * time.Second,
+		}
+		r, err := GetReport(config)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(len(r.Checks)).To(BeNumerically(">", 1))
 
@@ -83,7 +88,28 @@ var _ = Describe("Pingdumb", func() {
 	})
 
 	It("produces an error when it can't resolve the target", func() {
-		_, err := GetReport("https://this.domain.is.invalid/", DefaultResolvers)
-		Expect(err).To(HaveOccurred())
+		config := ReportConfig{
+			Target:  "https://this.domain.is.invalid/",
+			Timeout: 1 * time.Second,
+		}
+		_, err := GetReport(config)
+		_, ok := err.(*net.DNSError)
+		Expect(ok).To(BeTrue(), "expected net.DNSError")
+	})
+
+	It("returns failures on hanging connections", func() {
+		config := ReportConfig{
+			Target:    "http://local.test:8080/?hang=true",
+			Timeout:   100 * time.Millisecond,
+			Resolvers: resolvers,
+		}
+		r, err := GetReport(config)
+		Expect(err).ToNot(HaveOccurred())
+		Expect(len(r.Failures())).To(Equal(2))
+		Expect(r.OK()).To(BeFalse())
+		for _, check := range r.Checks {
+			Expect(check.Err()).To(HaveOccurred())
+			Expect(check.Err().Error()).To(ContainSubstring("context deadline exceeded"))
+		}
 	})
 })

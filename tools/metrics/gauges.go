@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"net"
 	"net/url"
 	"time"
 
@@ -314,9 +313,9 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 	})
 }
 
-func ELBNodeFailureCountGauge(logger lager.Logger, target string, resolvers []*net.Resolver, interval time.Duration) MetricReadCloser {
+func ELBNodeFailureCountGauge(logger lager.Logger, config pingdumb.ReportConfig, interval time.Duration) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
-		r, err := pingdumb.GetReport(target, resolvers)
+		r, err := pingdumb.GetReport(config)
 		if err != nil {
 			return err
 		}

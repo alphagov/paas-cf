@@ -9,6 +9,7 @@ import (
 	"code.cloudfoundry.org/lager"
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
+	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -60,7 +61,12 @@ var _ = Describe("Gauges", func() {
 	})
 
 	It("emits two metrics", func() {
-		gauge := ELBNodeFailureCountGauge(logger, "http://gauges.test:8580", resolvers, 1*time.Second)
+		config := pingdumb.ReportConfig{
+			Target:    "http://gauges.test:8580",
+			Resolvers: resolvers,
+			Timeout:   1 * time.Second,
+		}
+		gauge := ELBNodeFailureCountGauge(logger, config, 1*time.Second)
 		metric, err := gauge.ReadMetric()
 		Expect(err).NotTo(HaveOccurred())
 		Expect(metric.Name).To(Equal("aws.elb.unhealthy_node_count"))
@@ -74,7 +80,12 @@ var _ = Describe("Gauges", func() {
 	})
 
 	It("returns failure count > 0 and logs failures", func() {
-		gauge := ELBNodeFailureCountGauge(logger, "http://gauges.test:7878", resolvers, 1*time.Second)
+		config := pingdumb.ReportConfig{
+			Target:    "http://gauges.test:7878",
+			Resolvers: resolvers,
+			Timeout:   1 * time.Second,
+		}
+		gauge := ELBNodeFailureCountGauge(logger, config, 1*time.Second)
 		metric, err := gauge.ReadMetric()
 		Expect(err).NotTo(HaveOccurred())
 		Expect(metric.Name).To(Equal("aws.elb.unhealthy_node_count"))
