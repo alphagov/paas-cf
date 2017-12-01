@@ -93,7 +93,7 @@ func doRequest(target string, addr string) (*http.Response, error) {
 			DialContext: func(ctx context.Context, network, _ string) (net.Conn, error) {
 				return dialer.DialContext(ctx, network, addr)
 			},
-			TLSClientConfig:       &tls.Config{},
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 			DisableKeepAlives:     true,
 			IdleConnTimeout:       timeout,
 			TLSHandshakeTimeout:   timeout,
