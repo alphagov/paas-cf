@@ -135,7 +135,6 @@ prod: globals ## Set Environment to Production
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export ENABLE_PAAS_DASHBOARD=true)
-	$(eval export DEPLOY_RUBBERNECKER=true)
 	$(eval export DEPLOY_ENV=prod)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	@true
@@ -189,12 +188,6 @@ upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Consol
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-google-oauth-secrets.sh
-
-upload-tracker-token: check-env ## Decrypt and upload Pivotal tracker API token to S3
-	pass pivotal/tracker_token | aws s3 cp - "s3://gds-paas-${DEPLOY_ENV}-state/tracker_token"
-
-upload-pagerduty-token: check-env ## Decrypt and upload Pagerduty API token to S3
-	pass pagerduty/rubbernecker_api_token | aws s3 cp - "s3://gds-paas-${DEPLOY_ENV}-state/pagerduty_api_token"
 
 .PHONY: manually_upload_certs
 CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high

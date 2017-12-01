@@ -247,11 +247,6 @@ resources:
     source:
       interval: 5m
 
-  - name: paas-rubbernecker
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-rubbernecker
-
   - name: paas-compose-broker
     type: git
     source:
@@ -1252,7 +1247,6 @@ jobs:
           - get: bosh-CA
           - get: graphite-nozzle
           - get: datadog-tfstate
-          - get: paas-rubbernecker
           - get: paas-compose-broker
           - get: paas-compose-scraper
           - get: paas-usage-events-collector
@@ -2262,48 +2256,6 @@ jobs:
                   echo Setting DD_APP_KEY...
                   cf set-env paas-dashboard DD_APP_KEY "${DATADOG_APP_KEY}" > /dev/null
                   cf start paas-dashboard
-
-        - task: deploy-rubbernecker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-              - name: paas-rubbernecker
-            params:
-              DEPLOY_RUBBERNECKER: ((deploy_rubbernecker))
-              PIVOTAL_PROJECT_ID: ((pivotal_project_id))
-              TRACKER_TOKEN: ((tracker_token))
-              PAGERDUTY_API_TOKEN: ((pagerduty_api_token))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  if [ "${DEPLOY_RUBBERNECKER}" != "true" ]; then
-                    echo Rubbernecker disabled
-                    exit 0
-                  fi
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                    -o govuk-paas -s tools
-
-                  cf push --no-start -p paas-rubbernecker -f paas-rubbernecker/manifest.yml
-                  echo Setting PIVOTAL_API_KEY...
-                  cf set-env rubbernecker PIVOTAL_API_KEY "${TRACKER_TOKEN}" > /dev/null
-                  echo Setting PAGERDUTY_API_TOKEN...
-                  cf set-env rubbernecker PAGERDUTY_API_TOKEN "${PAGERDUTY_API_TOKEN}" > /dev/null
-                  echo Setting PIVOTAL_PROJECT_ID...
-                  cf set-env rubbernecker PIVOTAL_PROJECT_ID "${PIVOTAL_PROJECT_ID}"
-                  cf start rubbernecker
 
         - task: deploy-paas-metrics
           config:
