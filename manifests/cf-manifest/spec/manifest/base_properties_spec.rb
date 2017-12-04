@@ -173,6 +173,20 @@ RSpec.describe "base properties" do
     end
   end
 
+  describe "diego" do
+    subject(:diego) { properties.fetch("diego") }
+
+    describe "executor" do
+      subject(:executor) { diego.fetch("executor") }
+
+      it "should have a memory_capacity_mb of at least 30G" do
+        memory_capacity_mb = executor['memory_capacity_mb']
+        expect(memory_capacity_mb).to be_a_kind_of(Integer)
+        expect(memory_capacity_mb).to be >= (30 * 1024)
+      end
+    end
+  end
+
   describe "buildpacks" do
     let(:api_job) { manifest_with_defaults.fetch("jobs").find { |j| j.fetch("name") == "api" } }
     let(:api_template_names) { api_job.fetch("templates").map { |t| t.fetch("name") } }
