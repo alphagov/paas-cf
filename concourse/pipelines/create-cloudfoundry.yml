@@ -2856,7 +2856,7 @@ jobs:
               UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
               UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
 
-              uaac target "${SKIP_SSL_VALIDATION_OPTION}" "${UAA_ENDPOINT}"
+              uaac target ${SKIP_SSL_VALIDATION_OPTION} "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
               uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
 
