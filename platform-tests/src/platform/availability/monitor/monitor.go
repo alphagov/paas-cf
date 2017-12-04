@@ -66,16 +66,18 @@ type result struct {
 
 // Monitor continuously runs each Task given to Add in parallel
 // and gathers basic statistics on
+
 type Monitor struct {
-	tasks           []*Task
-	reporter        chan *Report
-	queue           chan *Task
-	results         chan *result
-	halt            chan bool
-	clientCfg       *cfclient.Config
-	logger          io.Writer
-	numWorkers      int
-	warningMatchers []*regexp.Regexp
+	tasks             []*Task
+	taskRatePerSecond int64
+	reporter          chan *Report
+	queue             chan *Task
+	results           chan *result
+	halt              chan bool
+	clientCfg         *cfclient.Config
+	logger            io.Writer
+	numWorkers        int
+	warningMatchers   []*regexp.Regexp
 }
 
 func (m *Monitor) Add(name string, fn TaskFunc) {
@@ -181,7 +183,7 @@ func (m *Monitor) producer() {
 			select {
 			case <-m.halt:
 				return
-			default:
+			case <-time.After(m.taskRateToDuration()):
 				m.queue <- task
 			}
 		}
@@ -197,19 +199,25 @@ func (m *Monitor) Stop() {
 	}
 }
 
+func (m *Monitor) taskRateToDuration() time.Duration {
+	return time.Second / time.Duration(m.taskRatePerSecond)
+}
+
 func NewMonitor(
 	clientCfg *cfclient.Config,
 	logger io.Writer,
 	numWorkers int,
 	warningMatchers []*regexp.Regexp,
+	taskRatePerSecond int64,
 ) *Monitor {
 	m := &Monitor{
-		reporter:        make(chan *Report),
-		results:         make(chan *result, numWorkers),
-		clientCfg:       clientCfg,
-		numWorkers:      numWorkers,
-		warningMatchers: warningMatchers,
-		logger:          logger,
+		reporter:          make(chan *Report),
+		results:           make(chan *result, numWorkers),
+		clientCfg:         clientCfg,
+		numWorkers:        numWorkers,
+		warningMatchers:   warningMatchers,
+		logger:            logger,
+		taskRatePerSecond: taskRatePerSecond,
 	}
 	return m
 }

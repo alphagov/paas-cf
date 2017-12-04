@@ -18,7 +18,8 @@ import (
 const (
 	maxConcourseConnectionFailures = 5
 	maxWarnings                    = 5
-	numWorkers                     = 16
+	numWorkers                     = 4
+	taskRatePerSecond              = 2
 )
 
 func lg(things ...interface{}) {
@@ -38,7 +39,7 @@ var _ = Describe("API Availability Monitoring", func() {
 			Password:          helpers.MustGetenv("CF_PASS"),
 			SkipSslValidation: helpers.MustGetenv("SKIP_SSL_VALIDATION") == "true",
 		}
-		monitor := monitor.NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers)
+		monitor := monitor.NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers, taskRatePerSecond)
 		deployment := helpers.ConcourseDeployment()
 
 		monitor.Add("Listing all apps in a space", func(cfg *cfclient.Config) error {
