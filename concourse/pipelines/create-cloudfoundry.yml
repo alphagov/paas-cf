@@ -397,6 +397,24 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
 
+      # FIXME: remove this once it's run everywhere.
+      - task: cleanup-unused-secrets
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                aws s3 rm "s3://((state_bucket))/tracker_token"
+                aws s3 rm "s3://((state_bucket))/pagerduty_api_token"
+
   - name: generate-secrets
     serial_groups: [cf-deploy]
     serial: true
