@@ -533,12 +533,13 @@ properties:
         redirect-uri: (( concat "https://login." properties.system_domain ))
       paas-usage-events-collector:
         access-token-validity: 1209600
-        authorized-grant-types: client_credentials,refresh_token
+        authorized-grant-types: client_credentials,refresh_token,authorization_code
+        autoapprove: true
         override: true
         secret: (( grab secrets.uaa_clients_paas_usage_events_collector_secret ))
-        scope: openid,oauth.approvals,cloud_controller.admin_read_only
-        authorities: oauth.login,cloud_controller.admin_read_only
-        redirect-uri: (( concat "https://login." properties.system_domain ))
+        scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
+        authorities: cloud_controller.admin_read_only,uaa.resource
+        redirect-uri: (( concat "https://paas-usage-events-collector." properties.app_domains[0] "/oauth/callback" ))
       cc-service-dashboards:
         secret: (( grab secrets.uaa_clients_cc_service_dashboards_password ))
         authorities: clients.read,clients.write,clients.admin
