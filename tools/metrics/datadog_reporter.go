@@ -103,7 +103,7 @@ func (r *DatadogReporter) WriteMetrics(events []Metric) error {
 			continue
 		}
 		m := datadog.Metric{}
-		m.SetMetric("op." + ev.Name)
+		m.SetMetric(ev.Name)
 		m.SetType(string(ev.Kind))
 		m.Points = []datadog.DataPoint{
 			{float64(ev.Time.Unix()), ev.Value},

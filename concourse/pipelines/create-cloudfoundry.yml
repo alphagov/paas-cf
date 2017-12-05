@@ -2320,6 +2320,7 @@ jobs:
               DATADOG_API_KEY: ((datadog_api_key))
               DATADOG_APP_KEY: ((datadog_app_key))
               DEPLOY_ENV: ((deploy_env))
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             inputs:
               - name: paas-cf
               - name: config
@@ -2355,6 +2356,7 @@ jobs:
                       'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                       'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                      'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|

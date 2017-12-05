@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
 	"github.com/pkg/errors"
 
 	"code.cloudfoundry.org/lager"
@@ -50,6 +51,7 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
+
 	// Combine all metrics into single stream
 	metrics := NewMultiMetricReader(
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
@@ -59,6 +61,10 @@ func Main() error {
 		UserCountGauge(c, 5*time.Minute),                // poll number of users
 		QuotaGauge(c, 5*time.Minute),                    // poll quota usage
 		EventCountGauge(c, "app.crash", 10*time.Minute), // count number of times an event is seen within the interval
+		ELBNodeFailureCountGauge(logger, pingdumb.ReportConfig{
+			Target:  os.Getenv("ELB_ADDRESS"),
+			Timeout: 5 * time.Second,
+		}, 30*time.Second),
 	)
 	defer metrics.Close()
 	// create a reporter

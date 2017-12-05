@@ -2,7 +2,7 @@
 
 ### Overview
 
-Collects metrics on platform usage/events with a focus on tennant usage (not internal platform health) then reports those events somewhere useful (currently datadog).
+Collects useful usage/platform metrics that are not currently provided by our other integrations, then reports those events somewhere useful (currently datadog).
 
 ### Metrics
 
@@ -10,15 +10,17 @@ The following metrics are currently collected:
 
 | Name | Kind | Description | Tags |
 | --- | --- | --- | --- |
-|`apps.count` | Gauge | Number of applications | `state` |
-|`services.provisioned` | Gauge | Number of provisioned services | `type` |
-|`orgs.count` | Gauge | Number of organisations | `quota` |
-|`spaces.count` | Gauge | Number of spaces | |
-|`users.count` | Gauge | Number of users<sup>[1](#f1)</sup> | |
-|`quotas.memory.reserved` | Gauge | Total ammount of memory promised to orgs | |
-|`quotas.memory.allocated` | Gauge | Total amount of memory promised to apps | |
-|`quotas.services.reserved` | Gauge | Total number of services promised to orgs | |
-|`quotas.services.allocated` | Gauge | Total number of services assigned | |
+|`aws.elb.unhealthy_node_count` | Gauge | Number of unhealthy ELB nodes | |
+|`aws.elb.healthy_node_count` | Gauge | Number of healthy ELB nodes | |
+|`op.apps.count` | Gauge | Number of applications | `state` |
+|`op.services.provisioned` | Gauge | Number of provisioned services | `type` |
+|`op.orgs.count` | Gauge | Number of organisations | `quota` |
+|`op.spaces.count` | Gauge | Number of spaces | |
+|`op.users.count` | Gauge | Number of users<sup>[1](#f1)</sup> | |
+|`op.quotas.memory.reserved` | Gauge | Total amount of memory promised to orgs | |
+|`op.quotas.memory.allocated` | Gauge | Total amount of memory promised to apps | |
+|`op.quotas.services.reserved` | Gauge | Total number of services promised to orgs | |
+|`op.quotas.services.allocated` | Gauge | Total number of services assigned | |
 
 ### Deploying as a Cloud Foundry app
 
@@ -33,6 +35,7 @@ You'll need some environment variables set (you could also add these to the mani
 ```bash
 cf set-env paas-metrics DATADOG_API_KEY "API_KEY"           # datadog secret key
 cf set-env paas-metrics DATADOG_APP_KEY "APP_KEY"           # datadog app key
+cf set-env paas-metrics ELB_ADDRESS "https://healthcheck/"  # address of an ELB to check
 cf set-env paas-metrics CF_API_ADDRESS "ENDPOINT"           # cloud foundry api endpoint url
 cf set-env pass-metrics CF_CLIENT_ID "UAA_CLIENT_ID"        # uaa client with cloud_foundry.global_auditor scope
 cf set-env paas-metrics CF_CLIENT_SECRET "SECRET"           # uaa client secret
