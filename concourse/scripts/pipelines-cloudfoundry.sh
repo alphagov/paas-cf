@@ -37,22 +37,6 @@ get_git_concourse_pool_clone_full_url_ssh() {
   rm -f "${tfstate_file}"
 }
 
-get_tracker_token() {
-  secrets_uri="s3://${state_bucket}/tracker_token"
-  export tracker_token
-  if aws s3 ls "${secrets_uri}" > /dev/null ; then
-    tracker_token=$(aws s3 cp "${secrets_uri}" -)
-  fi
-}
-
-get_pagerduty_api_token() {
-  secrets_uri="s3://${state_bucket}/pagerduty_api_token"
-  export pagerduty_api_token
-  if aws s3 ls "${secrets_uri}" > /dev/null ; then
-    pagerduty_api_token=$(aws s3 cp "${secrets_uri}" -)
-  fi
-}
-
 prepare_environment() {
   "${SCRIPT_DIR}/fly_sync_and_login.sh"
 
@@ -94,16 +78,6 @@ prepare_environment() {
   fi
 
   export EXPOSE_PIPELINE=1
-
-  get_tracker_token
-  get_pagerduty_api_token
-  if [ "${DEPLOY_RUBBERNECKER:-false}" = "true" ] ; then
-    if [ -z "${tracker_token+x}" ] ; then
-      echo "Rubbernecker deployment enabled but could not retrieve the API token. Did you run \`make <env> upload-tracker-token\`?"
-      exit 1
-    fi
-  fi
-
 }
 
 generate_vars_file() {
@@ -147,13 +121,9 @@ compose_billing_email: ${compose_billing_email:-}
 compose_billing_password: ${compose_billing_password:-}
 enable_datadog: ${ENABLE_DATADOG}
 enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
-deploy_rubbernecker: ${DEPLOY_RUBBERNECKER:-false}
-tracker_token: ${tracker_token:-}
-pivotal_project_id: ${PIVOTAL_PROJECT_ID:-1275640}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
-pagerduty_api_token: ${pagerduty_api_token:-}
 enable_metrics: ${ENABLE_METRICS}
 enable_usage_events_collection: ${ENABLE_USAGE_EVENTS_COLLECTION}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
