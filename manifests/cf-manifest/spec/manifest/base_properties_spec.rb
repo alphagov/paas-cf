@@ -126,6 +126,7 @@ RSpec.describe "base properties" do
           "tcp_router",
           "ssh-proxy",
           "graphite-nozzle",
+          "paas-admin",
           "paas-metrics",
           "datadog-nozzle",
           "cc-service-dashboards",
