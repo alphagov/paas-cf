@@ -137,6 +137,13 @@ RSpec.describe "base properties" do
         )
       }
 
+      it {
+        clients.each { |_, config|
+          expect(config).to have_key("override")
+          expect(config["override"]).to be true
+        }
+      }
+
       describe "login" do
         subject(:client) { clients.fetch("login") }
         it {
