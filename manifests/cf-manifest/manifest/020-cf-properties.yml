@@ -422,6 +422,7 @@ properties:
             - scim.invite
             - openid
             - cloud_controller.admin
+            - cloud_controller.admin_read_only
             - doppler.firehose
       groups:
         cloud_controller.global_auditor: 'Global Auditor read only group'

@@ -15,6 +15,7 @@ class UaaSyncAdminUsers
 
   DEFAULT_ADMIN_GROUPS = [
     "cloud_controller.admin",
+    "cloud_controller.admin_read_only",
     "uaa.admin",
     "scim.read",
     "scim.write",
