@@ -54,8 +54,14 @@ var _ = Describe("Pingdumb", func() {
 			Resolvers: resolvers,
 			Timeout:   1 * time.Second,
 		}
-		r, err := GetReport(config)
-		Expect(err).NotTo(HaveOccurred())
+		var (
+			r   *Report
+			err error
+		)
+		Eventually(func() error {
+			r, err = GetReport(config)
+			return err
+		}).Should(Succeed())
 		Expect(len(r.Checks)).To(BeNumerically(">", 1))
 
 		By("not translating HTTP error codes into failures")
