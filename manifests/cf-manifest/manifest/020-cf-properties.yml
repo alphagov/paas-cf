@@ -190,6 +190,8 @@ properties:
     drain_wait: 120
     route_services_secret: (( grab secrets.route_services_secret ))
     max_idle_connections: 0
+    tracing:
+      enable_zipkin: true
 
   cc:
     jobs:
