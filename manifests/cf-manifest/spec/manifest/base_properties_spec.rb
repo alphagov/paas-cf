@@ -126,6 +126,7 @@ RSpec.describe "base properties" do
           "tcp_router",
           "ssh-proxy",
           "graphite-nozzle",
+          "paas-admin",
           "paas-metrics",
           "datadog-nozzle",
           "cc-service-dashboards",
@@ -134,6 +135,13 @@ RSpec.describe "base properties" do
           "paas-usage-events-collector",
           "user_invitation",
         )
+      }
+
+      it {
+        clients.each { |_, config|
+          expect(config).to have_key("override")
+          expect(config["override"]).to be true
+        }
       }
 
       describe "login" do

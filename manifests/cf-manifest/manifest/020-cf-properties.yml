@@ -424,6 +424,7 @@ properties:
             - scim.invite
             - openid
             - cloud_controller.admin
+            - cloud_controller.admin_read_only
             - doppler.firehose
       groups:
         cloud_controller.global_auditor: 'Global Auditor read only group'
@@ -455,6 +456,7 @@ properties:
 
     clients:
       documentation:
+        override: true
         app-icon: (( grab meta.docs_app_icon ))
         app-launch-url: https://docs.cloud.service.gov.uk/#get-started
         show-on-homepage: true
@@ -469,7 +471,6 @@ properties:
         redirect-uri: (( concat "https://login." properties.system_domain ))
         secret: (( grab secrets.uaa_clients_login_secret ))
       cf:
-        id: cf
         override: true
         authorized-grant-types: password,refresh_token
         scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,scim.read,scim.write,scim.invite,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write
@@ -478,6 +479,7 @@ properties:
         refresh-token-validity: 604800
         secret: ''
       notifications:
+        override: true
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_notifications_secret ))
@@ -487,77 +489,91 @@ properties:
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_doppler_secret ))
       cloud_controller_username_lookup:
+        override: true
         authorities: scim.userids
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_cloud_controller_username_lookup_secret ))
       cc_service_key_client:
+        override: true
         authorities: credhub.read,credhub.write
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_cc_service_key_client_secret ))
       cc_routing:
+        override: true
         authorities: routing.router_groups.read
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_cc_routing_secret ))
       gorouter:
+        override: true
         authorities: routing.routes.read
         authorized-grant-types: client_credentials
         secret: (( grab secrets.uaa_clients_gorouter_secret ))
       tcp_emitter:
+        override: true
         authorities: routing.routes.write,routing.routes.read
         authorized-grant-types: client_credentials
         secret: ''
       tcp_router:
+        override: true
         authorities: routing.routes.read
         authorized-grant-types: client_credentials
         secret: ''
       ssh-proxy:
+        override: true
         authorized-grant-types: authorization_code
         autoapprove: true
-        override: true
         redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
         scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
         secret: (( grab secrets.uaa_clients_ssh_proxy_secret ))
       graphite-nozzle:
+        override: true
         access-token-validity: 1209600
         authorized-grant-types: authorization_code,client_credentials,refresh_token
-        override: true
         secret: (( grab secrets.uaa_clients_firehose_password ))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
         redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
       paas-metrics:
+        override: true
         access-token-validity: 1209600
         authorized-grant-types: client_credentials,refresh_token
-        override: true
         secret: (( grab secrets.uaa_clients_paas_metrics_secret ))
         scope: openid,oauth.approvals,cloud_controller.global_auditor
         authorities: oauth.login,cloud_controller.global_auditor
         redirect-uri: (( concat "https://login." properties.system_domain ))
       paas-usage-events-collector:
+        override: true
         access-token-validity: 1209600
         authorized-grant-types: client_credentials,refresh_token,authorization_code
         autoapprove: true
-        override: true
         secret: (( grab secrets.uaa_clients_paas_usage_events_collector_secret ))
         scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
         authorities: cloud_controller.admin_read_only,uaa.resource
         redirect-uri: (( concat "https://paas-usage-events-collector." properties.app_domains[0] "/oauth/callback" ))
+      paas-admin:
+        override: true
+        authorized-grant-types: authorization_code,refresh_token
+        autoapprove: true
+        secret: (( grab secrets.uaa_clients_paas_admin_secret ))
+        scope: openid,oauth.approvals,cloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor
+        authorities: uaa.none
+        redirect-uri: (( concat "https://paas-admin." properties.app_domains[0] "/auth/cloudfoundry/callback" ))
       cc-service-dashboards:
+        override: true
         secret: (( grab secrets.uaa_clients_cc_service_dashboards_password ))
         authorities: clients.read,clients.write,clients.admin
         authorized-grant-types: client_credentials
         redirect-uri: (( concat "https://login." properties.system_domain ))
       cdn_broker:
+        override: true
         authorities: uaa.none
         authorized-grant-types: password
-        id: cdn_broker
         scope: cloud_controller.admin_read_only
         secret: (( grab secrets.uaa_clients_cdn_broker_secret ))
       user_invitation:
+        override: true
         authorities: oauth.login,scim.write,emails.write,scim.userids
         authorized-grant-types: password,refresh_token
-        id: user_invitation
-        override: true
         redirect-uri: "https://www.cloud.service.gov.uk/next-steps?success"
         scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
         secret: (( grab secrets.uaa_clients_login_secret ))
