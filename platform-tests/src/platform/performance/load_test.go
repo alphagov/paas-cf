@@ -21,7 +21,7 @@ const (
 	loadTestLatency  = 300 * time.Millisecond
 )
 
-func loadTest(appName string, rate uint64, duration time.Duration, keepalive bool) (m *vegeta.Metrics, latency time.Duration) {
+func loadTest(appName string, rate uint64, duration time.Duration, keepalive bool) (m *vegeta.Metrics) {
 	appUri := helpers.AppUri(appName, "/", testConfig)
 	targeter := vegeta.NewStaticTargeter(vegeta.Target{
 		Method: "GET",
@@ -35,7 +35,7 @@ func loadTest(appName string, rate uint64, duration time.Duration, keepalive boo
 	for res := range attacker.Attack(targeter, rate, duration) {
 		metrics.Add(res)
 	}
-	return &metrics, metrics.Latencies.P99
+	return &metrics
 }
 
 func generateJsonReport(m *vegeta.Metrics, filename string) {
@@ -71,19 +71,19 @@ var _ = Describe("Load performance", func() {
 
 	Context("without HTTP Keep-Alive", func() {
 		It("has a response latency within our threshold", func() {
-			metrics, latency := loadTest(appName, loadTestRate, loadTestDuration, false)
+			metrics := loadTest(appName, loadTestRate, loadTestDuration, false)
 			generateJsonReport(metrics, "load-test-no-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
-			Expect(latency).To(BeNumerically("<", loadTestLatency))
+			Expect(metrics.Latencies.P99).To(BeNumerically("<", loadTestLatency))
 		})
 	})
 
 	Context("with HTTP Keep-Alive", func() {
 		It("has a response latency within our threshold", func() {
-			metrics, latency := loadTest(appName, loadTestRate, loadTestDuration, true)
+			metrics := loadTest(appName, loadTestRate, loadTestDuration, true)
 			generateJsonReport(metrics, "load-test-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
-			Expect(latency).To(BeNumerically("<", loadTestLatency))
+			Expect(metrics.Latencies.P99).To(BeNumerically("<", loadTestLatency))
 		})
 	})
 })
