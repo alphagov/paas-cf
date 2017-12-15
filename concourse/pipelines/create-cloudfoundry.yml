@@ -1470,6 +1470,11 @@ jobs:
                   cf create-org govuk-paas
                   cf create-space docs -o govuk-paas
                   cf create-space tools -o govuk-paas
+                  cf target -o admin
+                  cf share-private-domain govuk-paas "((system_dns_zone_name))"
+
+                  # Reserve some domains so that tenants cannot create them to
+                  # mislead others
                   cf target -o govuk-paas
                   cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
                   cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
