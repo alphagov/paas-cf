@@ -74,7 +74,7 @@ var _ = Describe("Load performance", func() {
 			metrics, latency := loadTest(appName, loadTestRate, loadTestDuration, false)
 			generateJsonReport(metrics, "load-test-no-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
-			Expect(time.Duration.Nanoseconds(latency)).To(BeNumerically("<", loadTestLatency))
+			Expect(latency).To(BeNumerically("<", loadTestLatency))
 		})
 	})
 
@@ -83,7 +83,7 @@ var _ = Describe("Load performance", func() {
 			metrics, latency := loadTest(appName, loadTestRate, loadTestDuration, true)
 			generateJsonReport(metrics, "load-test-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
-			Expect(time.Duration.Nanoseconds(latency)).To(BeNumerically("<", loadTestLatency))
+			Expect(latency).To(BeNumerically("<", loadTestLatency))
 		})
 	})
 })
