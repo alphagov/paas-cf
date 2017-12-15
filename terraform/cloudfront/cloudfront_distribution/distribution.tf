@@ -37,6 +37,8 @@ resource "aws_cloudfront_distribution" "cdn_instance" {
       cookies {
         forward = "none"
       }
+
+      headers = ["Host"]
     }
 
     viewer_protocol_policy = "redirect-to-https"

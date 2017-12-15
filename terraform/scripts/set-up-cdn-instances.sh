@@ -33,5 +33,6 @@ terraform "${TERRAFORM_ACTION}" \
   -var-file="${PAAS_CF_DIR}/terraform/${AWS_ACCOUNT}.tfvars" \
   -var "env=${DEPLOY_ENV}" \
   -var "system_dns_zone_name=${SYSTEM_DNS_ZONE_NAME}" \
+  -var "apps_dns_zone_name=${APPS_DNS_ZONE_NAME}" \
   -var "system_domain_cert_id=${CERT_ID}" \
   "${PAAS_CF_DIR}"/terraform/cloudfront

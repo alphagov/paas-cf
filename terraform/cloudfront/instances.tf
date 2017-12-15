@@ -4,12 +4,14 @@ variable "system_dns_zone_name" {}
 
 variable "system_domain_cert_id" {}
 
+variable "apps_dns_zone_name" {}
+
 module "cloudfront_paas_product_page" {
   source = "./cloudfront_distribution"
 
   name    = "PaaS Product Page"
   aliases = ["www.${var.system_dns_zone_name}"]
-  origin  = "paas-product-page.cloudapps.digital"
+  origin  = "${var.apps_dns_zone_name}"
   comment = "Serve the paas-product-page under the gov.uk domain."
 
   env                   = "${var.env}"
@@ -23,7 +25,7 @@ module "cloudfront_paas_docs" {
 
   name    = "PaaS Docs"
   aliases = ["docs.${var.system_dns_zone_name}"]
-  origin  = "paas-tech-docs.cloudapps.digital"
+  origin  = "${var.apps_dns_zone_name}"
   comment = "Serve the paas-tech-docs under the gov.uk domain."
 
   env                   = "${var.env}"
