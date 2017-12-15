@@ -49,7 +49,6 @@ func generateJsonReport(m *vegeta.Metrics, filename string) {
 }
 
 var _ = Describe("Load performance", func() {
-
 	var appName string
 
 	BeforeEach(func() {
@@ -69,22 +68,22 @@ var _ = Describe("Load performance", func() {
 	AfterEach(func() {
 		Expect(cf.Cf("delete", appName, "-f", "-r").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 	})
+
 	Context("without HTTP Keep-Alive", func() {
 		It("has a response latency within our threshold", func() {
 			metrics, latency := loadTest(appName, loadTestRate, loadTestDuration, false)
 			generateJsonReport(metrics, "load-test-no-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
 			Expect(time.Duration.Nanoseconds(latency)).To(BeNumerically("<", loadTestLatency))
-
 		})
 	})
+
 	Context("with HTTP Keep-Alive", func() {
 		It("has a response latency within our threshold", func() {
 			metrics, latency := loadTest(appName, loadTestRate, loadTestDuration, true)
 			generateJsonReport(metrics, "load-test-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
 			Expect(time.Duration.Nanoseconds(latency)).To(BeNumerically("<", loadTestLatency))
-
 		})
 	})
 })
