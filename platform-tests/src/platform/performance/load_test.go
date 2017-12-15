@@ -18,7 +18,7 @@ import (
 const (
 	loadTestRate     = 100
 	loadTestDuration = 10 * time.Second
-	loadTestLatency  = 300 * time.Millisecond
+	loadTestLatency  = 50 * time.Millisecond
 )
 
 func loadTest(appName string, rate uint64, duration time.Duration, keepalive bool) (m *vegeta.Metrics) {
@@ -74,7 +74,7 @@ var _ = Describe("Load performance", func() {
 			metrics := loadTest(appName, loadTestRate, loadTestDuration, false)
 			generateJsonReport(metrics, "load-test-no-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
-			Expect(metrics.Latencies.P99).To(BeNumerically("<", loadTestLatency))
+			Expect(metrics.Latencies.P95).To(BeNumerically("<", loadTestLatency))
 		})
 	})
 
@@ -83,7 +83,7 @@ var _ = Describe("Load performance", func() {
 			metrics := loadTest(appName, loadTestRate, loadTestDuration, true)
 			generateJsonReport(metrics, "load-test-keep-alive.json")
 			vegeta.NewTextReporter(metrics).Report(os.Stdout)
-			Expect(metrics.Latencies.P99).To(BeNumerically("<", loadTestLatency))
+			Expect(metrics.Latencies.P95).To(BeNumerically("<", loadTestLatency))
 		})
 	})
 })
