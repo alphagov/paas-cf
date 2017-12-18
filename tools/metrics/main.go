@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
@@ -53,7 +54,7 @@ func Main() error {
 	}
 
 	// Combine all metrics into single stream
-	metrics := NewMultiMetricReader(
+	gauges := []MetricReader{
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
 		ServiceCountGauge(c, 5*time.Minute),             // poll number of provisioned services
 		OrgCountGauge(c, 5*time.Minute),                 // poll number of orgs
@@ -65,7 +66,11 @@ func Main() error {
 			Target:  os.Getenv("ELB_ADDRESS"),
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
-	)
+	}
+	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
+		gauges = append(gauges, TLSValidityGauge(logger, strings.TrimSpace(addr), 15*time.Minute))
+	}
+	metrics := NewMultiMetricReader(gauges...)
 	defer metrics.Close()
 	// create a reporter
 	reporter := NewDatadogReporter(DatadogConfig{

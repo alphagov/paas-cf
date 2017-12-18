@@ -99,4 +99,77 @@ var _ = Describe("Gauges", func() {
 
 		Expect(log).To(gbytes.Say(`"addr":\s*"\d+\.\d+.\d+\.\d+`))
 	})
+
+	Context("tls.valid_days", func() {
+
+		It("returns >0 for non-expired certificate", func() {
+			gauge := TLSValidityGauge(logger, "badssl.com", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(BeNumerically(">", float64(0)))
+		})
+
+		It("allows setting port in addr", func() {
+			gauge := TLSValidityGauge(logger, "badssl.com:443", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(BeNumerically(">", float64(0)))
+		})
+
+		It("tags metrics with only the hostname", func() {
+			gauge := TLSValidityGauge(logger, "badssl.com:443", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Tags).To(HaveLen(1))
+			Expect(metric.Tags[0]).To(Equal("hostname:badssl.com"))
+		})
+
+		It("returns 0 for expired certificate", func() {
+			gauge := TLSValidityGauge(logger, "expired.badssl.com", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(Equal(float64(0)))
+		})
+
+		It("returns 0 for certificate with incorrect common name", func() {
+			gauge := TLSValidityGauge(logger, "wrong.host.badssl.com", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(Equal(float64(0)))
+		})
+
+		It("returns 0 for certificate with untrusted root CA", func() {
+			gauge := TLSValidityGauge(logger, "untrusted-root.badssl.com", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(Equal(float64(0)))
+		})
+
+		It("returns 0 for certificate with self-signed CA", func() {
+			gauge := TLSValidityGauge(logger, "self-signed.badssl.com", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(Equal(float64(0)))
+		})
+
+		It("returns 0 for certificate with null cipher suite", func() {
+			gauge := TLSValidityGauge(logger, "null.badssl.com", 1*time.Second)
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			Expect(metric.Name).To(Equal("tls.certificates.validity"))
+			Expect(metric.Value).To(Equal(float64(0)))
+		})
+
+		It("returns err when cannot connect", func() {
+			gauge := TLSValidityGauge(logger, "no.connection.invalid", 1*time.Second)
+			_, err := gauge.ReadMetric()
+			Expect(err).To(HaveOccurred())
+		})
+	})
 })
