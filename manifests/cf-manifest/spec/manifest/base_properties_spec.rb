@@ -115,7 +115,6 @@ RSpec.describe "base properties" do
 
       it {
         expect(clients.keys).to contain_exactly(
-          "documentation",
           "login",
           "cf",
           "notifications",
