@@ -202,6 +202,13 @@ properties:
           remove_field => "router_keys"
         }
       }
+      date {
+        match => [ "[gorouter][timestamp]", "ISO8601" ]
+        target => "@timestamp"
+      }
+      mutate {
+        remove_field => [ "[gorouter][timestamp]" ]
+      }
       if [@source][component] == "vcap_nginx_access" {
         grok {
           match => {
