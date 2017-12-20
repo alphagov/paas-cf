@@ -171,5 +171,11 @@ var _ = Describe("Gauges", func() {
 			_, err := gauge.ReadMetric()
 			Expect(err).To(HaveOccurred())
 		})
+
+		It("returns err when addr is a URL", func() {
+			gauge := TLSValidityGauge(logger, "http://badssl.com", 1*time.Second)
+			_, err := gauge.ReadMetric()
+			Expect(err).To(HaveOccurred())
+		})
 	})
 })

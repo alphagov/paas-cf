@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/url"
 	"strings"
 	"time"
@@ -18,13 +19,17 @@ func TLSValidityGauge(logger lager.Logger, addr string, interval time.Duration) 
 		if !strings.Contains(addr, ":") {
 			addr += ":443"
 		}
+		host, _, err := net.SplitHostPort(addr)
+		if err != nil {
+			return err
+		}
 		metric := Metric{
 			Kind:  Gauge,
 			Time:  time.Now(),
 			Name:  "tls.certificates.validity",
 			Value: float64(0),
 			Tags: []string{
-				fmt.Sprintf("hostname:%s", strings.Split(addr, ":")[0]),
+				fmt.Sprintf("hostname:%s", host),
 			},
 		}
 		cert, err := tlscheck.GetCertificate(addr)
