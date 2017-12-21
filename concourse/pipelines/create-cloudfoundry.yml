@@ -2339,7 +2339,6 @@ jobs:
                         'healthcheck.${APPS_DNS_ZONE_NAME}',
                         'api.${SYSTEM_DNS_ZONE_NAME}',
                         'uaa.${SYSTEM_DNS_ZONE_NAME}',
-                        'deployer.${SYSTEM_DNS_ZONE_NAME}',
                         '${APPS_DNS_ZONE_NAME}'
                       ].join(','),
                     }
