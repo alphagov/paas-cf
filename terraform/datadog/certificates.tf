@@ -5,13 +5,13 @@ resource "datadog_monitor" "invalid_tls_cert" {
   notify_no_data    = true
   no_data_timeframe = 120
 
-  query = "${format("min(last_1h):min:tls.certificates.validity{deploy_env:%s} by {hostname} <= 1", var.env)}"
+  query = "${format("min(last_1h):min:tls.certificates.validity{deploy_env:%s} by {hostname} <= 7", var.env)}"
 
   require_full_window = true
 
   thresholds {
-    warning  = 7
-    critical = 1
+    warning  = 30
+    critical = 7
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
