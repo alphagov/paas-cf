@@ -2335,7 +2335,13 @@ jobs:
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                       'DEPLOY_ENV' => '${DEPLOY_ENV}',
                       'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
-                      'TLS_DOMAINS' => 'healthcheck.${APPS_DNS_ZONE_NAME},api.${SYSTEM_DNS_ZONE_NAME},uaa.${SYSTEM_DNS_ZONE_NAME},deployer.${SYSTEM_DNS_ZONE_NAME}',
+                      'TLS_DOMAINS' => [
+                        'healthcheck.${APPS_DNS_ZONE_NAME}',
+                        'api.${SYSTEM_DNS_ZONE_NAME}',
+                        'uaa.${SYSTEM_DNS_ZONE_NAME}',
+                        'deployer.${SYSTEM_DNS_ZONE_NAME}',
+                        '${APPS_DNS_ZONE_NAME}'
+                      ].join(','),
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
