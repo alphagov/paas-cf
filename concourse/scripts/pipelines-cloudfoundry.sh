@@ -124,7 +124,6 @@ enable_paas_dashboard: ${ENABLE_PAAS_DASHBOARD:-false}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
-enable_metrics: ${ENABLE_METRICS}
 enable_usage_events_collection: ${ENABLE_USAGE_EVENTS_COLLECTION}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 continuous_smoke_tests_trigger: $([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")

@@ -21,6 +21,7 @@ The following metrics are currently collected:
 |`op.quotas.memory.allocated` | Gauge | Total amount of memory promised to apps | |
 |`op.quotas.services.reserved` | Gauge | Total number of services promised to orgs | |
 |`op.quotas.services.allocated` | Gauge | Total number of services assigned | |
+|`tls.certificates.validity` | Gauge | Number of days cert is valid for | `hostname` |
 
 ### Deploying as a Cloud Foundry app
 
@@ -42,6 +43,7 @@ cf set-env paas-metrics CF_CLIENT_SECRET "SECRET"           # uaa client secret
 cf set-env paas-metrics CF_SKIP_SSL_VALIDATION "true"       # [OPTIONAL] set to true if insecure
 cf set-env paas-metrics LOG_LEVEL "0"                       # [OPTIONAL] set to 0 for more detailed logs
 cf set-env paas-metrics DEPLOY_ENV "prod"                   # [OPTIONAL] set to tag metrics with env
+cf set-env paas-metrics TLS_DOMAINS "ssl1.com,ssl2.com"     # [OPTIONAL] csv list of domains to monitor TLS certs for
 ```
 
 Start the app...

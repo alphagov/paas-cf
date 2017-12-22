@@ -3,13 +3,53 @@ package main
 import (
 	"fmt"
 	"log"
+	"net"
 	"net/url"
+	"strings"
 	"time"
 
 	"code.cloudfoundry.org/lager"
 	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
+	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
 )
+
+func TLSValidityGauge(logger lager.Logger, addr string, interval time.Duration) MetricReadCloser {
+	return NewMetricPoller(interval, func(w MetricWriter) error {
+		if !strings.Contains(addr, ":") {
+			addr += ":443"
+		}
+		host, _, err := net.SplitHostPort(addr)
+		if err != nil {
+			return err
+		}
+		metric := Metric{
+			Kind:  Gauge,
+			Time:  time.Now(),
+			Name:  "tls.certificates.validity",
+			Value: float64(0),
+			Tags: []string{
+				fmt.Sprintf("hostname:%s", host),
+			},
+		}
+		cert, err := tlscheck.GetCertificate(addr)
+		if err != nil {
+			logger.Info("tls-certificates-validity", lager.Data{
+				"addr": addr,
+				"err":  err.Error(),
+			})
+			if tlscheck.IsCertificateError(err) {
+				metric.Value = 0
+			} else {
+				return err
+			}
+		} else {
+			daysUntilExpiry := time.Until(cert.NotAfter).Hours() / 24
+			metric.Value = float64(daysUntilExpiry)
+		}
+		return w.WriteMetrics([]Metric{metric})
+	})
+}
 
 func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
