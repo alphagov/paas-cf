@@ -36,3 +36,4 @@ jobs:
         client_id: "cdn_broker"
         client_secret: (( grab secrets.uaa_clients_cdn_broker_secret ))
         default_origin: (( grab terraform_outputs.cf_apps_domain ))
+        schedule: "0 0 * * 6"
