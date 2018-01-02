@@ -4,7 +4,7 @@
     {
       "Effect": "Allow",
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::${bucket_name}/*/AWSLogs/*/*",
+      "Resource": "arn:aws:s3:::${bucket_name}/*/AWSLogs/*",
       "Principal": {
         "AWS": "arn:aws:iam::${principal}:root"
       }
