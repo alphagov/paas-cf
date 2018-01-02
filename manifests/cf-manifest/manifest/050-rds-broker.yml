@@ -465,7 +465,7 @@ jobs:
                           usd: 1.544
                         unit: "HOUR"
                     bullets:
-                      - "Dedicated MySQL 5.4 server"
+                      - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
                     defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
@@ -517,7 +517,7 @@ jobs:
                           usd: 3.090
                         unit: "HOUR"
                     bullets:
-                      - "Dedicated MySQL 5.4 server"
+                      - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
                     defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
