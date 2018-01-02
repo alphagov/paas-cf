@@ -10,5 +10,17 @@
         "account_id": "650575079077",
         "vpc_id": "vpc-82c913e5",
         "subnet_cidr": "172.17.0.0/22"
+    },
+    {
+        "peer_name": "dit_trade_policy_group_prod",
+        "account_id": "588284153815",
+        "vpc_id": "vpc-57be5f31",
+        "subnet_cidr": "172.16.20.0/22"
+    },
+    {
+        "peer_name": "dit_trade_policy_group_dev",
+        "account_id": "001221602192",
+        "vpc_id": "vpc-b4afb5d3",
+        "subnet_cidr": "172.16.24.0/22"
     }
 ]
