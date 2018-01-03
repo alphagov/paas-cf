@@ -227,7 +227,3 @@ tunnel: check-env ## SSH tunnel to internal IPs
 
 stop-tunnel: check-env ## Stop SSH tunnel
 	@echo "stop-tunnel has moved to paas-bootstrap 🐝"
-
-show-cf-memory-usage: ## Show the memory usage of the current CF cluster
-	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
-	@./scripts/show-cf-memory-usage.rb
