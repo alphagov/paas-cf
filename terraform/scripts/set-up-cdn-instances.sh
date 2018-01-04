@@ -19,14 +19,13 @@ if [ -z "${CERT_ID// }" ] || [ "${CERT_ID}" == "null" ]; then
   exit 1
 fi
 
-terraform get "${PAAS_CF_DIR}/terraform/cloudfront"
-
-# Configure Terraform remote state.
-terraform remote config \
-  -backend=s3 \
+# Initialise Terraform with remote state.
+terraform init \
+  -backend=true \
   -backend-config="bucket=gds-paas-${DEPLOY_ENV}-state" \
   -backend-config="key=${STATEFILE}" \
-  -backend-config="region=${AWS_DEFAULT_REGION}"
+  -backend-config="region=${AWS_DEFAULT_REGION}" \
+  "${PAAS_CF_DIR}"/terraform/cloudfront
 
 # Run the terraform action on the instances.
 terraform "${TERRAFORM_ACTION}" \
