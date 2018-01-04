@@ -22,11 +22,11 @@ resource "datadog_monitor" "cell-idle-cpu" {
   message            = "${format("Less than {{threshold}}%% CPU idle on cells. There is only {{value}}%% CPU idle on average on cells. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "There is only {{value}}% CPU idle on average on cells. Check the deployment!"
   no_data_timeframe  = "7"
-  query              = "${format("avg(last_2h):ewma_5(avg:system.cpu.idle{deploy_env:%s,bosh-job:cell}) < 50", var.env)}"
+  query              = "${format("avg(last_24h):ewma_5(avg:system.cpu.idle{deploy_env:%s,bosh-job:cell}) < 33", var.env)}"
 
   thresholds {
-    warning  = "55.0"
-    critical = "50.0"
+    warning  = "37.0"
+    critical = "33.0"
   }
 
   require_full_window = true
