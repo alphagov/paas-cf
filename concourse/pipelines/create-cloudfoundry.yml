@@ -251,7 +251,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-compose-broker
-      tag_filter: v0.12.0
+      tag_filter: v0.13.0
 
   - name: paas-compose-scraper
     type: git
@@ -1425,6 +1425,7 @@ jobs:
                 export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
                 export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
                 export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
+                export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs.nat_public_ips_csv cf-terraform-outputs.yml)
                 export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets.elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
                 export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
                 EOT
@@ -1665,6 +1666,7 @@ jobs:
                       'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
                       'DB_PREFIX' => '${DB_PREFIX}',
                       'CLUSTER_NAME' => '${CLUSTER_NAME}',
+                      'IP_WHITELIST' => '${COMPOSE_BROKER_IP_WHITELIST}',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
