@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -eu
-RELEASE=0.2.2
-TF_VERSION=0.8.5
+RELEASE=0.2.3
+TF_VERSION=0.11.1
 BINARY=terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)
 
 # Setup the working grounds.

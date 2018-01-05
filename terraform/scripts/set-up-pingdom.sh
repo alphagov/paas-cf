@@ -2,8 +2,9 @@
 
 set -eu
 TERRAFORM_ACTION=${1}
-VERSION=0.2.2
-BINARY=terraform-provider-pingdom-tf-0.8.5-$(uname -s)-$(uname -m)
+TF_VERSION=0.11.1
+PLUGIN_VERSION=0.2.3
+BINARY=terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 
 # Get Pingdom credentials
@@ -24,19 +25,20 @@ fi
 
 #wget can only check timestamp on a file in work dir
 cd bin/
-wget -N "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${VERSION}/${BINARY}" 
+wget -N "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${PLUGIN_VERSION}/${BINARY}"
 cp ./"${BINARY}" "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
 chmod +x "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
 
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
 cd "${PAAS_CF_DIR}"/"${WORKING_DIR}"
 
-# Configure Terraform remote state
-terraform remote config \
-    -backend=s3 \
-    -backend-config="bucket=gds-paas-${DEPLOY_ENV}-state" \
-    -backend-config="key=${STATEFILE}" \
-    -backend-config="region=${AWS_DEFAULT_REGION}"
+# Initialise Terraform with remote state.
+terraform init \
+  -backend=true \
+  -backend-config="bucket=gds-paas-${DEPLOY_ENV}-state" \
+  -backend-config="key=${STATEFILE}" \
+  -backend-config="region=${AWS_DEFAULT_REGION}" \
+  "${PAAS_CF_DIR}"/terraform/pingdom
 
 # Run Terraform Pingdom Provider
 terraform "${TERRAFORM_ACTION}" \
