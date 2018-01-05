@@ -15,17 +15,29 @@ pass "certs/${AWS_ACCOUNT}/${DEPLOY_ENV}/apps_domain_intermediate.crt" > /dev/nu
 
 PAAS_CF_DIR=$(pwd)
 WORKING_DIR=$(mktemp -d cf-certs.XXXXXX)
-trap 'rm -r "${PAAS_CF_DIR}/${WORKING_DIR}"' EXIT
+BACKEND_CONFIG="${PAAS_CF_DIR}"/terraform/cf-certs/backends.tf
+cat > "${BACKEND_CONFIG}" <<EOF
+terraform {
+  backend "s3" {}
+}
+EOF
+
+cleanup() {
+  rm "${BACKEND_CONFIG}"
+  rm -r "${PAAS_CF_DIR:?}/${WORKING_DIR}"
+}
+trap 'cleanup' EXIT
 
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
 cd "${WORKING_DIR}"
 
 # Configure Terraform remote state
-terraform remote config \
-  -backend=s3 \
+terraform init \
+  -backend=true \
   -backend-config="bucket=gds-paas-${DEPLOY_ENV}-state" \
   -backend-config="key=${STATEFILE}" \
-  -backend-config="region=${AWS_DEFAULT_REGION}"
+  -backend-config="region=${AWS_DEFAULT_REGION}" \
+  "${PAAS_CF_DIR}"/terraform/cf-certs
 
 terraform "${TERRAFORM_ACTION}" -var env="${DEPLOY_ENV}" \
   -var-file="${PAAS_CF_DIR}/terraform/${AWS_ACCOUNT}.tfvars" \
