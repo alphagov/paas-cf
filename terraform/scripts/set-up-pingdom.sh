@@ -11,7 +11,7 @@ STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 export PASSWORD_STORE_DIR=~/.paas-pass
 PINGDOM_USER=$(pass pingdom.com/username)
 PINGDOM_PASSWORD=$(pass pingdom.com/password)
-PINGDOM_API_KEY=$(pass pingdom.com/api_key)
+PINGDOM_API_KEY=$(pass pingdom.com/app-key/govuk-paas-terraform)
 PINGDOM_ACCOUNT_EMAIL=$(pass pingdom.com/account_email)
 
 # Install Terraform plugin to temporary directory
