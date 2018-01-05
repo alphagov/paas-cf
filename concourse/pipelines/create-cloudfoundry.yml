@@ -2248,44 +2248,6 @@ jobs:
                       echo "Datadog disabled, skipping attribute applying..."
                     fi
 
-        - task: deploy-paas-dashboard
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            params:
-              ENABLE_PAAS_DASHBOARD: ((enable_paas_dashboard))
-              DATADOG_API_KEY: ((datadog_api_key))
-              DATADOG_APP_KEY: ((datadog_app_key))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  if [ "${ENABLE_PAAS_DASHBOARD}" != "true" ]; then
-                    echo PaaS dashboard application disabled
-                    exit 0
-                  fi
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                    -o admin -s monitoring
-                  cd paas-cf/tools/paas_dashboard
-                  cf push --no-start paas-dashboard
-                  echo Setting DD_API_KEY...
-                  cf set-env paas-dashboard DD_API_KEY "${DATADOG_API_KEY}" > /dev/null
-                  echo Setting DD_APP_KEY...
-                  cf set-env paas-dashboard DD_APP_KEY "${DATADOG_APP_KEY}" > /dev/null
-                  cf start paas-dashboard
-
         - task: deploy-paas-metrics
           config:
             platform: linux
