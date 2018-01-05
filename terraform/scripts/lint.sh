@@ -21,12 +21,8 @@ for dir in ${PAAS_CF_DIR}/terraform/*/ ; do
     continue
   fi
 
-  terraform get "${dir}" > /dev/null
-  terraform graph "${dir}" > /dev/null
+  terraform init -backend=false "${dir}" >/dev/null
+  terraform validate -check-variables=false "${dir}"
 done
 
-if [ "$(terraform fmt -write=false "${PAAS_CF_DIR}/terraform")" != "" ] ; then
-  echo "Use 'terraform fmt' to fix HCL formatting:"
-  terraform fmt -write=false -diff=true "${PAAS_CF_DIR}/terraform"
-  exit 1
-fi
+terraform fmt -check -diff "${PAAS_CF_DIR}/terraform"
