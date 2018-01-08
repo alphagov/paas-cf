@@ -127,16 +127,13 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: uaa
-        # FIXME: remove once CF is upgrade to >= v276
-        release: uaa
+        release: (( grab meta.release.name ))
       - name: metron_agent
         release: (( grab meta.release.name ))
       - name: statsd_injector
         release: (( grab meta.release.name ))
       - name: route_registrar
-      # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
-      # is merged - It is used ONLY for the route-registrar and gorouter
-        release: routing
+        release: (( grab meta.release.name ))
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -177,10 +174,10 @@ jobs:
         release: (( grab jobs.consul.templates.consul_agent.release ))
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_ng
-        release: capi
+        release: (( grab meta.release.name ))
         consumes: {nats: nil}
       - name: cloud_controller_clock
-        release: capi
+        release: (( grab meta.release.name ))
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
@@ -230,7 +227,7 @@ jobs:
         release: (( grab jobs.consul.templates.consul_agent.release ))
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_worker
-        release: capi
+        release: (( grab meta.release.name ))
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
@@ -313,9 +310,7 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
-      # FIXME: remove once https://github.com/cloudfoundry/route-registrar/pull/18
-      # is merged - It is used ONLY for the route-registrar and gorouter
-        release: routing
+        release: (( grab meta.release.name ))
         consumes: {nats: nil}
       - name: metron_agent
         release: (( grab meta.release.name ))
@@ -412,9 +407,9 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: tps
-        release: capi
+        release: (( grab meta.release.name ))
       - name: cc_uploader
-        release: capi
+        release: (( grab meta.release.name ))
       - name: metron_agent
         release: (( grab meta.release.name ))
     instances: 2
