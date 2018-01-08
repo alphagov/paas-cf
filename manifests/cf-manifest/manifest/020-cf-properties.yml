@@ -223,10 +223,6 @@ properties:
     audit_events:
       cutoff_age_in_days: 31
 
-    users_can_select_backend: true
-    # FIXME: this can be removed when the default becomes `true`
-    # See Github issue: https://github.com/cloudfoundry/cloud_controller_ng/issues/841
-    default_to_diego_backend: true
     allow_app_ssh_access: true
     default_app_memory: 1024
     default_app_disk_in_mb: 1024
