@@ -1772,8 +1772,8 @@ jobs:
                   . ./config/config.sh
 
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  export UAA_CLIENT_SECRET
-                  UAA_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+                  export UAA_ADMIN_PASSWORD
+                  UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
                   cd paas-cf/scripts
                   bundle
                   bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
