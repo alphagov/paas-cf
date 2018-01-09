@@ -22,14 +22,13 @@ run:
         echo "Datadog disabled but keys present, running check cleanup..."
       fi
 
+      cp datadog-tfstate/datadog.tfstate updated-datadog-tfstate/datadog.tfstate
       if [ "${ENABLE_DATADOG}" = "true" ] || [ "${cleanup}" = "true" ]; then
         terraform init paas-cf/terraform/datadog
         terraform destroy -force \
-          -state=datadog-tfstate/datadog.tfstate \
-          -state-out=updated-datadog-tfstate/datadog.tfstate \
+          -state=updated-datadog-tfstate/datadog.tfstate \
           -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
           paas-cf/terraform/datadog
       else
         echo "Datadog disabled, skipping terraform run..."
-        cp datadog-tfstate/datadog.tfstate updated-datadog-tfstate/datadog.tfstate
       fi

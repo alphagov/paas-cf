@@ -299,9 +299,10 @@ jobs:
                 mkdir generated-certificates
                 tar xzvf cf-certs/cf-certs.tar.gz -C generated-certificates
 
+                cp cf-tfstate/cf.tfstate updated-cf-tfstate/cf.tfstate
                 terraform init paas-cf/terraform/cloudfoundry
                 terraform destroy -force -var env="((deploy_env))" -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -state=cf-tfstate/cf.tfstate -state-out=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
+                  -state=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
@@ -329,6 +330,7 @@ jobs:
               - -e
               - -c
               - |
+                cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
                 terraform init paas-cf/terraform/cf-certs
                 terraform destroy -force -var env="((deploy_env))" -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                   -var system_domain_crt="irrelevant" \
@@ -337,8 +339,7 @@ jobs:
                   -var apps_domain_crt="irrelevant" \
                   -var apps_domain_key="irrelevant" \
                   -var apps_domain_intermediate_crt="irrelevant" \
-                  -state=cf-certs-tfstate/cf-certs.tfstate \
-                  -state-out=updated-tfstate/cf-certs.tfstate \
+                  -state=updated-tfstate/cf-certs.tfstate \
                   paas-cf/terraform/cf-certs
 
         ensure:
