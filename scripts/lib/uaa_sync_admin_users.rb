@@ -52,7 +52,7 @@ class UaaSyncAdminUsers
   end
 
   def get_uaa_target
-    api_info = cf_api_request('GET', '/v2/info')
+    api_info = cf_api_get_info
     api_info.fetch("token_endpoint")
   end
 
@@ -70,16 +70,30 @@ class UaaSyncAdminUsers
               end
 
     response = http.request(request)
+    [uri, response]
+  end
 
-    # when deleting a user via the CF API a nil body is returned (204 No Content)
+  def cf_api_get_info
+    uri, response = cf_api_request('GET', '/v2/info')
+    if response.code != "200"
+      raise "Error connecting to API endpoint #{uri}: #{response}"
+    end
+    JSON.parse(response.body)
+  end
+
+  def cf_api_delete_user(id)
+    uri, response = cf_api_request('DELETE', "/v2/users/#{id}", 'Authorization' => self.auth_header)
+
+    # fall back to UAA API as the user isn't in Cloud Foundry
+    if response.code == "404"
+      self.get_logger.info("User with GUID #{id} not in Cloud Foundry, attemping to delete via UAA")
+      self.ua.delete(:user, id)
+      return
+    end
+
     if response.code.to_i > 299
       raise "Error connecting to API endpoint #{uri}: #{response}"
     end
-    if response.body.nil?
-      response.body = '{}'
-    end
-
-    JSON.parse(response.body)
   end
 
   # Returns the logger for this object.
@@ -175,7 +189,7 @@ class UaaSyncAdminUsers
         user_info = self.create_user(user)
         created_users << user
       elsif user_info.fetch("origin") != user[:origin]
-        cf_api_request('DELETE', "/v2/users/#{user_info.fetch('id')}", 'Authorization' => self.auth_header)
+        cf_api_delete_user(user_info.fetch('id'))
         deleted_users << user
         user_info = self.create_user(user)
         created_users << user
@@ -229,7 +243,7 @@ class UaaSyncAdminUsers
 
       if Time.parse(user_info.fetch("meta").fetch("created")) < (Time.now - HOURS_TO_KEEP_TEST_USERS * 60 * 60)
         get_logger.info("Deleting admin user #{user_info.fetch('username')} which is not in the list.")
-        cf_api_request('DELETE', "/v2/users/#{user_id}", 'Authorization' => self.auth_header)
+        cf_api_delete_user(user_id)
         deleted_users << { username: user_info.fetch("username"), email: user_info.fetch("emails").fetch(0).fetch("value") }
       else
         get_logger.info("Not deleting user #{user_info.fetch('username')} created in the last #{HOURS_TO_KEEP_TEST_USERS} hours.")

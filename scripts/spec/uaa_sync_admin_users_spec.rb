@@ -290,6 +290,78 @@ RSpec.describe UaaSyncAdminUsers do
       end
     end
 
+    context "when deleting a user fails because they are not in Cloud Foundry" do
+      let(:uaa_api_url) { uaa_sync_admin_users.target }
+      let(:users) { [] }
+      before(:each) do
+        WebMock.stub_request(:get, %r{^#{uaa_api_url}/Users.*}).
+          to_return(
+            status: 200,
+            headers: { "content-type" => "application/json" },
+            body: json_query_responses([])
+          )
+        %w(admin removed_user).each { |user_to_match|
+          WebMock.stub_request(:get, %r{#{uaa_api_url}/Users\?filter=username eq "#{user_to_match}".*}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_query_responses([
+                json_user_response(user_to_match, "#{user_to_match}@example.com"),
+              ])
+            )
+          WebMock.stub_request(:get, %r{#{uaa_api_url}/Users\?filter=id eq "#{user_uuid(user_to_match)}".*}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_query_responses([
+                json_user_response(user_to_match, "#{user_to_match}@example.com"),
+              ])
+            )
+        }
+
+        uaa_sync_admin_users.admin_groups.each { |group_name|
+          WebMock.stub_request(:get, %r{^#{uaa_api_url}/Groups\?filter=displayName eq "#{group_name}".*}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_query_responses([
+                json_group_response(group_name, %w(admin existing_user removed_user test_user_1 test_user_2))
+              ])
+            )
+          WebMock.stub_request(:put, %r{^#{uaa_api_url}/Groups/#{group_uuid(group_name)}$}).
+            to_return(
+              status: 200,
+              headers: { "content-type" => "application/json" },
+              body: json_group_response(group_name, %w(admin existing_user new_user removed_user))
+          )
+        }
+        WebMock.stub_request(:delete, "#{cf_api_url}/v2/users/__user__removed_user__uuid__").
+          to_return(
+            status: 404,
+            headers: { "content-type" => "application/json" },
+            body: '{"error_code": "CF-UserNotFound"}',
+          )
+
+        WebMock.stub_request(:delete, "#{uaa_api_url}/Users/__user__removed_user__uuid__").
+          to_return(
+            status: 200,
+            headers: { "content-type" => "application/json" },
+            body: json_user_response("removed_user", "removed_user@example.com"),
+          )
+
+        @created_users, @deleted_users = uaa_sync_admin_users.update_admin_users(users)
+      end
+
+      it "falls back to the UAA API" do
+        expect(WebMock).to have_requested(
+          :delete, "#{cf_api_url}/v2/users/__user__removed_user__uuid__"
+        )
+        expect(WebMock).to have_requested(
+          :delete, "#{uaa_api_url}/Users/__user__removed_user__uuid__"
+        )
+      end
+    end
+
     context "when changing authentication origin" do
       let(:uaa_api_url) { uaa_sync_admin_users.target }
       let(:users) {
