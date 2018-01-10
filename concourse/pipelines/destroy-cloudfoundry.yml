@@ -216,7 +216,6 @@ jobs:
           params:
             file: deployed-healthcheck/healthcheck-deployed
 
-
   - name: terraform-destroy
     serial_groups: [ destroy ]
     serial: true

@@ -51,3 +51,6 @@ terraform_outputs:
   cloud_controller_security_group: sg-0000000
   cell_subnet_cidr_blocks: ""
   router_subnet_cidr_blocks: ""
+  ses_smtp_host: "SmtpHost"
+  ses_smtp_aws_access_key_id: "SmtpAccessTokenID"
+  ses_smtp_password: "SmtpPassword"

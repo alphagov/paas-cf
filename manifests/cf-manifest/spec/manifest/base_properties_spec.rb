@@ -94,6 +94,14 @@ RSpec.describe "base properties" do
   describe "login" do
     subject(:login) { properties.fetch("login") }
 
+    describe "smtp" do
+      subject(:smtp) { login.fetch("smtp") }
+
+      it { is_expected.to include("host" => "SmtpHost") }
+      it { is_expected.to include("user" => "SmtpAccessTokenID") }
+      it { is_expected.to include("password" => "SmtpPassword") }
+    end
+
     describe "links" do
       subject(:links) { login.fetch("links") }
 

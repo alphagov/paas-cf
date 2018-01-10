@@ -393,6 +393,14 @@ properties:
       serviceProviderKey: ((grab secrets.saml_key))
       serviceProviderKeyPassword: ""
       serviceProviderCertificate: ((grab secrets.saml_cert))
+    smtp:
+      host: (( grab terraform_outputs.ses_smtp_host ))
+      port: 587
+      from_address: "gov-uk-paas-support@digital.cabinet-office.gov.uk"
+      user: (( grab terraform_outputs.ses_smtp_aws_access_key_id ))
+      password: (( grab terraform_outputs.ses_smtp_password ))
+      auth: true
+      starttls: true
     enabled: true
     self_service_links_enabled: false
     links:

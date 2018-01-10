@@ -985,6 +985,26 @@ jobs:
           params:
             file: updated-tfstate/cf.tfstate
 
+      # FIXME: Move this operation to Terraform when this feature is added:
+      # https://github.com/terraform-providers/terraform-provider-aws/issues/113
+      - task: add-aws-users-to-groups
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          params:
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              aws iam add-user-to-group --user-name "ses-smtp-${DEPLOY_ENV}" --group-name email-senders
+
       - task: extract-cf-terraform-outputs
         config:
           platform: linux
@@ -1008,6 +1028,7 @@ jobs:
                 SCFILE="extract_tf_vars_from_terraform_state.rb"
                 $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
                 ls -l cf-terraform-outputs/cf.tfstate.sh
+
       - task: init-db
         config:
           platform: linux
@@ -1051,6 +1072,7 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
+
       - aggregate:
         - task: extract-terraform-outputs
           config:
@@ -1076,8 +1098,8 @@ jobs:
                 - |
                   for state in vpc bosh concourse cf; do
                     ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-                      < $state-tfstate/$state.tfstate \
-                      > terraform-outputs/$state.yml
+                      < ${state}-tfstate/${state}.tfstate \
+                      > terraform-outputs/${state}.yml
                     ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                       < ${state}-tfstate/${state}.tfstate \
                       > terraform-outputs/${state}.tfvars.sh
@@ -1105,28 +1127,28 @@ jobs:
                   ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-manifest.rb ${CF_MANIFEST_DIR}/grafana \
                     > grafana-dashboards-manifest/grafana-dashboards-manifest.yml
 
-      - task: generate-peer-manifest
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.2-slim
-          inputs:
-            - name: paas-cf
-          outputs:
-            - name: vpc-peering-manifest
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
-                > vpc-peering-manifest/vpc-peers.yml
+        - task: generate-peer-manifest
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: vpc-peering-manifest
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                  > vpc-peering-manifest/vpc-peers.yml
 
-                cat vpc-peering-manifest/vpc-peers.yml
+                  cat vpc-peering-manifest/vpc-peers.yml
 
       - aggregate:
         - task: generate-cloud-config
