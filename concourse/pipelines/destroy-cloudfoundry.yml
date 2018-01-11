@@ -161,10 +161,20 @@ jobs:
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
 
       - task: remove-healthcheck-db
-        file: paas-cf/concourse/tasks/remove-healthcheck-db.yml
+        file: paas-cf/concourse/tasks/remove-db.yml
+        params:
+          ORG: admin
+          SPACE: healthchecks
+          DB_NAME: healthcheck-db
+          BOUND_APP: healthcheck
 
       - task: remove-billing-db
-        file: paas-cf/concourse/tasks/remove-billing-db.yml
+        file: paas-cf/concourse/tasks/remove-db.yml
+        params:
+          ORG: admin
+          SPACE: billing
+          DB_NAME: billing-db
+          BOUND_APP: paas-usage-events-collector
 
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
