@@ -26,7 +26,10 @@ run:
         echo "Login failed.  Skipping..."
         exit 0
       fi
-      cf target -o "${ORG}" -s "${SPACE}"
+      if ! cf target -o "${ORG}" -s "${SPACE}"; then
+        echo "${ORG}/${SPACE} space doesn't seem to exist. Skipping..."
+        exit 0
+      fi
       if cf services | grep -q "${DB_NAME}"; then
         cf unbind-service "${BOUND_APP}" "${DB_NAME}" || true
         cf delete-service "${DB_NAME}" -f
