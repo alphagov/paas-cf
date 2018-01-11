@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/terraform
-    tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+    tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
 inputs:
   - name: paas-cf
   - name: datadog-tfstate
@@ -22,13 +22,13 @@ run:
         echo "Datadog disabled but keys present, running check cleanup..."
       fi
 
+      cp datadog-tfstate/datadog.tfstate updated-datadog-tfstate/datadog.tfstate
       if [ "${ENABLE_DATADOG}" = "true" ] || [ "${cleanup}" = "true" ]; then
+        terraform init paas-cf/terraform/datadog
         terraform destroy -force \
-          -state=datadog-tfstate/datadog.tfstate \
-          -state-out=updated-datadog-tfstate/datadog.tfstate \
+          -state=updated-datadog-tfstate/datadog.tfstate \
           -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
-        paas-cf/terraform/datadog
+          paas-cf/terraform/datadog
       else
         echo "Datadog disabled, skipping terraform run..."
-        cp datadog-tfstate/datadog.tfstate updated-datadog-tfstate/datadog.tfstate
       fi

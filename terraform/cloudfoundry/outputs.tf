@@ -1,33 +1,33 @@
 output "cf1_subnet_id" {
-  value = "${aws_subnet.cf.0.id}"
+  value = "${element(concat(aws_subnet.cf.*.id, list("")), 0)}"
 }
 
 output "cf2_subnet_id" {
-  value = "${aws_subnet.cf.1.id}"
+  value = "${element(concat(aws_subnet.cf.*.id, list("")), 1)}"
 }
 
 output "cf3_subnet_id" {
-  value = "${aws_subnet.cf.2.id}"
+  value = "${element(concat(aws_subnet.cf.*.id, list("")), 2)}"
 }
 
 output "cell1_subnet_id" {
-  value = "${aws_subnet.cell.0.id}"
+  value = "${element(concat(aws_subnet.cell.*.id, list("")), 0)}"
 }
 
 output "cell2_subnet_id" {
-  value = "${aws_subnet.cell.1.id}"
+  value = "${element(concat(aws_subnet.cell.*.id, list("")), 1)}"
 }
 
 output "cell3_subnet_id" {
-  value = "${aws_subnet.cell.2.id}"
+  value = "${element(concat(aws_subnet.cell.*.id, list("")), 2)}"
 }
 
 output "router1_subnet_id" {
-  value = "${aws_subnet.router.0.id}"
+  value = "${element(concat(aws_subnet.router.*.id, list("")), 0)}"
 }
 
 output "router2_subnet_id" {
-  value = "${aws_subnet.router.1.id}"
+  value = "${element(concat(aws_subnet.router.*.id, list("")), 1)}"
 }
 
 output "cf_root_domain" {

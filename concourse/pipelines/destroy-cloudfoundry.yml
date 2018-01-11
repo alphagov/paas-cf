@@ -270,7 +270,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -299,8 +299,10 @@ jobs:
                 mkdir generated-certificates
                 tar xzvf cf-certs/cf-certs.tar.gz -C generated-certificates
 
+                cp cf-tfstate/cf.tfstate updated-cf-tfstate/cf.tfstate
+                terraform init paas-cf/terraform/cloudfoundry
                 terraform destroy -force -var env="((deploy_env))" -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -state=cf-tfstate/cf.tfstate -state-out=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
+                  -state=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
@@ -313,7 +315,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
+              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
           inputs:
             - name: paas-cf
             - name: cf-certs-tfstate
@@ -328,6 +330,8 @@ jobs:
               - -e
               - -c
               - |
+                cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
+                terraform init paas-cf/terraform/cf-certs
                 terraform destroy -force -var env="((deploy_env))" -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                   -var system_domain_crt="irrelevant" \
                   -var system_domain_key="irrelevant" \
@@ -335,8 +339,7 @@ jobs:
                   -var apps_domain_crt="irrelevant" \
                   -var apps_domain_key="irrelevant" \
                   -var apps_domain_intermediate_crt="irrelevant" \
-                  -state=cf-certs-tfstate/cf-certs.tfstate \
-                  -state-out=updated-tfstate/cf-certs.tfstate \
+                  -state=updated-tfstate/cf-certs.tfstate \
                   paas-cf/terraform/cf-certs
 
         ensure:

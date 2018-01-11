@@ -839,7 +839,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
           inputs:
             - name: paas-cf
             - name: cf-certs-tfstate
@@ -864,15 +864,18 @@ jobs:
                   tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
                   tar xzf bosh-CA/bosh-CA.tar.gz
 
-                  terraform apply -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
+                  terraform init paas-cf/terraform/cf-certs
+                  terraform apply \
+                    -auto-approve=true \
+                    -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                     -var system_domain_crt="$(cat generated-certificates/system_domain.crt)" \
                     -var system_domain_key="$(cat generated-certificates/system_domain.key)" \
                     -var system_domain_intermediate_crt="$(cat bosh-CA.crt)" \
                     -var apps_domain_crt="$(cat generated-certificates/apps_domain.crt)" \
                     -var apps_domain_key="$(cat generated-certificates/apps_domain.key)" \
                     -var apps_domain_intermediate_crt="$(cat bosh-CA.crt)" \
-                    -state=cf-certs-tfstate/cf-certs.tfstate \
-                    -state-out=updated-tfstate/cf-certs.tfstate \
+                    -state=updated-tfstate/cf-certs.tfstate \
                     paas-cf/terraform/cf-certs
                 fi
         ensure:
@@ -941,7 +944,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -969,9 +972,14 @@ jobs:
                 mkdir generated-certificates
                 tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
 
-                terraform apply -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
+                terraform init paas-cf/terraform/cloudfoundry
+                terraform apply \
+                  -auto-approve=true \
+                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                   -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
-                  -state=cf-tfstate/cf.tfstate -state-out=updated-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
+                  -state=updated-tfstate/cf.tfstate \
+                  paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
@@ -2170,7 +2178,7 @@ jobs:
                 type: docker-image
                 source:
                   repository: governmentpaas/terraform
-                  tag: 465642da06051a55630d39c899697b678f66a7f7
+                  tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
               inputs:
                 - name: datadog-tfstate
                 - name: paas-cf
@@ -2189,11 +2197,13 @@ jobs:
                   - -e
                   - -c
                   - |
+                    cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                    terraform init paas-cf/terraform/datadog
+
                     if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
                       echo "Datadog disabled but keys present, running check cleanup..."
                       terraform destroy -force \
-                         -state=datadog-tfstate/datadog.tfstate \
-                         -state-out=updated-tfstate/datadog.tfstate \
+                         -state=updated-tfstate/datadog.tfstate \
                          -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
                          paas-cf/terraform/datadog
                       exit 0
@@ -2201,9 +2211,11 @@ jobs:
 
                     if [ "${ENABLE_DATADOG}" = "true" ]; then
                       terraform apply \
+                        -auto-approve=true \
                         -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                        -state=datadog-tfstate/datadog.tfstate -state-out=updated-tfstate/datadog.tfstate \
-                        -var-file=config/job_instances.tfvars paas-cf/terraform/datadog
+                        -state=updated-tfstate/datadog.tfstate \
+                        -var-file=config/job_instances.tfvars \
+                        paas-cf/terraform/datadog
                     else
                       echo "Datadog disabled, skipping terraform run..."
                       cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate

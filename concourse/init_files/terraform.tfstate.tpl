@@ -1,5 +1,6 @@
 {
-    "version": 1,
+    "version": 3,
+    "terraform_version": "0.11.1",
     "serial": 0,
     "modules": [
         {
@@ -7,7 +8,8 @@
                 "root"
             ],
             "outputs": {},
-            "resources": {}
+            "resources": {},
+            "depends_on": []
         }
     ]
 }
