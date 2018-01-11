@@ -1,3 +1,5 @@
+require 'net/https'
+require 'json'
 require 'securerandom'
 require 'time'
 require 'set'
@@ -11,7 +13,7 @@ require 'pp'
 # UaaSyncAdminUsers::DEFAULT_ADMIN_GROUPS
 #
 class UaaSyncAdminUsers
-  attr_accessor :ua, :token_issuer, :admin_groups
+  attr_accessor :target, :ua, :token_issuer, :admin_groups
 
   DEFAULT_ADMIN_GROUPS = [
     "cloud_controller.admin",
@@ -29,23 +31,69 @@ class UaaSyncAdminUsers
   # credentials.
   #
   # Params:
-  # - target: UAA target
-  # - admin_client: Admin client name for UAA with permissions to manage users
-  # - admin_password: Admin client password
+  # - cf_api_url: CF API URL
+  # - cf_admin_username: CF admin user's name
+  # - cf_admin_password: CF admin user's password
   # - options: Hash of options. Examples and defaults
   #   - skip_ssl_validation: default=false
   #   - extra_admin_groups: default=[] Additional admin groups apart of DEFAULT_ADMIN_GROUPS
   #   - log_level: default: :warn. Options: :debug, :trace, :warn
-  def initialize(target, admin_client, admin_password, options = nil)
-    @target = target
-    @admin_client = admin_client
-    @admin_password = admin_password
+  def initialize(cf_api_url, cf_admin_username, cf_admin_password, options = nil)
+    @cf_api_url = cf_api_url
+    @target = get_uaa_target
+    @cf_admin_username = cf_admin_username
+    @cf_admin_password = cf_admin_password
     @options = options
 
     self.admin_groups = DEFAULT_ADMIN_GROUPS + options.fetch(:extra_admin_groups, [])
 
-    self.token_issuer = CF::UAA::TokenIssuer.new(@target, @admin_client, @admin_password, @options)
+    self.token_issuer = CF::UAA::TokenIssuer.new(@target, 'cf', '', @options)
     self.token_issuer.logger = self.get_logger
+  end
+
+  def get_uaa_target
+    api_info = cf_api_get_info
+    api_info.fetch("token_endpoint")
+  end
+
+  def cf_api_request(method, path, headers = {})
+    uri = URI.parse(@cf_api_url) + path
+    http = Net::HTTP.new(uri.host, uri.port)
+    if uri.instance_of? URI::HTTPS
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE if ENV['SKIP_SSL_VERIFICATION'].to_s.casecmp("true").zero?
+    end
+
+    request = case method.upcase
+              when 'GET' then Net::HTTP::Get.new(uri.request_uri, headers)
+              when 'DELETE' then Net::HTTP::Delete.new(uri.request_uri, headers)
+              end
+
+    response = http.request(request)
+    [uri, response]
+  end
+
+  def cf_api_get_info
+    uri, response = cf_api_request('GET', '/v2/info')
+    if response.code != "200"
+      raise "Error connecting to API endpoint #{uri}: #{response}"
+    end
+    JSON.parse(response.body)
+  end
+
+  def cf_api_delete_user(id)
+    uri, response = cf_api_request('DELETE', "/v2/users/#{id}", 'Authorization' => self.auth_header)
+
+    # fall back to UAA API as the user isn't in Cloud Foundry
+    if response.code == "404"
+      self.get_logger.info("User with GUID #{id} not in Cloud Foundry, attemping to delete via UAA")
+      self.ua.delete(:user, id)
+      return
+    end
+
+    if response.code.to_i > 299
+      raise "Error connecting to API endpoint #{uri}: #{response}"
+    end
   end
 
   # Returns the logger for this object.
@@ -107,7 +155,11 @@ class UaaSyncAdminUsers
 
   # Authenticates the client with the UAA server and requests a new token.
   def request_token
-    @token = self.token_issuer.client_credentials_grant.info
+    @token = self.token_issuer.owner_password_grant(@cf_admin_username, @cf_admin_password, [
+      'cloud_controller.read', 'cloud_controller.write', 'openid', 'password.write',
+      'cloud_controller.admin', 'cloud_controller.admin_read_only', 'cloud_controller.global_auditor',
+      'scim.read', 'scim.write', 'scim.invite', 'uaa.user'
+    ]).info
     self.ua = CF::UAA::Scim.new(@target, self.auth_header, @options)
     self.ua.logger = self.get_logger
     self
@@ -137,7 +189,7 @@ class UaaSyncAdminUsers
         user_info = self.create_user(user)
         created_users << user
       elsif user_info.fetch("origin") != user[:origin]
-        self.ua.delete(:user, user_info.fetch("id"))
+        cf_api_delete_user(user_info.fetch('id'))
         deleted_users << user
         user_info = self.create_user(user)
         created_users << user
@@ -191,7 +243,7 @@ class UaaSyncAdminUsers
 
       if Time.parse(user_info.fetch("meta").fetch("created")) < (Time.now - HOURS_TO_KEEP_TEST_USERS * 60 * 60)
         get_logger.info("Deleting admin user #{user_info.fetch('username')} which is not in the list.")
-        ua.delete(:user, user_id)
+        cf_api_delete_user(user_id)
         deleted_users << { username: user_info.fetch("username"), email: user_info.fetch("emails").fetch(0).fetch("value") }
       else
         get_logger.info("Not deleting user #{user_info.fetch('username')} created in the last #{HOURS_TO_KEEP_TEST_USERS} hours.")
