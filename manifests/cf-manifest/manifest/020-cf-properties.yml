@@ -402,11 +402,11 @@ properties:
       auth: true
       starttls: true
     enabled: true
-    self_service_links_enabled: false
+    self_service_links_enabled: true
     links:
       passwd: (( concat "https://login." properties.system_domain "/forgot_password" ))
-      signup: (( concat "https://login." properties.system_domain "/create_account" ))
-      homeRedirect: (( concat "https://www." properties.system_domain "/next-steps" ))
+      signup: "https://www.cloud.service.gov.uk/signup"
+      homeRedirect: "https://www.cloud.service.gov.uk/next-steps?account-updated"
     branding:
       company_name: "GOV.UK PaaS"
     asset_base_url: (( concat "https://paas-uaa-assets." terraform_outputs.cf_apps_domain ))

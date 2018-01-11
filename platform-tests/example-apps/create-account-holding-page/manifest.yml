@@ -1,0 +1,7 @@
+---
+applications:
+ - name: create-account-holding-page
+   memory: 64M
+   disk_quota: 100M
+   instances: 2
+   buildpack: staticfile_buildpack

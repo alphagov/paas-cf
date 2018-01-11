@@ -1655,6 +1655,51 @@ jobs:
                   cf enable-feature-flag diego_docker
 
       - aggregate:
+        - task: block-create-account-endpoints
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                    -o admin -s assets
+
+                  cd paas-cf/platform-tests/example-apps/create-account-holding-page/
+                  cf push
+
+                  if ! cf domains | grep -q "login.((system_dns_zone_name))"; then
+                    cf create-domain admin "login.((system_dns_zone_name))"
+                  fi
+                  if ! cf domains | grep -q "uaa.((system_dns_zone_name))"; then
+                    cf create-domain admin "uaa.((system_dns_zone_name))"
+                  fi
+
+                  cf create-route assets "login.((system_dns_zone_name))" --path create_account
+                  cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
+                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
+                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do
+
+                  cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
+                  cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account.do
+                  cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account
+                  cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
+
         - task: deploy-compose-service-broker
           config:
             platform: linux
