@@ -29,6 +29,17 @@ resource "aws_elb" "elasticache_broker" {
   }
 }
 
+resource "aws_lb_ssl_negotiation_policy" "elasticache_broker" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.elasticache_broker.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_elasticache_subnet_group" "elasticache_broker" {
   name        = "elasticache-broker-${var.env}"
   description = "Subnet group for ElastiCache broker managed instances"
