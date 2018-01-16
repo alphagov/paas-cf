@@ -26,6 +26,17 @@ resource "aws_elb" "logsearch_ingestor" {
   }
 }
 
+resource "aws_lb_ssl_negotiation_policy" "logsearch_ingestor" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.logsearch_ingestor.id}"
+  lb_port       = 6514
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_elb" "logsearch_es_master" {
   name                      = "${var.env}-logsearch-es-master"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]

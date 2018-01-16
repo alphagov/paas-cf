@@ -29,6 +29,17 @@ resource "aws_elb" "rds_broker" {
   }
 }
 
+resource "aws_lb_ssl_negotiation_policy" "rds_broker" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.rds_broker.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_db_subnet_group" "rds_broker" {
   name        = "rdsbroker-${var.env}"
   description = "Subnet group for RDS broker managed instances"

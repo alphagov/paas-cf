@@ -29,6 +29,17 @@ resource "aws_elb" "cdn_broker" {
   }
 }
 
+resource "aws_lb_ssl_negotiation_policy" "cdn_broker" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.cdn_broker.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_s3_bucket" "cdn_broker_bucket" {
   bucket        = "gds-paas-${var.env}-cdn-broker-challenge"
   acl           = "private"
