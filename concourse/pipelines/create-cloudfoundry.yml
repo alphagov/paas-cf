@@ -11,6 +11,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -27,6 +28,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -59,6 +61,7 @@ groups:
     jobs:
       - rotate-cloudfoundry-credentials
       - clear-cloudfoundry-credentials
+      - expire-ses-smtp-credentials
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -246,6 +249,11 @@ resources:
     type: time
     source:
       interval: 5m
+
+  - name: smtp-credential-rotation-timer
+    type: time
+    source:
+      interval: 720h
 
   - name: paas-compose-broker
     type: git
@@ -577,6 +585,49 @@ jobs:
             put: cf-secrets
             params:
               file: generated-cf-secrets/cf-secrets.yml
+
+  - name: post-deploy
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-tfstate
+      - get: pipeline-trigger
+        passed: ['cf-deploy', 'api-availability-tests', 'app-availability-tests']
+        trigger: true
+    - task: remove-unused-ses-smtp-access-keys
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: governmentpaas/awscli
+            tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+        inputs:
+          - name: cf-tfstate
+        params:
+          DEPLOY_ENV: ((deploy_env))
+          AWS_DEFAULT_REGION: ((aws_region))
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              SES_SMTP_ACCESS_KEY_ID=$(jq -r '.modules[].outputs.ses_smtp_aws_access_key_id.value' cf-tfstate/cf.tfstate)
+              if [ -z "$SES_SMTP_ACCESS_KEY_ID" ]; then
+                echo "could not find ses_smtp_aws_access_key_id in terraform outputs"
+                exit 1
+              fi
+
+              UNUSED_ACCESS_KEYS=$(aws iam list-access-keys --user-name "ses-smtp-${DEPLOY_ENV}" | jq -r ".AccessKeyMetadata[] | select(.AccessKeyId != \"${SES_SMTP_ACCESS_KEY_ID}\") | .AccessKeyId")
+              if [ -z "$UNUSED_ACCESS_KEYS" ]; then
+                echo "no access keys to revoke"
+              else
+                for key in $UNUSED_ACCESS_KEYS; do
+                  echo "deleting key = $key"
+                  aws iam delete-access-key --user-name "ses-smtp-${DEPLOY_ENV}" --access-key-id "$key"
+                done
+              fi
 
   - name: pre-deploy
     plan:
@@ -2473,7 +2524,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy']
             trigger: true
           - get: cf-release
             params:
@@ -2481,7 +2532,7 @@ jobs:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['cf-deploy']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2538,10 +2589,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['cf-deploy']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2935,6 +2986,44 @@ jobs:
         params:
           file: modified-cf-secrets/cf-secrets.yml
 
+  - name: expire-ses-smtp-credentials
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-tfstate
+      - get: smtp-credential-rotation-timer
+        trigger: true
+    - task: forget-ses-smtp-access-key
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: governmentpaas/terraform
+            tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
+        inputs:
+          - name: cf-tfstate
+        outputs:
+          - name: updated-tfstate
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
+              terraform state rm \
+                -state=updated-tfstate/cf.tfstate \
+                aws_iam_access_key.ses_smtp
+              echo "ses smtp access key no longer managed by terraform."
+              echo "next successful deployment run will revoke the expired keys"
+      ensure:
+        put: cf-tfstate
+        params:
+          file: updated-tfstate/cf.tfstate
   - name: generate-git-keys
     plan:
       - task: ssh-keygen
