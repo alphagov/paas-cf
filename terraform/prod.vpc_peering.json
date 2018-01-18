@@ -22,5 +22,29 @@
         "account_id": "001221602192",
         "vpc_id": "vpc-b4afb5d3",
         "subnet_cidr": "172.16.24.0/22"
+    },
+    {
+        "peer_name": "dit_internal_prod",
+        "account_id": "200426811377",
+        "vpc_id": "vpc-63b34105",
+        "subnet_cidr": "172.16.4.0/22"
+    },
+    {
+        "peer_name": "dit_internal_dev",
+        "account_id": "537309863433",
+        "vpc_id": "vpc-43b14325",
+        "subnet_cidr": "172.16.8.0/22"
+    },
+    {
+        "peer_name": "dit_external_prod",
+        "account_id": "370113326201",
+        "vpc_id": "vpc-f1a75597",
+        "subnet_cidr": "172.16.12.0/22"
+    },
+    {
+        "peer_name": "dit-external-dev",
+        "account_id": "471146266171",
+        "vpc_id": "vpc-33a35155",
+        "subnet_cidr": "172.16.16.0/22"
     }
 ]
