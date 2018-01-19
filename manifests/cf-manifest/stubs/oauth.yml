@@ -12,7 +12,7 @@ properties:
           scopes:
             - openid
             - email
-          linkText: Login with Google
+          linkText: GOV.UK PaaS internal account login
           showLinkText: true
           addShadowUserOnLogin: false
           relyingPartyId: (( grab $OAUTH_CLIENT_ID ))
