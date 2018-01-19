@@ -2956,6 +2956,7 @@ jobs:
       - get: cf-secrets
         passed: ['rotate-cloudfoundry-credentials']
         trigger: true
+      - get: cf-tfstate
 
     - task: clear-passwords
       config:
@@ -2986,6 +2987,15 @@ jobs:
         params:
           file: modified-cf-secrets/cf-secrets.yml
 
+    - task: forget-ses-smtp-access-key
+      file: paas-cf/concourse/tasks/forget-ses-smtp-access-key.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+      ensure:
+        put: cf-tfstate
+        params:
+          file: updated-tfstate/cf.tfstate
+
   - name: expire-ses-smtp-credentials
     serial: true
     plan:
@@ -2995,35 +3005,14 @@ jobs:
       - get: smtp-credential-rotation-timer
         trigger: true
     - task: forget-ses-smtp-access-key
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: governmentpaas/terraform
-            tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
-        inputs:
-          - name: cf-tfstate
-        outputs:
-          - name: updated-tfstate
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
-              terraform state rm \
-                -state=updated-tfstate/cf.tfstate \
-                aws_iam_access_key.ses_smtp
-              echo "ses smtp access key no longer managed by terraform."
-              echo "next successful deployment run will revoke the expired keys"
+      file: paas-cf/concourse/tasks/forget-ses-smtp-access-key.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
       ensure:
         put: cf-tfstate
         params:
           file: updated-tfstate/cf.tfstate
+
   - name: generate-git-keys
     plan:
       - task: ssh-keygen
