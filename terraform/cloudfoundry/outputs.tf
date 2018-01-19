@@ -189,3 +189,11 @@ output "ses_smtp_aws_access_key_id" {
 output "ses_smtp_password" {
   value = "${aws_iam_access_key.ses_smtp.ses_smtp_password}"
 }
+
+output "metrics_exporter_aws_access_key_id" {
+  value = "${aws_iam_access_key.metrics_exporter.id}"
+}
+
+output "metrics_exporter_aws_secret_access_key" {
+  value = "${aws_iam_access_key.metrics_exporter.secret}"
+}

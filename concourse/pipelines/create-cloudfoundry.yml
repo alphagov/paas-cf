@@ -61,7 +61,7 @@ groups:
     jobs:
       - rotate-cloudfoundry-credentials
       - clear-cloudfoundry-credentials
-      - expire-ses-smtp-credentials
+      - expire-aws-keys
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -250,7 +250,7 @@ resources:
     source:
       interval: 5m
 
-  - name: smtp-credential-rotation-timer
+  - name: expire-aws-keys-timer
     type: time
     source:
       interval: 720h
@@ -613,21 +613,34 @@ jobs:
             - -e
             - -c
             - |
-              SES_SMTP_ACCESS_KEY_ID=$(jq -r '.modules[].outputs.ses_smtp_aws_access_key_id.value' cf-tfstate/cf.tfstate)
-              if [ -z "$SES_SMTP_ACCESS_KEY_ID" ]; then
-                echo "could not find ses_smtp_aws_access_key_id in terraform outputs"
-                exit 1
-              fi
+              delete_unused_keys() {
+                terraform_outputs_key=$1
+                username=$2
 
-              UNUSED_ACCESS_KEYS=$(aws iam list-access-keys --user-name "ses-smtp-${DEPLOY_ENV}" | jq -r ".AccessKeyMetadata[] | select(.AccessKeyId != \"${SES_SMTP_ACCESS_KEY_ID}\") | .AccessKeyId")
-              if [ -z "$UNUSED_ACCESS_KEYS" ]; then
-                echo "no access keys to revoke"
-              else
-                for key in $UNUSED_ACCESS_KEYS; do
-                  echo "deleting key = $key"
-                  aws iam delete-access-key --user-name "ses-smtp-${DEPLOY_ENV}" --access-key-id "$key"
-                done
-              fi
+                jq_path=".modules[].outputs.${terraform_outputs_key}.value"
+                ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
+                if [ -z "$ACCESS_KEY_ID" ]; then
+                  echo "could not find $terraform_outputs_key in terraform outputs"
+                  exit 1
+                fi
+
+                UNUSED_ACCESS_KEYS=$(\
+                  aws iam list-access-keys --user-name "$username" \
+                  --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
+                  --output text \
+                )
+                if [ -z "$UNUSED_ACCESS_KEYS" ]; then
+                  echo "no access keys to revoke"
+                else
+                  for key in $UNUSED_ACCESS_KEYS; do
+                    echo "deleting key $key for user $username"
+                    aws iam delete-access-key --user-name "$username" --access-key-id "$key"
+                  done
+                fi
+              }
+
+              delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
+              delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
 
   - name: pre-deploy
     plan:
@@ -1055,6 +1068,7 @@ jobs:
             - -c
             - |
               aws iam add-user-to-group --user-name "ses-smtp-${DEPLOY_ENV}" --group-name email-senders
+              aws iam add-user-to-group --user-name "metrics-exporter-${DEPLOY_ENV}" --group-name metrics-exporters
 
       - task: extract-cf-terraform-outputs
         config:
@@ -1509,6 +1523,8 @@ jobs:
                 export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs.nat_public_ips_csv cf-terraform-outputs.yml)
                 export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets.elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
                 export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
+                export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs.metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
+                export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs.metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
                 EOT
 
                 paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
@@ -2393,6 +2409,7 @@ jobs:
               DEPLOY_ENV: ((deploy_env))
               APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              AWS_DEFAULT_REGION: ((aws_region))
             inputs:
               - name: paas-cf
               - name: config
@@ -2435,6 +2452,9 @@ jobs:
                         'uaa.${SYSTEM_DNS_ZONE_NAME}',
                         '${APPS_DNS_ZONE_NAME}'
                       ].join(','),
+                      'AWS_DEFAULT_REGION' => '${AWS_DEFAULT_REGION}',
+                      'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
+                      'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
@@ -2987,8 +3007,8 @@ jobs:
         params:
           file: modified-cf-secrets/cf-secrets.yml
 
-    - task: forget-ses-smtp-access-key
-      file: paas-cf/concourse/tasks/forget-ses-smtp-access-key.yml
+    - task: forget-access-keys
+      file: paas-cf/concourse/tasks/forget-access-keys.yml
       params:
         AWS_DEFAULT_REGION: ((aws_region))
       ensure:
@@ -2996,16 +3016,16 @@ jobs:
         params:
           file: updated-tfstate/cf.tfstate
 
-  - name: expire-ses-smtp-credentials
+  - name: expire-aws-keys
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
       - get: cf-tfstate
-      - get: smtp-credential-rotation-timer
+      - get: expire-aws-keys-timer
         trigger: true
-    - task: forget-ses-smtp-access-key
-      file: paas-cf/concourse/tasks/forget-ses-smtp-access-key.yml
+    - task: forget-access-keys
+      file: paas-cf/concourse/tasks/forget-access-keys.yml
       params:
         AWS_DEFAULT_REGION: ((aws_region))
       ensure:

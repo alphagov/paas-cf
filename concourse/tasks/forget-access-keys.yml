@@ -17,8 +17,13 @@ run:
     - -c
     - |
       cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
-      terraform state rm \
-        -state=updated-tfstate/cf.tfstate \
+
+      terraform state rm -state=updated-tfstate/cf.tfstate \
         aws_iam_access_key.ses_smtp
       echo "ses smtp access key no longer managed by terraform."
-      echo "next successful deployment run will revoke the expired keys"
+
+      terraform state rm -state=updated-tfstate/cf.tfstate \
+        aws_iam_access_key.metrics_exporter
+      echo "metrics exporter access key no longer managed by terraform."
+
+      echo "next successful deployment run will delete the unused keys"
