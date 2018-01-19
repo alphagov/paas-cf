@@ -11,6 +11,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -27,6 +28,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -59,6 +61,7 @@ groups:
     jobs:
       - rotate-cloudfoundry-credentials
       - clear-cloudfoundry-credentials
+      - expire-ses-smtp-credentials
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -247,6 +250,11 @@ resources:
     source:
       interval: 5m
 
+  - name: smtp-credential-rotation-timer
+    type: time
+    source:
+      interval: 720h
+
   - name: paas-compose-broker
     type: git
     source:
@@ -405,7 +413,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/awscli
-              tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
           run:
             path: sh
             args:
@@ -578,6 +586,49 @@ jobs:
             params:
               file: generated-cf-secrets/cf-secrets.yml
 
+  - name: post-deploy
+    serial: true
+    plan:
+    - aggregate:
+      - get: cf-tfstate
+      - get: pipeline-trigger
+        passed: ['cf-deploy', 'api-availability-tests', 'app-availability-tests']
+        trigger: true
+    - task: remove-unused-ses-smtp-access-keys
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: governmentpaas/awscli
+            tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+        inputs:
+          - name: cf-tfstate
+        params:
+          DEPLOY_ENV: ((deploy_env))
+          AWS_DEFAULT_REGION: ((aws_region))
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              SES_SMTP_ACCESS_KEY_ID=$(jq -r '.modules[].outputs.ses_smtp_aws_access_key_id.value' cf-tfstate/cf.tfstate)
+              if [ -z "$SES_SMTP_ACCESS_KEY_ID" ]; then
+                echo "could not find ses_smtp_aws_access_key_id in terraform outputs"
+                exit 1
+              fi
+
+              UNUSED_ACCESS_KEYS=$(aws iam list-access-keys --user-name "ses-smtp-${DEPLOY_ENV}" | jq -r ".AccessKeyMetadata[] | select(.AccessKeyId != \"${SES_SMTP_ACCESS_KEY_ID}\") | .AccessKeyId")
+              if [ -z "$UNUSED_ACCESS_KEYS" ]; then
+                echo "no access keys to revoke"
+              else
+                for key in $UNUSED_ACCESS_KEYS; do
+                  echo "deleting key = $key"
+                  aws iam delete-access-key --user-name "ses-smtp-${DEPLOY_ENV}" --access-key-id "$key"
+                done
+              fi
+
   - name: pre-deploy
     plan:
       - aggregate:
@@ -655,7 +706,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/awscli
-              tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
           run:
             path: sh
             args:
@@ -985,6 +1036,26 @@ jobs:
           params:
             file: updated-tfstate/cf.tfstate
 
+      # FIXME: Move this operation to Terraform when this feature is added:
+      # https://github.com/terraform-providers/terraform-provider-aws/issues/113
+      - task: add-aws-users-to-groups
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          params:
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              aws iam add-user-to-group --user-name "ses-smtp-${DEPLOY_ENV}" --group-name email-senders
+
       - task: extract-cf-terraform-outputs
         config:
           platform: linux
@@ -1008,6 +1079,7 @@ jobs:
                 SCFILE="extract_tf_vars_from_terraform_state.rb"
                 $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
                 ls -l cf-terraform-outputs/cf.tfstate.sh
+
       - task: init-db
         config:
           platform: linux
@@ -1051,6 +1123,7 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
+
       - aggregate:
         - task: extract-terraform-outputs
           config:
@@ -1076,8 +1149,8 @@ jobs:
                 - |
                   for state in vpc bosh concourse cf; do
                     ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-                      < $state-tfstate/$state.tfstate \
-                      > terraform-outputs/$state.yml
+                      < ${state}-tfstate/${state}.tfstate \
+                      > terraform-outputs/${state}.yml
                     ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                       < ${state}-tfstate/${state}.tfstate \
                       > terraform-outputs/${state}.tfvars.sh
@@ -1105,28 +1178,28 @@ jobs:
                   ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-manifest.rb ${CF_MANIFEST_DIR}/grafana \
                     > grafana-dashboards-manifest/grafana-dashboards-manifest.yml
 
-      - task: generate-peer-manifest
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.2-slim
-          inputs:
-            - name: paas-cf
-          outputs:
-            - name: vpc-peering-manifest
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
-                > vpc-peering-manifest/vpc-peers.yml
+        - task: generate-peer-manifest
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: ruby
+                tag: 2.2-slim
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: vpc-peering-manifest
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                  > vpc-peering-manifest/vpc-peers.yml
 
-                cat vpc-peering-manifest/vpc-peers.yml
+                  cat vpc-peering-manifest/vpc-peers.yml
 
       - aggregate:
         - task: generate-cloud-config
@@ -1633,6 +1706,51 @@ jobs:
                   cf enable-feature-flag diego_docker
 
       - aggregate:
+        - task: block-create-account-endpoints
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                  . ./config/config.sh
+                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                    -o admin -s assets
+
+                  cd paas-cf/platform-tests/example-apps/create-account-holding-page/
+                  cf push
+
+                  if ! cf domains | grep -q "login.((system_dns_zone_name))"; then
+                    cf create-domain admin "login.((system_dns_zone_name))"
+                  fi
+                  if ! cf domains | grep -q "uaa.((system_dns_zone_name))"; then
+                    cf create-domain admin "uaa.((system_dns_zone_name))"
+                  fi
+
+                  cf create-route assets "login.((system_dns_zone_name))" --path create_account
+                  cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
+                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
+                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do
+
+                  cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
+                  cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account.do
+                  cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account
+                  cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
+
         - task: deploy-compose-service-broker
           config:
             platform: linux
@@ -2406,7 +2524,7 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy']
             trigger: true
           - get: cf-release
             params:
@@ -2414,7 +2532,7 @@ jobs:
                 - src/github.com/cloudfoundry/cf-acceptance-tests
             passed: ['cf-deploy']
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['cf-deploy']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2471,10 +2589,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['cf-deploy']
           - get: cf-manifest
             passed: ['cf-deploy']
           - get: bosh-CA
@@ -2838,6 +2956,7 @@ jobs:
       - get: cf-secrets
         passed: ['rotate-cloudfoundry-credentials']
         trigger: true
+      - get: cf-tfstate
 
     - task: clear-passwords
       config:
@@ -2867,6 +2986,32 @@ jobs:
         put: cf-secrets
         params:
           file: modified-cf-secrets/cf-secrets.yml
+
+    - task: forget-ses-smtp-access-key
+      file: paas-cf/concourse/tasks/forget-ses-smtp-access-key.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+      ensure:
+        put: cf-tfstate
+        params:
+          file: updated-tfstate/cf.tfstate
+
+  - name: expire-ses-smtp-credentials
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-tfstate
+      - get: smtp-credential-rotation-timer
+        trigger: true
+    - task: forget-ses-smtp-access-key
+      file: paas-cf/concourse/tasks/forget-ses-smtp-access-key.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+      ensure:
+        put: cf-tfstate
+        params:
+          file: updated-tfstate/cf.tfstate
 
   - name: generate-git-keys
     plan:
@@ -2964,7 +3109,7 @@ jobs:
                 type: docker-image
                 source:
                   repository: governmentpaas/awscli
-                  tag: 1ab7d6cdac70f2c32563ea173da0cd7791309be5
+                  tag: b2495d6ed07f680125d19aa7d1701da7efabb289
               params:
                 AWS_DEFAULT_REGION: ((aws_region))
                 DEPLOY_ENV: ((deploy_env))

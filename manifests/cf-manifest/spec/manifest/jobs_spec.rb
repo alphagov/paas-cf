@@ -128,9 +128,7 @@ RSpec.describe "uaa jobs" do
           expect(routes.length).to eq(1)
           expect(routes.first.fetch('uris')).to match_array([
             "uaa.#{terraform_fixture(:cf_root_domain)}",
-            "*.uaa.#{terraform_fixture(:cf_root_domain)}",
             "login.#{terraform_fixture(:cf_root_domain)}",
-            "*.login.#{terraform_fixture(:cf_root_domain)}",
           ])
         end
       end

@@ -177,3 +177,15 @@ output "router_subnet_cidr_blocks" {
 output "nat_public_ips_csv" {
   value = "${join(",", aws_eip.cf.*.public_ip)}"
 }
+
+output "ses_smtp_host" {
+  value = "email-smtp.${var.region}.amazonaws.com"
+}
+
+output "ses_smtp_aws_access_key_id" {
+  value = "${aws_iam_access_key.ses_smtp.id}"
+}
+
+output "ses_smtp_password" {
+  value = "${aws_iam_access_key.ses_smtp.ses_smtp_password}"
+}
