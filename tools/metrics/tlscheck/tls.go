@@ -6,10 +6,30 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"time"
 )
 
-func GetCertificate(addr string) (*x509.Certificate, error) {
-	conn, err := tls.Dial("tcp", addr, nil)
+type TLSChecker struct{}
+
+//go:generate counterfeiter -o fakes/fake_cert_checker.go . CertChecker
+type CertChecker interface {
+	DaysUntilExpiry(string, *tls.Config) (float64, error)
+}
+
+func (tc *TLSChecker) DaysUntilExpiry(addr string, tlsConfig *tls.Config) (float64, error) {
+	cert, err := GetCertificate(addr, tlsConfig)
+	if err == nil {
+		return time.Until(cert.NotAfter).Hours() / 24, nil
+	}
+
+	if IsCertificateError(err) {
+		return 0, nil
+	}
+	return 0, err
+}
+
+func GetCertificate(addr string, tlsConfig *tls.Config) (*x509.Certificate, error) {
+	conn, err := tls.Dial("tcp", addr, tlsConfig)
 	if err != nil {
 		return nil, err
 	}

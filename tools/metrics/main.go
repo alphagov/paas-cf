@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
+	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/pkg/errors"
 
 	"code.cloudfoundry.org/lager"
@@ -52,6 +54,12 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
+	sess, err := session.NewSession()
+	if err != nil {
+		return errors.Wrap(err, "failed to connect to AWS API")
+	}
+	cfs := NewCloudFrontService(sess)
+	tlsChecker := &tlscheck.TLSChecker{}
 
 	// Combine all metrics into single stream
 	gauges := []MetricReader{
@@ -66,9 +74,10 @@ func Main() error {
 			Target:  os.Getenv("ELB_ADDRESS"),
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
+		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
-		gauges = append(gauges, TLSValidityGauge(logger, strings.TrimSpace(addr), 15*time.Minute))
+		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))
 	}
 	metrics := NewMultiMetricReader(gauges...)
 	defer metrics.Close()
