@@ -452,9 +452,11 @@ properties:
       client_secret: (( grab secrets.uaa_cc_client_secret ))
 
     jwt:
-      verification_key: (( grab secrets.uaa_jwt_verification_key ))
-      signing_key: (( grab secrets.uaa_jwt_signing_key ))
       policy:
+        active_key_id: default
+        keys:
+          default:
+            signingKey: (( grab secrets.uaa_jwt_signing_key ))
         refreshTokenValiditySeconds: 604800
         global:
           refreshTokenValiditySeconds: 604800
