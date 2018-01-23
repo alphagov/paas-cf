@@ -546,9 +546,6 @@ jobs:
 
                   ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
 
-                  echo "Generating uaa_jwt_signing public key from private key"
-                  openssl rsa -pubout -in certs/uaa_jwt_signing.key -out certs/uaa_jwt_verification.pem
-
                   echo "Creating updated cert tarball"
                   cd certs
                   tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
@@ -1297,7 +1294,6 @@ jobs:
                     ../paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_cert" "${cn}.crt" > "${cn}_cert.yml"
                   done
 
-                  ../paas-cf/concourse/scripts/file_to_yaml.sh secrets uaa_jwt_verification_key uaa_jwt_verification.pem > uaa_jwt_verification_key.yml
                   # shellcheck disable=SC2103
                   cd .. || true
 
