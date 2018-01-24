@@ -34,6 +34,12 @@ releases:
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.3.tgz
     sha1: 6a9e252162519e50f6c511c489ba304a286d496a
 
+  # TODO: remove after https://github.com/cloudfoundry/loggregator-release/pull/356 was merged
+  - name: loggregator
+    version: 0.1.3
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/loggregator-0.1.3.tgz
+    sha1: dcd4c2f936efed6d3882221963425a4bf82a1f60
+
   ### buildpacks
   - name: binary-buildpack
     version: "1.0.15"
