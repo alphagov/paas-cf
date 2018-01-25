@@ -464,7 +464,7 @@ jobs:
                 - -c
                 - |
                   if  [ -z "$(tar -tvzf existing-ipsec-CA/ipsec-CA.tar.gz)" ] ; then
-                    certstrap init --passphrase "" --common-name ipsec-CA
+                    certstrap init --years "10" --passphrase "" --common-name ipsec-CA
                     (cd out && tar -cvzf ../generated-ipsec-CA/ipsec-CA.tar.gz ipsec-CA.*)
                   else
                     echo "The CA cert already exists, skipping generation..."
