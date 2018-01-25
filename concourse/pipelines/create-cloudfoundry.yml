@@ -62,6 +62,8 @@ groups:
       - rotate-cloudfoundry-credentials
       - clear-cloudfoundry-credentials
       - expire-aws-keys
+      - rotate-cf-internal-certs
+      - delete-old-cf-internal-certs
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -544,7 +546,8 @@ jobs:
                   echo "Extracting extant certs"
                   tar -xvzf cf-certs/cf-certs.tar.gz -C certs
 
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh certs bosh-CA/bosh-CA.tar.gz
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh \
+                    certs bosh-CA/bosh-CA.tar.gz create
 
                   echo "Creating updated cert tarball"
                   cd certs
@@ -3028,6 +3031,90 @@ jobs:
         put: cf-tfstate
         params:
           file: updated-tfstate/cf.tfstate
+
+  - name: rotate-cf-internal-certs
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: bosh-CA
+      - get: cf-certs
+    - task: rotate-cf-internal-certs
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: governmentpaas/certstrap
+            tag: 465642da06051a55630d39c899697b678f66a7f7
+        inputs:
+          - name: bosh-CA
+          - name: paas-cf
+          - name: cf-certs
+        outputs:
+          - name: generated-cf-certs
+        params:
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              mkdir certs
+              echo "Extracting extant certs"
+              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+              ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh \
+                certs bosh-CA/bosh-CA.tar.gz rotate
+
+              echo "Creating updated cert tarball"
+              cd certs
+              tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+      on_success:
+        put: cf-certs
+        params:
+          file: generated-cf-certs/cf-certs.tar.gz
+
+  - name: delete-old-cf-internal-certs
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-certs
+    - task: delete-old-cf-internal-certs
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: governmentpaas/certstrap
+            tag: 465642da06051a55630d39c899697b678f66a7f7
+        inputs:
+          - name: paas-cf
+          - name: cf-certs
+        outputs:
+          - name: generated-cf-certs
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              mkdir certs
+              echo "Extracting extant certs"
+              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+              rm -vf certs/*_old.*
+
+              echo "Creating updated cert tarball"
+              cd certs
+              tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+      on_success:
+        put: cf-certs
+        params:
+          file: generated-cf-certs/cf-certs.tar.gz
 
   - name: generate-git-keys
     plan:
