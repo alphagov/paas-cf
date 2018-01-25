@@ -2,7 +2,7 @@
 applications:
  - name: paas-metrics
    memory: 128M
-   disk_quota: 100M
+   disk_quota: 512M
    instances: 1
    buildpack: go_buildpack
    env:

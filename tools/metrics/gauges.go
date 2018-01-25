@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net"
@@ -14,7 +15,7 @@ import (
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
 )
 
-func TLSValidityGauge(logger lager.Logger, addr string, interval time.Duration) MetricReadCloser {
+func TLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, addr string, interval time.Duration) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		if !strings.Contains(addr, ":") {
 			addr += ":443"
@@ -23,31 +24,62 @@ func TLSValidityGauge(logger lager.Logger, addr string, interval time.Duration) 
 		if err != nil {
 			return err
 		}
+
+		daysUntilExpiry, err := certChecker.DaysUntilExpiry(addr, &tls.Config{})
+		if err != nil {
+			logger.Error("tls-certificates-validity-failure", err, lager.Data{
+				"addr":     addr,
+				"hostname": host,
+			})
+			return err
+		}
+
 		metric := Metric{
 			Kind:  Gauge,
 			Time:  time.Now(),
 			Name:  "tls.certificates.validity",
-			Value: float64(0),
+			Value: daysUntilExpiry,
 			Tags: []string{
 				fmt.Sprintf("hostname:%s", host),
 			},
 		}
-		cert, err := tlscheck.GetCertificate(addr)
+		return w.WriteMetrics([]Metric{metric})
+	})
+}
+
+func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, cfs *CloudFrontService, interval time.Duration) MetricReadCloser {
+	return NewMetricPoller(interval, func(w MetricWriter) error {
+		customDomains, err := cfs.CustomDomains()
 		if err != nil {
-			logger.Info("tls-certificates-validity", lager.Data{
-				"addr": addr,
-				"err":  err.Error(),
-			})
-			if tlscheck.IsCertificateError(err) {
-				metric.Value = 0
-			} else {
+			logger.Error("cloudfront-list-distributions-failure", err, lager.Data{})
+			return err
+		}
+
+		metrics := []Metric{}
+		for _, customDomain := range customDomains {
+			daysUntilExpiry, err := certChecker.DaysUntilExpiry(
+				customDomain.CloudFrontDomain+":443",
+				&tls.Config{ServerName: customDomain.AliasDomain},
+			)
+			if err != nil {
+				logger.Error("cdn-tls-certificates-validity-failure", err, lager.Data{
+					"alias_domain":      customDomain.AliasDomain,
+					"cloudfront_domain": customDomain.CloudFrontDomain,
+				})
 				return err
 			}
-		} else {
-			daysUntilExpiry := time.Until(cert.NotAfter).Hours() / 24
-			metric.Value = float64(daysUntilExpiry)
+
+			metrics = append(metrics, Metric{
+				Kind:  Gauge,
+				Time:  time.Now(),
+				Name:  "cdn.tls.certificates.validity",
+				Value: daysUntilExpiry,
+				Tags: []string{
+					fmt.Sprintf("hostname:%s", customDomain.AliasDomain),
+				},
+			})
 		}
-		return w.WriteMetrics([]Metric{metric})
+		return w.WriteMetrics(metrics)
 	})
 }
 
