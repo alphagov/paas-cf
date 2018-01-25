@@ -457,6 +457,8 @@ properties:
         keys:
           default:
             signingKey: (( grab secrets.uaa_jwt_signing_key ))
+          previous:
+            signingKey: (( grab secrets.uaa_jwt_signing_key_old || secrets.uaa_jwt_signing_key ))
         refreshTokenValiditySeconds: 604800
         global:
           refreshTokenValiditySeconds: 604800
