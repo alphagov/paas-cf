@@ -279,10 +279,10 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: loggregator_trafficcontroller
-        release: (( grab meta.release.name ))
+        release: loggregator
         consumes: {doppler: nil}
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 2
     vm_type: medium
     vm_extensions:
