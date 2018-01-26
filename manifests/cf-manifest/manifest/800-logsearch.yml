@@ -225,6 +225,18 @@ properties:
         remove_field => [ "[nginx][timestamp]" ]
       }
 
+      # Remove unnecessary or empty fields
+      mutate {
+        remove_field => [
+          "syslog5424_ver",
+          "syslog_msgid",
+          "syslog_procid",
+          "syslog_sd_id",
+          "syslog_sd_params",
+          "[@source][director]"
+        ]
+      }
+
   curator:
     purge_logs:
       retention_period: 30
