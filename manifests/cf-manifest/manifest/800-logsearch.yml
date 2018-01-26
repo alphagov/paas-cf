@@ -176,14 +176,6 @@ properties:
       - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
       - custom-filters: /var/vcap/jobs/logsearch-for-cloudfoundry-filters/config/logstash-filters-custom.conf
     custom_filters: |
-      if ("lrps" in [auctioneer][data]) {
-        ruby {
-          code => '
-            lrps_hash = event["auctioneer"]["data"]["lrps"]
-            event["auctioneer"]["data"]["lrps"] = lrps_hash.keys
-          '
-        }
-      }
       if [@source][component] == "gorouter" {
         mutate { replace => { "type" => "gorouter" } }
         grok {
