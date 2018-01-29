@@ -13,8 +13,8 @@ resources:
     source:
       days: [Monday, Tuesday, Wednesday, Thursday, Friday]
       location: Europe/London
-      start: 7:45 AM
-      stop: 8:15 AM
+      start: 7:00 AM
+      stop: 7:30 AM
 
 jobs:
   - name: kick-off
