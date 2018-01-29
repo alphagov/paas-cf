@@ -83,7 +83,7 @@ globals:
 .PHONY: dev
 dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
-	$(eval export ENABLE_USAGE_EVENTS_COLLECTION ?= false)
+	$(eval export ENABLE_BILLING_APP ?= false)
 	$(eval export CF_SKIP_SSL_VALIDATION=true)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
@@ -102,7 +102,7 @@ dev: globals ## Set Environment to DEV
 .PHONY: staging
 staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
-	$(eval export ENABLE_USAGE_EVENTS_COLLECTION=false)
+	$(eval export ENABLE_BILLING_APP=false)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=prod-)
@@ -120,7 +120,7 @@ staging: globals ## Set Environment to Staging
 .PHONY: prod
 prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
-	$(eval export ENABLE_USAGE_EVENTS_COLLECTION=true)
+	$(eval export ENABLE_BILLING_APP=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
