@@ -1,9 +1,8 @@
 releases:
   - name: elasticache-broker
-    version: 0.1.2
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.2.tgz
-    sha1: 0095601a8b6d6355f8bc1a5a40923a76cd980990
-
+    version: 0.0.1517235806
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.0.1517235806.tgz
+    sha1: 3f0375bd2f95dacfa154fabe0c3c16255e70b7e1
 jobs:
   - name: elasticache_broker
     azs: [z1, z2]
