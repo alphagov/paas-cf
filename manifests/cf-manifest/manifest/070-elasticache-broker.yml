@@ -43,22 +43,55 @@ jobs:
               bindable: true
               plan_updateable: false
               plans:
-                - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
-                  name: tiny
-                  description: 568MB RAM, 1 shard, single node, no backups, no failover
+                - id: 3a51701c-eef3-447c-882b-907ad2bcb7ac
+                  name: tiny-volatile-ttl
+                  description: 568MB RAM, 1 shard, single node, volatile-ttl maxmemory-policy, no backups, no failover
                   free: true
                   metadata:
-                    displayName: Redis Tiny
+                    displayName: Redis Tiny volatile-ttl
+                - id: 3a51701c-eef3-447c-882b-907ad2bcb7ad
+                  name: tiny-allkeys-random
+                  description: 568MB RAM, 1 shard, single node, allkeys-random maxmemory-policy, no backups, no failover
+                  free: true
+                  metadata:
+                    displayName: Redis Tiny allkeys-random
+                - id: 3a51701c-eef3-447c-882b-907ad2bcb7ae
+                  name: tiny-allkeys-lru
+                  description: 568MB RAM, 1 shard, single node, allkeys-lru maxmemory-policy, no backups, no failover
+                  free: true
+                  metadata:
+                    displayName: Redis Tiny allkeys-lru
 
         plan_configs:
-          3a51701c-eef3-447c-882b-907ad2bcb7ab:
+          3a51701c-eef3-447c-882b-907ad2bcb7ac:
             instance_type: cache.t2.micro
             replicas_per_node_group: 0
             shard_count: 1
             snapshot_retention_limit: 0
             automatic_failover_enabled: false
+            cache_parameter_group_name: tiny-volatile-ttl
             parameters:
-              maxmemory-policy: volatile-lru
+              maxmemory-policy: volatile-ttl
+              reserved-memory: '0'
+          3a51701c-eef3-447c-882b-907ad2bcb7ad:
+            instance_type: cache.t2.micro
+            replicas_per_node_group: 0
+            shard_count: 1
+            snapshot_retention_limit: 0
+            automatic_failover_enabled: false
+            cache_parameter_group_name: tiny-allkeys-random
+            parameters:
+              maxmemory-policy: allkeys-random
+              reserved-memory: '0'
+          3a51701c-eef3-447c-882b-907ad2bcb7ae:
+            instance_type: cache.t2.micro
+            replicas_per_node_group: 0
+            shard_count: 1
+            snapshot_retention_limit: 0
+            automatic_failover_enabled: false
+            cache_parameter_group_name: tiny-allkeys-lru
+            parameters:
+              maxmemory-policy: allkeys-lru
               reserved-memory: '0'
 
 properties:
