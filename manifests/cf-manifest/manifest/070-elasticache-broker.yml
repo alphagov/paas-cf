@@ -72,7 +72,7 @@ jobs:
             cache_parameter_group_name: tiny-volatile-ttl
             parameters:
               maxmemory-policy: volatile-ttl
-              reserved-memory: '0'
+              reserved-memory-percent: 25
           3a51701c-eef3-447c-882b-907ad2bcb7ad:
             instance_type: cache.t2.micro
             replicas_per_node_group: 0
@@ -82,7 +82,7 @@ jobs:
             cache_parameter_group_name: tiny-allkeys-random
             parameters:
               maxmemory-policy: allkeys-random
-              reserved-memory: '0'
+              reserved-memory-percent: 25
           3a51701c-eef3-447c-882b-907ad2bcb7ae:
             instance_type: cache.t2.micro
             replicas_per_node_group: 0
@@ -92,7 +92,7 @@ jobs:
             cache_parameter_group_name: tiny-allkeys-lru
             parameters:
               maxmemory-policy: allkeys-lru
-              reserved-memory: '0'
+              reserved-memory-percent: 25
 
 properties:
   cc:
