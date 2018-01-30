@@ -4,7 +4,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: ((branch_name))
+      branch: master
       tag_filter: ((paas_cf_tag_filter))
       commit_verification_key_ids: ((gpg_ids))
 
@@ -13,8 +13,8 @@ resources:
     source:
       days: [Monday, Tuesday, Wednesday, Thursday, Friday]
       location: Europe/London
-      start: 7:45 AM
-      stop: 8:15 AM
+      start: 7:00 AM
+      stop: 7:30 AM
 
 jobs:
   - name: kick-off
