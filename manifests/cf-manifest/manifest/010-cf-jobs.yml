@@ -1,20 +1,16 @@
-meta:
-  release:
-    name: cf
-
 jobs:
   - name: consul
     azs: [z1, z2, z3]
     templates:
       - name: consul_agent
-        release: (( grab meta.release.name ))
+        release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: datadog-consul-agent-server
         release: datadog-for-cloudfoundry
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 3
     persistent_disk_type: consul
     vm_type: small
@@ -42,11 +38,11 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: nats
         consumes: {nats: nil}
-        release: (( grab meta.release.name ))
+        release: nats
       - name: datadog-nats
         release: datadog-for-cloudfoundry
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 2
     vm_type: medium
     stemcell: default
@@ -60,17 +56,17 @@ jobs:
     azs: [z1, z2, z3]
     templates:
       - name: consul_agent
-        release: (( grab jobs.consul.templates.consul_agent.release ))
+        release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: etcd
-        release: (( grab meta.release.name ))
+        release: etcd
         consumes: {etcd: nil}
       - name: etcd_metrics_server
-        release: (( grab meta.release.name ))
+        release: etcd
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 3
     persistent_disk_type: etcd
     vm_type: medium
@@ -104,7 +100,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -127,13 +123,13 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: uaa
-        release: (( grab meta.release.name ))
+        release: uaa
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: statsd_injector
-        release: (( grab meta.release.name ))
+        release: statsd-injector
       - name: route_registrar
-        release: (( grab meta.release.name ))
+        release: routing
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -169,18 +165,18 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: (( grab jobs.consul.templates.consul_agent.release ))
+        release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_ng
-        release: (( grab meta.release.name ))
+        release: capi
         consumes: {nats: nil}
       - name: cloud_controller_clock
-        release: (( grab meta.release.name ))
+        release: capi
         consumes: {nats: nil}
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: statsd_injector
-        release: (( grab meta.release.name ))
+        release: statsd-injector
       - name: java-buildpack
         release: java-buildpack
       - name: go-buildpack
@@ -222,13 +218,13 @@ jobs:
     azs: [z1, z2]
     templates:
       - name: consul_agent
-        release: (( grab jobs.consul.templates.consul_agent.release ))
+        release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_worker
-        release: (( grab meta.release.name ))
+        release: capi
         consumes: {nats: nil}
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-cc-worker
@@ -254,11 +250,11 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: doppler
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: syslog_drain_binder
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 3
     vm_type: medium
     stemcell: default
@@ -308,10 +304,10 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
-        release: (( grab meta.release.name ))
+        release: routing
         consumes: {nats: nil}
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: haproxy
         release: paas-haproxy
       - name: datadog-router
@@ -348,7 +344,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 2
     vm_type: medium
     stemcell: default
@@ -372,7 +368,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: datadog-rep
         release: datadog-for-cloudfoundry
       - name: datadog-garden
@@ -405,11 +401,11 @@ jobs:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: tps
-        release: (( grab meta.release.name ))
+        release: capi
       - name: cc_uploader
-        release: (( grab meta.release.name ))
+        release: capi
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
     instances: 2
     vm_type: medium
     stemcell: default
@@ -429,7 +425,7 @@ jobs:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: datadog-route-emitter
         release: datadog-for-cloudfoundry
     instances: 2
@@ -449,7 +445,7 @@ jobs:
       - name: ssh_proxy
         release: diego
       - name: metron_agent
-        release: (( grab meta.release.name ))
+        release: loggregator
       - name: file_server
         release: diego
       - name: cfdot

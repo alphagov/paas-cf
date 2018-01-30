@@ -5,10 +5,34 @@ name: (( grab meta.environment ))
 director_uuid: ~
 
 releases:
-  - name: cf
-    version: "283"
-    url: https://bosh.io/d/github.com/cloudfoundry/cf-release?v=283
-    sha1: 27a0a3977d155052d6988bb3343618fdc6940df4
+  - name: consul
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/consul-release?v=181
+    version: "181"
+    sha1: f762a52b8b574fc816ff75a328f1598076274f32
+  - name: nats
+    url: https://bosh.io/d/github.com/cloudfoundry/nats-release?v=22
+    version: "22"
+    sha1: 1300071c7cf43f5d299a6eaec6f6bb6cca7eac3b
+  - name: etcd
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=104
+    version: "104"
+    sha1: 91d27a5a583d22acaf926023063fcdb2003522e6
+  - name: uaa
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=52.4
+    version: "52.4"
+    sha1: cf0cecad0e46c23d0889e28a948b2ca842a4477e
+  - name: statsd-injector
+    url: https://bosh.io/d/github.com/cloudfoundry/statsd-injector-release?v=1.0.30
+    version: "1.0.30"
+    sha1: b0f201e0341af9736848514c76149070ea902e41
+  - name: routing
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/cf-routing-release?v=0.168.0
+    version: "0.168.0"
+    sha1: 885321f95b530c4a5b8515c72155229cba26c449
+  - name: capi
+    url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.46.0
+    version: "1.46.0"
+    sha1: cf3170a2c35fff8960a899d7687351a05a87e2b6
   - name: diego
     version: 1.31.0
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.31.0
