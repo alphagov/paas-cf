@@ -18,6 +18,14 @@ module ManifestHelpers
     Cache.instance.manifest_with_defaults ||= render_manifest
   end
 
+  def manifest_with_custom_stub(stub_content)
+    Tempfile.open(['custom-stub', '.yml']) do |file|
+      file.write(stub_content)
+      file.flush
+      render_manifest("default", [file.path])
+    end
+  end
+
   def cloud_config_with_defaults
     Cache.instance.cloud_config_with_defaults ||= render_cloud_config
   end
@@ -66,7 +74,7 @@ private
     file
   end
 
-  def render_manifest(environment = "default")
+  def render_manifest(environment = "default", extra_stubs = [])
     manifest = render([
         File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
         File.expand_path("../../../manifest/*.yml", __FILE__),
@@ -78,7 +86,7 @@ private
         File.expand_path("../../../cell.yml", __FILE__),
         File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
-    ])
+    ].concat(extra_stubs))
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
