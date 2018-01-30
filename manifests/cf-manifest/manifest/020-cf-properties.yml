@@ -182,7 +182,7 @@ properties:
       cert_chain: (( grab secrets.router_internal_cert ))
       private_key: (( grab secrets.router_internal_key ))
     enable_ssl: false
-    enable_access_log_streaming: true
+    enable_access_log_streaming: false
     status:
       user: router_user
       password: (( grab secrets.router_password ))
