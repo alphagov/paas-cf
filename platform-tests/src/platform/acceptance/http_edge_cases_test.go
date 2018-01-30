@@ -35,7 +35,7 @@ var _ = Describe("HTTP edge cases", func() {
 			Expect(cf.Cf(
 				"push", appName,
 				"-b", testConfig.RubyBuildpackName,
-				"-p", "../../../../../cf-release/src/github.com/cloudfoundry/cf-acceptance-tests/assets/dora",
+				"-p", "../../../../../cf-acceptance-tests/assets/dora",
 				"-d", testConfig.AppsDomain,
 				"-i", "1",
 				"-m", "256M",

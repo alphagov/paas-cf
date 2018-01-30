@@ -218,11 +218,15 @@ resources:
       region_name: ((aws_region))
       versioned_file: healthcheck-deployed
 
-  - name: cf-release
+  - name: cf-acceptance-tests
     type: git
     source:
-      uri: https://github.com/cloudfoundry/cf-release
-      tag_filter: ((cf_release_version))
+      uri: https://github.com/cloudfoundry/cf-acceptance-tests
+
+  - name: cf-smoke-tests
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry/cf-smoke-tests
 
   - name: git-keys
     type: s3-iam
@@ -1338,12 +1342,6 @@ jobs:
     serial: true
     plan:
       - aggregate:
-          - get: cf-release
-            version:
-              ref: ((cf_release_version))
-            params:
-              submodules:
-                - src/smoke-tests
           - get: pipeline-trigger
             passed: ['generate-cf-config']
             trigger: true
@@ -1456,7 +1454,6 @@ jobs:
               repository: governmentpaas/bosh-cli
               tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
           inputs:
-            - name: cf-release
             - name: paas-cf
             - name: cf-manifest
             - name: bosh-secrets
@@ -2503,11 +2500,8 @@ jobs:
           - get: pipeline-trigger
             passed: ['cf-deploy','app-availability-tests','api-availability-tests']
             trigger: true
-          - get: cf-release
-            params:
-              submodules:
-                - src/smoke-tests
-            passed: ['cf-deploy']
+          - get: cf-smoke-tests
+            version: { ref: 1f219aa5cb8f3b6bfad312654ca66ff54d0cae5e }
           - get: paas-cf
             passed: ['cf-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
@@ -2545,11 +2539,8 @@ jobs:
           - get: pipeline-trigger
             passed: ['post-deploy']
             trigger: true
-          - get: cf-release
-            params:
-              submodules:
-                - src/github.com/cloudfoundry/cf-acceptance-tests
-            passed: ['cf-deploy']
+          - get: cf-acceptance-tests
+            version: { ref: 325495045bf4fbe8d4814d674f302fd420ee43c1 }
           - get: paas-cf
             passed: ['cf-deploy']
           - get: cf-manifest
@@ -2582,8 +2573,8 @@ jobs:
               DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
             inputs:
               - name: paas-cf
-              - name: cf-release
-                path: src/github.com/cloudfoundry/cf-release
+              - name: cf-acceptance-tests
+                path: src/github.com/cloudfoundry/cf-acceptance-tests
               - name: test-config
               - name: bosh-CA
             outputs:
@@ -2617,10 +2608,7 @@ jobs:
           - get: bosh-CA
           - get: cf-secrets
             passed: ['cf-deploy']
-          - get: cf-release
-            params:
-              submodules:
-                - src/github.com/cloudfoundry/cf-acceptance-tests
+          - get: cf-acceptance-tests
 
       - do:
         - task: create-temp-user
@@ -3176,11 +3164,7 @@ jobs:
     build_logs_to_retain: 10000
     plan:
       - aggregate:
-        - get: cf-release
-          params:
-            submodules:
-              - src/smoke-tests
-          passed: ['cf-deploy']
+        - get: cf-smoke-tests
         - get: paas-cf
           passed: ['cf-deploy']
         - get: cf-manifest

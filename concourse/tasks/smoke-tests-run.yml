@@ -7,7 +7,7 @@ image_resource:
     tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
 inputs:
   - name: paas-cf
-  - name: cf-release
+  - name: cf-smoke-tests
   - name: test-config
   - name: bosh-CA
 outputs:
