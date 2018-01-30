@@ -167,12 +167,6 @@ DISABLE_PIPELINE_LOCKING=true SELF_UPDATE_PIPELINE=false make dev pipelines
 
 Self update pipeline has to be disabled, otherwise it would revert to default value in the pipeline and unlock job would fail since pipeline was not locked before it self updated.
 
-## Optionally deploy failure-testing pipeline
-
-`failure-testing` is a pipeline created for purpose of resiliency testing of CF components. We don't deploy this pipeline by default to our deployments.
-In case you want to deploy the pipeline, set `ENABLE_FAILURE_TESTING` environment variable to true, e.g.
-`ENABLE_FAILURE_TESTING=true make dev pipelines`.
-
 ## Optionally run specific job in the create-cloudfoundry pipeline
 
 `create-cloudfoundry` is our main pipeline. When we are making changes or
