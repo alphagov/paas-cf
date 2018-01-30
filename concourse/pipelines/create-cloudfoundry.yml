@@ -221,12 +221,14 @@ resources:
   - name: cf-acceptance-tests
     type: git
     source:
-      uri: https://github.com/cloudfoundry/cf-acceptance-tests
+      uri: https://github.com/alphagov/paas-cf-acceptance-tests
+      branch: gds-cf-release-v283
 
   - name: cf-smoke-tests
     type: git
     source:
-      uri: https://github.com/cloudfoundry/cf-smoke-tests
+      uri: https://github.com/alphagov/paas-cf-smoke-tests
+      branch: gds-cf-release-v283
 
   - name: git-keys
     type: s3-iam
@@ -2501,7 +2503,6 @@ jobs:
             passed: ['cf-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-smoke-tests
-            version: { ref: 1f219aa5cb8f3b6bfad312654ca66ff54d0cae5e }
           - get: paas-cf
             passed: ['cf-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
@@ -2540,7 +2541,6 @@ jobs:
             passed: ['post-deploy']
             trigger: true
           - get: cf-acceptance-tests
-            version: { ref: 325495045bf4fbe8d4814d674f302fd420ee43c1 }
           - get: paas-cf
             passed: ['cf-deploy']
           - get: cf-manifest
