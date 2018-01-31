@@ -22,7 +22,7 @@ resource "aws_elb" "logsearch_ingestor" {
     instance_protocol  = "tcp"
     lb_port            = 6514
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 
@@ -87,7 +87,7 @@ resource "aws_elb" "logsearch_kibana" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 
