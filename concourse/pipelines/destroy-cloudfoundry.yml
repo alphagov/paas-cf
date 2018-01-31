@@ -174,7 +174,7 @@ jobs:
           ORG: admin
           SPACE: billing
           DB_NAME: billing-db
-          BOUND_APP: paas-usage-events-collector
+          BOUND_APP: paas-billing
 
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml

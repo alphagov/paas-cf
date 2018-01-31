@@ -542,15 +542,15 @@ properties:
         scope: openid,oauth.approvals,cloud_controller.global_auditor
         authorities: oauth.login,cloud_controller.global_auditor
         redirect-uri: (( concat "https://login." properties.system_domain ))
-      paas-usage-events-collector:
+      paas-billing:
         override: true
         access-token-validity: 1209600
         authorized-grant-types: client_credentials,refresh_token,authorization_code
         autoapprove: true
-        secret: (( grab secrets.uaa_clients_paas_usage_events_collector_secret ))
+        secret: (( grab secrets.uaa_clients_paas_billing_secret ))
         scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
         authorities: cloud_controller.admin_read_only,uaa.resource
-        redirect-uri: (( concat "https://paas-usage-events-collector." properties.app_domains[0] "/oauth/callback" ))
+        redirect-uri: (( concat "https://paas-billing." properties.app_domains[0] "/oauth/callback" ))
       paas-admin:
         override: true
         authorized-grant-types: authorization_code,refresh_token
