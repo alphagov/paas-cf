@@ -971,6 +971,128 @@ jobs:
           params:
             file: updated-tfstate/cf.tfstate
 
+      # FIXME: Remove once the self-signed generated apps and system certs
+      # have been deleted from all envs.
+      - do:
+        - task: delete-old-cf-certs
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/certstrap
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            inputs:
+              - name: cf-certs
+            outputs:
+              - name: generated-cf-certs
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  mkdir certs
+                  echo "Extracting certs"
+                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+                  for cert_entry in apps_domain system_domain; do
+                    rm -vf "certs/${cert_entry}.key" "certs/${cert_entry}_old.key" \
+                           "certs/${cert_entry}.csr" "certs/${cert_entry}_old.csr" \
+                           "certs/${cert_entry}.crt" "certs/${cert_entry}_old.crt"
+                  done
+
+                  echo "Creating updated cert tarball"
+                  cd certs
+                  tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+          on_success:
+            put: cf-certs
+            params:
+              file: generated-cf-certs/cf-certs.tar.gz
+        - do:
+          - task: try-get-cf-certs-tfstate
+            config:
+              platform: linux
+              inputs:
+                - name: paas-cf
+              outputs:
+                - name: cf-certs-tfstate
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/awscli
+                  tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+              params:
+                AWS_DEFAULT_REGION: ((aws_region))
+                STATE_BUCKET: ((state_bucket))
+              run:
+                path: sh
+                args:
+                  - -c
+                  - |
+                    aws s3 cp "s3://${STATE_BUCKET}/cf-certs.tfstate" cf-certs-tfstate/cf-certs.tfstate 2> awscli.output
+                    RET="$?"
+                    cat awscli.output 1>&2
+                    if [ "$RET" != "0" ]; then
+                      if grep -q "404" awscli.output; then
+                        echo "Skipping download"
+                        exit 0
+                      else
+                        exit "$RET"
+                      fi
+                    fi
+          - task: undo-upload-certs-to-aws
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/terraform
+                  tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
+              inputs:
+                - name: paas-cf
+                - name: cf-certs-tfstate
+              outputs:
+                - name: updated-tfstate
+              params:
+                TF_VAR_region: ((aws_region))
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -c
+                  - |
+                    if ! [ -f cf-certs-tfstate/cf-certs.tfstate ]; then
+                      echo "File cf-certs-tfstate/cf-certs.tfstate missing, skipping terraform destroy"
+                      exit 0
+                    fi
+                    cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
+                    terraform init paas-cf/terraform/cf-certs
+                    terraform destroy \
+                      -force \
+                      -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                      -state=updated-tfstate/cf-certs.tfstate \
+                      paas-cf/terraform/cf-certs
+            on_success:
+              task: delete-old-cf-certs-tfstate
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    repository: governmentpaas/awscli
+                    tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+                params:
+                  AWS_DEFAULT_REGION: ((aws_region))
+                  STATE_BUCKET: ((state_bucket))
+                run:
+                  path: sh
+                  args:
+                    - -e
+                    - -c
+                    - |
+                      aws s3 rm "s3://${STATE_BUCKET}/cf-certs.tfstate"
+
       # FIXME: Move this operation to Terraform when this feature is added:
       # https://github.com/terraform-providers/terraform-provider-aws/issues/113
       - task: add-aws-users-to-groups
