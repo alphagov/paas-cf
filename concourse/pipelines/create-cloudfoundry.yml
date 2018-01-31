@@ -2102,13 +2102,6 @@ jobs:
                     File.write('manifest.yml', manifest.to_yaml)
                   "
 
-                  # FIXME: Remove when deployed to prod.
-                  if cf app paas-usage-events-collector >/dev/null 2>&1; then
-                    cf rename paas-usage-events-collector paas-billing
-                    cf map-route paas-billing "${APPS_DNS_ZONE_NAME}" --hostname paas-billing
-                    cf delete-route "${APPS_DNS_ZONE_NAME}" --hostname paas-usage-events-collector -f
-                  fi
-
                   cf push paas-billing
 
         - task: deploy-paas-compose-scraper
