@@ -24,7 +24,7 @@ GOPATH="${GOPATH}:$(pwd)"
 export GOPATH
 
 echo "Starting acceptace tests"
-cd "src/github.com/cloudfoundry/cf-release/src/github.com/cloudfoundry/cf-acceptance-tests"
+cd src/github.com/cloudfoundry/cf-acceptance-tests
 ./bin/test \
   -keepGoing \
   -randomizeAllSpecs \

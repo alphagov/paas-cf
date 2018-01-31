@@ -48,7 +48,6 @@ prepare_environment() {
   state_bucket=gds-paas-${DEPLOY_ENV}-state
 
   cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/manifest"
-  cf_release_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.cf.version "${cf_manifest_dir}/000-base-cf-deployment.yml")
   cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/040-graphite.yml")
 
   if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
@@ -95,7 +94,6 @@ pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
-cf_release_version: v${cf_release_version}
 cf_graphite_version: ${cf_graphite_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 cf_skip_ssl_validation: ${CF_SKIP_SSL_VALIDATION:-}

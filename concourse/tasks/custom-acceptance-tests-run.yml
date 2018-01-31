@@ -9,7 +9,7 @@ inputs:
   - name: paas-cf
   - name: test-config
   - name: bosh-CA
-  - name: cf-release
+  - name: cf-acceptance-tests
 outputs:
   - name: artifacts
 run:
