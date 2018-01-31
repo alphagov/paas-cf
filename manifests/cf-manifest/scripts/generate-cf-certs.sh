@@ -8,7 +8,6 @@ CA_NAME="bosh-CA"
 # shellcheck disable=SC2154
 # Allow referencing unassigned variables (set -u catches problems)
 APPS_DOMAINS="*.${APPS_DNS_ZONE_NAME},${APPS_DNS_ZONE_NAME}"
-SYSTEM_DOMAINS="*.${SYSTEM_DNS_ZONE_NAME},${SYSTEM_DNS_ZONE_NAME}"
 
 # List of certs to generate
 # Format:
@@ -18,8 +17,6 @@ SYSTEM_DOMAINS="*.${SYSTEM_DNS_ZONE_NAME},${SYSTEM_DNS_ZONE_NAME}"
 # Note: ALWAYS add a comma after <name_cert>, even if there are no domains
 #
 CERTS_TO_GENERATE="
-apps_domain,${APPS_DOMAINS}
-system_domain,${SYSTEM_DOMAINS}
 saml,
 auctioneer_server,auctioneer.service.cf.internal
 auctioneer_client,
@@ -44,12 +41,6 @@ scalablesyslog_adapter_scheduler_client,
 cc_server,cloud-controller-ng.service.cf.internal
 cc_client,
 cc_uploader_server,cc-uploader.service.cf.internal
-"
-
-# Certificates that will not be rotated
-ROTATION_BLACK_LIST="
-apps_domain
-system_domain
 "
 
 generate_cert() {
@@ -84,16 +75,6 @@ rotate_cert() {
   generate_cert "${_cn}" "${_domains}" "${_target_dir}"
 }
 
-is_cert_blacklisted() {
-  _cn="$1"
-  for blacklisted_cert in ${ROTATION_BLACK_LIST}; do
-    if [ "${_cn}" = "${blacklisted_cert}" ];then
-      return 0
-    fi
-  done
-  return 1
-}
-
 CERTS_DIR=$(cd "$1" && pwd)
 CA_TARBALL="$2"
 ACTION="${3:-}"
@@ -120,12 +101,8 @@ for cert_entry in ${CERTS_TO_GENERATE}; do
   if [ -f "${CERTS_DIR}/${cn}.crt" ]; then
     echo "Certificate ${cn} is already generated."
     if [ "${ACTION}" = "rotate" ]; then
-      if is_cert_blacklisted "${cn}"; then
-        echo "Certificate ${cn} is blacklisted for rotation. Skipping."
-      else
-        echo "Rotating certificate..."
-        rotate_cert "${cn}" "${domains}" "${CERTS_DIR}"
-      fi
+      echo "Rotating certificate..."
+      rotate_cert "${cn}" "${domains}" "${CERTS_DIR}"
     else
       echo "Skipping creation."
     fi
@@ -134,4 +111,3 @@ for cert_entry in ${CERTS_TO_GENERATE}; do
     generate_cert "${cn}" "${domains}" "${CERTS_DIR}"
   fi
 done
-
