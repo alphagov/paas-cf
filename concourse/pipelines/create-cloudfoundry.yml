@@ -190,13 +190,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-certs.tar.gz
 
-  - name: cf-certs-tfstate
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: cf-certs.tfstate
-      region_name: eu-west-1
-
   - name: cf-manifest
     type: s3-iam
     source:
@@ -406,7 +399,6 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
@@ -876,64 +868,10 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: cf-tfstate
-          - get: cf-certs-tfstate
-          - get: bosh-CA
-            passed: ['pre-deploy']
           - get: cf-certs
             passed: ['generate-secrets']
           - get: cf-secrets
             passed: ['pre-deploy']
-
-      - task: upload-certs-to-aws
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/terraform
-              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
-          inputs:
-            - name: paas-cf
-            - name: cf-certs-tfstate
-            - name: bosh-CA
-            - name: cf-certs
-          outputs:
-            - name: updated-tfstate
-          params:
-            TF_VAR_env: ((deploy_env))
-            SKIP_UPLOAD_GENERATED_CERTS: ((skip_upload_generated_certs))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if [ "${SKIP_UPLOAD_GENERATED_CERTS}" = "true" ]; then
-                  cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
-                  echo "Using pre-uploaded public certificates for ${TF_VAR_env}"
-                else
-                  mkdir generated-certificates
-                  tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
-                  tar xzf bosh-CA/bosh-CA.tar.gz
-
-                  cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
-                  terraform init paas-cf/terraform/cf-certs
-                  terraform apply \
-                    -auto-approve=true \
-                    -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                    -var system_domain_crt="$(cat generated-certificates/system_domain.crt)" \
-                    -var system_domain_key="$(cat generated-certificates/system_domain.key)" \
-                    -var system_domain_intermediate_crt="$(cat bosh-CA.crt)" \
-                    -var apps_domain_crt="$(cat generated-certificates/apps_domain.crt)" \
-                    -var apps_domain_key="$(cat generated-certificates/apps_domain.key)" \
-                    -var apps_domain_intermediate_crt="$(cat bosh-CA.crt)" \
-                    -state=updated-tfstate/cf-certs.tfstate \
-                    paas-cf/terraform/cf-certs
-                fi
-        ensure:
-          put: cf-certs-tfstate
-          params:
-            file: updated-tfstate/cf-certs.tfstate
 
       - task: extract-terraform-variables
         config:
@@ -948,7 +886,6 @@ jobs:
             - name: vpc-tfstate
             - name: concourse-tfstate
             - name: cf-secrets
-            - name: cf-certs-tfstate
           outputs:
             - name: terraform-variables
           run:
@@ -961,8 +898,6 @@ jobs:
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < cf-certs-tfstate/cf-certs.tfstate > terraform-variables/cf-certs.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
                 < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
 
@@ -1018,7 +953,6 @@ jobs:
               - |
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
-                . terraform-variables/cf-certs.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
 
                 mkdir generated-certificates

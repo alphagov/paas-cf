@@ -85,7 +85,6 @@ generate_vars_file() {
 pipeline_name: ${pipeline_name}
 enable_destroy: ${ENABLE_DESTROY:-}
 self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
-skip_upload_generated_certs: ${SKIP_UPLOAD_GENERATED_CERTS:-false}
 aws_account: ${AWS_ACCOUNT:-dev}
 deploy_env: ${DEPLOY_ENV}
 state_bucket: ${state_bucket}

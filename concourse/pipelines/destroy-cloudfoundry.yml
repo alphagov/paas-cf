@@ -28,13 +28,6 @@ resources:
       versioned_file: cf.tfstate
       region_name: ((aws_region))
 
-  - name: cf-certs-tfstate
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: cf-certs.tfstate
-      region_name: eu-west-1
-
   - name: datadog-tfstate
     type: s3-iam
     source:
@@ -231,7 +224,6 @@ jobs:
           - get: vpc-tfstate
           - get: cf-secrets
           - get: cf-certs
-          - get: cf-certs-tfstate
 
       - task: extract-terraform-variables
         config:
@@ -247,7 +239,6 @@ jobs:
             - name: concourse-tfstate
             - name: vpc-tfstate
             - name: cf-secrets
-            - name: cf-certs-tfstate
           outputs:
             - name: terraform-variables
           run:
@@ -265,9 +256,6 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ls -l terraform-variables/vpc.tfvars.sh
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < cf-certs-tfstate/cf-certs.tfstate > terraform-variables/cf-certs.tfvars.sh
-                ls -l terraform-variables/cf-certs.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
                 < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
                 ls -l terraform-variables/cf-secrets.tfvars.sh
@@ -303,7 +291,6 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
-                . terraform-variables/cf-certs.tfvars.sh
 
                 mkdir generated-certificates
                 tar xzvf cf-certs/cf-certs.tar.gz -C generated-certificates
@@ -316,42 +303,3 @@ jobs:
           put: cf-tfstate
           params:
             file: updated-cf-tfstate/cf.tfstate
-
-      - task: cf-certs-terraform-destroy
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/terraform
-              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
-          inputs:
-            - name: paas-cf
-            - name: cf-certs-tfstate
-          outputs:
-            - name: updated-tfstate
-          params:
-            TF_VAR_system_dns_zone_name: ((system_dns_zone_name))
-            TF_VAR_apps_dns_zone_name: ((apps_dns_zone_name))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
-                terraform init paas-cf/terraform/cf-certs
-                terraform destroy -force -var env="((deploy_env))" -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -var system_domain_crt="irrelevant" \
-                  -var system_domain_key="irrelevant" \
-                  -var system_domain_intermediate_crt="irrelevant" \
-                  -var apps_domain_crt="irrelevant" \
-                  -var apps_domain_key="irrelevant" \
-                  -var apps_domain_intermediate_crt="irrelevant" \
-                  -state=updated-tfstate/cf-certs.tfstate \
-                  paas-cf/terraform/cf-certs
-
-        ensure:
-          put: cf-certs-tfstate
-          params:
-            file: updated-tfstate/cf-certs.tfstate
