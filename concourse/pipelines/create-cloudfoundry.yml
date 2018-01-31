@@ -279,7 +279,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: 0.7.0
+      tag_filter: v0.7.0
 
 jobs:
   - name: pipeline-lock
