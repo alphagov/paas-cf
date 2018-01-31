@@ -56,8 +56,7 @@ jobs:
             instance_type: cache.t2.micro
             replicas_per_node_group: 0
             shard_count: 1
-            snapshot_retention_limit: 0
-            automatic_failover_enabled: false
+            snapshot_retention_limit: 7
             parameters:
               maxmemory-policy: volatile-lru
               reserved-memory: '0'
