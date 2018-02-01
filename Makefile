@@ -191,7 +191,11 @@ pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 .PHONY: setup_cdn_instances
 setup_cdn_instances: check-env ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
-	@terraform/scripts/set-up-cdn-instances.sh ${ACTION}
+	@if test "${RUN_ON_CONCOURSE}" = "true"; then \
+		terraform/scripts/set-up-cdn-instances-on-concourse.sh ${ACTION}; \
+	else \
+		terraform/scripts/set-up-cdn-instances.sh ${ACTION}; \
+	fi
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))
