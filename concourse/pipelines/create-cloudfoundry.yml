@@ -111,7 +111,7 @@ resources:
     source:
       bucket: ((state_bucket))
       versioned_file: concourse.tfstate
-      region_name: eu-west-1
+      region_name: ((aws_region))
 
   - name: bosh-tfstate
     type: s3-iam
@@ -167,14 +167,14 @@ resources:
     source:
       bucket: ((state_bucket))
       versioned_file: cf.tfstate
-      region_name: eu-west-1
+      region_name: ((aws_region))
 
   - name: datadog-tfstate
     type: s3-iam
     source:
       bucket: ((state_bucket))
       versioned_file: datadog.tfstate
-      region_name: eu-west-1
+      region_name: ((aws_region))
 
   - name: cf-secrets
     type: s3-iam
@@ -195,7 +195,7 @@ resources:
     source:
       bucket: ((state_bucket))
       versioned_file: cf-certs.tfstate
-      region_name: eu-west-1
+      region_name: ((aws_region))
 
   - name: cf-manifest
     type: s3-iam
@@ -703,6 +703,8 @@ jobs:
             - name: cf-secrets
             - name: deployed-healthcheck
             - name: pipeline-trigger
+          params:
+            AWS_DEFAULT_REGION: ((aws_region))
           image_resource:
             type: docker-image
             source:
@@ -724,7 +726,6 @@ jobs:
 
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
-                export AWS_DEFAULT_REGION="eu-west-1"
                 bucket=((state_bucket))
 
                 echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
@@ -827,6 +828,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
             CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
+            AWS_DEFAULT_REGION: ((aws_region))
           run:
             path: sh
             args:
@@ -845,7 +847,6 @@ jobs:
                 CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
-                export AWS_DEFAULT_REGION="eu-west-1"
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks

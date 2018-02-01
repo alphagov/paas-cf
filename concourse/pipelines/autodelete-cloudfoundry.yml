@@ -68,7 +68,7 @@ resources:
     source:
       bucket: ((state_bucket))
       versioned_file: datadog.tfstate
-      region_name: eu-west-1
+      region_name: ((aws_region))
 
 jobs:
   - name: delete
