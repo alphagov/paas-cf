@@ -18,9 +18,9 @@ releases:
     version: "104"
     sha1: 91d27a5a583d22acaf926023063fcdb2003522e6
   - name: uaa
-    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=52.4
-    version: "52.4"
-    sha1: cf0cecad0e46c23d0889e28a948b2ca842a4477e
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=52.7
+    version: "52.7"
+    sha1: 8be4d3b477fc3b41700c1f0c8922efe4da5296c3
   - name: statsd-injector
     url: https://bosh.io/d/github.com/cloudfoundry/statsd-injector-release?v=1.0.30
     version: "1.0.30"
