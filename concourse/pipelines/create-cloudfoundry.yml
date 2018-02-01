@@ -2083,53 +2083,7 @@ jobs:
                     File.write('manifest.yml', manifest.to_yaml)
                   "
 
-                  # FIXME: Remove when deployed to prod.
-                  if cf app paas-usage-events-collector >/dev/null 2>&1; then
-                    cf rename paas-usage-events-collector paas-billing
-                    cf map-route paas-billing "${APPS_DNS_ZONE_NAME}" --hostname paas-billing
-                    cf delete-route "${APPS_DNS_ZONE_NAME}" --hostname paas-usage-events-collector -f
-                  fi
-
                   cf push paas-billing
-
-        - task: delete-paas-usage-events-collector-uaa-client
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-uaac
-                tag: 895cf6752c8ec64af05a3a735186b90acd3db65a
-            inputs:
-              - name: paas-cf
-              - name: cf-manifest
-              - name: cf-secrets
-            params:
-              CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  set -euv
-
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  SKIP_SSL_VALIDATION_OPTION=""
-                  if [ "${CF_SKIP_SSL_VALIDATION}" = "true" ]; then
-                    SKIP_SSL_VALIDATION_OPTION="--skip-ssl-validation"
-                  fi
-                  UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
-                  UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-
-                  uaac target ${SKIP_SSL_VALIDATION_OPTION} "${UAA_ENDPOINT}"
-                  uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
-
-                  # FIXME: Remove task when deployed to prod.
-                  CLIENT_NAME=paas-usage-events-collector
-                  if uaac client get "${CLIENT_NAME}"; then
-                    uaac client delete "${CLIENT_NAME}"
-                  fi
 
         - task: deploy-paas-compose-scraper
           config:
