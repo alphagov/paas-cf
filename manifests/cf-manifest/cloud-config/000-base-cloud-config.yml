@@ -131,7 +131,7 @@ vm_types:
 - name: compilation
   cloud_properties:
     iam_instance_profile: compilation-vm
-    instance_type: c3.large
+    instance_type: c4.large
     ephemeral_disk:
       size: 20480
       type: gp2
