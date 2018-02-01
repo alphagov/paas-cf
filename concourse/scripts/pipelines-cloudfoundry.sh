@@ -95,7 +95,6 @@ aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
 cf_graphite_version: ${cf_graphite_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
-cf_skip_ssl_validation: ${CF_SKIP_SSL_VALIDATION:-}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
