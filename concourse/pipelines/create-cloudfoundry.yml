@@ -1963,7 +1963,6 @@ jobs:
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             params:
               ENABLE_BILLING_APP: ((enable_billing_app))
-              CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
               APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             inputs:
               - name: paas-cf
@@ -2006,7 +2005,6 @@ jobs:
                       'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
                       'CF_CLIENT_REDIRECT_URL' => 'https://paas-billing.${APPS_DNS_ZONE_NAME}/oauth/callback',
                       'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                      'CF_SKIP_SSL_VALIDATION' => '${CF_SKIP_SSL_VALIDATION}',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
@@ -2355,7 +2353,6 @@ jobs:
                       'CF_CLIENT_ID' => 'paas-metrics',
                       'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
                       'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                      'CF_SKIP_SSL_VALIDATION' => 'true',
                       'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                       'DEPLOY_ENV' => '${DEPLOY_ENV}',
@@ -2836,8 +2833,6 @@ jobs:
           - name: cf-manifest
         outputs:
           - name: rotated-cf-secrets
-        params:
-          CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
         run:
           path: sh
           args:
@@ -2853,15 +2848,11 @@ jobs:
                 --existing-secrets rotated-cf-secrets/cf-secrets-cleared.yml \
                 > rotated-cf-secrets/cf-secrets.yml
 
-              SKIP_SSL_VALIDATION_OPTION=""
-              if [ "${CF_SKIP_SSL_VALIDATION}" = "true" ]; then
-                SKIP_SSL_VALIDATION_OPTION="--skip-ssl-validation"
-              fi
               UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
               UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
               UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
 
-              uaac target ${SKIP_SSL_VALIDATION_OPTION} "${UAA_ENDPOINT}"
+              uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
               uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
 
