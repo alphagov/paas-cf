@@ -62,6 +62,7 @@ resource "aws_cloudfront_distribution" "cdn_instance" {
   viewer_certificate {
     cloudfront_default_certificate = false
     iam_certificate_id             = "${var.system_domain_cert_id}"
+    acm_certificate_arn            = "${var.system_domain_acm_cert_arn}"
     minimum_protocol_version       = "TLSv1"
     ssl_support_method             = "sni-only"
   }

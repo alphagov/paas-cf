@@ -132,6 +132,7 @@ resource "aws_cloudfront_distribution" "simple_redirect" {
   viewer_certificate {
     cloudfront_default_certificate = false
     iam_certificate_id             = "${var.domain_cert_id}"
+    acm_certificate_arn            = "${var.domain_acm_cert_arn}"
     minimum_protocol_version       = "TLSv1"
     ssl_support_method             = "sni-only"
   }

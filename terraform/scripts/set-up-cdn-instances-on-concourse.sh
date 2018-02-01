@@ -42,10 +42,6 @@ run:
         export TERRAFORM_EXTRA_OPTS="-force"
       fi
 
-      # We need awscli&jq to get the cert id
-      apk add -U groff less python py-pip  jq
-      pip install awscli
-
       cd paas-cf
       ./terraform/scripts/set-up-cdn-instances.sh ${ACTION}
 EOF
