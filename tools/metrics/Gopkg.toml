@@ -35,4 +35,4 @@
 
 [[constraint]]
   name = "gopkg.in/zorkian/go-datadog-api.v2"
-  version = "2.3.0"
+  version = "2.7.0"
