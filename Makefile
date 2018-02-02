@@ -84,7 +84,6 @@ globals:
 dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
 	$(eval export ENABLE_BILLING_APP ?= false)
-	$(eval export CF_SKIP_SSL_VALIDATION=true)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
@@ -104,7 +103,6 @@ staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
 	$(eval export ENABLE_BILLING_APP=false)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
@@ -122,7 +120,6 @@ prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
 	$(eval export ENABLE_BILLING_APP=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export SKIP_UPLOAD_GENERATED_CERTS=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
@@ -185,15 +182,6 @@ upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Consol
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-google-oauth-secrets.sh
 
-.PHONY: manually_upload_certs
-CERT_PASSWORD_STORE_DIR?=~/.paas-pass-high
-manually_upload_certs: check-env ## Manually upload to AWS the SSL certificates for public facing endpoints
-	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
-	# check password store and if varables are accesible
-	$(if ${CERT_PASSWORD_STORE_DIR},,$(error Must pass CERT_PASSWORD_STORE_DIR=<path_to_password_store>))
-	$(if $(wildcard ${CERT_PASSWORD_STORE_DIR}),,$(error Password store ${CERT_PASSWORD_STORE_DIR} does not exist))
-	@terraform/scripts/manually-upload-certs.sh ${ACTION}
-
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
@@ -203,7 +191,11 @@ pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 .PHONY: setup_cdn_instances
 setup_cdn_instances: check-env ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
-	@terraform/scripts/set-up-cdn-instances.sh ${ACTION}
+	@if test "${RUN_ON_CONCOURSE}" = "true"; then \
+		terraform/scripts/set-up-cdn-instances-on-concourse.sh ${ACTION}; \
+	else \
+		terraform/scripts/set-up-cdn-instances.sh ${ACTION}; \
+	fi
 
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))

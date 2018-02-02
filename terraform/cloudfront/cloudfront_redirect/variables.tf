@@ -21,4 +21,10 @@ variable "dns_zone_id" {
 
 variable "domain_cert_id" {
   description = "The ID of the certificate to be assigned to a new subdomain."
+  default     = ""
+}
+
+variable "domain_acm_cert_arn" {
+  description = "The  ARN of the AWS Certificate Manager certificate to be assigned to a new subdomain."
+  default     = ""
 }

@@ -190,13 +190,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-certs.tar.gz
 
-  - name: cf-certs-tfstate
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: cf-certs.tfstate
-      region_name: eu-west-1
-
   - name: cf-manifest
     type: s3-iam
     source:
@@ -406,7 +399,6 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
@@ -876,64 +868,10 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: cf-tfstate
-          - get: cf-certs-tfstate
-          - get: bosh-CA
-            passed: ['pre-deploy']
           - get: cf-certs
             passed: ['generate-secrets']
           - get: cf-secrets
             passed: ['pre-deploy']
-
-      - task: upload-certs-to-aws
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/terraform
-              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
-          inputs:
-            - name: paas-cf
-            - name: cf-certs-tfstate
-            - name: bosh-CA
-            - name: cf-certs
-          outputs:
-            - name: updated-tfstate
-          params:
-            TF_VAR_env: ((deploy_env))
-            SKIP_UPLOAD_GENERATED_CERTS: ((skip_upload_generated_certs))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if [ "${SKIP_UPLOAD_GENERATED_CERTS}" = "true" ]; then
-                  cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
-                  echo "Using pre-uploaded public certificates for ${TF_VAR_env}"
-                else
-                  mkdir generated-certificates
-                  tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
-                  tar xzf bosh-CA/bosh-CA.tar.gz
-
-                  cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
-                  terraform init paas-cf/terraform/cf-certs
-                  terraform apply \
-                    -auto-approve=true \
-                    -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                    -var system_domain_crt="$(cat generated-certificates/system_domain.crt)" \
-                    -var system_domain_key="$(cat generated-certificates/system_domain.key)" \
-                    -var system_domain_intermediate_crt="$(cat bosh-CA.crt)" \
-                    -var apps_domain_crt="$(cat generated-certificates/apps_domain.crt)" \
-                    -var apps_domain_key="$(cat generated-certificates/apps_domain.key)" \
-                    -var apps_domain_intermediate_crt="$(cat bosh-CA.crt)" \
-                    -state=updated-tfstate/cf-certs.tfstate \
-                    paas-cf/terraform/cf-certs
-                fi
-        ensure:
-          put: cf-certs-tfstate
-          params:
-            file: updated-tfstate/cf-certs.tfstate
 
       - task: extract-terraform-variables
         config:
@@ -948,7 +886,6 @@ jobs:
             - name: vpc-tfstate
             - name: concourse-tfstate
             - name: cf-secrets
-            - name: cf-certs-tfstate
           outputs:
             - name: terraform-variables
           run:
@@ -961,8 +898,6 @@ jobs:
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < cf-certs-tfstate/cf-certs.tfstate > terraform-variables/cf-certs.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
                 < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
 
@@ -1018,7 +953,6 @@ jobs:
               - |
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
-                . terraform-variables/cf-certs.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
 
                 mkdir generated-certificates
@@ -1036,6 +970,128 @@ jobs:
           put: cf-tfstate
           params:
             file: updated-tfstate/cf.tfstate
+
+      # FIXME: Remove once the self-signed generated apps and system certs
+      # have been deleted from all envs.
+      - do:
+        - task: delete-old-cf-certs
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/certstrap
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            inputs:
+              - name: cf-certs
+            outputs:
+              - name: generated-cf-certs
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  mkdir certs
+                  echo "Extracting certs"
+                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
+
+                  for cert_entry in apps_domain system_domain; do
+                    rm -vf "certs/${cert_entry}.key" "certs/${cert_entry}_old.key" \
+                           "certs/${cert_entry}.csr" "certs/${cert_entry}_old.csr" \
+                           "certs/${cert_entry}.crt" "certs/${cert_entry}_old.crt"
+                  done
+
+                  echo "Creating updated cert tarball"
+                  cd certs
+                  tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+          on_success:
+            put: cf-certs
+            params:
+              file: generated-cf-certs/cf-certs.tar.gz
+        - do:
+          - task: try-get-cf-certs-tfstate
+            config:
+              platform: linux
+              inputs:
+                - name: paas-cf
+              outputs:
+                - name: cf-certs-tfstate
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/awscli
+                  tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+              params:
+                AWS_DEFAULT_REGION: ((aws_region))
+                STATE_BUCKET: ((state_bucket))
+              run:
+                path: sh
+                args:
+                  - -c
+                  - |
+                    aws s3 cp "s3://${STATE_BUCKET}/cf-certs.tfstate" cf-certs-tfstate/cf-certs.tfstate 2> awscli.output
+                    RET="$?"
+                    cat awscli.output 1>&2
+                    if [ "$RET" != "0" ]; then
+                      if grep -q "404" awscli.output; then
+                        echo "Skipping download"
+                        exit 0
+                      else
+                        exit "$RET"
+                      fi
+                    fi
+          - task: undo-upload-certs-to-aws
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/terraform
+                  tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
+              inputs:
+                - name: paas-cf
+                - name: cf-certs-tfstate
+              outputs:
+                - name: updated-tfstate
+              params:
+                TF_VAR_region: ((aws_region))
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -c
+                  - |
+                    if ! [ -f cf-certs-tfstate/cf-certs.tfstate ]; then
+                      echo "File cf-certs-tfstate/cf-certs.tfstate missing, skipping terraform destroy"
+                      exit 0
+                    fi
+                    cp cf-certs-tfstate/cf-certs.tfstate updated-tfstate/cf-certs.tfstate
+                    terraform init paas-cf/terraform/cf-certs
+                    terraform destroy \
+                      -force \
+                      -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                      -state=updated-tfstate/cf-certs.tfstate \
+                      paas-cf/terraform/cf-certs
+            on_success:
+              task: delete-old-cf-certs-tfstate
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    repository: governmentpaas/awscli
+                    tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+                params:
+                  AWS_DEFAULT_REGION: ((aws_region))
+                  STATE_BUCKET: ((state_bucket))
+                run:
+                  path: sh
+                  args:
+                    - -e
+                    - -c
+                    - |
+                      aws s3 rm "s3://${STATE_BUCKET}/cf-certs.tfstate"
 
       # FIXME: Move this operation to Terraform when this feature is added:
       # https://github.com/terraform-providers/terraform-provider-aws/issues/113
@@ -2029,7 +2085,6 @@ jobs:
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             params:
               ENABLE_BILLING_APP: ((enable_billing_app))
-              CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
               APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             inputs:
               - name: paas-cf
@@ -2072,7 +2127,6 @@ jobs:
                       'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
                       'CF_CLIENT_REDIRECT_URL' => 'https://paas-billing.${APPS_DNS_ZONE_NAME}/oauth/callback',
                       'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                      'CF_SKIP_SSL_VALIDATION' => '${CF_SKIP_SSL_VALIDATION}',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
@@ -2421,7 +2475,6 @@ jobs:
                       'CF_CLIENT_ID' => 'paas-metrics',
                       'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
                       'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                      'CF_SKIP_SSL_VALIDATION' => 'true',
                       'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
                       'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                       'DEPLOY_ENV' => '${DEPLOY_ENV}',
@@ -2902,8 +2955,6 @@ jobs:
           - name: cf-manifest
         outputs:
           - name: rotated-cf-secrets
-        params:
-          CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
         run:
           path: sh
           args:
@@ -2919,15 +2970,11 @@ jobs:
                 --existing-secrets rotated-cf-secrets/cf-secrets-cleared.yml \
                 > rotated-cf-secrets/cf-secrets.yml
 
-              SKIP_SSL_VALIDATION_OPTION=""
-              if [ "${CF_SKIP_SSL_VALIDATION}" = "true" ]; then
-                SKIP_SSL_VALIDATION_OPTION="--skip-ssl-validation"
-              fi
               UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
               UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
               UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
 
-              uaac target ${SKIP_SSL_VALIDATION_OPTION} "${UAA_ENDPOINT}"
+              uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
               uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
 
