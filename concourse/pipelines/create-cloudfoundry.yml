@@ -574,62 +574,6 @@ jobs:
             params:
               file: generated-cf-secrets/cf-secrets.yml
 
-  - name: post-deploy
-    serial: true
-    plan:
-    - aggregate:
-      - get: cf-tfstate
-      - get: pipeline-trigger
-        passed: ['cf-deploy', 'api-availability-tests', 'app-availability-tests']
-        trigger: true
-    - task: remove-unused-ses-smtp-access-keys
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: governmentpaas/awscli
-            tag: b2495d6ed07f680125d19aa7d1701da7efabb289
-        inputs:
-          - name: cf-tfstate
-        params:
-          DEPLOY_ENV: ((deploy_env))
-          AWS_DEFAULT_REGION: ((aws_region))
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              delete_unused_keys() {
-                terraform_outputs_key=$1
-                username=$2
-
-                jq_path=".modules[].outputs.${terraform_outputs_key}.value"
-                ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
-                if [ -z "$ACCESS_KEY_ID" ]; then
-                  echo "could not find $terraform_outputs_key in terraform outputs"
-                  exit 1
-                fi
-
-                UNUSED_ACCESS_KEYS=$(\
-                  aws iam list-access-keys --user-name "$username" \
-                  --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
-                  --output text \
-                )
-                if [ -z "$UNUSED_ACCESS_KEYS" ]; then
-                  echo "no access keys to revoke"
-                else
-                  for key in $UNUSED_ACCESS_KEYS; do
-                    echo "deleting key $key for user $username"
-                    aws iam delete-access-key --user-name "$username" --access-key-id "$key"
-                  done
-                fi
-              }
-
-              delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
-              delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
-
   - name: pre-deploy
     plan:
       - aggregate:
@@ -1336,43 +1280,9 @@ jobs:
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
-          - get: cf-tfstate
-            passed: ['generate-cf-config']
           - get: bosh-secrets
-          - get: cf-secrets
-            passed: ['generate-cf-config']
-          - get: bosh-CA
-          - get: graphite-nozzle
-          - get: datadog-tfstate
-          - get: paas-compose-broker
-          - get: paas-compose-scraper
-          - get: paas-billing
 
       - aggregate:
-        - task: extract-cf-terraform-outputs
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: 2.2-slim
-            inputs:
-              - name: paas-cf
-              - name: cf-tfstate
-            outputs:
-              - name: cf-terraform-outputs
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  SCPATH="./paas-cf/concourse/scripts"
-                  SCFILE="extract_tf_vars_from_terraform_state.rb"
-                  $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
-                  ls -l cf-terraform-outputs/cf.tfstate.sh
-
         - task: get-and-upload-stemcell
           config:
             platform: linux
@@ -1459,6 +1369,55 @@ jobs:
         params:
           file: updated-cf-manifest/cf-manifest.yml
 
+  - name: post-deploy
+    serial: true
+    plan:
+    - aggregate:
+      - get: pipeline-trigger
+        passed: ['cf-deploy']
+        trigger: true
+      - get: paas-cf
+        passed: ['cf-deploy']
+      - get: cf-manifest
+        passed: ['generate-cf-config']
+      - get: cf-tfstate
+        passed: ['generate-cf-config']
+      - get: bosh-secrets
+        passed: ['cf-deploy']
+      - get: cf-secrets
+        passed: ['generate-cf-config']
+      - get: bosh-CA
+      - get: graphite-nozzle
+      - get: datadog-tfstate
+      - get: paas-compose-broker
+      - get: paas-compose-scraper
+      - get: paas-billing
+
+    - aggregate:
+      - task: extract-cf-terraform-outputs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          outputs:
+            - name: cf-terraform-outputs
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                SCPATH="./paas-cf/concourse/scripts"
+                SCFILE="extract_tf_vars_from_terraform_state.rb"
+                $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
+                ls -l cf-terraform-outputs/cf.tfstate.sh
+
       - task: retrieve-config
         config:
           platform: linux
@@ -1513,408 +1472,676 @@ jobs:
 
                 ls -l config/*
 
-      - aggregate:
-        - task: create-orgs
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            params:
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
-                  cf create-org admin
-                  cf set-quota admin medium
+    - aggregate:
+      - task: create-orgs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          params:
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf create-org admin
+                cf set-quota admin medium
 
-                  cf create-space monitoring -o admin
-                  cf create-space service-brokers -o admin
-                  cf create-space healthchecks -o admin
-                  cf create-space billing -o admin
-                  cf create-space assets -o admin
+                cf create-space monitoring -o admin
+                cf create-space service-brokers -o admin
+                cf create-space healthchecks -o admin
+                cf create-space billing -o admin
+                cf create-space assets -o admin
 
-                  cf create-org govuk-paas
-                  cf create-space docs -o govuk-paas
-                  cf create-space tools -o govuk-paas
-                  cf target -o admin
-                  cf share-private-domain govuk-paas "((system_dns_zone_name))"
+                cf create-org govuk-paas
+                cf create-space docs -o govuk-paas
+                cf create-space tools -o govuk-paas
+                cf target -o admin
+                cf share-private-domain govuk-paas "((system_dns_zone_name))"
 
-                  # Reserve some domains so that tenants cannot create them to
-                  # mislead others
-                  cf target -o govuk-paas
-                  cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
-                  cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
-                  cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname status
+                # Reserve some domains so that tenants cannot create them to
+                # mislead others
+                cf target -o govuk-paas
+                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
+                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
+                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname status
 
-        - task: register-rds-broker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+      - task: register-rds-broker
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  if cf service-brokers | grep "rds-broker\s"; then
-                    cf update-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
-                  else
-                    cf create-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
-                  fi
-                  cf enable-service-access postgres
-                  cf enable-service-access mysql
+                if cf service-brokers | grep "rds-broker\s"; then
+                  cf update-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
+                else
+                  cf create-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
+                fi
+                cf enable-service-access postgres
+                cf enable-service-access mysql
 
-        - task: register-cdn-broker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  cf api "${API_ENDPOINT}"
-                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+      - task: register-cdn-broker
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
-                  if cf service-brokers | grep "cdn-broker\s"; then
-                    cf update-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
-                  else
-                    cf create-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
-                  fi
-                  cf enable-service-access cdn-route
+                if cf service-brokers | grep "cdn-broker\s"; then
+                  cf update-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
+                else
+                  cf create-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
+                fi
+                cf enable-service-access cdn-route
 
-        - task: set-security-groups-from-manifest
-          config:
-            platform: linux
-            inputs:
-              - name: paas-cf
-              - name: bosh-CA
-              - name: config
-              - name: cf-manifest
-            params:
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+      - task: set-security-groups-from-manifest
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: bosh-CA
+            - name: config
+            - name: cf-manifest
+          params:
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
+                ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
 
-        - task: set-quotas-from-manifest
-          config:
-            platform: linux
-            inputs:
-              - name: paas-cf
-              - name: bosh-CA
-              - name: config
-              - name: cf-manifest
-            params:
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
+      - task: set-quotas-from-manifest
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: bosh-CA
+            - name: config
+            - name: cf-manifest
+          params:
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
 
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
+                ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
-        - task: enable-diego_docker-feature-flag
-          config:
-            platform: linux
-            inputs:
-              - name: paas-cf
-              - name: bosh-CA
-              - name: config
-            params:
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                  . ./config/config.sh
+      - task: enable-diego_docker-feature-flag
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: bosh-CA
+            - name: config
+          params:
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                . ./config/config.sh
 
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  cf enable-feature-flag diego_docker
+                cf enable-feature-flag diego_docker
 
-      - aggregate:
-        - task: block-create-account-endpoints
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+    - aggregate:
+      - task: block-create-account-endpoints
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                  . ./config/config.sh
-                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                    -o admin -s assets
+                . ./config/config.sh
+                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                  -o admin -s assets
 
-                  cd paas-cf/platform-tests/example-apps/create-account-holding-page/
-                  cf push
+                cd paas-cf/platform-tests/example-apps/create-account-holding-page/
+                cf push
 
-                  if ! cf domains | grep -q "login.((system_dns_zone_name))"; then
-                    cf create-domain admin "login.((system_dns_zone_name))"
-                  fi
-                  if ! cf domains | grep -q "uaa.((system_dns_zone_name))"; then
-                    cf create-domain admin "uaa.((system_dns_zone_name))"
-                  fi
+                if ! cf domains | grep -q "login.((system_dns_zone_name))"; then
+                  cf create-domain admin "login.((system_dns_zone_name))"
+                fi
+                if ! cf domains | grep -q "uaa.((system_dns_zone_name))"; then
+                  cf create-domain admin "uaa.((system_dns_zone_name))"
+                fi
 
-                  cf create-route assets "login.((system_dns_zone_name))" --path create_account
-                  cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
-                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
-                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do
+                cf create-route assets "login.((system_dns_zone_name))" --path create_account
+                cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
+                cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
+                cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do
 
-                  cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
-                  cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account.do
-                  cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account
-                  cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
+                cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
+                cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account.do
+                cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account
+                cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
 
-        - task: deploy-compose-service-broker
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: paas-compose-broker
-              - name: config
-              - name: bosh-CA
-            params:
-              COMPOSE_API_KEY: ((compose_api_key))
-              DB_PREFIX: ((deploy_env))
-              CLUSTER_NAME: "gds-eu-west1-c00"
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+      - task: deploy-compose-service-broker
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+            - name: paas-compose-broker
+            - name: config
+            - name: bosh-CA
+          params:
+            COMPOSE_API_KEY: ((compose_api_key))
+            DB_PREFIX: ((deploy_env))
+            CLUSTER_NAME: "gds-eu-west1-c00"
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                  . ./config/config.sh
-                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                    -o admin -s service-brokers
+                . ./config/config.sh
+                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                  -o admin -s service-brokers
 
-                  cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
-                  cd paas-compose-broker/
+                cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
+                cd paas-compose-broker/
 
-                  ruby -ryaml -e "
-                    env = {
-                      'LOG_LEVEL' => 'DEBUG',
-                      'USERNAME' => 'compose-broker',
-                      'PASSWORD' => '${COMPOSE_BROKER_PASS}',
-                      'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
-                      'DB_PREFIX' => '${DB_PREFIX}',
-                      'CLUSTER_NAME' => '${CLUSTER_NAME}',
-                      'IP_WHITELIST' => '${COMPOSE_BROKER_IP_WHITELIST}',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] ||= {}
-                      app['env'].merge!(env)
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
-                  cf blue-green-deploy compose-broker
-                  cf delete -f compose-broker-old
-
-        - task: deploy-simulated-load-application
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            params:
-              TEST_HEAVY_LOAD: ((test_heavy_load))
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  if [ "${TEST_HEAVY_LOAD:-}" != "true" ] ; then
-                    echo Heavy load test has been disabled. Skipping...
-                    exit 0
-                  fi
-
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
-
-                  cf target -o admin -s healthchecks
-
-                  cd paas-cf/platform-tests/example-apps/healthcheck
-                  cf push simulated-load -i 180
-
-                  timeout=300
-                  deadline=$(($(date +%s) + timeout))
-
-                  checkInstances() {
-                    instances=$(cf app simulated-load | awk '/instances: / { print $2 }')
-                    RUNNING=$(echo "${instances}" | awk -F / '{ print $1 }')
-                    EXPECTED=$(echo "${instances}" | awk -F / '{ print $2 }')
-
-                    if [ "${RUNNING}" -lt "${EXPECTED}" ]; then
-                      return "1";
-                    fi
-
-                    return "0";
+                ruby -ryaml -e "
+                  env = {
+                    'LOG_LEVEL' => 'DEBUG',
+                    'USERNAME' => 'compose-broker',
+                    'PASSWORD' => '${COMPOSE_BROKER_PASS}',
+                    'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
+                    'DB_PREFIX' => '${DB_PREFIX}',
+                    'CLUSTER_NAME' => '${CLUSTER_NAME}',
+                    'IP_WHITELIST' => '${COMPOSE_BROKER_IP_WHITELIST}',
                   }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] ||= {}
+                    app['env'].merge!(env)
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf blue-green-deploy compose-broker
+                cf delete -f compose-broker-old
 
-                  while [ "$(checkInstances && echo $?)" -eq "1" ]; do
-                    sleep 5
-                    echo "Retrying $((timeout - (deadline - $(date +%s))))s..."
+      - task: deploy-simulated-load-application
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          params:
+            TEST_HEAVY_LOAD: ((test_heavy_load))
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                if [ "${TEST_HEAVY_LOAD:-}" != "true" ] ; then
+                  echo Heavy load test has been disabled. Skipping...
+                  exit 0
+                fi
 
-                    if [ "$(date +%s)" -gt "${deadline}" ] ; then
-                      echo "We're expecting ${EXPECTED} number of instance(s) to run."
-                      echo "Only ${RUNNING} instance(s) running..."
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                      exit 1
-                    fi
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
+
+                cd paas-cf/platform-tests/example-apps/healthcheck
+                cf push simulated-load -i 180
+
+                timeout=300
+                deadline=$(($(date +%s) + timeout))
+
+                checkInstances() {
+                  instances=$(cf app simulated-load | awk '/instances: / { print $2 }')
+                  RUNNING=$(echo "${instances}" | awk -F / '{ print $1 }')
+                  EXPECTED=$(echo "${instances}" | awk -F / '{ print $2 }')
+
+                  if [ "${RUNNING}" -lt "${EXPECTED}" ]; then
+                    return "1";
+                  fi
+
+                  return "0";
+                }
+
+                while [ "$(checkInstances && echo $?)" -eq "1" ]; do
+                  sleep 5
+                  echo "Retrying $((timeout - (deadline - $(date +%s))))s..."
+
+                  if [ "$(date +%s)" -gt "${deadline}" ] ; then
+                    echo "We're expecting ${EXPECTED} number of instance(s) to run."
+                    echo "Only ${RUNNING} instance(s) running..."
+
+                    exit 1
+                  fi
+                done
+
+                echo Done!
+
+      - task: sync-admin-users
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: "2.2"
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: cf-secrets
+            - name: cf-manifest
+            - name: bosh-CA
+          params:
+            DISABLE_USER_CREATION: ((disable_user_creation))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ${DISABLE_USER_CREATION} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
+
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                . ./config/config.sh
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                export UAA_ADMIN_PASSWORD
+                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+                cd paas-cf/scripts
+                bundle
+                bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
+
+      - task: deploy-graphite-nozzle
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: graphite-nozzle
+            - name: config
+            - name: bosh-CA
+          params:
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                cf target -o admin -s monitoring
+
+                cat <<EOF > graphite-nozzle.json
+                [
+                    {"protocol":"udp","destination":"${GRAPHITE_SERVER}","ports":"8125"}
+                ]
+                EOF
+                cf create-security-group graphite-nozzle graphite-nozzle.json
+                cf bind-security-group graphite-nozzle admin monitoring
+
+                cd graphite-nozzle
+
+                echo "web: graphite-nozzle" > Procfile
+
+                cat <<EOF > manifest.yml
+                ---
+                applications:
+                - name: graphite-nozzle
+                  memory: 100M
+                  instances: 1
+                  no-route: true
+                  health-check-type: none
+                  buildpack: go_buildpack
+                  env:
+                    DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
+                    UAA_ENDPOINT: "${UAA_ENDPOINT}"
+                    STATSD_ENDPOINT: "${GRAPHITE_SERVER}:8125"
+                    FIREHOSE_USERNAME: "${FIREHOSE_USER}"
+                    FIREHOSE_PASSWORD: "${FIREHOSE_PASS}"
+                    SUBSCRIPTION_ID: "firehose"
+                    STATSD_PREFIX: "cfstats."
+                    SKIP_SSL_VALIDATION: "true"
+                    PREFIX_JOB: "true"
+                EOF
+
+                ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
+
+      - task: deploy-healthcheck
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          params:
+            DISABLE_HEALTHCHECK_DB: ((disable_healthcheck_db))
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: bosh-CA
+          outputs:
+            - name: deployed-healthcheck
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
+                BUILD_ROOT=$(pwd)
+                cd paas-cf/platform-tests/example-apps/healthcheck
+
+                if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
+                  cf create-service postgres Free healthcheck-db
+                  while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
                   done
 
-                  echo Done!
+                  ruby -ryaml -e '
+                    manifest = YAML.load_file("manifest.yml")
+                    manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
+                    File.write("manifest.yml", manifest.to_yaml)
+                  '
+                fi
 
-        - task: sync-admin-users
+                cf blue-green-deploy healthcheck
+                cf delete -f healthcheck-old
+
+                cd "${BUILD_ROOT}"
+                echo "yes" > deployed-healthcheck/healthcheck-deployed
+        on_success:
+          put: deployed-healthcheck
+          params:
+            file: deployed-healthcheck/healthcheck-deployed
+
+      - task: deploy-paas-billing
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          params:
+            ENABLE_BILLING_APP: ((enable_billing_app))
+            CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing
+            - name: config
+            - name: cf-secrets
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                if  [ "${ENABLE_BILLING_APP:-}" != "true" ] ; then
+                  echo "ENABLE_BILLING_APP=${ENABLE_BILLING_APP} so skipping paas-billing deploy"
+                  exit 0
+                fi
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service billing-db > /dev/null; then
+                  cf create-service postgres M-dedicated-9.5 billing-db
+                  while ! cf service billing-db | grep -q 'Status: create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                cd paas-billing
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-billing',
+                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
+                    'CF_CLIENT_REDIRECT_URL' => 'https://paas-billing.${APPS_DNS_ZONE_NAME}/oauth/callback',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'CF_SKIP_SSL_VALIDATION' => '${CF_SKIP_SSL_VALIDATION}',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                    app['services'] = ['billing-db']
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf push paas-billing
+
+      - task: deploy-paas-compose-scraper
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          params:
+            ENABLE_DATADOG: ((enable_datadog))
+            COMPOSE_BILLING_EMAIL: ((compose_billing_email))
+            COMPOSE_BILLING_PASSWORD: ((compose_billing_password))
+            DATADOG_API_KEY: ((datadog_api_key))
+            DATADOG_APP_KEY: ((datadog_app_key))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-compose-scraper
+            - name: config
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                if [ "${ENABLE_DATADOG:-}" != "true" ] ; then
+                  echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-compose-scraper deploy"
+                  exit 0
+                fi
+
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                cd paas-compose-scraper/
+
+                ruby -ryaml -e "
+                  env = {
+                    'COMPOSE_EMAIL' => '${COMPOSE_BILLING_EMAIL}',
+                    'COMPOSE_PASSWORD' => '${COMPOSE_BILLING_PASSWORD}',
+                    'COMPOSE_ACCOUNT_NAME' => 'gds',
+                    'COMPOSE_CLUSTER_ID' => '5941cf9f859d2c0015000021',
+                    'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
+                    'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
+                    'DATADOG_TAGS' => 'deployment:${DEPLOY_ENV}',
+                    'CHECK_INTERVAL_SECONDS' => '300',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] ||= {}
+                    app['env'].merge!(env)
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf push paas-compose-scraper
+
+      - task: run-bosh-cleanup
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli
+              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
+          inputs:
+            - name: paas-cf
+            - name: bosh-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
+
+                bosh cleanup --all
+
+    - aggregate:
+      - do:
+        - task: register-compose-broker
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: "2.2"
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: cf-secrets
-              - name: cf-manifest
-              - name: bosh-CA
-            params:
-              DISABLE_USER_CREATION: ((disable_user_creation))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ${DISABLE_USER_CREATION} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
-
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
-                  . ./config/config.sh
-
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  export UAA_ADMIN_PASSWORD
-                  UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
-                  cd paas-cf/scripts
-                  bundle
-                  bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
-
-        - task: deploy-graphite-nozzle
-          config:
-            platform: linux
-            inputs:
-              - name: paas-cf
-              - name: graphite-nozzle
-              - name: config
-              - name: bosh-CA
-            params:
             image_resource:
               type: docker-image
               source:
                 repository: governmentpaas/cf-cli
                 tag: 465642da06051a55630d39c899697b678f66a7f7
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: bosh-CA
+            params:
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
               path: sh
               args:
@@ -1923,48 +2150,16 @@ jobs:
                 - -c
                 - |
                   ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                   . ./config/config.sh
                   echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  cf target -o admin -s monitoring
+                  if cf service-brokers | grep "compose-broker\s"; then
+                    cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  else
+                    cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  fi
 
-                  cat <<EOF > graphite-nozzle.json
-                  [
-                      {"protocol":"udp","destination":"${GRAPHITE_SERVER}","ports":"8125"}
-                  ]
-                  EOF
-                  cf create-security-group graphite-nozzle graphite-nozzle.json
-                  cf bind-security-group graphite-nozzle admin monitoring
-
-                  cd graphite-nozzle
-
-                  echo "web: graphite-nozzle" > Procfile
-
-                  cat <<EOF > manifest.yml
-                  ---
-                  applications:
-                  - name: graphite-nozzle
-                    memory: 100M
-                    instances: 1
-                    no-route: true
-                    health-check-type: none
-                    buildpack: go_buildpack
-                    env:
-                      DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
-                      UAA_ENDPOINT: "${UAA_ENDPOINT}"
-                      STATSD_ENDPOINT: "${GRAPHITE_SERVER}:8125"
-                      FIREHOSE_USERNAME: "${FIREHOSE_USER}"
-                      FIREHOSE_PASSWORD: "${FIREHOSE_PASS}"
-                      SUBSCRIPTION_ID: "firehose"
-                      STATSD_PREFIX: "cfstats."
-                      SKIP_SSL_VALIDATION: "true"
-                      PREFIX_JOB: "true"
-                  EOF
-
-                  ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
-
-        - task: deploy-healthcheck
+        - task: register-elasticache-broker
           config:
             platform: linux
             image_resource:
@@ -1972,527 +2167,339 @@ jobs:
               source:
                 repository: governmentpaas/cf-cli
                 tag: 465642da06051a55630d39c899697b678f66a7f7
-            params:
-              DISABLE_HEALTHCHECK_DB: ((disable_healthcheck_db))
             inputs:
               - name: paas-cf
               - name: config
               - name: bosh-CA
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  . ./config/config.sh
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                  if cf service-brokers | grep "elasticache-broker\s"; then
+                    cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
+                  else
+                    cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
+                  fi
+
+      - task: update-kibana-timezone
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+          - name: paas-cf
+          - name: cf-tfstate
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              SCRIPT_DIR="./paas-cf/concourse/scripts"
+
+              ruby "${SCRIPT_DIR}/extract_terraform_state_to_yaml.rb" \
+                < cf-tfstate/cf.tfstate \
+                > cf-tfstate.yaml
+
+              export ES_HOST
+              ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
+              export ES_PORT="9200"
+              ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
+
+      - task: enable-elasticsearch-shard-reallocation
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/curl-ssl
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+          - name: paas-cf
+          - name: cf-terraform-outputs
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              export TF_VAR_logsearch_elastic_master_elb_dns_name
+              . cf-terraform-outputs/cf.tfstate.sh
+
+              curl -s \
+                -X PUT \
+                -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
+                "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
+
+      - do:
+        - task: datadog-terraform-apply
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/terraform
+                tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
+            inputs:
+              - name: datadog-tfstate
+              - name: paas-cf
+              - name: config
             outputs:
-              - name: deployed-healthcheck
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
-
-                  cf target -o admin -s healthchecks
-                  BUILD_ROOT=$(pwd)
-                  cd paas-cf/platform-tests/example-apps/healthcheck
-
-                  if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
-                    cf create-service postgres Free healthcheck-db
-                    while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
-                      echo "Waiting for creation of service to complete..."
-                      sleep 30
-                    done
-
-                    ruby -ryaml -e '
-                      manifest = YAML.load_file("manifest.yml")
-                      manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
-                      File.write("manifest.yml", manifest.to_yaml)
-                    '
-                  fi
-
-                  cf blue-green-deploy healthcheck
-                  cf delete -f healthcheck-old
-
-                  cd "${BUILD_ROOT}"
-                  echo "yes" > deployed-healthcheck/healthcheck-deployed
-          on_success:
-            put: deployed-healthcheck
+              - name: updated-tfstate
             params:
-              file: deployed-healthcheck/healthcheck-deployed
-
-        - task: deploy-paas-billing
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            params:
-              ENABLE_BILLING_APP: ((enable_billing_app))
-              CF_SKIP_SSL_VALIDATION: ((cf_skip_ssl_validation))
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            inputs:
-              - name: paas-cf
-              - name: paas-billing
-              - name: config
-              - name: cf-secrets
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  if  [ "${ENABLE_BILLING_APP:-}" != "true" ] ; then
-                    echo "ENABLE_BILLING_APP=${ENABLE_BILLING_APP} so skipping paas-billing deploy"
-                    exit 0
-                  fi
-
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
-
-                  if ! cf service billing-db > /dev/null; then
-                    cf create-service postgres M-dedicated-9.5 billing-db
-                    while ! cf service billing-db | grep -q 'Status: create succeeded'; do
-                      echo "Waiting for creation of service to complete..."
-                      sleep 30
-                    done
-                  fi
-
-                  cd paas-billing
-
-                  ruby -ryaml -e "
-                    env = {
-                      'CF_CLIENT_ID' => 'paas-billing',
-                      'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
-                      'CF_CLIENT_REDIRECT_URL' => 'https://paas-billing.${APPS_DNS_ZONE_NAME}/oauth/callback',
-                      'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                      'CF_SKIP_SSL_VALIDATION' => '${CF_SKIP_SSL_VALIDATION}',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] = {} unless app['env']
-                      app['env'].merge!(env)
-                      app['services'] = ['billing-db']
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
-
-                  cf push paas-billing
-
-        - task: deploy-paas-compose-scraper
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            params:
+              TF_VAR_env: ((deploy_env))
+              TF_VAR_datadog_api_key: ((datadog_api_key))
+              TF_VAR_datadog_app_key: ((datadog_app_key))
+              TF_VAR_aws_account: ((aws_account))
               ENABLE_DATADOG: ((enable_datadog))
-              COMPOSE_BILLING_EMAIL: ((compose_billing_email))
-              COMPOSE_BILLING_PASSWORD: ((compose_billing_password))
-              DATADOG_API_KEY: ((datadog_api_key))
-              DATADOG_APP_KEY: ((datadog_app_key))
-              DEPLOY_ENV: ((deploy_env))
-            inputs:
-              - name: paas-cf
-              - name: paas-compose-scraper
-              - name: config
-              - name: bosh-CA
             run:
               path: sh
               args:
                 - -e
-                - -u
                 - -c
                 - |
-                  if [ "${ENABLE_DATADOG:-}" != "true" ] ; then
-                    echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-compose-scraper deploy"
+                  cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                  terraform init paas-cf/terraform/datadog
+
+                  if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
+                    echo "Datadog disabled but keys present, running check cleanup..."
+                    terraform destroy -force \
+                        -state=updated-tfstate/datadog.tfstate \
+                        -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
+                        paas-cf/terraform/datadog
                     exit 0
                   fi
 
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                  if [ "${ENABLE_DATADOG}" = "true" ]; then
+                    terraform apply \
+                      -auto-approve=true \
+                      -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                      -state=updated-tfstate/datadog.tfstate \
+                      -var-file=config/job_instances.tfvars \
+                      paas-cf/terraform/datadog
+                  else
+                    echo "Datadog disabled, skipping terraform run..."
+                    cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                  fi
+          ensure:
+            put: datadog-tfstate
+            params:
+              file: updated-tfstate/datadog.tfstate
 
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
-
-                  cd paas-compose-scraper/
-
-                  ruby -ryaml -e "
-                    env = {
-                      'COMPOSE_EMAIL' => '${COMPOSE_BILLING_EMAIL}',
-                      'COMPOSE_PASSWORD' => '${COMPOSE_BILLING_PASSWORD}',
-                      'COMPOSE_ACCOUNT_NAME' => 'gds',
-                      'COMPOSE_CLUSTER_ID' => '5941cf9f859d2c0015000021',
-                      'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
-                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
-                      'DATADOG_TAGS' => 'deployment:${DEPLOY_ENV}',
-                      'CHECK_INTERVAL_SECONDS' => '300',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] ||= {}
-                      app['env'].merge!(env)
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
-
-                  cf push paas-compose-scraper
-
-        - task: run-bosh-cleanup
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli
-                tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
-            inputs:
-              - name: paas-cf
-              - name: bosh-secrets
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-
-                  bosh cleanup --all
-
-      - aggregate:
-        - do:
-          - task: register-compose-broker
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/cf-cli
-                  tag: 465642da06051a55630d39c899697b678f66a7f7
-              inputs:
-                - name: paas-cf
-                - name: config
-                - name: bosh-CA
-              params:
-                APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                    . ./config/config.sh
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
-
-                    if cf service-brokers | grep "compose-broker\s"; then
-                      cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                    else
-                      cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                    fi
-
-          - task: register-elasticache-broker
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/cf-cli
-                  tag: 465642da06051a55630d39c899697b678f66a7f7
-              inputs:
-                - name: paas-cf
-                - name: config
-                - name: bosh-CA
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    ./paas-cf/concourse/scripts/import_bosh_ca.sh
-                    . ./config/config.sh
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
-
-                    if cf service-brokers | grep "elasticache-broker\s"; then
-                      cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
-                    else
-                      cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
-                    fi
-
-        - task: update-kibana-timezone
+        - task: datadog-apply-attributes
           config:
             platform: linux
             image_resource:
               type: docker-image
               source:
                 repository: ruby
-                tag: 2.2-slim
-            params:
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              DEPLOY_ENV: ((deploy_env))
+                tag: 2.2-alpine
             inputs:
-            - name: paas-cf
-            - name: cf-tfstate
-            run:
-              path: sh
-              args:
-              - -e
-              - -c
-              - |
-                SCRIPT_DIR="./paas-cf/concourse/scripts"
-
-                ruby "${SCRIPT_DIR}/extract_terraform_state_to_yaml.rb" \
-                  < cf-tfstate/cf.tfstate \
-                  > cf-tfstate.yaml
-
-                export ES_HOST
-                ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
-                export ES_PORT="9200"
-                ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
-
-        - task: enable-elasticsearch-shard-reallocation
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/curl-ssl
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-            - name: paas-cf
-            - name: cf-terraform-outputs
-            run:
-              path: sh
-              args:
-              - -e
-              - -c
-              - |
-                export TF_VAR_logsearch_elastic_master_elb_dns_name
-                . cf-terraform-outputs/cf.tfstate.sh
-
-                curl -s \
-                  -X PUT \
-                  -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
-                  "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
-
-        - do:
-          - task: datadog-terraform-apply
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/terraform
-                  tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
-              inputs:
-                - name: datadog-tfstate
-                - name: paas-cf
-                - name: config
-              outputs:
-                - name: updated-tfstate
-              params:
-                TF_VAR_env: ((deploy_env))
-                TF_VAR_datadog_api_key: ((datadog_api_key))
-                TF_VAR_datadog_app_key: ((datadog_app_key))
-                TF_VAR_aws_account: ((aws_account))
-                ENABLE_DATADOG: ((enable_datadog))
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
-                    terraform init paas-cf/terraform/datadog
-
-                    if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
-                      echo "Datadog disabled but keys present, running check cleanup..."
-                      terraform destroy -force \
-                         -state=updated-tfstate/datadog.tfstate \
-                         -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
-                         paas-cf/terraform/datadog
-                      exit 0
-                    fi
-
-                    if [ "${ENABLE_DATADOG}" = "true" ]; then
-                      terraform apply \
-                        -auto-approve=true \
-                        -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                        -state=updated-tfstate/datadog.tfstate \
-                        -var-file=config/job_instances.tfvars \
-                        paas-cf/terraform/datadog
-                    else
-                      echo "Datadog disabled, skipping terraform run..."
-                      cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
-                    fi
-            ensure:
-              put: datadog-tfstate
-              params:
-                file: updated-tfstate/datadog.tfstate
-
-          - task: datadog-apply-attributes
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: ruby
-                  tag: 2.2-alpine
-              inputs:
-                - name: datadog-tfstate
-                - name: paas-cf
-              params:
-                TF_VAR_env: ((deploy_env))
-                TF_VAR_datadog_api_key: ((datadog_api_key))
-                TF_VAR_datadog_app_key: ((datadog_app_key))
-                TF_VAR_aws_account: ((aws_account))
-                ENABLE_DATADOG: ((enable_datadog))
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    # FIXME: Remove this task when https://github.com/zorkian/go-datadog-api/issues/56 is fixed
-                    if [ "${ENABLE_DATADOG}" = "true" ]; then
-                      BUNDLE_GEMFILE=paas-cf/Gemfile bundle install --without=default
-                      echo "Applying require_full_window atributes for monitors that set it to false..."
-                      echo
-                      paas-cf/concourse/scripts/update_monitor_options.rb < datadog-tfstate/datadog.tfstate
-                      echo
-                      echo "Done"
-                    else
-                      echo "Datadog disabled, skipping attribute applying..."
-                    fi
-
-        - task: deploy-paas-metrics
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            params:
-              ENABLE_DATADOG: ((enable_datadog))
-              DATADOG_API_KEY: ((datadog_api_key))
-              DATADOG_APP_KEY: ((datadog_app_key))
-              DEPLOY_ENV: ((deploy_env))
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              AWS_DEFAULT_REGION: ((aws_region))
-            inputs:
+              - name: datadog-tfstate
               - name: paas-cf
-              - name: config
-              - name: cf-secrets
-              - name: bosh-CA
+            params:
+              TF_VAR_env: ((deploy_env))
+              TF_VAR_datadog_api_key: ((datadog_api_key))
+              TF_VAR_datadog_app_key: ((datadog_app_key))
+              TF_VAR_aws_account: ((aws_account))
+              ENABLE_DATADOG: ((enable_datadog))
             run:
               path: sh
               args:
                 - -e
-                - -u
                 - -c
                 - |
-                  if  [ "${ENABLE_DATADOG:-}" != "true" ] ; then
-                    echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-metrics deploy"
-                    exit 0
+                  # FIXME: Remove this task when https://github.com/zorkian/go-datadog-api/issues/56 is fixed
+                  if [ "${ENABLE_DATADOG}" = "true" ]; then
+                    BUNDLE_GEMFILE=paas-cf/Gemfile bundle install --without=default
+                    echo "Applying require_full_window atributes for monitors that set it to false..."
+                    echo
+                    paas-cf/concourse/scripts/update_monitor_options.rb < datadog-tfstate/datadog.tfstate
+                    echo
+                    echo "Done"
+                  else
+                    echo "Datadog disabled, skipping attribute applying..."
                   fi
 
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  METRICS_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+      - task: deploy-paas-metrics
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          params:
+            ENABLE_DATADOG: ((enable_datadog))
+            DATADOG_API_KEY: ((datadog_api_key))
+            DATADOG_APP_KEY: ((datadog_app_key))
+            DEPLOY_ENV: ((deploy_env))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            AWS_DEFAULT_REGION: ((aws_region))
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: cf-secrets
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                if  [ "${ENABLE_DATADOG:-}" != "true" ] ; then
+                  echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-metrics deploy"
+                  exit 0
+                fi
 
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                METRICS_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                  cd paas-cf/tools/metrics
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
-                  ruby -ryaml -e "
-                    env = {
-                      'CF_CLIENT_ID' => 'paas-metrics',
-                      'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
-                      'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                      'CF_SKIP_SSL_VALIDATION' => 'true',
-                      'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
-                      'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
-                      'DEPLOY_ENV' => '${DEPLOY_ENV}',
-                      'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
-                      'TLS_DOMAINS' => [
-                        'healthcheck.${APPS_DNS_ZONE_NAME}',
-                        'api.${SYSTEM_DNS_ZONE_NAME}',
-                        'uaa.${SYSTEM_DNS_ZONE_NAME}',
-                        '${APPS_DNS_ZONE_NAME}'
-                      ].join(','),
-                      'AWS_DEFAULT_REGION' => '${AWS_DEFAULT_REGION}',
-                      'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
-                      'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] = {} unless app['env']
-                      app['env'].merge!(env)
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
+                cd paas-cf/tools/metrics
 
-                  cf blue-green-deploy paas-metrics
-                  cf delete -f paas-metrics-old
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-metrics',
+                    'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'CF_SKIP_SSL_VALIDATION' => 'true',
+                    'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
+                    'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                    'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
+                    'TLS_DOMAINS' => [
+                      'healthcheck.${APPS_DNS_ZONE_NAME}',
+                      'api.${SYSTEM_DNS_ZONE_NAME}',
+                      'uaa.${SYSTEM_DNS_ZONE_NAME}',
+                      '${APPS_DNS_ZONE_NAME}'
+                    ].join(','),
+                    'AWS_DEFAULT_REGION' => '${AWS_DEFAULT_REGION}',
+                    'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
+                    'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
 
-        - task: deploy-paas-uaa-assets
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: paas-cf
-              - name: config
-              - name: cf-secrets
-              - name: bosh-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
+                cf blue-green-deploy paas-metrics
+                cf delete -f paas-metrics-old
 
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s assets
+      - task: deploy-paas-uaa-assets
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: cf-secrets
+            - name: bosh-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
-                  cd paas-cf/tools/paas-uaa-assets
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s assets
 
-                  cf blue-green-deploy paas-uaa-assets
-                  cf delete -f paas-uaa-assets-old
+                cd paas-cf/tools/paas-uaa-assets
+
+                cf blue-green-deploy paas-uaa-assets
+                cf delete -f paas-uaa-assets-old
+
+      - task: remove-unused-ses-smtp-access-keys
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          inputs:
+            - name: cf-tfstate
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            AWS_DEFAULT_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                delete_unused_keys() {
+                  terraform_outputs_key=$1
+                  username=$2
+
+                  jq_path=".modules[].outputs.${terraform_outputs_key}.value"
+                  ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
+                  if [ -z "$ACCESS_KEY_ID" ]; then
+                    echo "could not find $terraform_outputs_key in terraform outputs"
+                    exit 1
+                  fi
+
+                  UNUSED_ACCESS_KEYS=$(\
+                    aws iam list-access-keys --user-name "$username" \
+                    --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
+                    --output text \
+                  )
+                  if [ -z "$UNUSED_ACCESS_KEYS" ]; then
+                    echo "no access keys to revoke"
+                  else
+                    for key in $UNUSED_ACCESS_KEYS; do
+                      echo "deleting key $key for user $username"
+                      aws iam delete-access-key --user-name "$username" --access-key-id "$key"
+                    done
+                  fi
+                }
+
+                delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
+                delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-smoke-tests
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -2525,12 +2532,12 @@ jobs:
             trigger: true
           - get: cf-acceptance-tests
           - get: paas-cf
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: cf-manifest
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -2585,12 +2592,12 @@ jobs:
             passed: ['post-deploy']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: cf-manifest
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: bosh-CA
           - get: cf-secrets
-            passed: ['cf-deploy']
+            passed: ['post-deploy']
           - get: cf-acceptance-tests
 
       - do:
@@ -2628,10 +2635,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['cf-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
       - task: test-bosh-vms
@@ -3149,14 +3156,14 @@ jobs:
       - aggregate:
         - get: cf-smoke-tests
         - get: paas-cf
-          passed: ['cf-deploy']
+          passed: ['post-deploy']
         - get: cf-manifest
-          passed: ['cf-deploy']
+          passed: ['post-deploy']
         - get: bosh-CA
         - get: smoke-tests-timer
           trigger: ((continuous_smoke_tests_trigger))
         - get: cf-secrets
-          passed: ['cf-deploy']
+          passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
