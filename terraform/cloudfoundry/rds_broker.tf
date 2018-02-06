@@ -25,7 +25,7 @@ resource "aws_elb" "rds_broker" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 

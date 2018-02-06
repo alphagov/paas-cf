@@ -13,5 +13,5 @@ API_URL="https://api.${DEPLOY_ENV}.dev.cloudpipeline.digital"
 # shellcheck disable=SC2091
 $("${SCRIPT_DIR}/show-cf-secrets.sh" uaa_admin_password)
 
-cf api "$API_URL" --skip-ssl-validation
+cf api "$API_URL"
 cf login -u admin -p "${UAA_ADMIN_PASSWORD}"

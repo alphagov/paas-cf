@@ -27,7 +27,7 @@ resource "aws_elb" "cf_cc" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 
@@ -73,7 +73,7 @@ resource "aws_elb" "cf_uaa" {
     instance_protocol  = "ssl"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 
@@ -122,7 +122,7 @@ resource "aws_elb" "cf_doppler" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 
@@ -164,7 +164,7 @@ resource "aws_elb" "cf_router" {
     instance_protocol  = "ssl"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.apps_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.apps.arn}"
   }
 
   listener {
@@ -240,7 +240,7 @@ resource "aws_elb" "metrics" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 
   listener {
@@ -248,7 +248,7 @@ resource "aws_elb" "metrics" {
     instance_protocol  = "tcp"
     lb_port            = 3001
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${var.system_domain_cert_arn}"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
   }
 }
 

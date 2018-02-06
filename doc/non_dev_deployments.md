@@ -35,10 +35,6 @@ For staging and production a `DEPLOY_ENV` is required even though it's not used
 in domain names. Staging should use a `DEPLOY_ENV` of "staging", and production
 should use "prod".
 
-## SSL Certs
-
-See [`ssl_certs.md`](ssl_certs.md) for information on the SSL certificates.
-
 ## Deployment process
 
 With the above in mind, the deployment process is the same as for a dev
