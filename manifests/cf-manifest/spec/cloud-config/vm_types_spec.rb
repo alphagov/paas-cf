@@ -9,6 +9,7 @@ RSpec.describe "vm_types" do
       expect(pool["cloud_properties"]["elbs"]).to match_array([
         terraform_fixture(:cf_router_elb_name),
         terraform_fixture(:cf_uaa_elb_name),
+        terraform_fixture(:cf_router_system_domain_elb_name),
       ])
     end
   end
