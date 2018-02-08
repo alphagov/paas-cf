@@ -52,6 +52,7 @@ vm_types:
       elbs:
         - (( grab terraform_outputs.cf_router_elb_name ))
         - (( grab terraform_outputs.cf_uaa_elb_name ))
+        - (( grab terraform_outputs.cf_router_system_domain_elb_name ))
 
 # Diego below
 

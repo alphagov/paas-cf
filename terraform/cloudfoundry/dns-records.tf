@@ -38,6 +38,14 @@ resource "aws_route53_record" "cf_ssh_proxy" {
   records = ["${aws_elb.ssh_proxy.dns_name}"]
 }
 
+resource "aws_route53_record" "system_wildcard" {
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "*.${var.system_dns_zone_name}"
+  type    = "CNAME"
+  ttl     = "60"
+  records = ["${aws_elb.cf_router_system_domain.dns_name}"]
+}
+
 resource "aws_route53_record" "apps_wildcard" {
   zone_id = "${var.apps_dns_zone_id}"
   name    = "*.${var.apps_dns_zone_name}"

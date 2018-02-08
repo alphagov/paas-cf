@@ -93,6 +93,57 @@ resource "aws_proxy_protocol_policy" "cf_uaa_haproxy" {
   instance_ports = ["443"]
 }
 
+resource "aws_elb" "cf_router_system_domain" {
+  name                        = "${var.env}-cf-router-system-domain"
+  subnets                     = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout                = 19
+  cross_zone_load_balancing   = "true"
+  connection_draining         = true
+  connection_draining_timeout = 20
+
+  security_groups = [
+    "${aws_security_group.cf_api_elb.id}",
+  ]
+
+  access_logs {
+    bucket        = "${aws_s3_bucket.elb_access_log.id}"
+    bucket_prefix = "cf-router-system-domain"
+    interval      = 5
+  }
+
+  health_check {
+    target              = "HTTP:82/health"
+    interval            = "${var.health_check_interval}"
+    timeout             = "${var.health_check_timeout}"
+    healthy_threshold   = "${var.health_check_healthy}"
+    unhealthy_threshold = "${var.health_check_unhealthy}"
+  }
+
+  listener {
+    instance_port      = 443
+    instance_protocol  = "ssl"
+    lb_port            = 443
+    lb_protocol        = "ssl"
+    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
+  }
+}
+
+resource "aws_lb_ssl_negotiation_policy" "cf_router_system_domain" {
+  name          = "paas-${var.default_elb_security_policy}"
+  load_balancer = "${aws_elb.cf_router_system_domain.id}"
+  lb_port       = 443
+
+  attribute {
+    name  = "Reference-Security-Policy"
+    value = "${var.default_elb_security_policy}"
+  }
+}
+
+resource "aws_proxy_protocol_policy" "cf_router_system_domain_haproxy" {
+  load_balancer  = "${aws_elb.cf_router_system_domain.name}"
+  instance_ports = ["443"]
+}
+
 resource "aws_elb" "cf_doppler" {
   name                      = "${var.env}-cf-doppler"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
