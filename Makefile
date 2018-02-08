@@ -188,11 +188,6 @@ pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(eval export PASSWORD_STORE_DIR=${PASSWORD_STORE_DIR})
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
-.PHONY: setup_cdn_instances
-setup_cdn_instances: check-env ## Setup the CloudFront Distribution instances, by reading their config from terraform/cloudfront/instances.tf.
-	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
-	@terraform/scripts/set-up-cdn-instances.sh ${ACTION}
-
 merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 	$(if ${PR},,$(error Must pass PR=<number>))
 	bundle exec github_merge_sign --pr ${PR}
