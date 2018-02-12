@@ -35,7 +35,7 @@ jobs:
     release: logsearch-for-cloudfoundry
   vm_type: parser
   stemcell: default
-  instances: (( grab meta.parser.instances || 1 ))
+  instances: 1
   networks:
   - name: cf
     static_ips:
@@ -55,7 +55,7 @@ jobs:
     release: logsearch-for-cloudfoundry
   vm_type: parser
   stemcell: default
-  instances: (( grab meta.parser.instances || 1 ))
+  instances: 1
   networks:
   - name: cf
     static_ips:
