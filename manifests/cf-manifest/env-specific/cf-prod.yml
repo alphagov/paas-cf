@@ -2,5 +2,7 @@
 meta:
   cell:
     instances: 24
+  parser:
+    instances: 2
   elasticsearch_master:
     disk_size: 3072000
