@@ -35,12 +35,11 @@ jobs:
     release: logsearch-for-cloudfoundry
   vm_type: parser
   stemcell: default
-  instances: (( grab meta.parser.instances || 1 ))
+  instances: 1
   networks:
   - name: cf
     static_ips:
       - 10.0.16.14
-      - 10.0.16.15
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
@@ -56,12 +55,11 @@ jobs:
     release: logsearch-for-cloudfoundry
   vm_type: parser
   stemcell: default
-  instances: (( grab meta.parser.instances || 1 ))
+  instances: 1
   networks:
   - name: cf
     static_ips:
       - 10.0.17.14
-      - 10.0.17.15
   properties:
     redis:
       host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
