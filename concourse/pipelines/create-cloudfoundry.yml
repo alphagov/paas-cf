@@ -876,7 +876,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
+              tag: f810666094e6c65eeb183f9833b231aa24df6811
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -2176,95 +2176,59 @@ jobs:
                 -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
                 "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
 
-      - do:
-        - task: datadog-terraform-apply
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/terraform
-                tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
-            inputs:
-              - name: datadog-tfstate
-              - name: paas-cf
-              - name: config
-            outputs:
-              - name: updated-tfstate
-            params:
-              TF_VAR_env: ((deploy_env))
-              TF_VAR_datadog_api_key: ((datadog_api_key))
-              TF_VAR_datadog_app_key: ((datadog_app_key))
-              TF_VAR_aws_account: ((aws_account))
-              ENABLE_DATADOG: ((enable_datadog))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
-                  terraform init paas-cf/terraform/datadog
+      - task: datadog-terraform-apply
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/terraform
+              tag: f810666094e6c65eeb183f9833b231aa24df6811
+          inputs:
+            - name: datadog-tfstate
+            - name: paas-cf
+            - name: config
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_env: ((deploy_env))
+            TF_VAR_datadog_api_key: ((datadog_api_key))
+            TF_VAR_datadog_app_key: ((datadog_app_key))
+            TF_VAR_aws_account: ((aws_account))
+            ENABLE_DATADOG: ((enable_datadog))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                terraform init paas-cf/terraform/datadog
 
-                  if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
-                    echo "Datadog disabled but keys present, running check cleanup..."
-                    terraform destroy -force \
-                        -state=updated-tfstate/datadog.tfstate \
-                        -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
-                        paas-cf/terraform/datadog
-                    exit 0
-                  fi
-
-                  if [ "${ENABLE_DATADOG}" = "true" ]; then
-                    terraform apply \
-                      -auto-approve=true \
-                      -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
+                  echo "Datadog disabled but keys present, running check cleanup..."
+                  terraform destroy -force \
                       -state=updated-tfstate/datadog.tfstate \
-                      -var-file=config/job_instances.tfvars \
+                      -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
                       paas-cf/terraform/datadog
-                  else
-                    echo "Datadog disabled, skipping terraform run..."
-                    cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
-                  fi
-          ensure:
-            put: datadog-tfstate
-            params:
-              file: updated-tfstate/datadog.tfstate
+                  exit 0
+                fi
 
-        - task: datadog-apply-attributes
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: 2.2-alpine
-            inputs:
-              - name: datadog-tfstate
-              - name: paas-cf
-            params:
-              TF_VAR_env: ((deploy_env))
-              TF_VAR_datadog_api_key: ((datadog_api_key))
-              TF_VAR_datadog_app_key: ((datadog_app_key))
-              TF_VAR_aws_account: ((aws_account))
-              ENABLE_DATADOG: ((enable_datadog))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  # FIXME: Remove this task when https://github.com/zorkian/go-datadog-api/issues/56 is fixed
-                  if [ "${ENABLE_DATADOG}" = "true" ]; then
-                    BUNDLE_GEMFILE=paas-cf/Gemfile bundle install --without=default
-                    echo "Applying require_full_window atributes for monitors that set it to false..."
-                    echo
-                    paas-cf/concourse/scripts/update_monitor_options.rb < datadog-tfstate/datadog.tfstate
-                    echo
-                    echo "Done"
-                  else
-                    echo "Datadog disabled, skipping attribute applying..."
-                  fi
+                if [ "${ENABLE_DATADOG}" = "true" ]; then
+                  terraform apply \
+                    -auto-approve=true \
+                    -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                    -state=updated-tfstate/datadog.tfstate \
+                    -var-file=config/job_instances.tfvars \
+                    paas-cf/terraform/datadog
+                else
+                  echo "Datadog disabled, skipping terraform run..."
+                  cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
+                fi
+        ensure:
+          put: datadog-tfstate
+          params:
+            file: updated-tfstate/datadog.tfstate
 
       - task: deploy-paas-metrics
         config:
