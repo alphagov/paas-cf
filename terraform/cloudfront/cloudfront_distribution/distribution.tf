@@ -1,13 +1,3 @@
-resource "aws_route53_record" "cdn_domain" {
-  count = "${length(var.aliases)}"
-
-  zone_id = "${var.system_dns_zone_id}"
-  name    = "${element(var.aliases, count.index)}."
-  type    = "CNAME"
-  ttl     = "60"
-  records = ["${aws_cloudfront_distribution.cdn_instance.domain_name}"]
-}
-
 resource "aws_cloudfront_distribution" "cdn_instance" {
   origin {
     domain_name = "${var.origin}"
