@@ -28,6 +28,7 @@ func lg(things ...interface{}) {
 
 var warningMatchers = []*regexp.Regexp{
 	regexp.MustCompile("cannot fetch token: 503 Service Unavailable"),
+	regexp.MustCompile(`error \(200002\): CF-StatsUnavailable`),
 }
 
 var _ = Describe("API Availability Monitoring", func() {
