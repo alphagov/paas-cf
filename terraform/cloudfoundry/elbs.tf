@@ -94,7 +94,7 @@ resource "aws_proxy_protocol_policy" "cf_uaa_haproxy" {
 }
 
 resource "aws_elb" "cf_router_system_domain" {
-  name                        = "${var.env}-cf-router-system-domain"
+  name                        = "${var.env}-cf-system-domain"
   subnets                     = ["${split(",", var.infra_subnet_ids)}"]
   idle_timeout                = 19
   cross_zone_load_balancing   = "true"
