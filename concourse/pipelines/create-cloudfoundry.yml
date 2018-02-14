@@ -2514,6 +2514,7 @@ jobs:
             DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
             DEPLOY_ENV: ((deploy_env))
             AWS_REGION: ((aws_region))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
 
           ensure:
             task: upload-test-artifacts

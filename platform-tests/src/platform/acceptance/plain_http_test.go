@@ -1,13 +1,18 @@
 package acceptance_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("plain HTTP requests", func() {
@@ -15,9 +20,45 @@ var _ = Describe("plain HTTP requests", func() {
 		CONNECTION_TIMEOUT = 11 * time.Second
 	)
 
-	Describe("to the API", func() {
+	Describe("to the CC API", func() {
 		It("has the connection refused", func() {
 			uri := testConfig.ApiEndpoint + ":80"
+			_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
+			Expect(err).To(HaveOccurred(), "should not connect")
+			Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
+		})
+	})
+
+	Describe("to UAA", func() {
+		var uaaDomain string
+
+		BeforeEach(func() {
+			infoCommand := cf.Cf("curl", "/v2/info")
+			Expect(infoCommand.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+
+			var infoResp struct {
+				TokenEndpoint string `json:"token_endpoint"`
+			}
+			err := json.Unmarshal(infoCommand.Buffer().Contents(), &infoResp)
+			Expect(err).NotTo(HaveOccurred())
+
+			uaaHttpsURL, err := url.Parse(infoResp.TokenEndpoint)
+			Expect(err).NotTo(HaveOccurred())
+			uaaDomain = strings.Split(uaaHttpsURL.Host, ":")[0]
+		})
+
+		It("has the connection refused", func() {
+			uri := uaaDomain + ":80"
+			_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
+			Expect(err).To(HaveOccurred(), "should not connect")
+			Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
+		})
+	})
+
+	Describe("to the product page", func() {
+		It("has the connection refused", func() {
+			systemDomain := GetConfigFromEnvironment("SYSTEM_DNS_ZONE_NAME")
+			uri := fmt.Sprintf("www.%s:80", systemDomain)
 			_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
 			Expect(err).To(HaveOccurred(), "should not connect")
 			Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
