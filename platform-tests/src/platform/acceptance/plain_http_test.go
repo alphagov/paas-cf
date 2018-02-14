@@ -21,10 +21,14 @@ var _ = Describe("plain HTTP requests", func() {
 
 	Describe("to the API", func() {
 		It("has the connection refused", func() {
-			uri := testConfig.ApiEndpoint + ":80"
-			_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
-			Expect(err).To(HaveOccurred(), "should not connect")
-			Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
+			req, err := http.NewRequest("GET", fmt.Sprintf("http://%s/v2/info", testConfig.ApiEndpoint), nil)
+			Expect(err).NotTo(HaveOccurred())
+			_, err = http.DefaultTransport.RoundTrip(req)
+			Expect(err).To(HaveOccurred())
+			Expect(err).To(MatchError(Or(
+				ContainSubstring("connection refused"),
+				ContainSubstring("connection reset by peer"),
+			)))
 		})
 	})
 
