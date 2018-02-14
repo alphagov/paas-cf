@@ -74,7 +74,7 @@ jobs:
   - name: elasticsearch
     release: logsearch
   vm_type: elasticsearch_master
-  stemcell: default
+  stemcell: legacy
   instances: 3
   networks:
   - name: cf
