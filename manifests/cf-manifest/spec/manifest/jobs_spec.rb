@@ -34,26 +34,10 @@ RSpec.describe "the jobs definitions block" do
     end
   end
 
-  describe "in order to enforce etcd dependency on NATS" do
-    it "has etcd serial" do
-      expect("etcd").to be_updated_serially
-    end
-
-    it "has nats before etcd" do
-      expect("nats").to be_ordered_before("etcd")
-    end
-  end
-
   describe "in order to ensure high availability of ingestor" do
     it "has ingestor serial" do
       expect("ingestor_z1").to be_updated_serially
       expect("ingestor_z2").to be_updated_serially
-    end
-  end
-
-  describe "in order to start/upgrade etcd cluster while maintaining consensus" do
-    it "has etcd serial" do
-      expect("etcd").to be_updated_serially
     end
   end
 

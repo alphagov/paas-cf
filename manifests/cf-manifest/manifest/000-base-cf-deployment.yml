@@ -13,10 +13,6 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/nats-release?v=22
     version: "22"
     sha1: 1300071c7cf43f5d299a6eaec6f6bb6cca7eac3b
-  - name: etcd
-    url: https://bosh.io/d/github.com/cloudfoundry-incubator/etcd-release?v=117
-    version: "117"
-    sha1: 670bf17cea0e6e56bdac33956545b3e302062521
   - name: uaa
     url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=55
     version: "55"
@@ -57,12 +53,14 @@ releases:
     version: "0.1.3"
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.3.tgz
     sha1: 6a9e252162519e50f6c511c489ba304a286d496a
-
-  # TODO: remove after https://github.com/cloudfoundry/loggregator-release/pull/356 was merged
   - name: loggregator
-    version: "0.1.3"
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/loggregator-0.1.3.tgz
-    sha1: dcd4c2f936efed6d3882221963425a4bf82a1f60
+    version: "101.6"
+    url: https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=101.6
+    sha1: f83ca26da62276e4e8247e32dbfbf2ae1a4c6138
+  - name: cf-syslog-drain
+    url: https://bosh.io/d/github.com/cloudfoundry/cf-syslog-drain-release?v=5.1
+    version: "5.1"
+    sha1: ccc588acc4854d669f60ad1c826d2b366e3548c6
 
   ### buildpacks
   - name: binary-buildpack

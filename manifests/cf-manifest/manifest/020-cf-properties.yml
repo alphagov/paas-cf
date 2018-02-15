@@ -56,33 +56,6 @@ properties:
     user: nats_user
     password: (( grab secrets.nats_password ))
 
-  etcd:
-    disable_network_diagnostics: true
-    machines: (( grab jobs.etcd.networks.cf.static_ips ))
-    require_ssl: false
-    peer_require_ssl: (( grab properties.etcd.require_ssl ))
-    advertise_urls_dns_suffix: etcd.service.cf.internal
-    ca_cert: ""
-    client_cert: ""
-    client_key: ""
-    peer_ca_cert: ""
-    peer_cert: ""
-    peer_key: ""
-    server_cert: ""
-    server_key: ""
-
-  etcd_metrics_server:
-    etcd:
-      require_ssl: (( grab properties.etcd.require_ssl ))
-      ca_cert: (( grab properties.etcd.ca_cert ))
-      client_cert: (( grab properties.etcd.client_cert ))
-      client_key: (( grab properties.etcd.client_key ))
-      dns_suffix: (( grab properties.etcd.advertise_urls_dns_suffix ))
-    nats:
-      machines: (( grab properties.nats.machines ))
-      username: (( grab properties.nats.user ))
-      password: (( grab properties.nats.password ))
-
   loggregator:
     maxRetainedLogMessages: 100
     debug: false
@@ -92,6 +65,7 @@ properties:
     outgoing_dropsonde_port: 8081
     dropsonde_incoming_port: 3457
     traffic_controller_url: (( concat "wss://doppler." properties.system_domain ":443" ))
+    disable_syslog_drains: true
     tls:
       ca_cert: (( grab secrets.bosh_ca_cert ))
       doppler:
@@ -112,11 +86,9 @@ properties:
       syslogdrainbinder:
         cert: (( grab secrets.cc_client_cert  ))
         key: (( grab secrets.cc_client_key  ))
-
-    etcd:
-      machines: [(( grab properties.etcd.advertise_urls_dns_suffix ))]
-      require_ssl: (( grab properties.etcd.require_ssl ))
-      ca_cert: (( grab properties.etcd.ca_cert ))
+      reverse_log_proxy:
+        cert: (( grab secrets.reverse_log_proxy_cert  ))
+        key: (( grab secrets.reverse_log_proxy_key  ))
 
   loggregator_endpoint:
     shared_secret: (( grab secrets.loggregator_endpoint_shared_secret ))
@@ -133,9 +105,7 @@ properties:
     unmarshaller_count: 5
     port: 443
     outgoing_port: 8081
-    etcd:
-      client_cert: (( grab properties.etcd.client_cert ))
-      client_key: (( grab properties.etcd.client_key ))
+    disable_announce: true
 
   doppler_endpoint:
     shared_secret: (( grab properties.loggregator_endpoint.shared_secret ))
@@ -152,14 +122,6 @@ properties:
 
   traffic_controller:
     outgoing_port: 8080
-    etcd:
-      client_cert: (( grab properties.etcd.client_cert ))
-      client_key: (( grab properties.etcd.client_key ))
-
-  syslog_drain_binder:
-    etcd:
-      client_cert: (( grab properties.etcd.client_cert ))
-      client_key: (( grab properties.etcd.client_key ))
 
   ha_proxy:
     enable_proxy_protocol: true
