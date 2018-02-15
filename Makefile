@@ -83,11 +83,13 @@ globals:
 .PHONY: dev
 dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
+	$(eval export PERSISTENT_ENVIRONMENT=false)
 	$(eval export ENABLE_BILLING_APP ?= false)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=govpaas-alerting-dev@digital.cabinet-office.gov.uk)
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-default.yml)
 	$(eval export DISABLE_HEALTHCHECK_DB=true)
@@ -101,6 +103,7 @@ dev: globals ## Set Environment to DEV
 .PHONY: staging
 staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
+	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_BILLING_APP=false)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export TAG_PREFIX=prod-)
@@ -118,6 +121,7 @@ staging: globals ## Set Environment to Staging
 .PHONY: prod
 prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
+	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_BILLING_APP=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
