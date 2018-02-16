@@ -40,17 +40,17 @@ var _ = Describe("Elasticache Gauges", func() {
 			return nil
 		}
 
-		replicationGroups []*elasticache.ReplicationGroup
+		cacheClusters []*elasticache.CacheCluster
 
-		describeReplicationGroupsPagesStub = func(
-			input *elasticache.DescribeReplicationGroupsInput,
-			fn func(*elasticache.DescribeReplicationGroupsOutput, bool) bool,
+		describeCacheClustersPagesStub = func(
+			input *elasticache.DescribeCacheClustersInput,
+			fn func(*elasticache.DescribeCacheClustersOutput, bool) bool,
 		) error {
-			for i, replicationGroup := range replicationGroups {
-				page := &elasticache.DescribeReplicationGroupsOutput{
-					ReplicationGroups: []*elasticache.ReplicationGroup{replicationGroup},
+			for i, cacheCluster := range cacheClusters {
+				page := &elasticache.DescribeCacheClustersOutput{
+					CacheClusters: []*elasticache.CacheCluster{cacheCluster},
 				}
-				if !fn(page, i+1 >= len(replicationGroups)) {
+				if !fn(page, i+1 >= len(cacheClusters)) {
 					break
 				}
 			}
@@ -64,7 +64,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		logger.RegisterSink(lager.NewWriterSink(log, lager.INFO))
 		elasticacheAPI = &fakes.FakeElastiCacheAPI{}
 		elasticacheAPI.DescribeCacheParameterGroupsPagesStub = describeCacheParameterGroupsPagesStub
-		elasticacheAPI.DescribeReplicationGroupsPagesStub = describeReplicationGroupsPagesStub
+		elasticacheAPI.DescribeCacheClustersPagesStub = describeCacheClustersPagesStub
 		elasticacheService = &ElasticacheService{Client: elasticacheAPI}
 	})
 
@@ -85,12 +85,12 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns the number of nodes", func() {
-		replicationGroups = []*elasticache.ReplicationGroup{
+		cacheClusters = []*elasticache.CacheCluster{
 			{
-				MemberClusters: aws.StringSlice([]string{"node1", "node2"}),
+				NumCacheNodes: aws.Int64(2),
 			},
 			{
-				MemberClusters: aws.StringSlice([]string{"node3"}),
+				NumCacheNodes: aws.Int64(1),
 			},
 		}
 
@@ -114,9 +114,9 @@ var _ = Describe("Elasticache Gauges", func() {
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
-		elasticacheAPI.DescribeReplicationGroupsPagesStub = func(
-			input *elasticache.DescribeReplicationGroupsInput,
-			fn func(*elasticache.DescribeReplicationGroupsOutput, bool) bool,
+		elasticacheAPI.DescribeCacheClustersPagesStub = func(
+			input *elasticache.DescribeCacheClustersInput,
+			fn func(*elasticache.DescribeCacheClustersOutput, bool) bool,
 		) error {
 			return awsErr
 		}

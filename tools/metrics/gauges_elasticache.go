@@ -34,12 +34,12 @@ func ElasticCacheInstancesGauge(
 			Value: float64(cacheParameterGroupCount),
 		})
 
-		nodeCount := 0
-		err = ecs.Client.DescribeReplicationGroupsPages(
-			&elasticache.DescribeReplicationGroupsInput{},
-			func(page *elasticache.DescribeReplicationGroupsOutput, lastPage bool) bool {
-				for _, replicationGroup := range page.ReplicationGroups {
-					nodeCount = nodeCount + len(replicationGroup.MemberClusters)
+		nodeCount := int64(0)
+		err = ecs.Client.DescribeCacheClustersPages(
+			&elasticache.DescribeCacheClustersInput{},
+			func(page *elasticache.DescribeCacheClustersOutput, lastPage bool) bool {
+				for _, cacheCluster := range page.CacheClusters {
+					nodeCount = nodeCount + *cacheCluster.NumCacheNodes
 				}
 				return true
 			},
