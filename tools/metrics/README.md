@@ -92,7 +92,13 @@ _ = CopyMetrics(reporter, RandomMetric)
 You can execute tests with the standard go test command from this dir:
 
 ```
-go test -v ./...
+make test
+```
+
+### Regenerating mocks
+
+```
+make generate-fakes
 ```
 
 ### Updating dependencies
