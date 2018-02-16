@@ -1,7 +1,6 @@
 package acceptance_test
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
@@ -39,46 +38,59 @@ var _ = Describe("Redis backing service", func() {
 			appName        string
 			dbInstanceName string
 		)
-		BeforeEach(func() {
-			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
-			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-redis")
-			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-
-			pollForServiceCreationCompletion(dbInstanceName)
-
-			fmt.Fprintf(GinkgoWriter, "Created Redis instance: %s\n", dbInstanceName)
-
-			Expect(cf.Cf(
-				"push", appName,
-				"--no-start",
-				"-b", testConfig.GoBuildpackName,
-				"-p", "../../../example-apps/healthcheck",
-				"-f", "../../../example-apps/healthcheck/manifest.yml",
-				"-d", testConfig.AppsDomain,
-			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
-
-			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-
-			Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
-		})
-
-		AfterEach(func() {
-			cf.Cf("delete", appName, "-f").Wait(testConfig.DefaultTimeoutDuration())
-
-			Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-
-			// Poll until destruction is complete, otherwise the org cleanup (in AfterSuite) fails.
-			pollForServiceDeletionCompletion(dbInstanceName)
-		})
 
 		It("is accessible from the healthcheck app", func() {
-			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/redis-test", testConfig))
-			Expect(err).NotTo(HaveOccurred())
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+
+			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
+			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-redis")
+
+			By("creating the service: "+dbInstanceName, func() {
+				Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName, "-c", `{"maxmemory_policy": "noeviction"}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				pollForServiceCreationCompletion(dbInstanceName)
+			})
+
+			defer By("deleting the service", func() {
+				Expect(cf.Cf("delete-service", dbInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				pollForServiceDeletionCompletion(dbInstanceName)
+			})
+
+			By("updating the service: "+dbInstanceName, func() {
+				Expect(cf.Cf("update-service", dbInstanceName, "-c", `{"maxmemory_policy": "volatile-ttl"}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				pollForServiceUpdateCompletion(dbInstanceName)
+			})
+
+			By("pushing the healthcheck app", func() {
+				Expect(cf.Cf(
+					"push", appName,
+					"--no-start",
+					"-b", testConfig.GoBuildpackName,
+					"-p", "../../../example-apps/healthcheck",
+					"-f", "../../../example-apps/healthcheck/manifest.yml",
+					"-d", testConfig.AppsDomain,
+				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+			})
+
+			defer By("deleting the app", func() {
+				cf.Cf("delete", appName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+			})
+
+			By("binding the service", func() {
+				Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+			})
+
+			By("starting the app", func() {
+				Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+			})
+
+			By("allowing connections with TLS", func() {
+				resp, err := httpClient.Get(helpers.AppUri(appName, "/redis-test", testConfig))
+				Expect(err).NotTo(HaveOccurred())
+				body, err := ioutil.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+			})
+
 		})
 	})
 })

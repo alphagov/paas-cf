@@ -100,6 +100,17 @@ func pollForServiceCreationCompletion(dbInstanceName string) {
 	fmt.Fprint(GinkgoWriter, "done\n")
 }
 
+func pollForServiceUpdateCompletion(dbInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for service update to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("update succeeded"))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
 func pollForServiceDeletionCompletion(dbInstanceName string) {
 	fmt.Fprint(GinkgoWriter, "Polling for service destruction to complete")
 	Eventually(func() *Buffer {
