@@ -61,6 +61,8 @@ func Main() error {
 	cfs := NewCloudFrontService(sess)
 	tlsChecker := &tlscheck.TLSChecker{}
 
+	ecs := NewElasticacheService(sess)
+
 	// Combine all metrics into single stream
 	gauges := []MetricReader{
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
@@ -75,6 +77,7 @@ func Main() error {
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
+		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))

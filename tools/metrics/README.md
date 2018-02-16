@@ -12,6 +12,8 @@ The following metrics are currently collected:
 | --- | --- | --- | --- |
 |`aws.elb.unhealthy_node_count` | Gauge | Number of unhealthy ELB nodes | |
 |`aws.elb.healthy_node_count` | Gauge | Number of healthy ELB nodes | |
+|`aws.elasticache.node.count` | Gauge | Number of Elasticache nodes | |
+|`aws.elasticache.cache_parameter_group.count` | Gauge | Number of Elasticache cache parameter groups | |
 |`op.apps.count` | Gauge | Number of applications | `state` |
 |`op.services.provisioned` | Gauge | Number of provisioned services | `type` |
 |`op.orgs.count` | Gauge | Number of organisations | `quota` |
