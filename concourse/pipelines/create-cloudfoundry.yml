@@ -2300,8 +2300,7 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                cf blue-green-deploy paas-metrics
-                cf delete -f paas-metrics-old
+                cf push paas-metrics
 
       - task: deploy-paas-uaa-assets
         config:
