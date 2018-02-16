@@ -43,7 +43,7 @@ cf set-env paas-metrics ELB_ADDRESS "https://healthcheck/"  # Address of an ELB 
 cf set-env paas-metrics CF_API_ADDRESS "ENDPOINT"           # Cloud Foundry API endpoint URL
 cf set-env paas-metrics CF_CLIENT_ID "UAA_CLIENT_ID"        # UAA client with cloud_foundry.global_auditor scope
 cf set-env paas-metrics CF_CLIENT_SECRET "SECRET"           # UAA client secret
-cf set-env paas-metrics AWS_DEFAULT_REGION "eu-west-1"      # AWS region your CloudFront distributions are in
+cf set-env paas-metrics AWS_REGION "eu-west-1"              # AWS region your CloudFront distributions are in
 cf set-env paas-metrics AWS_ACCESS_KEY_ID "access_key"      # Key for a user capable of listing CloudFront distributions
 cf set-env paas-metrics AWS_SECRET_ACCESS_KEY "secret"      # Secret key for the user above
 cf set-env paas-metrics CF_SKIP_SSL_VALIDATION "true"       # [OPTIONAL] set to true if insecure

@@ -2245,7 +2245,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            AWS_DEFAULT_REGION: ((aws_region))
+            AWS_REGION: ((aws_region))
           inputs:
             - name: paas-cf
             - name: config
@@ -2288,7 +2288,7 @@ jobs:
                       'uaa.${SYSTEM_DNS_ZONE_NAME}',
                       '${APPS_DNS_ZONE_NAME}'
                     ].join(','),
-                    'AWS_DEFAULT_REGION' => '${AWS_DEFAULT_REGION}',
+                    'AWS_REGION' => '${AWS_REGION}',
                     'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
                     'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
                   }
