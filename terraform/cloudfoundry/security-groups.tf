@@ -20,6 +20,20 @@ resource "aws_security_group" "cf_api_elb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  // Allow for HTTP redirects
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+
+    cidr_blocks = [
+      "${compact(var.admin_cidrs)}",
+      "${compact(var.api_access_cidrs)}",
+      "${var.concourse_elastic_ip}/32",
+      "${formatlist("%s/32", aws_eip.cf.*.public_ip)}",
+    ]
+  }
+
   ingress {
     from_port = 443
     to_port   = 443
