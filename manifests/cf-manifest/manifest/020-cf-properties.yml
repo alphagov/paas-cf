@@ -40,7 +40,6 @@ properties:
     agent_cert: (( grab secrets.consul_agent_cert ))
     agent_key: (( grab secrets.consul_agent_key ))
     encrypt_keys: (( grab secrets.consul_encrypt_keys ))
-    require_ssl:
     server_cert: (( grab secrets.consul_server_cert ))
     server_key: (( grab secrets.consul_server_key ))
 
