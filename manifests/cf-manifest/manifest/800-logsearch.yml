@@ -15,6 +15,8 @@ jobs:
   templates:
   - name: queue
     release: logsearch
+  - name: datadog-logsearch-queue
+    release: datadog-for-cloudfoundry
   vm_type: small
   stemcell: default
   instances: 2
