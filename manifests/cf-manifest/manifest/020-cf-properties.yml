@@ -342,9 +342,12 @@ properties:
 
   login:
     saml:
-      serviceProviderKey: ((grab secrets.saml_key))
-      serviceProviderKeyPassword: ""
-      serviceProviderCertificate: ((grab secrets.saml_cert))
+      activeKeyId: key1
+      keys:
+        key1:
+          key: ((grab secrets.saml_key))
+          passphrase: ""
+          certificate: ((grab secrets.saml_cert))
     smtp:
       host: (( grab terraform_outputs.ses_smtp_host ))
       port: 587
