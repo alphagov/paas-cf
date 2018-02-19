@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"time"
 
 	"code.cloudfoundry.org/lager"
@@ -19,7 +20,11 @@ func ElasticCacheInstancesGauge(
 		err := ecs.Client.DescribeCacheParameterGroupsPages(
 			&elasticache.DescribeCacheParameterGroupsInput{},
 			func(page *elasticache.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
-				cacheParameterGroupCount = cacheParameterGroupCount + len(page.CacheParameterGroups)
+				for _, cacheParameterGroup := range page.CacheParameterGroups {
+					if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
+						cacheParameterGroupCount++
+					}
+				}
 				return true
 			},
 		)

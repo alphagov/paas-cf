@@ -144,10 +144,38 @@ var _ = Describe("Elasticache Gauges", func() {
 		Expect(metric.Kind).To(Equal(Gauge))
 	})
 
-	It("returns the number of cache parameter groups", func() {
+	It("returns zero if there are only default cache parameter groups", func() {
 		cacheParameterGroups = []*elasticache.CacheParameterGroup{
-			&elasticache.CacheParameterGroup{},
-			&elasticache.CacheParameterGroup{},
+			&elasticache.CacheParameterGroup{
+				CacheParameterGroupName: aws.String("default.redis3.2"),
+			},
+		}
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
+		defer gauge.Close()
+
+		var metric Metric
+		Eventually(func() string {
+			var err error
+			metric, err = gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+			return metric.Name
+		}, 3*time.Second).Should(Equal("aws.elasticache.cache_parameter_group.count"))
+
+		Expect(metric.Value).To(Equal(float64(0)))
+		Expect(metric.Kind).To(Equal(Gauge))
+	})
+
+	It("returns the number of cache parameter groups exluding the default ones", func() {
+		cacheParameterGroups = []*elasticache.CacheParameterGroup{
+			&elasticache.CacheParameterGroup{
+				CacheParameterGroupName: aws.String("default.redis3.2"),
+			},
+			&elasticache.CacheParameterGroup{
+				CacheParameterGroupName: aws.String("group-1"),
+			},
+			&elasticache.CacheParameterGroup{
+				CacheParameterGroupName: aws.String("group-1"),
+			},
 		}
 
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
