@@ -278,30 +278,6 @@ jobs:
     properties:
       max_in_flight: 1
 
-  - name: doppler
-    azs: [z1, z2, z3]
-    templates:
-      - name: consul_agent
-        release: (( grab jobs.consul.templates.consul_agent.release ))
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: doppler
-        release: loggregator
-        provides: {doppler: {as: doppler}}
-      - name: metron_agent
-        release: loggregator
-    instances: 3
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      consul:
-        agent:
-          services:
-            doppler: {}
-
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
     templates:
@@ -501,3 +477,27 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+
+  - name: doppler
+    azs: [z1, z2, z3]
+    templates:
+      - name: consul_agent
+        release: (( grab jobs.consul.templates.consul_agent.release ))
+        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+      - name: datadog-consul-agent-client
+        release: datadog-for-cloudfoundry
+      - name: doppler
+        release: loggregator
+        provides: {doppler: {as: doppler}}
+      - name: metron_agent
+        release: loggregator
+    instances: 3
+    vm_type: medium
+    stemcell: default
+    networks:
+      - name: cf
+    properties:
+      consul:
+        agent:
+          services:
+            doppler: {}
