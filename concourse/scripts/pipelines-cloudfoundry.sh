@@ -121,7 +121,7 @@ oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
 enable_billing_app: ${ENABLE_BILLING_APP}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
-continuous_smoke_tests_trigger: $([ "${ALERT_EMAIL_ADDRESS:-}" ] && echo "true" || echo "false")
+persistent_environment: ${PERSISTENT_ENVIRONMENT}
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
 gpg_ids: ${gpg_ids}
 EOF

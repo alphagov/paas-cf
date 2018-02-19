@@ -3045,60 +3045,88 @@ jobs:
     build_logs_to_retain: 10000
     plan:
       - aggregate:
+        - get: smoke-tests-timer
+          trigger: true
+        - get: deployed-healthcheck
         - get: cf-smoke-tests
         - get: paas-cf
           passed: ['post-deploy']
         - get: cf-manifest
           passed: ['post-deploy']
         - get: bosh-CA
-        - get: smoke-tests-timer
-          trigger: ((continuous_smoke_tests_trigger))
         - get: cf-secrets
           passed: ['post-deploy']
 
-      - do:
-        - task: create-temp-user
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: cont-smoketest-user
-
-        - task: smoke-tests-config
-          file: paas-cf/concourse/tasks/generate-test-config.yml
-          params:
-            TEST_PROPERTIES: smoke_tests
-
-        - task: smoke-tests-run
-          file: paas-cf/concourse/tasks/smoke-tests-run.yml
-          on_failure:
-            task: alert
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/awscli
-                  tag: b2495d6ed07f680125d19aa7d1701da7efabb289
-              params:
-                AWS_DEFAULT_REGION: ((aws_region))
-                DEPLOY_ENV: ((deploy_env))
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-              inputs:
-                - name: paas-cf
-              run:
-                path: sh
-                args:
-                - -e
-                - -c
-                - |
-                  paas-cf/concourse/scripts/smoke_tests_email.sh \
-                    "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
-          ensure:
-            task: upload-test-artifacts
-            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+      - try:
+          task: assert-should-run
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: latest
+            inputs:
+              - name: deployed-healthcheck
             params:
-              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+              PERSISTENT_ENVIRONMENT: ((persistent_environment))
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "$HEALTHCHECK_DEPLOYED" = "no" ] && [ "$PERSISTENT_ENVIRONMENT" != "true" ]; then
+                  echo "Healthcheck is not deployed and this is not a persistent environment"
+                  echo "Skipping smoke tests"
+                  exit 1
+                fi
 
-        ensure:
-          task: remove-temp-user
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          on_success:
+            do:
+            - task: create-temp-user
+              file: paas-cf/concourse/tasks/create_admin.yml
+              params:
+                PREFIX: cont-smoketest-user
+
+            - task: smoke-tests-config
+              file: paas-cf/concourse/tasks/generate-test-config.yml
+              params:
+                TEST_PROPERTIES: smoke_tests
+
+            - task: smoke-tests-run
+              file: paas-cf/concourse/tasks/smoke-tests-run.yml
+              on_failure:
+                task: alert
+                config:
+                  platform: linux
+                  image_resource:
+                    type: docker-image
+                    source:
+                      repository: governmentpaas/awscli
+                      tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+                  params:
+                    AWS_DEFAULT_REGION: ((aws_region))
+                    DEPLOY_ENV: ((deploy_env))
+                    SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                    ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+                  inputs:
+                    - name: paas-cf
+                  run:
+                    path: sh
+                    args:
+                    - -e
+                    - -c
+                    - |
+                      paas-cf/concourse/scripts/smoke_tests_email.sh \
+                        "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
+              ensure:
+                task: upload-test-artifacts
+                file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+                params:
+                  TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+            ensure:
+              task: remove-temp-user
+              file: paas-cf/concourse/tasks/delete_admin.yml
