@@ -90,3 +90,35 @@ resource "datadog_monitor" "ec2-cpu-utilisation-es" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:elasticsearch_master"]
 }
+
+resource "datadog_monitor" "elasticache-node-limit" {
+  name                = "${format("%s Number of elasticache nodes is close to the limit", var.env)}"
+  type                = "metric alert"
+  query               = "${format("avg(last_1h):avg:aws.elasticache.node.count{deploy_env:%s} > %d", var.env, (var.aws_limits_elasticache_nodes * 90) / 100)}"
+  message             = "Number of elasticache nodes has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
+  notify_no_data      = false
+  require_full_window = false
+
+  thresholds {
+    critical = "${(var.aws_limits_elasticache_nodes * 90) / 100}"
+    warning  = "${(var.aws_limits_elasticache_nodes * 80) / 100}"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
+}
+
+resource "datadog_monitor" "elasticache-cache-parameter-groups-limit" {
+  name                = "${format("%s Number of elasticache cache parameter groups is close to the limit", var.env)}"
+  type                = "metric alert"
+  query               = "${format("avg(last_1h):avg:aws.elasticache.cache_parameter_group.count{deploy_env:%s} > %d", var.env, (var.aws_limits_elasticache_cache_parameter_groups * 90) / 100)}"
+  message             = "Number of elasticache cache parameter groups has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
+  notify_no_data      = false
+  require_full_window = false
+
+  thresholds {
+    critical = "${(var.aws_limits_elasticache_cache_parameter_groups * 90) / 100}"
+    warning  = "${(var.aws_limits_elasticache_cache_parameter_groups * 80) / 100}"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:all"]
+}

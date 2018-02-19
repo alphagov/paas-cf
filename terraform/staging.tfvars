@@ -21,3 +21,6 @@ pingdom_contact_ids = [ 11089310, 11190300 ]
 
 datadog_notification_24x7 = "@pagerduty-datadog-in-hours"
 datadog_notification_in_hours = "@pagerduty-datadog-in-hours"
+
+aws_limits_elasticache_nodes = 100
+aws_limits_elasticache_cache_parameter_groups = 20

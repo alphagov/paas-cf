@@ -12,6 +12,8 @@ The following metrics are currently collected:
 | --- | --- | --- | --- |
 |`aws.elb.unhealthy_node_count` | Gauge | Number of unhealthy ELB nodes | |
 |`aws.elb.healthy_node_count` | Gauge | Number of healthy ELB nodes | |
+|`aws.elasticache.node.count` | Gauge | Number of Elasticache nodes | |
+|`aws.elasticache.cache_parameter_group.count` | Gauge | Number of Elasticache cache parameter groups | |
 |`op.apps.count` | Gauge | Number of applications | `state` |
 |`op.services.provisioned` | Gauge | Number of provisioned services | `type` |
 |`op.orgs.count` | Gauge | Number of organisations | `quota` |
@@ -41,7 +43,7 @@ cf set-env paas-metrics ELB_ADDRESS "https://healthcheck/"  # Address of an ELB 
 cf set-env paas-metrics CF_API_ADDRESS "ENDPOINT"           # Cloud Foundry API endpoint URL
 cf set-env paas-metrics CF_CLIENT_ID "UAA_CLIENT_ID"        # UAA client with cloud_foundry.global_auditor scope
 cf set-env paas-metrics CF_CLIENT_SECRET "SECRET"           # UAA client secret
-cf set-env paas-metrics AWS_DEFAULT_REGION "eu-west-1"      # AWS region your CloudFront distributions are in
+cf set-env paas-metrics AWS_REGION "eu-west-1"              # AWS region your CloudFront distributions are in
 cf set-env paas-metrics AWS_ACCESS_KEY_ID "access_key"      # Key for a user capable of listing CloudFront distributions
 cf set-env paas-metrics AWS_SECRET_ACCESS_KEY "secret"      # Secret key for the user above
 cf set-env paas-metrics CF_SKIP_SSL_VALIDATION "true"       # [OPTIONAL] set to true if insecure
@@ -92,7 +94,13 @@ _ = CopyMetrics(reporter, RandomMetric)
 You can execute tests with the standard go test command from this dir:
 
 ```
-go test -v ./...
+make test
+```
+
+### Regenerating mocks
+
+```
+make generate-fakes
 ```
 
 ### Updating dependencies

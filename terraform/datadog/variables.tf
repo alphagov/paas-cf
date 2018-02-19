@@ -25,3 +25,13 @@ variable "datadog_documentation_url" {
   description = "URL that documents how to respond to specific DataDog alerts. Anchors can be appended to refer to specific alerts."
   default     = "https://government-paas-team-manual.readthedocs.io/en/latest/support/responding_to_alerts/"
 }
+
+variable "aws_limits_elasticache_nodes" {
+  description = "AWS limit for elasticache nodes in the current account and region"
+  default     = 100
+}
+
+variable "aws_limits_elasticache_cache_parameter_groups" {
+  description = "AWS limit for elasticache cache parameter groups in the current account and region"
+  default     = 20
+}
