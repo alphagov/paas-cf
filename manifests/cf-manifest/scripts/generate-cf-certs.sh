@@ -31,7 +31,7 @@ doppler,
 metron,
 trafficcontroller,
 cc_trafficcontroller,
-rep_server,*.cell.service.cf.internal,cell.service.cf.internal
+rep_server,*.cell.service.cf.internal,cell.service.cf.internal,localhost,127.0.0.1
 rep_client,
 reverse_log_proxy,
 statsd_injector,
