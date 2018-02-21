@@ -132,6 +132,12 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: datadog-bbs
         release: datadog-for-cloudfoundry
+        properties:
+          bbs:
+            url: (( concat "https://" meta.bbs.api_location "/v1/actual_lrp_groups/list" ))
+            client_cert: "/var/vcap/jobs/cfdot/config/certs/cfdot/client.crt"
+            client_key: "/var/vcap/jobs/cfdot/config/certs/cfdot/client.key"
+            ca_cert: "/var/vcap/jobs/cfdot/config/certs/cfdot/ca.crt"
       - name: bbs
         release: diego
       - name: cfdot
@@ -147,9 +153,6 @@ jobs:
       - name: cf
     update:
       serial: true
-    properties:
-      bbs:
-          url: (( concat "https://" meta.bbs.api_location "/v1/actual_lrp_groups/list" ))
 
   - name: uaa
     azs: [z1, z2]
