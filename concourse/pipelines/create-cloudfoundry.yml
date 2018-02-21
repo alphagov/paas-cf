@@ -214,14 +214,14 @@ resources:
   - name: cf-acceptance-tests
     type: git
     source:
-      uri: https://github.com/alphagov/paas-cf-acceptance-tests
-      branch: gds-cf-release-v283
+      uri: https://github.com/cloudfoundry/cf-acceptance-tests
+      branch: cf1.14
 
   - name: cf-smoke-tests
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf-smoke-tests
-      branch: gds-cf-release-v283
+      branch: gds-cf-deployment-v1.14.0
 
   - name: git-keys
     type: s3-iam
@@ -694,7 +694,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
+              tag: 4aff7d1fd0fa27ff9910a77b39cbcaedb4455f0c
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -749,7 +749,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
+              tag: 4aff7d1fd0fa27ff9910a77b39cbcaedb4455f0c
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -2453,7 +2453,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
+                tag: 4aff7d1fd0fa27ff9910a77b39cbcaedb4455f0c
             params:
               DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
             inputs:
@@ -2598,7 +2598,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: d2a6fff2fcd941c0273e14ef5876f842207ea5dd
+                tag: 4aff7d1fd0fa27ff9910a77b39cbcaedb4455f0c
             inputs:
               - name: paas-cf
               - name: test-config

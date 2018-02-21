@@ -90,11 +90,11 @@ var _ = Describe("UAA authorization webpage styling", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			stylesheetChecksum := fmt.Sprintf("%x", sha512.Sum512(stylesheet))
-			expectedChecksum := "3ad54656fb0fb874a5ae8929a9959b22f6c82ba134a6bb5bb2fd46d45bbd0377ef863c83a0fcf751b885bbe0b6ee60644f4a70a0847bd4fe34bf6f9e909e1e24"
+			expectedChecksum := "4700fbb82b563cbcbbd03fb2edcc29339c15f8c202aab3539d551af0b4ef1a9314dc6143a94e86b285b86055332dc338d4557b339eae3c8ccb39242dcbfa3437"
 
 			failureExplanation := `UAA's default stylesheet has been changed. We use a custom stylesheet deployed in an app, but it might need to change in similar ways.
  - Visit UAA's login and accept invitation pages. Check our styling still looks good.
- - If it looks bad, fix our stylesheet.
+ - Update our stylesheet with the changes if appropriate.
  - Once it looks good, update the checksum in this test.`
 			Expect(stylesheetChecksum).To(Equal(expectedChecksum), failureExplanation)
 		})

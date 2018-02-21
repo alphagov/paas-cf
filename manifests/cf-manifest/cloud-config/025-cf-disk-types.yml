@@ -4,7 +4,3 @@ disk_types:
     disk_size: 1024
     cloud_properties:
       type: gp2
-  - name: etcd
-    disk_size: 10024
-    cloud_properties:
-      type: gp2

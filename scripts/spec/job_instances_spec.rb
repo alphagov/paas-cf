@@ -32,10 +32,8 @@ RSpec.describe JobInstances do
           instances: 3
         - name: nats
           instances: 2
-        - name: etcd
-          instances: 3
     }
     tfvars = JobInstances.generate manifest
-    expect(tfvars).to eq("job_instances = [ \"consul:3\", \"nats:2\", \"etcd:3\" ]")
+    expect(tfvars).to eq("job_instances = [ \"consul:3\", \"nats:2\" ]")
   end
 end

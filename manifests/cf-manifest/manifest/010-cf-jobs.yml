@@ -28,6 +28,76 @@ jobs:
         agent:
           mode: server
 
+  - name: adapter
+    azs: [z1, z2, z3]
+    instances: 3
+    vm_type: small
+    stemcell: default
+    networks:
+      - name: cf
+    templates:
+      - name: consul_agent
+        release: (( grab jobs.consul.templates.consul_agent.release ))
+        consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
+      - name: metron_agent
+        release: loggregator
+      - name: adapter
+        release: cf-syslog-drain
+    properties:
+      scalablesyslog:
+        adapter:
+          tls:
+            ca: (( grab secrets.bosh_ca_cert ))
+            cert: (( grab secrets.scalablesyslog_adapter_cert ))
+            key: (( grab secrets.scalablesyslog_adapter_key ))
+            cn: scalablesyslog_adapter
+          logs:
+            addr: reverse-log-proxy.service.cf.internal:8082
+        adapter_rlp:
+          tls:
+            ca: (( grab secrets.bosh_ca_cert ))
+            cert: (( grab secrets.reverse_log_proxy_cert ))
+            key: (( grab secrets.reverse_log_proxy_key ))
+            cn: reverse_log_proxy
+    update:
+      serial: true
+      max_in_flight: 1
+
+  - name: scheduler
+    azs: [z1, z2, z3]
+    instances: 3
+    vm_type: small
+    stemcell: default
+    networks:
+      - name: cf
+    templates:
+      - name: consul_agent
+        release: (( grab jobs.consul.templates.consul_agent.release ))
+        consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
+      - name: metron_agent
+        release: loggregator
+      - name: scheduler
+        release: cf-syslog-drain
+    properties:
+      scalablesyslog:
+        scheduler:
+          api:
+            url: https://cloud-controller-ng.service.cf.internal:9023
+          tls:
+            client:
+              ca: (( grab secrets.bosh_ca_cert ))
+              cert: (( grab secrets.scalablesyslog_adapter_scheduler_client_cert ))
+              key: (( grab secrets.scalablesyslog_adapter_scheduler_client_key ))
+              adapter_cn: "scalablesyslog_adapter"
+            api:
+              ca: (( grab secrets.bosh_ca_cert ))
+              cert: (( grab secrets.scalablesyslog_adapter_scheduler_api_cert ))
+              key: (( grab secrets.scalablesyslog_adapter_scheduler_api_key ))
+              cn: "cloud-controller-ng.service.cf.internal"
+    update:
+      serial: true
+      max_in_flight: 1
+
   - name: nats
     azs: [z1, z2]
     templates:
@@ -51,39 +121,6 @@ jobs:
         static_ips:
           - 10.0.16.11
           - 10.0.17.11
-
-  - name: etcd
-    azs: [z1, z2, z3]
-    templates:
-      - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: etcd
-        release: etcd
-        consumes: {etcd: nil}
-      - name: etcd_metrics_server
-        release: etcd
-      - name: metron_agent
-        release: loggregator
-    instances: 3
-    persistent_disk_type: etcd
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-        static_ips:
-          - 10.0.16.19
-          - 10.0.17.19
-          - 10.0.18.19
-    update:
-      serial: true
-    properties:
-      consul:
-        agent:
-          services:
-            etcd: {}
 
   - name: database
     azs: [z1, z2]
@@ -241,31 +278,6 @@ jobs:
     properties:
       max_in_flight: 1
 
-  - name: doppler
-    azs: [z1, z2, z3]
-    templates:
-      - name: consul_agent
-        release: (( grab jobs.consul.templates.consul_agent.release ))
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: doppler
-        release: loggregator
-      - name: syslog_drain_binder
-        release: loggregator
-      - name: metron_agent
-        release: loggregator
-    instances: 3
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-    properties:
-      consul:
-        agent:
-          services:
-            doppler: {}
-
   - name: loggregator_trafficcontroller
     azs: [z1, z2]
     templates:
@@ -276,9 +288,13 @@ jobs:
         release: datadog-for-cloudfoundry
       - name: loggregator_trafficcontroller
         release: loggregator
-        consumes: {doppler: nil}
+        consumes: {doppler: {from: doppler}}
       - name: metron_agent
         release: loggregator
+      - name: reverse_log_proxy
+        release: loggregator
+    provides:
+      reverse_log_proxy: {as: reverse_log_proxy, shared: true}
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -290,10 +306,14 @@ jobs:
       loggregator:
         uaa:
           client_secret: (( grab properties.uaa.clients.doppler.secret ))
+        reverse_log_proxy:
+          egress:
+            port: 8082
       consul:
         agent:
           services:
             loggregator_trafficcontroller: {}
+            reverse_log_proxy: {}
 
   - name: router
     azs: [z1, z2]
@@ -457,3 +477,27 @@ jobs:
     stemcell: default
     networks:
       - name: cf
+
+  - name: doppler
+    azs: [z1, z2, z3]
+    templates:
+      - name: consul_agent
+        release: (( grab jobs.consul.templates.consul_agent.release ))
+        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+      - name: datadog-consul-agent-client
+        release: datadog-for-cloudfoundry
+      - name: doppler
+        release: loggregator
+        provides: {doppler: {as: doppler}}
+      - name: metron_agent
+        release: loggregator
+    instances: 3
+    vm_type: medium
+    stemcell: default
+    networks:
+      - name: cf
+    properties:
+      consul:
+        agent:
+          services:
+            doppler: {}
