@@ -22,7 +22,7 @@ vm_types:
     network: (( grab vm_types.medium.network ))
     env: (( grab meta.default_env ))
     cloud_properties:
-      instance_type: c4.xlarge
+      instance_type: (( grab meta.elasticsearch_master.instance_type ))
       ephemeral_disk:
         size: 10240
         type: gp2
