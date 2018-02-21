@@ -411,6 +411,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" bosh-CA.crt paas-cf/concourse/init_files/zero_bytes
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -428,8 +429,33 @@ jobs:
           - get: cf-secrets
           - get: ssh-private-key
           - get: ssh-public-key
+          - get: bosh-CA-crt
 
       - aggregate:
+        - task: extract-bosh-CA-crt
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            inputs:
+              - name: bosh-CA
+            outputs:
+              - name: bosh-CA-crt
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  tar -xvzf bosh-CA/bosh-CA.tar.gz -C bosh-CA-crt
+          on_success:
+            put: bosh-CA-crt
+            params:
+              file: bosh-CA-crt/bosh-CA.crt
+
         - task: generate-ipsec-CA
           config:
             platform: linux

@@ -138,6 +138,30 @@ jobs:
           run:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
+      - task: extract-bosh-CA-crt
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+              tag: "3.4"
+          inputs:
+            - name: bosh-CA
+          outputs:
+            - name: bosh-CA-crt
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                tar -xvzf bosh-CA/bosh-CA.tar.gz -C bosh-CA-crt
+        on_success:
+          put: bosh-CA-crt
+          params:
+            file: bosh-CA-crt/bosh-CA.crt
+
       - task: delete-deployment
         config:
           platform: linux
