@@ -139,3 +139,21 @@ resource "datadog_monitor" "gorouter_healthy" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
 }
+
+resource "datadog_monitor" "gorouter_latency" {
+  name                = "${format("%s gorouter latency", var.env)}"
+  type                = "metric alert"
+  message             = "Gorouter latency too high."
+  escalation_message  = "Gorouter latency still too high. Check the deployment."
+  no_data_timeframe   = "7"
+  require_full_window = true
+
+  query = "${format("avg(last_1m):avg:cf.gorouter.latency{deployment:%s,job:router} by {ip} > 800", var.env)}"
+
+  thresholds {
+    warning  = "400.0"
+    critical = "800.0"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
+}
