@@ -70,6 +70,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-CA.tar.gz
 
+  - name: bosh-CA-crt
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: bosh-CA.crt
+
   - name: cf-secrets
     type: s3-iam
     source:
@@ -149,6 +156,31 @@ jobs:
           - get: cf-secrets
           - get: cf-manifest
           - get: datadog-tfstate
+          - get: bosh-CA-crt
+
+      - task: extract-bosh-CA-crt
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+              tag: "3.4"
+          inputs:
+            - name: bosh-CA
+          outputs:
+            - name: bosh-CA-crt
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                tar -xvzf bosh-CA/bosh-CA.tar.gz -C bosh-CA-crt
+        on_success:
+          put: bosh-CA-crt
+          params:
+            file: bosh-CA-crt/bosh-CA.crt
 
       - task: get-cf-cli-config
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
@@ -188,11 +220,16 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/bosh-cli
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              repository: governmentpaas/bosh-cli-v2
+              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
           inputs:
             - name: bosh-secrets
             - name: paas-cf
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: ((deploy_env))
           outputs:
             - name: deployed-healthcheck
           run:
@@ -201,8 +238,8 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-                bosh -n delete deployment --force "((deploy_env))"
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh -n delete-deployment --force
                 echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
           put: deployed-healthcheck

@@ -134,6 +134,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-CA.tar.gz
 
+  - name: bosh-CA-crt
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: bosh-CA.crt
+
   - name: ipsec-CA
     type: s3-iam
     source:
@@ -404,6 +411,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" bosh-CA.crt paas-cf/concourse/init_files/zero_bytes
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -421,8 +429,33 @@ jobs:
           - get: cf-secrets
           - get: ssh-private-key
           - get: ssh-public-key
+          - get: bosh-CA-crt
 
       - aggregate:
+        - task: extract-bosh-CA-crt
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            inputs:
+              - name: bosh-CA
+            outputs:
+              - name: bosh-CA-crt
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  tar -xvzf bosh-CA/bosh-CA.tar.gz -C bosh-CA-crt
+          on_success:
+            put: bosh-CA-crt
+            params:
+              file: bosh-CA-crt/bosh-CA.crt
+
         - task: generate-ipsec-CA
           config:
             platform: linux
@@ -1215,6 +1248,7 @@ jobs:
           - get: cf-manifest
             passed: ['generate-cf-config']
           - get: bosh-secrets
+          - get: bosh-CA-crt
 
       - aggregate:
         - task: get-and-upload-stemcell
@@ -1223,12 +1257,17 @@ jobs:
             image_resource:
               type: docker-image
               source:
-                repository: governmentpaas/bosh-cli
-                tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
+                repository: governmentpaas/bosh-cli-v2
+                tag: upgrade_bosh_cli_v2
             inputs:
               - name: bosh-secrets
               - name: paas-cf
               - name: cf-manifest
+              - name: bosh-CA-crt
+            params:
+              BOSH_ENVIRONMENT: ((bosh_fqdn))
+              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_DEPLOYMENT: ((deploy_env))
             run:
               path: sh
               args:
@@ -1247,8 +1286,8 @@ jobs:
                     STEMCELL_NAME=$($VAL_FROM_YAML "stemcells.${stemcell_index}.name" cf-manifest/cf-manifest.yml)
 
                     wget "https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION}" -O stemcell.tgz
-                    ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-                    bosh upload stemcell stemcell.tgz --skip-if-exists
+                    ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                    bosh -n upload-stemcell stemcell.tgz
 
                     stemcell_index=$((stemcell_index + 1))
                   done
@@ -1259,20 +1298,25 @@ jobs:
             image_resource:
               type: docker-image
               source:
-                repository: governmentpaas/bosh-cli
-                tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
+                repository: governmentpaas/bosh-cli-v2
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
             inputs:
               - name: cloud-config
               - name: bosh-secrets
               - name: paas-cf
+              - name: bosh-CA-crt
+            params:
+              BOSH_ENVIRONMENT: ((bosh_fqdn))
+              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_DEPLOYMENT: ((deploy_env))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-                  bosh update cloud-config cloud-config/cloud-config.yml
+                  ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                  bosh -n update-cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
         config:
@@ -1280,28 +1324,25 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/bosh-cli
-              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
+              repository: governmentpaas/bosh-cli-v2
+              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
           inputs:
             - name: paas-cf
             - name: cf-manifest
             - name: bosh-secrets
-          outputs:
-            - name: updated-cf-manifest
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: ((deploy_env))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-                sed -e "s/^director_uuid:.*/director_uuid: $(bosh status --uuid)/" < cf-manifest/cf-manifest.yml > updated-cf-manifest/cf-manifest.yml
-                bosh deployment updated-cf-manifest/cf-manifest.yml
-                bosh -n deploy
-
-      - put: cf-manifest
-        params:
-          file: updated-cf-manifest/cf-manifest.yml
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh -n deploy cf-manifest/cf-manifest.yml
 
   - name: post-deploy
     serial: true
@@ -1321,6 +1362,7 @@ jobs:
       - get: cf-secrets
         passed: ['generate-cf-config']
       - get: bosh-CA
+      - get: bosh-CA-crt
       - get: graphite-nozzle
       - get: datadog-tfstate
       - get: paas-compose-broker
@@ -2043,20 +2085,24 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/bosh-cli
-              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
+              repository: governmentpaas/bosh-cli-v2
+              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
           inputs:
             - name: paas-cf
             - name: bosh-secrets
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: ((deploy_env))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-
-                bosh cleanup --all
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh -n clean-up --all
 
     - aggregate:
       - do:
@@ -2537,34 +2583,40 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
+          - get: bosh-CA-crt
       - task: test-bosh-vms
         config:
           platform: linux
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/bosh-cli
-              tag: 4c863ad28bcb252bc35e1500e1afef386f5debfa
+              repository: governmentpaas/bosh-cli-v2
+              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
           inputs:
-          - name: paas-cf
-          - name: cf-manifest
-          - name: bosh-secrets
+            - name: paas-cf
+            - name: cf-manifest
+            - name: bosh-secrets
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: ((deploy_env))
           run:
             path: sh
             args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/concourse/scripts/bosh_login.sh "((bosh_fqdn))" bosh-secrets/bosh-secrets.yml
-              bosh deployment cf-manifest/cf-manifest.yml
-              bosh vms "((deploy_env))" | tee vms.txt
-              vms_not_running=$(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)" || true)
-              if [ "${vms_not_running}" -gt "0" ]; then
-                echo "Error: Number of not running VMs: ${vms_not_running}."
-                exit 1
-              else
-                echo "Success: All VMs are up and running."
-              fi
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh deployment
+                bosh vms | tee vms.txt
+                vms_not_running=$(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)" || true)
+                if [ "${vms_not_running}" -gt "0" ]; then
+                  echo "Error: Number of not running VMs: ${vms_not_running}."
+                  exit 1
+                else
+                  echo "Success: All VMs are up and running."
+                fi
 
   - name: performance-tests
     plan:
