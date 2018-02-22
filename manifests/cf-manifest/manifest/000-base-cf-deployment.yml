@@ -33,9 +33,9 @@ releases:
     url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.35.0
     sha1: 7525f412d6698f499124f0facee64a40a1e99ec0
   - name: garden-runc
-    version: "1.11.1"
-    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.11.1
-    sha1: d9a7901c0502d97c043b857496f0f414a5843e8d
+    version: 1.10.0
+    url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.10.0
+    sha1: 9c2ad4a961db49a5349a26d4240b8f8b9b54af88
   - name: cflinuxfs2
     version: "1.187.0"
     url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.187.0
