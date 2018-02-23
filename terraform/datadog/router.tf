@@ -143,16 +143,16 @@ resource "datadog_monitor" "gorouter_healthy" {
 resource "datadog_monitor" "gorouter_latency" {
   name                = "${format("%s gorouter latency", var.env)}"
   type                = "metric alert"
-  message             = "Gorouter latency too high."
+  message             = "${format("Gorouter latency too high. See: %s#Gorouter-high-latency-alerts", var.datadog_documentation_url)}"
   escalation_message  = "Gorouter latency still too high. Check the deployment."
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("avg(last_1m):avg:cf.gorouter.latency{deployment:%s,job:router} by {ip} > 800", var.env)}"
+  query = "${format("avg(last_10m):avg:cf.gorouter.latency{deployment:%s,job:router} by {ip} > 2500", var.env)}"
 
   thresholds {
-    warning  = "400.0"
-    critical = "800.0"
+    warning  = "750.0"
+    critical = "1500.0"
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
