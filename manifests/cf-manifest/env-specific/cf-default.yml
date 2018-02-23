@@ -4,3 +4,4 @@ meta:
     instances: 3
   elasticsearch_master:
     disk_size: 307400
+    instance_type: m4.large
