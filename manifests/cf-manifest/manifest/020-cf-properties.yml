@@ -639,7 +639,7 @@ properties:
         client_key: (( grab secrets.bbs_client_key ))
         require_ssl: true
       preloaded_rootfses:
-        - cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs.tar
+        - "cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"
 
     executor:
       memory_capacity_mb: (( calc "floor(meta.cell.rep_commit_percentage * meta.cell.instance_memory_mb)" ))
