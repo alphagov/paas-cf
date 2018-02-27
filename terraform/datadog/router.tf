@@ -148,7 +148,7 @@ resource "datadog_monitor" "gorouter_latency" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("avg(last_10m):avg:cf.gorouter.latency{deployment:%s,job:router} by {ip} > 2500", var.env)}"
+  query = "${format("avg(last_10m):avg:cf.gorouter.latency{deployment:%s,job:router} by {ip} > 1500", var.env)}"
 
   thresholds {
     warning  = "750.0"
