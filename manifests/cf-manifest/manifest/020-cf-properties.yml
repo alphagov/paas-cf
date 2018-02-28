@@ -714,7 +714,7 @@ properties:
         require_ssl: true
       traffic_controller_url: wss://doppler.((system_domain)):443
   cflinuxfs2-rootfs:
-    trusted_certs: ((meta.ca_certs.aws_rds_combined_ca_bundle))
+    trusted_certs: ((aws_rds_combined_ca_bundle))
 
   garden:
     log_level: error
