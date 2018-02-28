@@ -31,8 +31,8 @@ module ManifestHelpers
   end
 
   def terraform_fixture(key)
-    Cache.instance.terraform_fixture ||= load_terraform_fixture.fetch('terraform_outputs')
-    Cache.instance.terraform_fixture.fetch(key.to_s)
+    Cache.instance.terraform_fixture ||= load_terraform_fixture
+    Cache.instance.terraform_fixture.fetch('terraform_outputs_'+key.to_s)
   end
 
   def cf_secrets_file

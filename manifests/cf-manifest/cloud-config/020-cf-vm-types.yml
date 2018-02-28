@@ -55,8 +55,8 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs.cf_router_elb_name))
-        - ((terraform_outputs.cf_router_system_domain_elb_name))
+        - ((terraform_outputs_cf_router_elb_name))
+        - ((terraform_outputs_cf_router_system_domain_elb_name))
 
 # Diego below
 
@@ -71,6 +71,6 @@ vm_types:
         size: 204800
         type: gp2
       security_groups:
-        - ((terraform_outputs.rds_broker_db_clients_security_group))
-        - ((terraform_outputs.elasticache_broker_clients_security_group))
-        - ((terraform_outputs.default_security_group))
+        - ((terraform_outputs_rds_broker_db_clients_security_group))
+        - ((terraform_outputs_elasticache_broker_clients_security_group))
+        - ((terraform_outputs_default_security_group))

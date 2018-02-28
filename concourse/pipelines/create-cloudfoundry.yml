@@ -1584,16 +1584,16 @@ jobs:
               export UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
               export DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
               export GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
-              export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.rds_broker_elb_dns_name cf-terraform-outputs.yml)
+              export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_rds_broker_elb_dns_name cf-terraform-outputs.yml)
               export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
-              export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
+              export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
               export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
               export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
-              export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs.nat_public_ips_csv cf-terraform-outputs.yml)
+              export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
               export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets.elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
-              export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
-              export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs.metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
-              export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs.metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
+              export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
+              export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
+              export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
               EOT
 
               paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
@@ -2346,7 +2346,7 @@ jobs:
                 > cf-tfstate.yaml
 
               export ES_HOST
-              ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
+              ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs_logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
               export ES_PORT="9200"
               ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
 

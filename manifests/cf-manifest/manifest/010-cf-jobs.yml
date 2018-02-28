@@ -347,7 +347,7 @@ jobs:
       racoon:
         ports:
         - name: router
-          targets: ((terraform_outputs.cell_subnet_cidr_blocks))
+          targets: ((terraform_outputs_cell_subnet_cidr_blocks))
 
   - name: brain
     azs: [z1, z2]
@@ -404,7 +404,7 @@ jobs:
       racoon:
         ports:
         - name: cell
-          targets: ((terraform_outputs.router_subnet_cidr_blocks))
+          targets: ((terraform_outputs_router_subnet_cidr_blocks))
       tls:
         ca_cert: ((secrets.bosh_ca_cert))
         cert: ((secrets.cc_client_cert))

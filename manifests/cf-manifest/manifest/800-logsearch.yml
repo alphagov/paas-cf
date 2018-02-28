@@ -234,13 +234,13 @@ properties:
     purge_logs:
       retention_period: 30
     elasticsearch:
-      host: ((terraform_outputs.logsearch_elastic_master_elb_dns_name))
+      host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
   elasticsearch:
     master_hosts: ((elasticsearch_master_static_ips))
     cluster_name: logsearch
   kibana:
     elasticsearch:
-      host: ((terraform_outputs.logsearch_elastic_master_elb_dns_name))
+      host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
       port: 9200
   haproxy:
     kibana:
@@ -252,6 +252,6 @@ properties:
       inbound_port: 5602
   elasticsearch_config:
     elasticsearch:
-      host: ((terraform_outputs.logsearch_elastic_master_elb_dns_name))
+      host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json

@@ -1,9 +1,9 @@
 ---
 properties:
-  system_domain: ((terraform_outputs.cf_root_domain))
+  system_domain: ((terraform_outputs_cf_root_domain))
   system_domain_organization: admin
   app_domains:
-   - ((terraform_outputs.cf_apps_domain))
+   - ((terraform_outputs_cf_apps_domain))
 
   app_ssh:
     host_key_fingerprint: ((secrets.ssh_proxy_host_key.public_fingerprint))
@@ -216,7 +216,7 @@ properties:
       fog_connection:
         provider: AWS
         use_iam_profile: true
-        region: ((terraform_outputs.region))
+        region: ((terraform_outputs_region))
       cdn: ~
 
     packages:
@@ -224,7 +224,7 @@ properties:
       fog_connection:
         provider: AWS
         use_iam_profile: true
-        region: ((terraform_outputs.region))
+        region: ((terraform_outputs_region))
       cdn: ~
       max_package_size: 1073741824
       max_valid_packages_stored: ~
@@ -234,7 +234,7 @@ properties:
       fog_connection:
         provider: AWS
         use_iam_profile: true
-        region: ((terraform_outputs.region))
+        region: ((terraform_outputs_region))
       cdn: ~
       max_staged_droplets_stored: ~
 
@@ -255,7 +255,7 @@ properties:
       fog_connection:
         provider: AWS
         use_iam_profile: true
-        region: ((terraform_outputs.region))
+        region: ((terraform_outputs_region))
       cdn: ~
     quota_definitions:
       default:
@@ -335,7 +335,7 @@ properties:
 
   ccdb:
     db_scheme: postgres
-    address: ((terraform_outputs.cf_db_address))
+    address: ((terraform_outputs_cf_db_address))
     port: 5432
     roles:
       - tag: admin
@@ -356,11 +356,11 @@ properties:
           passphrase: ""
           certificate: ((secrets.saml_cert))
     smtp:
-      host: ((terraform_outputs.ses_smtp_host))
+      host: ((terraform_outputs_ses_smtp_host))
       port: 587
       from_address: "gov-uk-paas-support@digital.cabinet-office.gov.uk"
-      user: ((terraform_outputs.ses_smtp_aws_access_key_id))
-      password: ((terraform_outputs.ses_smtp_password))
+      user: ((terraform_outputs_ses_smtp_aws_access_key_id))
+      password: ((terraform_outputs_ses_smtp_password))
       auth: true
       starttls: true
     enabled: true
@@ -371,7 +371,7 @@ properties:
       homeRedirect: "https://www.cloud.service.gov.uk/next-steps?account-updated"
     branding:
       company_name: "GOV.UK PaaS"
-    asset_base_url: "https://paas-uaa-assets.((terraform_outputs.cf_apps_domain))"
+    asset_base_url: "https://paas-uaa-assets.((terraform_outputs_cf_apps_domain))"
 
   uaa:
     url: https://uaa.((system_domain))
@@ -548,7 +548,7 @@ properties:
 
   uaadb:
     db_scheme: postgresql
-    address: ((terraform_outputs.cf_db_address))
+    address: ((terraform_outputs_cf_db_address))
     port: 5432
     roles:
       - tag: admin
@@ -614,7 +614,7 @@ properties:
       sql:
         db_username: bbs
         db_password: ((secrets.cf_db_bbs_password))
-        db_host: ((terraform_outputs.cf_db_address))
+        db_host: ((terraform_outputs_cf_db_address))
         db_port: 5432
         db_schema: bbs
         db_driver: postgres
@@ -624,7 +624,7 @@ properties:
       sql:
         db_username: locket
         db_password: ((secrets.cf_db_locket_password))
-        db_host: ((terraform_outputs.cf_db_address))
+        db_host: ((terraform_outputs_cf_db_address))
         db_port: 5432
         db_schema: locket
         db_driver: postgres

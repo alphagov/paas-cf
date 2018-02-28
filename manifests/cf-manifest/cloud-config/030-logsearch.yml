@@ -12,7 +12,7 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs.logsearch_elb_name))
+        - ((terraform_outputs_logsearch_elb_name))
 
   - name: ingestor
     network: cf
@@ -25,7 +25,7 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs.logsearch_ingestor_elb_name))
+        - ((terraform_outputs_logsearch_ingestor_elb_name))
 
   - name: elasticsearch_master
     network: cf
@@ -38,7 +38,7 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs.logsearch_elastic_master_elb_name))
+        - ((terraform_outputs_logsearch_elastic_master_elb_name))
 
 disk_types:
   - name: elasticsearch_master

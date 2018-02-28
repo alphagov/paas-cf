@@ -13,7 +13,7 @@ vm_types:
         size: 10240
         type: gp2
       security_groups:
-        - ((terraform_outputs.rds_broker_db_clients_security_group))
-        - ((terraform_outputs.default_security_group))
+        - ((terraform_outputs_rds_broker_db_clients_security_group))
+        - ((terraform_outputs_default_security_group))
       elbs:
-        - ((terraform_outputs.rds_broker_elb_name))
+        - ((terraform_outputs_rds_broker_elb_name))

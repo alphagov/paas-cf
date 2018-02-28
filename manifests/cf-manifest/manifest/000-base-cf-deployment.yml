@@ -1,5 +1,5 @@
 meta:
-  environment: ((terraform_outputs.environment))
+  environment: ((terraform_outputs_environment))
 
 name: ((environment))
 

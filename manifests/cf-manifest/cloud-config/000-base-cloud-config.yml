@@ -1,11 +1,11 @@
 ---
 azs:
 - name: z1
-  cloud_properties: {availability_zone: ((terraform_outputs.zone0)) }
+  cloud_properties: {availability_zone: ((terraform_outputs_zone0)) }
 - name: z2
-  cloud_properties: {availability_zone: ((terraform_outputs.zone1)) }
+  cloud_properties: {availability_zone: ((terraform_outputs_zone1)) }
 - name: z3
-  cloud_properties: {availability_zone: ((terraform_outputs.zone2)) }
+  cloud_properties: {availability_zone: ((terraform_outputs_zone2)) }
 
 compilation:
   vm_type: compilation
