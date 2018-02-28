@@ -1585,20 +1585,20 @@ jobs:
 
               cat << EOT > config/config.sh
               export CF_ADMIN=admin
-              export CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+              export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
               export FIREHOSE_USER=graphite-nozzle
-              export FIREHOSE_PASS=$($VAL_FROM_YAML secrets.uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
+              export FIREHOSE_PASS=$($VAL_FROM_YAML secrets_uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
               export API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
               export UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
               export DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
               export GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
               export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_rds_broker_elb_dns_name cf-terraform-outputs.yml)
-              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
+              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-secrets/cf-secrets.yml)
               export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
-              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
-              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
+              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-secrets/cf-secrets.yml)
+              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-secrets/cf-secrets.yml)
               export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
-              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets.elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
+              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
@@ -1992,7 +1992,7 @@ jobs:
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 export UAA_ADMIN_PASSWORD
-                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
                 cd paas-cf/scripts
                 bundle
                 bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
@@ -2146,7 +2146,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
@@ -2446,7 +2446,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
@@ -3002,7 +3002,7 @@ jobs:
             - |
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-              sed "s/  uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
+              sed "s/^secrets_uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
                 > rotated-cf-secrets/cf-secrets-cleared.yml
 
               ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
@@ -3010,8 +3010,8 @@ jobs:
                 > rotated-cf-secrets/cf-secrets.yml
 
               UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
-              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-              UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
+              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+              UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
 
               uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
@@ -3039,8 +3039,8 @@ jobs:
         image_resource:
           type: docker-image
           source:
-            repository: governmentpaas/spruce
-            tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+            repository: ruby
+            tag: 2.2-slim
         inputs:
           - name: paas-cf
           - name: cf-secrets
@@ -3052,11 +3052,9 @@ jobs:
             - -e
             - -c
             - |
-              spruce merge \
-                cf-secrets/cf-secrets.yml \
-                paas-cf/concourse/resources/cf-secrets-keep.yml | \
-                spruce merge - paas-cf/concourse/resources/finalize.yml \
-                > modified-cf-secrets/cf-secrets.yml
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-secrets.rb < \
+                cf-secrets/cf-secrets.yml > \
+                modified-cf-secrets/cf-secrets.yml
       on_success:
         put: cf-secrets
         params:

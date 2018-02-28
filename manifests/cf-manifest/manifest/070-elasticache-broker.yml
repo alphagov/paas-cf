@@ -19,8 +19,8 @@ jobs:
       elasticache-broker:
         broker_name: "elasticache-broker"
         broker_username: "elasticache-broker"
-        broker_password: ((secrets.elasticache_broker_admin_password))
-        auth_token_seed: ((secrets.elasticache_broker_auth_token_seed))
+        broker_password: ((secrets_elasticache_broker_admin_password))
+        auth_token_seed: ((secrets_elasticache_broker_auth_token_seed))
         region: "eu-west-1"
         cache_subnet_group_name: ((terraform_outputs_elasticache_broker_subnet_group_name))
         vpc_security_group_ids:

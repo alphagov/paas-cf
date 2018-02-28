@@ -4,8 +4,8 @@ properties:
     apps_domain: ((app_domain))
     system_domain: ((system_domain))
     admin_user: "admin"
-    admin_password: ((secrets.uaa_admin_password))
-    test_password: ((secrets.test_user_password))
+    admin_password: ((secrets_uaa_admin_password))
+    test_password: ((secrets_test_user_password))
     skip_ssl_validation: false
     backend: "diego"
     skip_diego_unsupported_tests: true
@@ -28,7 +28,7 @@ properties:
     api: api.((system_domain))
     apps_domain: ((app_domain))
     user: "admin"
-    password: ((secrets.uaa_admin_password))
+    password: ((secrets_uaa_admin_password))
     org: "SMOKE_TESTS"
     space: "SMOKE_TESTS"
     use_existing_org: false

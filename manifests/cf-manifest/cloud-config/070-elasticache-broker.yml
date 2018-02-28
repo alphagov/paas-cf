@@ -5,7 +5,7 @@ vm_types:
     network: cf
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: t2.nano
       iam_instance_profile: elasticache-broker

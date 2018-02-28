@@ -246,7 +246,7 @@ properties:
     kibana:
       auth:
         username: admin
-        password: ((secrets.kibana_admin_password))
+        password: ((secrets_kibana_admin_password))
       backend_servers: ["localhost"]
       backend_port: 5601
       inbound_port: 5602

@@ -303,7 +303,7 @@ jobs:
     properties:
       loggregator:
         uaa:
-          client_secret: ((secrets.uaa_clients_doppler_secret))
+          client_secret: ((secrets_uaa_clients_doppler_secret))
         reverse_log_proxy:
           egress:
             port: 8082

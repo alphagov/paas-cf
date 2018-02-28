@@ -22,7 +22,7 @@ jobs:
     properties:
       cdn-broker:
         broker_username: "cdn-broker"
-        broker_password: ((secrets.cdn_broker_admin_password))
+        broker_password: ((secrets_cdn_broker_admin_password))
         database_url: ((terraform_outputs_cdn_db_connection_string))
         email: "the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
         acme_url: "https://acme-v01.api.letsencrypt.org/directory"
@@ -34,5 +34,5 @@ jobs:
         aws_default_region: "eu-west-1"
         api_address: https://api.((terraform_outputs_cf_root_domain))
         client_id: "cdn_broker"
-        client_secret: ((secrets.uaa_clients_cdn_broker_secret))
+        client_secret: ((secrets_uaa_clients_cdn_broker_secret))
         default_origin: ((terraform_outputs_cf_apps_domain))

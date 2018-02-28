@@ -32,7 +32,7 @@ module ManifestHelpers
 
   def terraform_fixture(key)
     Cache.instance.terraform_fixture ||= load_terraform_fixture
-    Cache.instance.terraform_fixture.fetch('terraform_outputs_'+key.to_s)
+    Cache.instance.terraform_fixture.fetch('terraform_outputs_' + key.to_s)
   end
 
   def cf_secrets_file
@@ -48,7 +48,7 @@ module ManifestHelpers
 private
 
   def render(arg_list)
-    output, error, status = Open3.capture3(arg_list.map {|p| root.join(p)}.join(' '))
+    output, error, status = Open3.capture3(arg_list.map { |p| root.join(p) }.join(' '))
     expect(status).to be_success, "#{arg_list[0]} exited #{status.exitstatus}, stderr:\n#{error}"
     output
   end

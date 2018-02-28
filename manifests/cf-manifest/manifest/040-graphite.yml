@@ -50,7 +50,7 @@ jobs:
     grafana:
       root_url: "/"
       admin_username: "admin"
-      admin_password: ((secrets.grafana_admin_password))
+      admin_password: ((secrets_grafana_admin_password))
       datasources:
         - name: graphite
           type: graphite

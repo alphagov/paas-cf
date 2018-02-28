@@ -6,7 +6,7 @@ properties:
    - ((terraform_outputs_cf_apps_domain))
 
   app_ssh:
-    host_key_fingerprint: ((secrets.ssh_proxy_host_key.public_fingerprint))
+    host_key_fingerprint: ((secrets_ssh_proxy_host_key.public_fingerprint))
 
   support_address: "https://docs.cloud.service.gov.uk"
   description: null
@@ -29,7 +29,7 @@ properties:
     ca_cert: ((certs_bosh_ca_cert))
     agent_cert: ((certs_consul_agent_cert))
     agent_key: ((certs_consul_agent_key))
-    encrypt_keys: ((secrets.consul_encrypt_keys))
+    encrypt_keys: ((secrets_consul_encrypt_keys))
     server_cert: ((certs_consul_server_cert))
     server_key: ((certs_consul_server_key))
 
@@ -44,7 +44,7 @@ properties:
     monitor_port: 0
     prof_port: 0
     user: nats_user
-    password: ((secrets.nats_password))
+    password: ((secrets_nats_password))
 
   loggregator:
     maxRetainedLogMessages: 100
@@ -81,7 +81,7 @@ properties:
         key: ((certs_reverse_log_proxy_key))
 
   loggregator_endpoint:
-    shared_secret: ((secrets.loggregator_endpoint_shared_secret))
+    shared_secret: ((secrets_loggregator_endpoint_shared_secret))
 
   logger_endpoint:
     port: 443
@@ -98,14 +98,14 @@ properties:
     disable_announce: true
 
   doppler_endpoint:
-    shared_secret: ((secrets.loggregator_endpoint_shared_secret))
+    shared_secret: ((secrets_loggregator_endpoint_shared_secret))
 
   metron_agent:
     deployment: ((environment))
     dropsonde_incoming_port: ((dropsonde_incoming_port))
 
   metron_endpoint:
-    shared_secret: ((secrets.loggregator_endpoint_shared_secret))
+    shared_secret: ((secrets_loggregator_endpoint_shared_secret))
 
   statsd_injector:
     deployment: ((environment))
@@ -136,10 +136,10 @@ properties:
     enable_access_log_streaming: true
     status:
       user: router_user
-      password: ((secrets.router_password))
+      password: ((secrets_router_password))
       port: 8080
     drain_wait: 120
-    route_services_secret: ((secrets.route_services_secret))
+    route_services_secret: ((secrets_route_services_secret))
     max_idle_connections: 0
     tracing:
       enable_zipkin: true
@@ -191,14 +191,14 @@ properties:
     srv_api_uri: "https://api.((system_domain))"
     internal_service_hostname: "cloud-controller-ng.service.cf.internal"
 
-    bulk_api_password: ((secrets.bulk_api_password))
+    bulk_api_password: ((secrets_bulk_api_password))
     internal_api_user: "internal_user"
-    internal_api_password: ((secrets.bulk_api_password))
+    internal_api_password: ((secrets_bulk_api_password))
 
     staging_upload_user: staging_upload_user
-    staging_upload_password: ((secrets.staging_upload_password))
+    staging_upload_password: ((secrets_staging_upload_password))
 
-    db_encryption_key: ((secrets.cc_db_encryption_key))
+    db_encryption_key: ((secrets_cc_db_encryption_key))
 
     logging_level: info
     db_logging_level: debug
@@ -340,7 +340,7 @@ properties:
     roles:
       - tag: admin
         name: api
-        password: ((secrets.cf_db_api_password))
+        password: ((secrets_cf_db_api_password))
     databases:
       - tag: cc
         name: api
@@ -384,7 +384,7 @@ properties:
       userids_enabled: true
       users:
         - name: admin
-          password: ((secrets.uaa_admin_password))
+          password: ((secrets_uaa_admin_password))
           groups:
             - scim.write
             - scim.read
@@ -409,9 +409,9 @@ properties:
         minLength: 8
 
     admin:
-      client_secret: ((secrets.uaa_admin_client_secret))
+      client_secret: ((secrets_uaa_admin_client_secret))
     cc:
-      client_secret: ((secrets.uaa_cc_client_secret))
+      client_secret: ((secrets_uaa_cc_client_secret))
 
     jwt:
       policy:
@@ -432,7 +432,7 @@ properties:
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
         authorized-grant-types: authorization_code,client_credentials,refresh_token
         redirect-uri: https://login.((system_domain))
-        secret: ((secrets.uaa_clients_login_secret))
+        secret: ((secrets_uaa_clients_login_secret))
       cf:
         override: true
         authorized-grant-types: password,refresh_token
@@ -445,32 +445,32 @@ properties:
         override: true
         authorities: cloud_controller.admin,scim.read
         authorized-grant-types: client_credentials
-        secret: ((secrets.uaa_clients_notifications_secret))
+        secret: ((secrets_uaa_clients_notifications_secret))
       doppler:
         override: true
         authorities: uaa.resource
         authorized-grant-types: client_credentials
-        secret: ((secrets.uaa_clients_doppler_secret))
+        secret: ((secrets_uaa_clients_doppler_secret))
       cloud_controller_username_lookup:
         override: true
         authorities: scim.userids
         authorized-grant-types: client_credentials
-        secret: ((secrets.uaa_clients_cloud_controller_username_lookup_secret))
+        secret: ((secrets_uaa_clients_cloud_controller_username_lookup_secret))
       cc_service_key_client:
         override: true
         authorities: credhub.read,credhub.write
         authorized-grant-types: client_credentials
-        secret: ((secrets.uaa_clients_cc_service_key_client_secret))
+        secret: ((secrets_uaa_clients_cc_service_key_client_secret))
       cc_routing:
         override: true
         authorities: routing.router_groups.read
         authorized-grant-types: client_credentials
-        secret: ((secrets.uaa_cc_routing_secret))
+        secret: ((secrets_uaa_cc_routing_secret))
       gorouter:
         override: true
         authorities: routing.routes.read
         authorized-grant-types: client_credentials
-        secret: ((secrets.uaa_clients_gorouter_secret))
+        secret: ((secrets_uaa_clients_gorouter_secret))
       tcp_emitter:
         override: true
         authorities: routing.routes.write,routing.routes.read
@@ -487,12 +487,12 @@ properties:
         autoapprove: true
         redirect-uri: https://login.((system_domain))/login
         scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
-        secret: ((secrets.uaa_clients_ssh_proxy_secret))
+        secret: ((secrets_uaa_clients_ssh_proxy_secret))
       graphite-nozzle:
         override: true
         access-token-validity: 1209600
         authorized-grant-types: authorization_code,client_credentials,refresh_token
-        secret: ((secrets.uaa_clients_firehose_password))
+        secret: ((secrets_uaa_clients_firehose_password))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
         redirect-uri: https://login.((system_domain))/login
@@ -500,7 +500,7 @@ properties:
         override: true
         access-token-validity: 1209600
         authorized-grant-types: client_credentials,refresh_token
-        secret: ((secrets.uaa_clients_paas_metrics_secret))
+        secret: ((secrets_uaa_clients_paas_metrics_secret))
         scope: openid,oauth.approvals,cloud_controller.global_auditor
         authorities: oauth.login,cloud_controller.global_auditor
         redirect-uri: https://login.((system_domain))
@@ -509,7 +509,7 @@ properties:
         access-token-validity: 1209600
         authorized-grant-types: client_credentials,refresh_token,authorization_code
         autoapprove: true
-        secret: ((secrets.uaa_clients_paas_billing_secret))
+        secret: ((secrets_uaa_clients_paas_billing_secret))
         scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
         authorities: cloud_controller.admin_read_only,uaa.resource
         redirect-uri: https://paas-billing.((app_domain))/oauth/callback
@@ -517,13 +517,13 @@ properties:
         override: true
         authorized-grant-types: authorization_code,refresh_token
         autoapprove: true
-        secret: ((secrets.uaa_clients_paas_admin_secret))
+        secret: ((secrets_uaa_clients_paas_admin_secret))
         scope: openid,oauth.approvals,cloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor
         authorities: uaa.none
         redirect-uri: https://paas-admin.((app_domain))/auth/cloudfoundry/callback
       cc-service-dashboards:
         override: true
-        secret: ((secrets.uaa_clients_cc_service_dashboards_password))
+        secret: ((secrets_uaa_clients_cc_service_dashboards_password))
         authorities: clients.read,clients.write,clients.admin
         authorized-grant-types: client_credentials
         redirect-uri: https://login.((system_domain))
@@ -532,14 +532,14 @@ properties:
         authorities: uaa.none
         authorized-grant-types: password
         scope: cloud_controller.admin_read_only
-        secret: ((secrets.uaa_clients_cdn_broker_secret))
+        secret: ((secrets_uaa_clients_cdn_broker_secret))
       user_invitation:
         override: true
         authorities: oauth.login,scim.write,emails.write,scim.userids
         authorized-grant-types: password,refresh_token
         redirect-uri: "https://www.cloud.service.gov.uk/next-steps?success"
         scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
-        secret: ((secrets.uaa_clients_login_secret))
+        secret: ((secrets_uaa_clients_login_secret))
 
     zones:
       internal:
@@ -553,7 +553,7 @@ properties:
     roles:
       - tag: admin
         name: uaa
-        password: ((secrets.cf_db_uaa_password))
+        password: ((secrets_cf_db_uaa_password))
     databases:
       - tag: uaa
         name: uaa
@@ -590,7 +590,7 @@ properties:
       active_key_label: key-2017-01
       encryption_keys:
         - label: key-2017-01
-          passphrase: ((secrets.bbs_encryption_key))
+          passphrase: ((secrets_bbs_encryption_key))
       ca_cert: ((certs_bosh_ca_cert))
       server_cert: ((certs_bbs_server_cert))
       server_key: ((certs_bbs_server_key))
@@ -613,7 +613,7 @@ properties:
         require_tls: true
       sql:
         db_username: bbs
-        db_password: ((secrets.cf_db_bbs_password))
+        db_password: ((secrets_cf_db_bbs_password))
         db_host: ((terraform_outputs_cf_db_address))
         db_port: 5432
         db_schema: bbs
@@ -623,7 +623,7 @@ properties:
     locket:
       sql:
         db_username: locket
-        db_password: ((secrets.cf_db_locket_password))
+        db_password: ((secrets_cf_db_locket_password))
         db_host: ((terraform_outputs_cf_db_address))
         db_port: 5432
         db_schema: locket
@@ -662,7 +662,7 @@ properties:
       nats:
         machines: ((nats_static_ips))
         user: nats_user
-        password: ((secrets.nats_password))
+        password: ((secrets_nats_password))
         port: ((nats_port))
 
     ssh_proxy:
@@ -673,11 +673,11 @@ properties:
         client_cert: ((certs_bbs_client_cert))
         client_key: ((certs_bbs_client_key))
         require_ssl: true
-      host_key: ((secrets.ssh_proxy_host_key.private_key))
+      host_key: ((secrets_ssh_proxy_host_key.private_key))
       enable_cf_auth: true
       enable_diego_auth: false
       diego_credentials: ""
-      uaa_secret: ((secrets.uaa_clients_ssh_proxy_secret))
+      uaa_secret: ((secrets_uaa_clients_ssh_proxy_secret))
       uaa_token_url: https://uaa.((system_domain))/oauth/token
 
   capi:
@@ -689,9 +689,9 @@ properties:
         server_key: ((certs_cc_uploader_server_key))
       cc:
         base_url: "https://api.((system_domain))"
-        basic_auth_password: ((secrets.bulk_api_password))
+        basic_auth_password: ((secrets_bulk_api_password))
         staging_upload_user: staging_upload_user
-        staging_upload_password: ((secrets.staging_upload_password))
+        staging_upload_password: ((secrets_staging_upload_password))
         ca_cert: ((certs_bosh_ca_cert))
         client_cert: ((certs_cc_client_cert))
         client_key: ((certs_cc_client_key))
@@ -702,7 +702,7 @@ properties:
       cc:
         base_url: "https://api.((system_domain))"
         staging_upload_user: staging_upload_user
-        staging_upload_password: ((secrets.staging_upload_password))
+        staging_upload_password: ((secrets_staging_upload_password))
         ca_cert: ((certs_bosh_ca_cert))
         client_cert: ((certs_cc_client_cert))
         client_key: ((certs_cc_client_key))

@@ -4,7 +4,7 @@ vm_types:
     network: cf
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: t2.small
       ephemeral_disk:
@@ -15,7 +15,7 @@ vm_types:
     network: cf
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: m3.medium
       ephemeral_disk:
@@ -26,7 +26,7 @@ vm_types:
     network: cf
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: m4.large
       ephemeral_disk:
@@ -37,7 +37,7 @@ vm_types:
     network: cf
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: c4.large
       ephemeral_disk:
@@ -48,7 +48,7 @@ vm_types:
     network: router
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: c3.large
       ephemeral_disk:
@@ -64,7 +64,7 @@ vm_types:
     network: cell
     env:
       bosh:
-        password: ((secrets.vcap_password))
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: ((cell_instance_type))
       ephemeral_disk:
