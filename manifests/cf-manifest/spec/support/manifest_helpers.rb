@@ -48,14 +48,20 @@ module ManifestHelpers
 private
 
   def render(arg_list)
-    output, error, status = Open3.capture3(arg_list.join(' '))
+    output, error, status = Open3.capture3(arg_list.map {|p| root.join(p)}.join(' '))
     expect(status).to be_success, "#{arg_list[0]} exited #{status.exitstatus}, stderr:\n#{error}"
     output
   end
 
+  def root
+    Pathname(File.expand_path("../../../..", __dir__))
+  end
+
   def render_grafana_dashboards_manifest
     file = Tempfile.new(['test-grafana-dashboards', '.yml'])
-    output, error, status = Open3.capture3(File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__), File.expand_path("../../../grafana", __FILE__))
+    output, error, status =
+      Open3.capture3(root.join("manifests/cf-manifest/scripts/grafana-dashboards-manifest.rb").to_s,
+                     root.join("manifests/cf-manifest/grafana").to_s)
     unless status.success?
       raise "Error generating grafana dashboards, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
     end
@@ -66,31 +72,31 @@ private
   end
 
   def render_manifest(environment = "default", extra_vars_files = [])
-    spruced_manifest = render([
-        File.expand_path("../../../../shared/spruce_merge.sh", __FILE__),
-        File.expand_path("../../../manifest/*.yml", __FILE__),
-        grafana_dashboards_manifest,
-        File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
-    ])
+    spruced_manifest = render(%W(
+      manifests/shared/spruce_merge.sh
+      manifests/cf-manifest/manifest/*.yml
+      manifests/cf-manifest/stubs/datadog-nozzle.yml
+      #{grafana_dashboards_manifest}
+    ))
 
     manifest = nil
-    Tempfile.open(['spruced_manifest_file', '.yml']) {|spruced_manifest_tempfile|
+    Tempfile.open(['spruced_manifest_file', '.yml']) { |spruced_manifest_tempfile|
       spruced_manifest_tempfile << spruced_manifest
       spruced_manifest_tempfile.close
 
-      manifest = render([
-        File.expand_path("../../../../shared/bosh_interpolate.sh", __FILE__),
-        spruced_manifest_tempfile.path,
-        File.expand_path("../../../manifest/data/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/environment-variables.yml", __FILE__),
-        cf_secrets_file,
-        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
-        grafana_dashboards_manifest,
-        File.expand_path("../../variables.yml", __FILE__),
-        File.expand_path("../../../static-ips-and-ports.yml", __FILE__),
-        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
-      ].concat(extra_vars_files))
+      manifest = render(%W(
+        manifests/shared/bosh_interpolate.sh
+        #{spruced_manifest_tempfile.path}
+        manifests/cf-manifest/manifest/data/*.yml
+        manifests/shared/spec/fixtures/terraform/*.yml
+        manifests/shared/spec/fixtures/environment-variables.yml
+        manifests/shared/spec/fixtures/cf-ssl-certificates.yml
+        manifests/variables.yml
+        manifests/cf-manifest/uaa-secrets.yml
+        manifests/cf-manifest/static-ips-and-ports.yml
+        manifests/cf-manifest/env-specific/cf-#{environment}.yml
+        #{cf_secrets_file}
+      ) + extra_vars_files)
     }
 
     # Deep freeze the object so that it's safe to use across multiple examples
@@ -99,32 +105,31 @@ private
   end
 
   def render_cloud_config(environment = "default")
-    spruced_manifest = render([
-      File.expand_path("../../../../shared/spruce_merge.sh", __FILE__),
-      File.expand_path("../../../cloud-config/*.yml", __FILE__),
-      cf_secrets_file,
-    ])
+    spruced_manifest = render(%W(
+      manifests/shared/spruce_merge.sh
+      manifests/cf-manifest/cloud-config/*.yml
+    ))
     manifest = nil
-    Tempfile.open(['spruced_manifest_file', '.yml']) {|spruced_manifest_tempfile|
+    Tempfile.open(['spruced_manifest_file', '.yml']) { |spruced_manifest_tempfile|
       spruced_manifest_tempfile << spruced_manifest
       spruced_manifest_tempfile.close
 
-      manifest = render([
-        File.expand_path("../../../../shared/bosh_interpolate.sh", __FILE__),
-        spruced_manifest_tempfile.path,
-        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/environment-variables.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
-        File.expand_path("../../variables.yml", __FILE__),
-        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
-        cf_secrets_file,
-      ])
+      manifest = render(%W(
+        manifests/shared/bosh_interpolate.sh
+        #{spruced_manifest_tempfile.path}
+        manifests/shared/spec/fixtures/terraform/*.yml
+        manifests/shared/spec/fixtures/environment-variables.yml
+        manifests/shared/spec/fixtures/cf-ssl-certificates.yml
+        manifests/variables.yml
+        manifests/cf-manifest/env-specific/cf-#{environment}.yml
+        #{cf_secrets_file}
+      ))
     }
     deep_freeze(YAML.safe_load(manifest))
   end
 
   def load_terraform_fixture
-    data = YAML.load_file(File.expand_path("../../../../shared/spec/fixtures/terraform/terraform-outputs.yml", __FILE__))
+    data = YAML.load_file(root.join("manifests/shared/spec/fixtures/terraform/terraform-outputs.yml"))
     deep_freeze(data)
   end
 
