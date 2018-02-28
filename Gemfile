@@ -1,9 +1,11 @@
 source "https://rubygems.org"
 
-gem 'bosh_cli', '1.3262.26.0'
+gem 'aws-sdk', '~> 2.3.8'
+gem 'cf-uaa-lib', '~> 3.8.0'
 gem 'github_merge_sign', '1.0.0'
 gem 'govuk-lint', "~> 3.3.0"
 gem 'json-minify', '~> 0.0.2'
+gem 'mail', '~> 2.6.4'
 gem 'rspec', '~> 3.3'
 gem 'webmock', "~> 1.24"
 

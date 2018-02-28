@@ -6,6 +6,7 @@ env:
   global:
     - TF_VERSION="0.11.1"
     - SPRUCE_VERSION="1.12.1"
+    - BOSH_CLI_VERSION="2.0.48"
     - DEPLOY_ENV="travis"
 
 addons:
@@ -39,6 +40,12 @@ before_install:
     wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64
     mv spruce-linux-amd64 ~/bin/spruce && chmod +x ~/bin/spruce
     set +e
+  - |
+    echo "Fetching bosh cli v2"
+    set -e
+    wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64
+    mv bosh-cli-${BOSH_CLI_VERSION}-linux-amd64 ~/bin/bosh && chmod +x ~/bin/bosh
+    set +e
   - pip install --user yamllint
   - GIMME_OUTPUT=$(gimme 1.9 | tee -a $HOME/.bashrc) && eval "$GIMME_OUTPUT"
   - export GOPATH=$HOME/gopath
@@ -47,7 +54,7 @@ before_install:
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/alphagov/paas-cf/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/alphagov/paas-cf
   - cd $HOME/gopath/src/github.com/alphagov/paas-cf
-  - cd scripts && BUNDLE_GEMFILE=Gemfile bundle install --jobs=3 --retry=3 --deployment && cd ..
+  - bundle install --jobs=3 --retry=3 --deployment
   - go get github.com/onsi/ginkgo/ginkgo
   - go get github.com/onsi/gomega/...
 
