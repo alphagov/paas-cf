@@ -1122,8 +1122,8 @@ jobs:
             image_resource:
               type: docker-image
               source:
-                repository: governmentpaas/spruce
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                repository: governmentpaas/bosh-cli-v2
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1133,9 +1133,10 @@ jobs:
             params:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
+              VARS_FILES: |
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
-                ./paas-cf/manifests/cf-manifest/cell.yml
+                ./paas-cf/manifests/cf-manifest/variables.yml
                 ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
             run:
               path: sh
@@ -1145,8 +1146,16 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
-                  # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+                  # FIXME: temporary install spruce, we will later split this
+                  # in a different task with a specific docker image
+                  SPRUCE_VERSION-1.14.0
+                  wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64 \
+                    && chmod +x spruce-linux-amd64 \
+                    && mv spruce-linux-amd64 /usr/local/bin/spruce \
+
+                   # shellcheck disable=SC2086
+                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced_manifest.yml
+                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced_manifest.yml $VARS_FILES > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
@@ -1158,8 +1167,8 @@ jobs:
             image_resource:
               type: docker-image
               source:
-                repository: governmentpaas/spruce
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                repository: governmentpaas/bosh-cli-v2
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1174,12 +1183,13 @@ jobs:
             params:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/manifest/*.yml
+                ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
+              VARS_FILES: |
                 ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
                 ./certs/*.yml
-                ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
-                ./paas-cf/manifests/cf-manifest/cell.yml
+                ./paas-cf/manifests/cf-manifest/variables.yml
                 ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
                 ./vpc-peering-manifest/*.yml
               AWS_ACCOUNT: ((aws_account))
@@ -1226,8 +1236,16 @@ jobs:
                                     ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
                   fi
 
+                  # FIXME: temporary install spruce, we will later split this
+                  # in a different task with a specific docker image
+                  SPRUCE_VERSION-1.14.0
+                  wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64 \
+                    && chmod +x spruce-linux-amd64 \
+                    && mv spruce-linux-amd64 /usr/local/bin/spruce \
+
                   # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced_manifest.yml
+                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced_manifest.yml $VARS_FILES > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:
