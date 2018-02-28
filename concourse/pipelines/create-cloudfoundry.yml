@@ -1184,6 +1184,14 @@ jobs:
                     sed 's/^/  /' < "${cn}.key"
                     echo "certs_${yaml_key_name}_cert: |"
                     sed 's/^/  /' < "${cn}.crt"
+
+                    if [ ! -f "${cn}_old.crt" ]; then
+                      echo "Using ${cn} for ${cn}_old" 1>&2
+                      echo "certs_${yaml_key_name}_old_key: |"
+                      sed 's/^/  /' < "${cn}.key"
+                      echo "certs_${yaml_key_name}_old_cert: |"
+                      sed 's/^/  /' < "${cn}.crt"
+                    fi
                   done > "certs-yaml/certs.yml"
 
       - do:
@@ -1316,7 +1324,6 @@ jobs:
                 ./cf-secrets/cf-secrets.yml
                 ./certs-yaml/*.yml
                 ./paas-cf/manifests/variables.yml
-                ./paas-cf/manifests/cf-manifest/uaa-secrets.yml
                 ./paas-cf/manifests/cf-manifest/static-ips-and-ports.yml
                 ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
                 ./environment-variables/environment-variables.yml

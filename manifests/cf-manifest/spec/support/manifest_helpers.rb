@@ -92,7 +92,6 @@ private
         manifests/shared/spec/fixtures/environment-variables.yml
         manifests/shared/spec/fixtures/cf-ssl-certificates.yml
         manifests/variables.yml
-        manifests/cf-manifest/uaa-secrets.yml
         manifests/cf-manifest/static-ips-and-ports.yml
         manifests/cf-manifest/env-specific/cf-#{environment}.yml
         #{cf_secrets_file}

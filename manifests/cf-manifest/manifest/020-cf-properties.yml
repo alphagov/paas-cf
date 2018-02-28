@@ -420,7 +420,7 @@ properties:
           default:
             signingKey: ((certs_uaa_jwt_signing_key))
           previous:
-            signingKey: ((certs_selected_uaa_jwt_signing_old_key))
+            signingKey: ((certs_uaa_jwt_signing_old_key))
         refreshTokenValiditySeconds: 604800
         global:
           refreshTokenValiditySeconds: 604800
