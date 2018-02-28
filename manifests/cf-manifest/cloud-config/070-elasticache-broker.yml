@@ -1,8 +1,11 @@
 ---
+# FIXME: Remove these vm types by using extensions instead
 vm_types:
   - name: elasticache_broker
     network: cf
-    env: (( grab meta.default_env ))
+    env:
+      bosh:
+        password: ((secrets.vcap_password))
     cloud_properties:
       instance_type: t2.nano
       iam_instance_profile: elasticache-broker
@@ -10,6 +13,6 @@ vm_types:
         size: 10240
         type: gp2
       security_groups:
-        - (( grab terraform_outputs.default_security_group ))
+        - ((terraform_outputs.default_security_group))
       elbs:
-        - (( grab terraform_outputs.elasticache_broker_elb_name ))
+        - ((terraform_outputs.elasticache_broker_elb_name))

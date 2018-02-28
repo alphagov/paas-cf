@@ -15,8 +15,8 @@ vm_extensions:
   - name: cf_rds_client_sg
     cloud_properties:
       security_groups:
-        - (( grab terraform_outputs.default_security_group ))
-        - (( grab terraform_outputs.cf_rds_client_security_group ))
+        - ((terraform_outputs.default_security_group))
+        - ((terraform_outputs.cf_rds_client_security_group))
 
   # This has to duplicate the cf_rds_client_security_group because
   # vm_extensions are only shallow merged, and you therefore can't use more
@@ -25,21 +25,21 @@ vm_extensions:
   - name: cf_cc_security_groups
     cloud_properties:
       security_groups:
-        - (( grab terraform_outputs.default_security_group ))
-        - (( grab terraform_outputs.cf_rds_client_security_group ))
-        - (( grab terraform_outputs.cloud_controller_security_group ))
+        - ((terraform_outputs.default_security_group))
+        - ((terraform_outputs.cf_rds_client_security_group))
+        - ((terraform_outputs.cloud_controller_security_group))
 
   - name: cf_cc_elb
     cloud_properties:
       elbs:
-        - (( grab terraform_outputs.cf_cc_elb_name ))
+        - ((terraform_outputs.cf_cc_elb_name))
 
   - name: cf_doppler_elbs
     cloud_properties:
       elbs:
-        - (( grab terraform_outputs.cf_doppler_elb_name ))
+        - ((terraform_outputs.cf_doppler_elb_name))
 
   - name: ssh_proxy_elb
     cloud_properties:
       elbs:
-        - (( grab terraform_outputs.cf_ssh_proxy_elb_name ))
+        - ((terraform_outputs.cf_ssh_proxy_elb_name))

@@ -19,12 +19,12 @@ jobs:
       elasticache-broker:
         broker_name: "elasticache-broker"
         broker_username: "elasticache-broker"
-        broker_password: (( grab secrets.elasticache_broker_admin_password ))
-        auth_token_seed: (( grab secrets.elasticache_broker_auth_token_seed ))
+        broker_password: ((secrets.elasticache_broker_admin_password))
+        auth_token_seed: ((secrets.elasticache_broker_auth_token_seed))
         region: "eu-west-1"
-        cache_subnet_group_name: (( grab terraform_outputs.elasticache_broker_subnet_group_name ))
+        cache_subnet_group_name: ((terraform_outputs.elasticache_broker_subnet_group_name))
         vpc_security_group_ids:
-        - (( grab terraform_outputs.elasticache_broker_instances_security_group_id ))
+        - ((terraform_outputs.elasticache_broker_instances_security_group_id))
 
         catalog:
           services:
@@ -67,7 +67,7 @@ properties:
       - name: elasticache_broker_instances
         rules:
           - protocol: tcp
-            destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
+            destination: ((terraform_outputs.aws_backing_service_cidr_all))
             ports: '6379'
 
     default_running_security_groups:

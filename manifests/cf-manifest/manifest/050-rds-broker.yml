@@ -1,6 +1,6 @@
 meta:
   rds_broker:
-    default_rds_properties:
+    default_rds_properties: &default_rds_properties
       storage_type: "gp2"
       auto_minor_version_upgrade: true
       multi_az: false
@@ -9,36 +9,36 @@ meta:
       copy_tags_to_snapshot: true
       skip_final_snapshot: false
       backup_retention_period: 7
-      db_subnet_group_name: (( grab terraform_outputs.rds_broker_dbs_subnet_group ))
+      db_subnet_group_name: ((terraform_outputs.rds_broker_dbs_subnet_group))
       vpc_security_group_ids:
-        - (( grab terraform_outputs.rds_broker_dbs_security_group_id ))
-    default_postgres_rds_properties:
-      inject: (( inject meta.rds_broker.default_rds_properties ))
+        - ((terraform_outputs.rds_broker_dbs_security_group_id))
+    default_postgres_rds_properties: &default_postgres_rds_properties
+      <<: *default_rds_properties # yamllint disable-line
       engine: "postgres"
       engine_version: "9.5"
-      db_parameter_group_name: (( grab terraform_outputs.rds_broker_postgres95_db_parameter_group ))
+      db_parameter_group_name: ((terraform_outputs.rds_broker_postgres95_db_parameter_group))
       postgres_extensions: ["uuid-ossp", "postgis"]
-    default_mysql_rds_properties:
-      inject: (( inject meta.rds_broker.default_rds_properties ))
+    default_mysql_rds_properties: &default_mysql_rds_properties
+      <<: *default_rds_properties # yamllint disable-line
       engine: "mysql"
       engine_version: "5.7"
-      db_parameter_group_name: (( grab terraform_outputs.rds_broker_mysql57_db_parameter_group ))
+      db_parameter_group_name: ((terraform_outputs.rds_broker_mysql57_db_parameter_group))
 
-    free_plan_rds_properties:
+    free_plan_rds_properties: &free_plan_rds_properties
       db_instance_class: "db.t2.micro"
       allocated_storage: 5
       backup_retention_period: 0
       skip_final_snapshot: true
-    small_plan_rds_properties:
+    small_plan_rds_properties: &small_plan_rds_properties
       db_instance_class: "db.t2.small"
       allocated_storage: 20
-    medium_plan_rds_properties:
+    medium_plan_rds_properties: &medium_plan_rds_properties
       db_instance_class: "db.m4.large"
       allocated_storage: 100
-    large_plan_rds_properties:
+    large_plan_rds_properties: &large_plan_rds_properties
       db_instance_class: "db.m4.2xlarge"
       allocated_storage: 512
-    xlarge_plan_rds_properties:
+    xlarge_plan_rds_properties: &xlarge_plan_rds_properties
       db_instance_class: "db.m4.4xlarge"
       allocated_storage: 2048
 
@@ -66,11 +66,11 @@ jobs:
         aws_access_key_id: ""
         aws_secret_access_key: ""
         aws_region: "eu-west-1"
-        password: (( grab secrets.rds_broker_admin_password ))
-        state_encryption_key: (( grab secrets.rds_broker_state_encryption_key ))
+        password: ((secrets.rds_broker_admin_password))
+        state_encryption_key: ((secrets.rds_broker_state_encryption_key))
         db_prefix: "rdsbroker"
-        master_password_seed: (( grab secrets.rds_broker_master_password_seed ))
-        broker_name: "(( grab terraform_outputs.environment ))"
+        master_password_seed: ((secrets.rds_broker_master_password_seed))
+        broker_name: "((terraform_outputs.environment))"
         catalog:
           services:
             - id: "ce71b484-d542-40f7-9dd4-5526e38c81ba"
@@ -98,8 +98,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.free_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *free_plan_rds_properties # yamllint disable-line
 
                 - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
                   name: "S-dedicated-9.5"
@@ -114,8 +114,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *small_plan_rds_properties # yamllint disable-line
 
                 - id: "359bcb39-0264-46bd-9120-0182c3829067"
                   name: "S-HA-dedicated-9.5"
@@ -130,8 +130,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *small_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "d9f1d61d-0a65-45ad-8fc9-88c921d038d2"
@@ -147,8 +147,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *small_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -165,8 +165,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.medium_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *medium_plan_rds_properties # yamllint disable-line
 
                 - id: "bf5b99c2-7990-4b66-b341-1bb83566d76e"
                   name: "M-HA-dedicated-9.5"
@@ -181,8 +181,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.medium_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *medium_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "8d50ccc5-707c-4306-be8f-f59a158eb736"
@@ -199,8 +199,8 @@ jobs:
                       - "Storage Encrypted"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.medium_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *medium_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -217,8 +217,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.large_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *large_plan_rds_properties # yamllint disable-line
 
                 - id: "dfe4ab2b-2069-41a5-ba08-2be21b0c76d3"
                   name: "L-HA-dedicated-9.5"
@@ -233,8 +233,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.large_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *large_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "620055b3-fe7c-46fc-87ad-c7d8f4fe7f34"
@@ -251,8 +251,8 @@ jobs:
                       - "Storage Encrypted"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.large_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *large_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -269,8 +269,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.xlarge_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *xlarge_plan_rds_properties # yamllint disable-line
 
                 - id: "7119925f-518d-4263-96ac-16990295aad6"
                   name: "XL-HA-dedicated-9.5"
@@ -285,8 +285,8 @@ jobs:
                       - "Dedicated Postgres 9.5 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.xlarge_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *xlarge_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "a91c8e59-8869-42fd-8a99-8989151d7353"
@@ -303,8 +303,8 @@ jobs:
                       - "Storage Encrypted"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_postgres_rds_properties ))
-                    plan: (( inject meta.rds_broker.xlarge_plan_rds_properties ))
+                    <<: *default_postgres_rds_properties # yamllint disable-line
+                    <<: *xlarge_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -333,8 +333,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.free_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *free_plan_rds_properties # yamllint disable-line
 
                 - id: "7fdde6ea-cc27-466c-86aa-46181fc20d25"
                   name: "S-dedicated-5.7"
@@ -349,8 +349,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *small_plan_rds_properties # yamllint disable-line
 
                 - id: "72279ebd-6001-4e38-aaef-72b68c4fa6fd"
                   name: "S-HA-dedicated-5.7"
@@ -365,8 +365,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *small_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "6aa563c1-5aeb-46a1-9509-badcf5995c96"
@@ -382,8 +382,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.small_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *small_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -400,8 +400,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.medium_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *medium_plan_rds_properties # yamllint disable-line
 
                 - id: "e60edf62-b701-4e38-846f-b0b3db728349"
                   name: "M-HA-dedicated-5.7"
@@ -416,8 +416,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.medium_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *medium_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "8d139b9e-bc82-4749-8ad6-7733980292d6"
@@ -434,8 +434,8 @@ jobs:
                       - "Storage Encrypted"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.medium_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *medium_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -452,8 +452,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.large_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *large_plan_rds_properties # yamllint disable-line
 
                 - id: "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6"
                   name: "L-HA-dedicated-5.7"
@@ -468,8 +468,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.large_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *large_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "d5efbf83-5e00-47a5-a668-2ef1307d5a23"
@@ -486,8 +486,8 @@ jobs:
                       - "Storage Encrypted"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.large_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *large_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -504,8 +504,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.xlarge_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *xlarge_plan_rds_properties # yamllint disable-line
 
                 - id: "065a7de5-28e8-4de1-8a39-4b4f752e2f2f"
                   name: "XL-HA-dedicated-5.7"
@@ -520,8 +520,8 @@ jobs:
                       - "Dedicated MySQL 5.7 server"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.xlarge_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *xlarge_plan_rds_properties # yamllint disable-line
                     multi_az: true
 
                 - id: "4edc975c-3f07-46f1-bd87-ecb35b76298f"
@@ -538,8 +538,8 @@ jobs:
                       - "Storage Encrypted"
                       - "AWS RDS"
                   rds_properties:
-                    defaults: (( inject meta.rds_broker.default_mysql_rds_properties ))
-                    plan: (( inject meta.rds_broker.xlarge_plan_rds_properties ))
+                    <<: *default_mysql_rds_properties # yamllint disable-line
+                    <<: *xlarge_plan_rds_properties # yamllint disable-line
                     multi_az: true
                     storage_encrypted: true
 
@@ -549,10 +549,10 @@ properties:
       - name: rds_broker_instances
         rules:
           - protocol: tcp
-            destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
+            destination: ((terraform_outputs.aws_backing_service_cidr_all))
             ports: '5432'
           - protocol: tcp
-            destination: (( grab terraform_outputs.aws_backing_service_cidr_all ))
+            destination: ((terraform_outputs.aws_backing_service_cidr_all))
             ports: '3306'
 
     default_running_security_groups:

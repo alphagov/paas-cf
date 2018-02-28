@@ -47,16 +47,7 @@ module ManifestHelpers
 
 private
 
-  def fake_env_vars
-    ENV["AWS_ACCOUNT"] = "dev"
-    ENV["DATADOG_API_KEY"] = "abcd1234"
-    ENV["ENABLE_DATADOG"] = "true"
-    ENV["OAUTH_CLIENT_ID"] = "abcd1234"
-    ENV["OAUTH_CLIENT_SECRET"] = "abcd1234"
-  end
-
   def render(arg_list)
-    fake_env_vars
     output, error, status = Open3.capture3(arg_list.join(' '))
     expect(status).to be_success, "#{arg_list[0]} exited #{status.exitstatus}, stderr:\n#{error}"
     output
@@ -92,10 +83,12 @@ private
         spruced_manifest_tempfile.path,
         File.expand_path("../../../manifest/data/*.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/environment-variables.yml", __FILE__),
         cf_secrets_file,
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
         grafana_dashboards_manifest,
-        File.expand_path("../../../variables.yml", __FILE__),
+        File.expand_path("../../variables.yml", __FILE__),
+        File.expand_path("../../../static-ips-and-ports.yml", __FILE__),
         File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
       ].concat(extra_vars_files))
     }
@@ -120,8 +113,9 @@ private
         File.expand_path("../../../../shared/bosh_interpolate.sh", __FILE__),
         spruced_manifest_tempfile.path,
         File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
+        File.expand_path("../../../../shared/spec/fixtures/environment-variables.yml", __FILE__),
         File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
-        File.expand_path("../../../variables.yml", __FILE__),
+        File.expand_path("../../variables.yml", __FILE__),
         File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
         cf_secrets_file,
       ])

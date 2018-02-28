@@ -1115,6 +1115,41 @@ jobs:
 
                   cat vpc-peering-manifest/vpc-peers.yml
 
+        - task: generate-environment-variables
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: environment-variables
+            params:
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              DATADOG_API_KEY: ((datadog_api_key))
+              OAUTH_CLIENT_ID: ((oauth_client_id))
+              OAUTH_CLIENT_SECRET: ((oauth_client_secret))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  cat <<EOF > environment-variables/environment-variables.yml
+                  ---
+                  system_domain: ${SYSTEM_DNS_ZONE_NAME}
+                  app_domain: ${APPS_DNS_ZONE_NAME}
+                  environment: ${DEPLOY_ENV}
+                  datadog_api_key: ${DATADOG_API_KEY}
+                  oauth_client_id: ${OAUTH_CLIENT_ID}
+                  oauth_client_secret: ${OAUTH_CLIENT_SECRET}
+                  EOF
+
       - aggregate:
         - task: generate-cloud-config
           config:
@@ -1128,6 +1163,7 @@ jobs:
               - name: paas-cf
               - name: terraform-outputs
               - name: cf-secrets
+              - name: environment-variables
             outputs:
               - name: cloud-config
             params:
@@ -1136,8 +1172,9 @@ jobs:
               VARS_FILES: |
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
-                ./paas-cf/manifests/cf-manifest/variables.yml
+                ./paas-cf/manifests/variables.yml
                 ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+                ./environment-variables/environment-variables.yml
             run:
               path: sh
               args:
@@ -1178,6 +1215,7 @@ jobs:
               - name: ipsec-CA
               - name: grafana-dashboards-manifest
               - name: vpc-peering-manifest
+              - name: environment-variables
             outputs:
               - name: cf-manifest
             params:
@@ -1189,15 +1227,15 @@ jobs:
                 ./terraform-outputs/*.yml
                 ./cf-secrets/cf-secrets.yml
                 ./certs/*.yml
-                ./paas-cf/manifests/cf-manifest/variables.yml
+                ./paas-cf/manifests/variables.yml
+                ./paas-cf/manifests/cf-manifest/uaa-secrets.yml
+                ./paas-cf/manifests/cf-manifest/static-ips-and-ports.yml
                 ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
                 ./vpc-peering-manifest/*.yml
+                ./environment-variables/environment-variables.yml
               AWS_ACCOUNT: ((aws_account))
               ENABLE_DATADOG: ((enable_datadog))
-              DATADOG_API_KEY: ((datadog_api_key))
               DISABLE_USER_CREATION: ((disable_user_creation))
-              OAUTH_CLIENT_ID: ((oauth_client_id))
-              OAUTH_CLIENT_SECRET: ((oauth_client_secret))
             run:
               path: sh
               args:

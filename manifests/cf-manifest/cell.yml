@@ -1,6 +1,0 @@
----
-meta:
-  cell:
-    instance_type: r4.xlarge
-    instance_memory_mb: 30662
-    rep_commit_percentage: 1.66
