@@ -169,10 +169,6 @@ jobs:
 properties:
   syslog_daemon_config:
     enable: false
-  parser_logstash: # FIXME: is this still used?
-    output:
-      elasticsearch:
-        data_hosts: ((elasticsearch_master_static_ips))
   logstash_parser:
     filters:
       - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
