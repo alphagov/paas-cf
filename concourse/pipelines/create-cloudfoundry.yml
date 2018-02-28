@@ -485,7 +485,6 @@ jobs:
                     mkdir out
                     tar -xvzf generated-ipsec-CA/ipsec-CA.tar.gz -C out
                   fi
-                  ./paas-cf/concourse/scripts/file_to_yaml.sh secrets ipsec_ca_cert out/ipsec-CA.crt > generated-ipsec-CA/ipsec-ca-cert.yml
           on_success:
             put: ipsec-CA
             params:
@@ -1180,10 +1179,12 @@ jobs:
                     cn=${file%.crt}
                     yaml_key_name=$(echo "${cn}" | tr A-Z- a-z_)
 
-                    echo "Converting ${cn} certs to YAML"
-                    ./paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_key" "${cn}.key" > "certs-yaml/${cn}_key.yml"
-                    ./paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_cert" "${cn}.crt" > "certs-yaml/${cn}_cert.yml"
-                  done
+                    echo "Converting ${cn} certs to YAML" 1>&2
+                    echo "certs_${yaml_key_name}_key: |"
+                    sed 's/^/  /' < "${cn}.key"
+                    echo "certs_${yaml_key_name}_cert: |"
+                    sed 's/^/  /' < "${cn}.crt"
+                  done > "certs-yaml/certs.yml"
 
       - do:
         - task: spruce-cloud-config

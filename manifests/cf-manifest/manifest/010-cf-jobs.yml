@@ -44,17 +44,17 @@ jobs:
       scalablesyslog:
         adapter:
           tls:
-            ca: ((secrets.bosh_ca_cert))
-            cert: ((secrets.scalablesyslog_adapter_cert))
-            key: ((secrets.scalablesyslog_adapter_key))
+            ca: ((certs_bosh_ca_cert))
+            cert: ((certs_scalablesyslog_adapter_cert))
+            key: ((certs_scalablesyslog_adapter_key))
             cn: scalablesyslog_adapter
           logs:
             addr: reverse-log-proxy.service.cf.internal:8082
         adapter_rlp:
           tls:
-            ca: ((secrets.bosh_ca_cert))
-            cert: ((secrets.reverse_log_proxy_cert))
-            key: ((secrets.reverse_log_proxy_key))
+            ca: ((certs_bosh_ca_cert))
+            cert: ((certs_reverse_log_proxy_cert))
+            key: ((certs_reverse_log_proxy_key))
             cn: reverse_log_proxy
     update:
       serial: true
@@ -82,14 +82,14 @@ jobs:
             url: https://cloud-controller-ng.service.cf.internal:9023
           tls:
             client:
-              ca: ((secrets.bosh_ca_cert))
-              cert: ((secrets.scalablesyslog_adapter_scheduler_client_cert))
-              key: ((secrets.scalablesyslog_adapter_scheduler_client_key))
+              ca: ((certs_bosh_ca_cert))
+              cert: ((certs_scalablesyslog_adapter_scheduler_client_cert))
+              key: ((certs_scalablesyslog_adapter_scheduler_client_key))
               adapter_cn: "scalablesyslog_adapter"
             api:
-              ca: ((secrets.bosh_ca_cert))
-              cert: ((secrets.scalablesyslog_adapter_scheduler_api_cert))
-              key: ((secrets.scalablesyslog_adapter_scheduler_api_key))
+              ca: ((certs_bosh_ca_cert))
+              cert: ((certs_scalablesyslog_adapter_scheduler_api_cert))
+              key: ((certs_scalablesyslog_adapter_scheduler_api_key))
               cn: "cloud-controller-ng.service.cf.internal"
     update:
       serial: true
@@ -173,8 +173,8 @@ jobs:
     networks:
       - name: cf
     properties:
-      ssl_key: ((secrets.uaa_internal_key))
-      ssl_chained_cert: ((secrets.uaa_internal_cert))
+      ssl_key: ((certs_uaa_internal_key))
+      ssl_chained_cert: ((certs_uaa_internal_cert))
       consul:
         agent:
           services:
@@ -406,9 +406,9 @@ jobs:
         - name: cell
           targets: ((terraform_outputs_router_subnet_cidr_blocks))
       tls:
-        ca_cert: ((secrets.bosh_ca_cert))
-        cert: ((secrets.cc_client_cert))
-        key: ((secrets.cc_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        cert: ((certs_cc_client_cert))
+        key: ((certs_cc_client_key))
 
   - name: cc_bridge
     azs: [z1, z2]

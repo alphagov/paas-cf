@@ -26,12 +26,12 @@ properties:
       dns_config:
         allow_stale: true
         max_stale: "30s"
-    ca_cert: ((secrets.bosh_ca_cert))
-    agent_cert: ((secrets.consul_agent_cert))
-    agent_key: ((secrets.consul_agent_key))
+    ca_cert: ((certs_bosh_ca_cert))
+    agent_cert: ((certs_consul_agent_cert))
+    agent_key: ((certs_consul_agent_key))
     encrypt_keys: ((secrets.consul_encrypt_keys))
-    server_cert: ((secrets.consul_server_cert))
-    server_key: ((secrets.consul_server_key))
+    server_cert: ((certs_consul_server_cert))
+    server_key: ((certs_consul_server_key))
 
   dropsonde:
     enabled: true
@@ -57,28 +57,28 @@ properties:
     traffic_controller_url: wss://doppler.((system_domain)):443
     disable_syslog_drains: true
     tls:
-      ca_cert: ((secrets.bosh_ca_cert))
+      ca_cert: ((certs_bosh_ca_cert))
       doppler:
-        cert: ((secrets.doppler_cert))
-        key: ((secrets.doppler_key))
+        cert: ((certs_doppler_cert))
+        key: ((certs_doppler_key))
       metron:
-        cert: ((secrets.metron_cert))
-        key: ((secrets.metron_key))
+        cert: ((certs_metron_cert))
+        key: ((certs_metron_key))
       cc_trafficcontroller:
-        cert: ((secrets.cc_trafficcontroller_cert))
-        key: ((secrets.cc_trafficcontroller_key))
+        cert: ((certs_cc_trafficcontroller_cert))
+        key: ((certs_cc_trafficcontroller_key))
       trafficcontroller:
-        cert: ((secrets.trafficcontroller_cert))
-        key: ((secrets.trafficcontroller_key))
+        cert: ((certs_trafficcontroller_cert))
+        key: ((certs_trafficcontroller_key))
       statsd_injector:
-        cert: ((secrets.statsd_injector_cert))
-        key: ((secrets.statsd_injector_key))
+        cert: ((certs_statsd_injector_cert))
+        key: ((certs_statsd_injector_key))
       syslogdrainbinder:
-        cert: ((secrets.cc_client_cert))
-        key: ((secrets.cc_client_key))
+        cert: ((certs_cc_client_cert))
+        key: ((certs_cc_client_key))
       reverse_log_proxy:
-        cert: ((secrets.reverse_log_proxy_cert))
-        key: ((secrets.reverse_log_proxy_key))
+        cert: ((certs_reverse_log_proxy_cert))
+        key: ((certs_reverse_log_proxy_key))
 
   loggregator_endpoint:
     shared_secret: ((secrets.loggregator_endpoint_shared_secret))
@@ -124,14 +124,14 @@ properties:
       capture response header strict-transport-security len 128
       http-response add-header Strict-Transport-Security max-age=31536000;\ includeSubDomains;\ preload unless { capture.res.hdr(0) -m found }
     enable_healthcheck_frontend: true
-    ssl_pem: ((secrets.router_internal_cert))((secrets.router_internal_key))
+    ssl_pem: ((certs_router_internal_cert))((certs_router_internal_key))
     enable_http_redirect_frontend: true
 
   router:
     backends:
       enable_tls: true
-      cert_chain: ((secrets.router_internal_cert))
-      private_key: ((secrets.router_internal_key))
+      cert_chain: ((certs_router_internal_cert))
+      private_key: ((certs_router_internal_key))
     enable_ssl: false
     enable_access_log_streaming: true
     status:
@@ -329,9 +329,9 @@ properties:
 
     tls_port: 9023
     mutual_tls:
-      ca_cert: ((secrets.bosh_ca_cert))
-      public_cert: ((secrets.cc_server_cert))
-      private_key: ((secrets.cc_server_key))
+      ca_cert: ((certs_bosh_ca_cert))
+      public_cert: ((certs_cc_server_cert))
+      private_key: ((certs_cc_server_key))
 
   ccdb:
     db_scheme: postgres
@@ -352,9 +352,9 @@ properties:
       activeKeyId: key1
       keys:
         key1:
-          key: ((secrets.saml_key))
+          key: ((certs_saml_key))
           passphrase: ""
-          certificate: ((secrets.saml_cert))
+          certificate: ((certs_saml_cert))
     smtp:
       host: ((terraform_outputs_ses_smtp_host))
       port: 587
@@ -400,9 +400,9 @@ properties:
     port: 8080
     ssl:
       port: 8443
-    sslCertificate: ((secrets.uaa_internal_cert))
-    sslPrivateKey: ((secrets.uaa_internal_key))
-    ca_cert: ((secrets.bosh_ca_cert))
+    sslCertificate: ((certs_uaa_internal_cert))
+    sslPrivateKey: ((certs_uaa_internal_key))
+    ca_cert: ((certs_bosh_ca_cert))
 
     password:
       policy:
@@ -418,9 +418,9 @@ properties:
         active_key_id: default
         keys:
           default:
-            signingKey: ((secrets.uaa_jwt_signing_key))
+            signingKey: ((certs_uaa_jwt_signing_key))
           previous:
-            signingKey: ((secrets_selected_uaa_jwt_signing_old_key))
+            signingKey: ((certs_selected_uaa_jwt_signing_old_key))
         refreshTokenValiditySeconds: 604800
         global:
           refreshTokenValiditySeconds: 604800
@@ -565,24 +565,24 @@ properties:
       starting_container_weight: 0.25
     cfdot:
       bbs:
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.bbs_client_cert))
-        client_key: ((secrets.bbs_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_bbs_client_cert))
+        client_key: ((certs_bbs_client_key))
         use_ssl: true
     auctioneer:
-      ca_cert: ((secrets.bosh_ca_cert))
-      server_cert: ((secrets.auctioneer_server_cert))
-      server_key: ((secrets.auctioneer_server_key))
+      ca_cert: ((certs_bosh_ca_cert))
+      server_cert: ((certs_auctioneer_server_cert))
+      server_key: ((certs_auctioneer_server_key))
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.bbs_client_cert))
-        client_key: ((secrets.bbs_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_bbs_client_cert))
+        client_key: ((certs_bbs_client_key))
         require_ssl: true
       rep:
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.rep_client_cert))
-        client_key: ((secrets.rep_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_rep_client_cert))
+        client_key: ((certs_rep_client_key))
         require_tls: true
       dropsonde_port: ((dropsonde_incoming_port))
 
@@ -591,14 +591,14 @@ properties:
       encryption_keys:
         - label: key-2017-01
           passphrase: ((secrets.bbs_encryption_key))
-      ca_cert: ((secrets.bosh_ca_cert))
-      server_cert: ((secrets.bbs_server_cert))
-      server_key: ((secrets.bbs_server_key))
+      ca_cert: ((certs_bosh_ca_cert))
+      server_cert: ((certs_bbs_server_cert))
+      server_key: ((certs_bbs_server_key))
       auctioneer:
         api_location: auctioneer.service.cf.internal:9016
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.auctioneer_client_cert))
-        client_key: ((secrets.auctioneer_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_auctioneer_client_cert))
+        client_key: ((certs_auctioneer_client_key))
         require_tls: true
       etcd:
         machines: []
@@ -607,9 +607,9 @@ properties:
         client_key: ""
         require_ssl: false
       rep:
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.rep_client_cert))
-        client_key: ((secrets.rep_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_rep_client_cert))
+        client_key: ((certs_rep_client_key))
         require_tls: true
       sql:
         db_username: bbs
@@ -633,17 +633,17 @@ properties:
       dropsonde_port: ((dropsonde_incoming_port))
 
     rep:
-      ca_cert: ((secrets.bosh_ca_cert))
-      server_cert: ((secrets.rep_server_cert))
-      server_key: ((secrets.rep_server_key))
+      ca_cert: ((certs_bosh_ca_cert))
+      server_cert: ((certs_rep_server_cert))
+      server_key: ((certs_rep_server_key))
       require_tls: true
       enable_legacy_api_endpoints: false
       dropsonde_port: ((dropsonde_incoming_port))
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.bbs_client_cert))
-        client_key: ((secrets.bbs_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_bbs_client_cert))
+        client_key: ((certs_bbs_client_key))
         require_ssl: true
       preloaded_rootfses:
         - cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs.tar
@@ -655,9 +655,9 @@ properties:
       dropsonde_port: ((dropsonde_incoming_port))
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.bbs_client_cert))
-        client_key: ((secrets.bbs_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_bbs_client_cert))
+        client_key: ((certs_bbs_client_key))
         require_ssl: true
       nats:
         machines: ((nats_static_ips))
@@ -669,9 +669,9 @@ properties:
       dropsonde_port: ((dropsonde_incoming_port))
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.bbs_client_cert))
-        client_key: ((secrets.bbs_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_bbs_client_cert))
+        client_key: ((certs_bbs_client_key))
         require_ssl: true
       host_key: ((secrets.ssh_proxy_host_key.private_key))
       enable_cf_auth: true
@@ -684,17 +684,17 @@ properties:
     cc_uploader:
       dropsonde_port: ((dropsonde_incoming_port))
       mutual_tls:
-        ca_cert: ((secrets.bosh_ca_cert))
-        server_cert: ((secrets.cc_uploader_server_cert))
-        server_key: ((secrets.cc_uploader_server_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        server_cert: ((certs_cc_uploader_server_cert))
+        server_key: ((certs_cc_uploader_server_key))
       cc:
         base_url: "https://api.((system_domain))"
         basic_auth_password: ((secrets.bulk_api_password))
         staging_upload_user: staging_upload_user
         staging_upload_password: ((secrets.staging_upload_password))
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.cc_client_cert))
-        client_key: ((secrets.cc_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_cc_client_cert))
+        client_key: ((certs_cc_client_key))
 
     tps:
       listener_enabled: false
@@ -703,14 +703,14 @@ properties:
         base_url: "https://api.((system_domain))"
         staging_upload_user: staging_upload_user
         staging_upload_password: ((secrets.staging_upload_password))
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.cc_client_cert))
-        client_key: ((secrets.cc_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_cc_client_cert))
+        client_key: ((certs_cc_client_key))
       bbs:
         api_location: bbs.service.cf.internal:8889
-        ca_cert: ((secrets.bosh_ca_cert))
-        client_cert: ((secrets.bbs_client_cert))
-        client_key: ((secrets.bbs_client_key))
+        ca_cert: ((certs_bosh_ca_cert))
+        client_cert: ((certs_bbs_client_cert))
+        client_key: ((certs_bbs_client_key))
         require_ssl: true
       traffic_controller_url: wss://doppler.((system_domain)):443
   cflinuxfs2-rootfs:
@@ -720,7 +720,7 @@ properties:
     log_level: error
     cleanup_process_dirs_on_wait: true
   racoon:
-    certificate_authority_cert: ((secrets.ipsec_ca_cert))
-    certificate_authority_private_key: ((secrets.ipsec_ca_key))
+    certificate_authority_cert: ((certs_ipsec_ca_cert))
+    certificate_authority_private_key: ((certs_ipsec_ca_key))
     verify_certificate: "on"
     level: require
