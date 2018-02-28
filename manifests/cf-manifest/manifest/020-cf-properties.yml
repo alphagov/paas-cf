@@ -281,6 +281,11 @@ properties:
         total_services: 80
         non_basic_services_allowed: true
         total_routes: 1000
+      2xlarge:
+        memory_limit: 409600
+        total_services: 160
+        non_basic_services_allowed: true
+        total_routes: 1000
       test_apps:
         memory_limit: 2048
         total_services: 10
