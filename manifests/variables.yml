@@ -1,0 +1,18 @@
+---
+cell_instance_type: r4.xlarge
+
+# Advertised memory capacity of the cells.
+#
+# We are currently doing over-provisioning of our cells.
+# More info in: https://github.com/alphagov/paas-cf/pull/1126
+#
+# The following value is computed by multiplying the real cell available
+# memory for the given instance type with a multiplier factor
+#
+# Refer to https://aws.amazon.com/ec2/instance-types/ for the instance mb size
+#
+# For instance:
+#
+# ruby -e 'puts "cell_memory_capacity_mb: #{ (30662 * 1.66).floor }";'
+#
+cell_memory_capacity_mb: 50898

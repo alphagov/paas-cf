@@ -8,7 +8,6 @@ releases:
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.3.tgz
   sha1: 5b7618c22224dfe7c1948dfad009aff1cdf661c4
 jobs:
-- (( append ))
 - name: queue
   release: logsearch
   azs: [z1, z2]
@@ -22,9 +21,7 @@ jobs:
   instances: 2
   networks:
   - name: cf
-    static_ips:
-      - 10.0.16.13
-      - 10.0.17.13
+    static_ips: ((queue_static_ips))
   persistent_disk_type: queue
 
 - name: parser_z1
@@ -44,8 +41,11 @@ jobs:
       - 10.0.16.14
   properties:
     redis:
-      host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
-    logstash: (( grab properties.parser_logstash ))
+      host: ((queue_static_ips_first))
+    logstash:
+      output:
+        elasticsearch:
+          data_hosts: ((elasticsearch_master_static_ips))
 
 - name: parser_z2
   release: logsearch
@@ -64,8 +64,11 @@ jobs:
       - 10.0.17.14
   properties:
     redis:
-      host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
-    logstash: (( grab properties.parser_logstash ))
+      host: ((queue_static_ips_second))
+    logstash:
+      output:
+        elasticsearch:
+          data_hosts: ((elasticsearch_master_static_ips))
 
 - name: elasticsearch_master
   release: logsearch
@@ -78,10 +81,7 @@ jobs:
   instances: 3
   networks:
   - name: cf
-    static_ips:
-      - 10.0.16.10
-      - 10.0.17.10
-      - 10.0.18.10
+    static_ips: ((elasticsearch_master_static_ips))
   persistent_disk_type: elasticsearch_master
   properties:
     elasticsearch:
@@ -90,7 +90,7 @@ jobs:
         allow_data: true
       discovery:
         minimum_master_nodes: 2
-      master_hosts: (( grab properties.elasticsearch.master_hosts ))
+      master_hosts: ((elasticsearch_master_static_ips))
 
 - name: maintenance
   instances: 1
@@ -142,7 +142,7 @@ jobs:
       - 10.0.16.12
   properties:
     redis:
-      host: (( grab jobs.queue.networks.cf.static_ips.[0] ))
+      host: ((queue_static_ips_first))
   update:
     serial: true
 
@@ -162,17 +162,13 @@ jobs:
       - 10.0.17.12
   properties:
     redis:
-      host: (( grab jobs.queue.networks.cf.static_ips.[1] ))
+      host: ((queue_static_ips_second))
   update:
     serial: true
 
 properties:
   syslog_daemon_config:
     enable: false
-  parser_logstash:
-    output:
-      elasticsearch:
-        data_hosts: (( grab properties.elasticsearch.master_hosts ))
   logstash_parser:
     filters:
       - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
@@ -234,24 +230,24 @@ properties:
     purge_logs:
       retention_period: 30
     elasticsearch:
-      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+      host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
   elasticsearch:
-    master_hosts: (( grab jobs.elasticsearch_master.networks.cf.static_ips[0] jobs.elasticsearch_master.networks.cf.static_ips[1] jobs.elasticsearch_master.networks.cf.static_ips[2] ))
+    master_hosts: ((elasticsearch_master_static_ips))
     cluster_name: logsearch
   kibana:
     elasticsearch:
-      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+      host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
       port: 9200
   haproxy:
     kibana:
       auth:
         username: admin
-        password: (( grab secrets.kibana_admin_password ))
+        password: ((secrets_kibana_admin_password))
       backend_servers: ["localhost"]
       backend_port: 5601
       inbound_port: 5602
   elasticsearch_config:
     elasticsearch:
-      host: (( grab terraform_outputs.logsearch_elastic_master_elb_dns_name ))
+      host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
     templates:
       - index_template: /var/vcap/packages/logsearch-config/default-mappings.json

@@ -1,0 +1,7 @@
+---
+system_domain: unit-test.dev.paas.example.com
+app_domain: unit-test.dev-apps.paas.example.com
+environment: unit-test
+datadog_api_key: abcd1234
+oauth_client_id: abcd1234
+oauth_client_secret: abcd1234

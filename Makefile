@@ -20,7 +20,7 @@ spec:
 	cd scripts &&\
 		go test
 	cd scripts &&\
-		BUNDLE_GEMFILE=Gemfile bundle exec rspec
+		bundle exec rspec
 	cd tools/metrics &&\
 		go test -v ./...
 	cd concourse/scripts &&\

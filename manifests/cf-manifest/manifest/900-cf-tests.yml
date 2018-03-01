@@ -1,11 +1,11 @@
 properties:
   acceptance_tests:
-    api: (( concat properties.cc.external_host "." properties.system_domain ))
-    apps_domain: (( grab properties.app_domains[0] ))
-    system_domain: (( grab properties.system_domain ))
+    api: api.((system_domain))
+    apps_domain: ((app_domain))
+    system_domain: ((system_domain))
     admin_user: "admin"
-    admin_password: (( grab secrets.uaa_admin_password ))
-    test_password: (( grab secrets.test_user_password ))
+    admin_password: ((secrets_uaa_admin_password))
+    test_password: ((secrets_test_user_password))
     skip_ssl_validation: false
     backend: "diego"
     skip_diego_unsupported_tests: true
@@ -25,10 +25,10 @@ properties:
     use_existing_user: false
 
   smoke_tests:
-    api: (( grab properties.acceptance_tests.api ))
-    apps_domain: (( grab properties.app_domains[0] ))
+    api: api.((system_domain))
+    apps_domain: ((app_domain))
     user: "admin"
-    password: (( grab secrets.uaa_admin_password ))
+    password: ((secrets_uaa_admin_password))
     org: "SMOKE_TESTS"
     space: "SMOKE_TESTS"
     use_existing_org: false

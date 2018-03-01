@@ -1,7 +1,7 @@
 meta:
-  environment: (( grab terraform_outputs.environment ))
+  environment: ((terraform_outputs_environment))
 
-name: (( grab meta.environment ))
+name: ((environment))
 
 releases:
   - name: consul

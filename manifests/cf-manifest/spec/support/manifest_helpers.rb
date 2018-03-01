@@ -18,9 +18,9 @@ module ManifestHelpers
     Cache.instance.manifest_with_defaults ||= render_manifest
   end
 
-  def manifest_with_custom_stub(stub_content)
-    Tempfile.open(['custom-stub', '.yml']) do |file|
-      file.write(stub_content)
+  def manifest_with_custom_vars_file(vars_file_content)
+    Tempfile.open(['custom-vars-file', '.yml']) do |file|
+      file.write(vars_file_content)
       file.flush
       render_manifest("default", [file.path])
     end
@@ -31,8 +31,8 @@ module ManifestHelpers
   end
 
   def terraform_fixture(key)
-    Cache.instance.terraform_fixture ||= load_terraform_fixture.fetch('terraform_outputs')
-    Cache.instance.terraform_fixture.fetch(key.to_s)
+    Cache.instance.terraform_fixture ||= load_terraform_fixture
+    Cache.instance.terraform_fixture.fetch('terraform_outputs_' + key.to_s)
   end
 
   def cf_secrets_file
@@ -47,24 +47,21 @@ module ManifestHelpers
 
 private
 
-  def fake_env_vars
-    ENV["AWS_ACCOUNT"] = "dev"
-    ENV["DATADOG_API_KEY"] = "abcd1234"
-    ENV["ENABLE_DATADOG"] = "true"
-    ENV["OAUTH_CLIENT_ID"] = "abcd1234"
-    ENV["OAUTH_CLIENT_SECRET"] = "abcd1234"
+  def render(arg_list)
+    output, error, status = Open3.capture3(arg_list.map { |p| root.join(p) }.join(' '))
+    expect(status).to be_success, "#{arg_list[0]} exited #{status.exitstatus}, stderr:\n#{error}"
+    output
   end
 
-  def render(arg_list)
-    fake_env_vars
-    output, error, status = Open3.capture3(arg_list.join(' '))
-    expect(status).to be_success, "build_manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
-    output
+  def root
+    Pathname(File.expand_path("../../../..", __dir__))
   end
 
   def render_grafana_dashboards_manifest
     file = Tempfile.new(['test-grafana-dashboards', '.yml'])
-    output, error, status = Open3.capture3(File.expand_path("../../../scripts/grafana-dashboards-manifest.rb", __FILE__), File.expand_path("../../../grafana", __FILE__))
+    output, error, status =
+      Open3.capture3(root.join("manifests/cf-manifest/scripts/grafana-dashboards-manifest.rb").to_s,
+                     root.join("manifests/cf-manifest/grafana").to_s)
     unless status.success?
       raise "Error generating grafana dashboards, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
     end
@@ -74,19 +71,32 @@ private
     file
   end
 
-  def render_manifest(environment = "default", extra_stubs = [])
-    manifest = render([
-        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
-        File.expand_path("../../../manifest/*.yml", __FILE__),
-        File.expand_path("../../../manifest/data/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-        cf_secrets_file,
-        File.expand_path("../../../../shared/spec/fixtures/cf-ssl-certificates.yml", __FILE__),
-        grafana_dashboards_manifest,
-        File.expand_path("../../../cell.yml", __FILE__),
-        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
-        File.expand_path("../../../stubs/datadog-nozzle.yml", __FILE__),
-    ].concat(extra_stubs))
+  def render_manifest(environment = "default", extra_vars_files = [])
+    spruced_manifest = render(%W(
+      manifests/shared/spruce_merge.sh
+      manifests/cf-manifest/manifest/*.yml
+      manifests/cf-manifest/stubs/datadog-nozzle.yml
+      #{grafana_dashboards_manifest}
+    ))
+
+    manifest = nil
+    Tempfile.open(['spruced_manifest_file', '.yml']) { |spruced_manifest_tempfile|
+      spruced_manifest_tempfile << spruced_manifest
+      spruced_manifest_tempfile.close
+
+      manifest = render(%W(
+        manifests/shared/bosh_interpolate.sh
+        #{spruced_manifest_tempfile.path}
+        manifests/cf-manifest/manifest/data/*.yml
+        manifests/shared/spec/fixtures/terraform/*.yml
+        manifests/shared/spec/fixtures/environment-variables.yml
+        manifests/shared/spec/fixtures/cf-ssl-certificates.yml
+        manifests/variables.yml
+        manifests/cf-manifest/static-ips-and-ports.yml
+        manifests/cf-manifest/env-specific/cf-#{environment}.yml
+        #{cf_secrets_file}
+      ) + extra_vars_files)
+    }
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
@@ -94,19 +104,31 @@ private
   end
 
   def render_cloud_config(environment = "default")
-    manifest = render([
-        File.expand_path("../../../../shared/build_manifest.sh", __FILE__),
-        File.expand_path("../../../cloud-config/*.yml", __FILE__),
-        File.expand_path("../../../../shared/spec/fixtures/terraform/*.yml", __FILE__),
-        File.expand_path("../../../cell.yml", __FILE__),
-        File.expand_path("../../../env-specific/cf-#{environment}.yml", __FILE__),
-        cf_secrets_file,
-    ])
+    spruced_manifest = render(%W(
+      manifests/shared/spruce_merge.sh
+      manifests/cf-manifest/cloud-config/*.yml
+    ))
+    manifest = nil
+    Tempfile.open(['spruced_manifest_file', '.yml']) { |spruced_manifest_tempfile|
+      spruced_manifest_tempfile << spruced_manifest
+      spruced_manifest_tempfile.close
+
+      manifest = render(%W(
+        manifests/shared/bosh_interpolate.sh
+        #{spruced_manifest_tempfile.path}
+        manifests/shared/spec/fixtures/terraform/*.yml
+        manifests/shared/spec/fixtures/environment-variables.yml
+        manifests/shared/spec/fixtures/cf-ssl-certificates.yml
+        manifests/variables.yml
+        manifests/cf-manifest/env-specific/cf-#{environment}.yml
+        #{cf_secrets_file}
+      ))
+    }
     deep_freeze(YAML.safe_load(manifest))
   end
 
   def load_terraform_fixture
-    data = YAML.load_file(File.expand_path("../../../../shared/spec/fixtures/terraform/terraform-outputs.yml", __FILE__))
+    data = YAML.load_file(root.join("manifests/shared/spec/fixtures/terraform/terraform-outputs.yml"))
     deep_freeze(data)
   end
 

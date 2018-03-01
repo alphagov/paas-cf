@@ -12,17 +12,18 @@ jobs:
     release: datadog-firehose-nozzle
     properties:
       datadog:
-        api_key: (( grab $DATADOG_API_KEY ))
+        api_key: ((datadog_api_key))
         metric_prefix: "cf."
       nozzle:
         subscription_id: "datadog-nozzle"
-        deployment: (( grab meta.environment ))
+        deployment: ((environment))
         insecure_ssl_skip_verify: false
       uaa:
-        url: (( grab properties.uaa.url ))
+        url: https://uaa.((system_domain))
         client: "datadog-nozzle"
-        client_secret: (( grab secrets.uaa_clients_datadog_firehose_password ))
-      loggregator: (( grab properties.loggregator ))
+        client_secret: ((secrets_uaa_clients_datadog_firehose_password))
+      loggregator:
+        traffic_controller_url: wss://doppler.((system_domain)):443
 
   vm_type: small
   stemcell: default
@@ -37,7 +38,7 @@ properties:
         access-token-validity: 1209600
         authorized-grant-types: authorization_code,client_credentials,refresh_token
         override: true
-        secret: (( grab secrets.uaa_clients_datadog_firehose_password ))
+        secret: ((secrets_uaa_clients_datadog_firehose_password))
         scope: openid,oauth.approvals,doppler.firehose
         authorities: oauth.login,doppler.firehose
-        redirect-uri: (( concat "https://login." properties.system_domain "/login" ))
+        redirect-uri: https://login.((system_domain))/login

@@ -66,10 +66,9 @@ var _ = Describe("ExtractTerraformStateToYAML", func() {
 
 		It("returns a YAML containing all the output values", func() {
 			Eventually(session).Should(gexec.Exit(0))
-			Expect(session.Out).To(gbytes.Say("terraform_outputs:\n"))
-			Expect(session.Out).To(gbytes.Say("\\s+foo_dns_name: foo.example.com"))
-			Expect(session.Out).To(gbytes.Say("\\s+foo_elastic_ip: 10.210.221.248"))
-			Expect(session.Out).To(gbytes.Say("\\s+foo_security_group_id: sg-12345678"))
+			Expect(session.Out).To(gbytes.Say("terraform_outputs_foo_dns_name: foo.example.com"))
+			Expect(session.Out).To(gbytes.Say("terraform_outputs_foo_elastic_ip: 10.210.221.248"))
+			Expect(session.Out).To(gbytes.Say("terraform_outputs_foo_security_group_id: sg-12345678"))
 		})
 	})
 

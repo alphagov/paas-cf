@@ -485,7 +485,6 @@ jobs:
                     mkdir out
                     tar -xvzf generated-ipsec-CA/ipsec-CA.tar.gz -C out
                   fi
-                  ./paas-cf/concourse/scripts/file_to_yaml.sh secrets ipsec_ca_cert out/ipsec-CA.crt > generated-ipsec-CA/ipsec-ca-cert.yml
           on_success:
             put: ipsec-CA
             params:
@@ -1115,28 +1114,102 @@ jobs:
 
                   cat vpc-peering-manifest/vpc-peers.yml
 
-      - aggregate:
-        - task: generate-cloud-config
+        - task: generate-environment-variables
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: environment-variables
+            params:
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              DATADOG_API_KEY: ((datadog_api_key))
+              OAUTH_CLIENT_ID: ((oauth_client_id))
+              OAUTH_CLIENT_SECRET: ((oauth_client_secret))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  cat <<EOF > environment-variables/environment-variables.yml
+                  ---
+                  system_domain: ${SYSTEM_DNS_ZONE_NAME}
+                  app_domain: ${APPS_DNS_ZONE_NAME}
+                  environment: ${DEPLOY_ENV}
+                  datadog_api_key: ${DATADOG_API_KEY}
+                  oauth_client_id: ${OAUTH_CLIENT_ID}
+                  oauth_client_secret: ${OAUTH_CLIENT_SECRET}
+                  EOF
+
+        - task: generate-certs-yaml
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: alpine
+                tag: "3.4"
+            inputs:
+              - name: paas-cf
+              - name: cf-certs
+              - name: bosh-CA
+              - name: ipsec-CA
+            outputs:
+              - name: certs-yaml
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  tar -xvzf bosh-CA/bosh-CA.tar.gz
+                  tar -xvzf ipsec-CA/ipsec-CA.tar.gz
+                  tar -xvzf cf-certs/cf-certs.tar.gz
+
+                  for file in *.crt; do
+                    cn=${file%.crt}
+                    yaml_key_name=$(echo "${cn}" | tr A-Z- a-z_)
+
+                    echo "Converting ${cn} certs to YAML" 1>&2
+                    echo "certs_${yaml_key_name}_key: |"
+                    sed 's/^/  /' < "${cn}.key"
+                    echo "certs_${yaml_key_name}_cert: |"
+                    sed 's/^/  /' < "${cn}.crt"
+
+                    if [ ! -f "${cn}_old.crt" ]; then
+                      echo "Using ${cn} for ${cn}_old" 1>&2
+                      echo "certs_${yaml_key_name}_old_key: |"
+                      sed 's/^/  /' < "${cn}.key"
+                      echo "certs_${yaml_key_name}_old_cert: |"
+                      sed 's/^/  /' < "${cn}.crt"
+                    fi
+                  done > "certs-yaml/certs.yml"
+
+      - do:
+        - task: spruce-cloud-config
           config:
             platform: linux
             image_resource:
               type: docker-image
               source:
                 repository: governmentpaas/spruce
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
             inputs:
               - name: paas-cf
-              - name: terraform-outputs
-              - name: cf-secrets
             outputs:
-              - name: cloud-config
+              - name: spruced-cloud-config
             params:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
-                ./terraform-outputs/*.yml
-                ./cf-secrets/cf-secrets.yml
-                ./paas-cf/manifests/cf-manifest/cell.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
             run:
               path: sh
               args:
@@ -1145,49 +1218,68 @@ jobs:
                 - |
                   echo "Generating cloud config..."
 
-                  # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cloud-config/cloud-config.yml
+                   # shellcheck disable=SC2086
+                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced-cloud-config/spruced_manifest.yml
+
+        - task: generate-cloud-config
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli-v2
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+            inputs:
+              - name: paas-cf
+              - name: spruced-cloud-config
+              - name: terraform-outputs
+              - name: cf-secrets
+              - name: environment-variables
+            outputs:
+              - name: cloud-config
+            params:
+              VARS_FILES: |
+                ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
+                ./paas-cf/manifests/variables.yml
+                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+                ./environment-variables/environment-variables.yml
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  echo "Generating cloud config..."
+
+                   # shellcheck disable=SC2086
+                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced-cloud-config/spruced_manifest.yml $VARS_FILES > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
               file: cloud-config/cloud-config.yml
 
-        - task: generate-cf-manifest
+        - task: spruce-cf-manifest
           config:
             platform: linux
             image_resource:
               type: docker-image
               source:
                 repository: governmentpaas/spruce
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
             inputs:
               - name: paas-cf
-              - name: terraform-outputs
-              - name: cf-secrets
-              - name: cf-certs
-              - name: bosh-CA
-              - name: ipsec-CA
               - name: grafana-dashboards-manifest
               - name: vpc-peering-manifest
             outputs:
-              - name: cf-manifest
+              - name: spruced-manifest
             params:
               MANIFEST_STUBS: |
                 ./paas-cf/manifests/cf-manifest/manifest/*.yml
-                ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
-                ./terraform-outputs/*.yml
-                ./cf-secrets/cf-secrets.yml
-                ./certs/*.yml
                 ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
-                ./paas-cf/manifests/cf-manifest/cell.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
                 ./vpc-peering-manifest/*.yml
-              AWS_ACCOUNT: ((aws_account))
               ENABLE_DATADOG: ((enable_datadog))
-              DATADOG_API_KEY: ((datadog_api_key))
               DISABLE_USER_CREATION: ((disable_user_creation))
-              OAUTH_CLIENT_ID: ((oauth_client_id))
-              OAUTH_CLIENT_SECRET: ((oauth_client_secret))
             run:
               path: sh
               args:
@@ -1195,27 +1287,6 @@ jobs:
                 - -u
                 - -c
                 - |
-                  mkdir certs
-                  echo "Extracting extant certs"
-                  tar -xvzf bosh-CA/bosh-CA.tar.gz -C certs
-                  tar -xvzf ipsec-CA/ipsec-CA.tar.gz -C certs
-                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-                  cd certs
-                  for file in *.crt; do
-                    cn=${file%.crt}
-                    yaml_key_name=$(echo "${cn}" | tr A-Z- a-z_)
-
-                    echo "Converting ${cn} certs to YAML"
-                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_key" "${cn}.key" > "${cn}_key.yml"
-                    ../paas-cf/concourse/scripts/file_to_yaml.sh secrets "${yaml_key_name}_cert" "${cn}.crt" > "${cn}_cert.yml"
-                  done
-
-                  # shellcheck disable=SC2103
-                  cd .. || true
-
-                  echo "Generating manifests"
-
                   if [ "${ENABLE_DATADOG}" = "true" ] ; then
                      MANIFEST_STUBS="${MANIFEST_STUBS}
                                     ./paas-cf/manifests/cf-manifest/stubs/datadog-nozzle.yml"
@@ -1227,7 +1298,44 @@ jobs:
                   fi
 
                   # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/build_manifest.sh $MANIFEST_STUBS > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced-manifest/spruced-manifest.yml
+
+        - task: generate-cf-manifest
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/bosh-cli-v2
+                tag: 465642da06051a55630d39c899697b678f66a7f7
+            inputs:
+              - name: paas-cf
+              - name: spruced-manifest
+              - name: terraform-outputs
+              - name: cf-secrets
+              - name: certs-yaml
+              - name: environment-variables
+            outputs:
+              - name: cf-manifest
+            params:
+              VARS_FILES: |
+                ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
+                ./terraform-outputs/*.yml
+                ./cf-secrets/cf-secrets.yml
+                ./certs-yaml/*.yml
+                ./paas-cf/manifests/variables.yml
+                ./paas-cf/manifests/cf-manifest/static-ips-and-ports.yml
+                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+                ./environment-variables/environment-variables.yml
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  # shellcheck disable=SC2086
+                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced-manifest/spruced-manifest.yml $VARS_FILES > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:
@@ -1477,23 +1585,23 @@ jobs:
 
               cat << EOT > config/config.sh
               export CF_ADMIN=admin
-              export CF_PASS=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+              export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
               export FIREHOSE_USER=graphite-nozzle
-              export FIREHOSE_PASS=$($VAL_FROM_YAML secrets.uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
+              export FIREHOSE_PASS=$($VAL_FROM_YAML secrets_uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
               export API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
               export UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
               export DOPPLER_ENDPOINT=$($VAL_FROM_YAML properties.loggregator.traffic_controller_url cf-manifest/cf-manifest.yml)
               export GRAPHITE_SERVER=$($VAL_FROM_YAML jobs.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
-              export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.rds_broker_elb_dns_name cf-terraform-outputs.yml)
-              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets.rds_broker_admin_password cf-secrets/cf-secrets.yml)
-              export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.cdn_broker_elb_dns_name cf-terraform-outputs.yml)
-              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets.cdn_broker_admin_password cf-secrets/cf-secrets.yml)
-              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets.compose_broker_admin_password cf-secrets/cf-secrets.yml)
-              export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs.nat_public_ips_csv cf-terraform-outputs.yml)
-              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets.elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
-              export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs.elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
-              export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs.metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
-              export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs.metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
+              export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_rds_broker_elb_dns_name cf-terraform-outputs.yml)
+              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-secrets/cf-secrets.yml)
+              export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
+              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-secrets/cf-secrets.yml)
+              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-secrets/cf-secrets.yml)
+              export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
+              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
+              export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
+              export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
+              export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
               EOT
 
               paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
@@ -1884,7 +1992,7 @@ jobs:
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 export UAA_ADMIN_PASSWORD
-                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password cf-secrets/cf-secrets.yml)
+                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
                 cd paas-cf/scripts
                 bundle
                 bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
@@ -2038,7 +2146,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
@@ -2246,7 +2354,7 @@ jobs:
                 > cf-tfstate.yaml
 
               export ES_HOST
-              ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs.logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
+              ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs_logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
               export ES_PORT="9200"
               ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
 
@@ -2338,7 +2446,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets.uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
                 ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
@@ -2892,9 +3000,14 @@ jobs:
             - -e
             - -c
             - |
+              echo "ERROR: We suspect this feature is currently broken. Exiting."
+              echo "You can manually disable this warning, push the pipeline"
+              echo "and rerun if you really require to run this task"
+              exit 1
+
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-              sed "s/  uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
+              sed "s/^secrets_uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
                 > rotated-cf-secrets/cf-secrets-cleared.yml
 
               ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
@@ -2902,8 +3015,8 @@ jobs:
                 > rotated-cf-secrets/cf-secrets.yml
 
               UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
-              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets.uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-              UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets.uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
+              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+              UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
 
               uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
@@ -2931,8 +3044,8 @@ jobs:
         image_resource:
           type: docker-image
           source:
-            repository: governmentpaas/spruce
-            tag: 465642da06051a55630d39c899697b678f66a7f7
+            repository: ruby
+            tag: 2.2-slim
         inputs:
           - name: paas-cf
           - name: cf-secrets
@@ -2944,11 +3057,9 @@ jobs:
             - -e
             - -c
             - |
-              spruce merge \
-                cf-secrets/cf-secrets.yml \
-                paas-cf/concourse/resources/cf-secrets-keep.yml | \
-                spruce merge - paas-cf/concourse/resources/finalize.yml \
-                > modified-cf-secrets/cf-secrets.yml
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-secrets.rb < \
+                cf-secrets/cf-secrets.yml > \
+                modified-cf-secrets/cf-secrets.yml
       on_success:
         put: cf-secrets
         params:
@@ -3010,6 +3121,11 @@ jobs:
             - -e
             - -c
             - |
+              echo "ERROR: We suspect this feature is currently broken. Exiting."
+              echo "You can manually disable this warning, push the pipeline"
+              echo "and rerun if you really require to run this task"
+              exit 1
+
               mkdir certs
               echo "Extracting extant certs"
               tar -xvzf cf-certs/cf-certs.tar.gz -C certs

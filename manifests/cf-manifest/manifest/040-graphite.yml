@@ -1,14 +1,3 @@
-meta:
-  graphite_templates:
-    - name: carbon
-      release: graphite
-    - name: graphite-web
-      release: graphite
-    - name: statsd
-      release: graphite
-    - name: grafana
-      release: grafana
-
 releases:
 - name: graphite
   version: 0.1.1
@@ -61,10 +50,18 @@ jobs:
     grafana:
       root_url: "/"
       admin_username: "admin"
-      admin_password: (( grab secrets.grafana_admin_password ))
+      admin_password: ((secrets_grafana_admin_password))
       datasources:
         - name: graphite
           type: graphite
           url: http://localhost:3001
 
-  templates: (( grab meta.graphite_templates ))
+  templates:
+    - name: carbon
+      release: graphite
+    - name: graphite-web
+      release: graphite
+    - name: statsd
+      release: graphite
+    - name: grafana
+      release: grafana

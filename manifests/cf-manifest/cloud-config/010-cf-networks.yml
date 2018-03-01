@@ -13,7 +13,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.cf1_subnet_id ))
+        subnet: ((terraform_outputs_cf1_subnet_id))
       az: z1
     - range: 10.0.17.0/24
       reserved:
@@ -26,7 +26,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.cf2_subnet_id ))
+        subnet: ((terraform_outputs_cf2_subnet_id))
       az: z2
     - range: 10.0.18.0/24
       reserved:
@@ -39,7 +39,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.cf3_subnet_id ))
+        subnet: ((terraform_outputs_cf3_subnet_id))
       az: z3
 
 - name: cell
@@ -51,7 +51,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.cell1_subnet_id ))
+        subnet: ((terraform_outputs_cell1_subnet_id))
       az: z1
     - range: 10.0.33.0/24
       reserved:
@@ -60,7 +60,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.cell2_subnet_id ))
+        subnet: ((terraform_outputs_cell2_subnet_id))
       az: z2
     - range: 10.0.34.0/24
       reserved:
@@ -69,7 +69,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.cell3_subnet_id ))
+        subnet: ((terraform_outputs_cell3_subnet_id))
       az: z3
 - name: router
   subnets:
@@ -82,7 +82,7 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.router1_subnet_id ))
+        subnet: ((terraform_outputs_router1_subnet_id))
       az: z1
     - range: 10.0.49.0/24
       reserved:
@@ -93,5 +93,5 @@ networks:
       dns:
         - 10.0.0.2
       cloud_properties:
-        subnet: (( grab terraform_outputs.router2_subnet_id ))
+        subnet: ((terraform_outputs_router2_subnet_id))
       az: z2

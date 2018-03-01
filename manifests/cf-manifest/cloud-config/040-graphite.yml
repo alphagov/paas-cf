@@ -4,14 +4,17 @@ disk_types:
     disk_size: 409600
     cloud_properties: {type: gp2}
 
+# FIXME: Remove these vm types by using extensions instead
 vm_types:
   - name: graphite
     network: cf
-    env: (( grab meta.default_env ))
+    env:
+      bosh:
+        password: ((secrets_vcap_password))
     cloud_properties:
       instance_type: t2.medium
       ephemeral_disk:
         size: 10240
         type: gp2
       elbs:
-        - (( grab terraform_outputs.metrics_elb_name ))
+        - ((terraform_outputs_metrics_elb_name))
