@@ -273,7 +273,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-compose-scraper
-      tag_filter: v0.1.1
+      tag_filter: v0.1.2
 
   - name: paas-billing
     type: git
