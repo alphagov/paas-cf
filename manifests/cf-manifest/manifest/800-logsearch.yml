@@ -1,8 +1,8 @@
 releases:
 - name: logsearch
-  url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=203.0.0
-  version: 203.0.0
-  sha1: 4872c3d89fb2587d844dabbc93b124fb43b720d8
+  url: https://bosh.io/d/github.com/cloudfoundry-community/logsearch-boshrelease?v=205.0.1
+  version: 205.0.1
+  sha1: 96d0249797be68d47027cf3cda904a4eaee5aa1f
 - name: logsearch-for-cloudfoundry
   version: 0.1.3
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.3.tgz
@@ -42,10 +42,10 @@ jobs:
   properties:
     redis:
       host: ((queue_static_ips_first))
-    logstash:
-      output:
-        elasticsearch:
-          data_hosts: ((elasticsearch_master_static_ips))
+    logstash_parser:
+      elasticsearch:
+        data_hosts:
+          - ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
 
 - name: parser_z2
   release: logsearch
@@ -64,11 +64,11 @@ jobs:
       - 10.0.17.14
   properties:
     redis:
-      host: ((queue_static_ips_second))
-    logstash:
-      output:
-        elasticsearch:
-          data_hosts: ((elasticsearch_master_static_ips))
+      host: ((queue_static_ips_first))
+    logstash_parser:
+      elasticsearch:
+        data_hosts:
+          - ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
 
 - name: elasticsearch_master
   release: logsearch
@@ -91,6 +91,8 @@ jobs:
       discovery:
         minimum_master_nodes: 2
       master_hosts: ((elasticsearch_master_static_ips))
+      health:
+        disable_post_start: true
 
 - name: maintenance
   instances: 1
