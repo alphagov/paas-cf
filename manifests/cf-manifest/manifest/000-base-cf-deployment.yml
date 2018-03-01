@@ -102,6 +102,9 @@ stemcells:
   - alias: logsearch
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
     version: "3468.22"
+  - alias: graphite
+    name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+    version: "3468.22"
 
 update:
   canaries: 0
