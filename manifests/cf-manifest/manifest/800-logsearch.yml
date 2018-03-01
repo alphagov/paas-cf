@@ -240,6 +240,8 @@ properties:
     elasticsearch:
       host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
       port: 9200
+    request_timeout: 300000
+    shard_timeout: 30000
   haproxy:
     kibana:
       auth:
