@@ -98,6 +98,9 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
+    version: "3541.5"
+  - alias: logsearch
+    name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
     version: "3468.22"
 
 update:
