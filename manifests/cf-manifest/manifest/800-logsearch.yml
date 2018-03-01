@@ -83,6 +83,10 @@ jobs:
   - name: cf
     static_ips: ((elasticsearch_master_static_ips))
   persistent_disk_type: elasticsearch_master
+  update:
+    canaries: 0
+    max_in_flight: 3
+    serial: true
   properties:
     elasticsearch:
       node:
