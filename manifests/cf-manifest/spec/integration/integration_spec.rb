@@ -74,7 +74,7 @@ RSpec.describe "generic manifest validations" do
 
   describe "IP address uniqueness" do
     specify "all jobs should use a unique IP address" do
-      all_ips = manifest["jobs"].map { |job|
+      all_ips = manifest["instance_groups"].map { |job|
         job["networks"].map { |net| net["static_ips"] }
       }.flatten.compact
 
@@ -87,7 +87,7 @@ RSpec.describe "generic manifest validations" do
   describe "jobs cross-references" do
     specify "all jobs reference vm_types that exist" do
       vm_type_names = cloud_config_with_defaults["vm_types"].map { |r| r["name"] }
-      manifest["jobs"].each do |job|
+      manifest["instance_groups"].each do |job|
         expect(vm_type_names).to include(job["vm_type"]),
           "vm_type #{job['vm_type']} not found for job #{job['name']}"
       end
@@ -95,7 +95,7 @@ RSpec.describe "generic manifest validations" do
 
     specify "all jobs reference vm_extensions that exist" do
       vm_extension_names = cloud_config_with_defaults.fetch("vm_extensions", []).map { |r| r["name"] }
-      manifest["jobs"].each do |job|
+      manifest["instance_groups"].each do |job|
         job.fetch("vm_extensions", []).each do |extension|
           expect(vm_extension_names).to include(extension),
             "vm_extension '#{extension}' not found for job #{job['name']}"
@@ -105,7 +105,7 @@ RSpec.describe "generic manifest validations" do
 
     specify "all jobs reference stemcells that exist" do
       stemcell_names = manifest["stemcells"].map { |r| r["alias"] }
-      manifest["jobs"].each do |job|
+      manifest["instance_groups"].each do |job|
         expect(job.has_key?("stemcell")).to be(true),
           "No stemcell defined for job #{job['name']}. You must add a stemcell to this job."
         expect(stemcell_names).to include(job["stemcell"]),
@@ -115,7 +115,7 @@ RSpec.describe "generic manifest validations" do
 
     specify "all jobs reference availability zones that exist" do
       azs_names = cloud_config_with_defaults["azs"].map { |r| r["name"] }
-      manifest["jobs"].each do |job|
+      manifest["instance_groups"].each do |job|
         expect(job.has_key?("azs")).to be(true),
           "No azs key defined for job #{job['name']}. You must add some availability zones."
         job["azs"].each do |az|
@@ -125,13 +125,13 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    specify "all job templates reference releases that exist" do
+    specify "all vm jobs reference releases that exist" do
       release_names = manifest["releases"].map { |r| r["name"] }
 
-      manifest["jobs"].each do |job|
-        job["templates"].each do |template|
-          expect(release_names).to include(template["release"]),
-            "release #{template['release']} not found for template #{template['name']} in job #{job['name']}"
+      manifest["instance_groups"].each do |instance_group|
+        instance_group["jobs"].each do |job|
+          expect(release_names).to include(job["release"]),
+            "release #{job['release']} not found for job #{job['name']} in instance_group #{instance_group['name']}"
         end
       end
     end
@@ -143,7 +143,7 @@ RSpec.describe "generic manifest validations" do
       let(:network_names) { networks_by_name.keys }
 
       specify "all jobs reference networks that exist" do
-        manifest["jobs"].each do |job|
+        manifest["instance_groups"].each do |job|
           job["networks"].each do |network|
             expect(network_names).to include(network["name"]),
               "network #{network['name']} not found for job #{job['name']}"
@@ -166,7 +166,7 @@ RSpec.describe "generic manifest validations" do
           end
         end
 
-        manifest["jobs"].each do |job|
+        manifest["instance_groups"].each do |job|
           job["networks"].each do |job_network|
             next unless job_network["static_ips"]
 
@@ -184,7 +184,7 @@ RSpec.describe "generic manifest validations" do
     specify "all jobs reference disk_types that exist" do
       disk_type_names = cloud_config_with_defaults.fetch("disk_types", {}).map { |p| p["name"] }
 
-      manifest["jobs"].each do |job|
+      manifest["instance_groups"].each do |job|
         next unless job["persistent_disk_type"]
 
         expect(disk_type_names).to include(job["persistent_disk_type"]),

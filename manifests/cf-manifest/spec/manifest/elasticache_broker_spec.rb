@@ -31,14 +31,14 @@ RSpec.describe "ElastiCache broker properties" do
   end
 
   describe "service plans" do
-    let(:elasticache_broker_job) {
-      manifest.fetch("jobs").find { |j| j["name"] == "elasticache_broker" }
+    let(:elasticache_broker_instance_group) {
+      manifest.fetch("instance_groups").find { |j| j["name"] == "elasticache_broker" }
     }
     let(:services) {
-      elasticache_broker_job.fetch("properties").fetch("elasticache-broker").fetch("catalog").fetch("services")
+      elasticache_broker_instance_group.fetch("properties").fetch("elasticache-broker").fetch("catalog").fetch("services")
     }
     let(:plan_configs) {
-      elasticache_broker_job.fetch("properties").fetch("elasticache-broker").fetch("plan_configs")
+      elasticache_broker_instance_group.fetch("properties").fetch("elasticache-broker").fetch("plan_configs")
     }
     let(:all_plans) {
       services.flat_map { |s| s["plans"] }
