@@ -48,13 +48,13 @@ releases:
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.21.tgz
     sha1: 8f52931dd63f2ac7e0335b2269633edfba40e3eb
 
-jobs:
+instance_groups:
   - name: rds_broker
     azs: [z1, z2]
     instances: 2
     vm_type: rds_broker
     stemcell: default
-    templates:
+    jobs:
       - name: rds-broker
         release: rds-broker
     networks:

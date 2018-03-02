@@ -3,8 +3,8 @@ RSpec.describe "Environment specific configuration" do
   let(:default_manifest) { manifest_with_defaults }
   let(:prod_manifest) { render_manifest("prod") }
 
-  def get_job_instances(manifest, job_name)
-    manifest["jobs"].select { |j| j["name"] == job_name }.first["instances"]
+  def get_instance_group_instances(manifest, instance_group_name)
+    manifest["instance_groups"].select { |i| i["name"] == instance_group_name }.first["instances"]
   end
 
   it "should allow a higher number of instances of cells in production" do

@@ -35,11 +35,11 @@ RSpec.describe "RDS broker properties" do
   end
 
   describe "service plans" do
-    let(:rds_broker_job) {
-      manifest.fetch("jobs").find { |j| j["name"] == "rds_broker" }
+    let(:rds_broker_instance_group) {
+      manifest.fetch("instance_groups").find { |i| i["name"] == "rds_broker" }
     }
     let(:services) {
-      rds_broker_job.fetch("properties").fetch("rds-broker").fetch("catalog").fetch("services")
+      rds_broker_instance_group.fetch("properties").fetch("rds-broker").fetch("catalog").fetch("services")
     }
     let(:all_plans) {
       services.flat_map { |s| s["plans"] }
