@@ -63,7 +63,7 @@ instance_groups:
   - name: scheduler
     azs: [z1, z2, z3]
     instances: 3
-    vm_type: small
+    vm_type: medium
     stemcell: default
     networks:
       - name: cf
@@ -73,8 +73,23 @@ instance_groups:
         consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
       - name: metron_agent
         release: loggregator
+      - name: cfdot
+        release: diego
+      - name: auctioneer
+        release: diego
+      - name: cloud_controller_clock
+        release: capi
+      - name: statsd_injector
+        release: statsd-injector
+      - name: tps
+        release: capi
+      - name: ssh_proxy
+        release: diego
       - name: scheduler
         release: cf-syslog-drain
+    vm_extensions:
+      - ssh_proxy_elb
+      - cf_rds_client_sg
     properties:
       scalablesyslog:
         scheduler:
@@ -203,9 +218,6 @@ instance_groups:
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_ng
-        release: capi
-        consumes: {nats: nil}
-      - name: cloud_controller_clock
         release: capi
         consumes: {nats: nil}
       - name: metron_agent
@@ -349,6 +361,7 @@ instance_groups:
         - name: router
           targets: ((terraform_outputs_cell_subnet_cidr_blocks))
 
+  # FIXME: Delete me
   - name: brain
     azs: [z1, z2]
     jobs:
@@ -410,6 +423,7 @@ instance_groups:
         cert: ((certs_cc_client_cert))
         key: ((certs_cc_client_key))
 
+  # FIXME: Delete me
   - name: cc_bridge
     azs: [z1, z2]
     jobs:
@@ -452,6 +466,7 @@ instance_groups:
     networks:
       - name: cf
 
+  # FIXME: Delete me
   - name: access
     azs: [z1, z2]
     jobs:
