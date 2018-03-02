@@ -111,7 +111,7 @@ instance_groups:
 
   - name: nats
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -131,7 +131,9 @@ instance_groups:
       - name: cf
         static_ips: ((nats_static_ips))
 
-  - name: database
+  - name: diego-api
+    migrated_from:
+    - name: database
     azs: [z1, z2]
     templates:
       - name: consul_agent
