@@ -1,7 +1,7 @@
-jobs:
+instance_groups:
   - name: consul
     azs: [z1, z2, z3]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -32,7 +32,7 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
@@ -67,14 +67,28 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
       - name: metron_agent
         release: loggregator
+      - name: cfdot
+        release: diego
+      - name: auctioneer
+        release: diego
+      - name: cloud_controller_clock
+        release: capi
+      - name: statsd_injector
+        release: statsd-injector
+      - name: tps
+        release: capi
+      - name: ssh_proxy
+        release: diego
       - name: scheduler
         release: cf-syslog-drain
+    vm_extensions:
+      - ssh_proxy_elb
     properties:
       scalablesyslog:
         scheduler:
