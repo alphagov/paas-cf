@@ -98,7 +98,7 @@ releases:
 stemcells:
   - alias: default
     name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3468.22"
+    version: "3468.25"
 
 update:
   canaries: 0
