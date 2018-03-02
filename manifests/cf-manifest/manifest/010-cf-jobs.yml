@@ -228,6 +228,10 @@ instance_groups:
         release: loggregator
       - name: statsd_injector
         release: statsd-injector
+      - name: file_server
+        release: diego
+      - name: cc_uploader
+        release: capi
       - name: java-buildpack
         release: java-buildpack
       - name: go-buildpack
