@@ -149,9 +149,9 @@ instance_groups:
             client_cert: "/var/vcap/jobs/cfdot/config/certs/cfdot/client.crt"
             client_key: "/var/vcap/jobs/cfdot/config/certs/cfdot/client.key"
             ca_cert: "/var/vcap/jobs/cfdot/config/certs/cfdot/ca.crt"
-      - name: bbs
-        release: diego
       - name: cfdot
+        release: diego
+      - name: bbs
         release: diego
       - name: metron_agent
         release: loggregator
