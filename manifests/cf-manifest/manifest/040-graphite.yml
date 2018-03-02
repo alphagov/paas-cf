@@ -13,7 +13,7 @@ jobs:
   azs: [z1]
   instances: 1
   vm_type: graphite
-  stemcell: default
+  stemcell: graphite
   persistent_disk_type: graphite_data
   networks:
     - name: cf
