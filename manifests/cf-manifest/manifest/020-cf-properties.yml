@@ -651,6 +651,7 @@ properties:
     executor:
       memory_capacity_mb: ((cell_memory_capacity_mb))
 
+    # FIXME: Delete me
     route_emitter:
       dropsonde_port: ((dropsonde_incoming_port))
       bbs:

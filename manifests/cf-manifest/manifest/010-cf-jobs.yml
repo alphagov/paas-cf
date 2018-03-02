@@ -372,6 +372,26 @@ instance_groups:
         release: diego
       - name: metron_agent
         release: loggregator
+      - name: route_emitter
+        release: diego
+        properties:
+          diego:
+            route_emitter:
+              local_mode: true
+              dropsonde_port: ((dropsonde_incoming_port))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              nats:
+                machines: ((nats_static_ips))
+                user: nats_user
+                password: ((secrets_nats_password))
+                port: ((nats_port))
+      - name: datadog-route-emitter
+        release: datadog-for-cloudfoundry
       - name: datadog-rep
         release: datadog-for-cloudfoundry
       - name: datadog-garden
@@ -436,6 +456,7 @@ instance_groups:
     update:
       serial: true
 
+  # FIXME: Delete me
   - name: route_emitter
     azs: [z1, z2]
     jobs:
