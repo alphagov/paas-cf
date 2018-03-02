@@ -7,11 +7,11 @@ releases:
   version: 0.1.3
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.3.tgz
   sha1: 5b7618c22224dfe7c1948dfad009aff1cdf661c4
-instance_groups:
+jobs:
 - name: queue
   release: logsearch
   azs: [z1, z2]
-  jobs:
+  templates:
   - name: queue
     release: logsearch
   - name: datadog-logsearch-queue
@@ -27,7 +27,7 @@ instance_groups:
 - name: parser_z1
   release: logsearch
   azs: [z1]
-  jobs:
+  templates:
   - name: parser
     release: logsearch
   - name: logsearch-for-cloudfoundry-filters
@@ -50,7 +50,7 @@ instance_groups:
 - name: parser_z2
   release: logsearch
   azs: [z2]
-  jobs:
+  templates:
   - name: parser
     release: logsearch
   - name: logsearch-for-cloudfoundry-filters
@@ -73,7 +73,7 @@ instance_groups:
 - name: elasticsearch_master
   release: logsearch
   azs: [z1, z2, z3]
-  jobs:
+  templates:
   - name: elasticsearch
     release: logsearch
   vm_type: elasticsearch_master
@@ -96,7 +96,7 @@ instance_groups:
   instances: 1
   release: logsearch
   azs: [z1, z2]
-  jobs:
+  templates:
   - name: elasticsearch_config
     release: logsearch
   - name: curator
@@ -115,7 +115,7 @@ instance_groups:
 - name: kibana
   release: logsearch
   azs: [z1, z2]
-  jobs:
+  templates:
   - name: kibana
     release: logsearch
   - name: haproxy
@@ -129,7 +129,7 @@ instance_groups:
 - name: ingestor_z1
   release: logsearch
   azs: [z1]
-  jobs:
+  templates:
   - name: ingestor_syslog
     release: logsearch
   vm_type: ingestor
@@ -149,7 +149,7 @@ instance_groups:
 - name: ingestor_z2
   release: logsearch
   azs: [z2]
-  jobs:
+  templates:
   - name: ingestor_syslog
     release: logsearch
   vm_type: ingestor
