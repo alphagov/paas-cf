@@ -54,7 +54,6 @@ before_install:
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/alphagov/paas-cf/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/alphagov/paas-cf
   - cd $HOME/gopath/src/github.com/alphagov/paas-cf
-  - bundle install --jobs=3 --retry=3 --deployment
   - go get github.com/onsi/ginkgo/ginkgo
   - go get github.com/onsi/gomega/...
 
