@@ -371,27 +371,6 @@ instance_groups:
         - name: router
           targets: ((terraform_outputs_cell_subnet_cidr_blocks))
 
-  # FIXME: Delete me
-  - name: brain
-    azs: [z1, z2]
-    jobs:
-      - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: auctioneer
-        release: diego
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: loggregator
-    instances: 2
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-
   - name: diego-cell
     migrated_from:
     - name: cell
@@ -435,25 +414,6 @@ instance_groups:
         cert: ((certs_cc_client_cert))
         key: ((certs_cc_client_key))
 
-  # FIXME: Delete me
-  - name: cc_bridge
-    azs: [z1, z2]
-    jobs:
-      - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: tps
-        release: capi
-      - name: metron_agent
-        release: loggregator
-    instances: 2
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-
   - name: route_emitter
     azs: [z1, z2]
     jobs:
@@ -472,31 +432,6 @@ instance_groups:
         release: datadog-for-cloudfoundry
     instances: 2
     vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf
-
-  # FIXME: Delete me
-  - name: access
-    azs: [z1, z2]
-    jobs:
-      - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: ssh_proxy
-        release: diego
-      - name: metron_agent
-        release: loggregator
-      - name: file_server
-        release: diego
-      - name: cfdot
-        release: diego
-    instances: 2
-    vm_type: small
-    vm_extensions:
-      - ssh_proxy_elb
     stemcell: default
     networks:
       - name: cf
