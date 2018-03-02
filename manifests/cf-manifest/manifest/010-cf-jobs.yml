@@ -132,7 +132,9 @@ instance_groups:
       - name: cf
         static_ips: ((nats_static_ips))
 
-  - name: database
+  - name: diego-api
+    migrated_from:
+    - name: database
     azs: [z1, z2]
     jobs:
       - name: consul_agent
@@ -261,7 +263,9 @@ instance_groups:
           services:
             cloud_controller_ng: {}
 
-  - name: api_worker
+  - name: cc-worker
+    migrated_from:
+    - name: api_worker
     azs: [z1, z2]
     jobs:
       - name: consul_agent
@@ -288,7 +292,9 @@ instance_groups:
     properties:
       max_in_flight: 1
 
-  - name: loggregator_trafficcontroller
+  - name: log-api
+    migrated_from:
+    - name: loggregator_trafficcontroller
     azs: [z1, z2]
     jobs:
       - name: consul_agent
@@ -382,7 +388,9 @@ instance_groups:
     networks:
       - name: cf
 
-  - name: cell
+  - name: diego-cell
+    migrated_from:
+    - name: cell
     azs: [z1, z2, z3]
     jobs:
       - name: consul_agent
