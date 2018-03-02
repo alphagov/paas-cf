@@ -28,7 +28,7 @@ type ConfigSource struct {
 
 var _ = Describe("KibanaSetUtc", func() {
 	const (
-		KibanaConfigPath = "/.kibana/config/4.4.0"
+		KibanaConfigPath = "/.kibana/config/5.0.0"
 		KibanaIndexPath  = "/.kibana"
 		SessionTimeout   = 5 * time.Second
 	)

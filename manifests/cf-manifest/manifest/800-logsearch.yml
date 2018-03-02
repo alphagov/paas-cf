@@ -1,12 +1,12 @@
 releases:
 - name: logsearch
-  url: https://bosh.io/d/github.com/logsearch/logsearch-boshrelease?v=203.0.0
-  version: 203.0.0
-  sha1: 4872c3d89fb2587d844dabbc93b124fb43b720d8
+  url: https://bosh.io/d/github.com/cloudfoundry-community/logsearch-boshrelease?v=205.0.1
+  version: 205.0.1
+  sha1: 96d0249797be68d47027cf3cda904a4eaee5aa1f
 - name: logsearch-for-cloudfoundry
-  version: 0.1.3
-  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.3.tgz
-  sha1: 5b7618c22224dfe7c1948dfad009aff1cdf661c4
+  version: 0.1.4
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.4.tgz
+  sha1: 7b450ea1ed91fe434eadd667f393f5d877321f1f
 jobs:
 - name: queue
   release: logsearch
@@ -30,7 +30,7 @@ jobs:
   templates:
   - name: parser
     release: logsearch
-  - name: logsearch-for-cloudfoundry-filters
+  - name: parser-config-lfc
     release: logsearch-for-cloudfoundry
   vm_type: parser
   stemcell: default
@@ -42,10 +42,10 @@ jobs:
   properties:
     redis:
       host: ((queue_static_ips_first))
-    logstash:
-      output:
-        elasticsearch:
-          data_hosts: ((elasticsearch_master_static_ips))
+    logstash_parser:
+      elasticsearch:
+        data_hosts:
+          - ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
 
 - name: parser_z2
   release: logsearch
@@ -53,7 +53,7 @@ jobs:
   templates:
   - name: parser
     release: logsearch
-  - name: logsearch-for-cloudfoundry-filters
+  - name: parser-config-lfc
     release: logsearch-for-cloudfoundry
   vm_type: parser
   stemcell: default
@@ -64,11 +64,11 @@ jobs:
       - 10.0.17.14
   properties:
     redis:
-      host: ((queue_static_ips_second))
-    logstash:
-      output:
-        elasticsearch:
-          data_hosts: ((elasticsearch_master_static_ips))
+      host: ((queue_static_ips_first))
+    logstash_parser:
+      elasticsearch:
+        data_hosts:
+          - ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
 
 - name: elasticsearch_master
   release: logsearch
@@ -83,6 +83,10 @@ jobs:
   - name: cf
     static_ips: ((elasticsearch_master_static_ips))
   persistent_disk_type: elasticsearch_master
+  update:
+    canaries: 0
+    max_in_flight: 3
+    serial: true
   properties:
     elasticsearch:
       node:
@@ -91,6 +95,8 @@ jobs:
       discovery:
         minimum_master_nodes: 2
       master_hosts: ((elasticsearch_master_static_ips))
+      health:
+        disable_post_start: true
 
 - name: maintenance
   instances: 1
@@ -101,7 +107,7 @@ jobs:
     release: logsearch
   - name: curator
     release: logsearch
-  - name: logsearch-for-cloudfoundry-filters
+  - name: elasticsearch-config-lfc
     release: logsearch-for-cloudfoundry
   vm_type: small
   stemcell: default
@@ -110,7 +116,9 @@ jobs:
   properties:
     elasticsearch_config:
       templates:
-      - index_template: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logs-template.json
+        - shards-and-replicas: /var/vcap/jobs/elasticsearch_config/index-templates/shards-and-replicas.json
+        - index-settings: /var/vcap/jobs/elasticsearch_config/index-templates/index-settings.json
+        - index-mappings-lfc: /var/vcap/jobs/elasticsearch-config-lfc/index-mappings.json
 
 - name: kibana
   release: logsearch
@@ -171,9 +179,14 @@ properties:
     enable: false
   logstash_parser:
     filters:
-      - logstash: /var/vcap/packages/logsearch-for-cloudfoundry-filters/logstash-filters-default.conf
-      - custom-filters: /var/vcap/jobs/logsearch-for-cloudfoundry-filters/config/logstash-filters-custom.conf
+      - logstash: /var/vcap/packages/logsearch-config-logstash-filters/logstash-filters-default.conf
+      - custom-filters: /var/vcap/jobs/parser-config-lfc/config/logstash-filters-custom.conf
     custom_filters: |
+      if [garden][data][spec] == "" {
+        mutate {
+          remove_field => [ "[garden][data][spec]" ]
+        }
+      }
       if [@source][component] == "gorouter" {
         mutate { replace => { "type" => "gorouter" } }
         grok {
@@ -238,6 +251,8 @@ properties:
     elasticsearch:
       host: ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
       port: 9200
+    request_timeout: 300000
+    shard_timeout: 30000
   haproxy:
     kibana:
       auth:
