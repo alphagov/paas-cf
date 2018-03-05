@@ -165,7 +165,7 @@ jobs:
             type: docker-image
             source:
               repository: alpine
-              tag: "3.4"
+              tag: latest
           inputs:
             - name: bosh-CA
           outputs:

@@ -331,7 +331,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: "3.4"
+                tag: latest
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -439,7 +439,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: "3.4"
+                tag: latest
             inputs:
               - name: bosh-CA
             outputs:
@@ -1121,7 +1121,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: "3.4"
+                tag: latest
             inputs:
               - name: paas-cf
             outputs:
@@ -1156,7 +1156,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: "3.4"
+                tag: latest
             inputs:
               - name: paas-cf
               - name: cf-certs
@@ -2908,7 +2908,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: "3.4"
+                tag: latest
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
