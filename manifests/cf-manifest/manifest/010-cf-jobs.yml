@@ -446,8 +446,6 @@ instance_groups:
         release: datadog-for-cloudfoundry
       - name: tps
         release: capi
-      - name: cc_uploader
-        release: capi
       - name: metron_agent
         release: loggregator
     instances: 2
