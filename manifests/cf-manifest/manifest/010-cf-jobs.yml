@@ -18,12 +18,12 @@ instance_groups:
     networks:
       - name: cf
         static_ips: ((consul_static_ips))
-    update:
-      serial: true
     properties:
       consul:
         agent:
           mode: server
+    update:
+      serial: true
 
   - name: nats
     azs: [z1, z2]
@@ -78,9 +78,6 @@ instance_groups:
             cert: ((certs_reverse_log_proxy_cert))
             key: ((certs_reverse_log_proxy_key))
             cn: reverse_log_proxy
-    update:
-      serial: true
-      max_in_flight: 1
 
   - name: diego-api
     migrated_from:
@@ -243,8 +240,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      max_in_flight: 1
 
   - name: router
     azs: [z1, z2]
@@ -281,6 +276,8 @@ instance_groups:
         ports:
         - name: router
           targets: ((terraform_outputs_cell_subnet_cidr_blocks))
+    update:
+      serial: true
 
   - name: scheduler
     azs: [z1, z2, z3]
@@ -330,7 +327,6 @@ instance_groups:
               cn: "cloud-controller-ng.service.cf.internal"
     update:
       serial: true
-      max_in_flight: 1
 
   - name: doppler
     azs: [z1, z2, z3]
@@ -437,6 +433,8 @@ instance_groups:
           services:
             loggregator_trafficcontroller: {}
             reverse_log_proxy: {}
+    update:
+      serial: true
 
   - name: route_emitter
     azs: [z1, z2]
