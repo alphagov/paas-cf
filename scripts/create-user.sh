@@ -104,7 +104,7 @@ check_params_and_environment() {
 
 create_org_space() {
   if ! cf org "${ORG}" 2&> /dev/null; then
-    read -p "The org $ORG doesn't exist yet. Do you want to create it? [Yy] " -n 1 -r
+    read -p "The org $ORG doesn't exist yet. Do you want to create it? [Yy] " -r
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       echo
       cf create-org "${ORG}"
