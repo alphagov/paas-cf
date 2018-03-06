@@ -2,3 +2,4 @@
 cell_instances: 24
 elasticsearch_master_disk_size: 3072000
 elasticsearch_master_instance_type: c4.2xlarge
+parser_instance_type: c4.xlarge
