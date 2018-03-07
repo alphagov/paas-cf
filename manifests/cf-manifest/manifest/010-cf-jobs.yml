@@ -32,6 +32,17 @@ meta:
       metron_agent:
         deployment: ((environment))
 
+  statsd_injector_job: &statsd_injector_job
+    name: statsd_injector
+    release: statsd-injector
+    properties:
+      loggregator:
+        tls:
+          ca_cert: ((certs_bosh_ca_cert))
+          statsd_injector:
+            cert: ((certs_statsd_injector_cert))
+            key: ((certs_statsd_injector_key))
+
   cfdot_job: &cfdot_job
     name: cfdot
     release: diego
@@ -225,12 +236,240 @@ instance_groups:
         release: datadog-for-cloudfoundry
       - name: uaa
         release: uaa
+        properties:
+          uaadb:
+            db_scheme: postgresql
+            address: ((terraform_outputs_cf_db_address))
+            port: 5432
+            roles:
+              - tag: admin
+                name: uaa
+                password: ((secrets_cf_db_uaa_password))
+            databases:
+              - tag: uaa
+                name: uaa
+                citext: true
+
+          uaa:
+            url: https://uaa.((system_domain))
+            issuer: https://uaa.((system_domain))
+            require_https: false
+            logging_level: INFO
+            scim:
+              userids_enabled: true
+              users:
+                - name: admin
+                  password: ((secrets_uaa_admin_password))
+                  groups:
+                    - scim.write
+                    - scim.read
+                    - scim.invite
+                    - openid
+                    - cloud_controller.admin
+                    - cloud_controller.admin_read_only
+                    - doppler.firehose
+              groups:
+                cloud_controller.global_auditor: 'Global Auditor read only group'
+
+
+            port: 8080
+            ssl:
+              port: 8443
+            sslCertificate: ((certs_uaa_internal_cert))
+            sslPrivateKey: ((certs_uaa_internal_key))
+
+            password:
+              policy:
+                minLength: 8
+
+            admin:
+              client_secret: ((secrets_uaa_admin_client_secret))
+
+            jwt:
+              policy:
+                active_key_id: default
+                keys:
+                  default:
+                    signingKey: ((certs_uaa_jwt_signing_key))
+                  previous:
+                    signingKey: ((certs_uaa_jwt_signing_old_key))
+                refreshTokenValiditySeconds: 604800
+                global:
+                  refreshTokenValiditySeconds: 604800
+
+            clients:
+              login:
+                override: true
+                scope: openid,oauth.approvals
+                authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
+                authorized-grant-types: authorization_code,client_credentials,refresh_token
+                redirect-uri: https://login.((system_domain))
+                secret: ((secrets_uaa_clients_login_secret))
+              cf:
+                override: true
+                authorized-grant-types: password,refresh_token
+                scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,scim.read,scim.write,scim.invite,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write
+                authorities: uaa.none
+                access-token-validity: 600
+                refresh-token-validity: 604800
+                secret: ''
+              notifications:
+                override: true
+                authorities: cloud_controller.admin,scim.read
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_notifications_secret))
+              doppler:
+                override: true
+                authorities: uaa.resource
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_doppler_secret))
+              cloud_controller_username_lookup:
+                override: true
+                authorities: scim.userids
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_cloud_controller_username_lookup_secret))
+              cc_service_key_client:
+                override: true
+                authorities: credhub.read,credhub.write
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_cc_service_key_client_secret))
+              cc_routing:
+                override: true
+                authorities: routing.router_groups.read
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_cc_routing_secret))
+              gorouter:
+                override: true
+                authorities: routing.routes.read
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_gorouter_secret))
+              tcp_emitter:
+                override: true
+                authorities: routing.routes.write,routing.routes.read
+                authorized-grant-types: client_credentials
+                secret: ''
+              tcp_router:
+                override: true
+                authorities: routing.routes.read
+                authorized-grant-types: client_credentials
+                secret: ''
+              ssh-proxy:
+                override: true
+                authorized-grant-types: authorization_code
+                autoapprove: true
+                redirect-uri: https://login.((system_domain))/login
+                scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
+                secret: ((secrets_uaa_clients_ssh_proxy_secret))
+              graphite-nozzle:
+                override: true
+                access-token-validity: 1209600
+                authorized-grant-types: authorization_code,client_credentials,refresh_token
+                secret: ((secrets_uaa_clients_firehose_password))
+                scope: openid,oauth.approvals,doppler.firehose
+                authorities: oauth.login,doppler.firehose
+                redirect-uri: https://login.((system_domain))/login
+              paas-metrics:
+                override: true
+                access-token-validity: 1209600
+                authorized-grant-types: client_credentials,refresh_token
+                secret: ((secrets_uaa_clients_paas_metrics_secret))
+                scope: openid,oauth.approvals,cloud_controller.global_auditor
+                authorities: oauth.login,cloud_controller.global_auditor
+                redirect-uri: https://login.((system_domain))
+              paas-billing:
+                override: true
+                access-token-validity: 1209600
+                authorized-grant-types: client_credentials,refresh_token,authorization_code
+                autoapprove: true
+                secret: ((secrets_uaa_clients_paas_billing_secret))
+                scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
+                authorities: cloud_controller.admin_read_only,uaa.resource
+                redirect-uri: https://paas-billing.((app_domain))/oauth/callback
+              paas-admin:
+                override: true
+                authorized-grant-types: authorization_code,refresh_token
+                autoapprove: true
+                secret: ((secrets_uaa_clients_paas_admin_secret))
+                scope: openid,oauth.approvals,cloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor
+                authorities: uaa.none
+                redirect-uri: https://paas-admin.((app_domain))/auth/cloudfoundry/callback
+              cc-service-dashboards:
+                override: true
+                secret: ((secrets_uaa_clients_cc_service_dashboards_password))
+                authorities: clients.read,clients.write,clients.admin
+                authorized-grant-types: client_credentials
+                redirect-uri: https://login.((system_domain))
+              cdn_broker:
+                override: true
+                authorities: uaa.none
+                authorized-grant-types: password
+                scope: cloud_controller.admin_read_only
+                secret: ((secrets_uaa_clients_cdn_broker_secret))
+              user_invitation:
+                override: true
+                authorities: oauth.login,scim.write,emails.write,scim.userids
+                authorized-grant-types: password,refresh_token
+                redirect-uri: "https://www.cloud.service.gov.uk/next-steps?success"
+                scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
+                secret: ((secrets_uaa_clients_login_secret))
+            zones:
+              internal:
+                hostnames:
+                - uaa.service.cf.internal
+          login:
+            saml:
+              activeKeyId: key1
+              keys:
+                key1:
+                  key: ((certs_saml_key))
+                  passphrase: ""
+                  certificate: ((certs_saml_cert))
+            smtp:
+              host: ((terraform_outputs_ses_smtp_host))
+              port: 587
+              from_address: "gov-uk-paas-support@digital.cabinet-office.gov.uk"
+              user: ((terraform_outputs_ses_smtp_aws_access_key_id))
+              password: ((terraform_outputs_ses_smtp_password))
+              auth: true
+              starttls: true
+            self_service_links_enabled: true
+            links:
+              passwd: "https://login.((system_domain))/forgot_password"
+              signup: "https://www.cloud.service.gov.uk/signup"
+              homeRedirect: "https://www.cloud.service.gov.uk/next-steps?account-updated"
+            branding:
+              company_name: "GOV.UK PaaS"
+            asset_base_url: "https://paas-uaa-assets.((terraform_outputs_cf_apps_domain))"
+
       - name: metron_agent
         <<: *metron_agent_job
       - name: statsd_injector
-        release: statsd-injector
+        <<: *statsd_injector_job
       - name: route_registrar
         release: routing
+        properties:
+          nats:
+            machines: ((nats_static_ips))
+            port: ((nats_port))
+            user: nats_user
+            password: ((secrets_nats_password))
+          route_registrar:
+            routes:
+              - name: uaa
+                registration_interval: 10s
+                health_check:
+                  name: cf_uaa_health_check
+                  script_path: /var/vcap/jobs/uaa/bin/health_check
+                  timeout: "5s"
+                port: 8081
+                tls_port: 8443
+                server_cert_domain_san: "uaa.service.cf.internal"
+                tags:
+                  component: uaa
+                uris:
+                  - "uaa.((system_domain))"
+                  - "login.((system_domain))"
+
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -238,29 +477,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      ssl_key: ((certs_uaa_internal_key))
-      ssl_chained_cert: ((certs_uaa_internal_cert))
-      consul:
-        agent:
-          services:
-            uaa: {}
-      route_registrar:
-        routes:
-          - name: uaa
-            registration_interval: 10s
-            health_check:
-              name: cf_uaa_health_check
-              script_path: /var/vcap/jobs/uaa/bin/health_check
-              timeout: "5s"
-            port: 8081
-            tls_port: 8443
-            server_cert_domain_san: "uaa.service.cf.internal"
-            tags:
-              component: uaa
-            uris:
-              - "uaa.((system_domain))"
-              - "login.((system_domain))"
 
   - name: api
     azs: [z1, z2]
