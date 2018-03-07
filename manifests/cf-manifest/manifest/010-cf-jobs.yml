@@ -110,22 +110,22 @@ instance_groups:
         <<: *metron_agent_job
       - name: adapter
         release: cf-syslog-drain
-    properties:
-      scalablesyslog:
-        adapter:
-          tls:
-            ca: ((certs_bosh_ca_cert))
-            cert: ((certs_scalablesyslog_adapter_cert))
-            key: ((certs_scalablesyslog_adapter_key))
-            cn: scalablesyslog_adapter
-          logs:
-            addr: reverse-log-proxy.service.cf.internal:8082
-        adapter_rlp:
-          tls:
-            ca: ((certs_bosh_ca_cert))
-            cert: ((certs_reverse_log_proxy_cert))
-            key: ((certs_reverse_log_proxy_key))
-            cn: reverse_log_proxy
+        properties:
+          scalablesyslog:
+            adapter:
+              tls:
+                ca: ((certs_bosh_ca_cert))
+                cert: ((certs_scalablesyslog_adapter_cert))
+                key: ((certs_scalablesyslog_adapter_key))
+                cn: scalablesyslog_adapter
+              logs:
+                addr: reverse-log-proxy.service.cf.internal:8082
+            adapter_rlp:
+              tls:
+                ca: ((certs_bosh_ca_cert))
+                cert: ((certs_reverse_log_proxy_cert))
+                key: ((certs_reverse_log_proxy_key))
+                cn: reverse_log_proxy
 
   - name: diego-api
     migrated_from:
