@@ -1169,6 +1169,15 @@ instance_groups:
       - name: doppler
         release: loggregator
         provides: {doppler: {as: doppler}}
+        properties:
+          doppler:
+            maxRetainedLogMessages: 100
+          loggregator:
+            tls:
+              ca_cert: ((certs_bosh_ca_cert))
+              doppler:
+                cert: ((certs_doppler_cert))
+                key: ((certs_doppler_key))
       - name: metron_agent
         <<: *metron_agent_job
     instances: 3
