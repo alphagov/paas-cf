@@ -1301,10 +1301,43 @@ instance_groups:
       - name: loggregator_trafficcontroller
         release: loggregator
         consumes: {doppler: {from: doppler}}
+        properties:
+          system_domain: ((terraform_outputs_cf_root_domain))
+          ssl:
+            skip_cert_verify: false
+          cc:
+            internal_service_hostname: cloud-controller-ng.service.cf.internal
+            tls_port: 9023
+            mutual_tls:
+              ca_cert: ((certs_bosh_ca_cert))
+          loggregator:
+            outgoing_dropsonde_port: 8081
+            uaa:
+              client_secret: ((secrets_uaa_clients_doppler_secret))
+            tls:
+              ca_cert: ((certs_bosh_ca_cert))
+              trafficcontroller:
+                cert: ((certs_trafficcontroller_cert))
+                key: ((certs_trafficcontroller_key))
+              cc_trafficcontroller:
+                cert: ((certs_cc_trafficcontroller_cert))
+                key: ((certs_cc_trafficcontroller_key))
+          uaa:
+            internal_url: https://uaa.service.cf.internal:8443
+            ca_cert: ((certs_bosh_ca_cert))
+          doppler:
+            outgoing_port: 8081
       - name: metron_agent
         <<: *metron_agent_job
       - name: reverse_log_proxy
         release: loggregator
+        properties:
+          loggregator:
+            tls:
+              ca_cert: ((certs_bosh_ca_cert))
+              reverse_log_proxy:
+                cert: ((certs_reverse_log_proxy_cert))
+                key: ((certs_reverse_log_proxy_key))
     provides:
       reverse_log_proxy: {as: reverse_log_proxy, shared: true}
     instances: 2
@@ -1314,17 +1347,5 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      loggregator:
-        uaa:
-          client_secret: ((secrets_uaa_clients_doppler_secret))
-        reverse_log_proxy:
-          egress:
-            port: 8082
-      consul:
-        agent:
-          services:
-            loggregator_trafficcontroller: {}
-            reverse_log_proxy: {}
     update:
       serial: true
