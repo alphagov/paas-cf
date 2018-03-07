@@ -978,9 +978,27 @@ instance_groups:
       - name: metron_agent
         <<: *metron_agent_job
       - name: cfdot
-        release: diego
+        <<: *cfdot_job
       - name: auctioneer
         release: diego
+        properties:
+          diego:
+            auctioneer:
+              ca_cert: ((certs_bosh_ca_cert))
+              server_cert: ((certs_auctioneer_server_cert))
+              server_key: ((certs_auctioneer_server_key))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              rep:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_rep_client_cert))
+                client_key: ((certs_rep_client_key))
+                require_tls: true
+              dropsonde_port: ((dropsonde_incoming_port))
       - name: cloud_controller_clock
         release: capi
         properties:
@@ -1067,32 +1085,69 @@ instance_groups:
                 secret: ((secrets_uaa_cc_routing_secret))
 
       - name: statsd_injector
-        release: statsd-injector
+        <<: *statsd_injector_job
       - name: tps
         release: capi
+        properties:
+          diego:
+            ssl:
+              skip_cert_verify: false
+          capi:
+            tps:
+              listener_enabled: false
+              dropsonde_port: ((dropsonde_incoming_port))
+              cc:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_cc_client_cert))
+                client_key: ((certs_cc_client_key))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              traffic_controller_url: wss://doppler.((system_domain)):443
       - name: ssh_proxy
         release: diego
+        properties:
+          diego:
+            ssl:
+              skip_cert_verify: false
+            ssh_proxy:
+              dropsonde_port: ((dropsonde_incoming_port))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              host_key: ((secrets_ssh_proxy_host_key.private_key))
+              enable_cf_auth: true
+              enable_diego_auth: false
+              diego_credentials: ""
+              uaa_secret: ((secrets_uaa_clients_ssh_proxy_secret))
+              uaa_token_url: https://uaa.((system_domain))/oauth/token
       - name: scheduler
         release: cf-syslog-drain
+        properties:
+          scalablesyslog:
+            scheduler:
+              api:
+                url: https://cloud-controller-ng.service.cf.internal:9023
+              tls:
+                client:
+                  ca: ((certs_bosh_ca_cert))
+                  cert: ((certs_scalablesyslog_adapter_scheduler_client_cert))
+                  key: ((certs_scalablesyslog_adapter_scheduler_client_key))
+                  adapter_cn: "scalablesyslog_adapter"
+                api:
+                  ca: ((certs_bosh_ca_cert))
+                  cert: ((certs_scalablesyslog_adapter_scheduler_api_cert))
+                  key: ((certs_scalablesyslog_adapter_scheduler_api_key))
+                  cn: "cloud-controller-ng.service.cf.internal"
     vm_extensions:
       - ssh_proxy_elb
       - cf_rds_client_sg
-    properties:
-      scalablesyslog:
-        scheduler:
-          api:
-            url: https://cloud-controller-ng.service.cf.internal:9023
-          tls:
-            client:
-              ca: ((certs_bosh_ca_cert))
-              cert: ((certs_scalablesyslog_adapter_scheduler_client_cert))
-              key: ((certs_scalablesyslog_adapter_scheduler_client_key))
-              adapter_cn: "scalablesyslog_adapter"
-            api:
-              ca: ((certs_bosh_ca_cert))
-              cert: ((certs_scalablesyslog_adapter_scheduler_api_cert))
-              key: ((certs_scalablesyslog_adapter_scheduler_api_key))
-              cn: "cloud-controller-ng.service.cf.internal"
     update:
       serial: true
 
