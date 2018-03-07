@@ -32,6 +32,18 @@ meta:
       metron_agent:
         deployment: ((environment))
 
+  cfdot_job: &cfdot_job
+    name: cfdot
+    release: diego
+    properties:
+      diego:
+        cfdot:
+          bbs:
+            ca_cert: ((certs_bosh_ca_cert))
+            client_cert: ((certs_bbs_client_cert))
+            client_key: ((certs_bbs_client_key))
+            use_ssl: true
+
 instance_groups:
   - name: consul
     azs: [z1, z2, z3]
@@ -146,8 +158,44 @@ instance_groups:
             ca_cert: "/var/vcap/jobs/cfdot/config/certs/cfdot/ca.crt"
       - name: bbs
         release: diego
+        properties:
+          diego:
+            bbs:
+              active_key_label: key-2017-01
+              encryption_keys:
+                - label: key-2017-01
+                  passphrase: ((secrets_bbs_encryption_key))
+              ca_cert: ((certs_bosh_ca_cert))
+              server_cert: ((certs_bbs_server_cert))
+              server_key: ((certs_bbs_server_key))
+              auctioneer:
+                api_location: auctioneer.service.cf.internal:9016
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_auctioneer_client_cert))
+                client_key: ((certs_auctioneer_client_key))
+                require_tls: true
+              etcd:
+                machines: []
+                ca_cert: ""
+                client_cert: ""
+                client_key: ""
+                require_ssl: false
+              rep:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_rep_client_cert))
+                client_key: ((certs_rep_client_key))
+                require_tls: true
+              sql:
+                db_username: bbs
+                db_password: ((secrets_cf_db_bbs_password))
+                db_host: ((terraform_outputs_cf_db_address))
+                db_port: 5432
+                db_schema: bbs
+                db_driver: postgres
+              dropsonde_port: ((dropsonde_incoming_port))
+              require_ssl: true
       - name: cfdot
-        release: diego
+        <<: *cfdot_job
       - name: metron_agent
         <<: *metron_agent_job
     instances: 2
