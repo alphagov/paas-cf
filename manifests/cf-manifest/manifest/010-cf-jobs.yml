@@ -71,8 +71,21 @@ instance_groups:
       - name: nats
         consumes: {nats: nil}
         release: nats
+        properties:
+          nats:
+            port: ((nats_port))
+            machines: ((nats_static_ips))
+            debug: false
+            trace: false
+            monitor_port: 0
+            prof_port: 0
+            user: nats_user
+            password: ((secrets_nats_password))
       - name: datadog-nats
         release: datadog-for-cloudfoundry
+        properties:
+          nats:
+            port: ((nats_port))
       - name: metron_agent
         <<: *metron_agent_job
     instances: 2
