@@ -1,3 +1,37 @@
+meta:
+  consul_agent_job: &consul_agent_job
+    name: consul_agent
+    release: consul
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+    properties:
+      consul: &consul_agent_job_properties_consul
+        agent: &consul_agent_job_properties_consul_agent
+          domain: cf.internal
+          servers:
+            lan: ((consul_static_ips))
+          dns_config:
+            allow_stale: true
+            max_stale: "30s"
+          log_level: null
+        ca_cert: ((certs_bosh_ca_cert))
+        agent_cert: ((certs_consul_agent_cert))
+        agent_key: ((certs_consul_agent_key))
+        encrypt_keys: ((secrets_consul_encrypt_keys))
+        server_cert: ((certs_consul_server_cert))
+        server_key: ((certs_consul_server_key))
+
+  metron_agent_job: &metron_agent_job
+    release: loggregator
+    properties:
+      loggregator:
+        tls:
+          ca_cert: ((certs_bosh_ca_cert))
+          metron:
+            cert: ((certs_metron_cert))
+            key: ((certs_metron_key))
+      metron_agent:
+        deployment: ((environment))
+
 instance_groups:
   - name: consul
     azs: [z1, z2, z3]
@@ -5,12 +39,18 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              mode: server
       - name: datadog-consul-agent-server
         release: datadog-for-cloudfoundry
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 3
     persistent_disk_type: consul
     vm_type: small
@@ -18,10 +58,6 @@ instance_groups:
     networks:
       - name: cf
         static_ips: ((consul_static_ips))
-    properties:
-      consul:
-        agent:
-          mode: server
     update:
       serial: true
 
@@ -29,8 +65,7 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: nats
@@ -39,7 +74,7 @@ instance_groups:
       - name: datadog-nats
         release: datadog-for-cloudfoundry
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 2
     vm_type: medium
     stemcell: default
@@ -56,10 +91,10 @@ instance_groups:
       - name: cf
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
+        <<: *consul_agent_job
+        consumes: {consul_client: nil, consul_server: nil, consul_common: nil, consul: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: adapter
         release: cf-syslog-drain
     properties:
@@ -85,8 +120,7 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-bbs
@@ -102,7 +136,7 @@ instance_groups:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -119,12 +153,19 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                uaa: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: uaa
         release: uaa
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: statsd_injector
         release: statsd-injector
       - name: route_registrar
@@ -166,11 +207,18 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                cloud_controller_ng: {}
       - name: cloud_controller_ng
         release: capi
         consumes: {nats: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: statsd_injector
         release: statsd-injector
       - name: file_server
@@ -207,12 +255,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      max_in_flight: 1
-      consul:
-        agent:
-          services:
-            cloud_controller_ng: {}
 
   - name: cc-worker
     migrated_from:
@@ -220,13 +262,12 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: cloud_controller_worker
         release: capi
         consumes: {nats: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-cc-worker
@@ -247,13 +288,20 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                gorouter: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
         release: routing
         consumes: {nats: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: haproxy
         release: paas-haproxy
       - name: datadog-router
@@ -268,10 +316,6 @@ instance_groups:
     networks:
       - name: router
     properties:
-      consul:
-        agent:
-          services:
-            gorouter: {}
       racoon:
         ports:
         - name: router
@@ -288,10 +332,10 @@ instance_groups:
       - name: cf
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
+        <<: *consul_agent_job
+        consumes: {consul_client: nil, consul_server: nil, consul_common: nil, consul: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: cfdot
         release: diego
       - name: auctioneer
@@ -334,23 +378,25 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                doppler: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: doppler
         release: loggregator
         provides: {doppler: {as: doppler}}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 3
     vm_type: medium
     stemcell: default
     networks:
       - name: cf
-    properties:
-      consul:
-        agent:
-          services:
-            doppler: {}
 
   - name: diego-cell
     migrated_from:
@@ -358,8 +404,7 @@ instance_groups:
     azs: [z1, z2, z3]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: rep
@@ -371,7 +416,7 @@ instance_groups:
       - name: cfdot
         release: diego
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: route_emitter
         release: diego
         properties:
@@ -423,13 +468,21 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                loggregator_trafficcontroller: {}
+                reverse_log_proxy: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: loggregator_trafficcontroller
         release: loggregator
         consumes: {doppler: {from: doppler}}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: reverse_log_proxy
         release: loggregator
     provides:
