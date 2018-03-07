@@ -890,14 +890,70 @@ instance_groups:
       - name: gorouter
         release: routing
         consumes: {nats: nil}
+        properties:
+          router:
+            backends:
+              enable_tls: true
+              cert_chain: ((certs_router_internal_cert))
+              private_key: ((certs_router_internal_key))
+            enable_ssl: false
+            enable_access_log_streaming: true
+            status:
+              user: router_user
+              password: ((secrets_router_password))
+              port: 8080
+            drain_wait: 120
+            route_services_secret: ((secrets_route_services_secret))
+            max_idle_connections: 0
+            tracing:
+              enable_zipkin: true
+          request_timeout_in_seconds: 900
+          nats:
+            user: nats_user
+            password: ((secrets_nats_password))
+            port: ((nats_port))
+            machines: ((nats_static_ips))
+          uaa:
+            clients:
+              gorouter:
+                secret: ((secrets_uaa_clients_gorouter_secret))
+            ssl:
+              port: 8443
+            ca_cert: ((certs_bosh_ca_cert))
+
       - name: metron_agent
         <<: *metron_agent_job
       - name: haproxy
         release: paas-haproxy
+        properties:
+          request_timeout_in_seconds: 900
+          ha_proxy:
+            enable_proxy_protocol: true
+            disable_http: true
+            go_router:
+              servers: [ "127.0.0.1" ]
+              port: 80
+              healthcheck_port: 8080
+            additional_frontend_config: |
+              capture response header strict-transport-security len 128
+              http-response add-header Strict-Transport-Security max-age=31536000;\ includeSubDomains;\ preload unless { capture.res.hdr(0) -m found }
+            enable_healthcheck_frontend: true
+            ssl_pem: ((certs_router_internal_cert))((certs_router_internal_key))
+            enable_http_redirect_frontend: true
+
       - name: datadog-router
         release: datadog-for-cloudfoundry
       - name: racoon
         release: ipsec
+        properties:
+          racoon:
+            ports:
+            - name: router
+              targets: ((terraform_outputs_cell_subnet_cidr_blocks))
+            certificate_authority_private_key: ((certs_ipsec_ca_key))
+            certificate_authority_cert: ((certs_ipsec_ca_cert))
+            level: require
+            verify_certificate: 'on'
       - name: datadog-ipsec
         release: datadog-for-cloudfoundry
     instances: 2
@@ -905,11 +961,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: router
-    properties:
-      racoon:
-        ports:
-        - name: router
-          targets: ((terraform_outputs_cell_subnet_cidr_blocks))
     update:
       serial: true
 
