@@ -62,24 +62,16 @@ RSpec.describe "the instance_groups definitions block" do
   end
 
   describe "in order to match the upstream Diego instance_group ordering" do
-    it "has database before brain" do
-      expect("diego-api").to be_ordered_before("brain")
+    it "has diego-api before scheduler" do
+      expect("diego-api").to be_ordered_before("scheduler")
     end
 
-    it "has brain before the cells" do
-      expect("brain").to be_ordered_before("diego-cell")
+    it "has scheduler before the diego cells" do
+      expect("scheduler").to be_ordered_before("diego-cell")
     end
 
-    it "has the cells before cc_bridge" do
-      expect("diego-cell").to be_ordered_before("cc_bridge")
-    end
-
-    it "has cc_bridge before route_emitter" do
-      expect("cc_bridge").to be_ordered_before("route_emitter")
-    end
-
-    it "has route_emitter before access" do
-      expect("route_emitter").to be_ordered_before("access")
+    it "has api before scheduler" do
+      expect("api").to be_ordered_before("scheduler")
     end
   end
 
