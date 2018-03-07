@@ -8,7 +8,7 @@ releases:
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/grafana-0.1.2.tgz
   sha1: 483ee4a07d683c94014efede103dd93cb92cd883
 
-jobs:
+instance_groups:
 - name: graphite
   azs: [z1]
   instances: 1
@@ -56,7 +56,7 @@ jobs:
           type: graphite
           url: http://localhost:3001
 
-  templates:
+  jobs:
     - name: carbon
       release: graphite
     - name: graphite-web

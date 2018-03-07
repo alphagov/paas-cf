@@ -1,7 +1,7 @@
-jobs:
+instance_groups:
   - name: consul
     azs: [z1, z2, z3]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -32,7 +32,7 @@ jobs:
     stemcell: default
     networks:
       - name: cf
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
@@ -63,18 +63,33 @@ jobs:
   - name: scheduler
     azs: [z1, z2, z3]
     instances: 3
-    vm_type: small
+    vm_type: medium
     stemcell: default
     networks:
       - name: cf
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
       - name: metron_agent
         release: loggregator
+      - name: cfdot
+        release: diego
+      - name: auctioneer
+        release: diego
+      - name: cloud_controller_clock
+        release: capi
+      - name: statsd_injector
+        release: statsd-injector
+      - name: tps
+        release: capi
+      - name: ssh_proxy
+        release: diego
       - name: scheduler
         release: cf-syslog-drain
+    vm_extensions:
+      - ssh_proxy_elb
+      - cf_rds_client_sg
     properties:
       scalablesyslog:
         scheduler:
@@ -97,7 +112,7 @@ jobs:
 
   - name: nats
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -117,9 +132,11 @@ jobs:
       - name: cf
         static_ips: ((nats_static_ips))
 
-  - name: database
+  - name: diego-api
+    migrated_from:
+    - name: database
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -151,7 +168,7 @@ jobs:
 
   - name: uaa
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -198,20 +215,21 @@ jobs:
 
   - name: api
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: cloud_controller_ng
         release: capi
         consumes: {nats: nil}
-      - name: cloud_controller_clock
-        release: capi
-        consumes: {nats: nil}
       - name: metron_agent
         release: loggregator
       - name: statsd_injector
         release: statsd-injector
+      - name: file_server
+        release: diego
+      - name: cc_uploader
+        release: capi
       - name: java-buildpack
         release: java-buildpack
       - name: go-buildpack
@@ -249,9 +267,11 @@ jobs:
           services:
             cloud_controller_ng: {}
 
-  - name: api_worker
+  - name: cc-worker
+    migrated_from:
+    - name: api_worker
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -276,9 +296,11 @@ jobs:
     properties:
       max_in_flight: 1
 
-  - name: loggregator_trafficcontroller
+  - name: log-api
+    migrated_from:
+    - name: loggregator_trafficcontroller
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -315,7 +337,7 @@ jobs:
 
   - name: router
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -349,9 +371,10 @@ jobs:
         - name: router
           targets: ((terraform_outputs_cell_subnet_cidr_blocks))
 
+  # FIXME: Delete me
   - name: brain
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -369,9 +392,11 @@ jobs:
     networks:
       - name: cf
 
-  - name: cell
+  - name: diego-cell
+    migrated_from:
+    - name: cell
     azs: [z1, z2, z3]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -410,17 +435,16 @@ jobs:
         cert: ((certs_cc_client_cert))
         key: ((certs_cc_client_key))
 
+  # FIXME: Delete me
   - name: cc_bridge
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: tps
-        release: capi
-      - name: cc_uploader
         release: capi
       - name: metron_agent
         release: loggregator
@@ -432,7 +456,7 @@ jobs:
 
   - name: route_emitter
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -452,9 +476,10 @@ jobs:
     networks:
       - name: cf
 
+  # FIXME: Delete me
   - name: access
     azs: [z1, z2]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
@@ -478,7 +503,7 @@ jobs:
 
   - name: doppler
     azs: [z1, z2, z3]
-    templates:
+    jobs:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}

@@ -4,13 +4,13 @@ releases:
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.5.tgz
     sha1: 189898fb860b5f51ac62dd74d5d2e0b1ad7c94f6
 
-jobs:
+instance_groups:
   - name: elasticache_broker
     azs: [z1, z2]
     instances: 2
     vm_type: elasticache_broker
     stemcell: default
-    templates:
+    jobs:
       - name: elasticache-broker
         release: elasticache-broker
     networks:

@@ -4,13 +4,13 @@ releases:
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.6.tgz
     sha1: 7db1bf1d80707e56d257d813d5155ce3c6767127
 
-jobs:
+instance_groups:
   - name: cdn_broker
     azs: [z1, z2]
     instances: 2
     vm_type: cdn_broker
     stemcell: default
-    templates:
+    jobs:
       - name: cdn-broker
         release: cdn-broker
       - name: cdn-cron
