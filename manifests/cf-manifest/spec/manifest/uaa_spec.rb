@@ -1,7 +1,7 @@
 RSpec.describe "uaa properties" do
   context "with the default certificates" do
     let(:manifest) { manifest_with_defaults }
-    let(:properties) { manifest.fetch("properties") }
+    let(:properties) { manifest.fetch("instance_groups").fetch("router").fetch("jobs").fetch("uaa").fetch("properties") }
 
     it "has the same certificate for jwt policy signing keys" do
       jwt_keys = properties.fetch("uaa").fetch("jwt").fetch("policy").fetch("keys")
