@@ -455,26 +455,3 @@ instance_groups:
             reverse_log_proxy: {}
     update:
       serial: true
-
-  # FIXME: Delete me
-  - name: route_emitter
-    azs: [z1, z2]
-    jobs:
-      - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-      - name: datadog-consul-agent-client
-        release: datadog-for-cloudfoundry
-      - name: route_emitter
-        release: diego
-      - name: cfdot
-        release: diego
-      - name: metron_agent
-        release: loggregator
-      - name: datadog-route-emitter
-        release: datadog-for-cloudfoundry
-    instances: 2
-    vm_type: medium
-    stemcell: default
-    networks:
-      - name: cf

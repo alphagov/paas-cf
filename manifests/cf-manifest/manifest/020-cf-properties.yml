@@ -651,21 +651,6 @@ properties:
     executor:
       memory_capacity_mb: ((cell_memory_capacity_mb))
 
-    # FIXME: Delete me
-    route_emitter:
-      dropsonde_port: ((dropsonde_incoming_port))
-      bbs:
-        api_location: bbs.service.cf.internal:8889
-        ca_cert: ((certs_bosh_ca_cert))
-        client_cert: ((certs_bbs_client_cert))
-        client_key: ((certs_bbs_client_key))
-        require_ssl: true
-      nats:
-        machines: ((nats_static_ips))
-        user: nats_user
-        password: ((secrets_nats_password))
-        port: ((nats_port))
-
     ssh_proxy:
       dropsonde_port: ((dropsonde_incoming_port))
       bbs:
