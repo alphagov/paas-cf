@@ -3013,11 +3013,6 @@ jobs:
             - -e
             - -c
             - |
-              echo "ERROR: We suspect this feature is currently broken. Exiting."
-              echo "You can manually disable this warning, push the pipeline"
-              echo "and rerun if you really require to run this task"
-              exit 1
-
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
               sed "s/^secrets_uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
@@ -3133,11 +3128,6 @@ jobs:
             - -e
             - -c
             - |
-              echo "ERROR: We suspect this feature is currently broken. Exiting."
-              echo "You can manually disable this warning, push the pipeline"
-              echo "and rerun if you really require to run this task"
-              exit 1
-
               mkdir certs
               echo "Extracting extant certs"
               tar -xvzf cf-certs/cf-certs.tar.gz -C certs
