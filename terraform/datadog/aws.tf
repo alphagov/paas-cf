@@ -62,7 +62,7 @@ resource "datadog_monitor" "rds-failure" {
 resource "datadog_monitor" "ec2-cpu-utilisation" {
   name                = "${format("%s EC2 high CPU utilisation", var.env)}"
   type                = "metric alert"
-  query               = "${format("avg(last_1h):avg:aws.ec2.cpuutilization{deploy_env:%s,!job:cell,!job:elasticsearch_master} by {bosh-job,bosh-index} > 90", var.env)}"
+  query               = "${format("avg(last_1h):avg:aws.ec2.cpuutilization{deploy_env:%s,!job:diego-cell,!job:elasticsearch_master} by {bosh-job,bosh-index} > 90", var.env)}"
   message             = "{{bosh-job.name}}/{{bosh-index.name}} CPU utilisation has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
   notify_no_data      = false
   require_full_window = false
