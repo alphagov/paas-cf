@@ -2,14 +2,15 @@
 
 require 'json'
 require 'yaml'
+require_relative './val_from_yaml.rb'
 
 class QuotasSetter
   def initialize(manifest)
-    @manifest = manifest
+    @manifest = PropertyTree.new(manifest)
   end
 
   def apply!
-    @manifest.fetch("properties").fetch("cc").fetch("quota_definitions").each do |name, definition|
+    @manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.quota_definitions"].each do |name, definition|
       create_update_quota(name, definition)
     end
   end

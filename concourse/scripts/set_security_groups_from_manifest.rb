@@ -3,21 +3,25 @@
 require 'tempfile'
 require 'json'
 require 'yaml'
+require_relative './val_from_yaml.rb'
 
 class SecurityGroupsSetter
   def initialize(manifest)
-    @manifest = manifest
+    @manifest = PropertyTree.new(manifest)
   end
 
   def apply!
-    cc_properties = @manifest.fetch("properties").fetch("cc")
-    cc_properties.fetch("security_group_definitions").each do |sg|
+    cc_properties = @manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc"] || {}
+    security_group_definitions = cc_properties["security_group_definitions"] || []
+    security_group_definitions.each do |sg|
       create_update_sg(sg)
     end
-    cc_properties.fetch("default_staging_security_groups").each do |sg_name|
+    default_staging_security_groups = cc_properties["default_staging_security_groups"] || []
+    default_staging_security_groups.each do |sg_name|
       cf("bind-staging-security-group", sg_name)
     end
-    cc_properties.fetch("default_running_security_groups").each do |sg_name|
+    default_running_security_groups = cc_properties["default_running_security_groups"] || []
+    default_running_security_groups.each do |sg_name|
       cf("bind-running-security-group", sg_name)
     end
   end

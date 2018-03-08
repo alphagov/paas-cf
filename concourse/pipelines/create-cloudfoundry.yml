@@ -2603,6 +2603,8 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
 
   - name: acceptance-tests
     plan:
@@ -2997,6 +2999,8 @@ jobs:
           - name: cf-manifest
         outputs:
           - name: rotated-cf-secrets
+        params:
+          UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
         run:
           path: sh
           args:
@@ -3017,7 +3021,6 @@ jobs:
                 --existing-secrets rotated-cf-secrets/cf-secrets-cleared.yml \
                 > rotated-cf-secrets/cf-secrets.yml
 
-              UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url  cf-manifest/cf-manifest.yml)
               UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
               UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
 
