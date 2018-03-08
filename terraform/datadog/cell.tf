@@ -4,7 +4,7 @@ resource "datadog_monitor" "cell-available-memory" {
   message            = "${format("Less than {{threshold}}%% memory free on cells. There is only {{value}}%% memory free on average on cells. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "There is only {{value}}% memory free on average on cells. Check the deployment!"
   no_data_timeframe  = "7"
-  query              = "${format("avg(last_2h):ewma_5(avg:system.mem.pct_usable{bosh-job:cell,deploy_env:%s}) * 100 < 50", var.env)}"
+  query              = "${format("avg(last_2h):ewma_5(avg:system.mem.pct_usable{bosh-job:diego-cell,deploy_env:%s}) * 100 < 50", var.env)}"
 
   thresholds {
     warning  = "55.0"
@@ -13,7 +13,7 @@ resource "datadog_monitor" "cell-available-memory" {
 
   require_full_window = true
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
 resource "datadog_monitor" "cell-idle-cpu" {
@@ -22,7 +22,7 @@ resource "datadog_monitor" "cell-idle-cpu" {
   message            = "${format("Less than {{threshold}}%% CPU idle on cells. There is only {{value}}%% CPU idle on average on cells. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "There is only {{value}}% CPU idle on average on cells. Check the deployment!"
   no_data_timeframe  = "7"
-  query              = "${format("avg(last_1d):ewma_5(avg:system.cpu.idle{deploy_env:%s,bosh-job:cell}) < 33", var.env)}"
+  query              = "${format("avg(last_1d):ewma_5(avg:system.cpu.idle{deploy_env:%s,bosh-job:diego-cell}) < 33", var.env)}"
 
   thresholds {
     warning  = "37.0"
@@ -31,7 +31,7 @@ resource "datadog_monitor" "cell-idle-cpu" {
 
   require_full_window = true
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
 resource "datadog_monitor" "rep_process_running" {
@@ -50,7 +50,7 @@ resource "datadog_monitor" "rep_process_running" {
     critical = 3
   }
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
 resource "datadog_monitor" "rep_healthy" {
@@ -67,7 +67,7 @@ resource "datadog_monitor" "rep_healthy" {
     critical = 50
   }
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
 resource "datadog_monitor" "rep-container-capacity" {
@@ -76,7 +76,7 @@ resource "datadog_monitor" "rep-container-capacity" {
   message            = "${format("More than {{threshold}}%% of container capacity across reps is utilised. There is {{value}}%% of container capacity in use. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "There is {{value}}% container capacity in use. Check the deployment!"
   no_data_timeframe  = "7"
-  query              = "${format("avg(last_2h):( ewma_5(sum:cf.rep.ContainerCount{deployment:%s,job:cell}) / ewma_5(sum:cf.rep.CapacityTotalContainers{deployment:%s,job:cell}) ) * 100 > 80", var.env, var.env)}"
+  query              = "${format("avg(last_2h):( ewma_5(sum:cf.rep.ContainerCount{deployment:%s,job:diego-cell}) / ewma_5(sum:cf.rep.CapacityTotalContainers{deployment:%s,job:diego-cell}) ) * 100 > 80", var.env, var.env)}"
 
   thresholds {
     warning  = "75.0"
@@ -85,7 +85,7 @@ resource "datadog_monitor" "rep-container-capacity" {
 
   require_full_window = true
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
 resource "datadog_monitor" "rep-memory-capacity" {
@@ -94,7 +94,7 @@ resource "datadog_monitor" "rep-memory-capacity" {
   message            = "${format("Less than {{threshold}}%% of rep advertised memory capacity. There is {{value}}%% of rep advertised remaining memory capacity. Review if we need to scale... @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message = "There is only {{value}}% of rep advertised memory capacity. Check the deployment!"
   no_data_timeframe  = "7"
-  query              = "${format("avg(last_2h):( ewma_5(sum:cf.rep.CapacityRemainingMemory{deployment:%s,job:cell}) / ewma_5(sum:cf.rep.CapacityTotalMemory{deployment:%s,job:cell}) ) * 100 < 33", var.env, var.env)}"
+  query              = "${format("avg(last_2h):( ewma_5(sum:cf.rep.CapacityRemainingMemory{deployment:%s,job:diego-cell}) / ewma_5(sum:cf.rep.CapacityTotalMemory{deployment:%s,job:diego-cell}) ) * 100 < 33", var.env, var.env)}"
 
   thresholds {
     warning  = "35.0"
@@ -103,7 +103,7 @@ resource "datadog_monitor" "rep-memory-capacity" {
 
   require_full_window = true
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
 resource "datadog_monitor" "garden_process_running" {
@@ -122,5 +122,5 @@ resource "datadog_monitor" "garden_process_running" {
     critical = 3
   }
 
-  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:cell"]
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
