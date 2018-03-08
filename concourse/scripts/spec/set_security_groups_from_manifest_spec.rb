@@ -6,10 +6,10 @@ RSpec.describe SecurityGroupsSetter do
   let(:default_staging_security_groups) { [] }
   let(:manifest) {
     {
-      "instance_groups"=> [
+      "instance_groups" => [
         "name" => "api",
-        "jobs"=> {
-          "cloud_controller_ng"=> {
+        "jobs" => {
+          "cloud_controller_ng" => {
             "properties" => {
               "cc" => {
                 "security_group_definitions" => security_group_definitions,

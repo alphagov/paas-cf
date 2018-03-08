@@ -89,25 +89,16 @@ RSpec.describe "the instance_groups definitions block" do
   end
 end
 
-RSpec.describe "uaa instance_group" do
-  let(:instance_groups) { manifest_with_defaults.fetch("instance_groups") }
+RSpec.describe "uaa route_registrar registers uaa" do
+  let(:routes) {
+    manifest_with_defaults.fetch("instance_groups.uaa.jobs.route_registrar.properties.route_registrar.routes")
+  }
 
-  describe "common instance_group properties" do
-    instance_group_name = "uaa"
-    context "instance_group #{instance_group_name}" do
-      subject(:instance_group) { instance_groups.find { |i| i["name"] == instance_group_name } }
-
-      describe "route registrar" do
-        let(:routes) { instance_group.fetch("properties").fetch("route_registrar").fetch("routes") }
-
-        it "registers the correct uris" do
-          expect(routes.length).to eq(1)
-          expect(routes.first.fetch('uris')).to match_array([
-            "uaa.#{terraform_fixture(:cf_root_domain)}",
-            "login.#{terraform_fixture(:cf_root_domain)}",
-          ])
-        end
-      end
-    end
+  it "registers the correct uris" do
+    expect(routes.length).to eq(1)
+    expect(routes.first.fetch('uris')).to match_array([
+      "uaa.#{terraform_fixture(:cf_root_domain)}",
+      "login.#{terraform_fixture(:cf_root_domain)}",
+    ])
   end
 end

@@ -1,11 +1,11 @@
 
 RSpec.describe "ElastiCache broker properties" do
   let(:manifest) { manifest_with_defaults }
-  let(:properties) { manifest.fetch("properties") }
+  let(:properties) { manifest.fetch("instance_groups.elasticache_broker.jobs.elasticache-broker.properties.elasticache-broker") }
 
   describe "adding ElastiCache access to application security groups" do
     it "appends a security group definition" do
-      defs = properties.fetch("cc").fetch("security_group_definitions")
+      defs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.security_group_definitions")
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
 
       elasticache_sg = defs.find { |d| d["name"] == "elasticache_broker_instances" }
@@ -18,13 +18,13 @@ RSpec.describe "ElastiCache broker properties" do
     end
 
     it "adds to default_running_security_groups" do
-      sgs = properties.fetch("cc").fetch("default_running_security_groups")
+      sgs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.default_running_security_groups")
       expect(sgs.length).to be > 1 # Ensure the default ones haven't been replaced
       expect(sgs).to include("elasticache_broker_instances")
     end
 
     it "adds to default_staging_security_groups" do
-      sgs = properties.fetch("cc").fetch("default_staging_security_groups")
+      sgs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.default_staging_security_groups")
       expect(sgs.length).to be > 1 # Ensure the default ones haven't been replaced
       expect(sgs).to include("elasticache_broker_instances")
     end
@@ -32,13 +32,13 @@ RSpec.describe "ElastiCache broker properties" do
 
   describe "service plans" do
     let(:elasticache_broker_instance_group) {
-      manifest.fetch("instance_groups").find { |j| j["name"] == "elasticache_broker" }
+      manifest.fetch("instance_groups.elasticache_broker")
     }
     let(:services) {
-      elasticache_broker_instance_group.fetch("properties").fetch("elasticache-broker").fetch("catalog").fetch("services")
+      properties.fetch("catalog").fetch("services")
     }
     let(:plan_configs) {
-      elasticache_broker_instance_group.fetch("properties").fetch("elasticache-broker").fetch("plan_configs")
+      properties.fetch("plan_configs")
     }
     let(:all_plans) {
       services.flat_map { |s| s["plans"] }

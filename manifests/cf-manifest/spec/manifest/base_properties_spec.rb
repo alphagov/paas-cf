@@ -1,7 +1,5 @@
-
 RSpec.describe "base properties" do
   let(:manifest) { manifest_with_defaults }
-  let(:properties) { manifest.fetch("properties") }
 
   it "sets the top-level manifest name" do
     expect(manifest["name"]).to eq(terraform_fixture(:environment))
@@ -11,20 +9,22 @@ RSpec.describe "base properties" do
     expect(manifest["update"].fetch("max_in_flight")).to eq(1)
   end
 
-  it "sets the system_domain from the terraform outputs" do
-    expect(properties["system_domain"]).to eq(terraform_fixture(:cf_root_domain))
-  end
+  describe "api cloud_controller_ng" do
+    subject(:cloud_controller_ng_properties) {
+      manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
+    }
+    subject(:cc) {
+      manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc"]
+    }
 
-  it "sets the app domains" do
-    expect(properties["app_domains"]).to match_array([
-      terraform_fixture(:cf_apps_domain),
-    ])
-  end
-
-  describe "cloud controller" do
-    subject(:cc) { properties.fetch("cc") }
-
-    it { is_expected.to include("srv_api_uri" => "https://api.#{terraform_fixture(:cf_root_domain)}") }
+    it "sets the system_domain from the terraform outputs" do
+      expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture(:cf_root_domain))
+    end
+    it "sets the app domains" do
+      expect(cloud_controller_ng_properties["app_domains"]).to match_array([
+        terraform_fixture(:cf_apps_domain),
+      ])
+    end
 
     shared_examples "a component with an AWS connection" do
       let(:fog_connection) { subject.fetch("fog_connection") }
@@ -65,12 +65,12 @@ RSpec.describe "base properties" do
 
       it { is_expected.to include("resource_directory_key" => "#{terraform_fixture(:environment)}-cf-resources") }
     end
+  end
 
-    describe "app_events" do
-      subject(:app_events) { cc.fetch("app_events") }
-
-      it { is_expected.to include("cutoff_age_in_days" => 31), "We expect retention period for data to be 31 days." }
-    end
+  describe "scheduler cloud_controller_clock" do
+    subject(:cc) {
+      manifest["instance_groups.scheduler.jobs.cloud_controller_clock.properties.cc"]
+    }
 
     describe "app_usage_events" do
       subject(:app_usage_events) { cc.fetch("app_usage_events") }
@@ -91,8 +91,8 @@ RSpec.describe "base properties" do
     end
   end
 
-  describe "login" do
-    subject(:login) { properties.fetch("login") }
+  describe "uaa login" do
+    subject(:login) { manifest["instance_groups.uaa.jobs.uaa.properties.login"] }
 
     describe "smtp" do
       subject(:smtp) { login.fetch("smtp") }
@@ -112,11 +112,10 @@ RSpec.describe "base properties" do
   end
 
   describe "uaa" do
-    subject(:uaa) { properties.fetch("uaa") }
+    subject(:uaa) { manifest["instance_groups.uaa.jobs.uaa.properties.uaa"] }
 
     it { is_expected.to include("issuer" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
     it { is_expected.to include("url" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
-
 
     describe "clients" do
       subject(:clients) { uaa.fetch("clients") }
@@ -189,11 +188,9 @@ RSpec.describe "base properties" do
     end
   end
 
-  describe "diego" do
-    subject(:diego) { properties.fetch("diego") }
-
+  describe "diego-cell rep" do
     describe "executor" do
-      subject(:executor) { diego.fetch("executor") }
+      subject(:executor) { manifest["instance_groups.diego-cell.jobs.rep.properties.diego.executor"] }
 
       it "should have a memory_capacity_mb of at least 30G" do
         memory_capacity_mb = executor['memory_capacity_mb']
@@ -207,7 +204,9 @@ RSpec.describe "base properties" do
     let(:api_instance_group) { manifest_with_defaults.fetch("instance_groups").find { |j| j.fetch("name") == "api" } }
     let(:api_job_names) { api_instance_group.fetch("jobs").map { |t| t.fetch("name") } }
 
-    let(:install_buildpacks_property) { properties.fetch("cc").fetch("install_buildpacks") }
+    let(:install_buildpacks_property) {
+      manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.install_buildpacks"]
+    }
 
     it "install_buildpacks reference packages that exist" do
       install_buildpacks_property.each do |pack|
@@ -218,7 +217,7 @@ RSpec.describe "base properties" do
   end
 
   describe "router" do
-    subject(:router) { properties.fetch("router") }
+    subject(:router) { manifest["instance_groups.router.jobs.gorouter.properties.router"] }
 
     it "sets route_services_secret" do
       expect(router["route_services_secret"]).not_to be_empty

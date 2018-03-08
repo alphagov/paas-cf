@@ -4,10 +4,10 @@ RSpec.describe QuotasSetter do
   let(:quota_definitions) { {} }
   let(:manifest) {
     {
-      "instance_groups"=> [
+      "instance_groups" => [
         "name" => "api",
-        "jobs"=> {
-          "cloud_controller_ng"=> {
+        "jobs" => {
+          "cloud_controller_ng" => {
             "properties" => {
               "cc" => {
                 "quota_definitions" => quota_definitions,
