@@ -21,11 +21,17 @@ if File.file?(ARGV[0])
 end
 
 manifest = {
-  "properties" => {
-    "cc" => {
-      "security_group_definitions" => security_groups
-    }
-  }
+  "instance_groups" => [
+    "name" => "api",
+    "jobs" => [
+      "name" => "cloud_controller_ng",
+      "properties" => {
+        "cc" => {
+          "security_group_definitions" => security_groups
+        }
+      }
+    ]
+  ]
 }
 
 puts manifest.to_yaml

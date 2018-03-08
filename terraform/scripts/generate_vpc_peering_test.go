@@ -132,9 +132,13 @@ var _ = Describe("VPC peering", func() {
 				Expect(err).To(BeNil(), "Config file: %s", filename)
 				Expect(out.String()).ToNot(BeEmpty(), "Config file: %s", filename)
 				Expect(out.String()).ToNot(Equal(`---
-properties:
-  cc:
-    security_group_definitions: []
+instance_groups:
+- name: api
+  jobs:
+  - name: cloud_controller_ng
+    properties:
+      cc:
+        security_group_definitions: []
 `), "Config file: %s", filename)
 			}
 		})
@@ -146,9 +150,13 @@ properties:
 			err := command.Run()
 			Expect(err).To(BeNil())
 			Expect(out.String()).To(Equal(`---
-properties:
-  cc:
-    security_group_definitions: []
+instance_groups:
+- name: api
+  jobs:
+  - name: cloud_controller_ng
+    properties:
+      cc:
+        security_group_definitions: []
 `))
 		})
 
