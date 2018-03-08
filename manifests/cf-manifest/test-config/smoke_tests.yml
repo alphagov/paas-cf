@@ -1,0 +1,16 @@
+---
+api: api.((system_domain))
+apps_domain: ((app_domain))
+user: "((admin_user))"
+password: "((admin_password))"
+org: "SMOKE_TESTS"
+space: "SMOKE_TESTS"
+use_existing_org: false
+use_existing_space: false
+skip_ssl_validation: false
+artifacts_directory: "/tmp/artifacts"
+suite_name: CF_SMOKE_TESTS
+logging_app: ''
+runtime_app: ''
+ginkgo_opts: ''
+backend: ''

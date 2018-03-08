@@ -2591,6 +2591,8 @@ jobs:
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: smoke_tests
+            APP_DOMAIN: ((apps_dns_zone_name))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: smoke-tests-run
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
@@ -2603,8 +2605,6 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
 
   - name: acceptance-tests
     plan:
@@ -2632,6 +2632,8 @@ jobs:
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: acceptance_tests
+            APP_DOMAIN: ((apps_dns_zone_name))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: run-tests
           config:
@@ -2693,6 +2695,8 @@ jobs:
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: acceptance_tests
+            APP_DOMAIN: ((apps_dns_zone_name))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: "Run custom acceptance tests"
           file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
@@ -2783,6 +2787,8 @@ jobs:
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: acceptance_tests
+            APP_DOMAIN: ((apps_dns_zone_name))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: run-tests
           config:
@@ -3295,6 +3301,8 @@ jobs:
               file: paas-cf/concourse/tasks/generate-test-config.yml
               params:
                 TEST_PROPERTIES: smoke_tests
+                APP_DOMAIN: ((apps_dns_zone_name))
+                SYSTEM_DOMAIN: ((system_dns_zone_name))
 
             - task: smoke-tests-run
               file: paas-cf/concourse/tasks/smoke-tests-run.yml
