@@ -5,7 +5,7 @@
 This repository contains [Concourse][] pipelines and related [Terraform][]
 and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 
-[Concourse]: http://concourse.ci/
+[Concourse]: http://concourse-ci.org/
 [Terraform]: https://terraform.io/
 [BOSH]: https://bosh.io/
 [CloudFoundry]: https://www.cloudfoundry.org/
