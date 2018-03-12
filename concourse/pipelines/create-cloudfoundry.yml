@@ -1180,15 +1180,23 @@ jobs:
                     yaml_key_name=$(echo "${cn}" | tr A-Z- a-z_)
 
                     echo "Converting ${cn} certs to YAML" 1>&2
+
                     echo "certs_${yaml_key_name}_key: |"
                     sed 's/^/  /' < "${cn}.key"
+
+                    echo "certs_${yaml_key_name}_key_hash: $(sha1sum "${cn}.key" | cut -d ' ' -f 1)"
+
                     echo "certs_${yaml_key_name}_cert: |"
                     sed 's/^/  /' < "${cn}.crt"
 
                     if [ ! -f "${cn}_old.crt" ]; then
                       echo "Using ${cn} for ${cn}_old" 1>&2
+
                       echo "certs_${yaml_key_name}_old_key: |"
                       sed 's/^/  /' < "${cn}.key"
+
+                      echo "certs_${yaml_key_name}_old_key_hash: $(sha1sum "${cn}.key" | cut -d ' ' -f 1)"
+
                       echo "certs_${yaml_key_name}_old_cert: |"
                       sed 's/^/  /' < "${cn}.crt"
                     fi

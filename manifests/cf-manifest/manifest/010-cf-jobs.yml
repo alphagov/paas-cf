@@ -294,11 +294,11 @@ instance_groups:
 
             jwt:
               policy:
-                active_key_id: default
+                active_key_id: ((certs_uaa_jwt_signing_key_hash))
                 keys:
-                  default:
+                  ((certs_uaa_jwt_signing_key_hash)):
                     signingKey: ((certs_uaa_jwt_signing_key))
-                  previous:
+                  ((certs_uaa_jwt_signing_old_key_hash)):
                     signingKey: ((certs_uaa_jwt_signing_old_key))
                 refreshTokenValiditySeconds: 604800
                 global:
