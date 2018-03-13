@@ -5,12 +5,7 @@ resource "datadog_monitor" "compose_host_ram_in_use" {
   no_data_timeframe = "20"
   notify_no_data    = true
   renotify_interval = "20"
-  query             = "${format("max(last_10m):max:compose.cluster.host.ram.in_use{deployment:%s} by {host} >= 80", var.env)}"
-
-  thresholds {
-    warning  = "70"
-    critical = "80"
-  }
+  query             = "${format("max(last_10m):max:compose.cluster.host.ram.in_use{deployment:%s} by {host} >= 85", var.env)}"
 
   require_full_window = false
 
