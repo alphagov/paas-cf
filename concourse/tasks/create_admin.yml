@@ -33,7 +33,7 @@ run:
 
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
       UAA_ADMIN_CLIENT_PASS=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-      UAA_ENDPOINT=$($VAL_FROM_YAML properties.uaa.url cf-manifest/cf-manifest.yml)
+      UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
 
       echo "Creating user ${NAME}"
       uaac target "${UAA_ENDPOINT}"

@@ -31,14 +31,17 @@ instance_groups:
   networks:
   - name: cf
 
-properties:
-  uaa:
-    clients:
-      datadog-nozzle:
-        access-token-validity: 1209600
-        authorized-grant-types: authorization_code,client_credentials,refresh_token
-        override: true
-        secret: ((secrets_uaa_clients_datadog_firehose_password))
-        scope: openid,oauth.approvals,doppler.firehose
-        authorities: oauth.login,doppler.firehose
-        redirect-uri: https://login.((system_domain))/login
+- name: uaa
+  jobs:
+  - name: uaa
+    properties:
+      uaa:
+        clients:
+          datadog-nozzle:
+            access-token-validity: 1209600
+            authorized-grant-types: authorization_code,client_credentials,refresh_token
+            override: true
+            secret: ((secrets_uaa_clients_datadog_firehose_password))
+            scope: openid,oauth.approvals,doppler.firehose
+            authorities: oauth.login,doppler.firehose
+            redirect-uri: https://login.((system_domain))/login

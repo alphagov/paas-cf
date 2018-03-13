@@ -1,3 +1,67 @@
+meta:
+  consul_agent_job: &consul_agent_job
+    name: consul_agent
+    release: consul
+    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+    properties:
+      consul: &consul_agent_job_properties_consul
+        agent: &consul_agent_job_properties_consul_agent
+          domain: cf.internal
+          servers:
+            lan: ((consul_static_ips))
+          dns_config:
+            allow_stale: true
+            max_stale: "30s"
+          log_level: null
+        ca_cert: ((certs_bosh_ca_cert))
+        agent_cert: ((certs_consul_agent_cert))
+        agent_key: ((certs_consul_agent_key))
+        encrypt_keys: ((secrets_consul_encrypt_keys))
+        server_cert: ((certs_consul_server_cert))
+        server_key: ((certs_consul_server_key))
+
+  metron_agent_job: &metron_agent_job
+    release: loggregator
+    properties:
+      loggregator:
+        tls:
+          ca_cert: ((certs_bosh_ca_cert))
+          metron:
+            cert: ((certs_metron_cert))
+            key: ((certs_metron_key))
+      metron_agent:
+        deployment: ((environment))
+
+  statsd_injector_job: &statsd_injector_job
+    name: statsd_injector
+    release: statsd-injector
+    properties:
+      loggregator:
+        tls:
+          ca_cert: ((certs_bosh_ca_cert))
+          statsd_injector:
+            cert: ((certs_statsd_injector_cert))
+            key: ((certs_statsd_injector_key))
+
+  cfdot_job: &cfdot_job
+    name: cfdot
+    release: diego
+    properties:
+      diego:
+        cfdot:
+          bbs:
+            ca_cert: ((certs_bosh_ca_cert))
+            client_cert: ((certs_bbs_client_cert))
+            client_key: ((certs_bbs_client_key))
+            use_ssl: true
+
+  blobstore-properties: &blobstore-properties
+    fog_connection:
+      provider: AWS
+      use_iam_profile: true
+      region: ((terraform_outputs_region))
+    cdn: ~
+
 instance_groups:
   - name: consul
     azs: [z1, z2, z3]
@@ -5,12 +69,18 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              mode: server
       - name: datadog-consul-agent-server
         release: datadog-for-cloudfoundry
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 3
     persistent_disk_type: consul
     vm_type: small
@@ -18,10 +88,6 @@ instance_groups:
     networks:
       - name: cf
         static_ips: ((consul_static_ips))
-    properties:
-      consul:
-        agent:
-          mode: server
     update:
       serial: true
 
@@ -29,17 +95,29 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: nats
         consumes: {nats: nil}
         release: nats
+        properties:
+          nats:
+            port: ((nats_port))
+            machines: ((nats_static_ips))
+            debug: false
+            trace: false
+            monitor_port: 0
+            prof_port: 0
+            user: nats_user
+            password: ((secrets_nats_password))
       - name: datadog-nats
         release: datadog-for-cloudfoundry
+        properties:
+          nats:
+            port: ((nats_port))
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 2
     vm_type: medium
     stemcell: default
@@ -56,28 +134,28 @@ instance_groups:
       - name: cf
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
+        <<: *consul_agent_job
+        consumes: {consul_client: nil, consul_server: nil, consul_common: nil, consul: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: adapter
         release: cf-syslog-drain
-    properties:
-      scalablesyslog:
-        adapter:
-          tls:
-            ca: ((certs_bosh_ca_cert))
-            cert: ((certs_scalablesyslog_adapter_cert))
-            key: ((certs_scalablesyslog_adapter_key))
-            cn: scalablesyslog_adapter
-          logs:
-            addr: reverse-log-proxy.service.cf.internal:8082
-        adapter_rlp:
-          tls:
-            ca: ((certs_bosh_ca_cert))
-            cert: ((certs_reverse_log_proxy_cert))
-            key: ((certs_reverse_log_proxy_key))
-            cn: reverse_log_proxy
+        properties:
+          scalablesyslog:
+            adapter:
+              tls:
+                ca: ((certs_bosh_ca_cert))
+                cert: ((certs_scalablesyslog_adapter_cert))
+                key: ((certs_scalablesyslog_adapter_key))
+                cn: scalablesyslog_adapter
+              logs:
+                addr: reverse-log-proxy.service.cf.internal:8082
+            adapter_rlp:
+              tls:
+                ca: ((certs_bosh_ca_cert))
+                cert: ((certs_reverse_log_proxy_cert))
+                key: ((certs_reverse_log_proxy_key))
+                cn: reverse_log_proxy
 
   - name: diego-api
     migrated_from:
@@ -85,8 +163,7 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-bbs
@@ -99,10 +176,46 @@ instance_groups:
             ca_cert: "/var/vcap/jobs/cfdot/config/certs/cfdot/ca.crt"
       - name: bbs
         release: diego
+        properties:
+          diego:
+            bbs:
+              active_key_label: key-2017-01
+              encryption_keys:
+                - label: key-2017-01
+                  passphrase: ((secrets_bbs_encryption_key))
+              ca_cert: ((certs_bosh_ca_cert))
+              server_cert: ((certs_bbs_server_cert))
+              server_key: ((certs_bbs_server_key))
+              auctioneer:
+                api_location: auctioneer.service.cf.internal:9016
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_auctioneer_client_cert))
+                client_key: ((certs_auctioneer_client_key))
+                require_tls: true
+              etcd:
+                machines: []
+                ca_cert: ""
+                client_cert: ""
+                client_key: ""
+                require_ssl: false
+              rep:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_rep_client_cert))
+                client_key: ((certs_rep_client_key))
+                require_tls: true
+              sql:
+                db_username: bbs
+                db_password: ((secrets_cf_db_bbs_password))
+                db_host: ((terraform_outputs_cf_db_address))
+                db_port: 5432
+                db_schema: bbs
+                db_driver: postgres
+              dropsonde_port: ((dropsonde_incoming_port))
+              require_ssl: true
       - name: cfdot
-        release: diego
+        <<: *cfdot_job
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -119,16 +232,251 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                uaa: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: uaa
         release: uaa
+        properties:
+          uaadb:
+            db_scheme: postgresql
+            address: ((terraform_outputs_cf_db_address))
+            port: 5432
+            roles:
+              - tag: admin
+                name: uaa
+                password: ((secrets_cf_db_uaa_password))
+            databases:
+              - tag: uaa
+                name: uaa
+                citext: true
+
+          uaa:
+            url: https://uaa.((system_domain))
+            issuer: https://uaa.((system_domain))
+            require_https: false
+            logging_level: INFO
+            scim:
+              userids_enabled: true
+              users:
+                - name: admin
+                  password: ((secrets_uaa_admin_password))
+                  groups:
+                    - scim.write
+                    - scim.read
+                    - scim.invite
+                    - openid
+                    - cloud_controller.admin
+                    - cloud_controller.admin_read_only
+                    - doppler.firehose
+              groups:
+                cloud_controller.global_auditor: 'Global Auditor read only group'
+
+
+            port: 8080
+            ssl:
+              port: 8443
+            sslCertificate: ((certs_uaa_internal_cert))
+            sslPrivateKey: ((certs_uaa_internal_key))
+
+            password:
+              policy:
+                minLength: 8
+
+            admin:
+              client_secret: ((secrets_uaa_admin_client_secret))
+
+            jwt:
+              policy:
+                active_key_id: default
+                keys:
+                  default:
+                    signingKey: ((certs_uaa_jwt_signing_key))
+                  previous:
+                    signingKey: ((certs_uaa_jwt_signing_old_key))
+                refreshTokenValiditySeconds: 604800
+                global:
+                  refreshTokenValiditySeconds: 604800
+
+            clients:
+              login:
+                override: true
+                scope: openid,oauth.approvals
+                authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
+                authorized-grant-types: authorization_code,client_credentials,refresh_token
+                redirect-uri: https://login.((system_domain))
+                secret: ((secrets_uaa_clients_login_secret))
+              cf:
+                override: true
+                authorized-grant-types: password,refresh_token
+                scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,scim.read,scim.write,scim.invite,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write
+                authorities: uaa.none
+                access-token-validity: 600
+                refresh-token-validity: 604800
+                secret: ''
+              notifications:
+                override: true
+                authorities: cloud_controller.admin,scim.read
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_notifications_secret))
+              doppler:
+                override: true
+                authorities: uaa.resource
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_doppler_secret))
+              cloud_controller_username_lookup:
+                override: true
+                authorities: scim.userids
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_cloud_controller_username_lookup_secret))
+              cc_service_key_client:
+                override: true
+                authorities: credhub.read,credhub.write
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_cc_service_key_client_secret))
+              cc_routing:
+                override: true
+                authorities: routing.router_groups.read
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_cc_routing_secret))
+              gorouter:
+                override: true
+                authorities: routing.routes.read
+                authorized-grant-types: client_credentials
+                secret: ((secrets_uaa_clients_gorouter_secret))
+              tcp_emitter:
+                override: true
+                authorities: routing.routes.write,routing.routes.read
+                authorized-grant-types: client_credentials
+                secret: ''
+              tcp_router:
+                override: true
+                authorities: routing.routes.read
+                authorized-grant-types: client_credentials
+                secret: ''
+              ssh-proxy:
+                override: true
+                authorized-grant-types: authorization_code
+                autoapprove: true
+                redirect-uri: https://login.((system_domain))/login
+                scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
+                secret: ((secrets_uaa_clients_ssh_proxy_secret))
+              graphite-nozzle:
+                override: true
+                access-token-validity: 1209600
+                authorized-grant-types: authorization_code,client_credentials,refresh_token
+                secret: ((secrets_uaa_clients_firehose_password))
+                scope: openid,oauth.approvals,doppler.firehose
+                authorities: oauth.login,doppler.firehose
+                redirect-uri: https://login.((system_domain))/login
+              paas-metrics:
+                override: true
+                access-token-validity: 1209600
+                authorized-grant-types: client_credentials,refresh_token
+                secret: ((secrets_uaa_clients_paas_metrics_secret))
+                scope: openid,oauth.approvals,cloud_controller.global_auditor
+                authorities: oauth.login,cloud_controller.global_auditor
+                redirect-uri: https://login.((system_domain))
+              paas-billing:
+                override: true
+                access-token-validity: 1209600
+                authorized-grant-types: client_credentials,refresh_token,authorization_code
+                autoapprove: true
+                secret: ((secrets_uaa_clients_paas_billing_secret))
+                scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
+                authorities: cloud_controller.admin_read_only,uaa.resource
+                redirect-uri: https://paas-billing.((app_domain))/oauth/callback
+              paas-admin:
+                override: true
+                authorized-grant-types: authorization_code,refresh_token
+                autoapprove: true
+                secret: ((secrets_uaa_clients_paas_admin_secret))
+                scope: openid,oauth.approvals,cloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor
+                authorities: uaa.none
+                redirect-uri: https://paas-admin.((app_domain))/auth/cloudfoundry/callback
+              cc-service-dashboards:
+                override: true
+                secret: ((secrets_uaa_clients_cc_service_dashboards_password))
+                authorities: clients.read,clients.write,clients.admin
+                authorized-grant-types: client_credentials
+                redirect-uri: https://login.((system_domain))
+              cdn_broker:
+                override: true
+                authorities: uaa.none
+                authorized-grant-types: password
+                scope: cloud_controller.admin_read_only
+                secret: ((secrets_uaa_clients_cdn_broker_secret))
+              user_invitation:
+                override: true
+                authorities: oauth.login,scim.write,emails.write,scim.userids
+                authorized-grant-types: password,refresh_token
+                redirect-uri: "https://www.cloud.service.gov.uk/next-steps?success"
+                scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
+                secret: ((secrets_uaa_clients_login_secret))
+            zones:
+              internal:
+                hostnames:
+                - uaa.service.cf.internal
+          login:
+            saml:
+              activeKeyId: key1
+              keys:
+                key1:
+                  key: ((certs_saml_key))
+                  passphrase: ""
+                  certificate: ((certs_saml_cert))
+            smtp:
+              host: ((terraform_outputs_ses_smtp_host))
+              port: 587
+              from_address: "gov-uk-paas-support@digital.cabinet-office.gov.uk"
+              user: ((terraform_outputs_ses_smtp_aws_access_key_id))
+              password: ((terraform_outputs_ses_smtp_password))
+              auth: true
+              starttls: true
+            self_service_links_enabled: true
+            links:
+              passwd: "https://login.((system_domain))/forgot_password"
+              signup: "https://www.cloud.service.gov.uk/signup"
+              homeRedirect: "https://www.cloud.service.gov.uk/next-steps?account-updated"
+            branding:
+              company_name: "GOV.UK PaaS"
+            asset_base_url: "https://paas-uaa-assets.((terraform_outputs_cf_apps_domain))"
+
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: statsd_injector
-        release: statsd-injector
+        <<: *statsd_injector_job
       - name: route_registrar
         release: routing
+        properties:
+          nats:
+            machines: ((nats_static_ips))
+            port: ((nats_port))
+            user: nats_user
+            password: ((secrets_nats_password))
+          route_registrar:
+            routes:
+              - name: uaa
+                registration_interval: 10s
+                health_check:
+                  name: cf_uaa_health_check
+                  script_path: /var/vcap/jobs/uaa/bin/health_check
+                  timeout: "5s"
+                port: 8081
+                tls_port: 8443
+                server_cert_domain_san: "uaa.service.cf.internal"
+                tags:
+                  component: uaa
+                uris:
+                  - "uaa.((system_domain))"
+                  - "login.((system_domain))"
+
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -136,29 +484,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      ssl_key: ((certs_uaa_internal_key))
-      ssl_chained_cert: ((certs_uaa_internal_cert))
-      consul:
-        agent:
-          services:
-            uaa: {}
-      route_registrar:
-        routes:
-          - name: uaa
-            registration_interval: 10s
-            health_check:
-              name: cf_uaa_health_check
-              script_path: /var/vcap/jobs/uaa/bin/health_check
-              timeout: "5s"
-            port: 8081
-            tls_port: 8443
-            server_cert_domain_san: "uaa.service.cf.internal"
-            tags:
-              component: uaa
-            uris:
-              - "uaa.((system_domain))"
-              - "login.((system_domain))"
 
   - name: api
     azs: [z1, z2]
@@ -166,17 +491,266 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                cloud_controller_ng: {}
       - name: cloud_controller_ng
         release: capi
         consumes: {nats: nil}
+        properties:
+          description: null
+
+          system_domain: ((terraform_outputs_cf_root_domain))
+          system_domain_organization: admin
+          app_domains:
+          - ((terraform_outputs_cf_apps_domain))
+
+          app_ssh:
+            host_key_fingerprint: ((secrets_ssh_proxy_host_key.public_fingerprint))
+
+          support_address: "https://docs.cloud.service.gov.uk"
+
+          ssl:
+            skip_cert_verify: false
+
+          request_timeout_in_seconds: 900
+
+          cc:
+            jobs: &cloud_controller_ng_jobs
+              global:
+                timeout_in_seconds: 14400 # 4 hours
+              blobstore_delete:
+                timeout_in_seconds: ~
+              droplet_upload:
+                timeout_in_seconds: ~
+
+            allow_app_ssh_access: true
+            default_app_memory: 1024
+            default_app_disk_in_mb: 1024
+            maximum_app_disk_in_mb: 2048
+            client_max_body_size: 15M
+
+            default_health_check_timeout: 60
+            maximum_health_check_timeout: 180
+
+            min_cli_version: ~
+            min_recommended_cli_version: ~
+
+            external_host: api
+            external_port: 9022
+            internal_service_hostname: "cloud-controller-ng.service.cf.internal"
+
+            bulk_api_password: ((secrets_bulk_api_password))
+            internal_api_user: "internal_user"
+            internal_api_password: ((secrets_bulk_api_password))
+
+            staging_upload_user: staging_upload_user
+            staging_upload_password: ((secrets_staging_upload_password))
+
+            db_encryption_key: ((secrets_cc_db_encryption_key))
+
+            logging_level: info
+            db_logging_level: debug
+
+            directories: ~
+            stacks: ~
+
+            disable_custom_buildpacks: false
+
+            broker_client_timeout_seconds: 70
+            broker_client_default_async_poll_interval_seconds: ~
+            broker_client_max_async_poll_duration_minutes: 11520
+
+            resource_pool: &cloud_controller_ng_resource_pool
+              resource_directory_key: "((environment))-cf-resources"
+              <<: *blobstore-properties
+
+            packages: &cloud_controller_ng_packages
+              app_package_directory_key: ((environment))-cf-packages
+              max_package_size: 1073741824
+              max_valid_packages_stored: ~
+              <<: *blobstore-properties
+
+            droplets: &cloud_controller_ng_droplets
+              droplet_directory_key: ((environment))-cf-droplets
+              max_staged_droplets_stored: ~
+              <<: *blobstore-properties
+
+            buildpacks: &cloud_controller_ng_buildpacks
+              buildpack_directory_key: ((environment))-cf-buildpacks
+              <<: *blobstore-properties
+
+            development_mode: false
+
+            newrelic: &cloud_controller_ng_newrelic
+              license_key: ~
+              environment_name: ((environment))
+              developer_mode: false
+              monitor_mode: false
+              capture_params: false
+              transaction_tracer:
+                enabled: true
+                record_sql: "obfuscated"
+
+            quota_definitions:
+              default:
+                memory_limit: 5120
+                total_services: 10
+                non_basic_services_allowed: false
+                total_routes: 1000
+              small:
+                memory_limit: 10240
+                total_services: 10
+                non_basic_services_allowed: true
+                total_routes: 1000
+              medium:
+                memory_limit: 61440
+                total_services: 20
+                non_basic_services_allowed: true
+                total_routes: 1000
+              large:
+                memory_limit: 102400
+                total_services: 40
+                non_basic_services_allowed: true
+                total_routes: 1000
+              xlarge:
+                memory_limit: 204800
+                total_services: 80
+                non_basic_services_allowed: true
+                total_routes: 1000
+              2xlarge:
+                memory_limit: 409600
+                total_services: 160
+                non_basic_services_allowed: true
+                total_routes: 1000
+              test_apps:
+                memory_limit: 2048
+                total_services: 10
+                non_basic_services_allowed: true
+                total_routes: 1000
+            default_quota_definition: default
+
+            install_buildpacks:
+              - name: staticfile_buildpack
+                package: staticfile-buildpack
+              - name: java_buildpack
+                package: java-buildpack
+              - name: ruby_buildpack
+                package: ruby-buildpack
+              - name: nodejs_buildpack
+                package: nodejs-buildpack
+              - name: go_buildpack
+                package: go-buildpack
+              - name: python_buildpack
+                package: python-buildpack
+              - name: php_buildpack
+                package: php-buildpack
+              - name: binary_buildpack
+                package: binary-buildpack
+
+            allowed_cors_domains: []
+            thresholds:
+              api:
+                alert_if_above_mb: ~
+                restart_if_consistently_above_mb: ~
+                restart_if_above_mb: ~
+
+            external_protocol: ~
+
+            tls_port: 9023
+            mutual_tls: &cloud_controller_ng_mutual_tls
+              ca_cert: ((certs_bosh_ca_cert))
+              public_cert: ((certs_cc_server_cert))
+              private_key: ((certs_cc_server_key))
+
+            security_group_definitions:
+            - name: public_networks
+              rules:
+              - protocol: all
+                destination: 0.0.0.0-9.255.255.255
+              - protocol: all
+                destination: 11.0.0.0-169.253.255.255
+              - protocol: all
+                destination: 169.255.0.0-172.15.255.255
+              - protocol: all
+                destination: 172.32.0.0-192.167.255.255
+              - protocol: all
+                destination: 192.169.0.0-255.255.255.255
+            - name: dns
+              rules:
+              - protocol: tcp
+                destination: 0.0.0.0/0
+                ports: '53'
+              - protocol: udp
+                destination: 0.0.0.0/0
+                ports: '53'
+
+            default_running_security_groups: ["public_networks", "dns"]
+            default_staging_security_groups: ["public_networks", "dns"]
+
+          ccdb: &cloud_controller_ng_ccdb
+            db_scheme: postgres
+            address: ((terraform_outputs_cf_db_address))
+            port: 5432
+            roles:
+              - tag: admin
+                name: api
+                password: ((secrets_cf_db_api_password))
+            databases:
+              - tag: cc
+                name: api
+                citext: true
+
+          uaa:
+            url: https://uaa.((system_domain))
+            ca_cert: ((certs_bosh_ca_cert))
+            ssl:
+              port: 8443
+            port: 8080
+            clients:
+              cc-service-dashboards:
+                secret: ((secrets_uaa_clients_cc_service_dashboards_password))
+              cloud_controller_username_lookup:
+                secret: ((secrets_uaa_clients_cloud_controller_username_lookup_secret))
+              cc_service_key_client:
+                secret: ((secrets_uaa_clients_cc_service_key_client_secret))
+              cc_routing:
+                secret: ((secrets_uaa_cc_routing_secret))
+          login:
+            enabled: true
+          doppler:
+            port: 443
+          router:
+            route_services_secret: ((secrets_route_services_secret))
+
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: statsd_injector
-        release: statsd-injector
+        <<: *statsd_injector_job
       - name: file_server
         release: diego
+        properties:
+          diego:
+            file_server:
+              dropsonde_port: ((dropsonde_incoming_port))
       - name: cc_uploader
         release: capi
+        properties:
+          capi:
+            cc_uploader:
+              dropsonde_port: ((dropsonde_incoming_port))
+              cc:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_cc_client_cert))
+                client_key: ((certs_cc_client_key))
+              mutual_tls:
+                ca_cert: ((certs_bosh_ca_cert))
+                server_cert: ((certs_cc_uploader_server_cert))
+                server_key: ((certs_cc_uploader_server_key))
       - name: java-buildpack
         release: java-buildpack
       - name: go-buildpack
@@ -197,6 +771,9 @@ instance_groups:
         release: datadog-for-cloudfoundry
       - name: datadog-cc
         release: datadog-for-cloudfoundry
+        properties:
+          cc:
+            external_port: 9022
     instances: 2
     vm_type: large
     vm_extensions:
@@ -207,12 +784,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      max_in_flight: 1
-      consul:
-        agent:
-          services:
-            cloud_controller_ng: {}
 
   - name: cc-worker
     migrated_from:
@@ -220,17 +791,102 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: cloud_controller_worker
         release: capi
         consumes: {nats: nil}
+        properties:
+          system_domain: ((terraform_outputs_cf_root_domain))
+          ssl:
+            skip_cert_verify: false
+          cc:
+            jobs:
+              global:
+                timeout_in_seconds: 14400 # 4 hours
+              blobstore_delete:
+                timeout_in_seconds: ~
+              generic:
+                number_of_workers: ~
+
+            allow_app_ssh_access: true
+            default_app_memory: 1024
+            default_app_disk_in_mb: 1024
+            maximum_app_disk_in_mb: 2048
+
+            default_health_check_timeout: 60
+
+            external_host: api
+            external_port: 9022
+            internal_service_hostname: "cloud-controller-ng.service.cf.internal"
+
+            internal_api_user: "internal_user"
+            internal_api_password: ((secrets_bulk_api_password))
+
+            staging_upload_user: staging_upload_user
+            staging_upload_password: ((secrets_staging_upload_password))
+
+            db_encryption_key: ((secrets_cc_db_encryption_key))
+
+            logging_level: info
+            db_logging_level: debug
+
+            stacks: ~
+
+            development_mode: false
+
+            broker_client_timeout_seconds: 70
+            broker_client_default_async_poll_interval_seconds: ~
+            broker_client_max_async_poll_duration_minutes: 11520
+
+            resource_pool: *cloud_controller_ng_resource_pool
+
+            packages:
+              app_package_directory_key: ((environment))-cf-packages
+              max_package_size: 1073741824
+              <<: *blobstore-properties
+
+            droplets:
+              droplet_directory_key: ((environment))-cf-droplets
+              <<: *blobstore-properties
+
+            buildpacks: *cloud_controller_ng_buildpacks
+
+            newrelic: *cloud_controller_ng_newrelic
+
+            thresholds:
+              worker:
+                alert_if_above_mb: ~
+                restart_if_consistently_above_mb: ~
+                restart_if_above_mb: ~
+
+            external_protocol: null
+            tls_port: 9023
+            mutual_tls: *cloud_controller_ng_mutual_tls
+
+          ccdb: *cloud_controller_ng_ccdb
+
+          uaa:
+            ca_cert: ((certs_bosh_ca_cert))
+            ssl:
+              port: 8443
+            port: 8080
+            clients:
+              cc-service-dashboards:
+                secret: ((secrets_uaa_clients_cc_service_dashboards_password))
+              cc_routing:
+                secret: ((secrets_uaa_cc_routing_secret))
+
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-cc-worker
         release: datadog-for-cloudfoundry
+        properties:
+          cc:
+            jobs:
+              generic:
+                number_of_workers: null
     instances: 2
     vm_type: medium
     vm_extensions:
@@ -247,19 +903,82 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                gorouter: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
         release: routing
         consumes: {nats: nil}
+        properties:
+          router:
+            backends:
+              enable_tls: true
+              cert_chain: ((certs_router_internal_cert))
+              private_key: ((certs_router_internal_key))
+            enable_ssl: false
+            enable_access_log_streaming: true
+            status:
+              user: router_user
+              password: ((secrets_router_password))
+              port: 8080
+            drain_wait: 120
+            route_services_secret: ((secrets_route_services_secret))
+            max_idle_connections: 0
+            tracing:
+              enable_zipkin: true
+          request_timeout_in_seconds: 900
+          nats:
+            user: nats_user
+            password: ((secrets_nats_password))
+            port: ((nats_port))
+            machines: ((nats_static_ips))
+          uaa:
+            clients:
+              gorouter:
+                secret: ((secrets_uaa_clients_gorouter_secret))
+            ssl:
+              port: 8443
+            ca_cert: ((certs_bosh_ca_cert))
+
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: haproxy
         release: paas-haproxy
+        properties:
+          request_timeout_in_seconds: 900
+          ha_proxy:
+            enable_proxy_protocol: true
+            disable_http: true
+            go_router:
+              servers: [ "127.0.0.1" ]
+              port: 80
+              healthcheck_port: 8080
+            additional_frontend_config: |
+              capture response header strict-transport-security len 128
+              http-response add-header Strict-Transport-Security max-age=31536000;\ includeSubDomains;\ preload unless { capture.res.hdr(0) -m found }
+            enable_healthcheck_frontend: true
+            ssl_pem: ((certs_router_internal_cert))((certs_router_internal_key))
+            enable_http_redirect_frontend: true
+
       - name: datadog-router
         release: datadog-for-cloudfoundry
       - name: racoon
         release: ipsec
+        properties:
+          racoon:
+            ports:
+            - name: router
+              targets: ((terraform_outputs_cell_subnet_cidr_blocks))
+            certificate_authority_private_key: ((certs_ipsec_ca_key))
+            certificate_authority_cert: ((certs_ipsec_ca_cert))
+            level: require
+            verify_certificate: 'on'
       - name: datadog-ipsec
         release: datadog-for-cloudfoundry
     instances: 2
@@ -267,15 +986,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: router
-    properties:
-      consul:
-        agent:
-          services:
-            gorouter: {}
-      racoon:
-        ports:
-        - name: router
-          targets: ((terraform_outputs_cell_subnet_cidr_blocks))
     update:
       serial: true
 
@@ -288,43 +998,181 @@ instance_groups:
       - name: cf
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul: nil, consul_common: nil, consul_server: nil, consul_client: nil}
+        <<: *consul_agent_job
+        consumes: {consul_client: nil, consul_server: nil, consul_common: nil, consul: nil}
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: cfdot
-        release: diego
+        <<: *cfdot_job
       - name: auctioneer
         release: diego
+        properties:
+          diego:
+            auctioneer:
+              ca_cert: ((certs_bosh_ca_cert))
+              server_cert: ((certs_auctioneer_server_cert))
+              server_key: ((certs_auctioneer_server_key))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              rep:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_rep_client_cert))
+                client_key: ((certs_rep_client_key))
+                require_tls: true
+              dropsonde_port: ((dropsonde_incoming_port))
       - name: cloud_controller_clock
         release: capi
+        properties:
+          system_domain: ((terraform_outputs_cf_root_domain))
+          ssl:
+            skip_cert_verify: false
+          cc:
+            jobs:
+              global:
+                timeout_in_seconds: 14400 # 4 hours
+              app_usage_events_cleanup:
+                timeout_in_seconds: ~
+              blobstore_delete:
+                timeout_in_seconds: ~
+
+            app_usage_events:
+              cutoff_age_in_days: 45
+            service_usage_events:
+              cutoff_age_in_days: 45
+            audit_events:
+              cutoff_age_in_days: 31
+
+            allow_app_ssh_access: true
+            default_app_memory: 1024
+            default_app_disk_in_mb: 1024
+            maximum_app_disk_in_mb: 2048
+
+            default_health_check_timeout: 60
+
+            external_host: api
+            external_port: 9022
+            internal_service_hostname: "cloud-controller-ng.service.cf.internal"
+
+            internal_api_user: "internal_user"
+            internal_api_password: ((secrets_bulk_api_password))
+
+            staging_upload_user: staging_upload_user
+            staging_upload_password: ((secrets_staging_upload_password))
+
+            db_encryption_key: ((secrets_cc_db_encryption_key))
+
+            logging_level: info
+            db_logging_level: debug
+
+            stacks: ~
+
+            resource_pool: *cloud_controller_ng_resource_pool
+
+            packages:
+              app_package_directory_key: ((environment))-cf-packages
+              max_package_size: 1073741824
+              <<: *blobstore-properties
+
+            droplets:
+              droplet_directory_key: ((environment))-cf-droplets
+              <<: *blobstore-properties
+
+            buildpacks: *cloud_controller_ng_buildpacks
+
+            newrelic: *cloud_controller_ng_newrelic
+
+            thresholds:
+              api:
+                alert_if_above_mb: ~
+                restart_if_consistently_above_mb: ~
+                restart_if_above_mb: ~
+
+            external_protocol: ~
+
+            tls_port: 9023
+            mutual_tls: *cloud_controller_ng_mutual_tls
+
+          ccdb: *cloud_controller_ng_ccdb
+
+          uaa:
+            ca_cert: ((certs_bosh_ca_cert))
+            ssl:
+              port: 8443
+            port: 8080
+            clients:
+              cc-service-dashboards:
+                secret: ((secrets_uaa_clients_cc_service_dashboards_password))
+              cc_routing:
+                secret: ((secrets_uaa_cc_routing_secret))
+
       - name: statsd_injector
-        release: statsd-injector
+        <<: *statsd_injector_job
       - name: tps
         release: capi
+        properties:
+          diego:
+            ssl:
+              skip_cert_verify: false
+          capi:
+            tps:
+              listener_enabled: false
+              dropsonde_port: ((dropsonde_incoming_port))
+              cc:
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_cc_client_cert))
+                client_key: ((certs_cc_client_key))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              traffic_controller_url: wss://doppler.((system_domain)):443
       - name: ssh_proxy
         release: diego
+        properties:
+          diego:
+            ssl:
+              skip_cert_verify: false
+            ssh_proxy:
+              dropsonde_port: ((dropsonde_incoming_port))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              host_key: ((secrets_ssh_proxy_host_key.private_key))
+              enable_cf_auth: true
+              enable_diego_auth: false
+              diego_credentials: ""
+              uaa_secret: ((secrets_uaa_clients_ssh_proxy_secret))
+              uaa_token_url: https://uaa.((system_domain))/oauth/token
       - name: scheduler
         release: cf-syslog-drain
+        properties:
+          scalablesyslog:
+            scheduler:
+              api:
+                url: https://cloud-controller-ng.service.cf.internal:9023
+              tls:
+                client:
+                  ca: ((certs_bosh_ca_cert))
+                  cert: ((certs_scalablesyslog_adapter_scheduler_client_cert))
+                  key: ((certs_scalablesyslog_adapter_scheduler_client_key))
+                  adapter_cn: "scalablesyslog_adapter"
+                api:
+                  ca: ((certs_bosh_ca_cert))
+                  cert: ((certs_scalablesyslog_adapter_scheduler_api_cert))
+                  key: ((certs_scalablesyslog_adapter_scheduler_api_key))
+                  cn: "cloud-controller-ng.service.cf.internal"
     vm_extensions:
       - ssh_proxy_elb
       - cf_rds_client_sg
-    properties:
-      scalablesyslog:
-        scheduler:
-          api:
-            url: https://cloud-controller-ng.service.cf.internal:9023
-          tls:
-            client:
-              ca: ((certs_bosh_ca_cert))
-              cert: ((certs_scalablesyslog_adapter_scheduler_client_cert))
-              key: ((certs_scalablesyslog_adapter_scheduler_client_key))
-              adapter_cn: "scalablesyslog_adapter"
-            api:
-              ca: ((certs_bosh_ca_cert))
-              cert: ((certs_scalablesyslog_adapter_scheduler_api_cert))
-              key: ((certs_scalablesyslog_adapter_scheduler_api_key))
-              cn: "cloud-controller-ng.service.cf.internal"
     update:
       serial: true
 
@@ -334,23 +1182,34 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                doppler: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: doppler
         release: loggregator
         provides: {doppler: {as: doppler}}
+        properties:
+          doppler:
+            maxRetainedLogMessages: 100
+          loggregator:
+            tls:
+              ca_cert: ((certs_bosh_ca_cert))
+              doppler:
+                cert: ((certs_doppler_cert))
+                key: ((certs_doppler_key))
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
     instances: 3
     vm_type: medium
     stemcell: default
     networks:
       - name: cf
-    properties:
-      consul:
-        agent:
-          services:
-            doppler: {}
 
   - name: diego-cell
     migrated_from:
@@ -358,20 +1217,53 @@ instance_groups:
     azs: [z1, z2, z3]
     jobs:
       - name: consul_agent
-        release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        <<: *consul_agent_job
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: rep
         release: diego
+        properties:
+          tls:
+            ca_cert: ((certs_bosh_ca_cert))
+            cert: ((certs_cc_client_cert))
+            key: ((certs_cc_client_key))
+          diego:
+            ssl:
+              skip_cert_verify: false
+            rep:
+              ca_cert: ((certs_bosh_ca_cert))
+              server_cert: ((certs_rep_server_cert))
+              server_key: ((certs_rep_server_key))
+              require_tls: true
+              enable_legacy_api_endpoints: false
+              dropsonde_port: ((dropsonde_incoming_port))
+              bbs:
+                api_location: bbs.service.cf.internal:8889
+                ca_cert: ((certs_bosh_ca_cert))
+                client_cert: ((certs_bbs_client_cert))
+                client_key: ((certs_bbs_client_key))
+                require_ssl: true
+              preloaded_rootfses:
+                - cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs.tar
+            executor:
+              memory_capacity_mb: ((cell_memory_capacity_mb))
       - name: garden
         release: garden-runc
+        properties:
+          garden:
+            log_level: error
+            cleanup_process_dirs_on_wait: true
+            deny_networks:
+              - 0.0.0.0/0
       - name: cflinuxfs2-rootfs-setup
         release: cflinuxfs2
+        properties:
+          cflinuxfs2-rootfs:
+            trusted_certs: ((aws_rds_combined_ca_bundle))
       - name: cfdot
-        release: diego
+        <<: *cfdot_job
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: route_emitter
         release: diego
         properties:
@@ -398,6 +1290,15 @@ instance_groups:
         release: datadog-for-cloudfoundry
       - name: racoon
         release: ipsec
+        properties:
+          racoon:
+            ports:
+            - name: cell
+              targets: ((terraform_outputs_router_subnet_cidr_blocks))
+            certificate_authority_private_key: ((certs_ipsec_ca_key))
+            certificate_authority_cert: ((certs_ipsec_ca_cert))
+            level: require
+            verify_certificate: 'on'
       - name: datadog-ipsec
         release: datadog-for-cloudfoundry
     instances: ((cell_instances))
@@ -405,15 +1306,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cell
-    properties:
-      racoon:
-        ports:
-        - name: cell
-          targets: ((terraform_outputs_router_subnet_cidr_blocks))
-      tls:
-        ca_cert: ((certs_bosh_ca_cert))
-        cert: ((certs_cc_client_cert))
-        key: ((certs_cc_client_key))
 
   - name: log-api
     migrated_from:
@@ -423,15 +1315,56 @@ instance_groups:
       - name: consul_agent
         release: consul
         consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        properties:
+          consul:
+            <<: *consul_agent_job_properties_consul
+            agent:
+              <<: *consul_agent_job_properties_consul_agent
+              services:
+                loggregator_trafficcontroller: {}
+                reverse_log_proxy: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: loggregator_trafficcontroller
         release: loggregator
         consumes: {doppler: {from: doppler}}
+        properties:
+          system_domain: ((terraform_outputs_cf_root_domain))
+          ssl:
+            skip_cert_verify: false
+          cc:
+            internal_service_hostname: cloud-controller-ng.service.cf.internal
+            tls_port: 9023
+            mutual_tls:
+              ca_cert: ((certs_bosh_ca_cert))
+          loggregator:
+            outgoing_dropsonde_port: 8081
+            uaa:
+              client_secret: ((secrets_uaa_clients_doppler_secret))
+            tls:
+              ca_cert: ((certs_bosh_ca_cert))
+              trafficcontroller:
+                cert: ((certs_trafficcontroller_cert))
+                key: ((certs_trafficcontroller_key))
+              cc_trafficcontroller:
+                cert: ((certs_cc_trafficcontroller_cert))
+                key: ((certs_cc_trafficcontroller_key))
+          uaa:
+            internal_url: https://uaa.service.cf.internal:8443
+            ca_cert: ((certs_bosh_ca_cert))
+          doppler:
+            outgoing_port: 8081
       - name: metron_agent
-        release: loggregator
+        <<: *metron_agent_job
       - name: reverse_log_proxy
         release: loggregator
+        properties:
+          loggregator:
+            tls:
+              ca_cert: ((certs_bosh_ca_cert))
+              reverse_log_proxy:
+                cert: ((certs_reverse_log_proxy_cert))
+                key: ((certs_reverse_log_proxy_key))
     provides:
       reverse_log_proxy: {as: reverse_log_proxy, shared: true}
     instances: 2
@@ -441,17 +1374,5 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-    properties:
-      loggregator:
-        uaa:
-          client_secret: ((secrets_uaa_clients_doppler_secret))
-        reverse_log_proxy:
-          egress:
-            port: 8082
-      consul:
-        agent:
-          services:
-            loggregator_trafficcontroller: {}
-            reverse_log_proxy: {}
     update:
       serial: true

@@ -10,69 +10,72 @@ instance_groups:
     instances: 2
     vm_type: elasticache_broker
     stemcell: default
+    networks:
+      - name: cf
     jobs:
       - name: elasticache-broker
         release: elasticache-broker
-    networks:
-      - name: cf
-    properties:
-      elasticache-broker:
-        broker_name: "elasticache-broker"
-        broker_username: "elasticache-broker"
-        broker_password: ((secrets_elasticache_broker_admin_password))
-        auth_token_seed: ((secrets_elasticache_broker_auth_token_seed))
-        region: "eu-west-1"
-        cache_subnet_group_name: ((terraform_outputs_elasticache_broker_subnet_group_name))
-        vpc_security_group_ids:
-        - ((terraform_outputs_elasticache_broker_instances_security_group_id))
+        properties:
+          elasticache-broker:
+            broker_name: "elasticache-broker"
+            broker_username: "elasticache-broker"
+            broker_password: ((secrets_elasticache_broker_admin_password))
+            auth_token_seed: ((secrets_elasticache_broker_auth_token_seed))
+            region: "eu-west-1"
+            cache_subnet_group_name: ((terraform_outputs_elasticache_broker_subnet_group_name))
+            vpc_security_group_ids:
+            - ((terraform_outputs_elasticache_broker_instances_security_group_id))
 
-        catalog:
-          services:
-            - id: 7b94ab02-478f-4c1b-95d8-21522672930b
-              name: redis
-              description: AWS ElastiCache Redis service
-              metadata:
-                displayName: Redis
-                imageUrl: https://redis.io/images/redis-white.png
-                longDescription: AWS ElastiCache Redis cluster
-                providerDisplayName: GOV.UK PaaS
-                documentationUrl: https://docs.cloud.service.gov.uk/#redis
-                supportUrl: https://www.cloud.service.gov.uk/support.html
-              tags:
-                - elasticache
-                - redis
-              bindable: true
-              plan_updateable: true
-              plans:
-                - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
-                  name: tiny
-                  description: 568MB RAM, 1 shard, single node, no failover
-                  free: true
+            catalog:
+              services:
+                - id: 7b94ab02-478f-4c1b-95d8-21522672930b
+                  name: redis
+                  description: AWS ElastiCache Redis service
                   metadata:
-                    displayName: Redis Tiny
+                    displayName: Redis
+                    imageUrl: https://redis.io/images/redis-white.png
+                    longDescription: AWS ElastiCache Redis cluster
+                    providerDisplayName: GOV.UK PaaS
+                    documentationUrl: https://docs.cloud.service.gov.uk/#redis
+                    supportUrl: https://www.cloud.service.gov.uk/support.html
+                  tags:
+                    - elasticache
+                    - redis
+                  bindable: true
+                  plan_updateable: true
+                  plans:
+                    - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
+                      name: tiny
+                      description: 568MB RAM, 1 shard, single node, no failover
+                      free: true
+                      metadata:
+                        displayName: Redis Tiny
 
-        plan_configs:
-          3a51701c-eef3-447c-882b-907ad2bcb7ab:
-            instance_type: cache.t2.micro
-            replicas_per_node_group: 0
-            shard_count: 1
-            snapshot_retention_limit: 7
-            parameters:
-              maxmemory-policy: volatile-lru
-              reserved-memory: '0'
+            plan_configs:
+              3a51701c-eef3-447c-882b-907ad2bcb7ab:
+                instance_type: cache.t2.micro
+                replicas_per_node_group: 0
+                shard_count: 1
+                snapshot_retention_limit: 7
+                parameters:
+                  maxmemory-policy: volatile-lru
+                  reserved-memory: '0'
 
-properties:
-  cc:
-    security_group_definitions:
-      - name: elasticache_broker_instances
-        rules:
-          - protocol: tcp
-            destination: ((terraform_outputs_aws_backing_service_cidr_all))
-            ports: '6379'
+  - name: api
+    jobs:
+      - name: cloud_controller_ng
+        properties:
+          cc:
+            security_group_definitions:
+              - name: elasticache_broker_instances
+                rules:
+                  - protocol: tcp
+                    destination: ((terraform_outputs_aws_backing_service_cidr_all))
+                    ports: '6379'
 
-    default_running_security_groups:
-      - (( append ))
-      - "elasticache_broker_instances"
-    default_staging_security_groups:
-      - (( append ))
-      - "elasticache_broker_instances"
+            default_running_security_groups:
+              - (( append ))
+              - "elasticache_broker_instances"
+            default_staging_security_groups:
+              - (( append ))
+              - "elasticache_broker_instances"

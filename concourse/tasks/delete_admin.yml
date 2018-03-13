@@ -28,7 +28,8 @@ run:
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
       CF_ADMIN=admin
       CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
-      API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+      SYSTEM_DNS_ZONE_NAME=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.system_domain cf-manifest/cf-manifest.yml)
+      API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
       echo "Removing user ${NAME}"
 

@@ -21,47 +21,49 @@ instance_groups:
         # This IP is replicated in manifests/shared/deployments/collectd.yml:38
         # because grab cannot be used to interpolate in a multi-line string.
         - 10.0.16.20
-  properties:
-    statsd:
-      deleteIdleStats: true
-    carbon:
-      prune_delay: 10
-      filter:
-        enable: true
-        blacklist:
-        - stats\.counters\.cfstats\.router_.+\.[0-9]+\.http\..+\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.*
-      storage_schemas:
-        - name: "catch_all"
-          pattern: "^.*$"
-          retentions: "10s:1d,1m:7d,15m:30d,1h:1y,1d:5y"
-      storage_aggregations:
-        - name: "catch_all"
-          pattern: "^.*$"
-          xFilesFactor: "0.5"
-          aggregationMethod: "average"
-      cache:
-        max_creates_per_minute: 500
-    graphite-web:
-      time_zone: Europe/London
-      httpd:
-        port: 3001
-      wsgi:
-        inactivity-timeout: 60
-    grafana:
-      root_url: "/"
-      admin_username: "admin"
-      admin_password: ((secrets_grafana_admin_password))
-      datasources:
-        - name: graphite
-          type: graphite
-          url: http://localhost:3001
-
   jobs:
     - name: carbon
       release: graphite
+      properties:
+        carbon:
+          prune_delay: 10
+          filter:
+            enable: true
+            blacklist:
+            - stats\.counters\.cfstats\.router_.+\.[0-9]+\.http\..+\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}.*
+          storage_schemas:
+            - name: "catch_all"
+              pattern: "^.*$"
+              retentions: "10s:1d,1m:7d,15m:30d,1h:1y,1d:5y"
+          storage_aggregations:
+            - name: "catch_all"
+              pattern: "^.*$"
+              xFilesFactor: "0.5"
+              aggregationMethod: "average"
+          cache:
+            max_creates_per_minute: 500
     - name: graphite-web
       release: graphite
+      properties:
+        graphite-web:
+          time_zone: Europe/London
+          httpd:
+            port: 3001
+          wsgi:
+            inactivity-timeout: 60
     - name: statsd
       release: graphite
+      properties:
+        statsd:
+          deleteIdleStats: true
     - name: grafana
       release: grafana
+      properties:
+        grafana:
+          root_url: "/"
+          admin_username: "admin"
+          admin_password: ((secrets_grafana_admin_password))
+          datasources:
+            - name: graphite
+              type: graphite
+              url: http://localhost:3001

@@ -6,14 +6,21 @@ RSpec.describe SecurityGroupsSetter do
   let(:default_staging_security_groups) { [] }
   let(:manifest) {
     {
-    "properties" => {
-      "cc" => {
-        "security_group_definitions" => security_group_definitions,
-        "default_running_security_groups" => default_running_security_groups,
-        "default_staging_security_groups" => default_staging_security_groups,
-      },
-    },
-  }}
+      "instance_groups" => [
+        "name" => "api",
+        "jobs" => {
+          "cloud_controller_ng" => {
+            "properties" => {
+              "cc" => {
+                "security_group_definitions" => security_group_definitions,
+                "default_running_security_groups" => default_running_security_groups,
+                "default_staging_security_groups" => default_staging_security_groups,
+              },
+            },
+          },
+        },
+      ],
+    }}
   subject { SecurityGroupsSetter.new(manifest) }
 
   before :each do

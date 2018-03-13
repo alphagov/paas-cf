@@ -3,8 +3,57 @@ require 'yaml'
 require 'singleton'
 require 'tempfile'
 
-
 module ManifestHelpers
+  class PropertyTree
+    def initialize(tree)
+      @tree = tree
+    end
+
+    def self.load_yaml(yaml_string)
+      PropertyTree.new(YAML.safe_load(yaml_string))
+    end
+
+    def recursive_get(tree, key_array)
+      return tree if key_array.empty?
+      current_key, *next_keys = key_array
+
+      next_level = case tree
+                   when Hash
+                     tree[current_key]
+                   when Array
+                     if current_key =~ /\A[-+]?\d+\z/ # If the key is an int, access by index
+                       tree[current_key.to_i]
+                     else # if not, search for a element with `name: current_key`
+                       tree.select { |x| x.is_a?(Hash) && x['name'] == current_key }.first
+                     end
+                   end
+      if not next_level.nil?
+        recursive_get(next_level, next_keys)
+      end
+    end
+
+    def get(key)
+      key_array = key.split('.')
+      self.recursive_get(@tree, key_array)
+    end
+
+    def [](key)
+      self.get(key)
+    end
+
+    def fetch(key, default_value = nil)
+      ret = self.get(key)
+      if ret.nil?
+        if default_value.nil?
+          raise KeyError.new(key)
+        else
+          return default_value
+        end
+      end
+      ret
+    end
+  end
+
   class Cache
     include Singleton
     attr_accessor :manifest_with_defaults
@@ -100,7 +149,7 @@ private
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
-    deep_freeze(YAML.safe_load(manifest))
+    deep_freeze(PropertyTree.load_yaml(manifest))
   end
 
   def render_cloud_config(environment = "default")
@@ -124,7 +173,7 @@ private
         #{cf_secrets_file}
       ))
     }
-    deep_freeze(YAML.safe_load(manifest))
+    deep_freeze(PropertyTree.load_yaml(manifest))
   end
 
   def load_terraform_fixture

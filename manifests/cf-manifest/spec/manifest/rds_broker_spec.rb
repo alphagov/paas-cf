@@ -1,11 +1,10 @@
 
 RSpec.describe "RDS broker properties" do
   let(:manifest) { manifest_with_defaults }
-  let(:properties) { manifest.fetch("properties") }
 
   describe "adding RDS access to application security groups" do
     it "appends a security group definition" do
-      defs = properties.fetch("cc").fetch("security_group_definitions")
+      defs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.security_group_definitions")
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
 
       rds_sg = defs.find { |d| d["name"] == "rds_broker_instances" }
@@ -22,13 +21,13 @@ RSpec.describe "RDS broker properties" do
     end
 
     it "adds to default_running_security_groups" do
-      sgs = properties.fetch("cc").fetch("default_running_security_groups")
+      sgs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.default_running_security_groups")
       expect(sgs.length).to be > 1 # Ensure the default ones haven't been replaced
       expect(sgs).to include("rds_broker_instances")
     end
 
     it "adds to default_staging_security_groups" do
-      sgs = properties.fetch("cc").fetch("default_staging_security_groups")
+      sgs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.default_staging_security_groups")
       expect(sgs.length).to be > 1 # Ensure the default ones haven't been replaced
       expect(sgs).to include("rds_broker_instances")
     end
@@ -36,10 +35,10 @@ RSpec.describe "RDS broker properties" do
 
   describe "service plans" do
     let(:rds_broker_instance_group) {
-      manifest.fetch("instance_groups").find { |i| i["name"] == "rds_broker" }
+      manifest.fetch("instance_groups.rds_broker")
     }
     let(:services) {
-      rds_broker_instance_group.fetch("properties").fetch("rds-broker").fetch("catalog").fetch("services")
+      manifest.fetch("instance_groups.rds_broker.jobs.rds-broker.properties.rds-broker.catalog.services")
     }
     let(:all_plans) {
       services.flat_map { |s| s["plans"] }
