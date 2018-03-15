@@ -207,7 +207,6 @@ instance_groups:
                 db_port: 5432
                 db_schema: bbs
                 db_driver: postgres
-              dropsonde_port: ((dropsonde_incoming_port))
               require_ssl: true
       - name: cfdot
         <<: *cfdot_job
@@ -728,16 +727,11 @@ instance_groups:
         <<: *statsd_injector_job
       - name: file_server
         release: diego
-        properties:
-          diego:
-            file_server:
-              dropsonde_port: ((dropsonde_incoming_port))
       - name: cc_uploader
         release: capi
         properties:
           capi:
             cc_uploader:
-              dropsonde_port: ((dropsonde_incoming_port))
               cc:
                 ca_cert: ((certs_bosh_ca_cert))
                 client_cert: ((certs_cc_client_cert))
@@ -1019,7 +1013,6 @@ instance_groups:
                 client_cert: ((certs_rep_client_cert))
                 client_key: ((certs_rep_client_key))
                 require_tls: true
-              dropsonde_port: ((dropsonde_incoming_port))
       - name: cloud_controller_clock
         release: capi
         properties:
@@ -1116,7 +1109,6 @@ instance_groups:
           capi:
             tps:
               listener_enabled: false
-              dropsonde_port: ((dropsonde_incoming_port))
               cc:
                 ca_cert: ((certs_bosh_ca_cert))
                 client_cert: ((certs_cc_client_cert))
@@ -1135,7 +1127,6 @@ instance_groups:
             ssl:
               skip_cert_verify: false
             ssh_proxy:
-              dropsonde_port: ((dropsonde_incoming_port))
               bbs:
                 api_location: bbs.service.cf.internal:8889
                 ca_cert: ((certs_bosh_ca_cert))
@@ -1242,7 +1233,6 @@ instance_groups:
               server_key: ((certs_rep_server_key))
               require_tls: true
               enable_legacy_api_endpoints: false
-              dropsonde_port: ((dropsonde_incoming_port))
               bbs:
                 api_location: bbs.service.cf.internal:8889
                 ca_cert: ((certs_bosh_ca_cert))
@@ -1276,7 +1266,6 @@ instance_groups:
           diego:
             route_emitter:
               local_mode: true
-              dropsonde_port: ((dropsonde_incoming_port))
               bbs:
                 api_location: bbs.service.cf.internal:8889
                 ca_cert: ((certs_bosh_ca_cert))
@@ -1340,7 +1329,6 @@ instance_groups:
             mutual_tls:
               ca_cert: ((certs_bosh_ca_cert))
           loggregator:
-            outgoing_dropsonde_port: 8081
             uaa:
               client_secret: ((secrets_uaa_clients_doppler_secret))
             tls:
