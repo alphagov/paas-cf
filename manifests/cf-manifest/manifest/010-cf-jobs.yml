@@ -80,7 +80,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-        static_ips: ((consul_static_ips))
     update:
       serial: true
 
