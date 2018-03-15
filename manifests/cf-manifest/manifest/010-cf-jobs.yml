@@ -105,9 +105,8 @@ instance_groups:
             user: nats_user
       - name: datadog-nats
         release: datadog-for-cloudfoundry
-        properties:
-          nats:
-            port: 4222  # TODO: consume the link from the job spec instead
+        consumes:
+          nats: {from: nats}
       - name: metron_agent
         <<: *metron_agent_job
     instances: 2
