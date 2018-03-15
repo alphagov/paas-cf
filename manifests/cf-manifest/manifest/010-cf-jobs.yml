@@ -95,23 +95,18 @@ instance_groups:
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: nats
-        consumes: {nats: nil}
         release: nats
+        provides:
+          nats: {as: nats, shared: true}
         properties:
           nats:
-            port: ((nats_port))
-            machines: ((nats_static_ips))
-            debug: false
-            trace: false
-            monitor_port: 0
-            prof_port: 0
+            password: "((secrets_nats_password))"
             user: nats_user
-            password: ((secrets_nats_password))
       - name: datadog-nats
         release: datadog-for-cloudfoundry
         properties:
           nats:
-            port: ((nats_port))
+            port: 4222  # TODO: consume the link from the job spec instead
       - name: metron_agent
         <<: *metron_agent_job
     instances: 2
@@ -119,7 +114,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-        static_ips: ((nats_static_ips))
 
   - name: adapter
     azs: [z1, z2, z3]
@@ -459,11 +453,6 @@ instance_groups:
       - name: route_registrar
         release: routing
         properties:
-          nats:
-            machines: ((nats_static_ips))
-            port: ((nats_port))
-            user: nats_user
-            password: ((secrets_nats_password))
           route_registrar:
             routes:
               - name: uaa
@@ -505,7 +494,6 @@ instance_groups:
                 cloud_controller_ng: {}
       - name: cloud_controller_ng
         release: capi
-        consumes: {nats: nil}
         properties:
           description: null
 
@@ -803,7 +791,6 @@ instance_groups:
           consul_client: {from: consul_client_link}
       - name: cloud_controller_worker
         release: capi
-        consumes: {nats: nil}
         properties:
           system_domain: ((terraform_outputs_cf_root_domain))
           ssl:
@@ -924,7 +911,6 @@ instance_groups:
         release: datadog-for-cloudfoundry
       - name: gorouter
         release: routing
-        consumes: {nats: nil}
         properties:
           router:
             backends:
@@ -943,11 +929,6 @@ instance_groups:
             tracing:
               enable_zipkin: true
           request_timeout_in_seconds: 900
-          nats:
-            user: nats_user
-            password: ((secrets_nats_password))
-            port: ((nats_port))
-            machines: ((nats_static_ips))
           uaa:
             clients:
               gorouter:
@@ -1300,11 +1281,6 @@ instance_groups:
                 client_cert: ((certs_bbs_client_cert))
                 client_key: ((certs_bbs_client_key))
                 require_ssl: true
-              nats:
-                machines: ((nats_static_ips))
-                user: nats_user
-                password: ((secrets_nats_password))
-                port: ((nats_port))
       - name: datadog-route-emitter
         release: datadog-for-cloudfoundry
       - name: datadog-rep
