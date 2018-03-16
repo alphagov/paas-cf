@@ -1,4 +1,7 @@
 ---
+nats_static_ips:
+  - 10.0.16.40  # first to be moved to top of static range
+  - 10.0.17.11
 elasticsearch_master_static_ips:
   - 10.0.16.10
   - 10.0.17.10

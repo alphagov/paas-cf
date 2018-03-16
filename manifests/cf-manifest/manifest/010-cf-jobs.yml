@@ -100,6 +100,7 @@ instance_groups:
           nats: {as: nats, shared: true}
         properties:
           nats:
+            machines: ((nats_static_ips))
             password: "((secrets_nats_password))"
             user: nats_user
       - name: datadog-nats
@@ -114,6 +115,7 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
+        static_ips: ((nats_static_ips))
 
   - name: adapter
     azs: [z1, z2, z3]
@@ -452,6 +454,9 @@ instance_groups:
       - name: route_registrar
         release: routing
         properties:
+          nats:
+            machines: ((nats_static_ips))
+
           route_registrar:
             routes:
               - name: uaa
@@ -925,6 +930,8 @@ instance_groups:
             tracing:
               enable_zipkin: true
           request_timeout_in_seconds: 900
+          nats:
+            machines: ((nats_static_ips))
           uaa:
             clients:
               gorouter:
@@ -1272,6 +1279,8 @@ instance_groups:
                 client_cert: ((certs_bbs_client_cert))
                 client_key: ((certs_bbs_client_key))
                 require_ssl: true
+              nats:
+                machines: ((nats_static_ips))
       - name: datadog-route-emitter
         release: datadog-for-cloudfoundry
       - name: datadog-rep
