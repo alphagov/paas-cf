@@ -3,6 +3,13 @@ meta:
 
 name: ((environment))
 
+update:
+  canaries: 0
+  canary_watch_time: 30000-420000
+  max_in_flight: 1
+  serial: false
+  update_watch_time: 5000-420000
+
 releases:
 - name: binary-buildpack
   url: https://bosh.io/d/github.com/cloudfoundry/binary-buildpack-release?v=1.0.16
@@ -96,10 +103,3 @@ stemcells:
 - alias: default
   name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
   version: "3468.25"
-
-update:
-  canaries: 0
-  max_in_flight: 1
-  canary_watch_time: 30000-420000
-  update_watch_time: 5000-420000
-  serial: false
