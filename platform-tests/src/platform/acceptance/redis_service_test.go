@@ -15,7 +15,7 @@ import (
 var _ = Describe("Redis backing service", func() {
 	const (
 		serviceName  = "redis"
-		testPlanName = "tiny"
+		testPlanName = "tiny-clustered"
 	)
 
 	It("is registered in the marketplace", func() {
