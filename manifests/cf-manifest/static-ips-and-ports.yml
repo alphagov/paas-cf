@@ -1,10 +1,6 @@
 ---
-consul_static_ips:
-  - 10.0.16.37
-  - 10.0.17.37
-  - 10.0.18.37
 nats_static_ips:
-  - 10.0.16.11
+  - 10.0.16.40  # first to be moved to top of static range
   - 10.0.17.11
 elasticsearch_master_static_ips:
   - 10.0.16.10
@@ -15,5 +11,3 @@ queue_static_ips:
   - &second_queue_static_ip 10.0.17.13
 queue_static_ips_first: *first_queue_static_ip
 queue_static_ips_second: *second_queue_static_ip
-nats_port: 4222
-dropsonde_incoming_port: 3457

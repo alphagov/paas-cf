@@ -1,25 +1,4 @@
 meta:
-  consul_agent_job: &consul_agent_job
-    name: consul_agent
-    release: consul
-    consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
-    properties:
-      consul: &consul_agent_job_properties_consul
-        agent: &consul_agent_job_properties_consul_agent
-          domain: cf.internal
-          servers:
-            lan: ((consul_static_ips))
-          dns_config:
-            allow_stale: true
-            max_stale: "30s"
-          log_level: null
-        ca_cert: ((certs_bosh_ca_cert))
-        agent_cert: ((certs_consul_agent_cert))
-        agent_key: ((certs_consul_agent_key))
-        encrypt_keys: ((secrets_consul_encrypt_keys))
-        server_cert: ((certs_consul_server_cert))
-        server_key: ((certs_consul_server_key))
-
   metron_agent_job: &metron_agent_job
     release: loggregator
     properties:
@@ -68,13 +47,27 @@ instance_groups:
     jobs:
       - name: consul_agent
         release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: {from: consul_server_link}
+          consul_client: {from: consul_client_link}
+        provides:
+          consul_common: {as: consul_common_link, shared: true}
+          consul_server: {as: consul_server_link, shared: true}
+          consul_client: {as: consul_client_link, shared: true}
         properties:
           consul:
-            <<: *consul_agent_job_properties_consul
             agent:
-              <<: *consul_agent_job_properties_consul_agent
               mode: server
+              domain: cf.internal
+              log_level: null
+            encrypt_keys: ((secrets_consul_encrypt_keys))
+            agent_cert: ((certs_consul_agent_cert))
+            agent_key: ((certs_consul_agent_key))
+            ca_cert: ((certs_bosh_ca_cert))
+            server_cert: ((certs_consul_server_cert))
+            server_key: ((certs_consul_server_key))
+
       - name: datadog-consul-agent-server
         release: datadog-for-cloudfoundry
       - name: datadog-consul-agent-client
@@ -87,7 +80,6 @@ instance_groups:
     stemcell: default
     networks:
       - name: cf
-        static_ips: ((consul_static_ips))
     update:
       serial: true
 
@@ -95,27 +87,26 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        <<: *consul_agent_job
+        release: consul
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: nats
-        consumes: {nats: nil}
         release: nats
+        provides:
+          nats: {as: nats, shared: true}
         properties:
           nats:
-            port: ((nats_port))
             machines: ((nats_static_ips))
-            debug: false
-            trace: false
-            monitor_port: 0
-            prof_port: 0
+            password: "((secrets_nats_password))"
             user: nats_user
-            password: ((secrets_nats_password))
       - name: datadog-nats
         release: datadog-for-cloudfoundry
-        properties:
-          nats:
-            port: ((nats_port))
+        consumes:
+          nats: {from: nats}
       - name: metron_agent
         <<: *metron_agent_job
     instances: 2
@@ -134,8 +125,11 @@ instance_groups:
       - name: cf
     jobs:
       - name: consul_agent
-        <<: *consul_agent_job
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil, consul: nil}
+        release: consul
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
       - name: metron_agent
         <<: *metron_agent_job
       - name: adapter
@@ -163,7 +157,11 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        <<: *consul_agent_job
+        release: consul
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: datadog-bbs
@@ -210,7 +208,6 @@ instance_groups:
                 db_port: 5432
                 db_schema: bbs
                 db_driver: postgres
-              dropsonde_port: ((dropsonde_incoming_port))
               require_ssl: true
       - name: cfdot
         <<: *cfdot_job
@@ -231,12 +228,13 @@ instance_groups:
     jobs:
       - name: consul_agent
         release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
         properties:
           consul:
-            <<: *consul_agent_job_properties_consul
             agent:
-              <<: *consul_agent_job_properties_consul_agent
               services:
                 uaa: {}
       - name: datadog-consul-agent-client
@@ -457,9 +455,7 @@ instance_groups:
         properties:
           nats:
             machines: ((nats_static_ips))
-            port: ((nats_port))
-            user: nats_user
-            password: ((secrets_nats_password))
+
           route_registrar:
             routes:
               - name: uaa
@@ -490,17 +486,19 @@ instance_groups:
     jobs:
       - name: consul_agent
         release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
         properties:
           consul:
-            <<: *consul_agent_job_properties_consul
             agent:
-              <<: *consul_agent_job_properties_consul_agent
               services:
                 cloud_controller_ng: {}
       - name: cloud_controller_ng
         release: capi
-        consumes: {nats: nil}
+        provides:
+          cloud_controller: {as: cloud_controller, shared: true}
         properties:
           description: null
 
@@ -733,16 +731,11 @@ instance_groups:
         <<: *statsd_injector_job
       - name: file_server
         release: diego
-        properties:
-          diego:
-            file_server:
-              dropsonde_port: ((dropsonde_incoming_port))
       - name: cc_uploader
         release: capi
         properties:
           capi:
             cc_uploader:
-              dropsonde_port: ((dropsonde_incoming_port))
               cc:
                 ca_cert: ((certs_bosh_ca_cert))
                 client_cert: ((certs_cc_client_cert))
@@ -791,10 +784,13 @@ instance_groups:
     azs: [z1, z2]
     jobs:
       - name: consul_agent
-        <<: *consul_agent_job
+        release: consul
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
       - name: cloud_controller_worker
         release: capi
-        consumes: {nats: nil}
         properties:
           system_domain: ((terraform_outputs_cf_root_domain))
           ssl:
@@ -902,19 +898,19 @@ instance_groups:
     jobs:
       - name: consul_agent
         release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
         properties:
           consul:
-            <<: *consul_agent_job_properties_consul
             agent:
-              <<: *consul_agent_job_properties_consul_agent
               services:
                 gorouter: {}
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: gorouter
         release: routing
-        consumes: {nats: nil}
         properties:
           router:
             backends:
@@ -934,9 +930,6 @@ instance_groups:
               enable_zipkin: true
           request_timeout_in_seconds: 900
           nats:
-            user: nats_user
-            password: ((secrets_nats_password))
-            port: ((nats_port))
             machines: ((nats_static_ips))
           uaa:
             clients:
@@ -998,8 +991,11 @@ instance_groups:
       - name: cf
     jobs:
       - name: consul_agent
-        <<: *consul_agent_job
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil, consul: nil}
+        release: consul
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
       - name: metron_agent
         <<: *metron_agent_job
       - name: cfdot
@@ -1023,7 +1019,6 @@ instance_groups:
                 client_cert: ((certs_rep_client_cert))
                 client_key: ((certs_rep_client_key))
                 require_tls: true
-              dropsonde_port: ((dropsonde_incoming_port))
       - name: cloud_controller_clock
         release: capi
         properties:
@@ -1120,7 +1115,6 @@ instance_groups:
           capi:
             tps:
               listener_enabled: false
-              dropsonde_port: ((dropsonde_incoming_port))
               cc:
                 ca_cert: ((certs_bosh_ca_cert))
                 client_cert: ((certs_cc_client_cert))
@@ -1139,7 +1133,6 @@ instance_groups:
             ssl:
               skip_cert_verify: false
             ssh_proxy:
-              dropsonde_port: ((dropsonde_incoming_port))
               bbs:
                 api_location: bbs.service.cf.internal:8889
                 ca_cert: ((certs_bosh_ca_cert))
@@ -1181,14 +1174,16 @@ instance_groups:
     jobs:
       - name: consul_agent
         release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
         properties:
           consul:
-            <<: *consul_agent_job_properties_consul
             agent:
-              <<: *consul_agent_job_properties_consul_agent
               services:
-                doppler: {}
+                doppler:
+                  name: doppler
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: doppler
@@ -1217,7 +1212,15 @@ instance_groups:
     azs: [z1, z2, z3]
     jobs:
       - name: consul_agent
-        <<: *consul_agent_job
+        release: consul
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
+        properties:
+          consul:
+            agent:
+              node_name_includes_id: true
       - name: datadog-consul-agent-client
         release: datadog-for-cloudfoundry
       - name: rep
@@ -1236,7 +1239,6 @@ instance_groups:
               server_key: ((certs_rep_server_key))
               require_tls: true
               enable_legacy_api_endpoints: false
-              dropsonde_port: ((dropsonde_incoming_port))
               bbs:
                 api_location: bbs.service.cf.internal:8889
                 ca_cert: ((certs_bosh_ca_cert))
@@ -1270,7 +1272,6 @@ instance_groups:
           diego:
             route_emitter:
               local_mode: true
-              dropsonde_port: ((dropsonde_incoming_port))
               bbs:
                 api_location: bbs.service.cf.internal:8889
                 ca_cert: ((certs_bosh_ca_cert))
@@ -1279,9 +1280,6 @@ instance_groups:
                 require_ssl: true
               nats:
                 machines: ((nats_static_ips))
-                user: nats_user
-                password: ((secrets_nats_password))
-                port: ((nats_port))
       - name: datadog-route-emitter
         release: datadog-for-cloudfoundry
       - name: datadog-rep
@@ -1314,12 +1312,13 @@ instance_groups:
     jobs:
       - name: consul_agent
         release: consul
-        consumes: {consul_client: nil, consul_server: nil, consul_common: nil}
+        consumes:
+          consul_common: {from: consul_common_link}
+          consul_server: nil
+          consul_client: {from: consul_client_link}
         properties:
           consul:
-            <<: *consul_agent_job_properties_consul
             agent:
-              <<: *consul_agent_job_properties_consul_agent
               services:
                 loggregator_trafficcontroller: {}
                 reverse_log_proxy: {}
@@ -1338,7 +1337,6 @@ instance_groups:
             mutual_tls:
               ca_cert: ((certs_bosh_ca_cert))
           loggregator:
-            outgoing_dropsonde_port: 8081
             uaa:
               client_secret: ((secrets_uaa_clients_doppler_secret))
             tls:
