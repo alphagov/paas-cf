@@ -2136,6 +2136,7 @@ jobs:
           params:
             ENABLE_BILLING_APP: ((enable_billing_app))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             COMPOSE_API_KEY: ((compose_api_key))
           inputs:
             - name: paas-cf
@@ -2176,7 +2177,7 @@ jobs:
                   env = {
                     'CF_CLIENT_ID' => 'paas-billing',
                     'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
-                    'CF_CLIENT_REDIRECT_URL' => 'https://paas-billing.${APPS_DNS_ZONE_NAME}/oauth/callback',
+                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
                     'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
                   }
@@ -2185,6 +2186,9 @@ jobs:
                     app['env'] = {} unless app['env']
                     app['env'].merge!(env)
                     app['services'] = ['billing-db']
+                    app['routes'] = [
+                      { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "

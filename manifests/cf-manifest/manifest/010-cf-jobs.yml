@@ -391,7 +391,7 @@ instance_groups:
                 secret: ((secrets_uaa_clients_paas_billing_secret))
                 scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
                 authorities: cloud_controller.admin_read_only,uaa.resource
-                redirect-uri: https://paas-billing.((app_domain))/oauth/callback
+                redirect-uri: https://billing.((system_domain))/oauth/callback
               paas-admin:
                 override: true
                 authorized-grant-types: authorization_code,refresh_token
