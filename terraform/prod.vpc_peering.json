@@ -46,5 +46,17 @@
         "account_id": "471146266171",
         "vpc_id": "vpc-33a35155",
         "subnet_cidr": "172.16.16.0/22"
+    },
+    {
+        "peer_name": "dit-trade-remedies-dev",
+        "account_id": "621036312122",
+        "vpc_id": "vpc-048745d02c20b63f6",
+        "subnet_cidr": "172.16.28.0/22"
+    },
+    {
+        "peer_name": "dit-trade-remedies-prod",
+        "account_id": "604925858717",
+        "vpc_id": "vpc-08f2b2a7787348c52",
+        "subnet_cidr": "172.16.32.0/22"
     }
 ]
