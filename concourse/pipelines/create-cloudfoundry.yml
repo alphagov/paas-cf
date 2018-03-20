@@ -2135,7 +2135,6 @@ jobs:
               tag: 465642da06051a55630d39c899697b678f66a7f7
           params:
             ENABLE_BILLING_APP: ((enable_billing_app))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             COMPOSE_API_KEY: ((compose_api_key))
           inputs:
