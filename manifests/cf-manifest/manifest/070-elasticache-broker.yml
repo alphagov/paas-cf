@@ -47,13 +47,13 @@ instance_groups:
                     - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
                       name: tiny-clustered
                       description: 568MB RAM, clustered (1 shard), single node, no failover, daily backups
-                      free: true
+                      free: false
                       metadata:
                         displayName: Redis Clustered Tiny
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
                       name: tiny-unclustered
                       description: 568MB RAM, non-clustered, single node, no failover, no backups
-                      free: true
+                      free: false
                       metadata:
                         displayName: Redis Non-clustered Tiny
 
