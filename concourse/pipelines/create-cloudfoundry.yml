@@ -2195,11 +2195,6 @@ jobs:
 
                 cf push paas-billing
 
-                # TODO: remove after the new route was deployed to staging/prod
-                if cf app paas-billing | grep -q "paas-billing.${APPS_DNS_ZONE_NAME}"; then
-                  cf delete-route -f "${APPS_DNS_ZONE_NAME}" --hostname paas-billing
-                fi
-
       - task: deploy-paas-compose-scraper
         config:
           platform: linux
