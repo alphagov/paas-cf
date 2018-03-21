@@ -1,8 +1,8 @@
 releases:
   - name: elasticache-broker
-    version: 0.1.5
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.5.tgz
-    sha1: 189898fb860b5f51ac62dd74d5d2e0b1ad7c94f6
+    version: 0.1.6
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.6.tgz
+    sha1: 3388df3fbef757200175cb3b1ef66011b605c071
 
 instance_groups:
   - name: elasticache_broker
@@ -45,11 +45,17 @@ instance_groups:
                   plan_updateable: true
                   plans:
                     - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
-                      name: tiny
-                      description: 568MB RAM, 1 shard, single node, no failover
-                      free: true
+                      name: tiny-clustered
+                      description: 568MB RAM, clustered (1 shard), single node, no failover, daily backups
+                      free: false
                       metadata:
-                        displayName: Redis Tiny
+                        displayName: Redis Clustered Tiny
+                    - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
+                      name: tiny-unclustered
+                      description: 568MB RAM, non-clustered, single node, no failover, no backups
+                      free: false
+                      metadata:
+                        displayName: Redis Non-clustered Tiny
 
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab:
@@ -57,7 +63,19 @@ instance_groups:
                 replicas_per_node_group: 0
                 shard_count: 1
                 snapshot_retention_limit: 7
+                automatic_failover_enabled: true
                 parameters:
+                  cluster-enabled: 'yes'
+                  maxmemory-policy: volatile-lru
+                  reserved-memory: '0'
+              c84d1bef-9500-4ce9-88b2-c0bd421bbf8a:
+                instance_type: cache.t2.micro
+                replicas_per_node_group: 0
+                shard_count: 1
+                snapshot_retention_limit: 0
+                automatic_failover_enabled: false
+                parameters:
+                  cluster-enabled: 'no'
                   maxmemory-policy: volatile-lru
                   reserved-memory: '0'
 
