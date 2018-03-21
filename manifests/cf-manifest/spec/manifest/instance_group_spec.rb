@@ -89,16 +89,26 @@ RSpec.describe "the instance_groups definitions block" do
   end
 end
 
-RSpec.describe "uaa route_registrar registers uaa" do
-  let(:routes) {
+RSpec.describe "registration of routes for services behind GoRouter" do
+  let(:uaa_routes) {
     manifest_with_defaults.fetch("instance_groups.uaa.jobs.route_registrar.properties.route_registrar.routes")
   }
+  let(:api_routes) {
+    manifest_with_defaults.fetch("instance_groups.api.jobs.route_registrar.properties.route_registrar.routes")
+  }
 
-  it "registers the correct uris" do
-    expect(routes.length).to eq(1)
-    expect(routes.first.fetch('uris')).to match_array([
+  it "registers the correct uris for uaa" do
+    expect(uaa_routes.length).to eq(1)
+    expect(uaa_routes.first.fetch('uris')).to match_array([
       "uaa.#{terraform_fixture(:cf_root_domain)}",
       "login.#{terraform_fixture(:cf_root_domain)}",
+    ])
+  end
+
+  it "registers the correct uris for api" do
+    expect(api_routes.length).to eq(1)
+    expect(api_routes.first.fetch('uris')).to match_array([
+      "api.#{terraform_fixture(:cf_root_domain)}",
     ])
   end
 end

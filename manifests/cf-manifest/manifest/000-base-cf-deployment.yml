@@ -730,6 +730,22 @@ instance_groups:
     release: python-buildpack
   - name: staticfile-buildpack
     release: staticfile-buildpack
+  - name: route_registrar
+    release: routing
+    properties:
+      route_registrar:
+        routes:
+        - name: api
+          registration_interval: 20s
+          port: 9022
+          tags:
+            component: CloudController
+          uris:
+          - api.((system_domain))
+          health_check:
+            name: api-health-check
+            script_path: "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_ng_health_check"
+            timeout: 3s
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: datadog-cc
