@@ -28,6 +28,7 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/static-ips-and-ports.yml" \
   --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
   --vars-file="${WORKDIR}/environment-variables/environment-variables.yml" \
+  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/010-cert-rotation.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/030-legacy-stemcells.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/040-graphite.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/050-rds-broker.yml" \
