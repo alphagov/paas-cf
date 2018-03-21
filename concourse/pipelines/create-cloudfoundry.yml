@@ -847,8 +847,6 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: cf-tfstate
-          - get: cf-certs
-            passed: ['generate-secrets']
           - get: cf-secrets
             passed: ['pre-deploy']
 
@@ -915,7 +913,6 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
-            - name: cf-certs
             - name: vpc-peering-tfvars
           outputs:
             - name: updated-tfstate
@@ -933,9 +930,6 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
-
-                mkdir generated-certificates
-                tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
                 terraform init paas-cf/terraform/cloudfoundry
