@@ -1,0 +1,48 @@
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: datadog-firehose-nozzle
+    url: https://bosh.io/d/github.com/cloudfoundry-incubator/datadog-firehose-nozzle-release?v=51
+    version: "51"
+    sha1: b358712488c44a09e815f278d6b767f3e82cd3e3
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: nozzle
+    azs: [z1, z2]
+    jobs:
+    - name: datadog-firehose-nozzle
+      release: datadog-firehose-nozzle
+      properties:
+        datadog:
+          api_key: ((datadog_api_key))
+          metric_prefix: "cf."
+        nozzle:
+          subscription_id: "datadog-nozzle"
+          deployment: ((environment))
+          insecure_ssl_skip_verify: false
+        uaa:
+          url: https://uaa.((system_domain))
+          client: "datadog-nozzle"
+          client_secret: ((secrets_uaa_clients_datadog_firehose_password))
+        loggregator:
+          traffic_controller_url: wss://doppler.((system_domain)):443
+    vm_type: small
+    stemcell: default
+    instances: 2
+    networks:
+    - name: cf
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/datadog-nozzle?
+  value:
+    access-token-validity: 1209600
+    authorized-grant-types: authorization_code,client_credentials,refresh_token
+    override: true
+    secret: ((secrets_uaa_clients_datadog_firehose_password))
+    scope: openid,oauth.approvals,doppler.firehose
+    authorities: oauth.login,doppler.firehose
+    redirect-uri: https://login.((system_domain))/login
