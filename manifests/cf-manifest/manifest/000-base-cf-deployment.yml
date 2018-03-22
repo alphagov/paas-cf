@@ -542,7 +542,6 @@ instance_groups:
         db_encryption_key: ((secrets_cc_db_encryption_key))
         logging_level: info
         db_logging_level: debug
-        directories: ~
         stacks: ~
         disable_custom_buildpacks: false
         broker_client_timeout_seconds: 70
