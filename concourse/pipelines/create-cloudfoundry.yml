@@ -59,6 +59,7 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
+      - check-var-store-certs
   - name: credentials
     jobs:
       - rotate-cloudfoundry-credentials
@@ -266,6 +267,11 @@ resources:
     type: time
     source:
       interval: 5m
+
+  - name: check-var-store-certs-timer
+    type: time
+    source:
+      interval: 720h
 
   - name: expire-aws-keys-timer
     type: time
@@ -3250,3 +3256,57 @@ jobs:
             ensure:
               task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: check-var-store-certs
+    build_logs_to_retain: 50
+    plan:
+      - aggregate:
+        - get: check-var-store-certs-timer
+          trigger: true
+        - get: paas-cf
+          # passed: ['generate-cf-config']
+        - get: cf-vars-store
+          # passed: ['generate-cf-config']
+
+      - task: check-var-store-certs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/check-vars-store-certificates.rb 30 < cf-vars-store/cf-vars-store.yml
+        on_failure:
+          task: alert
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/awscli
+                tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+            params:
+              AWS_DEFAULT_REGION: ((aws_region))
+              DEPLOY_ENV: ((deploy_env))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+            inputs:
+              - name: paas-cf
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                paas-cf/concourse/scripts/check-vars-store-certificates-email.sh \
+                  "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
