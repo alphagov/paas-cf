@@ -885,6 +885,7 @@ instance_groups:
     release: routing
     properties:
       router:
+        ca_certs: "((uaa_ca.certificate))((uaa_ca_old.certificate))"
         backends:
           enable_tls: true
           cert_chain: "((router_ssl.certificate))"
