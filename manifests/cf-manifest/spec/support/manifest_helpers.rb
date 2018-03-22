@@ -61,6 +61,7 @@ module ManifestHelpers
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
+    attr_accessor :vars_store
   end
 
   def workdir
@@ -71,12 +72,8 @@ module ManifestHelpers
     Cache.instance.manifest_with_defaults ||= render_manifest
   end
 
-  def manifest_with_custom_vars_file(vars_file_content)
-    Tempfile.open(['custom-vars-file', '.yml']) do |file|
-      file.write(vars_file_content)
-      file.flush
-      render_manifest("default", "false", "true", ["--vars-file \"#{file.path}\""])
-    end
+  def manifest_with_custom_vars_store(vars_store_content)
+    render_manifest("default", "false", "true", vars_store_content)
   end
 
   def manifest_with_datadog_enabled
@@ -143,7 +140,12 @@ private
     file
   end
 
-  def render_manifest(environment = "default", enable_datadog = "false", disable_user_creation = "true", args = [])
+  def render_manifest(
+    environment = "default",
+    enable_datadog = "false",
+    disable_user_creation = "true",
+    custom_vars_store_content = nil
+  )
     copy_terraform_fixtures
     generate_cf_secrets
     copy_environment_variables
@@ -158,11 +160,22 @@ private
       'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
-    args.unshift(root.join('manifests/cf-manifest/scripts/generate-manifest.sh').to_s)
-    output, error, status = Open3.capture3(env, args.join(' '))
-    expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
+    Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
+      vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
+      vars_store_tempfile.close
 
-    deep_freeze(PropertyTree.load_yaml(output))
+      args = %W{
+        #{root}/manifests/cf-manifest/scripts/generate-manifest.sh
+        --var-errs
+        --vars-store=#{vars_store_tempfile.path}
+      }
+      output, error, status = Open3.capture3(env, args.join(' '))
+      expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
+
+      Cache.instance.vars_store = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
+
+      deep_freeze(PropertyTree.load_yaml(output))
+    }
   end
 
   def render_cloud_config(environment = "default")
@@ -203,11 +216,15 @@ private
   end
 
   def copy_certs
-    dir = workdir + '/certs-yaml'
+    dir = workdir + '/ipsec-CA'
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
     FileUtils.cp(
-      root.join("manifests/shared/spec/fixtures/cf-ssl-certificates.yml"),
-      "#{dir}/certs.yml",
+      root.join("manifests/shared/spec/fixtures/ipsec-CA.crt"),
+      "#{dir}/ipsec-CA.crt",
+    )
+    FileUtils.cp(
+      root.join("manifests/shared/spec/fixtures/ipsec-CA.key"),
+      "#{dir}/ipsec-CA.key",
     )
   end
 
