@@ -47,9 +47,6 @@ prepare_environment() {
 
   state_bucket=gds-paas-${DEPLOY_ENV}-state
 
-  cf_manifest_dir="${SCRIPT_DIR}/../../manifests/cf-manifest/manifest"
-  cf_graphite_version=$("${SCRIPT_DIR}"/val_from_yaml.rb releases.graphite.version "${cf_manifest_dir}/040-graphite.yml")
-
   if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
     gpg_ids="[]"
   else
@@ -93,7 +90,6 @@ pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
-cf_graphite_version: ${cf_graphite_version}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 paas_cf_tag_filter: ${PAAS_CF_TAG_FILTER:-}
 TAG_PREFIX: ${TAG_PREFIX:-}
