@@ -1,0 +1,21 @@
+---
+# FIXME: Remove these vm types by using extensions instead
+- type: replace
+  path: /vm_types/-
+  value:
+    name: rds_broker
+    network: cf
+    env:
+      bosh:
+        password: ((secrets_vcap_password))
+    cloud_properties:
+      instance_type: t2.nano
+      iam_instance_profile: rds-broker
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+      security_groups:
+      - ((terraform_outputs_rds_broker_db_clients_security_group))
+      - ((terraform_outputs_default_security_group))
+      elbs:
+      - ((terraform_outputs_rds_broker_elb_name))
