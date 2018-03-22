@@ -14,6 +14,108 @@ compilation:
   reuse_compilation_vms: true
   workers: 6
 
+disk_types:
+- name: consul
+  disk_size: 1024
+  cloud_properties:
+    type: gp2
+
+networks:
+- name: cf
+  subnets:
+  - range: 10.0.16.0/24
+    reserved:
+    - 10.0.16.2 - 10.0.16.3
+    static:
+    - 10.0.16.10 - 10.0.16.39
+    dynamic:
+    - 10.0.16.40 - 10.0.16.254
+    gateway: 10.0.16.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_cf1_subnet_id))
+    az: z1
+  - range: 10.0.17.0/24
+    reserved:
+    - 10.0.17.2 - 10.0.17.3
+    static:
+    - 10.0.17.10 - 10.0.17.39
+    dynamic:
+    - 10.0.17.40 - 10.0.17.254
+    gateway: 10.0.17.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_cf2_subnet_id))
+    az: z2
+  - range: 10.0.18.0/24
+    reserved:
+    - 10.0.18.2 - 10.0.18.3
+    static:
+    - 10.0.18.10 - 10.0.18.39
+    dynamic:
+    - 10.0.18.40 - 10.0.18.254
+    gateway: 10.0.18.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_cf3_subnet_id))
+    az: z3
+- name: cell
+  subnets:
+  - range: 10.0.32.0/24
+    reserved:
+    - 10.0.32.2 - 10.0.32.3
+    gateway: 10.0.32.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_cell1_subnet_id))
+    az: z1
+  - range: 10.0.33.0/24
+    reserved:
+    - 10.0.33.2 - 10.0.33.3
+    gateway: 10.0.33.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_cell2_subnet_id))
+    az: z2
+  - range: 10.0.34.0/24
+    reserved:
+    - 10.0.34.2 - 10.0.34.3
+    gateway: 10.0.34.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_cell3_subnet_id))
+    az: z3
+- name: router
+  subnets:
+  - range: 10.0.48.0/24
+    reserved:
+    - 10.0.48.2 - 10.0.48.3
+    static:
+    - 10.0.48.4 - 10.0.48.100
+    gateway: 10.0.48.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_router1_subnet_id))
+    az: z1
+  - range: 10.0.49.0/24
+    reserved:
+    - 10.0.49.2 - 10.0.49.3
+    static:
+    - 10.0.49.4 - 10.0.49.100
+    gateway: 10.0.49.1
+    dns:
+    - 10.0.0.2
+    cloud_properties:
+      subnet: ((terraform_outputs_router2_subnet_id))
+    az: z2
+
 vm_types:
 - name: compilation
   cloud_properties:
@@ -22,3 +124,119 @@ vm_types:
     ephemeral_disk:
       size: 20480
       type: gp2
+
+- name: small
+  network: cf
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: t2.small
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+
+- name: medium
+  network: cf
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: m3.medium
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+
+- name: large
+  network: cf
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: m4.large
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+
+- name: parser
+  network: cf
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: ((parser_instance_type))
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+
+- name: router
+  network: router
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: c3.large
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+    elbs:
+    - ((terraform_outputs_cf_router_elb_name))
+    - ((terraform_outputs_cf_router_system_domain_elb_name))
+
+- name: cell
+  network: cell
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: ((cell_instance_type))
+    ephemeral_disk:
+      size: 204800
+      type: gp2
+    security_groups:
+    - ((terraform_outputs_rds_broker_db_clients_security_group))
+    - ((terraform_outputs_elasticache_broker_clients_security_group))
+    - ((terraform_outputs_default_security_group))
+
+vm_extensions:
+- name: 64g_ephemeral_disk
+  cloud_properties:
+    ephemeral_disk:
+      size: 65536
+      type: gp2
+
+- name: cf_cc_instance_profile
+  cloud_properties:
+    iam_instance_profile: cf-cloudcontroller
+
+- name: cf_rds_client_sg
+  cloud_properties:
+    security_groups:
+    - ((terraform_outputs_default_security_group))
+    - ((terraform_outputs_cf_rds_client_security_group))
+
+# This has to duplicate the cf_rds_client_security_group because
+# vm_extensions are only shallow merged, and you therefore can't use more
+# than one that specifies security groups.
+# https://github.com/cloudfoundry/bosh/issues/1177
+- name: cf_cc_security_groups
+  cloud_properties:
+    security_groups:
+    - ((terraform_outputs_default_security_group))
+    - ((terraform_outputs_cf_rds_client_security_group))
+    - ((terraform_outputs_cloud_controller_security_group))
+
+- name: cf_cc_elb
+  cloud_properties:
+    elbs:
+    - ((terraform_outputs_cf_cc_elb_name))
+
+- name: cf_doppler_elbs
+  cloud_properties:
+    elbs:
+    - ((terraform_outputs_cf_doppler_elb_name))
+
+- name: ssh_proxy_elb
+  cloud_properties:
+    elbs:
+    - ((terraform_outputs_cf_ssh_proxy_elb_name))
