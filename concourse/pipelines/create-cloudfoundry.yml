@@ -1226,23 +1226,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  bosh interpolate \
-                    --var-errs \
-                    --vars-file=terraform-outputs/vpc.yml \
-                    --vars-file=terraform-outputs/bosh.yml \
-                    --vars-file=terraform-outputs/concourse.yml \
-                    --vars-file=terraform-outputs/cf.yml \
-                    --vars-file=cf-secrets/cf-secrets.yml \
-                    --vars-file=paas-cf/manifests/variables.yml \
-                    --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
-                    --vars-file=environment-variables/environment-variables.yml \
-                    --ops-file=paas-cf/cloud-config/operations/040-graphite.yml \
-                    --ops-file=paas-cf/cloud-config/operations/050-rds-broker.yml \
-                    --ops-file=paas-cf/cloud-config/operations/060-cdn-broker.yml \
-                    --ops-file=paas-cf/cloud-config/operations/070-elasticache-broker.yml \
-                    --ops-file=paas-cf/cloud-config/operations/080-logsearch.yml \
-                    paas-cf/manifests/cf-manifest/cloud-config/000-base-cloud-config.yml \
-                    > cloud-config/cloud-config.yml
+                  paas-cf/manifests/cf-manifest/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
