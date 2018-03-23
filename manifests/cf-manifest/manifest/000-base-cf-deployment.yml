@@ -503,30 +503,17 @@ instance_groups:
     provides:
       cloud_controller: {as: cloud_controller, shared: true}
     properties:
-      support_address: "https://docs.cloud.service.gov.uk"
-      router:
-        route_services_secret: ((secrets_route_services_secret))
+      description: null
       system_domain: ((terraform_outputs_cf_root_domain))
       system_domain_organization: admin
       app_domains:
       - ((terraform_outputs_cf_apps_domain))
       app_ssh:
         host_key_fingerprint: ((secrets_ssh_proxy_host_key.public_fingerprint))
+      support_address: "https://docs.cloud.service.gov.uk"
       ssl:
         skip_cert_verify: false
-      uaa:
-        ca_cert: ((certs_bosh_ca_cert))
-        clients:
-          cc_routing:
-            secret: ((secrets_uaa_cc_routing_secret))
-          cloud_controller_username_lookup:
-            secret: ((secrets_uaa_clients_cloud_controller_username_lookup_secret))
-          cc-service-dashboards:
-            secret: ((secrets_uaa_clients_cc_service_dashboards_password))
-          cc_service_key_client:
-            secret: ((secrets_uaa_clients_cc_service_key_client_secret))
-        url: https://uaa.((system_domain))
-        port: 8080
+      request_timeout_in_seconds: 900
       cc:
         jobs: &cloud_controller_ng_jobs
           global:
@@ -535,13 +522,28 @@ instance_groups:
             timeout_in_seconds: ~
           droplet_upload:
             timeout_in_seconds: ~
+        allow_app_ssh_access: true
+        default_app_memory: 1024
+        default_app_disk_in_mb: 1024
+        maximum_app_disk_in_mb: 2048
+        client_max_body_size: 15M
+        default_health_check_timeout: 60
+        maximum_health_check_timeout: 180
+        min_cli_version: ~
+        min_recommended_cli_version: ~
+        external_host: api
+        external_port: 9022
+        internal_service_hostname: "cloud-controller-ng.service.cf.internal"
         bulk_api_password: ((secrets_bulk_api_password))
+        internal_api_user: "internal_user"
         internal_api_password: ((secrets_bulk_api_password))
         staging_upload_user: staging_upload_user
         staging_upload_password: ((secrets_staging_upload_password))
         db_encryption_key: ((secrets_cc_db_encryption_key))
+        logging_level: info
         db_logging_level: debug
         stacks: ~
+        disable_custom_buildpacks: false
         broker_client_timeout_seconds: 70
         broker_client_default_async_poll_interval_seconds: ~
         broker_client_max_async_poll_duration_minutes: 11520
@@ -550,6 +552,7 @@ instance_groups:
           <<: *blobstore-properties
         packages: &cloud_controller_ng_packages
           app_package_directory_key: ((environment))-cf-packages
+          max_package_size: 1073741824
           max_valid_packages_stored: ~
           <<: *blobstore-properties
         droplets: &cloud_controller_ng_droplets
@@ -559,6 +562,7 @@ instance_groups:
         buildpacks: &cloud_controller_ng_buildpacks
           buildpack_directory_key: ((environment))-cf-buildpacks
           <<: *blobstore-properties
+        development_mode: false
         newrelic: &cloud_controller_ng_newrelic
           license_key: ~
           environment_name: ((environment))
@@ -604,6 +608,7 @@ instance_groups:
             total_services: 10
             non_basic_services_allowed: true
             total_routes: 1000
+        default_quota_definition: default
         install_buildpacks:
           - name: staticfile_buildpack
             package: staticfile-buildpack
@@ -621,11 +626,14 @@ instance_groups:
             package: php-buildpack
           - name: binary_buildpack
             package: binary-buildpack
+        allowed_cors_domains: []
         thresholds:
           api:
             alert_if_above_mb: ~
             restart_if_consistently_above_mb: ~
             restart_if_above_mb: ~
+        external_protocol: ~
+        tls_port: 9023
         mutual_tls: &cloud_controller_ng_mutual_tls
           ca_cert: ((certs_bosh_ca_cert))
           public_cert: ((certs_cc_server_cert))
@@ -665,6 +673,27 @@ instance_groups:
           - tag: cc
             name: api
             citext: true
+      uaa:
+        url: https://uaa.((system_domain))
+        ca_cert: ((certs_bosh_ca_cert))
+        ssl:
+          port: 8443
+        port: 8080
+        clients:
+          cc-service-dashboards:
+            secret: ((secrets_uaa_clients_cc_service_dashboards_password))
+          cloud_controller_username_lookup:
+            secret: ((secrets_uaa_clients_cloud_controller_username_lookup_secret))
+          cc_service_key_client:
+            secret: ((secrets_uaa_clients_cc_service_key_client_secret))
+          cc_routing:
+            secret: ((secrets_uaa_cc_routing_secret))
+      login:
+        enabled: true
+      doppler:
+        port: 443
+      router:
+        route_services_secret: ((secrets_route_services_secret))
   - name: metron_agent
     <<: *metron_agent_job
   - name: statsd_injector
@@ -720,6 +749,9 @@ instance_groups:
     release: datadog-for-cloudfoundry
   - name: datadog-cc
     release: datadog-for-cloudfoundry
+    properties:
+      cc:
+        external_port: 9022
   instances: 2
   vm_type: large
   vm_extensions:
@@ -755,18 +787,30 @@ instance_groups:
               timeout_in_seconds: ~
             generic:
               number_of_workers: ~
+          allow_app_ssh_access: true
+          default_app_memory: 1024
+          default_app_disk_in_mb: 1024
+          maximum_app_disk_in_mb: 2048
+          default_health_check_timeout: 60
+          external_host: api
+          external_port: 9022
+          internal_service_hostname: "cloud-controller-ng.service.cf.internal"
+          internal_api_user: "internal_user"
           internal_api_password: ((secrets_bulk_api_password))
           staging_upload_user: staging_upload_user
           staging_upload_password: ((secrets_staging_upload_password))
           db_encryption_key: ((secrets_cc_db_encryption_key))
+          logging_level: info
           db_logging_level: debug
           stacks: ~
+          development_mode: false
           broker_client_timeout_seconds: 70
           broker_client_default_async_poll_interval_seconds: ~
           broker_client_max_async_poll_duration_minutes: 11520
           resource_pool: *cloud_controller_ng_resource_pool
           packages:
             app_package_directory_key: ((environment))-cf-packages
+            max_package_size: 1073741824
             <<: *blobstore-properties
           droplets:
             droplet_directory_key: ((environment))-cf-droplets
@@ -778,6 +822,8 @@ instance_groups:
               alert_if_above_mb: ~
               restart_if_consistently_above_mb: ~
               restart_if_above_mb: ~
+          external_protocol: null
+          tls_port: 9023
           mutual_tls: *cloud_controller_ng_mutual_tls
         ccdb: *cloud_controller_ng_ccdb
         uaa:
@@ -957,6 +1003,18 @@ instance_groups:
           audit_events:
             cutoff_age_in_days: 31
 
+          allow_app_ssh_access: true
+          default_app_memory: 1024
+          default_app_disk_in_mb: 1024
+          maximum_app_disk_in_mb: 2048
+
+          default_health_check_timeout: 60
+
+          external_host: api
+          external_port: 9022
+          internal_service_hostname: "cloud-controller-ng.service.cf.internal"
+
+          internal_api_user: "internal_user"
           internal_api_password: ((secrets_bulk_api_password))
 
           staging_upload_user: staging_upload_user
@@ -964,6 +1022,7 @@ instance_groups:
 
           db_encryption_key: ((secrets_cc_db_encryption_key))
 
+          logging_level: info
           db_logging_level: debug
 
           stacks: ~
@@ -972,6 +1031,7 @@ instance_groups:
 
           packages:
             app_package_directory_key: ((environment))-cf-packages
+            max_package_size: 1073741824
             <<: *blobstore-properties
 
           droplets:
@@ -988,20 +1048,23 @@ instance_groups:
               restart_if_consistently_above_mb: ~
               restart_if_above_mb: ~
 
+          external_protocol: ~
+
+          tls_port: 9023
           mutual_tls: *cloud_controller_ng_mutual_tls
 
         ccdb: *cloud_controller_ng_ccdb
 
         uaa:
           ca_cert: ((certs_bosh_ca_cert))
+          ssl:
+            port: 8443
+          port: 8080
           clients:
             cc-service-dashboards:
               secret: ((secrets_uaa_clients_cc_service_dashboards_password))
             cc_routing:
               secret: ((secrets_uaa_cc_routing_secret))
-          ssl:
-            port: 8443
-          port: 8080
 
     - name: statsd_injector
       <<: *statsd_injector_job
