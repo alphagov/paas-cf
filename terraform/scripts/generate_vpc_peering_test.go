@@ -122,46 +122,58 @@ var _ = Describe("VPC peering", func() {
 		})
 	})
 
-	Context("manifest output", func() {
+	Context("ops file", func() {
 		It("can be generated", func() {
 			for _, filename := range files {
-				command := exec.Command("./generate_vpc_peering_manifest.rb", filename)
+				command := exec.Command("./generate_vpc_peering_opsfile.rb", filename)
 				var out bytes.Buffer
 				command.Stdout = &out
 				err := command.Run()
 				Expect(err).To(BeNil(), "Config file: %s", filename)
 				Expect(out.String()).ToNot(BeEmpty(), "Config file: %s", filename)
-				Expect(out.String()).ToNot(Equal(`---
-instance_groups:
-- name: api
-  jobs:
-  - name: cloud_controller_ng
-    properties:
-      cc:
-        security_group_definitions: []
+				Expect(out.String()).ToNot(Equal(`--- []
 `), "Config file: %s", filename)
 			}
 		})
 
-		It("has empty manifest with no environment config", func() {
-			command := exec.Command("./generate_vpc_peering_manifest.rb", "cheese")
+		It("has no operations with no environment config", func() {
+			command := exec.Command("./generate_vpc_peering_opsfile.rb", "cheese")
 			var out bytes.Buffer
 			command.Stdout = &out
 			err := command.Run()
 			Expect(err).To(BeNil())
+			Expect(out.String()).To(Equal(`--- []
+`))
+		})
+
+		It("generates one operation per config", func() {
+			file, err := ioutil.TempFile(os.TempDir(), "vpcpeer")
+			Expect(err).To(BeNil())
+
+			defer os.Remove(file.Name())
+
+			data, _ := json.Marshal([]interface{}{examplePeerConfig})
+			err = ioutil.WriteFile(file.Name(), data, 0644)
+			Expect(err).To(BeNil())
+
+			command := exec.Command("./generate_vpc_peering_opsfile.rb", file.Name())
+			var out bytes.Buffer
+			command.Stdout = &out
+			err = command.Run()
+			Expect(err).To(BeNil())
 			Expect(out.String()).To(Equal(`---
-instance_groups:
-- name: api
-  jobs:
-  - name: cloud_controller_ng
-    properties:
-      cc:
-        security_group_definitions: []
+- type: replace
+  path: "/instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions?/-"
+  value:
+    name: vpc_peer_cheese
+    rules:
+    - protocol: all
+      destination: 0.0.0.0/32
 `))
 		})
 
 		It("crashes when not given a config", func() {
-			command := exec.Command("./generate_vpc_peering_manifest.rb")
+			command := exec.Command("./generate_vpc_peering_opsfile.rb")
 			err := command.Run()
 			Expect(err).ToNot(BeNil())
 		})
@@ -185,7 +197,7 @@ instance_groups:
 				err = ioutil.WriteFile(file.Name(), data, 0644)
 				Expect(err).To(BeNil())
 
-				command := exec.Command("./generate_vpc_peering_manifest.rb", file.Name())
+				command := exec.Command("./generate_vpc_peering_opsfile.rb", file.Name())
 				var out bytes.Buffer
 				command.Stdout = &out
 				err = command.Run()

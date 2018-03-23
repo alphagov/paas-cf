@@ -1091,7 +1091,7 @@ jobs:
                   ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-opsfile.rb ${CF_MANIFEST_DIR}/grafana \
                     > grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml
 
-        - task: generate-peer-manifest
+        - task: generate-peer-opsfile
           config:
             platform: linux
             image_resource:
@@ -1102,17 +1102,17 @@ jobs:
             inputs:
               - name: paas-cf
             outputs:
-              - name: vpc-peering-manifest
+              - name: vpc-peering-opsfile
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
-                  > vpc-peering-manifest/vpc-peers.yml
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                  > vpc-peering-opsfile/vpc-peers.yml
 
-                  cat vpc-peering-manifest/vpc-peers.yml
+                  cat vpc-peering-opsfile/vpc-peers.yml
 
         - task: generate-environment-variables
           config:
