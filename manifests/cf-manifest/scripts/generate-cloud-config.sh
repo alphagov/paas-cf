@@ -3,7 +3,7 @@
 set -eu -o pipefail
 
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
-WORKDIR=${WORKDIR:-}
+WORKDIR=${WORKDIR:-.}
 
 bosh interpolate \
   --var-errs \

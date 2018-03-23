@@ -56,11 +56,16 @@ module ManifestHelpers
 
   class Cache
     include Singleton
+    attr_accessor :workdir
     attr_accessor :manifest_with_defaults
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
-    attr_accessor :grafana_dashboards_manifest
+    attr_accessor :grafana_dashboards_opsfile
+  end
+
+  def workdir
+    Cache.instance.workdir ||= $workdir
   end
 
   def manifest_with_defaults
@@ -89,27 +94,21 @@ module ManifestHelpers
     Cache.instance.cf_secrets_file.path
   end
 
-  def grafana_dashboards_manifest
-    Cache.instance.grafana_dashboards_manifest ||= render_grafana_dashboards_manifest
-    Cache.instance.grafana_dashboards_manifest.path
+  def grafana_dashboards_opsfile
+    Cache.instance.grafana_dashboards_opsfile ||= render_grafana_dashboards_opsfile
+    Cache.instance.grafana_dashboards_opsfile.path
   end
 
 private
-
-  def render(arg_list)
-    output, error, status = Open3.capture3(arg_list.map { |p| root.join(p) }.join(' '))
-    expect(status).to be_success, "#{arg_list[0]} exited #{status.exitstatus}, stderr:\n#{error}"
-    output
-  end
 
   def root
     Pathname(File.expand_path("../../../..", __dir__))
   end
 
-  def render_grafana_dashboards_manifest
+  def render_grafana_dashboards_opsfile
     file = Tempfile.new(['test-grafana-dashboards', '.yml'])
     output, error, status =
-      Open3.capture3(root.join("manifests/cf-manifest/scripts/grafana-dashboards-manifest.rb").to_s,
+      Open3.capture3(root.join("manifests/cf-manifest/scripts/grafana-dashboards-opsfile.rb").to_s,
                      root.join("manifests/cf-manifest/grafana").to_s)
     unless status.success?
       raise "Error generating grafana dashboards, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
@@ -121,31 +120,9 @@ private
   end
 
   def render_manifest(environment = "default", extra_vars_files = [])
-    spruced_manifest = render(%W(
-      manifests/shared/spruce_merge.sh
-      manifests/cf-manifest/manifest/*.yml
-      manifests/cf-manifest/stubs/datadog-nozzle.yml
-      #{grafana_dashboards_manifest}
+    manifest = render(%W(
+      manifests/cf-manifest/scripts/generate-manifest.sh
     ))
-
-    manifest = nil
-    Tempfile.open(['spruced_manifest_file', '.yml']) { |spruced_manifest_tempfile|
-      spruced_manifest_tempfile << spruced_manifest
-      spruced_manifest_tempfile.close
-
-      manifest = render(%W(
-        manifests/shared/bosh_interpolate.sh
-        #{spruced_manifest_tempfile.path}
-        manifests/cf-manifest/manifest/data/*.yml
-        manifests/shared/spec/fixtures/terraform/*.yml
-        manifests/shared/spec/fixtures/environment-variables.yml
-        manifests/shared/spec/fixtures/cf-ssl-certificates.yml
-        manifests/variables.yml
-        manifests/cf-manifest/static-ips-and-ports.yml
-        manifests/cf-manifest/env-specific/cf-#{environment}.yml
-        #{cf_secrets_file}
-      ) + extra_vars_files)
-    }
 
     # Deep freeze the object so that it's safe to use across multiple examples
     # without risk of state leaking.
@@ -153,36 +130,51 @@ private
   end
 
   def render_cloud_config(environment = "default")
-    spruced_manifest = render(%W(
-      manifests/shared/spruce_merge.sh
-      manifests/cf-manifest/cloud-config/*.yml
-    ))
-    manifest = nil
-    Tempfile.open(['spruced_manifest_file', '.yml']) { |spruced_manifest_tempfile|
-      spruced_manifest_tempfile << spruced_manifest
-      spruced_manifest_tempfile.close
+    copy_terraform_fixtures
+    generate_cf_secrets
+    copy_environment_variables
 
-      manifest = render(%W(
-        manifests/shared/bosh_interpolate.sh
-        #{spruced_manifest_tempfile.path}
-        manifests/shared/spec/fixtures/terraform/*.yml
-        manifests/shared/spec/fixtures/environment-variables.yml
-        manifests/shared/spec/fixtures/cf-ssl-certificates.yml
-        manifests/variables.yml
-        manifests/cf-manifest/env-specific/cf-#{environment}.yml
-        #{cf_secrets_file}
-      ))
+    env = {
+      'PAAS_CF_DIR' => root.to_s,
+      'WORKDIR' => workdir,
+      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{environment}.yml").to_s,
     }
-    deep_freeze(PropertyTree.load_yaml(manifest))
+    output, error, status = Open3.capture3(env, root.join('manifests/cf-manifest/scripts/generate-cloud-config.sh').to_s)
+    expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
+
+    deep_freeze(PropertyTree.load_yaml(output))
+  end
+
+  def copy_terraform_fixtures
+    dir = workdir + '/terraform-outputs'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+
+    %w(vpc bosh concourse cf).each { |file|
+      FileUtils.cp(
+        root.join("manifests/shared/spec/fixtures/terraform/#{file}.yml"),
+        "#{dir}/#{file}.yml",
+      )
+    }
+  end
+
+  def copy_environment_variables
+    dir = workdir + '/environment-variables'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+    FileUtils.cp(
+      root.join("manifests/shared/spec/fixtures/environment-variables.yml"),
+      "#{dir}/environment-variables.yml",
+    )
   end
 
   def load_terraform_fixture
-    data = YAML.load_file(root.join("manifests/shared/spec/fixtures/terraform/terraform-outputs.yml"))
+    data = YAML.load_file(root.join("manifests/shared/spec/fixtures/terraform/cf.yml"))
     deep_freeze(data)
   end
 
   def generate_cf_secrets
-    file = Tempfile.new(['test-cf-secrets', '.yml'])
+    dir = workdir + '/cf-secrets'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+    file = File::open("#{dir}/cf-secrets.yml", 'w')
     output, error, status = Open3.capture3(File.expand_path("../../../scripts/generate-cf-secrets.rb", __FILE__))
     unless status.success?
       raise "Error generating cf-secrets, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
