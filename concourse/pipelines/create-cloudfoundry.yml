@@ -1069,7 +1069,7 @@ jobs:
                       > terraform-outputs/${state}.tfvars.sh
                   done
 
-        - task: generate-grafana-dashboards-manifest
+        - task: generate-grafana-dashboards-opsfile
           config:
             platform: linux
             image_resource:
@@ -1080,7 +1080,7 @@ jobs:
             inputs:
               - name: paas-cf
             outputs:
-              - name: grafana-dashboards-manifest
+              - name: grafana-dashboards-opsfile
             run:
               path: sh
               args:
@@ -1088,8 +1088,8 @@ jobs:
                 - -c
                 - |
                   CF_MANIFEST_DIR=./paas-cf/manifests/cf-manifest
-                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-manifest.rb ${CF_MANIFEST_DIR}/grafana \
-                    > grafana-dashboards-manifest/grafana-dashboards-manifest.yml
+                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-opsfile.rb ${CF_MANIFEST_DIR}/grafana \
+                    > grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml
 
         - task: generate-peer-manifest
           config:
