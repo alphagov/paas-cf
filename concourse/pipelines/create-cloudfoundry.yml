@@ -1261,41 +1261,7 @@ jobs:
                 - -u
                 - -c
                 - |
-                  datadog_opsfile=paas-cf/manifests/cf-manifest/operations/noop.yml
-                  if [ "${ENABLE_DATADOG}" = "true" ] ; then
-                    datadog_opsfile="paas-cf/manifests/cf-manifest/operations/090-datadog-nozzle.yml"
-                  fi
-
-                  oauth_opsfile=paas-cf/manifests/cf-manifest/operations/noop.yml
-                  if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-                     oauth_opsfile="paas-cf/manifests/cf-manifest/operations/100-oauth.yml"
-                  fi
-
-                  bosh interpolate \
-                    --var-errs \
-                    --vars-file=paas-cf/manifests/cf-manifest/manifest/data/000-aws-rds-combined-ca-bundle-pem.yml \
-                    --vars-file=terraform-outputs/vpc.yml \
-                    --vars-file=terraform-outputs/bosh.yml \
-                    --vars-file=terraform-outputs/concourse.yml \
-                    --vars-file=terraform-outputs/cf.yml \
-                    --vars-file=cf-secrets/cf-secrets.yml \
-                    --vars-file=certs-yaml/certs.yml \
-                    --vars-file=paas-cf/manifests/variables.yml \
-                    --vars-file=paas-cf/manifests/cf-manifest/static-ips-and-ports.yml \
-                    --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
-                    --vars-file=environment-variables/environment-variables.yml \
-                    --ops-file=grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml \
-                    --ops-file=vpc-peering-opsfile/vpc-peers.yml \
-                    --ops-file=paas-cf/manifests/cf-manifest/operations/040-graphite.yml \
-                    --ops-file=paas-cf/manifests/cf-manifest/operations/050-rds-broker.yml \
-                    --ops-file=paas-cf/manifests/cf-manifest/operations/060-cdn-broker.yml \
-                    --ops-file=paas-cf/manifests/cf-manifest/operations/070-elasticache-broker.yml \
-                    --ops-file=paas-cf/manifests/cf-manifest/operations/080-logsearch.yml \
-                    --ops-file="${datadog_opsfile}" \
-                    --ops-file="${oauth_opsfile}" \
-                    --ops-file=paas-cf/manifests/cf-manifest/operations/999-prune.yml \
-                    paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml \
-                    > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:
