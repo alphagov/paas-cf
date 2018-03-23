@@ -2,17 +2,17 @@
 
 set -eu -o pipefail
 
-PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf/}
-WORKDIR=${WORKDIR:-}
+PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
+WORKDIR=${WORKDIR:-.}
 
-datadog_opsfile=${PAAS_CF_DIR}manifests/cf-manifest/operations/noop.yml
+datadog_opsfile=${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/noop.yml
 if [ "${ENABLE_DATADOG}" = "true" ] ; then
-  datadog_opsfile="${PAAS_CF_DIR}manifests/cf-manifest/operations/090-datadog-nozzle.yml"
+  datadog_opsfile="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/090-datadog-nozzle.yml"
 fi
 
-oauth_opsfile=${PAAS_CF_DIR}manifests/cf-manifest/operations/noop.yml
+oauth_opsfile=${PAAS_CF_DIR}/manifests/cf-manifest//manifest/operations/noop.yml
 if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-   oauth_opsfile="${PAAS_CF_DIR}manifests/cf-manifest/operations/100-oauth.yml"
+   oauth_opsfile="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/100-oauth.yml"
 fi
 
 bosh interpolate \

@@ -118,6 +118,8 @@ RSpec.describe "base properties" do
     it { is_expected.to include("url" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
 
     describe "clients" do
+      let(:manifest) { manifest_with_datadog_enabled }
+
       subject(:clients) { uaa.fetch("clients") }
 
       it {

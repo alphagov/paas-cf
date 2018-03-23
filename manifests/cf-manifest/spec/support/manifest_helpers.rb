@@ -62,6 +62,7 @@ module ManifestHelpers
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
     attr_accessor :grafana_dashboards_opsfile
+    attr_accessor :vpc_peering_opsfile
   end
 
   def workdir
@@ -76,8 +77,16 @@ module ManifestHelpers
     Tempfile.open(['custom-vars-file', '.yml']) do |file|
       file.write(vars_file_content)
       file.flush
-      render_manifest("default", [file.path])
+      render_manifest("default", "false", "true", ["--vars-file \"#{file.path}\""])
     end
+  end
+
+  def manifest_with_datadog_enabled
+    render_manifest("default", "true", "true")
+  end
+
+  def manifest_with_enable_user_creation
+    render_manifest("default", "false", "false")
   end
 
   def cloud_config_with_defaults
@@ -99,6 +108,11 @@ module ManifestHelpers
     Cache.instance.grafana_dashboards_opsfile.path
   end
 
+  def vpc_peering_opsfile
+    Cache.instance.vpc_peering_opsfile ||= render_vpc_peering_opsfile
+    Cache.instance.vpc_peering_opsfile.path
+  end
+
 private
 
   def root
@@ -106,12 +120,14 @@ private
   end
 
   def render_grafana_dashboards_opsfile
-    file = Tempfile.new(['test-grafana-dashboards', '.yml'])
+    dir = workdir + '/grafana-dashboards-opsfile'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+    file = File::open("#{dir}/grafana-dashboards-opsfile.yml", 'w')
     output, error, status =
       Open3.capture3(root.join("manifests/cf-manifest/scripts/grafana-dashboards-opsfile.rb").to_s,
                      root.join("manifests/cf-manifest/grafana").to_s)
     unless status.success?
-      raise "Error generating grafana dashboards, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
+      raise "Error generating grafana dashboards opsfile, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
     end
     file.write(output)
     file.flush
@@ -119,14 +135,42 @@ private
     file
   end
 
-  def render_manifest(environment = "default", extra_vars_files = [])
-    manifest = render(%W(
-      manifests/cf-manifest/scripts/generate-manifest.sh
-    ))
+  def render_vpc_peering_opsfile(aws_account = "dev")
+    dir = workdir + '/vpc-peering-opsfile'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+    file = File::open("#{dir}/vpc-peers.yml", 'w')
+    output, error, status =
+      Open3.capture3(root.join("terraform/scripts/generate_vpc_peering_opsfile.rb").to_s,
+                     root.join("terraform/#{aws_account}.vpc_peering.json").to_s)
+    unless status.success?
+      raise "Error generating vpc peering opsfile, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
+    end
+    file.write(output)
+    file.flush
+    file.rewind
+    file
+  end
 
-    # Deep freeze the object so that it's safe to use across multiple examples
-    # without risk of state leaking.
-    deep_freeze(PropertyTree.load_yaml(manifest))
+  def render_manifest(environment = "default", enable_datadog = "false", disable_user_creation = "true", args = [])
+    copy_terraform_fixtures
+    generate_cf_secrets
+    copy_environment_variables
+    copy_certs
+    render_grafana_dashboards_opsfile
+    render_vpc_peering_opsfile
+
+    env = {
+      'PAAS_CF_DIR' => root.to_s,
+      'WORKDIR' => workdir,
+      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{environment}.yml").to_s,
+      'ENABLE_DATADOG' => enable_datadog,
+      'DISABLE_USER_CREATION' => disable_user_creation
+    }
+    args.unshift(root.join('manifests/cf-manifest/scripts/generate-manifest.sh').to_s)
+    output, error, status = Open3.capture3(env, args.join(' '))
+    expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
+
+    deep_freeze(PropertyTree.load_yaml(output))
   end
 
   def render_cloud_config(environment = "default")
@@ -163,6 +207,15 @@ private
     FileUtils.cp(
       root.join("manifests/shared/spec/fixtures/environment-variables.yml"),
       "#{dir}/environment-variables.yml",
+    )
+  end
+
+  def copy_certs
+    dir = workdir + '/certs-yaml'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+    FileUtils.cp(
+      root.join("manifests/shared/spec/fixtures/cf-ssl-certificates.yml"),
+      "#{dir}/certs.yml",
     )
   end
 
