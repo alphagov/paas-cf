@@ -1248,47 +1248,6 @@ jobs:
             params:
               file: cloud-config/cloud-config.yml
 
-        - task: spruce-cf-manifest
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/spruce
-                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
-            inputs:
-              - name: paas-cf
-              - name: grafana-dashboards-manifest
-              - name: vpc-peering-manifest
-            outputs:
-              - name: spruced-manifest
-            params:
-              MANIFEST_STUBS: |
-                ./paas-cf/manifests/cf-manifest/manifest/*.yml
-                ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
-                ./vpc-peering-manifest/*.yml
-              ENABLE_DATADOG: ((enable_datadog))
-              DISABLE_USER_CREATION: ((disable_user_creation))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  if [ "${ENABLE_DATADOG}" = "true" ] ; then
-                     MANIFEST_STUBS="${MANIFEST_STUBS}
-                                    ./paas-cf/manifests/cf-manifest/stubs/datadog-nozzle.yml"
-                  fi
-
-                  if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-                     MANIFEST_STUBS="${MANIFEST_STUBS}
-                                    ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
-                  fi
-
-                  # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced-manifest/spruced-manifest.yml
-
         - task: generate-cf-manifest
           config:
             platform: linux
@@ -1299,23 +1258,18 @@ jobs:
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             inputs:
               - name: paas-cf
-              - name: spruced-manifest
               - name: terraform-outputs
               - name: cf-secrets
               - name: certs-yaml
               - name: environment-variables
+              - name: grafana-dashboards-opsfile
+              - name: vpc-peering-opsfile
             outputs:
               - name: cf-manifest
             params:
-              VARS_FILES: |
-                ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
-                ./terraform-outputs/*.yml
-                ./cf-secrets/cf-secrets.yml
-                ./certs-yaml/*.yml
-                ./paas-cf/manifests/variables.yml
-                ./paas-cf/manifests/cf-manifest/static-ips-and-ports.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
-                ./environment-variables/environment-variables.yml
+              CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+              ENABLE_DATADOG: ((enable_datadog))
+              DISABLE_USER_CREATION: ((disable_user_creation))
             run:
               path: sh
               args:
@@ -1323,8 +1277,41 @@ jobs:
                 - -u
                 - -c
                 - |
-                  # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced-manifest/spruced-manifest.yml $VARS_FILES > cf-manifest/cf-manifest.yml
+                  datadog_opsfile=paas-cf/manifests/cf-manifest/operations/noop.yml
+                  if [ "${ENABLE_DATADOG}" = "true" ] ; then
+                    datadog_opsfile="paas-cf/manifests/cf-manifest/operations/090-datadog-nozzle.yml"
+                  fi
+
+                  oauth_opsfile=paas-cf/manifests/cf-manifest/operations/noop.yml
+                  if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
+                     oauth_opsfile="paas-cf/manifests/cf-manifest/operations/100-oauth.yml"
+                  fi
+
+                  bosh interpolate \
+                    --var-errs \
+                    --vars-file=paas-cf/manifests/cf-manifest/manifest/data/000-aws-rds-combined-ca-bundle-pem.yml \
+                    --vars-file=terraform-outputs/vpc.yml \
+                    --vars-file=terraform-outputs/bosh.yml \
+                    --vars-file=terraform-outputs/concourse.yml \
+                    --vars-file=terraform-outputs/cf.yml \
+                    --vars-file=cf-secrets/cf-secrets.yml \
+                    --vars-file=certs-yaml/certs.yml \
+                    --vars-file=paas-cf/manifests/variables.yml \
+                    --vars-file=paas-cf/manifests/cf-manifest/static-ips-and-ports.yml \
+                    --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
+                    --vars-file=environment-variables/environment-variables.yml \
+                    --ops-file=grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml \
+                    --ops-file=vpc-peering-opsfile/vpc-peers.yml \
+                    --ops-file=paas-cf/manifests/cf-manifest/operations/040-graphite.yml \
+                    --ops-file=paas-cf/manifests/cf-manifest/operations/050-rds-broker.yml \
+                    --ops-file=paas-cf/manifests/cf-manifest/operations/060-cdn-broker.yml \
+                    --ops-file=paas-cf/manifests/cf-manifest/operations/070-elasticache-broker.yml \
+                    --ops-file=paas-cf/manifests/cf-manifest/operations/080-logsearch.yml \
+                    --ops-file="${datadog_opsfile}" \
+                    --ops-file="${oauth_opsfile}" \
+                    --ops-file=paas-cf/manifests/cf-manifest/operations/999-prune.yml \
+                    paas-cf/manifests/cf-manifest/manifest/000-base-cf-deployment.yml \
+                    > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:

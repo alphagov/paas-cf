@@ -1,0 +1,10 @@
+---
+
+- type: remove
+  path: /meta?
+
+- type: remove
+  path: /secrets?
+
+- type: remove
+  path: /terraform_outputs?
