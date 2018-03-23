@@ -65,8 +65,9 @@ groups:
       - rotate-cloudfoundry-credentials
       - clear-cloudfoundry-credentials
       - expire-aws-keys
-      - rotate-cf-internal-certs
-      - delete-old-cf-internal-certs
+      - rotate-cf-certs-cas
+      - rotate-cf-certs-leafs
+      - delete-old-cf-certs
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -3025,89 +3026,113 @@ jobs:
         params:
           file: updated-tfstate/cf.tfstate
 
-  - name: rotate-cf-internal-certs
+  - name: rotate-cf-certs-cas
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-      - get: bosh-CA
-      - get: cf-certs
-    - task: rotate-cf-internal-certs
+      - get: cf-manifest
+      - get: cf-vars-store
+    - task: rotate-cf-certs
       config:
         platform: linux
         image_resource:
           type: docker-image
           source:
-            repository: governmentpaas/certstrap
-            tag: 465642da06051a55630d39c899697b678f66a7f7
+            repository: ruby
+            tag: 2.2-slim
         inputs:
-          - name: bosh-CA
           - name: paas-cf
-          - name: cf-certs
+          - name: cf-manifest
+          - name: cf-vars-store
         outputs:
-          - name: generated-cf-certs
-        params:
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          - name: updated-cf-certs
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              mkdir certs
-              echo "Extracting extant certs"
-              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-              ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh \
-                certs bosh-CA/bosh-CA.tar.gz rotate
-
-              echo "Creating updated cert tarball"
-              cd certs
-              tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --ca \
+                --manifest cf-manifest/cf-manifest.yml \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                > updated-cf-certs/cf-vars-store.yml
       on_success:
-        put: cf-certs
+        put: cf-vars-store
         params:
-          file: generated-cf-certs/cf-certs.tar.gz
+          file: updated-cf-certs/cf-vars-store.yml
 
-  - name: delete-old-cf-internal-certs
+  - name: rotate-cf-certs-leafs
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-certs
-    - task: delete-old-cf-internal-certs
+      - get: cf-manifest
+      - get: cf-vars-store
+    - task: rotate-cf-certs
       config:
         platform: linux
         image_resource:
           type: docker-image
           source:
-            repository: governmentpaas/certstrap
-            tag: 465642da06051a55630d39c899697b678f66a7f7
+            repository: ruby
+            tag: 2.2-slim
         inputs:
           - name: paas-cf
-          - name: cf-certs
+          - name: cf-manifest
+          - name: cf-vars-store
         outputs:
-          - name: generated-cf-certs
+          - name: updated-cf-certs
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              mkdir certs
-              echo "Extracting extant certs"
-              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-              rm -vf certs/*_old.*
-
-              echo "Creating updated cert tarball"
-              cd certs
-              tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --leaf \
+                --manifest cf-manifest/cf-manifest.yml \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                > updated-cf-certs/cf-vars-store.yml
       on_success:
-        put: cf-certs
+        put: cf-vars-store
         params:
-          file: generated-cf-certs/cf-certs.tar.gz
+          file: updated-cf-certs/cf-vars-store.yml
+
+  - name: delete-old-cf-certs
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-manifest
+      - get: cf-vars-store
+    - task: rotate-cf-certs
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ruby
+            tag: 2.2-slim
+        inputs:
+          - name: paas-cf
+          - name: cf-manifest
+          - name: cf-vars-store
+        outputs:
+          - name: updated-cf-certs
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --delete \
+                --manifest cf-manifest/cf-manifest.yml \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                > updated-cf-certs/cf-vars-store.yml
+      on_success:
+        put: cf-vars-store
+        params:
+          file: updated-cf-certs/cf-vars-store.yml
 
   - name: generate-git-keys
     plan:
