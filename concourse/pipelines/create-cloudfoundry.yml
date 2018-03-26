@@ -710,6 +710,7 @@ jobs:
                 exit 1
 
   - name: app-availability-tests
+    serial: true
     plan:
       - aggregate:
           - get: pipeline-trigger
@@ -763,6 +764,7 @@ jobs:
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
 
   - name: api-availability-tests
+    serial: true
     plan:
       - aggregate:
           - get: pipeline-trigger
