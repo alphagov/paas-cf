@@ -62,7 +62,6 @@ module ManifestHelpers
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
     attr_accessor :grafana_dashboards_opsfile
-    attr_accessor :vpc_peering_opsfile
   end
 
   def workdir
@@ -108,9 +107,8 @@ module ManifestHelpers
     Cache.instance.grafana_dashboards_opsfile.path
   end
 
-  def vpc_peering_opsfile
-    Cache.instance.vpc_peering_opsfile ||= render_vpc_peering_opsfile
-    Cache.instance.vpc_peering_opsfile.path
+  def property_tree(tree)
+    PropertyTree.new(tree)
   end
 
 private
@@ -135,13 +133,13 @@ private
     file
   end
 
-  def render_vpc_peering_opsfile(aws_account = "dev")
+  def render_vpc_peering_opsfile(environment = "dev")
     dir = workdir + '/vpc-peering-opsfile'
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
     file = File::open("#{dir}/vpc-peers.yml", 'w')
     output, error, status =
       Open3.capture3(root.join("terraform/scripts/generate_vpc_peering_opsfile.rb").to_s,
-                     root.join("terraform/#{aws_account}.vpc_peering.json").to_s)
+                     root.join("terraform/#{environment}.vpc_peering.json").to_s)
     unless status.success?
       raise "Error generating vpc peering opsfile, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
     end
@@ -157,7 +155,7 @@ private
     copy_environment_variables
     copy_certs
     render_grafana_dashboards_opsfile
-    render_vpc_peering_opsfile
+    render_vpc_peering_opsfile(environment)
 
     env = {
       'PAAS_CF_DIR' => root.to_s,
