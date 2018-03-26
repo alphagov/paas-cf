@@ -215,6 +215,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-manifest.yml
 
+  - name: cf-manifest-pre-vars
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: cf-manifest-pre-vars.yml
+
   - name: cloud-config
     type: s3-iam
     source:
@@ -1232,6 +1239,7 @@ jobs:
               - name: vpc-peering-opsfile
             outputs:
               - name: cf-manifest
+              - name: cf-manifest-pre-vars
               - name: cf-vars-store-updated
             params:
               CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
@@ -1250,12 +1258,17 @@ jobs:
                     --var-errs \
                     --vars-store cf-vars-store-updated/cf-vars-store.yml \
                     > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
+                    > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
 
           on_success:
             aggregate:
             - put: cf-manifest
               params:
                 file: cf-manifest/cf-manifest.yml
+            - put: cf-manifest-pre-vars
+              params:
+                file: cf-manifest-pre-vars/cf-manifest-pre-vars.yml
             - put: cf-vars-store
               params:
                 file: cf-vars-store-updated/cf-vars-store.yml
@@ -3031,7 +3044,7 @@ jobs:
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-manifest
+      - get: cf-manifest-pre-vars
       - get: cf-vars-store
     - task: rotate-cf-certs
       config:
@@ -3043,7 +3056,7 @@ jobs:
             tag: 2.2-slim
         inputs:
           - name: paas-cf
-          - name: cf-manifest
+          - name: cf-manifest-pre-vars
           - name: cf-vars-store
         outputs:
           - name: updated-cf-certs
@@ -3054,7 +3067,7 @@ jobs:
             - -c
             - |
               ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --ca \
-                --manifest cf-manifest/cf-manifest.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
       on_success:
@@ -3067,7 +3080,7 @@ jobs:
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-manifest
+      - get: cf-manifest-pre-vars
       - get: cf-vars-store
     - task: rotate-cf-certs
       config:
@@ -3079,7 +3092,7 @@ jobs:
             tag: 2.2-slim
         inputs:
           - name: paas-cf
-          - name: cf-manifest
+          - name: cf-manifest-pre-vars
           - name: cf-vars-store
         outputs:
           - name: updated-cf-certs
@@ -3090,7 +3103,7 @@ jobs:
             - -c
             - |
               ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --leaf \
-                --manifest cf-manifest/cf-manifest.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
       on_success:
@@ -3103,7 +3116,7 @@ jobs:
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-manifest
+      - get: cf-manifest-pre-vars
       - get: cf-vars-store
     - task: rotate-cf-certs
       config:
@@ -3115,7 +3128,7 @@ jobs:
             tag: 2.2-slim
         inputs:
           - name: paas-cf
-          - name: cf-manifest
+          - name: cf-manifest-pre-vars
           - name: cf-vars-store
         outputs:
           - name: updated-cf-certs
@@ -3126,7 +3139,7 @@ jobs:
             - -c
             - |
               ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --delete \
-                --manifest cf-manifest/cf-manifest.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
       on_success:
