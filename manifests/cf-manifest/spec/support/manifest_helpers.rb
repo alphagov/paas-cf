@@ -61,7 +61,6 @@ module ManifestHelpers
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
-    attr_accessor :grafana_dashboards_opsfile
   end
 
   def workdir
@@ -100,11 +99,6 @@ module ManifestHelpers
   def cf_secrets_file
     Cache.instance.cf_secrets_file ||= generate_cf_secrets
     Cache.instance.cf_secrets_file.path
-  end
-
-  def grafana_dashboards_opsfile
-    Cache.instance.grafana_dashboards_opsfile ||= render_grafana_dashboards_opsfile
-    Cache.instance.grafana_dashboards_opsfile.path
   end
 
   def property_tree(tree)
