@@ -118,8 +118,6 @@ RSpec.describe "base properties" do
     it { is_expected.to include("url" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
 
     describe "clients" do
-      let(:manifest) { manifest_with_datadog_enabled }
-
       subject(:clients) { uaa.fetch("clients") }
 
       it {
@@ -137,7 +135,6 @@ RSpec.describe "base properties" do
           "graphite-nozzle",
           "paas-admin",
           "paas-metrics",
-          "datadog-nozzle",
           "cc-service-dashboards",
           "cc_service_key_client",
           "cdn_broker",
@@ -157,34 +154,6 @@ RSpec.describe "base properties" do
         subject(:client) { clients.fetch("login") }
         it {
           is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture(:cf_root_domain)}")
-        }
-      end
-
-      def comma_tokenize(str)
-        str.split(",").map(&:strip)
-      end
-
-      describe "datadog-nozzle" do
-        subject(:client) { clients.fetch("datadog-nozzle") }
-        it {
-          expect(comma_tokenize(client["authorized-grant-types"])).to contain_exactly(
-            "authorization_code",
-            "client_credentials",
-            "refresh_token",
-          )
-        }
-        it {
-          expect(comma_tokenize(client["scope"])).to contain_exactly(
-            "openid",
-            "oauth.approvals",
-            "doppler.firehose",
-          )
-        }
-        it {
-          expect(comma_tokenize(client["authorities"])).to contain_exactly(
-            "oauth.login",
-            "doppler.firehose",
-          )
         }
       end
     end
