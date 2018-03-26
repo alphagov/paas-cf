@@ -9,6 +9,18 @@ RSpec.describe "base properties" do
     expect(manifest["update"].fetch("max_in_flight")).to eq(1)
   end
 
+  it "does not have meta top level key" do
+    expect(manifest.fetch('meta', 'not_found')).to eq 'not_found'
+  end
+
+  it "does not have secrets top level key" do
+    expect(manifest.fetch('secrets', 'not_found')).to eq 'not_found'
+  end
+
+  it "does not have terraform_outputs top level key" do
+    expect(manifest.fetch('terraform_outputs', 'not_found')).to eq 'not_found'
+  end
+
   describe "api cloud_controller_ng" do
     subject(:cloud_controller_ng_properties) {
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
