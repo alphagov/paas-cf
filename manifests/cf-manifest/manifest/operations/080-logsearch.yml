@@ -28,7 +28,7 @@
     - name: datadog-logsearch-queue
       release: datadog-for-cloudfoundry
     vm_type: small
-    stemcell: default
+    stemcell: "3468"
     instances: 2
     networks:
     - name: cf
@@ -117,7 +117,7 @@
             }
 
     vm_type: parser
-    stemcell: default
+    stemcell: "3468"
     instances: 1
     networks:
     - name: cf
@@ -147,7 +147,7 @@
       release: logsearch-for-cloudfoundry
       properties: *logstash_parser_config_lfc_properties
     vm_type: parser
-    stemcell: default
+    stemcell: "3468"
     instances: 1
     networks:
     - name: cf
@@ -175,7 +175,7 @@
           health:
             disable_post_start: true
     vm_type: elasticsearch_master
-    stemcell: default
+    stemcell: "3468"
     instances: 3
     networks:
     - name: cf
@@ -215,7 +215,7 @@
     - name: elasticsearch-config-lfc
       release: logsearch-for-cloudfoundry
     vm_type: small
-    stemcell: default
+    stemcell: "3468"
     networks:
     - name: cf
 
@@ -247,7 +247,7 @@
             backend_port: 5601
             inbound_port: 5602
     vm_type: kibana
-    stemcell: default
+    stemcell: "3468"
     instances: 1
     networks:
     - name: cf
@@ -265,7 +265,7 @@
         redis:
           host: ((queue_static_ips_first))
     vm_type: ingestor
-    stemcell: default
+    stemcell: "3468"
     instances: 1
     networks:
     - name: cf
@@ -288,7 +288,7 @@
         redis:
           host: ((queue_static_ips_second))
     vm_type: ingestor
-    stemcell: default
+    stemcell: "3468"
     instances: 1
     networks:
     - name: cf
