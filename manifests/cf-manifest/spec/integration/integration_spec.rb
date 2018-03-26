@@ -14,7 +14,7 @@ RSpec.describe "generic manifest validations" do
     end
   end
 
-  describe "there are no leftover spruce substitutions" do
+  describe "there are no leftover variable substitutions" do
     def no_values_contain c, s
       case c
       when Hash
@@ -30,7 +30,7 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    # Spruce leaves entries like `key: (( "value" ))` alone. This led
+    # BOSH interpolate leaves entries like `key: (( "value" ))` alone. This led
     # to URLs of "(( \"value\" ))" being passed to nozzle during one
     # cf upgrade. We have some entries that legitimately have )) in,
     # but it seems unlikely we will have ones with a legitimate )).

@@ -1,5 +1,8 @@
-meta:
-  rds_broker:
+---
+
+- type: replace
+  path: /meta?/rds_broker
+  value:
     default_rds_properties: &default_rds_properties
       storage_type: "gp2"
       auto_minor_version_upgrade: true
@@ -42,14 +45,18 @@ meta:
       db_instance_class: "db.m4.4xlarge"
       allocated_storage: 2048
 
-releases:
-  - name: rds-broker
+- type: replace
+  path: /releases/-
+  value:
+    name: rds-broker
     version: 0.1.24
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.24.tgz
     sha1: e060b260fb534a679de91a6305d62ecd3d181bed
 
-instance_groups:
-  - name: rds_broker
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: rds_broker
     azs: [z1, z2]
     instances: 2
     vm_type: rds_broker
@@ -553,24 +560,22 @@ instance_groups:
                         multi_az: true
                         storage_encrypted: true
 
-  - name: api
-    jobs:
-      - name: cloud_controller_ng
-        properties:
-          cc:
-            security_group_definitions:
-              - name: rds_broker_instances
-                rules:
-                  - protocol: tcp
-                    destination: ((terraform_outputs_aws_backing_service_cidr_all))
-                    ports: '5432'
-                  - protocol: tcp
-                    destination: ((terraform_outputs_aws_backing_service_cidr_all))
-                    ports: '3306'
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions/-
+  value:
+    name: rds_broker_instances
+    rules:
+      - protocol: tcp
+        destination: ((terraform_outputs_aws_backing_service_cidr_all))
+        ports: '5432'
+      - protocol: tcp
+        destination: ((terraform_outputs_aws_backing_service_cidr_all))
+        ports: '3306'
 
-            default_running_security_groups:
-              - (( append ))
-              - "rds_broker_instances"
-            default_staging_security_groups:
-              - (( append ))
-              - "rds_broker_instances"
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_running_security_groups/-
+  value: rds_broker_instances
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_staging_security_groups/-
+  value: rds_broker_instances

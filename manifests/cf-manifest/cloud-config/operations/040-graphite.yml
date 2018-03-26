@@ -1,12 +1,16 @@
 ---
-disk_types:
-  - name: graphite_data
+- type: replace
+  path: /disk_types/-
+  value:
+    name: graphite_data
     disk_size: 409600
     cloud_properties: {type: gp2}
 
 # FIXME: Remove these vm types by using extensions instead
-vm_types:
-  - name: graphite
+- type: replace
+  path: /vm_types/-
+  value:
+    name: graphite
     network: cf
     env:
       bosh:
@@ -17,4 +21,4 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs_metrics_elb_name))
+      - ((terraform_outputs_metrics_elb_name))

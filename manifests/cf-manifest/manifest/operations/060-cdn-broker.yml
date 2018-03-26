@@ -1,11 +1,17 @@
-releases:
-  - name: cdn-broker
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: cdn-broker
     version: 0.1.6
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.6.tgz
     sha1: 7db1bf1d80707e56d257d813d5155ce3c6767127
 
-instance_groups:
-  - name: cdn_broker
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: cdn_broker
     azs: [z1, z2]
     instances: 2
     vm_type: cdn_broker

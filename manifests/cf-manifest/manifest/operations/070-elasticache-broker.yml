@@ -1,11 +1,17 @@
-releases:
-  - name: elasticache-broker
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: elasticache-broker
     version: 0.1.6
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.6.tgz
     sha1: 3388df3fbef757200175cb3b1ef66011b605c071
 
-instance_groups:
-  - name: elasticache_broker
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: elasticache_broker
     azs: [z1, z2]
     instances: 2
     vm_type: elasticache_broker
@@ -79,21 +85,19 @@ instance_groups:
                   maxmemory-policy: volatile-lru
                   reserved-memory: '0'
 
-  - name: api
-    jobs:
-      - name: cloud_controller_ng
-        properties:
-          cc:
-            security_group_definitions:
-              - name: elasticache_broker_instances
-                rules:
-                  - protocol: tcp
-                    destination: ((terraform_outputs_aws_backing_service_cidr_all))
-                    ports: '6379'
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions/-
+  value:
+    name: elasticache_broker_instances
+    rules:
+      - protocol: tcp
+        destination: ((terraform_outputs_aws_backing_service_cidr_all))
+        ports: '6379'
 
-            default_running_security_groups:
-              - (( append ))
-              - "elasticache_broker_instances"
-            default_staging_security_groups:
-              - (( append ))
-              - "elasticache_broker_instances"
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_running_security_groups/-
+  value: elasticache_broker_instances
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_staging_security_groups/-
+  value: elasticache_broker_instances

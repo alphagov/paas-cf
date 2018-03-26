@@ -1069,7 +1069,7 @@ jobs:
                       > terraform-outputs/${state}.tfvars.sh
                   done
 
-        - task: generate-grafana-dashboards-manifest
+        - task: generate-grafana-dashboards-opsfile
           config:
             platform: linux
             image_resource:
@@ -1080,7 +1080,7 @@ jobs:
             inputs:
               - name: paas-cf
             outputs:
-              - name: grafana-dashboards-manifest
+              - name: grafana-dashboards-opsfile
             run:
               path: sh
               args:
@@ -1088,10 +1088,10 @@ jobs:
                 - -c
                 - |
                   CF_MANIFEST_DIR=./paas-cf/manifests/cf-manifest
-                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-manifest.rb ${CF_MANIFEST_DIR}/grafana \
-                    > grafana-dashboards-manifest/grafana-dashboards-manifest.yml
+                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-opsfile.rb ${CF_MANIFEST_DIR}/grafana \
+                    > grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml
 
-        - task: generate-peer-manifest
+        - task: generate-peer-opsfile
           config:
             platform: linux
             image_resource:
@@ -1102,17 +1102,17 @@ jobs:
             inputs:
               - name: paas-cf
             outputs:
-              - name: vpc-peering-manifest
+              - name: vpc-peering-opsfile
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  ruby paas-cf/terraform/scripts/generate_vpc_peering_manifest.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
-                  > vpc-peering-manifest/vpc-peers.yml
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                  > vpc-peering-opsfile/vpc-peers.yml
 
-                  cat vpc-peering-manifest/vpc-peers.yml
+                  cat vpc-peering-opsfile/vpc-peers.yml
 
         - task: generate-environment-variables
           config:
@@ -1203,32 +1203,6 @@ jobs:
                   done > "certs-yaml/certs.yml"
 
       - do:
-        - task: spruce-cloud-config
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/spruce
-                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
-            inputs:
-              - name: paas-cf
-            outputs:
-              - name: spruced-cloud-config
-            params:
-              MANIFEST_STUBS: |
-                ./paas-cf/manifests/cf-manifest/cloud-config/*.yml
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  echo "Generating cloud config..."
-
-                   # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced-cloud-config/spruced_manifest.yml
-
         - task: generate-cloud-config
           config:
             platform: linux
@@ -1239,74 +1213,24 @@ jobs:
                 tag: c735581beb174ecc95ca1a7b57eff444af3bf099
             inputs:
               - name: paas-cf
-              - name: spruced-cloud-config
               - name: terraform-outputs
               - name: cf-secrets
               - name: environment-variables
             outputs:
               - name: cloud-config
             params:
-              VARS_FILES: |
-                ./terraform-outputs/*.yml
-                ./cf-secrets/cf-secrets.yml
-                ./paas-cf/manifests/variables.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
-                ./environment-variables/environment-variables.yml
+              CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  echo "Generating cloud config..."
-
-                   # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced-cloud-config/spruced_manifest.yml $VARS_FILES > cloud-config/cloud-config.yml
+                  paas-cf/manifests/cf-manifest/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
           on_success:
             put: cloud-config
             params:
               file: cloud-config/cloud-config.yml
-
-        - task: spruce-cf-manifest
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/spruce
-                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
-            inputs:
-              - name: paas-cf
-              - name: grafana-dashboards-manifest
-              - name: vpc-peering-manifest
-            outputs:
-              - name: spruced-manifest
-            params:
-              MANIFEST_STUBS: |
-                ./paas-cf/manifests/cf-manifest/manifest/*.yml
-                ./grafana-dashboards-manifest/grafana-dashboards-manifest.yml
-                ./vpc-peering-manifest/*.yml
-              ENABLE_DATADOG: ((enable_datadog))
-              DISABLE_USER_CREATION: ((disable_user_creation))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  if [ "${ENABLE_DATADOG}" = "true" ] ; then
-                     MANIFEST_STUBS="${MANIFEST_STUBS}
-                                    ./paas-cf/manifests/cf-manifest/stubs/datadog-nozzle.yml"
-                  fi
-
-                  if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-                     MANIFEST_STUBS="${MANIFEST_STUBS}
-                                    ./paas-cf/manifests/cf-manifest/stubs/oauth.yml"
-                  fi
-
-                  # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/spruce_merge.sh $MANIFEST_STUBS > spruced-manifest/spruced-manifest.yml
 
         - task: generate-cf-manifest
           config:
@@ -1318,23 +1242,18 @@ jobs:
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             inputs:
               - name: paas-cf
-              - name: spruced-manifest
               - name: terraform-outputs
               - name: cf-secrets
               - name: certs-yaml
               - name: environment-variables
+              - name: grafana-dashboards-opsfile
+              - name: vpc-peering-opsfile
             outputs:
               - name: cf-manifest
             params:
-              VARS_FILES: |
-                ./paas-cf/manifests/cf-manifest/manifest/data/*.yml
-                ./terraform-outputs/*.yml
-                ./cf-secrets/cf-secrets.yml
-                ./certs-yaml/*.yml
-                ./paas-cf/manifests/variables.yml
-                ./paas-cf/manifests/cf-manifest/static-ips-and-ports.yml
-                ./paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
-                ./environment-variables/environment-variables.yml
+              CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+              ENABLE_DATADOG: ((enable_datadog))
+              DISABLE_USER_CREATION: ((disable_user_creation))
             run:
               path: sh
               args:
@@ -1342,8 +1261,7 @@ jobs:
                 - -u
                 - -c
                 - |
-                  # shellcheck disable=SC2086
-                  ./paas-cf/manifests/shared/bosh_interpolate.sh spruced-manifest/spruced-manifest.yml $VARS_FILES > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh > cf-manifest/cf-manifest.yml
           on_success:
             put: cf-manifest
             params:

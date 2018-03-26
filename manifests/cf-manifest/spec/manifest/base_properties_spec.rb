@@ -9,6 +9,18 @@ RSpec.describe "base properties" do
     expect(manifest["update"].fetch("max_in_flight")).to eq(1)
   end
 
+  it "does not have meta top level key" do
+    expect(manifest.fetch('meta', 'not_found')).to eq 'not_found'
+  end
+
+  it "does not have secrets top level key" do
+    expect(manifest.fetch('secrets', 'not_found')).to eq 'not_found'
+  end
+
+  it "does not have terraform_outputs top level key" do
+    expect(manifest.fetch('terraform_outputs', 'not_found')).to eq 'not_found'
+  end
+
   describe "api cloud_controller_ng" do
     subject(:cloud_controller_ng_properties) {
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
@@ -135,7 +147,6 @@ RSpec.describe "base properties" do
           "graphite-nozzle",
           "paas-admin",
           "paas-metrics",
-          "datadog-nozzle",
           "cc-service-dashboards",
           "cc_service_key_client",
           "cdn_broker",
@@ -155,34 +166,6 @@ RSpec.describe "base properties" do
         subject(:client) { clients.fetch("login") }
         it {
           is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture(:cf_root_domain)}")
-        }
-      end
-
-      def comma_tokenize(str)
-        str.split(",").map(&:strip)
-      end
-
-      describe "datadog-nozzle" do
-        subject(:client) { clients.fetch("datadog-nozzle") }
-        it {
-          expect(comma_tokenize(client["authorized-grant-types"])).to contain_exactly(
-            "authorization_code",
-            "client_credentials",
-            "refresh_token",
-          )
-        }
-        it {
-          expect(comma_tokenize(client["scope"])).to contain_exactly(
-            "openid",
-            "oauth.approvals",
-            "doppler.firehose",
-          )
-        }
-        it {
-          expect(comma_tokenize(client["authorities"])).to contain_exactly(
-            "oauth.login",
-            "doppler.firehose",
-          )
         }
       end
     end

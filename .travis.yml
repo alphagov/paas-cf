@@ -5,7 +5,6 @@ rvm:
 env:
   global:
     - TF_VERSION="0.11.1"
-    - SPRUCE_VERSION="1.14.0"
     - BOSH_CLI_VERSION="2.0.48"
     - DEPLOY_ENV="travis"
 
@@ -33,12 +32,6 @@ before_install:
     wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
     unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
     rm terraform_${TF_VERSION}_linux_amd64.zip
-    set +e
-  - |
-    echo "Fetching Spruce"
-    set -e
-    wget https://github.com/geofffranks/spruce/releases/download/v${SPRUCE_VERSION}/spruce-linux-amd64
-    mv spruce-linux-amd64 ~/bin/spruce && chmod +x ~/bin/spruce
     set +e
   - |
     echo "Fetching bosh cli v2"

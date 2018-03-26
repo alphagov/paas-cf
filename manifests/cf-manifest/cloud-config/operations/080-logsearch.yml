@@ -1,7 +1,9 @@
 ---
 # FIXME: Remove these vm types by using extensions instead
-vm_types:
-  - name: kibana
+- type: replace
+  path: /vm_types/-
+  value:
+    name: kibana
     network: cf
     env:
       bosh:
@@ -12,9 +14,12 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs_logsearch_elb_name))
+      - ((terraform_outputs_logsearch_elb_name))
 
-  - name: ingestor
+- type: replace
+  path: /vm_types/-
+  value:
+    name: ingestor
     network: cf
     env:
       bosh:
@@ -25,9 +30,12 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs_logsearch_ingestor_elb_name))
+      - ((terraform_outputs_logsearch_ingestor_elb_name))
 
-  - name: elasticsearch_master
+- type: replace
+  path: /vm_types/-
+  value:
+    name: elasticsearch_master
     network: cf
     env:
       bosh:
@@ -38,12 +46,32 @@ vm_types:
         size: 10240
         type: gp2
       elbs:
-        - ((terraform_outputs_logsearch_elastic_master_elb_name))
+      - ((terraform_outputs_logsearch_elastic_master_elb_name))
 
-disk_types:
-  - name: elasticsearch_master
+- type: replace
+  path: /vm_types/-
+  value:
+    name: parser
+    network: cf
+    env:
+      bosh:
+        password: ((secrets_vcap_password))
+    cloud_properties:
+      instance_type: ((parser_instance_type))
+      ephemeral_disk:
+        size: 10240
+        type: gp2
+
+- type: replace
+  path: /disk_types/-
+  value:
+    name: elasticsearch_master
     disk_size: ((elasticsearch_master_disk_size))
     cloud_properties: {type: gp2}
-  - name: queue
+
+- type: replace
+  path: /disk_types/-
+  value:
+    name: queue
     disk_size: 102400
     cloud_properties: {type: gp2}
