@@ -24,6 +24,8 @@ variables:
   options:
     ca: ca_one
     common_name: leaf_two.cf.internal
+- name: not_a_certificate
+  type: rsa
 EOS
   }
 
@@ -136,6 +138,10 @@ leaf_one:
     one
   private_key: |
     one
+not_a_certificate: |
+  one
+not_a_certificate_old: |
+  two
 EOS
     }
 
@@ -159,6 +165,10 @@ leaf_one:
     one
   private_key: |
     one
+not_a_certificate: |
+  one
+not_a_certificate_old: |
+  two
 EOS
       ))
     end

@@ -53,18 +53,23 @@ def rotate_leafs(vars, certs)
   certs
 end
 
-def delete_old(certs)
-  certs.map { |k, v|
-    v = BLANK_CERT if k.end_with?("_old")
-    [k, v]
-  }.to_h
+def delete_old(vars, certs)
+  vars.each do |var|
+    next unless var.fetch("type", "") == "certificate"
+    name = var.fetch("name")
+    next unless name.end_with?("_old")
+
+    certs[name] = BLANK_CERT
+  end
+
+  certs
 end
 
 def rotate(manifest, certs, ca: false, leaf: false, delete: false)
   vars = manifest.fetch("variables").select { |v| v["type"] == 'certificate' }
 
   if delete
-    return delete_old(certs)
+    return delete_old(vars, certs)
   end
 
   certs = rotate_cas(vars, certs) if ca
