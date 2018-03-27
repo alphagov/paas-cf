@@ -1345,17 +1345,17 @@ releases:
   version: 1.0.16
   sha1: d8d7db55c1602a8587ed681e714a4d121a813a36
 - name: capi
-  url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.49.0
-  version: 1.49.0
-  sha1: da59f9232a828e364337b81952a5510d8f1ca3b9
+  url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.52.0
+  version: 1.52.0
+  sha1: e7e939e856ac512bb00ae3b844dc1b3c1d156a46
 - name: cf-syslog-drain
   url: https://bosh.io/d/github.com/cloudfoundry/cf-syslog-drain-release?v=5.1
   version: "5.1"
   sha1: ccc588acc4854d669f60ad1c826d2b366e3548c6
 - name: cflinuxfs2
-  url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.187.0
-  version: 1.187.0
-  sha1: dd38c18449d3119d42ad1ab7bba589e6da9e1a7c
+  url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.194.0
+  version: 1.194.0
+  sha1: 5113b1e7cf0fcfe38e6ab47065c2eecf9878bdb4
 - name: consul
   url: https://bosh.io/d/github.com/cloudfoundry-incubator/consul-release?v=191
   version: "191"
