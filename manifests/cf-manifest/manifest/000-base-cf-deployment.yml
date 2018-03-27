@@ -1361,9 +1361,9 @@ releases:
   version: "191"
   sha1: 61b429ae13e0fde0ebdb98fce99e08f7baf60a16
 - name: datadog-for-cloudfoundry
-  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.22.tgz
-  version: 0.1.22
-  sha1: af4bf4a83c3e7542eaf8851ab003fd3262df9cc8
+  version: 0.1.23
+  url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.23.tgz
+  sha1: 09f70cbd87ec6045d44aa346e23fd6dd9bf14bfa
 - name: diego
   url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.35.0
   version: 1.35.0
