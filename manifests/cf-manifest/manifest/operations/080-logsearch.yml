@@ -12,10 +12,9 @@
   path: /releases/-
   value:
     name: logsearch-for-cloudfoundry
-    version: 0.1.4
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.4.tgz
-    sha1: 7b450ea1ed91fe434eadd667f393f5d877321f1f
-
+    version: 0.1.5
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.5.tgz
+    sha1: dee838e3a9c317c406ae1bcb84ae42ae862829c2
 - type: replace
   path: /instance_groups/-
   value:
