@@ -128,7 +128,7 @@ instance_groups:
   - z1
   - z2
   - z3
-  instances: 3
+  instances: 6
   vm_type: medium
   stemcell: default
   networks:
