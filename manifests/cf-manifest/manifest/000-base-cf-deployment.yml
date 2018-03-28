@@ -1170,7 +1170,6 @@ instance_groups:
           server_cert: ((certs_rep_server_cert))
           server_key: ((certs_rep_server_key))
           require_tls: true
-          enable_legacy_api_endpoints: false
           bbs:
             api_location: bbs.service.cf.internal:8889
             ca_cert: ((certs_bosh_ca_cert))
@@ -1365,9 +1364,9 @@ releases:
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.23.tgz
   sha1: 09f70cbd87ec6045d44aa346e23fd6dd9bf14bfa
 - name: diego
-  url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.35.0
-  version: 1.35.0
-  sha1: 7525f412d6698f499124f0facee64a40a1e99ec0
+  url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=2.0.0
+  version: 2.0.0
+  sha1: 5e6a075bc0b9abecd297161448206e5b3dcbdf38
 - name: garden-runc
   url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.11.1
   version: 1.11.1
