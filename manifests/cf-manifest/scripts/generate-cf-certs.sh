@@ -28,6 +28,8 @@ uaa_internal,uaa.service.cf.internal
 consul_server,server.dc1.cf.internal,server.dc2.cf.internal
 consul_agent,
 doppler,
+locket_server,locket.service.cf.internal
+loggregator_tls_metron,
 metron,
 trafficcontroller,
 cc_trafficcontroller,
