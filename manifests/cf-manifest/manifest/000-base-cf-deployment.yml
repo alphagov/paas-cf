@@ -12,17 +12,6 @@ meta:
             key: "((loggregator_tls_metron.private_key))"
       metron_agent:
         deployment: ((environment))
-  cfdot_job: &cfdot_job
-    name: cfdot
-    release: diego
-    properties:
-      diego:
-        cfdot:
-          bbs:
-            ca_cert: "((service_cf_internal_ca.certificate))"
-            client_cert: "((diego_bbs_client.certificate))"
-            client_key: "((diego_bbs_client.private_key))"
-            use_ssl: true
   statsd_injector_job: &statsd_injector_job
     name: statsd_injector
     release: statsd-injector
@@ -263,7 +252,12 @@ instance_groups:
         cert: ((certs_loggregator_tls_metron_cert))
         key: ((certs_loggregator_tls_metron_key))
   - name: cfdot
-    <<: *cfdot_job
+    release: diego
+    properties:
+      tls: &cfdot_tls_client_properties
+        ca_certificate: "((service_cf_internal_ca.certificate))"
+        certificate: "((diego_bbs_client.certificate))"
+        private_key: "((diego_bbs_client.private_key))"
   - name: metron_agent
     <<: *metron_agent_job
 - name: uaa
@@ -993,7 +987,9 @@ instance_groups:
     - name: metron_agent
       <<: *metron_agent_job
     - name: cfdot
-      <<: *cfdot_job
+      release: diego
+      properties:
+        tls: *cfdot_tls_client_properties
     - name: auctioneer
       release: diego
       properties:
@@ -1229,7 +1225,9 @@ instance_groups:
       cflinuxfs2-rootfs:
         trusted_certs: ((aws_rds_combined_ca_bundle))
   - name: cfdot
-    <<: *cfdot_job
+    release: diego
+    properties:
+      tls: *cfdot_tls_client_properties
   - name: metron_agent
     <<: *metron_agent_job
   - name: route_emitter
