@@ -1637,9 +1637,9 @@ releases:
   version: 1.194.0
   sha1: 5113b1e7cf0fcfe38e6ab47065c2eecf9878bdb4
 - name: consul
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/consul-release?v=191
-  version: "191"
-  sha1: 61b429ae13e0fde0ebdb98fce99e08f7baf60a16
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/consul-release?v=192
+  version: "192"
+  sha1: 399894e3b4f5d4ba7ea5abe4ab89190ec2d4ad56
 - name: datadog-for-cloudfoundry
   version: 0.1.23
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.23.tgz
