@@ -1136,6 +1136,9 @@ instance_groups:
             enable_cf_auth: true
             enable_diego_auth: false
             diego_credentials: ""
+            uaa:
+              ca_cert: ((certs_bosh_ca_cert))
+              port: 8443
             uaa_secret: ((secrets_uaa_clients_ssh_proxy_secret))
             uaa_token_url: https://uaa.((system_domain))/oauth/token
     - name: scheduler
