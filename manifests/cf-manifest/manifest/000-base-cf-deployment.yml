@@ -1645,9 +1645,9 @@ releases:
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.23.tgz
   sha1: 09f70cbd87ec6045d44aa346e23fd6dd9bf14bfa
 - name: diego
-  url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=2.0.0
-  version: 2.0.0
-  sha1: 5e6a075bc0b9abecd297161448206e5b3dcbdf38
+  url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=2.1.0
+  version: 2.1.0
+  sha1: 20cb4f7d197902ad0ce312324434712cddce3044
 - name: garden-runc
   url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.11.1
   version: 1.11.1
