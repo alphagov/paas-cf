@@ -5,6 +5,7 @@ groups:
       - pipeline-lock
       - init
       - pre-deploy
+      - migrate-cf-certs
       - generate-secrets
       - app-availability-tests
       - api-availability-tests
@@ -22,6 +23,7 @@ groups:
   - name: cloudfoundry
     jobs:
       - pre-deploy
+      - migrate-cf-certs
       - generate-secrets
       - app-availability-tests
       - api-availability-tests
@@ -57,13 +59,15 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
+      - check-var-store-certs
   - name: credentials
     jobs:
       - rotate-cloudfoundry-credentials
       - clear-cloudfoundry-credentials
       - expire-aws-keys
-      - rotate-cf-internal-certs
-      - delete-old-cf-internal-certs
+      - rotate-cf-certs-cas
+      - rotate-cf-certs-leafs
+      - delete-old-cf-certs
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -197,12 +201,26 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-certs.tar.gz
 
+  - name: cf-vars-store
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: cf-vars-store.yml
+
   - name: cf-manifest
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: cf-manifest.yml
+
+  - name: cf-manifest-pre-vars
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: cf-manifest-pre-vars.yml
 
   - name: cloud-config
     type: s3-iam
@@ -257,6 +275,11 @@ resources:
     type: time
     source:
       interval: 5m
+
+  - name: check-var-store-certs-timer
+    type: time
+    source:
+      interval: 720h
 
   - name: expire-aws-keys-timer
     type: time
@@ -404,6 +427,7 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" ipsec-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
+                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-vars-store.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
@@ -412,6 +436,65 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" bosh-CA.crt paas-cf/concourse/init_files/zero_bytes
+
+  - name: migrate-cf-certs
+    serial: true
+    plan:
+      - aggregate:
+          - get: paas-cf
+            passed: ['init']
+          - get: pipeline-trigger
+            passed: ['init']
+            trigger: true
+          - get: bosh-CA
+          - get: cf-certs
+          - get: cf-vars-store
+
+      - task: migrate-cf-certs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/spruce
+              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+          inputs:
+            - name: bosh-CA
+            - name: paas-cf
+            - name: cf-certs
+            - name: cf-vars-store
+          outputs:
+            - name: generated-cf-vars-store
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                if [ "$(wc -l ./cf-vars-store/cf-vars-store.yml | cut -f 1 -d ' ')" != "0" ]; then
+                  echo "Skipping migration cf-vars-store/cf-vars-store.yml is not empty"
+                  cp cf-vars-store/cf-vars-store.yml generated-cf-vars-store/cf-vars-store.yml
+                  exit 0
+                fi
+                echo "Converting cf-certs.tgz to cf-vars-store/cf-vars-store.yml"
+
+                tar -xzf bosh-CA/bosh-CA.tar.gz -C bosh-CA
+                tar -xzf cf-certs/cf-certs.tar.gz -C cf-certs
+
+                # For UAA key rotation
+                UAA_JWT_SIGNING_KEY_HASH="$(sha1sum ./cf-certs/uaa_jwt_signing.key | cut -f 1 -d " " | tr -d '\n')"
+                export UAA_JWT_SIGNING_KEY_HASH
+
+                spruce merge ./paas-cf/manifests/cf-manifest/scripts/cf-certs-migration-to-vars-store.spruce.yml > generated-cf-vars-store/cf-vars-store.yml
+
+        on_success:
+          put: cf-vars-store
+          params:
+            file: generated-cf-vars-store/cf-vars-store.yml
+
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -425,7 +508,6 @@ jobs:
             trigger: true
           - get: bosh-CA
           - get: ipsec-CA
-          - get: cf-certs
           - get: cf-secrets
           - get: ssh-private-key
           - get: ssh-public-key
@@ -530,44 +612,6 @@ jobs:
                 - put: ssh-public-key
                   params:
                     file: generated-ssh-public-key/id_rsa.pub
-
-        - task: generate-cf-certs
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/certstrap
-                tag: 465642da06051a55630d39c899697b678f66a7f7
-            inputs:
-              - name: bosh-CA
-              - name: paas-cf
-              - name: cf-certs
-            outputs:
-              - name: generated-cf-certs
-            params:
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  mkdir certs
-                  echo "Extracting extant certs"
-                  tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh \
-                    certs bosh-CA/bosh-CA.tar.gz create
-
-                  echo "Creating updated cert tarball"
-                  cd certs
-                  tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
-          on_success:
-            put: cf-certs
-            params:
-              file: generated-cf-certs/cf-certs.tar.gz
 
         - task: generate-cf-secrets
           config:
@@ -847,8 +891,6 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: cf-tfstate
-          - get: cf-certs
-            passed: ['generate-secrets']
           - get: cf-secrets
             passed: ['pre-deploy']
 
@@ -915,7 +957,6 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
-            - name: cf-certs
             - name: vpc-peering-tfvars
           outputs:
             - name: updated-tfstate
@@ -933,9 +974,6 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
-
-                mkdir generated-certificates
-                tar xzf cf-certs/cf-certs.tar.gz -C generated-certificates
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
                 terraform init paas-cf/terraform/cloudfoundry
@@ -1028,11 +1066,11 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['cf-terraform']
-          - get: bosh-CA
           - get: ipsec-CA
           - get: cf-secrets
             passed: ['cf-terraform']
-          - get: cf-certs
+          - get: cf-vars-store
+            passed: ['migrate-cf-certs']
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
@@ -1151,59 +1189,6 @@ jobs:
                   oauth_client_secret: ${OAUTH_CLIENT_SECRET}
                   EOF
 
-        - task: generate-certs-yaml
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: alpine
-                tag: latest
-            inputs:
-              - name: paas-cf
-              - name: cf-certs
-              - name: bosh-CA
-              - name: ipsec-CA
-            outputs:
-              - name: certs-yaml
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  tar -xvzf bosh-CA/bosh-CA.tar.gz
-                  tar -xvzf ipsec-CA/ipsec-CA.tar.gz
-                  tar -xvzf cf-certs/cf-certs.tar.gz
-
-                  for file in *.crt; do
-                    cn=${file%.crt}
-                    yaml_key_name=$(echo "${cn}" | tr A-Z- a-z_)
-
-                    echo "Converting ${cn} certs to YAML" 1>&2
-
-                    echo "certs_${yaml_key_name}_key: |"
-                    sed 's/^/  /' < "${cn}.key"
-
-                    echo "certs_${yaml_key_name}_key_hash: $(sha1sum "${cn}.key" | cut -d ' ' -f 1)"
-
-                    echo "certs_${yaml_key_name}_cert: |"
-                    sed 's/^/  /' < "${cn}.crt"
-
-                    if [ ! -f "${cn}_old.crt" ]; then
-                      echo "Using ${cn} for ${cn}_old" 1>&2
-
-                      echo "certs_${yaml_key_name}_old_key: |"
-                      sed 's/^/  /' < "${cn}.key"
-
-                      echo "certs_${yaml_key_name}_old_key_hash: $(sha1sum "${cn}.key" | cut -d ' ' -f 1)"
-
-                      echo "certs_${yaml_key_name}_old_cert: |"
-                      sed 's/^/  /' < "${cn}.crt"
-                    fi
-                  done > "certs-yaml/certs.yml"
-
       - do:
         - task: generate-cloud-config
           config:
@@ -1229,6 +1214,7 @@ jobs:
                 - -c
                 - |
                   paas-cf/manifests/cf-manifest/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
+
           on_success:
             put: cloud-config
             params:
@@ -1243,15 +1229,18 @@ jobs:
                 repository: governmentpaas/bosh-cli-v2
                 tag: 465642da06051a55630d39c899697b678f66a7f7
             inputs:
+              - name: cf-vars-store
               - name: paas-cf
+              - name: ipsec-CA
               - name: terraform-outputs
               - name: cf-secrets
-              - name: certs-yaml
               - name: environment-variables
               - name: grafana-dashboards-opsfile
               - name: vpc-peering-opsfile
             outputs:
               - name: cf-manifest
+              - name: cf-manifest-pre-vars
+              - name: cf-vars-store-updated
             params:
               CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
               ENABLE_DATADOG: ((enable_datadog))
@@ -1263,11 +1252,26 @@ jobs:
                 - -u
                 - -c
                 - |
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh > cf-manifest/cf-manifest.yml
+                  tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
+                  cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
+                    --var-errs \
+                    --vars-store cf-vars-store-updated/cf-vars-store.yml \
+                    > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
+                    > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
+
           on_success:
-            put: cf-manifest
-            params:
-              file: cf-manifest/cf-manifest.yml
+            aggregate:
+            - put: cf-manifest
+              params:
+                file: cf-manifest/cf-manifest.yml
+            - put: cf-manifest-pre-vars
+              params:
+                file: cf-manifest-pre-vars/cf-manifest-pre-vars.yml
+            - put: cf-vars-store
+              params:
+                file: cf-vars-store-updated/cf-vars-store.yml
 
   - name: cf-deploy
     serial_groups: [cf-deploy]
@@ -2927,6 +2931,33 @@ jobs:
       - get: paas-cf
       - get: cf-secrets
       - get: cf-manifest
+      - get: cf-vars-store
+
+    - task: rotate-jwt-secrets
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ruby
+            tag: 2.2-slim
+        inputs:
+          - name: paas-cf
+          - name: cf-vars-store
+        outputs:
+          - name: updated-cf-vars-store
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - ./paas-cf/manifests/cf-manifest/scripts/rotate-jwt-keys.rb \
+                < cf-vars-store/cf-vars-store.yml \
+                > updated-cf-vars-store/cf-vars-store.yml
+      on_success:
+        put: cf-vars-store
+        params:
+          file: updated-cf-vars-store/cf-vars-store.yml
 
     - task: update-uaa-admin-password
       config:
@@ -2965,7 +2996,6 @@ jobs:
               uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
               uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
-
       on_success:
         put: cf-secrets
         params:
@@ -3035,89 +3065,113 @@ jobs:
         params:
           file: updated-tfstate/cf.tfstate
 
-  - name: rotate-cf-internal-certs
+  - name: rotate-cf-certs-cas
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-      - get: bosh-CA
-      - get: cf-certs
-    - task: rotate-cf-internal-certs
+      - get: cf-manifest-pre-vars
+      - get: cf-vars-store
+    - task: rotate-cf-certs
       config:
         platform: linux
         image_resource:
           type: docker-image
           source:
-            repository: governmentpaas/certstrap
-            tag: 465642da06051a55630d39c899697b678f66a7f7
+            repository: ruby
+            tag: 2.2-slim
         inputs:
-          - name: bosh-CA
           - name: paas-cf
-          - name: cf-certs
+          - name: cf-manifest-pre-vars
+          - name: cf-vars-store
         outputs:
-          - name: generated-cf-certs
-        params:
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          - name: updated-cf-certs
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              mkdir certs
-              echo "Extracting extant certs"
-              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-              ./paas-cf/manifests/cf-manifest/scripts/generate-cf-certs.sh \
-                certs bosh-CA/bosh-CA.tar.gz rotate
-
-              echo "Creating updated cert tarball"
-              cd certs
-              tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --ca \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                > updated-cf-certs/cf-vars-store.yml
       on_success:
-        put: cf-certs
+        put: cf-vars-store
         params:
-          file: generated-cf-certs/cf-certs.tar.gz
+          file: updated-cf-certs/cf-vars-store.yml
 
-  - name: delete-old-cf-internal-certs
+  - name: rotate-cf-certs-leafs
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-certs
-    - task: delete-old-cf-internal-certs
+      - get: cf-manifest-pre-vars
+      - get: cf-vars-store
+    - task: rotate-cf-certs
       config:
         platform: linux
         image_resource:
           type: docker-image
           source:
-            repository: governmentpaas/certstrap
-            tag: 465642da06051a55630d39c899697b678f66a7f7
+            repository: ruby
+            tag: 2.2-slim
         inputs:
           - name: paas-cf
-          - name: cf-certs
+          - name: cf-manifest-pre-vars
+          - name: cf-vars-store
         outputs:
-          - name: generated-cf-certs
+          - name: updated-cf-certs
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              mkdir certs
-              echo "Extracting extant certs"
-              tar -xvzf cf-certs/cf-certs.tar.gz -C certs
-
-              rm -vf certs/*_old.*
-
-              echo "Creating updated cert tarball"
-              cd certs
-              tar -cvzf ../generated-cf-certs/cf-certs.tar.gz .
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --leaf \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                > updated-cf-certs/cf-vars-store.yml
       on_success:
-        put: cf-certs
+        put: cf-vars-store
         params:
-          file: generated-cf-certs/cf-certs.tar.gz
+          file: updated-cf-certs/cf-vars-store.yml
+
+  - name: delete-old-cf-certs
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-manifest-pre-vars
+      - get: cf-vars-store
+    - task: rotate-cf-certs
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: ruby
+            tag: 2.2-slim
+        inputs:
+          - name: paas-cf
+          - name: cf-manifest-pre-vars
+          - name: cf-vars-store
+        outputs:
+          - name: updated-cf-certs
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --delete \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                > updated-cf-certs/cf-vars-store.yml
+      on_success:
+        put: cf-vars-store
+        params:
+          file: updated-cf-certs/cf-vars-store.yml
 
   - name: generate-git-keys
     plan:
@@ -3266,3 +3320,57 @@ jobs:
             ensure:
               task: remove-temp-user
               file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: check-var-store-certs
+    build_logs_to_retain: 50
+    plan:
+      - aggregate:
+        - get: check-var-store-certs-timer
+          trigger: true
+        - get: paas-cf
+          # passed: ['generate-cf-config']
+        - get: cf-vars-store
+          # passed: ['generate-cf-config']
+
+      - task: check-var-store-certs
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby
+              tag: 2.2-slim
+          inputs:
+            - name: paas-cf
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/check-vars-store-certificates.rb 30 < cf-vars-store/cf-vars-store.yml
+        on_failure:
+          task: alert
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/awscli
+                tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+            params:
+              AWS_DEFAULT_REGION: ((aws_region))
+              DEPLOY_ENV: ((deploy_env))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+            inputs:
+              - name: paas-cf
+            run:
+              path: sh
+              args:
+              - -e
+              - -c
+              - |
+                paas-cf/concourse/scripts/check-vars-store-certificates-email.sh \
+                  "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
