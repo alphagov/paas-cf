@@ -27,7 +27,7 @@
       release: logsearch
     - name: datadog-logsearch-queue
       release: datadog-for-cloudfoundry
-    vm_type: small
+    vm_type: ((queue_vm_type))
     stemcell: "3468"
     instances: 2
     networks:
