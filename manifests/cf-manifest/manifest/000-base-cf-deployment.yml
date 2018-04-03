@@ -16,6 +16,10 @@ meta:
     name: cfdot
     release: diego
     properties:
+      tls:
+        ca_certificate: "((service_cf_internal_ca.certificate))"
+        certificate: "((diego_rep_client.certificate))"
+        private_key: "((diego_rep_client.private_key))"
       diego:
         cfdot:
           bbs:
@@ -197,6 +201,12 @@ instance_groups:
   - name: bbs
     release: diego
     properties:
+      cell_registrations:
+        locket:
+          enabled: false
+      locks:
+        locket:
+          enabled: false
       diego:
         bbs:
           active_key_label: key-2017-01
@@ -231,6 +241,11 @@ instance_groups:
             db_schema: bbs
             db_driver: postgres
           require_ssl: true
+        loggregator: &diego_loggregator_client_properties
+          use_v2_api: true
+          ca_cert: "((loggregator_ca.certificate))"
+          cert: "((loggregator_tls_metron.certificate))"
+          key: "((loggregator_tls_metron.private_key))"
   - name: cfdot
     <<: *cfdot_job
   - name: metron_agent
@@ -700,6 +715,8 @@ instance_groups:
     <<: *statsd_injector_job
   - name: file_server
     release: diego
+    properties:
+      loggregator: *diego_loggregator_client_properties
   - name: cc_uploader
     release: capi
     properties:
@@ -966,6 +983,9 @@ instance_groups:
     - name: auctioneer
       release: diego
       properties:
+        locks:
+          locket:
+            enabled: false
         diego:
           auctioneer:
             ca_cert: "((service_cf_internal_ca.certificate))"
@@ -982,6 +1002,7 @@ instance_groups:
               client_cert: "((diego_rep_client.certificate))"
               client_key: "((diego_rep_client.private_key))"
               require_tls: true
+        loggregator: *diego_loggregator_client_properties
     - name: cloud_controller_clock
       release: capi
       properties:
@@ -1108,6 +1129,10 @@ instance_groups:
             diego_credentials: ""
             uaa_secret: ((secrets_uaa_clients_ssh_proxy_secret))
             uaa_token_url: https://uaa.((system_domain))/oauth/token
+            uaa:
+              ca_cert: "((uaa_ca.certificate))"
+              port: 8443
+        loggregator: *diego_loggregator_client_properties
     - name: scheduler
       release: cf-syslog-drain
       properties:
@@ -1159,6 +1184,9 @@ instance_groups:
   - name: rep
     release: diego
     properties:
+      cell_registrations:
+        locket:
+          enabled: false
       tls:
         ca_cert: "((service_cf_internal_ca.certificate))"
         cert: "((diego_rep_agent_v2.certificate))"
@@ -1182,6 +1210,7 @@ instance_groups:
             - cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs.tar
         executor:
           memory_capacity_mb: ((cell_memory_capacity_mb))
+      loggregator: *diego_loggregator_client_properties
   - name: garden
     release: garden-runc
     properties:
@@ -1202,6 +1231,9 @@ instance_groups:
   - name: route_emitter
     release: diego
     properties:
+      locks:
+        locket:
+          enabled: false
       diego:
         route_emitter:
           local_mode: true
@@ -1211,6 +1243,7 @@ instance_groups:
             client_cert: "((diego_bbs_client.certificate))"
             client_key: "((diego_bbs_client.private_key))"
             require_ssl: true
+      loggregator: *diego_loggregator_client_properties
   - name: datadog-route-emitter
     release: datadog-for-cloudfoundry
   - name: datadog-rep
@@ -1415,6 +1448,8 @@ variables:
     common_name: rep client
     extended_key_usage:
     - client_auth
+    alternative_names:
+    - 127.0.0.1
 - name: diego_rep_agent_v2
   type: certificate
   options:
@@ -1592,33 +1627,33 @@ releases:
   version: 1.0.16
   sha1: d8d7db55c1602a8587ed681e714a4d121a813a36
 - name: capi
-  url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.49.0
-  version: 1.49.0
-  sha1: da59f9232a828e364337b81952a5510d8f1ca3b9
+  url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.52.0
+  version: 1.52.0
+  sha1: e7e939e856ac512bb00ae3b844dc1b3c1d156a46
 - name: cf-syslog-drain
-  url: https://bosh.io/d/github.com/cloudfoundry/cf-syslog-drain-release?v=5.1
-  version: "5.1"
-  sha1: ccc588acc4854d669f60ad1c826d2b366e3548c6
+  url: https://bosh.io/d/github.com/cloudfoundry/cf-syslog-drain-release?v=6.0
+  version: "6.0"
+  sha1: 6207b0b7d0a7ae294f0aa46aaccd9d61698395e5
 - name: cflinuxfs2
-  url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.187.0
-  version: 1.187.0
-  sha1: dd38c18449d3119d42ad1ab7bba589e6da9e1a7c
+  url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.194.0
+  version: 1.194.0
+  sha1: 5113b1e7cf0fcfe38e6ab47065c2eecf9878bdb4
 - name: consul
-  url: https://bosh.io/d/github.com/cloudfoundry-incubator/consul-release?v=191
-  version: "191"
-  sha1: 61b429ae13e0fde0ebdb98fce99e08f7baf60a16
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/consul-release?v=192
+  version: "192"
+  sha1: 399894e3b4f5d4ba7ea5abe4ab89190ec2d4ad56
 - name: datadog-for-cloudfoundry
   version: 0.1.23
   url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.23.tgz
   sha1: 09f70cbd87ec6045d44aa346e23fd6dd9bf14bfa
 - name: diego
-  url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=1.35.0
-  version: 1.35.0
-  sha1: 7525f412d6698f499124f0facee64a40a1e99ec0
+  url: https://bosh.io/d/github.com/cloudfoundry/diego-release?v=2.1.0
+  version: 2.1.0
+  sha1: 20cb4f7d197902ad0ce312324434712cddce3044
 - name: garden-runc
-  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.11.1
-  version: 1.11.1
-  sha1: d9a7901c0502d97c043b857496f0f414a5843e8d
+  url: https://bosh.io/d/github.com/cloudfoundry/garden-runc-release?v=1.12.1
+  version: 1.12.1
+  sha1: ed353e41eec34c3713d6d80c4cc890afc7291cca
 - name: go-buildpack
   url: https://bosh.io/d/github.com/cloudfoundry/go-buildpack-release?v=1.8.18
   version: 1.8.18
@@ -1632,13 +1667,13 @@ releases:
   version: "4.8"
   sha1: c5ad741533275c1b9ae6a844dda5d0ae14669add
 - name: loggregator
-  url: https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=101.6
-  version: "101.6"
-  sha1: f83ca26da62276e4e8247e32dbfbf2ae1a4c6138
+  url: https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=102.1
+  version: "102.1"
+  sha1: 61949aff688e368a11d03daa18855800517666d3
 - name: nats
-  url: https://bosh.io/d/github.com/cloudfoundry/nats-release?v=22
-  version: "22"
-  sha1: 1300071c7cf43f5d299a6eaec6f6bb6cca7eac3b
+  url: https://bosh.io/d/github.com/cloudfoundry/nats-release?v=23
+  version: "23"
+  sha1: d56195a7cc0b7781c9de7bb7479472f16fcc1049
 - name: nodejs-buildpack
   url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.16
   version: 1.6.16
@@ -1672,9 +1707,9 @@ releases:
   version: 1.2.0
   sha1: f995b553969a73d717cf42e7d240f4e899efd8ac
 - name: uaa
-  url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=55
-  version: "55"
-  sha1: 393d844138f7b32017d7706684c36bf499e8cc79
+  url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=56
+  version: "56"
+  sha1: 462383bd04d75ba5a0fd5e205853719b5b78423d
 stemcells:
 - alias: default
   name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
