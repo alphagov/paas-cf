@@ -5,7 +5,6 @@ groups:
       - pipeline-lock
       - init
       - pre-deploy
-      - migrate-cf-certs
       - generate-secrets
       - app-availability-tests
       - api-availability-tests
@@ -23,7 +22,6 @@ groups:
   - name: cloudfoundry
     jobs:
       - pre-deploy
-      - migrate-cf-certs
       - generate-secrets
       - app-availability-tests
       - api-availability-tests
@@ -193,13 +191,6 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: cf-secrets.yml
-
-  - name: cf-certs
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: cf-certs.tar.gz
 
   - name: cf-vars-store
     type: s3-iam
@@ -429,72 +420,12 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-vars-store.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" bosh-CA.crt paas-cf/concourse/init_files/zero_bytes
-
-  - name: migrate-cf-certs
-    serial: true
-    plan:
-      - aggregate:
-          - get: paas-cf
-            passed: ['init']
-          - get: pipeline-trigger
-            passed: ['init']
-            trigger: true
-          - get: bosh-CA
-          - get: cf-certs
-          - get: cf-vars-store
-
-      - task: migrate-cf-certs
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/spruce
-              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
-          inputs:
-            - name: bosh-CA
-            - name: paas-cf
-            - name: cf-certs
-            - name: cf-vars-store
-          outputs:
-            - name: generated-cf-vars-store
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if [ "$(wc -l ./cf-vars-store/cf-vars-store.yml | cut -f 1 -d ' ')" != "0" ]; then
-                  echo "Skipping migration cf-vars-store/cf-vars-store.yml is not empty"
-                  cp cf-vars-store/cf-vars-store.yml generated-cf-vars-store/cf-vars-store.yml
-                  exit 0
-                fi
-                echo "Converting cf-certs.tgz to cf-vars-store/cf-vars-store.yml"
-
-                tar -xzf bosh-CA/bosh-CA.tar.gz -C bosh-CA
-                tar -xzf cf-certs/cf-certs.tar.gz -C cf-certs
-
-                # For UAA key rotation
-                UAA_JWT_SIGNING_KEY_HASH="$(sha1sum ./cf-certs/uaa_jwt_signing.key | cut -f 1 -d " " | tr -d '\n')"
-                export UAA_JWT_SIGNING_KEY_HASH
-
-                spruce merge ./paas-cf/manifests/cf-manifest/scripts/cf-certs-migration-to-vars-store.spruce.yml > generated-cf-vars-store/cf-vars-store.yml
-
-        on_success:
-          put: cf-vars-store
-          params:
-            file: generated-cf-vars-store/cf-vars-store.yml
-
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -1070,7 +1001,6 @@ jobs:
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-vars-store
-            passed: ['migrate-cf-certs']
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
