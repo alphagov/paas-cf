@@ -20,13 +20,6 @@ meta:
         ca_certificate: "((service_cf_internal_ca.certificate))"
         certificate: "((diego_rep_client.certificate))"
         private_key: "((diego_rep_client.private_key))"
-      diego:
-        cfdot:
-          bbs:
-            ca_cert: "((service_cf_internal_ca.certificate))"
-            client_cert: "((diego_bbs_client.certificate))"
-            client_key: "((diego_bbs_client.private_key))"
-            use_ssl: true
   statsd_injector_job: &statsd_injector_job
     name: statsd_injector
     release: statsd-injector
@@ -222,12 +215,6 @@ instance_groups:
             client_cert: "((diego_auctioneer_client.certificate))"
             client_key: "((diego_auctioneer_client.private_key))"
             require_tls: true
-          etcd:
-            machines: []
-            ca_cert: ""
-            client_cert: ""
-            client_key: ""
-            require_ssl: false
           rep:
             ca_cert: "((service_cf_internal_ca.certificate))"
             client_cert: "((diego_rep_client.certificate))"
@@ -1202,10 +1189,6 @@ instance_groups:
           enable_legacy_api_endpoints: false
           bbs:
             api_location: bbs.service.cf.internal:8889
-            ca_cert: "((service_cf_internal_ca.certificate))"
-            client_cert: "((diego_bbs_client.certificate))"
-            client_key: "((diego_bbs_client.private_key))"
-            require_ssl: true
           preloaded_rootfses:
             - cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs.tar
         executor:
