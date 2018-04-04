@@ -1338,7 +1338,7 @@ instance_groups:
             ca: "((loggregator_ca.certificate))"
             cert: "((adapter_rlp_tls.certificate))"
             key: "((adapter_rlp_tls.private_key))"
-            cn: reverse_log_proxy
+            cn: "reverselogproxy"
 
 variables:
 - name: service_cf_internal_ca
