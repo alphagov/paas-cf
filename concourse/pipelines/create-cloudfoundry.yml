@@ -240,13 +240,13 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf1.14
+      branch: cf1.21
 
   - name: cf-smoke-tests
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf-smoke-tests
-      branch: gds-cf-deployment-v1.14.0
+      branch: gds-cf-deployment-v1.21.0
 
   - name: git-keys
     type: s3-iam
