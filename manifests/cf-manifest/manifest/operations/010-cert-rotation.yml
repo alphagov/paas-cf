@@ -68,24 +68,12 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-api/jobs/name=cfdot/properties/diego/cfdot/bbs/ca_cert
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=diego-api/jobs/name=metron_agent/properties/loggregator/tls/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=cfdot/properties/diego/cfdot/bbs/ca_cert
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=diego-cell/jobs/name=metron_agent/properties/loggregator/tls/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
-
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/rep/bbs/ca_cert
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/rep/ca_cert
@@ -152,10 +140,6 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=scheduler/jobs/name=cfdot/properties/diego/cfdot/bbs/ca_cert
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/mutual_tls/ca_cert
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
@@ -200,8 +184,32 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
-  path: /meta/cfdot_job/properties/diego/cfdot/bbs/ca_cert
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+  path: /instance_groups/name=api/jobs/name=file_server/properties/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=auctioneer/properties/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=ssh_proxy/properties/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=ssh_proxy/properties/diego/ssh_proxy/uaa/ca_cert
+  value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=route_emitter/properties/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
   path: /meta/metron_agent_job/properties/loggregator/tls/ca_cert
@@ -210,6 +218,23 @@
 - type: replace
   path: /meta/statsd_injector_job/properties/loggregator/tls/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /meta/cfdot_job/properties/tls/ca_certificate
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-api/jobs/name=cfdot/properties/tls/ca_certificate
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=cfdot/properties/tls/ca_certificate
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cfdot/properties/tls/ca_certificate
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
 
 - type: replace
   path: /variables/-
