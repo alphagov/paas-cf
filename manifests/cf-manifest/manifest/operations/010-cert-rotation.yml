@@ -208,7 +208,7 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/loggregator/ca_cert
+  path: /instance_groups/name=diego-api/jobs/name=bbs/properties/loggregator/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
