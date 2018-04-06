@@ -37,6 +37,6 @@ cd src/github.com/cloudfoundry/cf-acceptance-tests
   -keepGoing \
   -randomizeAllSpecs \
   -skipPackage=helpers \
-  -skip=${SKIP_REGEX} \
+  -skip="${SKIP_REGEX}" \
   -slowSpecThreshold=${SLOW_SPEC_THRESHOLD} \
   -nodes="${NODES}"
