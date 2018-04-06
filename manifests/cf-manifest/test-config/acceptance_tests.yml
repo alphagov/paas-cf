@@ -9,7 +9,7 @@ skip_ssl_validation: false
 backend: "diego"
 skip_diego_unsupported_tests: true
 include_tasks: true
-include_v3: false
+include_v3: true
 include_security_groups: true
 include_routing: true
 include_internet_dependent: true

@@ -9,8 +9,16 @@ fi
 
 SLEEPTIME=90
 NODES=5
-SKIP_REGEX='routing.API|allows\spreviously-blocked\sip|Adding\sa\swildcard\sroute\sto\sa\sdomain|forwards\sapp\smessages\sto\sregistered\ssyslog\sdrains|when\sapp\shas\smultiple\sports\smapped'
 SLOW_SPEC_THRESHOLD=120
+
+# Build Skip regex to ignore tests
+SKIP_REGEX='routing.API'
+SKIP_REGEX="${SKIP_REGEX}|allows previously-blocked ip"
+SKIP_REGEX="${SKIP_REGEX}|Adding a wildcard route to a domain"
+SKIP_REGEX="${SKIP_REGEX}|forwards app messages to registered syslog drains"
+SKIP_REGEX="${SKIP_REGEX}|when app has multiple ports mapped"
+SKIP_REGEX="${SKIP_REGEX}|applies the associated app.s policies to the task"
+SKIP_REGEX="${SKIP_REGEX// /\\s}" # Replace ' ' with \s
 
 export CONFIG
 CONFIG="$(pwd)/test-config/config.json"
@@ -29,6 +37,6 @@ cd src/github.com/cloudfoundry/cf-acceptance-tests
   -keepGoing \
   -randomizeAllSpecs \
   -skipPackage=helpers \
-  -skip=${SKIP_REGEX} \
+  -skip="${SKIP_REGEX}" \
   -slowSpecThreshold=${SLOW_SPEC_THRESHOLD} \
   -nodes="${NODES}"
