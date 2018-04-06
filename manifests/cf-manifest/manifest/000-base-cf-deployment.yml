@@ -228,11 +228,11 @@ instance_groups:
             db_schema: bbs
             db_driver: postgres
           require_ssl: true
-        loggregator: &diego_loggregator_client_properties
-          use_v2_api: true
-          ca_cert: "((loggregator_ca.certificate))"
-          cert: "((loggregator_tls_metron.certificate))"
-          key: "((loggregator_tls_metron.private_key))"
+      loggregator: &diego_loggregator_client_properties
+        use_v2_api: true
+        ca_cert: "((loggregator_ca.certificate))"
+        cert: "((loggregator_tls_metron.certificate))"
+        key: "((loggregator_tls_metron.private_key))"
   - name: cfdot
     <<: *cfdot_job
   - name: metron_agent
