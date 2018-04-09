@@ -5,8 +5,6 @@ set -eu
 export CONFIG
 CONFIG="$(pwd)/test-config/config.json"
 
-./paas-cf/concourse/scripts/import_bosh_ca.sh
-
 echo "Linking smoke-tests directory inside $GOPATH"
 CF_GOPATH=/go/src/github.com/cloudfoundry
 mkdir -p $CF_GOPATH

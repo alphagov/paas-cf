@@ -63,13 +63,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-secrets.yml
 
-  - name: bosh-CA
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-CA.tar.gz
-
   - name: bosh-CA-crt
     type: s3-iam
     source:
@@ -144,36 +137,11 @@ jobs:
             passed: ['init']
             trigger: true
           - get: bosh-secrets
-          - get: bosh-CA
           - get: paas-cf
           - get: cf-secrets
           - get: cf-manifest
           - get: datadog-tfstate
           - get: bosh-CA-crt
-
-      - task: extract-bosh-CA-crt
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: alpine
-              tag: latest
-          inputs:
-            - name: bosh-CA
-          outputs:
-            - name: bosh-CA-crt
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                tar -xvzf bosh-CA/bosh-CA.tar.gz -C bosh-CA-crt
-        on_success:
-          put: bosh-CA-crt
-          params:
-            file: bosh-CA-crt/bosh-CA.crt
 
       - task: get-cf-cli-config
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
