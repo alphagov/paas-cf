@@ -1,7 +1,7 @@
 
 RSpec.describe "Environment specific configuration" do
   let(:default_manifest) { manifest_with_defaults }
-  let(:prod_manifest) { render_manifest("prod") }
+  let(:prod_manifest) { manifest_for_prod }
 
   def get_instance_group_instances(manifest, instance_group_name)
     manifest["instance_groups"].select { |i| i["name"] == instance_group_name }.first["instances"]

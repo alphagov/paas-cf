@@ -52,12 +52,45 @@ module ManifestHelpers
       end
       ret
     end
+
+    # Recursive perform an inject as in Ennumerable::inject, but
+    # passing the path of the element with the syntax used
+    # in BOSH opsfiles.
+    def recursive_inject(acum, x, path)
+      if x.is_a? Hash
+        x.inject(acum) { |acum2, (key, x2)|
+          recursive_inject(acum2, x2, path + '/' + key) { |acum3, x3, path3|
+            yield(acum3, x3, path3)
+          }
+        }
+      elsif x.is_a? Array
+        x.each_with_index.inject(acum) { |acum2, (x2, index)|
+          new_path = if x.is_a?(Hash) && x.has_key?('name')
+                       path + '/name=' + x['name']
+                     else
+                       path + '/' + index.to_s
+                     end
+          recursive_inject(acum2, x2, new_path) { |acum3, x3, path3|
+            yield(acum3, x3, path3)
+          }
+        }
+      else
+        yield(acum, x, path)
+      end
+    end
+
+    def inject(acum)
+      self.recursive_inject(acum, @tree, "") { |acum2, x, path|
+        yield(acum2, x, path)
+      }
+    end
   end
 
   class Cache
     include Singleton
     attr_accessor :workdir
     attr_accessor :manifest_with_defaults
+    attr_accessor :manifest_without_vars_store
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
@@ -68,20 +101,30 @@ module ManifestHelpers
     Cache.instance.workdir ||= $workdir
   end
 
+  def manifest_without_vars_store
+    Cache.instance.manifest_without_vars_store ||= \
+      render_manifest("default", "false", "true", [])
+  end
+
   def manifest_with_defaults
-    Cache.instance.manifest_with_defaults ||= render_manifest
+    Cache.instance.manifest_with_defaults ||= \
+      render_manifest_with_vars_store("default", "false", "true", nil)
   end
 
   def manifest_with_custom_vars_store(vars_store_content)
-    render_manifest("default", "false", "true", vars_store_content)
+    render_manifest_with_vars_store("default", "false", "true", vars_store_content)
   end
 
   def manifest_with_datadog_enabled
-    render_manifest("default", "true", "true")
+    render_manifest_with_vars_store("default", "true", "true", nil)
   end
 
   def manifest_with_enable_user_creation
-    render_manifest("default", "false", "false")
+    render_manifest_with_vars_store("default", "false", "false", nil)
+  end
+
+  def manifest_for_prod
+    render_manifest_with_vars_store("prod", "false", "true", nil)
   end
 
   def cloud_config_with_defaults
@@ -141,10 +184,10 @@ private
   end
 
   def render_manifest(
-    environment = "default",
-    enable_datadog = "false",
-    disable_user_creation = "true",
-    custom_vars_store_content = nil
+    environment,
+    enable_datadog,
+    disable_user_creation,
+    extra_args
   )
     copy_terraform_fixtures
     generate_cf_secrets
@@ -160,21 +203,32 @@ private
       'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
+    args = ["#{root}/manifests/cf-manifest/scripts/generate-manifest.sh"] + extra_args
+    output, error, status = Open3.capture3(env, args.join(' '))
+    expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
+
+    deep_freeze(PropertyTree.load_yaml(output))
+  end
+
+  def render_manifest_with_vars_store(
+    environment,
+    enable_datadog,
+    disable_user_creation,
+    custom_vars_store_content
+  )
     Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
       vars_store_tempfile.close
 
       args = %W{
-        #{root}/manifests/cf-manifest/scripts/generate-manifest.sh
         --var-errs
         --vars-store=#{vars_store_tempfile.path}
       }
-      output, error, status = Open3.capture3(env, args.join(' '))
-      expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
+      output = render_manifest(environment, enable_datadog, disable_user_creation, args)
 
       Cache.instance.vars_store = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
 
-      deep_freeze(PropertyTree.load_yaml(output))
+      output
     }
   end
 
