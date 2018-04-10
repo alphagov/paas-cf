@@ -73,10 +73,10 @@
                 add_tag => ["gorouter", "gorouter_access_log"]
               }
               kv {
-                source => "router_keys"
+                source => "routerkeys"
                 target => "[gorouter][header]"
                 value_split => ":"
-                remove_field => "router_keys"
+                remove_field => "routerkeys"
               }
             }
             date {
