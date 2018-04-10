@@ -35,6 +35,7 @@ bosh interpolate \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/060-cdn-broker.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/070-elasticache-broker.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/080-logsearch.yml" \
+  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/manifest/operations/200-paas-admin-uaa-client.yml" \
   --ops-file="${WORKDIR}/grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml" \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   --ops-file="${datadog_opsfile}" \

@@ -150,6 +150,7 @@ RSpec.describe "base properties" do
           "cc_service_key_client",
           "cdn_broker",
           "paas-billing",
+          "paas-admin",
           "user_invitation",
         )
       }
