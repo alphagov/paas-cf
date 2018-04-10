@@ -203,6 +203,14 @@
             - shards-and-replicas: /var/vcap/jobs/elasticsearch_config/index-templates/shards-and-replicas.json
             - index-settings: /var/vcap/jobs/elasticsearch_config/index-templates/index-settings.json
             - index-mappings-lfc: /var/vcap/jobs/elasticsearch-config-lfc/index-mappings.json
+            - index-settings-total-fields: |
+                {
+                  "template": "logstash-*",
+                  "order": 200,
+                  "settings": {
+                    "index.mapping.total_fields.limit": 2000
+                  }
+                }
     - name: curator
       release: logsearch
       properties:
