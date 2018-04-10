@@ -70,8 +70,7 @@
                   "@message" =>
                     '%{HOSTNAME:[gorouter][host]} - \[%{TIMESTAMP_ISO8601:[gorouter][timestamp]}\] "%{WORD:[gorouter][method]} %{URIPATHPARAM:[gorouter][request]} %{NOTSPACE:[gorouter][httpversion]}" %{BASE10NUM:[gorouter][status]} %{BASE10NUM:[gorouter][bytesreceived]} %{BASE10NUM:[gorouter][bytessent]} %{QUOTEDSTRING:[gorouter][referer]} %{QUOTEDSTRING:[gorouter][useragent]} %{QUOTEDSTRING:[gorouter][clientaddr]} %{QUOTEDSTRING:[gorouter][upstreamaddr]} %{GREEDYDATA:routerkeys}'
                   }
-                tag_on_failure => ["fail/cloudfoundry/gorouter/grok"]
-                add_tag => ["gorouter"]
+                add_tag => ["gorouter", "gorouter_access_log"]
               }
               kv {
                 source => "router_keys"
