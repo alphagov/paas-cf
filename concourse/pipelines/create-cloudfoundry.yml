@@ -1450,6 +1450,7 @@ jobs:
                 cf create-space service-brokers -o admin
                 cf create-space healthchecks -o admin
                 cf create-space billing -o admin
+                cf create-space public -o admin
                 cf create-space assets -o admin
 
                 cf create-org govuk-paas
