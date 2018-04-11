@@ -12,6 +12,7 @@ groups:
       - generate-cf-config
       - cf-deploy
       - post-deploy
+      - deploy-paas-admin
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -29,6 +30,7 @@ groups:
       - generate-cf-config
       - cf-deploy
       - post-deploy
+      - deploy-paas-admin
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -287,6 +289,14 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-billing
       tag_filter: v0.17.0
+
+  - name: paas-admin
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-admin
+      # FIXME: Use tags once paas-admin has a automated pipeline to
+      # test, release and tag the project.
+      branch: master
 
 jobs:
   - name: pipeline-lock
@@ -1359,12 +1369,15 @@ jobs:
         passed: ['cf-deploy']
       - get: cf-secrets
         passed: ['generate-cf-config']
+      - get: cf-vars-store
+        passed: ['generate-cf-config']
       - get: bosh-CA-crt
       - get: graphite-nozzle
       - get: datadog-tfstate
       - get: paas-compose-broker
       - get: paas-compose-scraper
       - get: paas-billing
+      - get: paas-admin
 
     - task: retrieve-config
       config:
@@ -2022,6 +2035,115 @@ jobs:
                 "
 
                 cf push paas-compose-scraper
+
+      - do:
+        - task: build-paas-admin
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: node
+                tag: 8-alpine
+            inputs:
+              - name: paas-admin
+            outputs:
+              - name: paas-admin-dist
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  cd paas-admin
+                  npm install
+                  NODE_ENV=production npm run build
+
+                  cp -Ra . ../paas-admin-dist
+
+        - task: render-manifest-paas-admin
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/spruce
+                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+            inputs:
+              - name: paas-admin-dist
+              - name: cf-vars-store
+            outputs:
+              - name: paas-admin-manifest
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              NOTIFY_API_KEY: foo # FIXME: Inject credentials
+              NOTIFY_WELCOME_TEMPLATE_ID: bar # FIXME: Inject credentials
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  cat <<EOF > paas-admin-env-and-routes.yml
+                  applications:
+                  - name: paas-admin
+                    routes:
+                    - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
+                    env:
+                      OAUTH_AUTHORIZATION_URL: "https://login.${SYSTEM_DNS_ZONE_NAME}/oauth/authorize"
+                      OAUTH_TOKEN_URL: "https://uaa.${SYSTEM_DNS_ZONE_NAME}/oauth/token"
+                      OAUTH_CLIENT_ID: "paas-admin"
+                      OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
+                      API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
+                      UAA_URL: "https://uaa.${SYSTEM_DNS_ZONE_NAME}"
+                      NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
+                      NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
+                  EOF
+
+                  spruce merge \
+                    paas-admin-dist/manifest.yml \
+                    paas-admin-env-and-routes.yml \
+                    cf-vars-store/cf-vars-store.yml \
+                    | spruce merge --cherry-pick applications \
+                      > paas-admin-manifest/manifest.yml
+
+        - task: deploy-paas-admin
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: b70af5321b8c80994add887c94827aa583f95541
+            inputs:
+              - name: paas-cf
+              - name: paas-admin-dist
+              - name: paas-admin-manifest
+              - name: config
+              - name: cf-secrets
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - -x
+                - |
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  export CF_CLIENT_SECRET
+                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+
+                  . ./config/config.sh
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+                  cf target -o admin -s public
+
+                  cd paas-admin-dist
+
+                  cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
 
       - task: run-bosh-cleanup
         config:
