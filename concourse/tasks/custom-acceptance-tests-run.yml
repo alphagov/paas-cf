@@ -8,7 +8,6 @@ image_resource:
 inputs:
   - name: paas-cf
   - name: test-config
-  - name: bosh-CA
   - name: cf-acceptance-tests
 outputs:
   - name: artifacts
@@ -18,7 +17,6 @@ run:
     - -e
     - -c
     - |
-      ./paas-cf/concourse/scripts/import_bosh_ca.sh
       ln -s "$(pwd)/artifacts" /tmp/artifacts
       echo "Running tests"
       export CONFIG

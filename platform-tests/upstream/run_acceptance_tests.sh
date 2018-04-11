@@ -23,8 +23,6 @@ SKIP_REGEX="${SKIP_REGEX// /\\s}" # Replace ' ' with \s
 export CONFIG
 CONFIG="$(pwd)/test-config/config.json"
 
-./paas-cf/concourse/scripts/import_bosh_ca.sh
-
 echo "Sleeping for ${SLEEPTIME} seconds..."
 for i in $(seq $SLEEPTIME 1); do echo -ne "$i"'\r'; sleep 1; done; echo
 

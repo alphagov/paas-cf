@@ -2,7 +2,6 @@
 platform: linux
 inputs:
   - name: paas-cf
-  - name: bosh-CA
   - name: config
 image_resource:
   type: docker-image
@@ -16,7 +15,6 @@ run:
     - -u
     - -c
     - |
-      ./paas-cf/concourse/scripts/import_bosh_ca.sh
       . ./config/config.sh
       if ! curl -I -f "${API_ENDPOINT}/info"; then
         echo "CF API unavailable. Skipping..."

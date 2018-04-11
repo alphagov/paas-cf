@@ -5,7 +5,6 @@ groups:
       - pipeline-lock
       - init
       - pre-deploy
-      - migrate-cf-certs
       - generate-secrets
       - app-availability-tests
       - api-availability-tests
@@ -23,7 +22,6 @@ groups:
   - name: cloudfoundry
     jobs:
       - pre-deploy
-      - migrate-cf-certs
       - generate-secrets
       - app-availability-tests
       - api-availability-tests
@@ -131,13 +129,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-secrets.yml
 
-  - name: bosh-CA
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-CA.tar.gz
-
   - name: bosh-CA-crt
     type: s3-iam
     source:
@@ -193,13 +184,6 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: cf-secrets.yml
-
-  - name: cf-certs
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: cf-certs.tar.gz
 
   - name: cf-vars-store
     type: s3-iam
@@ -429,72 +413,11 @@ jobs:
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-vars-store.yml paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-certs.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
                 paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" bosh-CA.crt paas-cf/concourse/init_files/zero_bytes
-
-  - name: migrate-cf-certs
-    serial: true
-    plan:
-      - aggregate:
-          - get: paas-cf
-            passed: ['init']
-          - get: pipeline-trigger
-            passed: ['init']
-            trigger: true
-          - get: bosh-CA
-          - get: cf-certs
-          - get: cf-vars-store
-
-      - task: migrate-cf-certs
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/spruce
-              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
-          inputs:
-            - name: bosh-CA
-            - name: paas-cf
-            - name: cf-certs
-            - name: cf-vars-store
-          outputs:
-            - name: generated-cf-vars-store
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                if [ "$(wc -l ./cf-vars-store/cf-vars-store.yml | cut -f 1 -d ' ')" != "0" ]; then
-                  echo "Skipping migration cf-vars-store/cf-vars-store.yml is not empty"
-                  cp cf-vars-store/cf-vars-store.yml generated-cf-vars-store/cf-vars-store.yml
-                  exit 0
-                fi
-                echo "Converting cf-certs.tgz to cf-vars-store/cf-vars-store.yml"
-
-                tar -xzf bosh-CA/bosh-CA.tar.gz -C bosh-CA
-                tar -xzf cf-certs/cf-certs.tar.gz -C cf-certs
-
-                # For UAA key rotation
-                UAA_JWT_SIGNING_KEY_HASH="$(sha1sum ./cf-certs/uaa_jwt_signing.key | cut -f 1 -d " " | tr -d '\n')"
-                export UAA_JWT_SIGNING_KEY_HASH
-
-                spruce merge ./paas-cf/manifests/cf-manifest/scripts/cf-certs-migration-to-vars-store.spruce.yml > generated-cf-vars-store/cf-vars-store.yml
-
-        on_success:
-          put: cf-vars-store
-          params:
-            file: generated-cf-vars-store/cf-vars-store.yml
-
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -506,38 +429,11 @@ jobs:
           - get: pipeline-trigger
             passed: ['init']
             trigger: true
-          - get: bosh-CA
           - get: ipsec-CA
           - get: cf-secrets
           - get: ssh-private-key
           - get: ssh-public-key
-          - get: bosh-CA-crt
-
       - aggregate:
-        - task: extract-bosh-CA-crt
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: alpine
-                tag: latest
-            inputs:
-              - name: bosh-CA
-            outputs:
-              - name: bosh-CA-crt
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  tar -xvzf bosh-CA/bosh-CA.tar.gz -C bosh-CA-crt
-          on_success:
-            put: bosh-CA-crt
-            params:
-              file: bosh-CA-crt/bosh-CA.crt
-
         - task: generate-ipsec-CA
           config:
             platform: linux
@@ -653,13 +549,10 @@ jobs:
             passed: ['generate-secrets']
           - get: cf-secrets
             passed: ['generate-secrets']
-          - get: bosh-CA
-            passed: ['generate-secrets']
       - task: wait-for-app-availability-tests
         config:
           platform: linux
           inputs:
-            - name: bosh-CA
             - name: paas-cf
             - name: cf-secrets
             - name: deployed-healthcheck
@@ -685,8 +578,6 @@ jobs:
                   exit 0
                 fi
 
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
@@ -710,7 +601,6 @@ jobs:
         config:
           platform: linux
           inputs:
-            - name: bosh-CA
             - name: paas-cf
             - name: cf-secrets
             - name: deployed-healthcheck
@@ -733,8 +623,6 @@ jobs:
                   echo "Skipping wait-for-api-availability-tests because the healthcheck is not deployed"
                   exit 0
                 fi
-
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
@@ -763,7 +651,6 @@ jobs:
           - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
-          - get: bosh-CA
       - task: run-tests
         config:
           platform: linux
@@ -775,7 +662,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
-            - name: bosh-CA
             - name: deployed-healthcheck
           params:
             SKIP_SSL_VALIDATION: true
@@ -797,8 +683,6 @@ jobs:
                   exit 0
                 fi
 
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 export CONCOURSE_ATC_URL
                 CONCOURSE_ATC_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
                 export PIPELINE_TRIGGER_VERSION
@@ -819,7 +703,6 @@ jobs:
             passed: ['generate-secrets']
           - get: paas-cf
             passed: ['generate-secrets']
-          - get: bosh-CA
       - task: run-tests
         config:
           platform: linux
@@ -831,7 +714,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
-            - name: bosh-CA
             - name: deployed-healthcheck
             - name: cf-secrets
           params:
@@ -854,7 +736,6 @@ jobs:
                   echo "Skipping api-availability-tests because the healthcheck is not deployed"
                   exit 0
                 fi
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 export CONCOURSE_ATC_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
                 export CF_PASS
@@ -1070,7 +951,6 @@ jobs:
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-vars-store
-            passed: ['migrate-cf-certs']
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
@@ -1479,7 +1359,6 @@ jobs:
         passed: ['cf-deploy']
       - get: cf-secrets
         passed: ['generate-cf-config']
-      - get: bosh-CA
       - get: bosh-CA-crt
       - get: graphite-nozzle
       - get: datadog-tfstate
@@ -1554,7 +1433,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: bosh-CA
           params:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
           run:
@@ -1563,7 +1441,6 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
                 cf create-org admin
@@ -1599,7 +1476,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -1607,7 +1483,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
@@ -1629,7 +1504,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -1637,7 +1511,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 . ./config/config.sh
                 cf api "${API_ENDPOINT}"
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
@@ -1654,7 +1527,6 @@ jobs:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: bosh-CA
             - name: config
             - name: cf-manifest
           params:
@@ -1670,7 +1542,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
@@ -1681,7 +1552,6 @@ jobs:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: bosh-CA
             - name: config
             - name: cf-manifest
           params:
@@ -1697,7 +1567,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 . ./config/config.sh
 
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
@@ -1709,7 +1578,6 @@ jobs:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: bosh-CA
             - name: config
           params:
           image_resource:
@@ -1724,7 +1592,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
                 . ./config/config.sh
 
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
@@ -1743,7 +1610,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -1751,8 +1617,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 . ./config/config.sh
                 cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
                   -o admin -s assets
@@ -1789,7 +1653,6 @@ jobs:
             - name: paas-cf
             - name: paas-compose-broker
             - name: config
-            - name: bosh-CA
           params:
             COMPOSE_API_KEY: ((compose_api_key))
             DB_PREFIX: ((deploy_env))
@@ -1801,8 +1664,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 . ./config/config.sh
                 cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
                   -o admin -s service-brokers
@@ -1843,7 +1704,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -1855,8 +1715,6 @@ jobs:
                   echo Heavy load test has been disabled. Skipping...
                   exit 0
                 fi
-
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
@@ -1908,7 +1766,6 @@ jobs:
             - name: config
             - name: cf-secrets
             - name: cf-manifest
-            - name: bosh-CA
           params:
             DISABLE_USER_CREATION: ((disable_user_creation))
           run:
@@ -1918,8 +1775,6 @@ jobs:
               - -c
               - |
                 ${DISABLE_USER_CREATION} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
-
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
 
@@ -1937,7 +1792,6 @@ jobs:
             - name: paas-cf
             - name: graphite-nozzle
             - name: config
-            - name: bosh-CA
           params:
           image_resource:
             type: docker-image
@@ -1951,8 +1805,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
@@ -2006,7 +1858,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: bosh-CA
           outputs:
             - name: deployed-healthcheck
           run:
@@ -2016,8 +1867,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
@@ -2066,7 +1915,6 @@ jobs:
             - name: paas-billing
             - name: config
             - name: cf-secrets
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -2081,7 +1929,6 @@ jobs:
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
@@ -2137,7 +1984,6 @@ jobs:
             - name: paas-cf
             - name: paas-compose-scraper
             - name: config
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -2149,8 +1995,6 @@ jobs:
                   echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-compose-scraper deploy"
                   exit 0
                 fi
-
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
@@ -2216,7 +2060,6 @@ jobs:
             inputs:
               - name: paas-cf
               - name: config
-              - name: bosh-CA
             params:
               APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
@@ -2226,7 +2069,6 @@ jobs:
                 - -u
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
@@ -2247,7 +2089,6 @@ jobs:
             inputs:
               - name: paas-cf
               - name: config
-              - name: bosh-CA
             run:
               path: sh
               args:
@@ -2255,7 +2096,6 @@ jobs:
                 - -u
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
                   . ./config/config.sh
                   echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
@@ -2370,7 +2210,6 @@ jobs:
             - name: paas-cf
             - name: config
             - name: cf-secrets
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -2385,7 +2224,6 @@ jobs:
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
@@ -2434,7 +2272,6 @@ jobs:
             - name: paas-cf
             - name: config
             - name: cf-secrets
-            - name: bosh-CA
           run:
             path: sh
             args:
@@ -2442,8 +2279,6 @@ jobs:
               - -u
               - -c
               - |
-                ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s assets
 
@@ -2512,7 +2347,6 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: bosh-CA
           - get: cf-secrets
             passed: ['post-deploy']
 
@@ -2552,7 +2386,6 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: bosh-CA
           - get: cf-secrets
             passed: ['post-deploy']
 
@@ -2585,7 +2418,6 @@ jobs:
               - name: cf-acceptance-tests
                 path: src/github.com/cloudfoundry/cf-acceptance-tests
               - name: test-config
-              - name: bosh-CA
             outputs:
               - name: artifacts
                 path: /tmp/artifacts
@@ -2614,7 +2446,6 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: bosh-CA
           - get: cf-secrets
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -2708,7 +2539,6 @@ jobs:
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
-          - get: bosh-CA
           - get: cf-secrets
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
 
@@ -2736,15 +2566,12 @@ jobs:
             inputs:
               - name: paas-cf
               - name: test-config
-              - name: bosh-CA
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/import_bosh_ca.sh
-
                   echo "Running tests"
                   export CONFIG
                   CONFIG="$(pwd)/test-config/config.json"
@@ -3235,7 +3062,6 @@ jobs:
           passed: ['post-deploy']
         - get: cf-manifest
           passed: ['post-deploy']
-        - get: bosh-CA
         - get: cf-secrets
           passed: ['post-deploy']
 
