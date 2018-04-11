@@ -15,6 +15,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 # shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/google-oauth.sh"
 
+# shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/notify.sh"
+
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
@@ -58,6 +61,7 @@ prepare_environment() {
   get_datadog_secrets
   get_compose_secrets
   get_google_oauth_secrets
+  get_notify_secrets
 
   if [ "${ENABLE_DATADOG}" = "true" ] ; then
     # shellcheck disable=SC2154
@@ -115,6 +119,7 @@ enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: ${oauth_client_id:-}
 oauth_client_secret: ${oauth_client_secret:-}
+notify_api_key: ${notify_api_key:-}
 enable_billing_app: ${ENABLE_BILLING_APP}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}

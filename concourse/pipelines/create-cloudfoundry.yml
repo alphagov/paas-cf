@@ -12,7 +12,6 @@ groups:
       - generate-cf-config
       - cf-deploy
       - post-deploy
-      - deploy-paas-admin
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -30,7 +29,6 @@ groups:
       - generate-cf-config
       - cf-deploy
       - post-deploy
-      - deploy-paas-admin
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -2077,8 +2075,8 @@ jobs:
               - name: paas-admin-manifest
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              NOTIFY_API_KEY: foo # FIXME: Inject credentials
-              NOTIFY_WELCOME_TEMPLATE_ID: bar # FIXME: Inject credentials
+              NOTIFY_API_KEY: ((notify_api_key))
+              NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
             run:
               path: sh
               args:
