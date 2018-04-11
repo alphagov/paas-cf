@@ -12,10 +12,9 @@
   path: /releases/-
   value:
     name: logsearch-for-cloudfoundry
-    version: 0.1.4
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.4.tgz
-    sha1: 7b450ea1ed91fe434eadd667f393f5d877321f1f
-
+    version: 0.1.5
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.5.tgz
+    sha1: dee838e3a9c317c406ae1bcb84ae42ae862829c2
 - type: replace
   path: /instance_groups/-
   value:
@@ -71,14 +70,13 @@
                   "@message" =>
                     '%{HOSTNAME:[gorouter][host]} - \[%{TIMESTAMP_ISO8601:[gorouter][timestamp]}\] "%{WORD:[gorouter][method]} %{URIPATHPARAM:[gorouter][request]} %{NOTSPACE:[gorouter][httpversion]}" %{BASE10NUM:[gorouter][status]} %{BASE10NUM:[gorouter][bytesreceived]} %{BASE10NUM:[gorouter][bytessent]} %{QUOTEDSTRING:[gorouter][referer]} %{QUOTEDSTRING:[gorouter][useragent]} %{QUOTEDSTRING:[gorouter][clientaddr]} %{QUOTEDSTRING:[gorouter][upstreamaddr]} %{GREEDYDATA:routerkeys}'
                   }
-                tag_on_failure => ["fail/cloudfoundry/gorouter/grok"]
-                add_tag => ["gorouter"]
+                add_tag => ["gorouter", "gorouter_access_log"]
               }
               kv {
-                source => "router_keys"
+                source => "routerkeys"
                 target => "[gorouter][header]"
                 value_split => ":"
-                remove_field => "router_keys"
+                remove_field => "routerkeys"
               }
             }
             date {
@@ -204,6 +202,14 @@
             - shards-and-replicas: /var/vcap/jobs/elasticsearch_config/index-templates/shards-and-replicas.json
             - index-settings: /var/vcap/jobs/elasticsearch_config/index-templates/index-settings.json
             - index-mappings-lfc: /var/vcap/jobs/elasticsearch-config-lfc/index-mappings.json
+            - index-settings-total-fields: |
+                {
+                  "template": "logstash-*",
+                  "order": 200,
+                  "settings": {
+                    "index.mapping.total_fields.limit": 2000
+                  }
+                }
     - name: curator
       release: logsearch
       properties:
