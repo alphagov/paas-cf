@@ -215,11 +215,6 @@ vm_extensions:
     - ((terraform_outputs_cf_rds_client_security_group))
     - ((terraform_outputs_cloud_controller_security_group))
 
-- name: cf_cc_elb
-  cloud_properties:
-    elbs:
-    - ((terraform_outputs_cf_cc_elb_name))
-
 - name: cf_doppler_elbs
   cloud_properties:
     elbs:

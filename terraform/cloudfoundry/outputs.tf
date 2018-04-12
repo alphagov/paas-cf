@@ -58,10 +58,6 @@ output "cf_router_elb_name" {
   value = "${aws_elb.cf_router.name}"
 }
 
-output "cf_cc_elb_name" {
-  value = "${aws_elb.cf_cc.name}"
-}
-
 output "cf_router_system_domain_elb_name" {
   value = "${aws_elb.cf_router_system_domain.name}"
 }
