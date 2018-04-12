@@ -48,7 +48,6 @@ generator = SecretGenerator.new(
   "secrets_uaa_clients_notifications_secret" => :simple,
   "secrets_uaa_clients_paas_metrics_secret" => :simple,
   "secrets_uaa_clients_paas_billing_secret" => :simple,
-  "secrets_uaa_clients_paas_admin_secret" => :simple,
   "secrets_uaa_clients_ssh_proxy_secret" => :simple,
   "secrets_vcap_password" => :sha512_crypted,
 )
