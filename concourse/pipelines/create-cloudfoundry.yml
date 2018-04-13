@@ -1921,6 +1921,7 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             COMPOSE_API_KEY: ((compose_api_key))
+            DEPLOY_ENV: ((deploy_env))
           inputs:
             - name: paas-cf
             - name: paas-billing
@@ -1933,6 +1934,12 @@ jobs:
               - -u
               - -c
               - |
+                # TODO: Update the name once we change the plan names.
+                BILLING_DB_PLAN="Free"
+                if [ "${DEPLOY_ENV}" = "prod" ]; then
+                  BILLING_DB_PLAN="M-dedicated-9.5"
+                fi
+
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
 
@@ -1940,7 +1947,7 @@ jobs:
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
                 if ! cf service billing-db > /dev/null; then
-                  cf create-service postgres M-dedicated-9.5 billing-db
+                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
                   while ! cf service billing-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30
