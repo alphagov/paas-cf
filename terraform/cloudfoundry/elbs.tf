@@ -45,14 +45,12 @@ resource "aws_lb_ssl_negotiation_policy" "cf_cc" {
 resource "aws_elb" "cf_router_system_domain" {
   name                        = "${var.env}-cf-router-system-domain"
   subnets                     = ["${split(",", var.infra_subnet_ids)}"]
-  idle_timeout                = 19
+  idle_timeout                = "${var.elb_idle_timeout}"
   cross_zone_load_balancing   = "true"
   connection_draining         = true
-  connection_draining_timeout = 20
+  connection_draining_timeout = 110
 
-  security_groups = [
-    "${aws_security_group.cf_api_elb.id}",
-  ]
+  security_groups = ["${aws_security_group.cf_api_elb.id}"]
 
   access_logs {
     bucket        = "${aws_s3_bucket.elb_access_log.id}"
