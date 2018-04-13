@@ -17,7 +17,6 @@ generator = SecretGenerator.new(
   "secrets_cf_db_uaa_password" => :simple,
   "secrets_compose_broker_admin_password" => :simple,
   "secrets_consul_encrypt_keys" => :simple_in_array,
-  "secrets_elasticache_broker_auth_token_seed" => :simple,
   "secrets_elasticache_broker_admin_password" => :simple,
   "secrets_grafana_admin_password" => :simple,
   "secrets_kibana_admin_password" => :simple,
