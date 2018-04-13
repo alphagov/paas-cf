@@ -1919,7 +1919,6 @@ jobs:
               repository: governmentpaas/cf-cli
               tag: 465642da06051a55630d39c899697b678f66a7f7
           params:
-            ENABLE_BILLING_APP: ((enable_billing_app))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             COMPOSE_API_KEY: ((compose_api_key))
           inputs:
@@ -1934,11 +1933,6 @@ jobs:
               - -u
               - -c
               - |
-                if  [ "${ENABLE_BILLING_APP:-}" != "true" ] ; then
-                  echo "ENABLE_BILLING_APP=${ENABLE_BILLING_APP} so skipping paas-billing deploy"
-                  exit 0
-                fi
-
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
 

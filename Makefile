@@ -84,7 +84,6 @@ globals:
 dev: globals ## Set Environment to DEV
 	$(eval export AWS_ACCOUNT=dev)
 	$(eval export PERSISTENT_ENVIRONMENT=false)
-	$(eval export ENABLE_BILLING_APP ?= false)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
@@ -104,7 +103,6 @@ dev: globals ## Set Environment to DEV
 staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
-	$(eval export ENABLE_BILLING_APP=false)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
@@ -122,7 +120,6 @@ staging: globals ## Set Environment to Staging
 prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
-	$(eval export ENABLE_BILLING_APP=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export PAAS_CF_TAG_FILTER=prod-*)
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
