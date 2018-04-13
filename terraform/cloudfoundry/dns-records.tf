@@ -1,11 +1,3 @@
-resource "aws_route53_record" "cf_cc" {
-  zone_id = "${var.system_dns_zone_id}"
-  name    = "api.${var.system_dns_zone_name}."
-  type    = "CNAME"
-  ttl     = "60"
-  records = ["${aws_elb.cf_cc.dns_name}"]
-}
-
 resource "aws_route53_record" "cf_doppler" {
   zone_id = "${var.system_dns_zone_id}"
   name    = "doppler.${var.system_dns_zone_name}."

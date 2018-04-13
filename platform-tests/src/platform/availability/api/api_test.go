@@ -2,6 +2,7 @@ package api_availability
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 	"os"
 	"regexp"
@@ -39,6 +40,11 @@ var _ = Describe("API Availability Monitoring", func() {
 			Username:          helpers.MustGetenv("CF_USER"),
 			Password:          helpers.MustGetenv("CF_PASS"),
 			SkipSslValidation: helpers.MustGetenv("SKIP_SSL_VALIDATION") == "true",
+			HttpClient: &http.Client{
+				Transport: &http.Transport{
+					DisableKeepAlives: true,
+				},
+			},
 		}
 		monitor := monitor.NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers, taskRatePerSecond)
 		deployment := helpers.ConcourseDeployment()
