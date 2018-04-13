@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: elasticache-broker
-    version: 0.1.6
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.6.tgz
-    sha1: 3388df3fbef757200175cb3b1ef66011b605c071
+    version: 0.1.7
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.7.tgz
+    sha1: d6a2a45c857a64c3f4962184d5163bfbb810fa9b
 
 - type: replace
   path: /instance_groups/-
