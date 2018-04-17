@@ -32,6 +32,7 @@ cleanup() {
 trap 'cleanup' EXIT
 
 export CF_HOME
+export CF_SUBSHELL_TARGET=$TARGET
 
 cf api "${API_URL}"
 cf login --sso
