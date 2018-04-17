@@ -422,7 +422,7 @@ instance_groups:
             override: true
             authorities: oauth.login,scim.write,emails.write,scim.userids
             authorized-grant-types: password,refresh_token
-            redirect-uri: "https://www.cloud.service.gov.uk/next-steps?success"
+            redirect-uri: "https://admin.((system_domain))/"
             scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
             secret: ((secrets_uaa_clients_login_secret))
         zones:
@@ -449,7 +449,7 @@ instance_groups:
         links:
           passwd: "https://login.((system_domain))/forgot_password"
           signup: "https://www.cloud.service.gov.uk/signup"
-          homeRedirect: "https://www.cloud.service.gov.uk/next-steps?account-updated"
+          homeRedirect: "https://admin.((system_domain))/"
         branding:
           company_name: "GOV.UK PaaS"
         asset_base_url: "https://paas-uaa-assets.((terraform_outputs_cf_apps_domain))"
