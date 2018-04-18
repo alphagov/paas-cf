@@ -181,6 +181,12 @@ instance_groups:
       consul_common: {from: consul_common_link}
       consul_server: nil
       consul_client: {from: consul_client_link}
+    properties:
+      consul:
+        agent:
+          services:
+            silk-controller:
+              name: silk-controller
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: datadog-bbs
@@ -233,6 +239,25 @@ instance_groups:
         ca_cert: "((loggregator_ca.certificate))"
         cert: "((loggregator_tls_metron.certificate))"
         key: "((loggregator_tls_metron.private_key))"
+  - name: silk-controller
+    release: cf-networking
+    properties:
+      cf_networking:
+        silk_controller:
+          ca_cert: ((silk_ca.certificate))
+          server_cert: ((silk_controller.certificate))
+          server_key: ((silk_controller.private_key))
+          database:
+            type: postgres
+            username: network_connectivity
+            password: ((secrets_cf_db_network_connectivity_password))
+            host: ((terraform_outputs_cf_db_address))
+            port: 5432
+            name: network_connectivity
+        silk_daemon:
+          ca_cert: ((silk_ca.certificate))
+          client_cert: ((silk_daemon.certificate))
+          client_key: ((silk_daemon.private_key))
   - name: cfdot
     <<: *cfdot_job
   - name: metron_agent
@@ -381,6 +406,11 @@ instance_groups:
             redirect-uri: https://login.((system_domain))/login
             scope: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
             secret: ((secrets_uaa_clients_ssh_proxy_secret))
+          network-policy:
+            override: true
+            authorities: uaa.resource,cloud_controller.admin_read_only
+            authorized-grant-types: client_credentials
+            secret: ((uaa_clients_network_policy_secret))
           graphite-nozzle:
             override: true
             access-token-validity: 1209600
@@ -492,6 +522,8 @@ instance_groups:
         agent:
           services:
             cloud_controller_ng: {}
+            policy-server-internal:
+              name: policy-server
   - name: cloud_controller_ng
     release: capi
     provides:
@@ -696,6 +728,28 @@ instance_groups:
     release: diego
     properties:
       loggregator: *diego_loggregator_client_properties
+  - name: policy-server
+    release: cf-networking
+    properties:
+      cf_networking:
+        policy_server:
+          uaa_client_secret: ((uaa_clients_network_policy_secret))
+          uaa_ca: ((uaa_ca.certificate))
+          database:
+            type: postgres
+            username: network_policy
+            password: ((secrets_cf_db_network_policy_password))
+            host: ((terraform_outputs_cf_db_address))
+            port: 5432
+            name: network_policy
+  - name: policy-server-internal
+    release: cf-networking
+    properties:
+      cf_networking:
+        policy_server_internal:
+          ca_cert: ((network_policy_ca.certificate))
+          server_cert: ((network_policy_server.certificate))
+          server_key: ((network_policy_server.private_key))
   - name: cc_uploader
     release: capi
     properties:
@@ -741,6 +795,11 @@ instance_groups:
             name: api-health-check
             script_path: "/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_ng_health_check"
             timeout: 3s
+        - name: policy-server
+          port: 4002
+          registration_interval: 20s
+          uris:
+          - api.((system_domain))/networking
   - name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
   - name: datadog-cc
@@ -1192,6 +1251,9 @@ instance_groups:
         cleanup_process_dirs_on_wait: true
         deny_networks:
           - 0.0.0.0/0
+        network_plugin: /var/vcap/packages/runc-cni/bin/garden-external-networker
+        network_plugin_extra_args:
+        - --configFile=/var/vcap/jobs/garden-cni/config/adapter.json
   - name: cflinuxfs2-rootfs-setup
     release: cflinuxfs2
     properties:
@@ -1217,6 +1279,28 @@ instance_groups:
             client_key: "((diego_bbs_client.private_key))"
             require_ssl: true
       loggregator: *diego_loggregator_client_properties
+  - name: garden-cni
+    release: cf-networking
+  - name: netmon
+    release: cf-networking
+  - name: vxlan-policy-agent
+    release: cf-networking
+    properties:
+      cf_networking:
+        vxlan_policy_agent:
+          ca_cert: ((network_policy_ca.certificate))
+          client_cert: ((network_policy_client.certificate))
+          client_key: ((network_policy_client.private_key))
+  - name: silk-daemon
+    release: cf-networking
+    properties:
+      cf_networking:
+        silk_daemon:
+          ca_cert: ((silk_ca.certificate))
+          client_cert: ((silk_daemon.certificate))
+          client_key: ((silk_daemon.private_key))
+  - name: cni
+    release: cf-networking
   - name: datadog-route-emitter
     release: datadog-for-cloudfoundry
   - name: datadog-rep
@@ -1347,6 +1431,47 @@ instance_groups:
             cn: "reverselogproxy"
 
 variables:
+- name: uaa_clients_network_policy_secret
+  type: password
+- name: silk_ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: silk-ca
+- name: silk_controller
+  type: certificate
+  options:
+    ca: silk_ca
+    common_name: silk-controller.service.cf.internal
+    extended_key_usage:
+    - server_auth
+- name: silk_daemon
+  type: certificate
+  options:
+    ca: silk_ca
+    common_name: silk-daemon
+    extended_key_usage:
+    - client_auth
+- name: network_policy_ca
+  type: certificate
+  options:
+    is_ca: true
+    common_name: networkPolicyCA
+- name: network_policy_server
+  type: certificate
+  options:
+    ca: network_policy_ca
+    common_name: policy-server.service.cf.internal
+    extended_key_usage:
+    - server_auth
+- name: network_policy_client
+  type: certificate
+  options:
+    ca: network_policy_ca
+    common_name: clientName
+    extended_key_usage:
+    - client_auth
+
 - name: service_cf_internal_ca
   type: certificate
   options:
@@ -1603,6 +1728,10 @@ releases:
   url: https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.52.0
   version: 1.52.0
   sha1: e7e939e856ac512bb00ae3b844dc1b3c1d156a46
+- name: cf-networking
+  url: https://bosh.io/d/github.com/cloudfoundry/cf-networking-release?v=1.12.0
+  version: 1.12.0
+  sha1: 1d9c68230afef929666d49aa5c5a00b9b16645ff
 - name: cf-syslog-drain
   url: https://bosh.io/d/github.com/cloudfoundry/cf-syslog-drain-release?v=6.0
   version: "6.0"
