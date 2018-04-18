@@ -68,3 +68,4 @@ run:
       add_member scim.read "${USERID}"
       add_member scim.write "${USERID}"
       add_member doppler.firehose "${USERID}"
+      add_member network.admin "${USERID}"
