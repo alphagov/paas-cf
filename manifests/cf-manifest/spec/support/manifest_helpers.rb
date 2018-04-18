@@ -65,8 +65,8 @@ module ManifestHelpers
         }
       elsif x.is_a? Array
         x.each_with_index.inject(acum) { |acum2, (x2, index)|
-          new_path = if x.is_a?(Hash) && x.has_key?('name')
-                       path + '/name=' + x['name']
+          new_path = if x2.is_a?(Hash) && x2.has_key?('name')
+                       path + '/name=' + x2['name']
                      else
                        path + '/' + index.to_s
                      end
