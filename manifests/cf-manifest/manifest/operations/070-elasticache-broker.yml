@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: elasticache-broker
-    version: 0.1.7
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.7.tgz
-    sha1: d6a2a45c857a64c3f4962184d5163bfbb810fa9b
+    version: 0.1.8
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.8.tgz
+    sha1: a1b83e8f8972b71756bc622442590f34ff72a551
 
 - type: replace
   path: /instance_groups/-
@@ -26,7 +26,6 @@
             broker_name: "elasticache-broker"
             broker_username: "elasticache-broker"
             broker_password: ((secrets_elasticache_broker_admin_password))
-            auth_token_seed: ((secrets_elasticache_broker_auth_token_seed))
             kms_key_id: alias/elasticache-broker
             secrets_manager_path: elasticache-broker/((environment))
             region: "eu-west-1"

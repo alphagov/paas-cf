@@ -14,7 +14,6 @@ list_secrets_to_keep = %w{
   secrets_cf_db_uaa_password
   secrets_compose_broker_admin_password
   secrets_consul_encrypt_keys
-  secrets_elasticache_broker_auth_token_seed
   secrets_elasticache_broker_admin_password
   secrets_kibana_admin_password
   secrets_nats_password
