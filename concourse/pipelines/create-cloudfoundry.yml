@@ -2226,6 +2226,7 @@ jobs:
                   else
                     cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
                   fi
+                  cf enable-service-access redis
 
       - task: update-kibana-timezone
         config:
