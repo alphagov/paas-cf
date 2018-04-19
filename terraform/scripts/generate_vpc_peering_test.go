@@ -62,6 +62,28 @@ var _ = Describe("VPC peering", func() {
 			}
 		})
 
+		// The range 10.0.0.0/16 is used by our VPC and 10.255.0.0/16
+		// is used by the cf-networking stack for private apps.
+		It("do not use the 10.0.0.0/8 range for peers", func() {
+			for _, filename := range files {
+				file, _ := ioutil.ReadFile(filename)
+
+				var peers []map[string]string
+				err := json.Unmarshal([]byte(file), &peers)
+				Expect(err).To(BeNil(), "Config file: %s", filename)
+
+				_, reservedRange, _ := net.ParseCIDR("10.0.0.0/8")
+
+				for _, peer := range peers {
+					_, net, err := net.ParseCIDR(peer["subnet_cidr"])
+					Expect(err).To(BeNil(), "Config file: %s", filename)
+
+					intersection := (net.Contains(reservedRange.IP) || reservedRange.Contains(net.IP))
+					Expect(intersection).To(Equal(false), "%s has intersecting CIDRs: %s, %s", filename, net, reservedRange)
+				}
+			}
+		})
+
 		Describe("tfvar output", func() {
 			It("can be generated", func() {
 				for _, filename := range files {
