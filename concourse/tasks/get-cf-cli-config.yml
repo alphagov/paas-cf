@@ -15,6 +15,7 @@ run:
   path: sh
   args:
     - -e
+    - -u
     - -c
     - |
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
@@ -22,5 +23,11 @@ run:
       cat << EOT > config/config.sh
       export CF_ADMIN=admin
       export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
-      export API_ENDPOINT=$($VAL_FROM_YAML properties.cc.srv_api_uri cf-manifest/cf-manifest.yml)
+
+      SYSTEM_DNS_ZONE_NAME=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.system_domain cf-manifest/cf-manifest.yml)
+      export API_ENDPOINT="https://api.\${SYSTEM_DNS_ZONE_NAME}"
+
       EOT
+
+      . ./config/config.sh
+      echo "API_ENDPOINT: ${API_ENDPOINT}"
