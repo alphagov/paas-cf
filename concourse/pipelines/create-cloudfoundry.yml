@@ -3,7 +3,6 @@ groups:
   - name: all
     jobs:
       - pipeline-lock
-      - init
       - pre-deploy
       - generate-secrets
       - app-availability-tests
@@ -71,7 +70,7 @@ resource_types:
   type: docker-image
   source:
     repository: governmentpaas/s3-resource
-    tag: 594eaa9f4d93b2ed32a7e5e1cdea5b380e2f6682
+    tag: fda60bf4c5f85e96c16f704e128e5ead9e84d30d
 
 - name: semver-iam
   type: docker-image
@@ -142,6 +141,9 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: ipsec-CA.tar.gz
+      initial_version: "-"
+      # This is an empty tar.gz file base64 encoded
+      initial_content_binary: "H4sICMtSp1YAA2NvbmNvdXJzZS1jZXJ0cy50YXIA7cEBDQAAAMKg909tDjegAAAAAAAAAAAAgDcDmt4dJwAoAAA="
 
   - name: ssh-private-key
     type: s3-iam
@@ -149,6 +151,7 @@ resources:
       bucket: ((state_bucket))
       versioned_file: id_rsa
       region_name: ((aws_region))
+      initial_version: "-"
 
   - name: ssh-public-key
     type: s3-iam
@@ -156,6 +159,7 @@ resources:
       bucket: ((state_bucket))
       versioned_file: id_rsa.pub
       region_name: ((aws_region))
+      initial_version: "-"
 
   - name: git-ssh-private-key
     type: s3-iam
@@ -170,6 +174,23 @@ resources:
       bucket: ((state_bucket))
       versioned_file: cf.tfstate
       region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 3,
+            "terraform_version": "0.11.1",
+            "serial": 0,
+            "modules": [
+                {
+                    "path": [
+                        "root"
+                    ],
+                    "outputs": {},
+                    "resources": {},
+                    "depends_on": []
+                }
+            ]
+        }
 
   - name: datadog-tfstate
     type: s3-iam
@@ -177,6 +198,23 @@ resources:
       bucket: ((state_bucket))
       versioned_file: datadog.tfstate
       region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 3,
+            "terraform_version": "0.11.1",
+            "serial": 0,
+            "modules": [
+                {
+                    "path": [
+                        "root"
+                    ],
+                    "outputs": {},
+                    "resources": {},
+                    "depends_on": []
+                }
+            ]
+        }
 
   - name: cf-secrets
     type: s3-iam
@@ -184,6 +222,7 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: cf-secrets.yml
+      initial_version: "-"
 
   - name: cf-vars-store
     type: s3-iam
@@ -191,6 +230,7 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: cf-vars-store.yml
+      initial_version: "-"
 
   - name: cf-manifest
     type: s3-iam
@@ -219,6 +259,8 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: healthcheck-deployed
+      initial_version: "-"
+      initial_content_text: "no"
 
   - name: cf-acceptance-tests
     type: git
@@ -238,6 +280,9 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: git-keys.tar.gz
+      initial_version: "-"
+      # This is an empty tar.gz file base64 encoded
+      initial_content_binary: "H4sICMtSp1YAA2NvbmNvdXJzZS1jZXJ0cy50YXIA7cEBDQAAAMKg909tDjegAAAAAAAAAAAAgDcDmt4dJwAoAAA="
 
   - name: release-version
     type: semver-iam
@@ -390,52 +435,15 @@ jobs:
       - put: pipeline-trigger
         params: {bump: patch}
 
-
-  - name: init
-    serial_groups: [bosh-deploy]
-    serial: true
-    plan:
-      - get: pipeline-trigger
-        trigger: true
-        passed: ['pipeline-lock']
-      - get: paas-cf
-        passed: ['pipeline-lock']
-      - task: bootstrap-s3-state
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/curl-ssl
-              tag: 465642da06051a55630d39c899697b678f66a7f7
-          inputs:
-            - name: paas-cf
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" ipsec-CA.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-secrets.yml paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" google-oauth-secrets.yml paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf-vars-store.yml paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" cf.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" datadog.tfstate paas-cf/concourse/init_files/terraform.tfstate.tpl
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" git-keys.tar.gz paas-cf/concourse/init_files/empty.tar.gz
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" id_rsa.pub paas-cf/concourse/init_files/zero_bytes
-                paas-cf/concourse/scripts/s3init.sh "((state_bucket))" healthcheck-deployed paas-cf/concourse/init_files/string-no
-
   - name: generate-secrets
     serial_groups: [cf-deploy]
     serial: true
     plan:
       - aggregate:
           - get: paas-cf
-            passed: ['init']
+            passed: ['pipeline-lock']
           - get: pipeline-trigger
-            passed: ['init']
+            passed: ['pipeline-lock']
             trigger: true
           - get: ipsec-CA
           - get: cf-secrets
