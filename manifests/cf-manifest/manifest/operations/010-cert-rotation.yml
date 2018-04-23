@@ -252,6 +252,14 @@
   value: ((silk_ca.certificate))((silk_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=api/jobs/name=policy-server-internal/properties/cf_networking/policy_server_internal/ca_cert
+  value: ((network_policy_ca.certificate))((network_policy_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/properties/cf_networking/vxlan_policy_agent/ca_cert
+  value: ((network_policy_ca.certificate))((network_policy_ca_old.certificate))
+
+- type: replace
   path: /variables/-
   value:
     name: silk_ca_old
@@ -259,6 +267,15 @@
       common_name: silk_ca
       is_ca: true
     type: certificate
+
+- type: replace
+  path: /variables/-
+  value:
+    name: network_policy_ca_old
+    type: certificate
+    options:
+      is_ca: true
+      common_name: networkPolicyCA
 
 - type: replace
   path: /variables/-
