@@ -73,7 +73,13 @@ prepare_environment() {
 
   # shellcheck disable=SC2154
   if [ -z "${compose_api_key+x}" ] ; then
-    echo "Could not retrieve access token for compose. Did you do run \`make ${AWS_ACCOUNT} upload-compose-secrets\`?"
+    echo "Could not retrieve access token for Compose. Did you run \`make ${AWS_ACCOUNT} upload-compose-secrets\`?"
+    exit 1
+  fi
+
+  # shellcheck disable=SC2154
+  if [ -z "${notify_api_key+x}" ] ; then
+    echo "Could not retrieve api key for Notify. Did you run \`make ${AWS_ACCOUNT} upload-notify-secrets\`?"
     exit 1
   fi
 
