@@ -23,7 +23,7 @@ https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/
 As a welcome message you can use the text from here:
 https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
 '
-REDIRECT_URI="https://www.cloud.service.gov.uk/next-steps?success"
+REDIRECT_URI="https://admin.cloud.service.gov.uk/"
 
 ###########################################################################
 usage() {
