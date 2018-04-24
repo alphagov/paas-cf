@@ -52,13 +52,15 @@ generate_new_token() {
   chmod 600 "${TOKEN_FILE}"
   trap 'rm ${TOKEN_FILE}' ERR
 
+  echo "if [ \$(date +%s) -lt ${expires} ]; then" >> "${TOKEN_FILE}"
   aws sts get-session-token \
     --serial-number "${token_arn}" \
     --duration-seconds "${STS_TOKEN_DURATION}" \
     --output text \
     --query "[Credentials.AccessKeyId,Credentials.SecretAccessKey,Credentials.SessionToken]" \
     --token-code "${mfa_token}" | \
-      awk '{ print "export AWS_ACCESS_KEY_ID=\"" $1 "\"\n" "export AWS_SECRET_ACCESS_KEY=\"" $2 "\"\n" "export AWS_SESSION_TOKEN=\"" $3 "\"" }' >> "${TOKEN_FILE}"
+      awk '{ print "  export AWS_ACCESS_KEY_ID=\"" $1 "\"\n" "  export AWS_SECRET_ACCESS_KEY=\"" $2 "\"\n" "  export AWS_SESSION_TOKEN=\"" $3 "\"" }' >> "${TOKEN_FILE}"
+  printf "else\n  echo \"Could not import AWS STS Token for ${AWS_ACCOUNT} because it has expired\"\nfi" >> "${TOKEN_FILE}"
 }
 
 ensure_env_vars
