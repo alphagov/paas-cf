@@ -42,3 +42,12 @@
         release: datadog-for-cloudfoundry
     networks:
       - name: cf
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cdn_broker?
+  value:
+    authorities: uaa.none
+    authorized-grant-types: password
+    override: true
+    scope: cloud_controller.admin_read_only
+    secret: ((secrets_uaa_clients_cdn_broker_secret))
