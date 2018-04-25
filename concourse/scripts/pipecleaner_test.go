@@ -11,7 +11,7 @@ import (
 )
 
 var _ = Describe("PipeCleaner", func() {
-	const runTimeout = 2 * time.Second
+	const runTimeout = 5 * time.Second
 
 	var (
 		command *exec.Cmd
