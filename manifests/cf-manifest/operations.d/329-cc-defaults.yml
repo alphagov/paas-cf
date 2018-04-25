@@ -1,0 +1,386 @@
+---
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/description?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/uaa/ssl?/port?
+  value: 8443
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/uaa/ssl?/port?
+  value: 8443
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/login?/enabled?
+  value: true
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/request_timeout_in_seconds?
+  value: 900
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/allow_app_ssh_access?
+  value: true
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/allow_app_ssh_access?
+  value: true
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/allow_app_ssh_access?
+  value: true
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/allowed_cors_domains?
+  value: []
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/broker_client_default_async_poll_interval_seconds?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/broker_client_default_async_poll_interval_seconds?
+  value: ~
+
+# FIXME: similar to default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/broker_client_max_async_poll_duration_minutes?
+  value: 11520
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/broker_client_max_async_poll_duration_minutes?
+  value: 11520
+
+# FIXME: similar to default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/broker_client_timeout_seconds?
+  value: 70
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/broker_client_timeout_seconds?
+  value: 70
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/client_max_body_size?
+  value:  15M
+
+# FIXME: similar to , but not enabled unless log_db_queries=true https://github.com/cloudfoundry/capi-release/blob/develop/jobs/cloud_controller_ng/spec#L249
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/db_logging_level?
+  value: debug
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/db_logging_level?
+  value: debug
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/db_logging_level?
+  value: debug
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_app_disk_in_mb?
+  value: 1024
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/default_app_disk_in_mb?
+  value: 1024
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/default_app_disk_in_mb?
+  value: 1024
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_app_memory?
+  value: 1024
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/default_app_memory?
+  value: 1024
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/default_app_memory?
+  value: 1024
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_health_check_timeout?
+  value: 60
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/default_health_check_timeout?
+  value: 60
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/default_health_check_timeout?
+  value: 60
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/maximum_app_disk_in_mb?
+  value: 2048
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/maximum_app_disk_in_mb?
+  value: 2048
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/maximum_app_disk_in_mb?
+  value: 2048
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/development_mode?
+  value: false
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/development_mode?
+  value: false
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/disable_custom_buildpacks?
+  value: false
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/external_host?
+  value: api
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/external_host?
+  value: api
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/external_host?
+  value: api
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/external_port?
+  value: 9022
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/external_port?
+  value: 9022
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/external_port?
+  value: 9022
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/external_protocol?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/external_protocol?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/external_protocol?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/internal_api_user?
+  value: internal_user
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/internal_api_user?
+  value: internal_user
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/internal_api_user?
+  value: internal_user
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/internal_service_hostname?
+  value: cloud-controller-ng.service.cf.internal
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/internal_service_hostname?
+  value: cloud-controller-ng.service.cf.internal
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/internal_service_hostname?
+  value: cloud-controller-ng.service.cf.internal
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/jobs?/blobstore_delete?/timeout_in_seconds?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/jobs?/blobstore_delete?/timeout_in_seconds?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/jobs?/blobstore_delete?/timeout_in_seconds?
+  value: ~
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/jobs?/droplet_upload?/timeout_in_seconds?
+  value: ~
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/jobs?/global?/timeout_in_seconds?
+  value: 14400
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/jobs?/global?/timeout_in_seconds?
+  value: 14400
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/jobs?/global?/timeout_in_seconds?
+  value: 14400
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/logging_level?
+  value: info
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/logging_level?
+  value: info
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/logging_level?
+  value: info
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/maximum_health_check_timeout?
+  value: 180
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/min_cli_version?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/min_recommended_cli_version?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/newrelic?
+  value:
+    capture_params: false
+    developer_mode: false
+    environment_name: ((environment))
+    license_key: null
+    monitor_mode: false
+    transaction_tracer:
+      enabled: true
+      record_sql: obfuscated
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/newrelic?
+  value:
+    capture_params: false
+    developer_mode: false
+    environment_name: ((environment))
+    license_key: null
+    monitor_mode: false
+    transaction_tracer:
+      enabled: true
+      record_sql: obfuscated
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/newrelic?
+  value:
+    capture_params: false
+    developer_mode: false
+    environment_name: ((environment))
+    license_key: null
+    monitor_mode: false
+    transaction_tracer:
+      enabled: true
+      record_sql: obfuscated
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/tls_port?
+  value: 9023
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/tls_port?
+  value: 9023
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/tls_port?
+  value: 9023
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/buildpacks/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/buildpacks/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/buildpacks/cdn?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/packages/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/packages/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/packages/cdn?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/droplets/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/droplets/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/droplets/cdn?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/resource_pool/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/resource_pool/cdn?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/resource_pool/cdn?
+  value: ~
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/jobs?/app_usage_events_cleanup?/timeout_in_seconds?
+  value: ~
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/droplets/max_staged_droplets_stored?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/packages/max_package_size?
+  value:  1073741824
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/packages/max_package_size?
+  value:  1073741824
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/packages/max_package_size?
+  value:  1073741824
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/packages/max_valid_packages_stored?
+  value: ~
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/stacks?
+  value: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/stacks?
+  value: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/stacks?
+  value: ~
+
+# FIXME: default
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/ssl/skip_cert_verify?
+  value: false
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/ssl/skip_cert_verify?
+  value: false
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/ssl?/skip_cert_verify?
+  value: false
+
+# FIXME: default, was null
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/jobs?/generic?/number_of_workers?
+  value: ~
+
