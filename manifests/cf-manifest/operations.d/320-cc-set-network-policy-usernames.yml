@@ -1,0 +1,8 @@
+---
+# TODO: These are set in cf-deployment using variables
+- type: replace
+  path: /instance_groups/name=api/jobs/name=policy-server/properties/cf_networking/policy_server/database/name
+  value: network_policy
+- type: replace
+  path: /instance_groups/name=api/jobs/name=policy-server/properties/cf_networking/policy_server/database/username
+  value: network_policy
