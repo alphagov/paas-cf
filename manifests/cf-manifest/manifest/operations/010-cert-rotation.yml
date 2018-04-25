@@ -316,6 +316,15 @@
 - type: replace
   path: /variables/-
   value:
+    name: application_ca_old
+    options:
+      common_name: appRootCA
+      is_ca: true
+    type: certificate
+
+- type: replace
+  path: /variables/-
+  value:
     name: uaa_ca_old
     options:
       common_name: uaaCA
