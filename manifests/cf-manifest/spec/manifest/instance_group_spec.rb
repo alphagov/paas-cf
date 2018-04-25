@@ -106,9 +106,12 @@ RSpec.describe "registration of routes for services behind GoRouter" do
   end
 
   it "registers the correct uris for api" do
-    expect(api_routes.length).to eq(1)
-    expect(api_routes.first.fetch('uris')).to match_array([
+    expect(api_routes.length).to eq(2)
+    expect(api_routes[0].fetch('uris')).to match_array([
       "api.#{terraform_fixture(:cf_root_domain)}",
+    ])
+    expect(api_routes[1].fetch('uris')).to match_array([
+      "api.#{terraform_fixture(:cf_root_domain)}/networking",
     ])
   end
 end

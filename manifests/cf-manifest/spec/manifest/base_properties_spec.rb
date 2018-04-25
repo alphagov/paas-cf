@@ -152,6 +152,7 @@ RSpec.describe "base properties" do
           "paas-billing",
           "paas-admin",
           "user_invitation",
+          "network-policy",
         )
       }
 

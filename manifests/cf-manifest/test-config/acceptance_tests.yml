@@ -22,3 +22,4 @@ include_route_services: true
 include_zipkin: true
 artifacts_directory: "/tmp/artifacts"
 use_existing_user: false
+include_container_networking: true

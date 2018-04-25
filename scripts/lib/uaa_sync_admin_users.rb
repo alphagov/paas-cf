@@ -20,7 +20,8 @@ class UaaSyncAdminUsers
     "scim.read",
     "scim.write",
     "scim.invite",
-    "doppler.firehose"
+    "doppler.firehose",
+    "network.admin"
   ].freeze
 
   HOURS_TO_KEEP_TEST_USERS = 2
