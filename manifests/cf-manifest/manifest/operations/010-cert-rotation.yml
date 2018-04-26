@@ -212,18 +212,6 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
-  path: /meta/metron_agent_job/properties/loggregator/tls/ca_cert
-  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
-
-- type: replace
-  path: /meta/statsd_injector_job/properties/loggregator/tls/ca_cert
-  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
-
-- type: replace
-  path: /meta/cfdot_job/properties/tls/ca_certificate
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=diego-api/jobs/name=cfdot/properties/tls/ca_certificate
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
@@ -330,4 +318,3 @@
       common_name: uaaCA
       is_ca: true
     type: certificate
-
