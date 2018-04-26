@@ -1,0 +1,18 @@
+---
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_jwt_signing_key_old
+    type: rsa
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_jwt_signing_key_id
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_jwt_signing_key_old_id
+    type: password
