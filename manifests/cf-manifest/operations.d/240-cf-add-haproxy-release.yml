@@ -1,0 +1,9 @@
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: paas-haproxy
+    sha1: c8c90a4c14ea2201a37469596b5cef309864a394
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-haproxy-0.1.5.tgz
+    version: 0.1.5
