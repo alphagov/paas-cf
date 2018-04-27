@@ -1,7 +1,0 @@
----
-- type: replace
-  path: /stemcells/-
-  value:
-    alias: "3468"
-    name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-    version: "3468.28"
