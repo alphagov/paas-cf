@@ -1,0 +1,7 @@
+---
+- type: replace
+  path: /instance_groups/name=scheduler/vm_extensions?
+  value:
+  # TODO: cf-deployment uses diego-ssh-proxy-network-properties for this extension
+  - ssh_proxy_elb
+  - cf_rds_client_sg

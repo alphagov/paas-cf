@@ -16,3 +16,11 @@ cell_instance_type: r4.xlarge
 # ruby -e 'puts "cell_memory_capacity_mb: #{ (30662 * 1.66).floor }";'
 #
 cell_memory_capacity_mb: 50898
+
+# Used by cf-deployment/operations/rename-network.yml
+network_name: cf
+
+# Used by cf-deployment/operations/use-external-dbs.yml
+external_database_type: postgres
+external_database_port: 5432
+external_cc_database_name: api

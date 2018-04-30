@@ -1,0 +1,24 @@
+---
+# TODO: do we want to disable these thresholds?
+# https://github.com/cloudfoundry/capi-release/blob/develop/jobs/cloud_controller_ng/spec#L661-L669
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/thresholds?
+  value:
+    api:
+      alert_if_above_mb: ~
+      restart_if_above_mb: ~
+      restart_if_consistently_above_mb: ~
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/thresholds?
+  value:
+    worker:
+      alert_if_above_mb: ~
+      restart_if_above_mb: ~
+      restart_if_consistently_above_mb: ~
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/thresholds?
+  value:
+    api:
+      alert_if_above_mb: ~
+      restart_if_above_mb: ~
+      restart_if_consistently_above_mb: ~

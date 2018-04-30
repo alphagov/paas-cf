@@ -1,0 +1,13 @@
+---
+
+- type: replace
+  path: /update/canaries
+  value: 0
+
+- type: replace
+  path: /update/canary_watch_time
+  value: 30000-420000
+
+- type: replace
+  path: /update/update_watch_time
+  value: 5000-420000

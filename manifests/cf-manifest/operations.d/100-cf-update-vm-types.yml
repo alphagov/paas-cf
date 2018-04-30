@@ -1,0 +1,40 @@
+# TODO: Review instance sizes that are different to cf-deployment
+- type: replace
+  path: /instance_groups/name=adapter/vm_type
+  value: small
+- type: replace
+  path: /instance_groups/name=api/vm_type
+  value: large
+- type: replace
+  path: /instance_groups/name=cc-worker/vm_type
+  value: medium
+- type: replace
+  path: /instance_groups/name=consul/vm_type
+  value: small
+- type: replace
+  path: /instance_groups/name=diego-api/vm_type
+  value: medium
+- type: replace
+  path: /instance_groups/name=doppler/vm_type
+  value: medium
+- type: replace
+  path: /instance_groups/name=log-api/vm_type
+  value: medium
+- type: replace
+  path: /instance_groups/name=nats/vm_type
+  value: medium
+- type: replace
+  path: /instance_groups/name=scheduler/vm_type
+  value: medium
+- type: replace
+  path: /instance_groups/name=uaa/vm_type
+  value: medium
+
+# TODO: Remove the router vm_type. Not needed with extensions
+- type: replace
+  path: /instance_groups/name=router/vm_type
+  value: router
+
+- type: replace
+  path: /instance_groups/name=diego-cell/vm_type
+  value: cell

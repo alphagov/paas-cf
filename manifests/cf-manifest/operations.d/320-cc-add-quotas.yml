@@ -1,0 +1,43 @@
+---
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/quota_definitions?
+  value:
+    2xlarge:
+      memory_limit: 409600
+      non_basic_services_allowed: true
+      total_routes: 1000
+      total_services: 160
+    default:
+      memory_limit: 5120
+      non_basic_services_allowed: false
+      total_routes: 1000
+      total_services: 10
+    large:
+      memory_limit: 102400
+      non_basic_services_allowed: true
+      total_routes: 1000
+      total_services: 40
+    medium:
+      memory_limit: 61440
+      non_basic_services_allowed: true
+      total_routes: 1000
+      total_services: 20
+    small:
+      memory_limit: 10240
+      non_basic_services_allowed: true
+      total_routes: 1000
+      total_services: 10
+    test_apps:
+      memory_limit: 2048
+      non_basic_services_allowed: true
+      total_routes: 1000
+      total_services: 10
+    xlarge:
+      memory_limit: 204800
+      non_basic_services_allowed: true
+      total_routes: 1000
+      total_services: 80
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_quota_definition?
+  value: default

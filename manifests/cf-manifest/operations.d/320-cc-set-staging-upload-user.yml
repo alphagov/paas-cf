@@ -1,0 +1,11 @@
+---
+# TODO: in cf-deployment is staging_user. Shall we change it?
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/staging_upload_user?
+  value: staging_upload_user
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/staging_upload_user?
+  value: staging_upload_user
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/staging_upload_user?
+  value: staging_upload_user

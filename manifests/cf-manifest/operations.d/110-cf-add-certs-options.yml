@@ -1,0 +1,11 @@
+- type: replace
+  path: /variables/name=consul_server/options?/alternative_names?/-
+  value: server.dc1.cf.internal
+
+- type: replace
+  path: /variables/name=consul_server/options?/alternative_names?/-
+  value: server.dc2.cf.internal
+
+- type: replace
+  path: /variables/name=diego_rep_client/options?/alternative_names?/-
+  value: 127.0.0.1

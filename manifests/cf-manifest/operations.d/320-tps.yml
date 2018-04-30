@@ -1,0 +1,4 @@
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=tps/properties/capi?/tps?/traffic_controller_url?
+  value: wss://doppler.((system_domain)):443
+

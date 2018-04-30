@@ -1,0 +1,39 @@
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: ipsec
+    sha1: 6a9e252162519e50f6c511c489ba304a286d496a
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.3.tgz
+    version: 0.1.3
+
+- type: replace
+  path: /instance_groups/name=router/jobs/-
+  value:
+    name: racoon
+    release: ipsec
+    properties:
+      racoon:
+        ports:
+        - name: router
+          targets: ((terraform_outputs_cell_subnet_cidr_blocks))
+        certificate_authority_private_key: "((ipsec_ca.private_key))"
+        certificate_authority_cert: "((ipsec_ca.certificate))"
+        level: require
+        verify_certificate: 'on'
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/-
+  value:
+    name: racoon
+    release: ipsec
+    properties:
+      racoon:
+        ports:
+        - name: cell
+          targets: ((terraform_outputs_router_subnet_cidr_blocks))
+        certificate_authority_private_key: "((ipsec_ca.private_key))"
+        certificate_authority_cert: "((ipsec_ca.certificate))"
+        level: require
+        verify_certificate: 'on'

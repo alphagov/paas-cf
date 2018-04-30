@@ -1,0 +1,5 @@
+---
+
+- type: replace
+  path: /instance_groups/name=nats/jobs/name=nats/properties/nats/user
+  value: nats_user

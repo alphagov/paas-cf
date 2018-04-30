@@ -1,0 +1,268 @@
+---
+
+- type: replace
+  path: /instance_groups/name=uaa/vm_extensions?/-
+  value: cf_rds_client_sg
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/server_cert_domain_san?
+  value: uaa.service.cf.internal
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/tls_port?
+  value: 8443
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/health_check/timeout?
+  value: 5s
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/health_check/name
+  value: cf_uaa_health_check
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/port
+  value: 8081
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/uris
+  value:
+    - "uaa.((system_domain))"
+    - "login.((system_domain))"
+
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/consumes
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/asset_base_url?
+  value: https://paas-uaa-assets.((terraform_outputs_cf_apps_domain))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/branding?/company_name
+  value: GOV.UK PaaS
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/links?
+  value:
+    homeRedirect: https://admin.((system_domain))/
+    passwd: https://login.((system_domain))/forgot_password
+    signup: https://www.cloud.service.gov.uk/signup
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/self_service_links_enabled?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/smtp?
+  value:
+    auth: true
+    from_address: gov-uk-paas-support@digital.cabinet-office.gov.uk
+    host: ((terraform_outputs_ses_smtp_host))
+    password: ((terraform_outputs_ses_smtp_password))
+    port: 587
+    starttls: true
+    user: ((terraform_outputs_ses_smtp_aws_access_key_id))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/saml/activeKeyId
+  value: key1
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/saml/keys/key1?
+  value:
+    certificate: ((uaa_login_saml.certificate))
+    key: ((uaa_login_saml.private_key))
+    passphrase: ""
+
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/saml/keys/key-1
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/issuer?
+  value: https://uaa.((system_domain))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/password?/policy/minLength
+  value: 8
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/require_https?
+  value: false
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/login?
+  value:
+    authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
+    authorized-grant-types: authorization_code,client_credentials,refresh_token
+    override: true
+    redirect-uri: https://login.((system_domain))
+    scope: openid,oauth.approvals
+    secret: ((secrets_uaa_clients_login_secret))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/notifications?
+  value:
+    authorities: cloud_controller.admin,scim.read
+    authorized-grant-types: client_credentials
+    override: true
+    secret: ((secrets_uaa_clients_notifications_secret))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-billing?
+  value:
+    access-token-validity: 1209600
+    authorities: cloud_controller.admin_read_only,uaa.resource
+    authorized-grant-types: client_credentials,refresh_token,authorization_code
+    autoapprove: true
+    override: true
+    redirect-uri: https://billing.((system_domain))/oauth/callback
+    scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
+    secret: ((secrets_uaa_clients_paas_billing_secret))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-metrics?
+  value:
+    access-token-validity: 1209600
+    authorities: oauth.login,cloud_controller.global_auditor
+    authorized-grant-types: client_credentials,refresh_token
+    override: true
+    redirect-uri: https://login.((system_domain))
+    scope: openid,oauth.approvals,cloud_controller.global_auditor
+    secret: ((secrets_uaa_clients_paas_metrics_secret))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/user_invitation?
+  value:
+    authorities: oauth.login,scim.write,emails.write,scim.userids
+    authorized-grant-types: password,refresh_token
+    override: true
+    redirect-uri: https://admin.((system_domain))/
+    scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
+    secret: ((secrets_uaa_clients_login_secret))
+
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/routing_api_client
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cc-service-dashboards/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cc-service-dashboards/redirect-uri?
+  value: https://login.((system_domain))
+
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cc-service-dashboards/scope
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cc_routing/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cc_service_key_client/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cf/refresh-token-validity
+  value: 604800
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cf/scope
+  value: network.admin,network.write,cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,scim.invite,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write,cloud_controller.admin_read_only,cloud_controller.global_auditor
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cloud_controller_username_lookup/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/gorouter/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/network-policy/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/ssh-proxy/redirect-uri
+  value: https://login.((system_domain))/login
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/ssh-proxy/scope
+  value: openid,cloud_controller.read,cloud_controller.write,cloud_controller.admin
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_emitter/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_emitter/secret
+  value: ""
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_router/override?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_router/secret
+  value: ""
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/global?/refreshTokenValiditySeconds
+  value: 604800
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/refreshTokenValiditySeconds?
+  value: 604800
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/active_key_id
+  value: ((uaa_jwt_signing_key_id))
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/keys/((uaa_jwt_signing_key_id))?/signingKey
+  value: ((uaa_jwt_signing_key.private_key))
+
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/keys/((uaa_jwt_signing_key_old_id))?/signingKey
+  value: ((uaa_jwt_signing_key_old.private_key))
+
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/keys/key-1
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/groups?/cloud_controller.global_auditor
+  value: Global Auditor read only group
+
+- type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/users/name=bosh
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/users/name=admin/groups
+  value:
+    - scim.write
+    - scim.read
+    - scim.invite
+    - openid
+    - cloud_controller.admin
+    - cloud_controller.admin_read_only
+    - doppler.firehose
+    - network.admin
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/databases/0
+  value:
+    name: uaa
+    tag: uaa
+    citext: true
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/db_scheme
+  value: postgresql
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/roles/0
+  value:
+    name: uaa
+    password: ((secrets_cf_db_uaa_password))
+    tag: admin
