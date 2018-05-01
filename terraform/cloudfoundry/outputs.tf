@@ -30,6 +30,10 @@ output "router2_subnet_id" {
   value = "${element(concat(aws_subnet.router.*.id, list("")), 1)}"
 }
 
+output "router3_subnet_id" {
+  value = "${element(concat(aws_subnet.router.*.id, list("")), 2)}"
+}
+
 output "cf_root_domain" {
   value = "${var.system_dns_zone_name}"
 }

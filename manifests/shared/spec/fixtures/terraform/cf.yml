@@ -7,6 +7,7 @@ terraform_outputs_cell2_subnet_id: subnet-98765432
 terraform_outputs_cell3_subnet_id: subnet-98765433
 terraform_outputs_router1_subnet_id: subnet-09876543
 terraform_outputs_router2_subnet_id: subnet-98765432
+terraform_outputs_router3_subnet_id: subnet-87654321
 terraform_outputs_cf_root_domain: unit-test.dev.paas.example.com
 terraform_outputs_cf_apps_domain: unit-test.dev-apps.paas.example.com
 terraform_outputs_environment: unit-test

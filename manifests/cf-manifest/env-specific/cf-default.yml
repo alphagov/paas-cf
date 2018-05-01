@@ -1,5 +1,6 @@
 ---
 cell_instances: 3
+router_instances: 2
 elasticsearch_master_disk_size: 307400
 elasticsearch_master_instance_type: m4.large
 parser_instance_type: c4.large
