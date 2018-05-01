@@ -276,7 +276,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf-smoke-tests
-      branch: gds-cf-deployment-v1.21.0
+      branch: gds-cf-deployment-v1.28.0
 
   - name: git-keys
     type: s3-iam
