@@ -91,6 +91,7 @@ module ManifestHelpers
     attr_accessor :workdir
     attr_accessor :manifest_with_defaults
     attr_accessor :manifest_without_vars_store
+    attr_accessor :cf_deployment_manifest
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
     attr_accessor :cf_secrets_file
@@ -125,6 +126,10 @@ module ManifestHelpers
 
   def manifest_for_prod
     render_manifest_with_vars_store("prod", "false", "true", nil)
+  end
+
+  def cf_deployment_manifest
+    YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
   end
 
   def cloud_config_with_defaults
