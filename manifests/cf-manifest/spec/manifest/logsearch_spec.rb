@@ -17,8 +17,8 @@ RSpec.describe "Logsearch properties" do
     }
 
     it "points the parsers at the correct queues" do
-      expect(manifest.fetch("instance_groups.parser_z1.jobs.parser.properties.redis.host")).to eq(queue_ips[0])
-      expect(manifest.fetch("instance_groups.parser_z2.jobs.parser.properties.redis.host")).to eq(queue_ips[1])
+      expect(manifest.fetch("instance_groups.parser.jobs.parser.properties.logstash_parser.inputs.0.options.host")).to eq(queue_ips[0])
+      expect(manifest.fetch("instance_groups.parser.jobs.parser.properties.logstash_parser.inputs.1.options.host")).to eq(queue_ips[1])
     end
   end
 end
