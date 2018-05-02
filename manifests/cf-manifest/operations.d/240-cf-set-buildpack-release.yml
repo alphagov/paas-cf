@@ -36,9 +36,9 @@
   path: /releases/name=php-buildpack
   value:
     name: php-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/php-buildpack-release?v=4.3.48
-    version: 4.3.48
-    sha1: 76192602e33b77df2822d47f0da10da93071d6ee
+    version: 4.3.53
+    url: https://bosh.io/d/github.com/cloudfoundry/php-buildpack-release?v=4.3.53
+    sha1: fd6eaec4090066a0cee8953da8edab58e4e7983a
 
 - type: replace
   path: /releases/name=python-buildpack
