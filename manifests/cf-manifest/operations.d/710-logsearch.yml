@@ -37,16 +37,23 @@
 - type: replace
   path: /instance_groups/-
   value:
-    name: parser_z1
+    name: parser
     release: logsearch
-    azs: [z1]
+    azs: [z1, z2]
     jobs:
     - name: parser
       release: logsearch
       properties:
         redis:
-          host: ((queue_static_ips_first))
+          host: dummy # This value would get overriden in each plugin below
         logstash_parser:
+          inputs:
+          - plugin: redis
+            options:
+              host: ((queue_static_ips_first))
+          - plugin: redis
+            options:
+              host: ((queue_static_ips_second))
           filters:
           - logstash: /var/vcap/packages/logsearch-config-logstash-filters/logstash-filters-default.conf
           - custom-filters: /var/vcap/jobs/parser-config-lfc/config/logstash-filters-custom.conf
@@ -116,41 +123,9 @@
 
     vm_type: parser
     stemcell: "3468"
-    instances: 1
+    instances: 2
     networks:
     - name: cf
-      static_ips:
-        - 10.0.16.14
-
-- type: replace
-  path: /instance_groups/-
-  value:
-    name: parser_z2
-    release: logsearch
-    azs: [z2]
-    jobs:
-    - name: parser
-      release: logsearch
-      properties:
-        redis:
-          host: ((queue_static_ips_second))
-        logstash_parser:
-          filters:
-          - logstash: /var/vcap/packages/logsearch-config-logstash-filters/logstash-filters-default.conf
-          - custom-filters: /var/vcap/jobs/parser-config-lfc/config/logstash-filters-custom.conf
-          elasticsearch:
-            data_hosts:
-            - ((terraform_outputs_logsearch_elastic_master_elb_dns_name))
-    - name: parser-config-lfc
-      release: logsearch-for-cloudfoundry
-      properties: *logstash_parser_config_lfc_properties
-    vm_type: parser
-    stemcell: "3468"
-    instances: 1
-    networks:
-    - name: cf
-      static_ips:
-        - 10.0.17.14
 
 - type: replace
   path: /instance_groups/-
