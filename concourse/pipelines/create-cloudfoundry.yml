@@ -2106,7 +2106,6 @@ jobs:
                       OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
                       API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
                       BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                      UAA_URL: "https://uaa.${SYSTEM_DNS_ZONE_NAME}"
                       NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                       NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
                   EOF
