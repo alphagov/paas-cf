@@ -20,4 +20,26 @@ RSpec.describe "release versions" do
         "expected release #{release['name']} version #{release['version']} to have matching version in URL: #{release['url']}"
     end
   end
+
+  specify "manifest versions are not older than the ones in cf_deployment" do
+    def normalise_version(v)
+      Gem::Version.new(v.gsub(/^v/, '').gsub(/^([0-9]+)$/, '0.0.\1'))
+    end
+
+    manifest_releases = manifest_with_defaults.fetch("releases").map { |release|
+      [release['name'], release['version']]
+    }.to_h
+
+    cf_deployment_manifest.fetch("releases").each do |release|
+      next if release['name'].end_with? '-buildpack'
+
+      if manifest_releases.has_key? release['name']
+        cf_deployment_release_version = release.fetch('version')
+        manifest_release_version = manifest_releases[release['name']]
+
+        expect(normalise_version(manifest_release_version)).to be >= normalise_version(cf_deployment_release_version),
+          "expected #{release['name']} release version #{manifest_release_version} not to be older than #{cf_deployment_release_version} as defined in cf-deployment"
+      end
+    end
+  end
 end
