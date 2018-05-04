@@ -2108,6 +2108,7 @@ jobs:
                       BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
                       NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                       NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
+                      SESSION_SECRET: "session-(( grab uaa_clients_paas_admin_secret ))"
                   EOF
 
                   spruce merge \
