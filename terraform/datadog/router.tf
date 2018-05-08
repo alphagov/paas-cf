@@ -97,7 +97,7 @@ resource "datadog_monitor" "total_routes_discrepancy" {
   no_data_timeframe   = "7"
   require_full_window = true
 
-  query = "${format("avg(last_5m):outliers(avg:cf.gorouter.total_routes{deployment:%s,job:router} by {ip}, 'dbscan', 3.0) > 0", var.env)}"
+  query = "${format("avg(last_5m):outliers(avg:cf.gorouter.total_routes{deployment:%s,job:router} by {ip}, 'scaledDBSCAN', 3.0) > 0", var.env)}"
 
   thresholds {}
 
