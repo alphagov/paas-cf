@@ -1,5 +1,0 @@
----
-# FIXME: we don't need to remove this as they use the default value in cf-deployment
-- type: replace
-  path: /instance_groups/name=doppler/jobs/name=doppler/properties/doppler/maxRetainedLogMessages?
-  value: 100
