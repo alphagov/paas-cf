@@ -1,10 +1,6 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=consul/jobs/name=consul_agent/properties/consul/agent/log_level?
-  value: ~
-
-- type: replace
   path: /instance_groups/name=consul/jobs/name=consul_agent/properties/consul/encrypt_keys
   value: ((secrets_consul_encrypt_keys))
 
