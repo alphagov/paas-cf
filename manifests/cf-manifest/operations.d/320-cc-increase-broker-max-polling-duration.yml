@@ -1,0 +1,7 @@
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/broker_client_max_async_poll_duration_minutes?
+  value: 11520
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/broker_client_max_async_poll_duration_minutes?
+  value: 11520
