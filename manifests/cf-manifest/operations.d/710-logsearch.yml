@@ -15,6 +15,13 @@
     version: 0.1.5
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/logsearch-for-cloudfoundry-0.1.5.tgz
     sha1: dee838e3a9c317c406ae1bcb84ae42ae862829c2
+
+- type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: queue
+    release: logsearch
+
 - type: replace
   path: /instance_groups/-
   value:
@@ -33,6 +40,12 @@
     - name: cf
       static_ips: ((queue_static_ips))
     persistent_disk_type: queue
+
+- type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: parser
+    release: logsearch
 
 - type: replace
   path: /instance_groups/-
@@ -128,6 +141,12 @@
     - name: cf
 
 - type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: elasticsearch
+    release: logsearch
+
+- type: replace
   path: /instance_groups/-
   value:
     name: elasticsearch_master
@@ -158,6 +177,12 @@
       canaries: 0
       max_in_flight: 3
       serial: true
+
+- type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: elasticsearch_config
+    release: logsearch
 
 - type: replace
   path: /instance_groups/-
@@ -201,6 +226,12 @@
     - name: cf
 
 - type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: kibana
+    release: logsearch
+
+- type: replace
   path: /instance_groups/-
   value:
     name: kibana
@@ -232,6 +263,12 @@
     instances: 1
     networks:
     - name: cf
+
+- type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: ingestor_syslog
+    release: logsearch
 
 - type: replace
   path: /instance_groups/-

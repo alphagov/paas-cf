@@ -17,6 +17,12 @@
     sha1: 483ee4a07d683c94014efede103dd93cb92cd883
 
 - type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: carbon
+    release: graphite
+
+- type: replace
   path: /instance_groups/-
   value:
     name: graphite
