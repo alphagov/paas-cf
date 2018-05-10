@@ -5,7 +5,7 @@
   value:
     - alias: "3468"
       name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-      version: "3468.30"
+      version: "3468.42"
     - alias: default
       name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent
-      version: "3541.12"
+      version: "3541.25"
