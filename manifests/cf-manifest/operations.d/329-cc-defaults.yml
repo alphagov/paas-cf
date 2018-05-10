@@ -1,13 +1,5 @@
 ---
 
-# FIXME: similar to default
-- type: replace
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/broker_client_timeout_seconds?
-  value: 70
-- type: replace
-  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/broker_client_timeout_seconds?
-  value: 70
-
 # FIXME: similar to , but not enabled unless log_db_queries=true https://github.com/cloudfoundry/capi-release/blob/develop/jobs/cloud_controller_ng/spec#L249
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/db_logging_level?
