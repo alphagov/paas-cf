@@ -129,7 +129,7 @@ module ManifestHelpers
   end
 
   def cf_deployment_manifest
-    YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
+    Cache.instance.cf_deployment_manifest ||= YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
   end
 
   def cloud_config_with_defaults

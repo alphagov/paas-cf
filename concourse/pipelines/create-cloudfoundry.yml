@@ -1255,9 +1255,9 @@ jobs:
                     fi
 
                     STEMCELL_VERSION=$($VAL_FROM_YAML "stemcells.${stemcell_index}.version" cf-manifest/cf-manifest.yml)
-                    STEMCELL_NAME=$($VAL_FROM_YAML "stemcells.${stemcell_index}.name" cf-manifest/cf-manifest.yml)
+                    STEMCELL_OS=$($VAL_FROM_YAML "stemcells.${stemcell_index}.os" cf-manifest/cf-manifest.yml)
 
-                    wget "https://bosh.io/d/stemcells/${STEMCELL_NAME}?v=${STEMCELL_VERSION}" -O stemcell.tgz
+                    wget "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-${STEMCELL_OS}-go_agent?v=${STEMCELL_VERSION}" -O stemcell.tgz
                     ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                     bosh -n upload-stemcell stemcell.tgz
 

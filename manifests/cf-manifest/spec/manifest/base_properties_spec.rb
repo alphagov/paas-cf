@@ -21,6 +21,24 @@ RSpec.describe "base properties" do
     expect(manifest.fetch('terraform_outputs', 'not_found')).to eq 'not_found'
   end
 
+  describe "stemcells" do
+    let(:stemcells) { manifest.fetch("stemcells") }
+
+    it "all stemcells specify an os" do
+      stemcells.each do |stemcell|
+        os = stemcell["os"]
+        expect(os).not_to be_nil, "stemcell #{stemcell['alias']} does not specify an os"
+      end
+    end
+
+    it "default stemcell os matches cf-deployment manifest" do
+      default = stemcells.find { |s| s["alias"] == "default" }
+      cf_deployment_default = cf_deployment_manifest.fetch("stemcells").find { |s| s["alias"] == "default" }
+
+      expect(default["os"]).to eq(cf_deployment_default.fetch("os"))
+    end
+  end
+
   describe "api cloud_controller_ng" do
     subject(:cloud_controller_ng_properties) {
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
