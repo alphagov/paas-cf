@@ -53,25 +53,6 @@ resource "datadog_monitor" "rep_process_running" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
 }
 
-# FIXME: Re-enable this once the check has been fixed - https://www.pivotaltracker.com/story/show/156570305
-#
-#resource "datadog_monitor" "rep_healthy" {
-#  name                = "${format("%s Cell rep healthy", var.env)}"
-#  type                = "service check"
-#  message             = "Large portion of Cell reps unhealthy. Check deployment state."
-#  escalation_message  = "Large portion of Cell reps still unhealthy. Check deployment state."
-#  no_data_timeframe   = "7"
-#  require_full_window = true
-#
-#  query = "${format("'http.can_connect'.over('deploy_env:%s','instance:rep_service_endpoint').by('*').last(1).pct_by_status()", var.env)}"
-#
-#  thresholds {
-#    critical = 50
-#  }
-#
-#  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:diego-cell"]
-#}
-
 resource "datadog_monitor" "rep-container-capacity" {
   name               = "${format("%s rep container capacity", var.env)}"
   type               = "query alert"
