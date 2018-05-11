@@ -7,13 +7,3 @@
 - type: replace
   path: /instance_groups/name=doppler/instances
   value: 6
-
-- type: remove
-  path: /instance_groups/name=doppler/jobs/name=doppler/properties/doppler/disable_announce
-
-- type: remove
-  path: /instance_groups/name=doppler/jobs/name=doppler/properties/loggregator/disable_syslog_drains
-
-# TODO: probably we don't need to remove this. Needs investigation
-- type: remove
-  path: /instance_groups/name=doppler/jobs/name=doppler/provides/doppler/shared
