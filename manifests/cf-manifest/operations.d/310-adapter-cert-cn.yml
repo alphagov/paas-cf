@@ -1,10 +1,14 @@
-# TODO: Cahnge this CN back to ss-adapter as in cf-deployment
+# FIXME: Remove this file once the certs have been rotated to include
+# both CNs (using the alternative_name below)
 - type: replace
   path: /instance_groups/name=adapter/jobs/name=adapter/properties/scalablesyslog/adapter/tls/cn
   value: scalablesyslog_adapter
 - type: replace
   path: /instance_groups/name=scheduler/jobs/name=scheduler/properties/scalablesyslog/scheduler/tls/client/adapter_cn
   value: scalablesyslog_adapter
+
 - type: replace
-  path: /variables/name=adapter_tls/options/common_name
-  value: scalablesyslog_adapter
+  path: /variables/name=adapter_tls/options/alternative_names?
+  value:
+    - ss-adapter
+    - scalablesyslog_adapter
