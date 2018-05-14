@@ -1,9 +1,0 @@
-# FIXME: default
-- type: replace
-  path: /instance_groups/name=scheduler/jobs/name=tps/properties/capi/tps?/bbs?/api_location?
-  value: bbs.service.cf.internal:8889
-# FIXME: default
-- type: replace
-  path: /instance_groups/name=scheduler/jobs/name=tps/properties/capi/tps?/bbs?/require_ssl?
-  value: true
-
