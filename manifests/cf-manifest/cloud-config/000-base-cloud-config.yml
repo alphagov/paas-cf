@@ -15,8 +15,8 @@ compilation:
   workers: 6
 
 disk_types:
-- name: consul
-  disk_size: 1024
+- name: 5GB
+  disk_size: 5120
   cloud_properties:
     type: gp2
 
