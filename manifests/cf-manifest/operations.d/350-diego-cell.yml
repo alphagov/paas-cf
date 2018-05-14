@@ -32,10 +32,6 @@
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers
 
 - type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/ssl/skip_cert_verify
-  value: false
-
-- type: replace
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/executor/memory_capacity_mb
   value: ((cell_memory_capacity_mb))
 
@@ -44,22 +40,6 @@
 
 - type: remove
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/instance_identity_key
-
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/rep/ca_cert
-  value: ((service_cf_internal_ca.certificate))
-
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/rep/require_tls
-  value: true
-
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/rep/server_cert
-  value: ((diego_rep_agent_v2.certificate))
-
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/rep/server_key
-  value: ((diego_rep_agent_v2.private_key))
 
 - type: remove
   path: /instance_groups/name=diego-cell/jobs/name=route_emitter/properties/tcp

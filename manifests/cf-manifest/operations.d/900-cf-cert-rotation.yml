@@ -56,10 +56,6 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/rep/ca_cert
-  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/tls/ca_cert
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
