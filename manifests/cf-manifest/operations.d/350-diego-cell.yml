@@ -24,10 +24,6 @@
 - type: remove
   path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden/destroy_containers_on_start
 
-# TODO: do we need to keep the value from upstream? Needs investigation
-- type: remove
-  path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden/persistent_image_list
-
 - type: remove
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers
 
