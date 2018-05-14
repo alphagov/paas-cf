@@ -24,3 +24,5 @@ network_name: cf
 external_database_type: postgres
 external_database_port: 5432
 external_cc_database_name: api
+external_policy_server_database_name: network_policy
+external_policy_server_database_username: network_policy
