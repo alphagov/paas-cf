@@ -2164,7 +2164,6 @@ jobs:
                 - -e
                 - -u
                 - -c
-                - -x
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   export CF_CLIENT_SECRET
@@ -3388,7 +3387,7 @@ jobs:
               - |
                 log() { echo "$@" 1>&2; }
 
-                bosh_curl(){ 
+                bosh_curl(){
                   path="$1"
                   out="$2"
                   bosh_password=$(awk '/bosh_admin_password/ { print $2 }' < bosh-secrets/bosh-secrets.yml)
