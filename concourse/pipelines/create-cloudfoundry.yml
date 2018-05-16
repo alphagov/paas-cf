@@ -365,8 +365,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts
-      # FIXME: WIP: update to use tag_filter from release-ci before merging
-      branch: master
+      tag_filter: v0.1.0
 
   - name: paas-admin
     type: git
