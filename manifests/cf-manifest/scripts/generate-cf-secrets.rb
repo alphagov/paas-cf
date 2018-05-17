@@ -18,6 +18,7 @@ generator = SecretGenerator.new(
   "secrets_cf_db_network_connectivity_password" => :simple,
   "secrets_cf_db_network_policy_password" => :simple,
   "secrets_compose_broker_admin_password" => :simple,
+  "secrets_paas_accounts_admin_password" => :simple,
   "secrets_consul_encrypt_keys" => :simple_in_array,
   "secrets_elasticache_broker_admin_password" => :simple,
   "secrets_grafana_admin_password" => :simple,

@@ -361,6 +361,12 @@ resources:
       uri: https://github.com/alphagov/paas-billing
       tag_filter: v0.24.0
 
+  - name: paas-accounts
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-accounts
+      tag_filter: v0.1.0
+
   - name: paas-admin
     type: git
     source:
@@ -1411,6 +1417,7 @@ jobs:
       - get: paas-compose-broker
       - get: paas-compose-scraper
       - get: paas-billing
+      - get: paas-accounts
       - get: paas-admin
 
     - task: retrieve-config
@@ -2013,6 +2020,66 @@ jobs:
                 "
 
                 cf push paas-billing
+
+      - task: deploy-paas-accounts
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-accounts
+            - name: config
+            - name: cf-secrets
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                # TODO: Update the name once we change the plan names.
+                DB_PLAN="Free"
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-secrets/cf-secrets.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service accounts-db > /dev/null; then
+                  cf create-service postgres "${DB_PLAN}" accounts-db
+                  while ! cf service accounts-db | grep -q 'Status: create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                cd paas-accounts
+
+                ruby -ryaml -e "
+                  env = {
+                    'BASIC_AUTH_USERNAME' => 'admin',
+                    'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                    app['services'] = ['accounts-db']
+                    app['routes'] = [
+                      { 'route' => 'accounts.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf push paas-accounts
 
       - task: deploy-paas-compose-scraper
         config:

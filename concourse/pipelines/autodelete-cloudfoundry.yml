@@ -102,6 +102,14 @@ jobs:
           DB_NAME: billing-db
           BOUND_APP: paas-billing
 
+      - task: remove-accounts-db
+        file: paas-cf/concourse/tasks/remove-db.yml
+        params:
+          ORG: admin
+          SPACE: billing
+          DB_NAME: accounts-db
+          BOUND_APP: paas-accounts
+
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
         params:
