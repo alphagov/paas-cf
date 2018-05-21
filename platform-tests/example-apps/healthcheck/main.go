@@ -42,6 +42,10 @@ func writeJson(w http.ResponseWriter, data interface{}) {
 }
 
 func buildTLSConfigWithCACert(caCertBase64 string) (*tls.Config, error) {
+	if caCertBase64 == "" {
+		return &tls.Config{}, nil
+	}
+
 	ca, err := base64.StdEncoding.DecodeString(caCertBase64)
 	if err != nil {
 		return nil, err
