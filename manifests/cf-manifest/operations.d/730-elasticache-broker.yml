@@ -9,12 +9,20 @@
     sha1: a1b83e8f8972b71756bc622442590f34ff72a551
 
 - type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: elasticache-broker
+    release: elasticache-broker
+
+- type: replace
   path: /instance_groups/-
   value:
     name: elasticache_broker
     azs: [z1, z2]
     instances: 2
-    vm_type: elasticache_broker
+    vm_type: nano
+    vm_extensions:
+      - elasticache_broker
     stemcell: default
     networks:
       - name: cf

@@ -15,8 +15,8 @@ compilation:
   workers: 6
 
 disk_types:
-- name: consul
-  disk_size: 1024
+- name: 5GB
+  disk_size: 5120
   cloud_properties:
     type: gp2
 
@@ -134,6 +134,17 @@ vm_types:
     instance_type: c3.large
     ephemeral_disk:
       size: 20480
+      type: gp2
+
+- name: nano
+  network: cf
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: t2.nano
+    ephemeral_disk:
+      size: 10240
       type: gp2
 
 - name: small

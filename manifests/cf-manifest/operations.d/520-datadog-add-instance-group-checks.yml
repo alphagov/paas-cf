@@ -40,12 +40,6 @@
   value:
     name: datadog-cc-worker
     release: datadog-for-cloudfoundry
-    properties:
-      cc:
-        jobs:
-          generic:
-            # FIXME: default, was null
-            number_of_workers: ~
 
 - type: replace
   path: /instance_groups/name=cc-worker/jobs/-

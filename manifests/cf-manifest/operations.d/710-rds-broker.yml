@@ -54,12 +54,20 @@
     sha1: 17c6ae4825225292c24760ac8ec47f104fe986ed
 
 - type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: rds-broker
+    release: rds-broker
+
+- type: replace
   path: /instance_groups/-
   value:
     name: rds_broker
     azs: [z1, z2]
     instances: 2
-    vm_type: rds_broker
+    vm_type: nano
+    vm_extensions:
+      - rds_broker
     stemcell: default
     networks:
       - name: cf

@@ -9,12 +9,20 @@
     sha1: 1d9e2c202192c2d4c726d82de2a46e73ad0177be
 
 - type: replace
+  path: /addons/name=metron_agent/exclude/jobs/-
+  value:
+    name: cdn-broker
+    release: cdn-broker
+
+- type: replace
   path: /instance_groups/-
   value:
     name: cdn_broker
     azs: [z1, z2]
     instances: 2
-    vm_type: cdn_broker
+    vm_type: nano
+    vm_extensions:
+      - cdn_broker
     stemcell: default
     jobs:
       - name: cdn-broker
