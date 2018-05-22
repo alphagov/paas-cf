@@ -552,7 +552,7 @@ jobs:
               type: docker-image
               source:
                 repository: ruby
-                tag: 2.2-slim
+                tag: 2.5-slim
             inputs:
               - name: paas-cf
               - name: cf-secrets
@@ -858,7 +858,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: 2.2-slim
+              tag: 2.5-slim
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
@@ -886,7 +886,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: 2.2-slim
+              tag: 2.5-slim
           inputs:
             - name: paas-cf
           outputs:
@@ -974,7 +974,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: 2.2-slim
+              tag: 2.5-slim
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -1042,7 +1042,7 @@ jobs:
               type: docker-image
               source:
                 repository: ruby
-                tag: 2.2-slim
+                tag: 2.5-slim
             inputs:
               - name: paas-cf
               - name: vpc-tfstate
@@ -1095,7 +1095,7 @@ jobs:
               type: docker-image
               source:
                 repository: ruby
-                tag: 2.2-slim
+                tag: 2.5-slim
             inputs:
               - name: paas-cf
             outputs:
@@ -1325,7 +1325,7 @@ jobs:
                 type: docker-image
                 source:
                   repository: ruby
-                  tag: 2.2-slim
+                  tag: 2.5-slim
               inputs:
                 - name: paas-cf
                 - name: cf-tfstate
@@ -1463,7 +1463,7 @@ jobs:
           type: docker-image
           source:
             repository: ruby
-            tag: 2.2-slim
+            tag: 2.5-slim
         run:
           path: sh
           args:
@@ -1893,7 +1893,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: "2.2"
+              tag: "2.5"
           inputs:
             - name: paas-cf
             - name: config
@@ -2421,7 +2421,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: 2.2-slim
+              tag: 2.5-slim
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
@@ -3070,7 +3070,7 @@ jobs:
           type: docker-image
           source:
             repository: ruby
-            tag: 2.2-slim
+            tag: 2.5-slim
         inputs:
           - name: paas-cf
           - name: cf-vars-store
@@ -3149,7 +3149,7 @@ jobs:
           type: docker-image
           source:
             repository: ruby
-            tag: 2.2-slim
+            tag: 2.5-slim
         inputs:
           - name: paas-cf
           - name: cf-secrets
@@ -3209,7 +3209,7 @@ jobs:
           type: docker-image
           source:
             repository: ruby
-            tag: 2.2-slim
+            tag: 2.5-slim
         inputs:
           - name: paas-cf
           - name: cf-manifest-pre-vars
@@ -3245,7 +3245,7 @@ jobs:
           type: docker-image
           source:
             repository: ruby
-            tag: 2.2-slim
+            tag: 2.5-slim
         inputs:
           - name: paas-cf
           - name: cf-manifest-pre-vars
@@ -3281,7 +3281,7 @@ jobs:
           type: docker-image
           source:
             repository: ruby
-            tag: 2.2-slim
+            tag: 2.5-slim
         inputs:
           - name: paas-cf
           - name: cf-manifest-pre-vars
@@ -3465,7 +3465,7 @@ jobs:
             type: docker-image
             source:
               repository: ruby
-              tag: 2.2-slim
+              tag: 2.5-slim
           inputs:
             - name: paas-cf
             - name: cf-vars-store
