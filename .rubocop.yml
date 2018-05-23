@@ -8,3 +8,11 @@ AllCops:
 Layout/IndentHeredoc:
   # FIXME: Remove when we've upgraded to Ruby 2.3
   Enabled: false
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+Performance/RegexpMatch:
+  Enabled: false
+Performance/HashEachMethods:
+  Enabled: false
+Style/NumericPredicate:
+  Enabled: false
