@@ -6,7 +6,6 @@ AllCops:
     - 'tools/metrics/vendor/**/*'
   TargetRubyVersion: 2.5
 Layout/IndentHeredoc:
-  # FIXME: Remove when we've upgraded to Ruby 2.3
   Enabled: false
 Naming/HeredocDelimiterNaming:
   Enabled: false
