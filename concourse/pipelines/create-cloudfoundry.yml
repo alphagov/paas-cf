@@ -2082,7 +2082,7 @@ jobs:
 
                 if ! cf service billing-db > /dev/null; then
                   cf create-service postgres "${BILLING_DB_PLAN}" billing-db
-                  while ! cf service billing-db | grep -q 'Status: create succeeded'; do
+                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30
                   done
@@ -2145,7 +2145,7 @@ jobs:
 
                 if ! cf service accounts-db > /dev/null; then
                   cf create-service postgres "${DB_PLAN}" accounts-db
-                  while ! cf service accounts-db | grep -q 'Status: create succeeded'; do
+                  while ! cf service accounts-db | grep -iqE 'status:\s+create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30
                   done
