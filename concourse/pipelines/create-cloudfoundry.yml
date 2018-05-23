@@ -1765,10 +1765,20 @@ jobs:
                   cf create-domain admin "uaa.((system_dns_zone_name))"
                 fi
 
-                cf create-route assets "login.((system_dns_zone_name))" --path create_account
-                cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
-                cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
-                cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do
+                cf target -s assets
+
+                if ! cf routes | grep -qE "\s+login.((system_dns_zone_name))\s+/create_account(\s+|$)"; then
+                  cf create-route assets "login.((system_dns_zone_name))" --path create_account
+                fi
+                if ! cf routes | grep -qE "\s+login.((system_dns_zone_name))\s+/create_account\.do(\s+|$)"; then
+                  cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
+                fi
+                if ! cf routes | grep -qE "\s+uaa.((system_dns_zone_name))\s+/create_account(\s+|$)"; then
+                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
+                fi
+                if ! cf routes | grep -qE "\s+uaa.((system_dns_zone_name))\s+/create_account\.do(\s+|$)"; then
+                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do;
+                fi
 
                 cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
                 cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account.do
