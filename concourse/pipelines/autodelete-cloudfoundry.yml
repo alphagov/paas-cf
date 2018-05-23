@@ -156,7 +156,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli-v2
-              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
           run:
             path: sh
             args:
