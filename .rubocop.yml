@@ -5,12 +5,6 @@ AllCops:
     - 'platform-tests/src/platform/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
   TargetRubyVersion: 2.5
-Metrics/BlockLength:
-  # FIXME: Remove when upstream PR is released:
-  # https://github.com/alphagov/govuk-lint/pull/87
-  Enabled: true
-  Exclude:
-    - "**/spec/**/*"
 Layout/IndentHeredoc:
   # FIXME: Remove when we've upgraded to Ruby 2.3
   Enabled: false
