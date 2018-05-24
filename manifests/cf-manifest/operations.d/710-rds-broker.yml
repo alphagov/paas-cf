@@ -78,7 +78,7 @@
           rds-broker:
             aws_access_key_id: ""
             aws_secret_access_key: ""
-            aws_region: "eu-west-1"
+            aws_region: "((terraform_outputs_region))"
             broker_name: "((terraform_outputs_environment))"
             cron_schedule: "0 0 * * *"
             keep_snapshots_for_days: 35
@@ -90,7 +90,7 @@
             allow_user_update_parameters: true
             aws_access_key_id: ""
             aws_secret_access_key: ""
-            aws_region: "eu-west-1"
+            aws_region: "((terraform_outputs_region))"
             password: ((secrets_rds_broker_admin_password))
             state_encryption_key: ((secrets_rds_broker_state_encryption_key))
             db_prefix: "rdsbroker"

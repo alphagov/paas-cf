@@ -36,7 +36,7 @@
             broker_password: ((secrets_elasticache_broker_admin_password))
             kms_key_id: alias/elasticache-broker
             secrets_manager_path: elasticache-broker/((environment))
-            region: "eu-west-1"
+            region: "((terraform_outputs_region))"
             cache_subnet_group_name: ((terraform_outputs_elasticache_broker_subnet_group_name))
             vpc_security_group_ids:
             - ((terraform_outputs_elasticache_broker_instances_security_group_id))
