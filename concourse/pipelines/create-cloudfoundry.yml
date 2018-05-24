@@ -894,6 +894,7 @@ jobs:
                 terraform apply \
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
                   -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
                   -state=updated-tfstate/cf.tfstate \
                   paas-cf/terraform/cloudfoundry
@@ -3543,4 +3544,3 @@ jobs:
       - put: health-snapshot-secrets
         params:
           file: health-snapshot-secrets/health-snapshot-secrets.yml
-
