@@ -38,4 +38,19 @@ uaa_jwt_signing_key_old:
       expect(default_key).not_to eq(previous_key)
     end
   end
+
+  context "when setting the cf cli token validity" do
+    let(:manifest) { manifest_with_defaults }
+    let(:cf_client) { manifest.fetch("instance_groups.uaa.jobs.uaa.properties.uaa.clients.cf") }
+    let(:refresh_token_validity) { cf_client.fetch("refresh-token-validity") }
+    let(:access_token_validity) { cf_client.fetch("access-token-validity") }
+
+    it "sets the refresh token validity to 20 hours" do
+      expect(refresh_token_validity).to equal(72000)
+    end
+
+    it "doesn't set the access token validity to higher than the refresh validity" do
+      expect(access_token_validity).to be <= refresh_token_validity
+    end
+  end
 end
