@@ -2181,6 +2181,7 @@ jobs:
                   - name: paas-admin
                     routes:
                     - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
+                    instances: 2
                     env:
                       OAUTH_CLIENT_ID: "paas-admin"
                       OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
