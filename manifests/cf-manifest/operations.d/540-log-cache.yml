@@ -127,10 +127,9 @@
     name: log-cache-cf-auth-proxy
     properties:
       cc:
-        ca_cert: ((log_cache_tls_cc_auth_proxy.ca))
-        capi_internal_addr: https://cloud-controller-ng.service.cf.internal:9023
-        cert: ((log_cache_tls_cc_auth_proxy.certificate))
         common_name: cloud-controller-ng.service.cf.internal
+        ca_cert: ((log_cache_tls_cc_auth_proxy.ca))
+        cert: ((log_cache_tls_cc_auth_proxy.certificate))
         key: ((log_cache_tls_cc_auth_proxy.private_key))
       proxy_port: 8083
       uaa:
@@ -189,3 +188,23 @@
   value:
     name: log-cache-scheduler
     release: log-cache
+
+# FIXME: the log-cache release relies on bosh-dns https://github.com/cloudfoundry/bosh-dns-release
+# to discover the reverse-log-proxy address, but we don not use bosh-dns yet.
+#
+# We override the link information with the consul dns name and hardcoded port
+- type: replace
+  path: /instance_groups/name=doppler/jobs/name=log-cache-nozzle/consumes/reverse_log_proxy
+  value:
+    address: reverse-log-proxy.service.cf.internal
+    instances: []
+    properties:
+      reverse_log_proxy:
+        egress:
+          port: 8082
+
+- type: replace
+  path: /instance_groups/name=doppler/jobs/name=log-cache-cf-auth-proxy/consumes?/cloud_controller?
+  value:
+    address: cloud-controller-ng.service.cf.internal
+    instances: []
