@@ -1123,13 +1123,6 @@ jobs:
               - name: paas-cf
             outputs:
               - name: environment-variables
-            params:
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              DEPLOY_ENV: ((deploy_env))
-              DATADOG_API_KEY: ((datadog_api_key))
-              OAUTH_CLIENT_ID: ((oauth_client_id))
-              OAUTH_CLIENT_SECRET: ((oauth_client_secret))
             run:
               path: sh
               args:
@@ -1138,12 +1131,12 @@ jobs:
                 - |
                   cat <<EOF > environment-variables/environment-variables.yml
                   ---
-                  system_domain: ${SYSTEM_DNS_ZONE_NAME}
-                  app_domain: ${APPS_DNS_ZONE_NAME}
-                  environment: ${DEPLOY_ENV}
-                  datadog_api_key: ${DATADOG_API_KEY}
-                  oauth_client_id: ${OAUTH_CLIENT_ID}
-                  oauth_client_secret: ${OAUTH_CLIENT_SECRET}
+                  system_domain: ((system_dns_zone_name))
+                  app_domain: ((apps_dns_zone_name))
+                  environment: ((deploy_env))
+                  datadog_api_key: ((datadog_api_key))
+                  oauth_client_id: ((oauth_client_id))
+                  oauth_client_secret: ((oauth_client_secret))
                   EOF
 
       - do:

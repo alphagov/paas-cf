@@ -116,15 +116,15 @@ bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
-datadog_api_key: ${datadog_api_key:-}
-datadog_app_key: ${datadog_app_key:-}
+datadog_api_key: "${datadog_api_key:-}"
+datadog_app_key: "${datadog_app_key:-}"
 compose_api_key: ${compose_api_key:-}
 compose_billing_email: ${compose_billing_email:-}
 compose_billing_password: ${compose_billing_password:-}
 enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
-oauth_client_id: ${oauth_client_id:-}
-oauth_client_secret: ${oauth_client_secret:-}
+oauth_client_id: "${oauth_client_id:-}"
+oauth_client_secret: "${oauth_client_secret:-}"
 notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
