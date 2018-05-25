@@ -119,6 +119,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
             AWS_ACCOUNT: ((aws_account))
+            AWS_DEFAULT_REGION: ((aws_region))
             SELF_UPDATE_PIPELINE: ((self_update_pipeline))
             PIPELINES_TO_UPDATE: ((pipeline_name))
             ENABLE_DESTROY: ((enable_destroy))
