@@ -3,6 +3,42 @@
 - type: replace
   path: /releases/-
   value:
+    name: datadog-agent
+    version: 0.1.5
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-agent-0.1.5.tgz
+    sha1: 573bed2ab7960eb97dafff4b7c6111e7ad72b39c
+
+- type: replace
+  path: /addons/-
+  value:
+    name: datadog-agent
+    jobs:
+    - name: datadog-agent
+      release: datadog-agent
+    properties:
+      enabled: true
+      api_key: ((datadog_api_key))
+      application_key: ((datadog_app_key))
+      use_dogstatsd: false
+      include_bosh_tags: true
+      tags:
+        aws_account: ((aws_account))
+        deploy_env: ((terraform_outputs_environment))
+      integrations:
+        process:
+          init_config:
+          instances:
+            - name: btrfs
+              search_string: ["btrfs"]
+        dns_check:
+          init_config:
+          instances:
+            - name: Canary
+              hostname: __canary.((system_domain))
+
+- type: replace
+  path: /releases/-
+  value:
     name: datadog-firehose-nozzle
     url: https://bosh.io/d/github.com/cloudfoundry-incubator/datadog-firehose-nozzle-release?v=51
     version: "51"

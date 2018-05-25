@@ -1134,7 +1134,9 @@ jobs:
                   system_domain: ((system_dns_zone_name))
                   app_domain: ((apps_dns_zone_name))
                   environment: ((deploy_env))
+                  aws_account: ((aws_account))
                   datadog_api_key: ((datadog_api_key))
+                  datadog_app_key: ((datadog_app_key))
                   oauth_client_id: ((oauth_client_id))
                   oauth_client_secret: ((oauth_client_secret))
                   EOF

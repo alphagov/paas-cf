@@ -8,7 +8,7 @@ WORKDIR=${WORKDIR:-.}
 
 datadog_opsfile=${PAAS_CF_DIR}/manifests/cf-manifest/operations/noop.yml
 if [ "${ENABLE_DATADOG}" = "true" ] ; then
-  datadog_opsfile="${PAAS_CF_DIR}/manifests/cf-manifest/operations/datadog-add-nozzle.yml"
+  datadog_opsfile="${PAAS_CF_DIR}/manifests/cf-manifest/operations/datadog.yml"
 fi
 
 oauth_opsfile=${PAAS_CF_DIR}/manifests/cf-manifest/operations/noop.yml

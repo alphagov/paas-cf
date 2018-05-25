@@ -91,6 +91,7 @@ module ManifestHelpers
     attr_accessor :workdir
     attr_accessor :manifest_with_defaults
     attr_accessor :manifest_without_vars_store
+    attr_accessor :manifest_with_datadog_enabled
     attr_accessor :cf_deployment_manifest
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
@@ -117,7 +118,8 @@ module ManifestHelpers
   end
 
   def manifest_with_datadog_enabled
-    render_manifest_with_vars_store("default", "true", "true", nil)
+    Cache.instance.manifest_with_datadog_enabled ||= \
+      render_manifest_with_vars_store("default", "true", "true", nil)
   end
 
   def manifest_with_enable_user_creation
