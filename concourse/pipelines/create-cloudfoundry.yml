@@ -448,6 +448,8 @@ jobs:
             PIPELINES_TO_UPDATE: ((pipeline_name))
             BOSH_AZ: ((bosh_az))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
+            ENABLE_DATADOG: ((enable_datadog))
+            NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
