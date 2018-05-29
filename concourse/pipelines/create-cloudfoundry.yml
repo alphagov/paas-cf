@@ -2661,39 +2661,71 @@ jobs:
             PREFIX: acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
-        - task: generate-test-config
-          file: paas-cf/concourse/tasks/generate-test-config.yml
-          params:
-            TEST_PROPERTIES: acceptance_tests
-            APP_DOMAIN: ((apps_dns_zone_name))
-            SYSTEM_DOMAIN: ((system_dns_zone_name))
+        - aggregate:
+          - do:
+            - task: generate-test-config
+              file: paas-cf/concourse/tasks/generate-test-config.yml
+              params:
+                TEST_PROPERTIES: acceptance_tests
+                APP_DOMAIN: ((apps_dns_zone_name))
+                SYSTEM_DOMAIN: ((system_dns_zone_name))
+            - task: run-tests
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    repository: governmentpaas/cf-acceptance-tests
+                    tag: c599048c56cc1508314315552bd11f413fab1c78
+                params:
+                  DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
+                inputs:
+                  - name: paas-cf
+                  - name: cf-acceptance-tests
+                    path: src/github.com/cloudfoundry/cf-acceptance-tests
+                  - name: test-config
+                outputs:
+                  - name: artifacts
+                    path: /tmp/artifacts
+                run:
+                  path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
 
-        - task: run-tests
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-acceptance-tests
-                tag: c599048c56cc1508314315552bd11f413fab1c78
-            params:
-              DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
-            inputs:
-              - name: paas-cf
-              - name: cf-acceptance-tests
-                path: src/github.com/cloudfoundry/cf-acceptance-tests
-              - name: test-config
-            outputs:
-              - name: artifacts
-                path: /tmp/artifacts
-            run:
-              path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
+              ensure:
+                task: upload-test-artifacts
+                file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+                params:
+                  TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
-          ensure:
-            task: upload-test-artifacts
-            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
-            params:
-              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+          - do:
+            - task: generate-test-config
+              file: paas-cf/concourse/tasks/generate-test-config.yml
+              params:
+                TEST_PROPERTIES: acceptance_log_cache_tests
+                APP_DOMAIN: ((apps_dns_zone_name))
+                SYSTEM_DOMAIN: ((system_dns_zone_name))
+            - task: run-log-cache-tests
+              timeout: 20m
+              config:
+                platform: linux
+                image_resource:
+                  type: docker-image
+                  source:
+                    # FIXME: Use the right acceptance test container ID with the log-cach-cli plugin
+                    # https://github.com/alphagov/paas-docker-cloudfoundry-tools/pull/129
+                    repository: governmentpaas/cf-acceptance-tests
+                    tag: c599048c56cc1508314315552bd11f413fab1c78
+                params:
+                  DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
+                inputs:
+                  - name: paas-cf
+                  - name: cf-acceptance-tests
+                    path: src/github.com/cloudfoundry/cf-acceptance-tests
+                  - name: test-config
+                outputs:
+                  - name: artifacts
+                    path: /tmp/artifacts
+                run:
+                  path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
 
         ensure:
           task: remove-temp-user
