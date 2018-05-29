@@ -21,7 +21,7 @@ write_message_json() {
   "Body": {
     "Html": {
       "Data": "There are certificates in <b>${DEPLOY_ENV}</b> that are not valid or about to expire. See \
-      <a href=\"https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry/jobs/check-var-store-certs/builds/latest\">Concourse</a> \
+      <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry/jobs/check-certificates/builds/latest'>Concourse</a> \
       for details.<br/>"
     }
   }

@@ -39,7 +39,7 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
-      - check-var-store-certs
+      - check-certificates
       - health-snapshot
   - name: credentials
     jobs:
@@ -311,7 +311,7 @@ resources:
     source:
       interval: 5m
 
-  - name: check-var-store-certs-timer
+  - name: check-certificates-timer
     type: time
     source:
       interval: 24h
@@ -3489,18 +3489,19 @@ jobs:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
 
-  - name: check-var-store-certs
+  - name: check-certificates
     build_logs_to_retain: 50
     plan:
       - aggregate:
-        - get: check-var-store-certs-timer
+        - get: check-certificates-timer
           trigger: true
         - get: paas-cf
           # passed: ['generate-cf-config']
         - get: cf-vars-store
           # passed: ['generate-cf-config']
+        - get: ipsec-CA
 
-      - task: check-var-store-certs
+      - task: check-certificates
         config:
           platform: linux
           image_resource:
@@ -3511,13 +3512,25 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-vars-store
+            - name: ipsec-CA
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/check-vars-store-certificates.rb 30 < cf-vars-store/cf-vars-store.yml
+                ./paas-cf/concourse/scripts/check-certificates.rb 30 < cf-vars-store/cf-vars-store.yml
+
+                tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
+                cat <<EOF > ipsec_cert.yml
+                ---
+                ipsec:
+                  certificate: |
+                $(sed 's/^/    /' ipsec-CA/ipsec-CA.crt)
+                EOF
+
+                ./paas-cf/concourse/scripts/check-certificates.rb 30 < ipsec_cert.yml
+
         on_failure:
           task: alert
           config:
@@ -3540,7 +3553,7 @@ jobs:
               - -e
               - -c
               - |
-                paas-cf/concourse/scripts/check-vars-store-certificates-email.sh \
+                paas-cf/concourse/scripts/check-certificates-email.sh \
                   "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
 
   - name: health-snapshot
