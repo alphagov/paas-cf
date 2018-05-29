@@ -70,6 +70,7 @@ jobs:
             - name: paas-cf
           params:
             AWS_ACCOUNT: ((aws_account))
+            AWS_DEFAULT_REGION: ((aws_region))
             DEPLOY_ENV: ((deploy_env))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
