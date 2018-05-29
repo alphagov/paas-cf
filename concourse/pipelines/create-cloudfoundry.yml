@@ -314,7 +314,7 @@ resources:
   - name: check-var-store-certs-timer
     type: time
     source:
-      interval: 720h
+      interval: 24h
 
   - name: expire-aws-keys-timer
     type: time
