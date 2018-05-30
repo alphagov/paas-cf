@@ -7,6 +7,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -16,7 +17,7 @@ import (
 var _ = Describe("Postgres backing service", func() {
 	const (
 		serviceName  = "postgres"
-		testPlanName = "tiny-unencrypted-9.5"
+		testPlanName = "tiny-9.5"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -25,29 +26,31 @@ var _ = Describe("Postgres backing service", func() {
 		Expect(plans).To(Say(serviceName))
 	})
 
-	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
-		Expect(plans).To(Exit(0))
-		Expect(plans.Out.Contents()).To(ContainSubstring("tiny-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("tiny-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("small-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("small-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("small-ha-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("small-ha-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("medium-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("medium-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("medium-ha-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("medium-ha-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("large-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("large-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("large-ha-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("large-ha-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-ha-unencrypted-9.5"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-ha-9.5"))
+	It("has only the expected plans available to the user", func() {
+		workflowhelpers.AsUser(testContext.RegularUserContext(), testContext.ShortTimeout(), func() {
+			plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(plans).To(Exit(0))
+			cfMarketplaceOutput := string(plans.Out.Contents())
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("tiny-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-ha-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-ha-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-ha-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-ha-unencrypted-9.5"))
+		})
 	})
-
 	Context("creating a database instance", func() {
 		// Avoid creating additional tests in this block because this setup and
 		// teardown is slow (several minutes).
