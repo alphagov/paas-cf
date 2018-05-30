@@ -1533,8 +1533,57 @@ jobs:
                 else
                   cf create-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
                 fi
-                cf enable-service-access postgres
-                cf enable-service-access mysql
+
+                # Enable supported plans
+                cat <<EOF | xargs -n1 cf enable-service-access mysql -p
+                tiny-5.7
+                small-5.7
+                small-ha-5.7
+                medium-ha-5.7
+                medium-5.7
+                large-ha-5.7
+                large-5.7
+                xlarge-ha-5.7
+                xlarge-5.7
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -p
+                tiny-9.5
+                small-ha-9.5
+                small-9.5
+                medium-ha-9.5
+                medium-9.5
+                large-ha-9.5
+                large-9.5
+                xlarge-ha-9.5
+                xlarge-9.5
+                EOF
+
+                # Disable deprecated plans
+                cat <<EOF | xargs -n1 cf disable-service-access mysql -p
+                tiny-unencrypted-5.7
+                small-unencrypted-5.7
+                small-ha-unencrypted-5.7
+                medium-ha-unencrypted-5.7
+                medium-unencrypted-5.7
+                large-ha-unencrypted-5.7
+                large-unencrypted-5.7
+                xlarge-ha-unencrypted-5.7
+                xlarge-unencrypted-5.7
+                EOF
+
+                cat <<EOF | xargs -n1 cf disable-service-access postgres -p
+                tiny-unencrypted-9.5
+                small-ha-unencrypted-9.5
+                small-unencrypted-9.5
+                medium-ha-unencrypted-9.5
+                medium-unencrypted-9.5
+                large-ha-unencrypted-9.5
+                large-unencrypted-9.5
+                xlarge-ha-unencrypted-9.5
+                xlarge-unencrypted-9.5
+                EOF
+
 
       - task: register-cdn-broker
         config:

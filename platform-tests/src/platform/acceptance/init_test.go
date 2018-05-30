@@ -31,8 +31,9 @@ const (
 )
 
 var (
-	testConfig *config.Config
-	httpClient *http.Client
+	testConfig  *config.Config
+	httpClient  *http.Client
+	testContext *workflowhelpers.ReproducibleTestSuiteSetup
 )
 
 func TestSuite(t *testing.T) {
@@ -47,7 +48,7 @@ func TestSuite(t *testing.T) {
 		},
 	}
 
-	testContext := workflowhelpers.NewTestSuiteSetup(testConfig)
+	testContext = workflowhelpers.NewTestSuiteSetup(testConfig)
 
 	BeforeSuite(func() {
 		testContext.Setup()

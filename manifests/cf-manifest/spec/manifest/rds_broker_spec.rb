@@ -74,7 +74,7 @@ RSpec.describe "RDS broker properties" do
       }
     end
 
-    shared_examples "free sized plans" do
+    shared_examples "tiny sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 5) }
@@ -160,7 +160,26 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("Free", "S-dedicated-9.5", "S-HA-dedicated-9.5", "S-HA-enc-dedicated-9.5", "M-dedicated-9.5", "M-HA-dedicated-9.5", "M-HA-enc-dedicated-9.5", "L-dedicated-9.5", "L-HA-dedicated-9.5", "L-HA-enc-dedicated-9.5", "XL-dedicated-9.5", "XL-HA-dedicated-9.5", "XL-HA-enc-dedicated-9.5")
+        expect(pg_plan_names).to contain_exactly(
+          "tiny-unencrypted-9.5",
+          "tiny-9.5",
+          "small-unencrypted-9.5",
+          "small-9.5",
+          "small-ha-unencrypted-9.5",
+          "small-ha-9.5",
+          "medium-unencrypted-9.5",
+          "medium-9.5",
+          "medium-ha-unencrypted-9.5",
+          "medium-ha-9.5",
+          "large-unencrypted-9.5",
+          "large-9.5",
+          "large-ha-unencrypted-9.5",
+          "large-ha-9.5",
+          "xlarge-unencrypted-9.5",
+          "xlarge-9.5",
+          "xlarge-ha-unencrypted-9.5",
+          "xlarge-ha-9.5",
+        )
       end
 
       describe "plan rds_properties" do
@@ -181,138 +200,192 @@ RSpec.describe "RDS broker properties" do
           end
         end
 
-        describe "S-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "S-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "small sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "S-HA-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "S-HA-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "small sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "S-HA-enc-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "S-HA-enc-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "small sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "M-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "M-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "medium sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "M-HA-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "M-HA-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "medium sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "M-HA-enc-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "M-HA-enc-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "medium sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "L-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "L-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "large sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "L-HA-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "L-HA-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "large sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "L-HA-enc-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "L-HA-enc-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "large sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "XL-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "XL-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "xlarge sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "XL-HA-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "XL-HA-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "xlarge sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "XL-HA-enc-dedicated-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "XL-HA-enc-dedicated-9.5" } }
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "xlarge sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "free plan" do
-          subject { pg_plans.find { |p| p["name"] == "Free" } }
+        describe "tiny-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-9.5" } }
 
           it "is marked as free" do
             expect(subject.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all postgres plans"
-          it_behaves_like "free sized plans"
+          it_behaves_like "tiny sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "tiny-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "tiny-9.5" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "small-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "small-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-ha-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "small-ha-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-ha-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "small-ha-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "medium-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "medium-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "medium-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-ha-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "medium-ha-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "medium-ha-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "medium-ha-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "large-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "large-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "large-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "large-ha-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "large-ha-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "large-ha-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "xlarge-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-ha-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "xlarge-ha-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
       end
     end
@@ -323,7 +396,26 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         my_plan_names = my_plans.map { |p| p["name"] }
-        expect(my_plan_names).to contain_exactly("Free", "S-dedicated-5.7", "S-HA-dedicated-5.7", "S-HA-enc-dedicated-5.7", "M-dedicated-5.7", "M-HA-dedicated-5.7", "M-HA-enc-dedicated-5.7", "L-dedicated-5.7", "L-HA-dedicated-5.7", "L-HA-enc-dedicated-5.7", "XL-dedicated-5.7", "XL-HA-dedicated-5.7", "XL-HA-enc-dedicated-5.7")
+        expect(my_plan_names).to contain_exactly(
+          "tiny-unencrypted-5.7",
+          "tiny-5.7",
+          "small-unencrypted-5.7",
+          "small-5.7",
+          "small-ha-unencrypted-5.7",
+          "small-ha-5.7",
+          "medium-unencrypted-5.7",
+          "medium-5.7",
+          "medium-ha-unencrypted-5.7",
+          "medium-ha-5.7",
+          "large-unencrypted-5.7",
+          "large-5.7",
+          "large-ha-unencrypted-5.7",
+          "large-ha-5.7",
+          "xlarge-unencrypted-5.7",
+          "xlarge-5.7",
+          "xlarge-ha-unencrypted-5.7",
+          "xlarge-ha-5.7",
+        )
       end
 
       describe "plan rds_properties" do
@@ -344,138 +436,192 @@ RSpec.describe "RDS broker properties" do
           end
         end
 
-        describe "S-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "S-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "small sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "S-HA-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "S-HA-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "small sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "S-HA-enc-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "S-HA-enc-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "small sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "M-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "M-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "medium sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "M-HA-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "M-HA-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "medium sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "M-HA-enc-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "M-HA-enc-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "medium sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "L-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "L-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "large sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "L-HA-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "L-HA-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "large sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "L-HA-enc-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "L-HA-enc-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "large sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "XL-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "XL-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "xlarge sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "XL-HA-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "XL-HA-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "xlarge sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "XL-HA-enc-dedicated-5.7" do
-          subject { my_plans.find { |p| p["name"] == "XL-HA-enc-dedicated-5.7" } }
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "xlarge sized plans"
-          it_behaves_like "backup enabled plans"
-          it_behaves_like "HA plans"
-          it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "free plan" do
-          subject { my_plans.find { |p| p["name"] == "Free" } }
+        describe "tiny-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7" } }
 
           it "is marked as free" do
             expect(subject.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all mysql plans"
-          it_behaves_like "free sized plans"
+          it_behaves_like "tiny sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "tiny-5.7" do
+          subject { my_plans.find { |p| p["name"] == "tiny-5.7" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "small-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-5.7" do
+          subject { my_plans.find { |p| p["name"] == "small-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-ha-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "small-ha-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-ha-5.7" do
+          subject { my_plans.find { |p| p["name"] == "small-ha-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "medium-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "medium-5.7" do
+          subject { my_plans.find { |p| p["name"] == "medium-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-ha-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "medium-ha-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "medium-ha-5.7" do
+          subject { my_plans.find { |p| p["name"] == "medium-ha-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "large-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "large-5.7" do
+          subject { my_plans.find { |p| p["name"] == "large-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "large-ha-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "large-ha-5.7" do
+          subject { my_plans.find { |p| p["name"] == "large-ha-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "xlarge-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "xlarge-5.7" do
+          subject { my_plans.find { |p| p["name"] == "xlarge-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-ha-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "xlarge-ha-5.7" do
+          subject { my_plans.find { |p| p["name"] == "xlarge-ha-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
       end
     end

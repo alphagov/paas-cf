@@ -7,6 +7,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
@@ -16,7 +17,7 @@ import (
 var _ = Describe("MySQL backing service", func() {
 	const (
 		serviceName  = "mysql"
-		testPlanName = "Free"
+		testPlanName = "tiny-5.7"
 	)
 
 	It("should have registered the mysql service", func() {
@@ -25,16 +26,30 @@ var _ = Describe("MySQL backing service", func() {
 		Expect(plans).To(Say(serviceName))
 	})
 
-	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
-		Expect(plans).To(Exit(0))
-		Expect(plans.Out.Contents()).To(ContainSubstring("Free"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("S-HA-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("M-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("M-HA-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("L-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("L-HA-dedicated-5.7"))
+	It("has only the expected plans available to the user", func() {
+		workflowhelpers.AsUser(testContext.RegularUserContext(), testContext.ShortTimeout(), func() {
+			plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(plans).To(Exit(0))
+			cfMarketplaceOutput := string(plans.Out.Contents())
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("tiny-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-ha-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-ha-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-ha-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-unencrypted-5.7"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-ha-unencrypted-5.7"))
+		})
 	})
 
 	Context("creating a database instance", func() {
