@@ -27,7 +27,7 @@
       engine_version: "5.7"
       db_parameter_group_name: ((terraform_outputs_rds_broker_mysql57_db_parameter_group))
 
-    free_plan_rds_properties: &free_plan_rds_properties
+    tiny_plan_rds_properties: &tiny_plan_rds_properties
       db_instance_class: "db.t2.micro"
       allocated_storage: 5
       backup_retention_period: 0
@@ -115,7 +115,7 @@
                   plan_updateable: true
                   plans:
                     - id: "5f2eec8a-0cad-4ab9-b81e-d6adade2fd42"
-                      name: "Free"
+                      name: "tiny-unencrypted-9.5"
                       description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.micro."
                       free: true
                       metadata:
@@ -124,10 +124,10 @@
                           - "AWS RDS"
                       rds_properties:
                         <<: *default_postgres_rds_properties # yamllint disable-line
-                        <<: *free_plan_rds_properties # yamllint disable-line
+                        <<: *tiny_plan_rds_properties # yamllint disable-line
 
                     - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
-                      name: "S-dedicated-9.5"
+                      name: "small-unencrypted-9.5"
                       description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
                       free: false
                       metadata:
@@ -143,7 +143,7 @@
                         <<: *small_plan_rds_properties # yamllint disable-line
 
                     - id: "359bcb39-0264-46bd-9120-0182c3829067"
-                      name: "S-HA-dedicated-9.5"
+                      name: "small-ha-unencrypted-9.5"
                       description: "20GB Storage, Dedicated Instance, Highly Available, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
                       free: false
                       metadata:
@@ -160,7 +160,7 @@
                         multi_az: true
 
                     - id: "d9f1d61d-0a65-45ad-8fc9-88c921d038d2"
-                      name: "S-HA-enc-dedicated-9.5"
+                      name: "small-ha-9.5"
                       description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
                       free: false
                       metadata:
@@ -178,7 +178,7 @@
                         storage_encrypted: true
 
                     - id: "9b882524-ab58-4c18-b501-d2a3f4619104"
-                      name: "M-dedicated-9.5"
+                      name: "medium-unencrypted-9.5"
                       description: "100GB Storage, Dedicated Instance, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
                       free: false
                       metadata:
@@ -194,7 +194,7 @@
                         <<: *medium_plan_rds_properties # yamllint disable-line
 
                     - id: "bf5b99c2-7990-4b66-b341-1bb83566d76e"
-                      name: "M-HA-dedicated-9.5"
+                      name: "medium-ha-unencrypted-9.5"
                       description: "100GB Storage, Dedicated Instance, Highly Available, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
                       free: false
                       metadata:
@@ -211,7 +211,7 @@
                         multi_az: true
 
                     - id: "8d50ccc5-707c-4306-be8f-f59a158eb736"
-                      name: "M-HA-enc-dedicated-9.5"
+                      name: "medium-ha-9.5"
                       description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
                       free: false
                       metadata:
@@ -230,7 +230,7 @@
                         storage_encrypted: true
 
                     - id: "238a1328-4f77-4b70-9bd9-2cdbbfb999c8"
-                      name: "L-dedicated-9.5"
+                      name: "large-unencrypted-9.5"
                       description: "512GB Storage, Dedicated Instance, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
                       free: false
                       metadata:
@@ -246,7 +246,7 @@
                         <<: *large_plan_rds_properties # yamllint disable-line
 
                     - id: "dfe4ab2b-2069-41a5-ba08-2be21b0c76d3"
-                      name: "L-HA-dedicated-9.5"
+                      name: "large-ha-unencrypted-9.5"
                       description: "512GB Storage, Dedicated Instance, Highly Available, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
                       free: false
                       metadata:
@@ -263,7 +263,7 @@
                         multi_az: true
 
                     - id: "620055b3-fe7c-46fc-87ad-c7d8f4fe7f34"
-                      name: "L-HA-enc-dedicated-9.5"
+                      name: "large-ha-9.5"
                       description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
                       free: false
                       metadata:
@@ -282,7 +282,7 @@
                         storage_encrypted: true
 
                     - id: "1065c353-54dd-4f6b-a5b4-a4b5aa4575c6"
-                      name: "XL-dedicated-9.5"
+                      name: "xlarge-unencrypted-9.5"
                       description: "2TB Storage, Dedicated Instance, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
                       free: false
                       metadata:
@@ -298,7 +298,7 @@
                         <<: *xlarge_plan_rds_properties # yamllint disable-line
 
                     - id: "7119925f-518d-4263-96ac-16990295aad6"
-                      name: "XL-HA-dedicated-9.5"
+                      name: "xlarge-ha-unencrypted-9.5"
                       description: "2TB Storage, Dedicated Instance, Highly Available, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
                       free: false
                       metadata:
@@ -315,7 +315,7 @@
                         multi_az: true
 
                     - id: "a91c8e59-8869-42fd-8a99-8989151d7353"
-                      name: "XL-HA-enc-dedicated-9.5"
+                      name: "xlarge-ha-9.5"
                       description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
                       free: false
                       metadata:
@@ -350,7 +350,7 @@
                   plan_updateable: true
                   plans:
                     - id: 69977068-8ef5-4172-bfdb-e8cea3c14d01
-                      name: "Free"
+                      name: "tiny-unencrypted-5.7"
                       description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.micro."
                       free: true
                       metadata:
@@ -359,10 +359,10 @@
                           - "AWS RDS"
                       rds_properties:
                         <<: *default_mysql_rds_properties # yamllint disable-line
-                        <<: *free_plan_rds_properties # yamllint disable-line
+                        <<: *tiny_plan_rds_properties # yamllint disable-line
 
                     - id: "7fdde6ea-cc27-466c-86aa-46181fc20d25"
-                      name: "S-dedicated-5.7"
+                      name: "small-unencrypted-5.7"
                       description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.small."
                       free: false
                       metadata:
@@ -378,7 +378,7 @@
                         <<: *small_plan_rds_properties # yamllint disable-line
 
                     - id: "72279ebd-6001-4e38-aaef-72b68c4fa6fd"
-                      name: "S-HA-dedicated-5.7"
+                      name: "small-ha-unencrypted-5.7"
                       description: "20GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.t2.small."
                       free: false
                       metadata:
@@ -395,7 +395,7 @@
                         multi_az: true
 
                     - id: "6aa563c1-5aeb-46a1-9509-badcf5995c96"
-                      name: "S-HA-enc-dedicated-5.7"
+                      name: "small-ha-5.7"
                       description: "20GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
                       free: false
                       metadata:
@@ -413,7 +413,7 @@
                         storage_encrypted: true
 
                     - id: "4eb35ca9-a7ec-46c6-b137-d819848536cd"
-                      name: "M-dedicated-5.7"
+                      name: "medium-unencrypted-5.7"
                       description: "100GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.large."
                       free: false
                       metadata:
@@ -429,7 +429,7 @@
                         <<: *medium_plan_rds_properties # yamllint disable-line
 
                     - id: "e60edf62-b701-4e38-846f-b0b3db728349"
-                      name: "M-HA-dedicated-5.7"
+                      name: "medium-ha-unencrypted-5.7"
                       description: "100GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.large."
                       free: false
                       metadata:
@@ -446,7 +446,7 @@
                         multi_az: true
 
                     - id: "8d139b9e-bc82-4749-8ad6-7733980292d6"
-                      name: "M-HA-enc-dedicated-5.7"
+                      name: "medium-ha-5.7"
                       description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
                       free: false
                       metadata:
@@ -465,7 +465,7 @@
                         storage_encrypted: true
 
                     - id: "6725bf1f-71e8-447a-b6a1-659247fcc03c"
-                      name: "L-dedicated-5.7"
+                      name: "large-unencrypted-5.7"
                       description: "512GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
                       free: false
                       metadata:
@@ -481,7 +481,7 @@
                         <<: *large_plan_rds_properties # yamllint disable-line
 
                     - id: "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6"
-                      name: "L-HA-dedicated-5.7"
+                      name: "large-ha-unencrypted-5.7"
                       description: "512GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
                       free: false
                       metadata:
@@ -498,7 +498,7 @@
                         multi_az: true
 
                     - id: "d5efbf83-5e00-47a5-a668-2ef1307d5a23"
-                      name: "L-HA-enc-dedicated-5.7"
+                      name: "large-ha-5.7"
                       description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
                       free: false
                       metadata:
@@ -517,7 +517,7 @@
                         storage_encrypted: true
 
                     - id: "a37144bf-4e05-451b-87ba-0a2c57a23a91"
-                      name: "XL-dedicated-5.7"
+                      name: "xlarge-unencrypted-5.7"
                       description: "2TB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
                       free: false
                       metadata:
@@ -533,7 +533,7 @@
                         <<: *xlarge_plan_rds_properties # yamllint disable-line
 
                     - id: "065a7de5-28e8-4de1-8a39-4b4f752e2f2f"
-                      name: "XL-HA-dedicated-5.7"
+                      name: "xlarge-ha-unencrypted-5.7"
                       description: "2TB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
                       free: false
                       metadata:
@@ -550,7 +550,7 @@
                         multi_az: true
 
                     - id: "4edc975c-3f07-46f1-bd87-ecb35b76298f"
-                      name: "XL-HA-enc-dedicated-5.7"
+                      name: "xlarge-ha-5.7"
                       description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
                       free: false
                       metadata:

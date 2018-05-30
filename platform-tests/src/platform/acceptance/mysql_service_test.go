@@ -16,7 +16,7 @@ import (
 var _ = Describe("MySQL backing service", func() {
 	const (
 		serviceName  = "mysql"
-		testPlanName = "Free"
+		testPlanName = "tiny-unencrypted-5.7"
 	)
 
 	It("should have registered the mysql service", func() {
@@ -28,13 +28,24 @@ var _ = Describe("MySQL backing service", func() {
 	It("has the expected plans available", func() {
 		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
-		Expect(plans.Out.Contents()).To(ContainSubstring("Free"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("S-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("S-HA-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("M-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("M-HA-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("L-dedicated-5.7"))
-		Expect(plans.Out.Contents()).To(ContainSubstring("L-HA-dedicated-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("tiny-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("tiny-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("small-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("small-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("small-ha-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("small-ha-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("medium-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("medium-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("medium-ha-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("medium-ha-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("large-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("large-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("large-ha-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("large-ha-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-ha-unencrypted-5.7"))
+		Expect(plans.Out.Contents()).To(ContainSubstring("xlarge-ha-5.7"))
 	})
 
 	Context("creating a database instance", func() {
