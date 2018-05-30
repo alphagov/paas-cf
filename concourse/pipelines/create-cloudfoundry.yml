@@ -3531,31 +3531,6 @@ jobs:
 
                 ./paas-cf/concourse/scripts/check-certificates.rb 30 < ipsec_cert.yml
 
-        on_failure:
-          task: alert
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/awscli
-                tag: b2495d6ed07f680125d19aa7d1701da7efabb289
-            params:
-              AWS_DEFAULT_REGION: ((aws_region))
-              DEPLOY_ENV: ((deploy_env))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-            inputs:
-              - name: paas-cf
-            run:
-              path: sh
-              args:
-              - -e
-              - -c
-              - |
-                paas-cf/concourse/scripts/check-certificates-email.sh \
-                  "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
-
   - name: health-snapshot
     serial: true
     build_logs_to_retain: 25
