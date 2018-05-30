@@ -160,7 +160,26 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
-        expect(pg_plan_names).to contain_exactly("tiny-unencrypted-9.5", "small-unencrypted-9.5", "small-ha-unencrypted-9.5", "small-ha-9.5", "medium-unencrypted-9.5", "medium-ha-unencrypted-9.5", "medium-ha-9.5", "large-unencrypted-9.5", "large-ha-unencrypted-9.5", "large-ha-9.5", "xlarge-unencrypted-9.5", "xlarge-ha-unencrypted-9.5", "xlarge-ha-9.5")
+        expect(pg_plan_names).to contain_exactly(
+          "tiny-unencrypted-9.5",
+          "tiny-9.5",
+          "small-unencrypted-9.5",
+          "small-9.5",
+          "small-ha-unencrypted-9.5",
+          "small-ha-9.5",
+          "medium-unencrypted-9.5",
+          "medium-9.5",
+          "medium-ha-unencrypted-9.5",
+          "medium-ha-9.5",
+          "large-unencrypted-9.5",
+          "large-9.5",
+          "large-ha-unencrypted-9.5",
+          "large-ha-9.5",
+          "xlarge-unencrypted-9.5",
+          "xlarge-9.5",
+          "xlarge-ha-unencrypted-9.5",
+          "xlarge-ha-9.5",
+        )
       end
 
       describe "plan rds_properties" do
@@ -181,6 +200,34 @@ RSpec.describe "RDS broker properties" do
           end
         end
 
+        describe "tiny-unencrypted-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-9.5" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "tiny-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "tiny-9.5" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "small-unencrypted-9.5" do
           subject { pg_plans.find { |p| p["name"] == "small-unencrypted-9.5" } }
 
@@ -189,6 +236,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "small-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "small-ha-unencrypted-9.5" do
@@ -221,6 +278,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption disabled plans"
         end
 
+        describe "medium-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "medium-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "medium-ha-unencrypted-9.5" do
           subject { pg_plans.find { |p| p["name"] == "medium-ha-unencrypted-9.5" } }
 
@@ -249,6 +316,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "large-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "large-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "large-ha-unencrypted-9.5" do
@@ -281,6 +358,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption disabled plans"
         end
 
+        describe "xlarge-9.5" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-9.5" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "xlarge-ha-unencrypted-9.5" do
           subject { pg_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-9.5" } }
 
@@ -300,20 +387,6 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
         end
-
-        describe "tiny plan" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-9.5" } }
-
-          it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
-          end
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "tiny sized plans"
-          it_behaves_like "backup disabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
-        end
       end
     end
 
@@ -323,7 +396,26 @@ RSpec.describe "RDS broker properties" do
 
       it "contains only specific plans" do
         my_plan_names = my_plans.map { |p| p["name"] }
-        expect(my_plan_names).to contain_exactly("tiny-unencrypted-5.7", "small-unencrypted-5.7", "small-ha-unencrypted-5.7", "small-ha-5.7", "medium-unencrypted-5.7", "medium-ha-unencrypted-5.7", "medium-ha-5.7", "large-unencrypted-5.7", "large-ha-unencrypted-5.7", "large-ha-5.7", "xlarge-unencrypted-5.7", "xlarge-ha-unencrypted-5.7", "xlarge-ha-5.7")
+        expect(my_plan_names).to contain_exactly(
+          "tiny-unencrypted-5.7",
+          "tiny-5.7",
+          "small-unencrypted-5.7",
+          "small-5.7",
+          "small-ha-unencrypted-5.7",
+          "small-ha-5.7",
+          "medium-unencrypted-5.7",
+          "medium-5.7",
+          "medium-ha-unencrypted-5.7",
+          "medium-ha-5.7",
+          "large-unencrypted-5.7",
+          "large-5.7",
+          "large-ha-unencrypted-5.7",
+          "large-ha-5.7",
+          "xlarge-unencrypted-5.7",
+          "xlarge-5.7",
+          "xlarge-ha-unencrypted-5.7",
+          "xlarge-ha-5.7",
+        )
       end
 
       describe "plan rds_properties" do
@@ -344,6 +436,34 @@ RSpec.describe "RDS broker properties" do
           end
         end
 
+        describe "tiny-unencrypted-5.7" do
+          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "tiny-5.7" do
+          subject { my_plans.find { |p| p["name"] == "tiny-5.7" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "small-unencrypted-5.7" do
           subject { my_plans.find { |p| p["name"] == "small-unencrypted-5.7" } }
 
@@ -352,6 +472,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-5.7" do
+          subject { my_plans.find { |p| p["name"] == "small-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "small-ha-unencrypted-5.7" do
@@ -384,6 +514,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption disabled plans"
         end
 
+        describe "medium-5.7" do
+          subject { my_plans.find { |p| p["name"] == "medium-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "medium-ha-unencrypted-5.7" do
           subject { my_plans.find { |p| p["name"] == "medium-ha-unencrypted-5.7" } }
 
@@ -412,6 +552,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "large-5.7" do
+          subject { my_plans.find { |p| p["name"] == "large-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
         end
 
         describe "large-ha-unencrypted-5.7" do
@@ -444,6 +594,16 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption disabled plans"
         end
 
+        describe "xlarge-5.7" do
+          subject { my_plans.find { |p| p["name"] == "xlarge-5.7" } }
+
+          it_behaves_like "all mysql plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "xlarge-ha-unencrypted-5.7" do
           subject { my_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-5.7" } }
 
@@ -462,20 +622,6 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
-        end
-
-        describe "tiny plan" do
-          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7" } }
-
-          it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
-          end
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "tiny sized plans"
-          it_behaves_like "backup disabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption disabled plans"
         end
       end
     end

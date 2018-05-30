@@ -126,6 +126,20 @@
                         <<: *default_postgres_rds_properties # yamllint disable-line
                         <<: *tiny_plan_rds_properties # yamllint disable-line
 
+                    - id: "8332f409-4689-4614-a6bc-64dec6e2faae"
+                      name: "tiny-9.5"
+                      description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Storage Encrypted, Max 50 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.micro."
+                      free: true
+                      metadata:
+                        bullets:
+                          - "Dedicated Postgres 9.5 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_postgres_rds_properties # yamllint disable-line
+                        <<: *tiny_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
+
                     - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
                       name: "small-unencrypted-9.5"
                       description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
@@ -141,6 +155,24 @@
                       rds_properties:
                         <<: *default_postgres_rds_properties # yamllint disable-line
                         <<: *small_plan_rds_properties # yamllint disable-line
+
+                    - id: "2611d776-9991-4940-a755-880eafbc33a0"
+                      name: "small-9.5"
+                      description: "20GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 0.039
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated Postgres 9.5 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_postgres_rds_properties # yamllint disable-line
+                        <<: *small_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
 
                     - id: "359bcb39-0264-46bd-9120-0182c3829067"
                       name: "small-ha-unencrypted-9.5"
@@ -192,6 +224,24 @@
                       rds_properties:
                         <<: *default_postgres_rds_properties # yamllint disable-line
                         <<: *medium_plan_rds_properties # yamllint disable-line
+
+                    - id: "17ef8670-5134-4ae6-b7fc-9ee8e52394c5"
+                      name: "medium-9.5"
+                      description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 0.201
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated Postgres 9.5 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_postgres_rds_properties # yamllint disable-line
+                        <<: *medium_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
 
                     - id: "bf5b99c2-7990-4b66-b341-1bb83566d76e"
                       name: "medium-ha-unencrypted-9.5"
@@ -245,6 +295,24 @@
                         <<: *default_postgres_rds_properties # yamllint disable-line
                         <<: *large_plan_rds_properties # yamllint disable-line
 
+                    - id: "8ea15f55-fbd2-41a3-a679-482d67a3d9ea"
+                      name: "large-9.5"
+                      description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 0.806
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated Postgres 9.5 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_postgres_rds_properties # yamllint disable-line
+                        <<: *large_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
+
                     - id: "dfe4ab2b-2069-41a5-ba08-2be21b0c76d3"
                       name: "large-ha-unencrypted-9.5"
                       description: "512GB Storage, Dedicated Instance, Highly Available, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
@@ -296,6 +364,24 @@
                       rds_properties:
                         <<: *default_postgres_rds_properties # yamllint disable-line
                         <<: *xlarge_plan_rds_properties # yamllint disable-line
+
+                    - id: "3cb1947e-1df5-4483-8e9e-07c9294f9347"
+                      name: "xlarge-9.5"
+                      description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 1.612
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated Postgres 9.5 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_postgres_rds_properties # yamllint disable-line
+                        <<: *xlarge_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
 
                     - id: "7119925f-518d-4263-96ac-16990295aad6"
                       name: "xlarge-ha-unencrypted-9.5"
@@ -361,6 +447,20 @@
                         <<: *default_mysql_rds_properties # yamllint disable-line
                         <<: *tiny_plan_rds_properties # yamllint disable-line
 
+                    - id: 05a741b5-e86a-4d36-a37a-04c8173381a6
+                      name: "tiny-5.7"
+                      description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.micro."
+                      free: true
+                      metadata:
+                        bullets:
+                          - "Dedicated MySQL 5.7 server"
+                          - "Storage Encryped"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_mysql_rds_properties # yamllint disable-line
+                        <<: *tiny_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
+
                     - id: "7fdde6ea-cc27-466c-86aa-46181fc20d25"
                       name: "small-unencrypted-5.7"
                       description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.small."
@@ -376,6 +476,24 @@
                       rds_properties:
                         <<: *default_mysql_rds_properties # yamllint disable-line
                         <<: *small_plan_rds_properties # yamllint disable-line
+
+                    - id: "b0ccc8c9-09b0-4c3e-9880-091cc41c2ab5"
+                      name: "small-5.7"
+                      description: "20GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 0.036
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated MySQL 5.7 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_mysql_rds_properties # yamllint disable-line
+                        <<: *small_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
 
                     - id: "72279ebd-6001-4e38-aaef-72b68c4fa6fd"
                       name: "small-ha-unencrypted-5.7"
@@ -427,6 +545,24 @@
                       rds_properties:
                         <<: *default_mysql_rds_properties # yamllint disable-line
                         <<: *medium_plan_rds_properties # yamllint disable-line
+
+                    - id: "29cdedeb-e910-4a7a-b606-2c4e42eea478"
+                      name: "medium-5.7"
+                      description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 0.193
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated MySQL 5.7 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_mysql_rds_properties # yamllint disable-line
+                        <<: *medium_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
 
                     - id: "e60edf62-b701-4e38-846f-b0b3db728349"
                       name: "medium-ha-unencrypted-5.7"
@@ -480,6 +616,24 @@
                         <<: *default_mysql_rds_properties # yamllint disable-line
                         <<: *large_plan_rds_properties # yamllint disable-line
 
+                    - id: "98a9b7cf-e067-4915-8190-ce8224dd04dc"
+                      name: "large-5.7"
+                      description: "512GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 0.772
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated MySQL 5.7 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_mysql_rds_properties # yamllint disable-line
+                        <<: *large_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
+
                     - id: "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6"
                       name: "large-ha-unencrypted-5.7"
                       description: "512GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
@@ -531,6 +685,24 @@
                       rds_properties:
                         <<: *default_mysql_rds_properties # yamllint disable-line
                         <<: *xlarge_plan_rds_properties # yamllint disable-line
+
+                    - id: "e03020e8-eaed-49c2-bd58-23b7cb871c22"
+                      name: "xlarge-5.7"
+                      description: "2TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
+                      free: false
+                      metadata:
+                        costs:
+                          - amount:
+                              usd: 1.545
+                            unit: "HOUR"
+                        bullets:
+                          - "Dedicated MySQL 5.7 server"
+                          - "Storage Encrypted"
+                          - "AWS RDS"
+                      rds_properties:
+                        <<: *default_mysql_rds_properties # yamllint disable-line
+                        <<: *xlarge_plan_rds_properties # yamllint disable-line
+                        storage_encrypted: true
 
                     - id: "065a7de5-28e8-4de1-8a39-4b4f752e2f2f"
                       name: "xlarge-ha-unencrypted-5.7"
