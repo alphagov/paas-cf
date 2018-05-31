@@ -28,6 +28,7 @@ module EmailCredentialsHelper
       })
   end
 
+  # rubocop:disable Layout/EmptyLinesAroundArguments
   def self.send_notification(api_url, user, source_address)
     send_email(
       from: source_address,
@@ -53,4 +54,5 @@ The Government PaaS Team.
       }
     )
   end
+  # rubocop:enable Layout/EmptyLinesAroundArguments
 end
