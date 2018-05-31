@@ -4,8 +4,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"net"
-	"strings"
 	"time"
 )
 
@@ -22,9 +20,13 @@ func (tc *TLSChecker) DaysUntilExpiry(addr string, tlsConfig *tls.Config) (float
 		return time.Until(cert.NotAfter).Hours() / 24, nil
 	}
 
-	if IsCertificateError(err) {
-		return 0, nil
+	switch e := err.(type) {
+	case x509.CertificateInvalidError:
+		if e.Reason == x509.Expired {
+			return 0, nil
+		}
 	}
+
 	return 0, err
 }
 
@@ -44,22 +46,4 @@ func GetCertificate(addr string, tlsConfig *tls.Config) (*x509.Certificate, erro
 	}
 
 	return nil, fmt.Errorf("no certificate found")
-}
-
-func IsCertificateError(err error) bool {
-	switch v := err.(type) {
-	case x509.CertificateInvalidError,
-		x509.HostnameError,
-		x509.SystemRootsError,
-		x509.UnknownAuthorityError,
-		x509.InsecureAlgorithmError:
-		return true
-	case *net.OpError:
-		if v.Op == "remote error" && strings.Contains(err.Error(), "handshake failure") {
-			return true // handshake error
-		}
-		return false
-	default:
-		return false
-	}
 }

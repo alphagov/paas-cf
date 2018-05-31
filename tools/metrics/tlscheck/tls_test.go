@@ -30,28 +30,24 @@ var _ = Describe("TLSCheck", func() {
 			Expect(daysUntilExpiry).To(Equal(float64(0)))
 		})
 
-		It("returns 0 for certificate with incorrect common name", func() {
-			daysUntilExpiry, err := checker.DaysUntilExpiry("wrong.host.badssl.com:443", &tls.Config{})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(daysUntilExpiry).To(Equal(float64(0)))
+		It("returns error for certificate with incorrect common name", func() {
+			_, err := checker.DaysUntilExpiry("wrong.host.badssl.com:443", &tls.Config{})
+			Expect(err).To(HaveOccurred())
 		})
 
-		It("returns 0 for certificate with untrusted root CA", func() {
-			daysUntilExpiry, err := checker.DaysUntilExpiry("untrusted-root.badssl.com:443", &tls.Config{})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(daysUntilExpiry).To(Equal(float64(0)))
+		It("returns error for certificate with untrusted root CA", func() {
+			_, err := checker.DaysUntilExpiry("untrusted-root.badssl.com:443", &tls.Config{})
+			Expect(err).To(HaveOccurred())
 		})
 
-		It("returns 0 for certificate with self-signed CA", func() {
-			daysUntilExpiry, err := checker.DaysUntilExpiry("self-signed.badssl.com:443", &tls.Config{})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(daysUntilExpiry).To(Equal(float64(0)))
+		It("returns error for certificate with self-signed CA", func() {
+			_, err := checker.DaysUntilExpiry("self-signed.badssl.com:443", &tls.Config{})
+			Expect(err).To(HaveOccurred())
 		})
 
-		It("returns 0 for certificate with null cipher suite", func() {
-			daysUntilExpiry, err := checker.DaysUntilExpiry("null.badssl.com:443", &tls.Config{})
-			Expect(err).NotTo(HaveOccurred())
-			Expect(daysUntilExpiry).To(Equal(float64(0)))
+		It("returns error for certificate with null cipher suite", func() {
+			_, err := checker.DaysUntilExpiry("null.badssl.com:443", &tls.Config{})
+			Expect(err).To(HaveOccurred())
 		})
 
 		It("returns err when cannot connect", func() {
