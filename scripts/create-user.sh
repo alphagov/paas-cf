@@ -96,7 +96,7 @@ check_params_and_environment() {
     abort "You need to be logged into CF CLI"
   fi
 
-  if ! aws ses get-send-quota >/dev/null 2>&1; then
+  if ! aws ses get-send-quota --region eu-west-1 >/dev/null 2>&1; then
     abort "You must have AWS cli installed and configured with valid credentials. Test it with: aws ses get-send-quota"
   fi
 

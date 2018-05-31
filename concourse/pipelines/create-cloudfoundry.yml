@@ -443,10 +443,13 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
             AWS_ACCOUNT: ((aws_account))
+            AWS_DEFAULT_REGION: ((aws_region))
             SELF_UPDATE_PIPELINE: ((self_update_pipeline))
             PIPELINES_TO_UPDATE: ((pipeline_name))
             BOSH_AZ: ((bosh_az))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
+            ENABLE_DATADOG: ((enable_datadog))
+            NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
@@ -736,6 +739,35 @@ jobs:
             passed: ['generate-secrets']
           - get: paas-cf
             passed: ['generate-secrets']
+
+      - task: upload-job-file
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          inputs:
+            - name: pipeline-trigger
+            - name: deployed-healthcheck
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping api-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
+
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+                echo "Writing $JOB_FILE to S3 to signal job start"
+                echo 'started' | aws s3 cp - "s3://((state_bucket))/$JOB_FILE"
+
       - task: run-tests
         config:
           platform: linux
@@ -769,6 +801,7 @@ jobs:
                   echo "Skipping api-availability-tests because the healthcheck is not deployed"
                   exit 0
                 fi
+
                 export CONCOURSE_ATC_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
                 export CF_PASS
@@ -779,18 +812,28 @@ jobs:
 
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
 
-                JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
-
-                echo "Writing $JOB_FILE to S3 to signal job start"
-                export DEBIAN_FRONTEND=noninteractive
-                apt-get -qq update && apt-get install -y awscli > /dev/null
-                bucket=((state_bucket))
-                echo 'started' > ./jobstate
-                aws s3 cp ./jobstate "s3://${bucket}/$JOB_FILE"
-                trap 'aws s3 rm "s3://${bucket}/${JOB_FILE}"' EXIT
-
                 echo "Running api-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+        ensure:
+          task: delete-job-file
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/awscli
+                tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+            inputs:
+              - name: pipeline-trigger
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                  JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+                  aws s3 rm "s3://((state_bucket))/${JOB_FILE}"
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
@@ -894,6 +937,7 @@ jobs:
                 terraform apply \
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
                   -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
                   -state=updated-tfstate/cf.tfstate \
                   paas-cf/terraform/cloudfoundry
@@ -3591,4 +3635,3 @@ jobs:
       - put: health-snapshot-secrets
         params:
           file: health-snapshot-secrets/health-snapshot-secrets.yml
-

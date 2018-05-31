@@ -131,7 +131,7 @@ vm_types:
 - name: compilation
   cloud_properties:
     iam_instance_profile: compilation-vm
-    instance_type: c3.large
+    instance_type: c4.large
     ephemeral_disk:
       size: 20480
       type: gp2
@@ -164,7 +164,7 @@ vm_types:
     bosh:
       password: ((secrets_vcap_password))
   cloud_properties:
-    instance_type: m3.medium
+    instance_type: t2.medium
     ephemeral_disk:
       size: 10240
       type: gp2
@@ -186,7 +186,7 @@ vm_types:
     bosh:
       password: ((secrets_vcap_password))
   cloud_properties:
-    instance_type: c3.large
+    instance_type: c4.large
     ephemeral_disk:
       size: 10240
       type: gp2

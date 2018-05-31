@@ -31,4 +31,4 @@ EOF
 
 write_message_json
 
-aws ses send-email --to "${TO}" --message file://message.json --from "${FROM}"
+aws ses send-email --region eu-west-1 --to "${TO}" --message file://message.json --from "${FROM}"
