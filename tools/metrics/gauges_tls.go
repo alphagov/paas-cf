@@ -62,7 +62,7 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 					"alias_domain":      customDomain.AliasDomain,
 					"cloudfront_domain": customDomain.CloudFrontDomain,
 				})
-				return err
+				continue
 			}
 
 			metrics = append(metrics, Metric{

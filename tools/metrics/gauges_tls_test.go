@@ -252,20 +252,41 @@ var _ = Describe("TLS gauges", func() {
 		})
 
 		Context("If the TLS check returns an error for any of the domains", func() {
-			It("returns the error", func() {
+			It("doesn't report a metric for that domain", func() {
 				cloudFrontClient.ListDistributionsPagesStub = listDistributionsPageStub
-				tlsErr := errors.New("some error")
-				tlsChecker.DaysUntilExpiryReturnsOnCall(0, float64(123), nil)
-				tlsChecker.DaysUntilExpiryReturnsOnCall(1, float64(0), tlsErr)
 
-				gauge := CDNTLSValidityGauge(logger, tlsChecker, cloudFrontService, 1*time.Second)
+				tlsErr := errors.New("some error")
+				tlsChecker.DaysUntilExpiryReturnsOnCall(0, float64(0), tlsErr)
+				tlsChecker.DaysUntilExpiryReturnsOnCall(1, float64(234), nil)
+				tlsChecker.DaysUntilExpiryReturnsOnCall(2, float64(345), nil)
+
+				gauge := CDNTLSValidityGauge(logger, tlsChecker, cloudFrontService, 5*time.Second)
 				defer gauge.Close()
 
-				Eventually(func() error {
+				var metrics []Metric
+				Eventually(func() int {
 					metric, err := gauge.ReadMetric()
-					fmt.Fprintln(GinkgoWriter, metric, err)
-					return err
-				}, 3*time.Second).Should(MatchError(tlsErr))
+					if err == nil {
+						metrics = append(metrics, metric)
+					}
+					return len(metrics)
+				}, 3*time.Second).Should(BeNumerically(">=", 2))
+
+				Expect(tlsChecker.DaysUntilExpiryCallCount()).To(Equal(3))
+
+				Expect(metrics[0].Name).To(Equal("cdn.tls.certificates.validity"))
+				Expect(metrics[0].Value).To(Equal(float64(234)))
+				Expect(metrics[0].Kind).To(Equal(Gauge))
+				Expect(metrics[0].Tags).To(Equal([]string{
+					fmt.Sprintf("hostname:s2.service.gov.uk"),
+				}))
+
+				Expect(metrics[1].Name).To(Equal("cdn.tls.certificates.validity"))
+				Expect(metrics[1].Value).To(Equal(float64(345)))
+				Expect(metrics[1].Kind).To(Equal(Gauge))
+				Expect(metrics[1].Tags).To(Equal([]string{
+					fmt.Sprintf("hostname:s3.service.gov.uk"),
+				}))
 			})
 		})
 
