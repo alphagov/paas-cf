@@ -17,20 +17,37 @@ resource "datadog_monitor" "invalid_tls_cert" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
 }
 
-resource "datadog_monitor" "invalid_cdn_tls_cert" {
-  name              = "${format("%s Invalid CloudFront TLS/SSL Certificate", var.env)}"
-  type              = "metric alert"
-  message           = "${format("{{hostname.name}} CloudFront certificate {{#is_alert}}is invalid!{{/is_alert}}{{#is_warning}}expires in {{value}} days{{/is_warning}}\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info.", var.datadog_documentation_url)}"
-  notify_no_data    = true
-  no_data_timeframe = 480
+resource "datadog_monitor" "cdn_tls_cert_expiry" {
+  name    = "${format("%s CloudFront TLS/SSL Certificates expiry", var.env)}"
+  type    = "metric alert"
+  message = "${format("{{hostname.name}} CloudFront certificate {{#is_alert}}is almost expired!{{/is_alert}}{{#is_warning}}expires in {{value}} days{{/is_warning}}\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info.", var.datadog_documentation_url)}"
 
-  query = "${format("min(last_4h):min:cdn.tls.certificates.validity{deploy_env:%s} by {hostname} <= 7", var.env)}"
+  query = "${format("min(last_4h):min:cdn.tls.certificates.expiry{deploy_env:%s} by {hostname} <= 7", var.env)}"
 
   require_full_window = false
 
   thresholds {
     warning  = 21
     critical = 7
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
+}
+
+resource "datadog_monitor" "cdn_tls_cert_validity" {
+  name              = "${format("%s CloudFront TLS/SSL Certificate validity", var.env)}"
+  type              = "metric alert"
+  message           = "${format("A high number of CloudFront certificates are invalid.\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info.", var.datadog_documentation_url)}"
+  notify_no_data    = true
+  no_data_timeframe = 480
+
+  query = "${format("min(last_4h):min:cdn.tls.certificates.validity{deploy_env:%s}.rollup(avg) <= 0.5", var.env)}"
+
+  require_full_window = false
+
+  thresholds {
+    warning  = 0.75
+    critical = 0.5
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
