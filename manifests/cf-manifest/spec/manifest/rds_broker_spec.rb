@@ -162,7 +162,6 @@ RSpec.describe "RDS broker properties" do
         pg_plan_names = pg_plans.map { |p| p["name"] }
         expect(pg_plan_names).to contain_exactly(
           "tiny-unencrypted-9.5",
-          "tiny-9.5",
           "small-unencrypted-9.5",
           "small-9.5",
           "small-ha-unencrypted-9.5",
@@ -212,20 +211,6 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "tiny-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-9.5" } }
-
-          it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
-          end
-
-          it_behaves_like "all postgres plans"
-          it_behaves_like "tiny sized plans"
-          it_behaves_like "backup disabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption enabled plans"
         end
 
         describe "small-unencrypted-9.5" do
@@ -398,7 +383,6 @@ RSpec.describe "RDS broker properties" do
         my_plan_names = my_plans.map { |p| p["name"] }
         expect(my_plan_names).to contain_exactly(
           "tiny-unencrypted-5.7",
-          "tiny-5.7",
           "small-unencrypted-5.7",
           "small-5.7",
           "small-ha-unencrypted-5.7",
@@ -448,20 +432,6 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
-        end
-
-        describe "tiny-5.7" do
-          subject { my_plans.find { |p| p["name"] == "tiny-5.7" } }
-
-          it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
-          end
-
-          it_behaves_like "all mysql plans"
-          it_behaves_like "tiny sized plans"
-          it_behaves_like "backup disabled plans"
-          it_behaves_like "non-HA plans"
-          it_behaves_like "Encryption enabled plans"
         end
 
         describe "small-unencrypted-5.7" do

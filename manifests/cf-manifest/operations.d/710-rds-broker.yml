@@ -126,20 +126,6 @@
                         <<: *default_postgres_rds_properties # yamllint disable-line
                         <<: *tiny_plan_rds_properties # yamllint disable-line
 
-                    - id: "8332f409-4689-4614-a6bc-64dec6e2faae"
-                      name: "tiny-9.5"
-                      description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Storage Encrypted, Max 50 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.micro."
-                      free: true
-                      metadata:
-                        bullets:
-                          - "Dedicated Postgres 9.5 server"
-                          - "Storage Encrypted"
-                          - "AWS RDS"
-                      rds_properties:
-                        <<: *default_postgres_rds_properties # yamllint disable-line
-                        <<: *tiny_plan_rds_properties # yamllint disable-line
-                        storage_encrypted: true
-
                     - id: "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e"
                       name: "small-unencrypted-9.5"
                       description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
@@ -446,20 +432,6 @@
                       rds_properties:
                         <<: *default_mysql_rds_properties # yamllint disable-line
                         <<: *tiny_plan_rds_properties # yamllint disable-line
-
-                    - id: 05a741b5-e86a-4d36-a37a-04c8173381a6
-                      name: "tiny-5.7"
-                      description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.micro."
-                      free: true
-                      metadata:
-                        bullets:
-                          - "Dedicated MySQL 5.7 server"
-                          - "Storage Encryped"
-                          - "AWS RDS"
-                      rds_properties:
-                        <<: *default_mysql_rds_properties # yamllint disable-line
-                        <<: *tiny_plan_rds_properties # yamllint disable-line
-                        storage_encrypted: true
 
                     - id: "7fdde6ea-cc27-466c-86aa-46181fc20d25"
                       name: "small-unencrypted-5.7"
