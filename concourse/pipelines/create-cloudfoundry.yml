@@ -1966,7 +1966,7 @@ jobs:
                 cd paas-cf/platform-tests/example-apps/healthcheck
 
                 if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
-                  cf create-service postgres Free healthcheck-db
+                  cf create-service postgres tiny-9.5 healthcheck-db
                   while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                     echo "Waiting for creation of service to complete..."
                     sleep 30
@@ -2013,10 +2013,9 @@ jobs:
               - -u
               - -c
               - |
-                # TODO: Update the name once we change the plan names.
-                BILLING_DB_PLAN="Free"
+                BILLING_DB_PLAN="tiny-9.5"
                 if [ "${DEPLOY_ENV}" = "prod" ]; then
-                  BILLING_DB_PLAN="M-dedicated-9.5"
+                  BILLING_DB_PLAN="medium-9.5"
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
@@ -2080,8 +2079,7 @@ jobs:
               - -u
               - -c
               - |
-                # TODO: Update the name once we change the plan names.
-                DB_PLAN="Free"
+                DB_PLAN="tiny-9.5"
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-secrets/cf-secrets.yml)

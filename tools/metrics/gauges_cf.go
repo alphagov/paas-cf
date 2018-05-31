@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"strings"
 	"time"
 
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
@@ -419,5 +420,5 @@ func isOrgQuotaTrial(quota *cfclient.OrgQuota) bool {
 
 // Determine if a service plan is free.
 func isServicePlanFree(plan *cfclient.ServicePlan) bool {
-	return plan.Name == "Free"
+	return strings.HasPrefix(plan.Name, "tiny-")
 }
