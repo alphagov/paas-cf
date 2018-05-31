@@ -1536,7 +1536,7 @@ jobs:
 
                 # Enable supported plans
                 cat <<EOF | xargs -n1 cf enable-service-access mysql -p
-                tiny-5.7
+                tiny-unencrypted-5.7
                 small-5.7
                 small-ha-5.7
                 medium-ha-5.7
@@ -1548,7 +1548,7 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -p
-                tiny-9.5
+                tiny-unencrypted-9.5
                 small-ha-9.5
                 small-9.5
                 medium-ha-9.5
@@ -1561,7 +1561,6 @@ jobs:
 
                 # Disable deprecated plans
                 cat <<EOF | xargs -n1 cf disable-service-access mysql -p
-                tiny-unencrypted-5.7
                 small-unencrypted-5.7
                 small-ha-unencrypted-5.7
                 medium-ha-unencrypted-5.7
@@ -1573,7 +1572,6 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf disable-service-access postgres -p
-                tiny-unencrypted-9.5
                 small-ha-unencrypted-9.5
                 small-unencrypted-9.5
                 medium-ha-unencrypted-9.5
@@ -1968,7 +1966,7 @@ jobs:
                 if  [ "${DISABLE_HEALTHCHECK_DB:-}" != "true" ] ; then
 
                   if ! cf service healthcheck-db > /dev/null; then
-                    cf create-service postgres tiny-9.5 healthcheck-db
+                    cf create-service postgres tiny-unencrypted-9.5 healthcheck-db
                     while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
                       echo "Waiting for creation of service to complete..."
                       sleep 30
@@ -2016,7 +2014,7 @@ jobs:
               - -u
               - -c
               - |
-                BILLING_DB_PLAN="tiny-9.5"
+                BILLING_DB_PLAN="tiny-unencrypted-9.5"
                 if [ "${DEPLOY_ENV}" = "prod" ]; then
                   BILLING_DB_PLAN="medium-9.5"
                 fi
@@ -2082,7 +2080,7 @@ jobs:
               - -u
               - -c
               - |
-                DB_PLAN="tiny-9.5"
+                DB_PLAN="tiny-unencrypted-9.5"
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-secrets/cf-secrets.yml)

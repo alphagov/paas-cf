@@ -17,7 +17,7 @@ import (
 var _ = Describe("MySQL backing service", func() {
 	const (
 		serviceName  = "mysql"
-		testPlanName = "tiny-5.7"
+		testPlanName = "tiny-unencrypted-5.7"
 	)
 
 	It("should have registered the mysql service", func() {
@@ -31,7 +31,7 @@ var _ = Describe("MySQL backing service", func() {
 			plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(plans).To(Exit(0))
 			cfMarketplaceOutput := string(plans.Out.Contents())
-			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-5.7"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-5.7"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("small-5.7"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-5.7"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-5.7"))
@@ -40,7 +40,6 @@ var _ = Describe("MySQL backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-5.7"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-5.7"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-5.7"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("tiny-unencrypted-5.7"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-unencrypted-5.7"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-ha-unencrypted-5.7"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-unencrypted-5.7"))
