@@ -691,7 +691,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: c599048c56cc1508314315552bd11f413fab1c78
+              tag: 52752f11595bab840402c22021d34c6ed6b41b70
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -743,7 +743,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/cf-acceptance-tests
-              tag: c599048c56cc1508314315552bd11f413fab1c78
+              tag: 52752f11595bab840402c22021d34c6ed6b41b70
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -2676,7 +2676,7 @@ jobs:
                   type: docker-image
                   source:
                     repository: governmentpaas/cf-acceptance-tests
-                    tag: c599048c56cc1508314315552bd11f413fab1c78
+                    tag: 52752f11595bab840402c22021d34c6ed6b41b70
                 params:
                   DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
                 inputs:
@@ -2710,10 +2710,8 @@ jobs:
                 image_resource:
                   type: docker-image
                   source:
-                    # FIXME: Use the right acceptance test container ID with the log-cach-cli plugin
-                    # https://github.com/alphagov/paas-docker-cloudfoundry-tools/pull/129
                     repository: governmentpaas/cf-acceptance-tests
-                    tag: c599048c56cc1508314315552bd11f413fab1c78
+                    tag: 52752f11595bab840402c22021d34c6ed6b41b70
                 params:
                   DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
                 inputs:
@@ -2859,7 +2857,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/cf-acceptance-tests
-                tag: c599048c56cc1508314315552bd11f413fab1c78
+                tag: 52752f11595bab840402c22021d34c6ed6b41b70
             inputs:
               - name: paas-cf
               - name: test-config
