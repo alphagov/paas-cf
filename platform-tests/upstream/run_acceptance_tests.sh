@@ -12,7 +12,7 @@ NODES=5
 SLOW_SPEC_THRESHOLD=120
 
 # Build Skip regex to ignore tests
-SKIP_REGEX='routing.API'
+SKIP_REGEX="${SKIP_REGEX:+${SKIP_REGEX}|}routing.API"
 SKIP_REGEX="${SKIP_REGEX}|Adding a wildcard route to a domain"
 SKIP_REGEX="${SKIP_REGEX}|when app has multiple ports mapped"
 SKIP_REGEX="${SKIP_REGEX// /\\s}" # Replace ' ' with \s

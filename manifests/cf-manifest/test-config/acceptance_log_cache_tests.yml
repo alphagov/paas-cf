@@ -1,0 +1,42 @@
+---
+api: api.((system_domain))
+apps_domain: ((app_domain))
+system_domain: ((system_domain))
+admin_user: ((admin_user))
+admin_password: ((admin_password))
+test_password: ((secrets_test_user_password))
+skip_ssl_validation: false
+backend: "diego"
+skip_diego_unsupported_tests: true
+artifacts_directory: "/tmp/artifacts"
+use_existing_user: false
+
+use_log_cache: true
+
+include_apps: true
+include_backend_compatibility: false
+include_capi_experimental: false
+include_capi_no_bridge: false
+include_container_networking: false
+include_credhub : false
+include_detect: false
+include_docker: false
+include_internet_dependent: false
+include_isolation_segments: false
+include_logging: false
+include_operator: false
+include_persistent_app: false
+include_private_docker_registry: false
+include_privileged_container_support: false
+include_route_services: false
+include_routing: false
+include_routing_isolation_segments: false
+include_security_groups: false
+include_service_discovery: false
+include_service_instance_sharing: false
+include_services: false
+include_ssh: false
+include_sso: false
+include_tasks: false
+include_v3: false
+include_zipkin: false
