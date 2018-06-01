@@ -18,6 +18,15 @@ import (
 	"github.com/onsi/gomega/gbytes"
 )
 
+func ExpectMetric(metric Metric, name string, value int, host string) {
+	Expect(metric.Name).To(Equal(name))
+	Expect(metric.Value).To(Equal(float64(value)))
+	Expect(metric.Kind).To(Equal(Gauge))
+	Expect(metric.Tags).To(Equal([]string{
+		fmt.Sprintf("hostname:" + host),
+	}))
+}
+
 var _ = Describe("TLS gauges", func() {
 
 	var (
@@ -94,12 +103,8 @@ var _ = Describe("TLS gauges", func() {
 					metric, err = gauge.ReadMetric()
 					return err
 				}, 3*time.Second).ShouldNot(HaveOccurred())
-				Expect(metric.Name).To(Equal("tls.certificates.validity"))
-				Expect(metric.Value).To(Equal(float64(123)))
-				Expect(metric.Kind).To(Equal(Gauge))
-				Expect(metric.Tags).To(Equal([]string{
-					fmt.Sprintf("hostname:somedomain.com"),
-				}))
+
+				ExpectMetric(metric, "tls.certificates.validity", 123, "somedomain.com")
 
 				passedDomain, passedTLSConfig := tlsChecker.DaysUntilExpiryArgsForCall(0)
 				Expect(passedDomain).To(Equal("somedomain.com:443"))
@@ -192,28 +197,14 @@ var _ = Describe("TLS gauges", func() {
 				metric, _ := gauge.ReadMetric()
 				metrics = append(metrics, metric)
 				return len(metrics)
-			}, 3*time.Second).Should(Equal(3))
+			}, 3*time.Second).Should(Equal(6))
 
-			Expect(metrics[0].Name).To(Equal("cdn.tls.certificates.validity"))
-			Expect(metrics[0].Value).To(Equal(float64(123)))
-			Expect(metrics[0].Kind).To(Equal(Gauge))
-			Expect(metrics[0].Tags).To(Equal([]string{
-				fmt.Sprintf("hostname:s1.service.gov.uk"),
-			}))
-
-			Expect(metrics[1].Name).To(Equal("cdn.tls.certificates.validity"))
-			Expect(metrics[1].Value).To(Equal(float64(234)))
-			Expect(metrics[1].Kind).To(Equal(Gauge))
-			Expect(metrics[1].Tags).To(Equal([]string{
-				fmt.Sprintf("hostname:s2.service.gov.uk"),
-			}))
-
-			Expect(metrics[2].Name).To(Equal("cdn.tls.certificates.validity"))
-			Expect(metrics[2].Value).To(Equal(float64(345)))
-			Expect(metrics[2].Kind).To(Equal(Gauge))
-			Expect(metrics[2].Tags).To(Equal([]string{
-				fmt.Sprintf("hostname:s3.service.gov.uk"),
-			}))
+			ExpectMetric(metrics[0], "cdn.tls.certificates.expiry", 123, "s1.service.gov.uk")
+			ExpectMetric(metrics[1], "cdn.tls.certificates.validity", 1, "s1.service.gov.uk")
+			ExpectMetric(metrics[2], "cdn.tls.certificates.expiry", 234, "s2.service.gov.uk")
+			ExpectMetric(metrics[3], "cdn.tls.certificates.validity", 1, "s2.service.gov.uk")
+			ExpectMetric(metrics[4], "cdn.tls.certificates.expiry", 345, "s3.service.gov.uk")
+			ExpectMetric(metrics[5], "cdn.tls.certificates.validity", 1, "s3.service.gov.uk")
 
 			Expect(tlsChecker.DaysUntilExpiryCallCount()).To(Equal(3))
 			passedDomain, passedTLSConfig := tlsChecker.DaysUntilExpiryArgsForCall(0)
@@ -270,23 +261,15 @@ var _ = Describe("TLS gauges", func() {
 						metrics = append(metrics, metric)
 					}
 					return len(metrics)
-				}, 3*time.Second).Should(BeNumerically(">=", 2))
+				}, 3*time.Second).Should(BeNumerically(">=", 5))
 
 				Expect(tlsChecker.DaysUntilExpiryCallCount()).To(Equal(3))
 
-				Expect(metrics[0].Name).To(Equal("cdn.tls.certificates.validity"))
-				Expect(metrics[0].Value).To(Equal(float64(234)))
-				Expect(metrics[0].Kind).To(Equal(Gauge))
-				Expect(metrics[0].Tags).To(Equal([]string{
-					fmt.Sprintf("hostname:s2.service.gov.uk"),
-				}))
-
-				Expect(metrics[1].Name).To(Equal("cdn.tls.certificates.validity"))
-				Expect(metrics[1].Value).To(Equal(float64(345)))
-				Expect(metrics[1].Kind).To(Equal(Gauge))
-				Expect(metrics[1].Tags).To(Equal([]string{
-					fmt.Sprintf("hostname:s3.service.gov.uk"),
-				}))
+				ExpectMetric(metrics[0], "cdn.tls.certificates.validity", 0, "s1.service.gov.uk")
+				ExpectMetric(metrics[1], "cdn.tls.certificates.expiry", 234, "s2.service.gov.uk")
+				ExpectMetric(metrics[2], "cdn.tls.certificates.validity", 1, "s2.service.gov.uk")
+				ExpectMetric(metrics[3], "cdn.tls.certificates.expiry", 345, "s3.service.gov.uk")
+				ExpectMetric(metrics[4], "cdn.tls.certificates.validity", 1, "s3.service.gov.uk")
 			})
 		})
 
