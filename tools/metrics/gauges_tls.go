@@ -62,14 +62,27 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 					"alias_domain":      customDomain.AliasDomain,
 					"cloudfront_domain": customDomain.CloudFrontDomain,
 				})
-				return err
+			}
+
+			var validity int
+			if err == nil {
+				validity = 1
+				metrics = append(metrics, Metric{
+					Kind:  Gauge,
+					Time:  time.Now(),
+					Name:  "cdn.tls.certificates.expiry",
+					Value: daysUntilExpiry,
+					Tags: []string{
+						fmt.Sprintf("hostname:%s", customDomain.AliasDomain),
+					},
+				})
 			}
 
 			metrics = append(metrics, Metric{
 				Kind:  Gauge,
 				Time:  time.Now(),
 				Name:  "cdn.tls.certificates.validity",
-				Value: daysUntilExpiry,
+				Value: float64(validity),
 				Tags: []string{
 					fmt.Sprintf("hostname:%s", customDomain.AliasDomain),
 				},

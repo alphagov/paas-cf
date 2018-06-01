@@ -57,7 +57,7 @@ func TestMetricBuffer(t *testing.T) {
 				t.Fatal(err)
 			}
 			if m.Value != metrics[i].Value {
-				t.Fatalf("expected metric.Value to be %d got %d", metrics[i].Value, m.Value)
+				t.Fatalf("expected metric.Value to be %f got %f", metrics[i].Value, m.Value)
 			}
 		})
 	}
@@ -102,7 +102,7 @@ func TestMetricPoller(t *testing.T) {
 			}
 		}
 		if len(metrics) > 11 || len(metrics) < 9 {
-			t.Fatal("expected to collect roughly ~10 metrics over ~1 second got %v", len(metrics))
+			t.Fatalf("expected to collect roughly ~10 metrics over ~1 second got %d", len(metrics))
 		}
 	})
 	t.Run("close should end polling", func(t *testing.T) {
