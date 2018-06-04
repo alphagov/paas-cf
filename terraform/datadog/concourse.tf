@@ -52,6 +52,25 @@ resource "datadog_monitor" "continuous-smoketests-failures" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
 }
 
+resource "datadog_monitor" "check-certificates-failures" {
+  name               = "${format("%s concourse check certificates failures", var.env)}"
+  type               = "query alert"
+  escalation_message = "Cloud Foundry certificate check failed"
+  query              = "${format("sum(last_1d):count_nonzero(max:concourse.build.finished{build_status:failed,deploy_env:%s,job:check-certificates}) >= 1", var.env)}"
+
+  message = "${format("{{#is_alert}}Some of the Cloud Foundry certificates might be expiring soon. Check the health/check-certificates job on Concourse.\n\nVisit the [Team Manual > Responding to alerts > Cloud Foundry internal certificates](%s#cloud-foundry-internal-certificates) for more info.{{/is_alert}}", var.datadog_documentation_url)}"
+
+  require_full_window = false
+  notify_no_data      = true
+  no_data_timeframe   = 2880
+
+  thresholds {
+    critical = "1"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
+}
+
 resource "datadog_timeboard" "concourse-jobs" {
   title       = "${format("%s job runtime difference", var.env) }"
   description = "vs previous hour"
