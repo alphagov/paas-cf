@@ -267,12 +267,8 @@ resources:
   - name: cf-acceptance-tests
     type: git
     source:
-      #FIXME: We have forked the acceptance tests due to:
-      # https://github.com/cloudfoundry/cf-acceptance-tests/pull/290
-      # Remove this once we are using a version of the acceptance
-      # tests that include the above fix.
-      uri: https://github.com/alphagov/paas-cf-acceptance-tests/
-      branch: cf1.28-allow-http-redirect
+      uri: https://github.com/cloudfoundry/cf-acceptance-tests
+      branch: cf1.38
 
   - name: cf-smoke-tests
     type: git
