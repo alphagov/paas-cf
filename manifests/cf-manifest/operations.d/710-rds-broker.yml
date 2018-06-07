@@ -54,12 +54,6 @@
     sha1: 17c6ae4825225292c24760ac8ec47f104fe986ed
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
-  value:
-    name: rds-broker
-    release: rds-broker
-
-- type: replace
   path: /instance_groups/-
   value:
     name: rds_broker
