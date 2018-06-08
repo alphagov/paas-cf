@@ -86,10 +86,6 @@
   value: 8
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/require_https?
-  value: false
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/login?
   value:
     authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
