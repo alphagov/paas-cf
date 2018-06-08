@@ -38,5 +38,16 @@ RSpec.describe "Certificate rotation" do
 
     expect(rotable_ca_certs_not_patched).to be_empty,
       "CA certificates referred without appending '_old.certificate' to support rotation: #{rotable_ca_certs_not_patched.join('; ')}"
+
+    # When indirectly referencing the ca via `certificate.ca` it's not possible to add the _old version of the CA cert.
+    indirect_ca_references = manifest.inject([]) do |acum, v, path|
+      if v =~ /\(\(([^\.]*).ca\)\)/
+        acum << path
+      end
+      acum
+    end
+
+    expect(indirect_ca_references).to be_empty,
+      "CA certificates referred to indirectly meaning the _old version can't be used: #{indirect_ca_references.join('; ')}"
   end
 end

@@ -10,7 +10,7 @@ certs = YAML.safe_load(STDIN)
 alert = false
 
 unless certs.nil?
-  certs.each { |variable, value|
+  certs.each do |variable, value|
     next unless value.is_a?(Hash) && value.has_key?('certificate')
     next if variable =~ /_old$/
     certificate = OpenSSL::X509::Certificate.new value['certificate']
@@ -22,7 +22,12 @@ unless certs.nil?
       puts "#{variable}: #{days_to_expire} days to expire. ERROR! less than #{ALERT_DAYS} days."
       alert = true
     end
-  }
+
+    unless certificate.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
+      puts "#{variable}: ERROR! Missing Subject Key Identifier"
+      alert = true
+    end
+  end
 end
 
 exit 1 if alert
