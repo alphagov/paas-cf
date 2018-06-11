@@ -94,10 +94,6 @@ output "logsearch_elb_name" {
   value = "${aws_elb.logsearch_kibana.name}"
 }
 
-output "metrics_elb_name" {
-  value = "${aws_elb.metrics.name}"
-}
-
 output "aws_backing_service_cidr_all" {
   value = "${var.aws_backing_service_cidr_all}"
 }
