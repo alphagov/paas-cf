@@ -203,7 +203,7 @@ merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 
 find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
 	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))
-	./scripts/find_diverged_forks.py alphagov --prefix=paas --extra-repo=graphite-nozzle --github-token=${GITHUB_TOKEN}
+	./scripts/find_diverged_forks.py alphagov --prefix=paas --github-token=${GITHUB_TOKEN}
 
 .PHONY: run_job
 run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
