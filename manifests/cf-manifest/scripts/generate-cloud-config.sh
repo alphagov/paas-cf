@@ -15,7 +15,6 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
   --vars-file="${WORKDIR}/environment-variables/environment-variables.yml" \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/040-graphite.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/050-rds-broker.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/060-cdn-broker.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/070-elasticache-broker.yml" \
