@@ -158,22 +158,6 @@ private
     Pathname(File.expand_path("../../../..", __dir__))
   end
 
-  def render_grafana_dashboards_opsfile
-    dir = workdir + '/grafana-dashboards-opsfile'
-    FileUtils.mkdir(dir) unless Dir.exist?(dir)
-    file = File::open("#{dir}/grafana-dashboards-opsfile.yml", 'w')
-    output, error, status =
-      Open3.capture3(root.join("manifests/cf-manifest/scripts/grafana-dashboards-opsfile.rb").to_s,
-                     root.join("manifests/cf-manifest/grafana").to_s)
-    unless status.success?
-      raise "Error generating grafana dashboards opsfile, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
-    end
-    file.write(output)
-    file.flush
-    file.rewind
-    file
-  end
-
   def render_vpc_peering_opsfile(environment = "dev")
     dir = workdir + '/vpc-peering-opsfile'
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
@@ -200,7 +184,6 @@ private
     generate_cf_secrets
     copy_environment_variables
     copy_certs
-    render_grafana_dashboards_opsfile
     render_vpc_peering_opsfile(environment)
 
     env = {

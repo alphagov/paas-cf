@@ -1063,28 +1063,6 @@ jobs:
                       > terraform-outputs/${state}.tfvars.sh
                   done
 
-        - task: generate-grafana-dashboards-opsfile
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/json-minify
-                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
-            inputs:
-              - name: paas-cf
-            outputs:
-              - name: grafana-dashboards-opsfile
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  CF_MANIFEST_DIR=./paas-cf/manifests/cf-manifest
-                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-opsfile.rb ${CF_MANIFEST_DIR}/grafana \
-                    > grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml
-
         - task: generate-peer-opsfile
           config:
             platform: linux
@@ -1184,7 +1162,6 @@ jobs:
               - name: terraform-outputs
               - name: cf-secrets
               - name: environment-variables
-              - name: grafana-dashboards-opsfile
               - name: vpc-peering-opsfile
             outputs:
               - name: cf-manifest
