@@ -355,9 +355,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      # FIXME: Use tags once paas-admin has a automated pipeline to
-      # test, release and tag the project.
-      branch: master
+      tag_filter: v0.1.0
 
 jobs:
   - name: pipeline-lock
