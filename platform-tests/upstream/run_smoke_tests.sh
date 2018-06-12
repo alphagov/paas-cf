@@ -8,7 +8,7 @@ CONFIG="$(pwd)/test-config/config.json"
 echo "Linking smoke-tests directory inside $GOPATH"
 CF_GOPATH=/go/src/github.com/cloudfoundry
 mkdir -p $CF_GOPATH
-ln -s "$(pwd)/cf-smoke-tests" "${CF_GOPATH}/cf-smoke-tests"
+ln -s "$(pwd)/cf-smoke-tests-release/src/smoke_tests" "${CF_GOPATH}/cf-smoke-tests"
 
 echo "Linking test artifacts directory"
 ln -s "$(pwd)/artifacts" /tmp/artifacts

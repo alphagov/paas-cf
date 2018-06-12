@@ -7,7 +7,7 @@ image_resource:
     tag: 4aff7d1fd0fa27ff9910a77b39cbcaedb4455f0c
 inputs:
   - name: paas-cf
-  - name: cf-smoke-tests
+  - name: cf-smoke-tests-release
   - name: test-config
 outputs:
   - name: artifacts
