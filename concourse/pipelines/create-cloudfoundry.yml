@@ -3403,7 +3403,7 @@ jobs:
         - get: deployed-healthcheck
         - get: cf-smoke-tests-release
         - get: paas-cf
-          passed: ['post-deploy']
+          passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
         - get: cf-secrets
