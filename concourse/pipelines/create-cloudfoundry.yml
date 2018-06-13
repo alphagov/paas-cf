@@ -1918,38 +1918,6 @@ jobs:
                   cf delete -f "${app_name}"
                 fi
 
-      # TODO: remove this task after the Graphite/Grafana was removed from all envs
-      - task: delete-graphite-nozzle-uaa-client
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-uaac
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
-          inputs:
-            - name: paas-cf
-            - name: cf-manifest
-            - name: cf-secrets
-          params:
-            UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                set -euv
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-
-                uaac target "${UAA_ENDPOINT}"
-                uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
-                CLIENT_NAME=graphite-nozzle
-                if uaac client get "${CLIENT_NAME}"; then
-                  uaac client delete "${CLIENT_NAME}"
-                fi
-
       - task: deploy-healthcheck
         config:
           platform: linux
