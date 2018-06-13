@@ -49,15 +49,9 @@
   path: /releases/-
   value:
     name: rds-broker
-    version: 0.1.27
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.27.tgz
-    sha1: 17c6ae4825225292c24760ac8ec47f104fe986ed
-
-- type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
-  value:
-    name: rds-broker
-    release: rds-broker
+    version: 0.1.28
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.28.tgz
+    sha1: 1398e27b7e55a0bcc59be4b40586def21fa4ba19
 
 - type: replace
   path: /instance_groups/-
@@ -82,6 +76,16 @@
             broker_name: "((terraform_outputs_environment))"
             cron_schedule: "0 0 * * *"
             keep_snapshots_for_days: 35
+      - name: rds-metric-collector
+        release: rds-broker
+        properties:
+          rds-metric-collector:
+            aws:
+              aws_region: "((terraform_outputs_region))"
+            rds-broker:
+              broker_name: "((terraform_outputs_environment))"
+              db_prefix: "rdsbroker"
+              master_password_seed: ((secrets_rds_broker_master_password_seed))
       - name: rds-broker
         release: rds-broker
         properties:
@@ -731,3 +735,13 @@
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_staging_security_groups/-
   value: rds_broker_instances
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/0:before
+  value:
+    name: consul_agent
+    release: consul
+    consumes:
+      consul_common: {from: consul_common_link}
+      consul_server: nil
+      consul_client: {from: consul_client_link}
