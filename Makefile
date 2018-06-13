@@ -154,7 +154,7 @@ trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
 showenv: check-env ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
-	@scripts/show-cf-secrets.sh grafana_admin_password kibana_admin_password uaa_admin_password
+	@scripts/show-cf-secrets.sh kibana_admin_password uaa_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
@@ -203,7 +203,7 @@ merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
 
 find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
 	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))
-	./scripts/find_diverged_forks.py alphagov --prefix=paas --extra-repo=graphite-nozzle --github-token=${GITHUB_TOKEN}
+	./scripts/find_diverged_forks.py alphagov --prefix=paas --github-token=${GITHUB_TOKEN}
 
 .PHONY: run_job
 run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it

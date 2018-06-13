@@ -75,7 +75,6 @@ OK
 #0   public_networks
 #1   dns
 #2   rds_broker_instances
-#3   graphite-nozzle        admin          admin
           EOT
         end
 

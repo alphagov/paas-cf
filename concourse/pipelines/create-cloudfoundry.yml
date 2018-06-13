@@ -79,12 +79,6 @@ resources:
       tag_filter: ((paas_cf_tag_filter))
       commit_verification_key_ids: ((gpg_ids))
 
-  - name: graphite-nozzle
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-graphite-nozzle
-      branch: gds_master
-
   - name: vpc-tfstate
     type: s3-iam
     source:
@@ -1063,28 +1057,6 @@ jobs:
                       > terraform-outputs/${state}.tfvars.sh
                   done
 
-        - task: generate-grafana-dashboards-opsfile
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/json-minify
-                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
-            inputs:
-              - name: paas-cf
-            outputs:
-              - name: grafana-dashboards-opsfile
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  CF_MANIFEST_DIR=./paas-cf/manifests/cf-manifest
-                  ${CF_MANIFEST_DIR}/scripts/grafana-dashboards-opsfile.rb ${CF_MANIFEST_DIR}/grafana \
-                    > grafana-dashboards-opsfile/grafana-dashboards-opsfile.yml
-
         - task: generate-peer-opsfile
           config:
             platform: linux
@@ -1184,7 +1156,6 @@ jobs:
               - name: terraform-outputs
               - name: cf-secrets
               - name: environment-variables
-              - name: grafana-dashboards-opsfile
               - name: vpc-peering-opsfile
             outputs:
               - name: cf-manifest
@@ -1431,7 +1402,6 @@ jobs:
       - get: cf-vars-store
         passed: ['generate-cf-config']
       - get: bosh-CA-crt
-      - get: graphite-nozzle
       - get: datadog-tfstate
       - get: paas-compose-broker
       - get: paas-compose-scraper
@@ -1471,12 +1441,9 @@ jobs:
               cat << EOT > config/config.sh
               export CF_ADMIN=admin
               export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
-              export FIREHOSE_USER=graphite-nozzle
-              export FIREHOSE_PASS=$($VAL_FROM_YAML secrets_uaa_clients_firehose_password cf-secrets/cf-secrets.yml)
               export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
               export UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
               export DOPPLER_ENDPOINT=$($VAL_FROM_YAML instance_groups.scheduler.jobs.tps.properties.capi.tps.traffic_controller_url cf-manifest/cf-manifest.yml)
-              export GRAPHITE_SERVER=$($VAL_FROM_YAML instance_groups.graphite.networks.cf.static_ips.0 cf-manifest/cf-manifest.yml)
               export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_rds_broker_elb_dns_name cf-terraform-outputs.yml)
               export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-secrets/cf-secrets.yml)
               export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
@@ -1921,12 +1888,12 @@ jobs:
                 bundle
                 bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
 
-      - task: deploy-graphite-nozzle
+      # TODO: remove this task after the Graphite/Grafana was removed from all envs
+      - task: remove-graphite-nozzle
         config:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: graphite-nozzle
             - name: config
           params:
           image_resource:
@@ -1945,41 +1912,44 @@ jobs:
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
                 cf target -o admin -s monitoring
+                cf delete-security-group -f graphite-nozzle
 
-                cat <<EOF > graphite-nozzle.json
-                [
-                    {"protocol":"udp","destination":"${GRAPHITE_SERVER}","ports":"8125"}
-                ]
-                EOF
-                cf create-security-group graphite-nozzle graphite-nozzle.json
-                cf bind-security-group graphite-nozzle admin monitoring
+                app_name=$(cf apps | grep graphite-nozzle | cut -f 1 -d ' ')
+                if [ -n "${app_name}" ]; then
+                  cf delete -f "${app_name}"
+                fi
 
-                cd graphite-nozzle
+      # TODO: remove this task after the Graphite/Grafana was removed from all envs
+      - task: delete-graphite-nozzle-uaa-client
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-uaac
+              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          inputs:
+            - name: paas-cf
+            - name: cf-manifest
+            - name: cf-secrets
+          params:
+            UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                set -euv
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
 
-                echo "web: graphite-nozzle" > Procfile
-
-                cat <<EOF > manifest.yml
-                ---
-                applications:
-                - name: graphite-nozzle
-                  memory: 100M
-                  instances: 1
-                  no-route: true
-                  health-check-type: none
-                  buildpack: go_buildpack
-                  env:
-                    DOPPLER_ENDPOINT: "${DOPPLER_ENDPOINT}"
-                    UAA_ENDPOINT: "${UAA_ENDPOINT}"
-                    STATSD_ENDPOINT: "${GRAPHITE_SERVER}:8125"
-                    FIREHOSE_USERNAME: "${FIREHOSE_USER}"
-                    FIREHOSE_PASSWORD: "${FIREHOSE_PASS}"
-                    SUBSCRIPTION_ID: "firehose"
-                    STATSD_PREFIX: "cfstats."
-                    SKIP_SSL_VALIDATION: "true"
-                    PREFIX_JOB: "true"
-                EOF
-
-                ../paas-cf/concourse/scripts/cf_push_on_git_change.sh graphite-nozzle
+                uaac target "${UAA_ENDPOINT}"
+                uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
+                CLIENT_NAME=graphite-nozzle
+                if uaac client get "${CLIENT_NAME}"; then
+                  uaac client delete "${CLIENT_NAME}"
+                fi
 
       - task: deploy-healthcheck
         config:

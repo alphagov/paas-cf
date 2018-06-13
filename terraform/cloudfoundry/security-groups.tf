@@ -42,47 +42,6 @@ resource "aws_security_group" "cf_api_elb" {
   }
 }
 
-resource "aws_security_group" "metrics_elb" {
-  name_prefix = "${var.env}-metrics-"
-  description = "Security group for graphite/grafana ELB. Allows access from admin IP ranges."
-  vpc_id      = "${var.vpc_id}"
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${compact(var.admin_cidrs)}",
-    ]
-  }
-
-  ingress {
-    from_port = 3001
-    to_port   = 3001
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${compact(var.admin_cidrs)}",
-    ]
-  }
-
-  tags {
-    Name = "${var.env}-metrics_elb"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_security_group" "web" {
   name_prefix = "${var.env}-cf-web-"
   description = "Security group for web that allows HTTP(S) traffic from anywhere"
