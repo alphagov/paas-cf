@@ -93,6 +93,7 @@ pipeline_name: ${pipeline_name}
 enable_destroy: ${ENABLE_DESTROY:-}
 self_update_pipeline: ${SELF_UPDATE_PIPELINE:-true}
 aws_account: ${AWS_ACCOUNT:-dev}
+makefile_env_target: ${MAKEFILE_ENV_TARGET}
 deploy_env: ${DEPLOY_ENV}
 state_bucket: ${state_bucket}
 test_artifacts_bucket: gds-paas-${DEPLOY_ENV}-test-artifacts
