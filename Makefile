@@ -117,6 +117,23 @@ staging: globals ## Set Environment to Staging
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	@true
 
+.PHONY: stg-lon
+stg-lon: globals ## Set Environment to stg-lon
+	$(eval export AWS_ACCOUNT=staging)
+	$(eval export PERSISTENT_ENVIRONMENT=true)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export OUTPUT_TAG_PREFIX=prod-lon-)
+	$(eval export SYSTEM_DNS_ZONE_NAME=london.staging.cloudpipeline.digital)
+	$(eval export APPS_DNS_ZONE_NAME=london.staging.cloudpipelineapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stg-lon@digital.cabinet-office.gov.uk)
+	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-stg-lon.yml)
+	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=stg-lon)
+	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	@true
+
 .PHONY: prod
 prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
@@ -131,6 +148,23 @@ prod: globals ## Set Environment to Production
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod)
+	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	@true
+
+.PHONY: prod-lon
+prod-lon: globals ## Set Environment to prod-lon
+	$(eval export AWS_ACCOUNT=prod)
+	$(eval export PERSISTENT_ENVIRONMENT=true)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export INPUT_TAG_PREFIX=prod-lon-)
+	$(eval export SYSTEM_DNS_ZONE_NAME=london.cloud.service.gov.uk)
+	$(eval export APPS_DNS_ZONE_NAME=london.cloudapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod-lon@digital.cabinet-office.gov.uk)
+	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod-lon.yml)
+	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
+	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=prod-lon)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	@true
 
