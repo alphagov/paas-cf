@@ -54,7 +54,7 @@ var _ = Describe("TagRelease", func() {
 		cleanUpWorkingDirectory(workingDirectory)
 	})
 
-	Describe("when creating a new tag (tag_filter not set)", func() {
+	Describe("when creating a new tag (INPUT_TAG_PREFIX not set)", func() {
 		BeforeEach(func() {
 			runBashScript(baseCmd, `
 				cd origin_repo
@@ -90,7 +90,7 @@ var _ = Describe("TagRelease", func() {
 			Expect(string(session.Out.Contents())).To(ContainSubstring("next-0.0.42"))
 		})
 
-		It("skips tagging when HEAD is already tagged using the given tag_prefix", func() {
+		It("skips tagging when HEAD is already tagged using the given OUTPUT_TAG_PREFIX", func() {
 			runBashScript(baseCmd, `
 				cd origin_repo
 				git tag next-0.0.40
@@ -105,6 +105,23 @@ var _ = Describe("TagRelease", func() {
 				git tag -l "next-*"
 			`)
 			Expect(string(session.Out.Contents())).NotTo(ContainSubstring("next-0.0.42"))
+		})
+
+		It("ignores tags with extra stuff between the prefix and the version", func() {
+			runBashScript(baseCmd, `
+				cd origin_repo
+				git tag next-foo-0.0.40
+			`)
+			cloneRepository(baseCmd, "paas-cf")
+			runBashScript(baseCmd, `
+				./tag_release.sh next- test_aws_account test_env ""
+			`)
+
+			session := runBashScript(baseCmd, `
+				cd paas-cf
+				git tag -l "next-*"
+			`)
+			Expect(string(session.Out.Contents())).To(ContainSubstring("next-0.0.42"))
 		})
 
 		It("tags the HEAD revision of the checked out repo", func() {
@@ -155,7 +172,7 @@ var _ = Describe("TagRelease", func() {
 		})
 	})
 
-	Describe("when promoting previous tags (tag_filter is set)", func() {
+	Describe("when promoting previous tags (INPUT_TAG_PREFIX is set)", func() {
 		BeforeEach(func() {
 			runBashScript(baseCmd, `
 				cd origin_repo
@@ -168,11 +185,11 @@ var _ = Describe("TagRelease", func() {
 			`)
 		})
 
-		It("promotes the tag matching the tag_filter", func() {
+		It("promotes the tag matching the INPUT_TAG_PREFIX", func() {
 			cloneRepository(baseCmd, "paas-cf")
 
 			runBashScript(baseCmd, `
-				./tag_release.sh next- test_aws_account test_env "previous-*"
+				./tag_release.sh next- test_aws_account test_env "previous-"
 			`)
 
 			session := runBashScript(baseCmd, `
@@ -183,6 +200,26 @@ var _ = Describe("TagRelease", func() {
 			Expect(string(session.Out.Contents())).NotTo(ContainSubstring("next-0.0.1"))
 		})
 
+		It("ignores tags with extra stuff between the prefix and the version", func() {
+			runBashScript(baseCmd, `
+				cd origin_repo
+				git tag previous-foo-0.0.5
+			`)
+
+			cloneRepository(baseCmd, "paas-cf")
+
+			runBashScript(baseCmd, `
+				./tag_release.sh next- test_aws_account test_env "previous-"
+			`)
+
+			session := runBashScript(baseCmd, `
+				cd paas-cf
+				git tag -l "next-*"
+			`)
+			Expect(string(session.Out.Contents())).To(ContainSubstring("next-0.0.2"))
+			Expect(string(session.Out.Contents())).NotTo(ContainSubstring("next-0.0.5"))
+		})
+
 		It("promotes the tag pointing at the HEAD commit", func() {
 			cloneRepository(baseCmd, "paas-cf")
 			runBashScript(baseCmd, `
@@ -191,7 +228,7 @@ var _ = Describe("TagRelease", func() {
 			`)
 
 			runBashScript(baseCmd, `
-				./tag_release.sh next- test_aws_account test_env "previous-*"
+				./tag_release.sh next- test_aws_account test_env "previous-"
 			`)
 
 			session := runBashScript(baseCmd, `
@@ -212,7 +249,7 @@ var _ = Describe("TagRelease", func() {
 			expectedCommitHash := strings.TrimSpace(string(session.Out.Contents()))
 
 			runBashScript(baseCmd, `
-				./tag_release.sh next- test_aws_account test_env "previous-*"
+				./tag_release.sh next- test_aws_account test_env "previous-"
 			`)
 
 			session = runBashScript(baseCmd, `
@@ -237,7 +274,7 @@ var _ = Describe("TagRelease", func() {
 				cloneRepository(baseCmd, "paas-cf")
 
 				runBashScript(baseCmd, `
-					./tag_release.sh next- test_aws_account test_env "previous-*"
+					./tag_release.sh next- test_aws_account test_env "previous-"
 				`)
 
 				session := runBashScript(baseCmd, `
@@ -258,7 +295,7 @@ var _ = Describe("TagRelease", func() {
 				cloneRepository(baseCmd, "paas-cf")
 
 				runBashScript(baseCmd, `
-					./tag_release.sh next- test_aws_account test_env "previous-*"
+					./tag_release.sh next- test_aws_account test_env "previous-"
 				`)
 
 				session := runBashScript(baseCmd, `

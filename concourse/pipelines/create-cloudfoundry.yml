@@ -2871,7 +2871,7 @@ jobs:
                 exit 0
               fi
               paas-cf/concourse/scripts/tag_release.sh \
-                "${OUTPUT_TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${INPUT_TAG_PREFIX}*"
+                "${OUTPUT_TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${INPUT_TAG_PREFIX}"
 
   - name: pipeline-unlock
     serial: true

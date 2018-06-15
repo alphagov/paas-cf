@@ -103,7 +103,7 @@ debug: ${DEBUG:-}
 cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
 INPUT_TAG_PREFIX: ${INPUT_TAG_PREFIX:-}
 OUTPUT_TAG_PREFIX: ${OUTPUT_TAG_PREFIX:-}
-paas_cf_tag_filter: ${INPUT_TAG_PREFIX:+${INPUT_TAG_PREFIX}*}
+paas_cf_tag_filter: ${INPUT_TAG_PREFIX:+${INPUT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
