@@ -1,0 +1,7 @@
+---
+cell_instances: 6
+router_instances: 3
+elasticsearch_master_disk_size: 460800
+elasticsearch_master_instance_type: c4.2xlarge
+parser_instance_type: c4.xlarge
+queue_vm_type: small
