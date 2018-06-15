@@ -11,8 +11,6 @@ if [ -z "${DEPLOY_ENV}" ]; then
   exit 1
 fi
 
-AWS_ACCOUNT=${AWS_ACCOUNT:-dev}
-
 case $TARGET_CONCOURSE in
   deployer)
     CONCOURSE_URL="${CONCOURSE_URL:-https://deployer.${SYSTEM_DNS_ZONE_NAME}}"
