@@ -334,7 +334,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: v0.29.0
+      tag_filter: v0.30.0
 
   - name: paas-accounts
     type: git
