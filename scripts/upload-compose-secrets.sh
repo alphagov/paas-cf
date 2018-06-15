@@ -9,7 +9,7 @@ COMPOSE_BILLING_PASSWORD=$(pass "compose/billing/password")
 if [ -n "${COMPOSE_PASSWORD_STORE_HIGH_DIR:-}" ]; then
   export PASSWORD_STORE_DIR=${COMPOSE_PASSWORD_STORE_HIGH_DIR}
 fi
-COMPOSE_API_KEY=$(pass "compose/${AWS_ACCOUNT}/access_token")
+COMPOSE_API_KEY=$(pass "compose/${MAKEFILE_ENV_TARGET}/access_token")
 
 SECRETS=$(mktemp secrets.yml.XXXXXX)
 trap 'rm  "${SECRETS}"' EXIT

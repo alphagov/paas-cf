@@ -204,7 +204,7 @@ showenv: check-env ## Display environment information
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
 	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to staging/prod))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
@@ -212,7 +212,7 @@ upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S
 .PHONY: upload-compose-secrets
 upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S3
 	$(eval export COMPOSE_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to dev/staging/prod))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${COMPOSE_PASSWORD_STORE_DIR},,$(error Must pass COMPOSE_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${COMPOSE_PASSWORD_STORE_DIR}),,$(error Password store ${COMPOSE_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-compose-secrets.sh
@@ -220,7 +220,7 @@ upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
 	$(eval export OAUTH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to staging/prod))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-google-oauth-secrets.sh
@@ -228,7 +228,7 @@ upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Consol
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3
 	$(eval export NOTIFY_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${NOTIFY_PASSWORD_STORE_DIR},,$(error Must pass NOTIFY_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${NOTIFY_PASSWORD_STORE_DIR}),,$(error Password store ${NOTIFY_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-notify-secrets.sh
