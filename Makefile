@@ -201,6 +201,9 @@ showenv: check-env ## Display environment information
 		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
+.PHONY: upload-all-secrets
+upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets
+
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
 	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
