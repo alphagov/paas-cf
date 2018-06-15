@@ -348,6 +348,12 @@ resources:
       uri: https://github.com/alphagov/paas-admin
       tag_filter: v0.4.0
 
+  - name: paas-log-cache-adapter
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-log-cache-adapter
+      tag_filter: v0.1.0
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1407,6 +1413,7 @@ jobs:
       - get: paas-billing
       - get: paas-accounts
       - get: paas-admin
+      - get: paas-log-cache-adapter
 
     - task: retrieve-config
       config:
@@ -2238,6 +2245,53 @@ jobs:
                   cd paas-admin-dist
 
                   cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
+
+      - do:
+        - task: deploy-paas-log-cache-adapter
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: governmentpaas/cf-cli
+                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+            inputs:
+              - name: paas-cf
+              - name: paas-log-cache-adapter
+              - name: config
+              - name: cf-secrets
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  . ./config/config.sh
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+                  cf target -o admin -s monitoring
+
+                  cd paas-log-cache-adapter
+
+                  ruby -ryaml -e "
+                    env = {
+                      'LOG_CACHE_API' => 'https://log-cache.${SYSTEM_DNS_ZONE_NAME}',
+                    }
+                    manifest = YAML.load_file('manifest.yml')
+                    manifest['applications'].each { |app|
+                      app['env'] = {} unless app['env']
+                      app['env'].merge!(env)
+                      app['routes'] = [
+                        { 'route' => 'metrics.${SYSTEM_DNS_ZONE_NAME}' }
+                      ]
+                    }
+                    File.write('manifest.yml', manifest.to_yaml)
+                  "
+
+                  cf zero-downtime-push paas-log-cache-adapter -f manifest.yml
 
       - task: run-bosh-cleanup
         config:
