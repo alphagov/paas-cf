@@ -1,0 +1,10 @@
+---
+- type: replace
+  path: /instance_groups/name=diego-api/jobs/name=locket/properties/diego/locket/sql
+  value:
+    db_host: "((terraform_outputs_cf_db_address))"
+    db_port: 5432
+    db_schema: locket
+    db_username: locket
+    db_password: "((secrets_cf_db_locket_password))"
+    db_driver: postgres
