@@ -346,7 +346,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.4.0
+      tag_filter: v0.8.0
 
   - name: paas-log-cache-adapter
     type: git
