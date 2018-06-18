@@ -2199,7 +2199,7 @@ jobs:
                       ACCOUNTS_SECRET: "(( grab secrets_paas_accounts_admin_password ))"
                       NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                       NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
-                      SESSION_SECRET: "session-(( grab uaa_clients_paas_admin_secret ))"
+                      SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
                   EOF
 
                   spruce merge \
