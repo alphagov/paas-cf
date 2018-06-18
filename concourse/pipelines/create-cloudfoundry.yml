@@ -2908,8 +2908,8 @@ jobs:
           params:
             aws_account: ((aws_account))
             deploy_env: ((deploy_env))
-            TAG_PREFIX: ((TAG_PREFIX))
-            TAG_FILTER: ((paas_cf_tag_filter))
+            OUTPUT_TAG_PREFIX: ((OUTPUT_TAG_PREFIX))
+            INPUT_TAG_PREFIX: ((INPUT_TAG_PREFIX))
           inputs:
           - name: paas-cf
           - name: release-version
@@ -2920,12 +2920,12 @@ jobs:
             - -e
             - -c
             - |
-              if [ -z "${TAG_PREFIX}" ]; then
-                echo \$TAG_PREFIX not set, skipping
+              if [ -z "${OUTPUT_TAG_PREFIX}" ]; then
+                echo \$OUTPUT_TAG_PREFIX not set, skipping
                 exit 0
               fi
               paas-cf/concourse/scripts/tag_release.sh \
-                "${TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${TAG_FILTER}"
+                "${OUTPUT_TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${INPUT_TAG_PREFIX}"
 
   - name: pipeline-unlock
     serial: true
