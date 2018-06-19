@@ -1927,7 +1927,7 @@ jobs:
 
                   if ! cf service healthcheck-db > /dev/null; then
                     cf create-service postgres tiny-unencrypted-9.5 healthcheck-db
-                    while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
+                    while ! cf service healthcheck-db | grep -q 'create succeeded'; do
                       echo "Waiting for creation of service to complete..."
                       sleep 30
                     done
