@@ -16,7 +16,10 @@ support_email="gov-uk-paas-support@digital.cabinet-office.gov.uk"
 
 # Enable the pagerduty notifications
 enable_pagerduty_notifications = 1
-pingdom_contact_ids = [ 11089310, 11189971 ]
+
+# 14270737 - Government PaaS Team Maillist
+# 14270734 - PaaS PagerDuty 24x7
+pingdom_contact_ids = [ 14270737, 14270734 ]
 
 datadog_notification_24x7 = "@pagerduty-datadog-24x7"
 datadog_notification_in_hours = "@pagerduty-datadog-in-hours"
