@@ -129,6 +129,7 @@ func (e *esClient) doRequest(method, url string, body io.Reader, expectedStatus 
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Add("Content-Type", "application/json")
 	resp, err := e.client.Do(req)
 	if err != nil {
 		return nil, err
