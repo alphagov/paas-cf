@@ -1,7 +1,7 @@
 resource "datadog_monitor" "dns_can_resolve" {
   name    = "${format("%s DNS resolution working", var.env)}"
   type    = "service check"
-  message = "DNS resolution is failing on {{host.name}}"
+  message = "${format("DNS resolution is failing on {{host.name}} @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
 
   query = "${format("'dns.can_resolve'.over('deploy_env:%s').by('bosh-job','bosh-index').last(4).count_by_status()", var.env)}"
 

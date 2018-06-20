@@ -20,13 +20,8 @@ resource "datadog_monitor" "job_healthy" {
   type = "metric alert"
 
   message = "${format(
-    "%s bosh job has too many unhealthy instances",
-    element(null_resource.parsed_job_instances.*.triggers.job_name, count.index)
-  )}"
-
-  escalation_message = "${format(
-    "%s bosh job has still too many unhealthy instances",
-    element(null_resource.parsed_job_instances.*.triggers.job_name, count.index)
+    "%s bosh job has too many unhealthy instances @govpaas-alerting-%s@digital.cabinet-office.gov.uk",
+    element(null_resource.parsed_job_instances.*.triggers.job_name, count.index), var.aws_account
   )}"
 
   no_data_timeframe   = "30"

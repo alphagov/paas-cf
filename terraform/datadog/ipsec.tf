@@ -1,8 +1,7 @@
 resource "datadog_monitor" "ipsec_daemon_running" {
   name                = "${format("%s racoon ipsec daemon running", var.env)}"
   type                = "service check"
-  message             = "Racoon ipsec daemon not running. Check VM state."
-  escalation_message  = "Racoon ipsec daemon still not running. Check the VM!"
+  message             = "${format("Racoon ipsec daemon not running. Check VM state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   notify_no_data      = false
   require_full_window = false
 

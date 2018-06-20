@@ -1,7 +1,7 @@
 resource "datadog_monitor" "compose_host_ram_in_use" {
   name              = "${format("%s High memory utilisation on a Compose cluster host", var.env)}"
   type              = "metric alert"
-  message           = "Host {{host.name}} in the Compose cluster is using {{value}}% of RAM. As this is above {{#is_alert}}{{threshold}}%{{/is_alert}}{{#is_warning}}{{warn_threshold}}%{{/is_warning}} the cluster may need scaling."
+  message           = "${format("Host {{host.name}} in the Compose cluster is using {{value}}%% of RAM. As this is above {{#is_alert}}{{threshold}}%%{{/is_alert}}{{#is_warning}}{{warn_threshold}}%%{{/is_warning}} the cluster may need scaling. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   no_data_timeframe = "20"
   notify_no_data    = true
   renotify_interval = "20"
@@ -15,7 +15,7 @@ resource "datadog_monitor" "compose_host_ram_in_use" {
 resource "datadog_monitor" "compose_host_disk_in_use" {
   name              = "${format("%s High disk utilisation on a Compose cluster host", var.env)}"
   type              = "metric alert"
-  message           = "Host {{host.name}} in the Compose cluster is using {{value}}% of disk. As this is above {{#is_alert}}{{threshold}}%{{/is_alert}}{{#is_warning}}{{warn_threshold}}%{{/is_warning}} the cluster may need scaling."
+  message           = "${format("Host {{host.name}} in the Compose cluster is using {{value}}%% of disk. As this is above {{#is_alert}}{{threshold}}%%{{/is_alert}}{{#is_warning}}{{warn_threshold}}%%{{/is_warning}} the cluster may need scaling. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   no_data_timeframe = "20"
   notify_no_data    = true
   renotify_interval = "20"

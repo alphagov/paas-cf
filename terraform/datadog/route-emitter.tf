@@ -1,8 +1,7 @@
 resource "datadog_monitor" "route_emitter_process_running" {
   name                = "${format("%s route-emitter process running", var.env)}"
   type                = "service check"
-  message             = "route-emitter process not running. Check router state."
-  escalation_message  = "route-emitter rep process still not running. Check router state."
+  message             = "${format("route-emitter process not running. Check router state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   notify_no_data      = false
   require_full_window = true
 
@@ -20,8 +19,7 @@ resource "datadog_monitor" "route_emitter_process_running" {
 resource "datadog_monitor" "route_emitter_healthy" {
   name                = "${format("%s route-emitter healthy", var.env)}"
   type                = "service check"
-  message             = "Large portion of route-emitter unhealthy. Check deployment state."
-  escalation_message  = "Large portion of route-emitter still unhealthy. Check deployment state."
+  message             = "${format("Large portion of route-emitter unhealthy. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   no_data_timeframe   = "7"
   require_full_window = true
 
