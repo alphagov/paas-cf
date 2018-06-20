@@ -63,7 +63,7 @@ resource "datadog_monitor" "ec2-cpu-utilisation" {
   name                = "${format("%s EC2 high CPU utilisation", var.env)}"
   type                = "metric alert"
   query               = "${format("avg(last_1h):avg:aws.ec2.cpuutilization{deploy_env:%s,!bosh-job:diego-cell,!bosh-job:elasticsearch_master,!bosh-job:parser} by {bosh-job,bosh-index} > 90", var.env)}"
-  message             = "{{bosh-job.name}}/{{bosh-index.name}} CPU utilisation has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
+  message             = "${format("{{bosh-job.name}}/{{bosh-index.name}} CPU utilisation has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}%% for 1h @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   notify_no_data      = false
   require_full_window = false
 
@@ -79,7 +79,7 @@ resource "datadog_monitor" "ec2-cpu-utilisation-es" {
   name                = "${format("%s EC2 high CPU utilisation - ElasticSearch", var.env)}"
   type                = "metric alert"
   query               = "${format("avg(last_1h):avg:aws.ec2.cpuutilization{deploy_env:%s,bosh-job:elasticsearch_master} by {bosh-job,bosh-index} > 95", var.env)}"
-  message             = "{{bosh-job.name}}/{{bosh-index.name}} CPU utilisation has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
+  message             = "${format("{{bosh-job.name}}/{{bosh-index.name}} CPU utilisation has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}%% for 1h @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   notify_no_data      = false
   require_full_window = false
 
@@ -95,7 +95,7 @@ resource "datadog_monitor" "elasticache-node-limit" {
   name                = "${format("%s Number of elasticache nodes is close to the limit", var.env)}"
   type                = "metric alert"
   query               = "${format("avg(last_1h):avg:aws.elasticache.node.count{deploy_env:%s} > %d", var.env, (var.aws_limits_elasticache_nodes * 90) / 100)}"
-  message             = "Number of elasticache nodes has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
+  message             = "${format("Number of elasticache nodes has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}%% for 1h @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   notify_no_data      = false
   require_full_window = false
 
@@ -111,7 +111,7 @@ resource "datadog_monitor" "elasticache-cache-parameter-groups-limit" {
   name                = "${format("%s Number of elasticache cache parameter groups is close to the limit", var.env)}"
   type                = "metric alert"
   query               = "${format("avg(last_1h):avg:aws.elasticache.cache_parameter_group.count{deploy_env:%s} > %d", var.env, (var.aws_limits_elasticache_cache_parameter_groups * 90) / 100)}"
-  message             = "Number of elasticache cache parameter groups has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}% for 1h"
+  message             = "${format("Number of elasticache cache parameter groups has been over {{#is_warning}}{{warn_threshold}}{{/is_warning}}{{#is_alert}}{{threshold}}{{/is_alert}}%% for 1h @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   notify_no_data      = false
   require_full_window = false
 

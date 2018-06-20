@@ -20,7 +20,7 @@ resource "datadog_monitor" "consul" {
 resource "datadog_monitor" "consul_connect_to_port" {
   name                = "${format("%s consul cluster service is accepting connections", var.env)}"
   type                = "service check"
-  message             = "Large portion of consul service are not accepting connections. Check deployment state."
+  message             = "${format("Large portion of consul service are not accepting connections. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Large portion of consul service are still not accepting connections. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true
@@ -37,7 +37,7 @@ resource "datadog_monitor" "consul_connect_to_port" {
 resource "datadog_monitor" "consul_has_leader" {
   name                = "${format("%s consul cluster has at least one leader", var.env)}"
   type                = "service check"
-  message             = "No consul cluster servers are repoted as leader"
+  message             = "${format("No consul cluster servers are repoted as leader @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Still no consul cluster servers are repoted as leader. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true

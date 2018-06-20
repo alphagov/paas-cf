@@ -37,7 +37,7 @@ resource "datadog_monitor" "cell-idle-cpu" {
 resource "datadog_monitor" "rep_process_running" {
   name                = "${format("%s Cell rep process running", var.env)}"
   type                = "service check"
-  message             = "Cell rep process not running."
+  message             = "${format("Cell rep process not running. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Cell rep process still not running."
   notify_no_data      = false
   require_full_window = true
@@ -92,7 +92,7 @@ resource "datadog_monitor" "rep-memory-capacity" {
 resource "datadog_monitor" "garden_process_running" {
   name                = "${format("%s Cell garden process running", var.env)}"
   type                = "service check"
-  message             = "Cell garden process not running."
+  message             = "${format("Cell garden process not running. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Cell garden process still not running."
   notify_no_data      = false
   require_full_window = true

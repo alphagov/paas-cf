@@ -1,7 +1,7 @@
 resource "datadog_monitor" "invalid_tls_cert" {
   name              = "${format("%s Invalid TLS/SSL Certificate", var.env)}"
   type              = "metric alert"
-  message           = "${format("{{hostname.name}} certificate {{#is_alert}}is invalid!{{/is_alert}}{{#is_warning}}expires in {{value}} days{{/is_warning}}\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info.", var.datadog_documentation_url)}"
+  message           = "${format("{{hostname.name}} certificate {{#is_alert}}is invalid!{{/is_alert}}{{#is_warning}}expires in {{value}} days{{/is_warning}}\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
   notify_no_data    = true
   no_data_timeframe = 120
 
@@ -20,7 +20,7 @@ resource "datadog_monitor" "invalid_tls_cert" {
 resource "datadog_monitor" "cdn_tls_cert_expiry" {
   name    = "${format("%s CloudFront TLS/SSL Certificates expiry", var.env)}"
   type    = "metric alert"
-  message = "${format("{{hostname.name}} CloudFront certificate {{#is_alert}}is almost expired!{{/is_alert}}{{#is_warning}}expires in {{value}} days{{/is_warning}}\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info.", var.datadog_documentation_url)}"
+  message = "${format("{{hostname.name}} CloudFront certificate {{#is_alert}}is almost expired!{{/is_alert}}{{#is_warning}}expires in {{value}} days{{/is_warning}}\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
 
   query = "${format("min(last_4h):min:cdn.tls.certificates.expiry{deploy_env:%s} by {hostname} <= 7", var.env)}"
 
@@ -37,7 +37,7 @@ resource "datadog_monitor" "cdn_tls_cert_expiry" {
 resource "datadog_monitor" "cdn_tls_cert_validity" {
   name              = "${format("%s CloudFront TLS/SSL Certificate validity", var.env)}"
   type              = "metric alert"
-  message           = "${format("A high number of CloudFront certificates are invalid.\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info.", var.datadog_documentation_url)}"
+  message           = "${format("A high number of CloudFront certificates are invalid.\n\nSee [Team Manual > Responding to alerts > Invalid Certificates](%s#invalid-certificates) for more info. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
   notify_no_data    = true
   no_data_timeframe = 480
 

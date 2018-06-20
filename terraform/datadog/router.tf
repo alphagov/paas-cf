@@ -47,7 +47,7 @@ resource "datadog_timeboard" "gorouter" {
 resource "datadog_monitor" "route_update_latency" {
   name                = "${format("%s route update latency", var.env)}"
   type                = "metric alert"
-  message             = "Route update latency too high, possibly serving stale routes."
+  message             = "${format("Route update latency too high, possibly serving stale routes. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Route update latency still too high. Check the deployment."
   no_data_timeframe   = "7"
   require_full_window = true
@@ -71,7 +71,7 @@ variable "datadog_monitor_total_routes_drop_enabled" {
 resource "datadog_monitor" "total_routes_drop" {
   name                = "${format("%s total routes difference", var.env)}"
   type                = "query alert"
-  message             = "Amount of the routes has decreased considerably, check deployment status."
+  message             = "${format("Amount of the routes has decreased considerably, check deployment status. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Total routes still dropping quickly. Check the deployment."
   no_data_timeframe   = "7"
   require_full_window = true
@@ -92,7 +92,7 @@ resource "datadog_monitor" "total_routes_drop" {
 resource "datadog_monitor" "total_routes_discrepancy" {
   name                = "${format("%s total routes discrepancy", var.env)}"
   type                = "query alert"
-  message             = "Discrepancy in the amount of routes on routers. Check deployment status."
+  message             = "${format("Discrepancy in the amount of routes on routers. Check deployment status. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Routers still have considerably different amount of total routes!"
   no_data_timeframe   = "7"
   require_full_window = true
@@ -107,7 +107,7 @@ resource "datadog_monitor" "total_routes_discrepancy" {
 resource "datadog_monitor" "gorouter_process_running" {
   name                = "${format("%s gorouter process running", var.env)}"
   type                = "service check"
-  message             = "gorouter process not running. Check router state."
+  message             = "${format("gorouter process not running. Check router state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "gorouter process still not running. Check router state."
   notify_no_data      = false
   require_full_window = true
@@ -126,7 +126,7 @@ resource "datadog_monitor" "gorouter_process_running" {
 resource "datadog_monitor" "gorouter_healthy" {
   name                = "${format("%s gorouter healthy", var.env)}"
   type                = "service check"
-  message             = "Large portion of gorouters unhealthy. Check deployment state."
+  message             = "${format("Large portion of gorouters unhealthy. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
   escalation_message  = "Large portion of gorouters still unhealthy. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true
@@ -143,7 +143,7 @@ resource "datadog_monitor" "gorouter_healthy" {
 resource "datadog_monitor" "gorouter_latency" {
   name                = "${format("%s gorouter latency", var.env)}"
   type                = "metric alert"
-  message             = "${format("Gorouter latency too high. See: %s#Gorouter-high-latency-alerts", var.datadog_documentation_url)}"
+  message             = "${format("Gorouter latency too high. See: %s#Gorouter-high-latency-alerts @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
   escalation_message  = "Gorouter latency still too high. Check the deployment."
   no_data_timeframe   = "7"
   require_full_window = true
