@@ -16,7 +16,7 @@ resource "datadog_monitor" "dns_can_resolve" {
 resource "datadog_monitor" "dns_response_time" {
   name                = "${format("%s DNS resolution response time", var.env)}"
   type                = "metric alert"
-  message             = "${format("DNS resolution is slow on {{host.name}} @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  message             = "DNS resolution is slow on {{host.name}}"
   notify_no_data      = false
   require_full_window = true
 
