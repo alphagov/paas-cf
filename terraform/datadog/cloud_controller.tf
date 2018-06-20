@@ -2,7 +2,6 @@ resource "datadog_monitor" "cc_api_master_process_running" {
   name                = "${format("%s Cloud Controller API master process running", var.env)}"
   type                = "service check"
   message             = "${format("Cloud Controller API master process is not running. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Cloud Controller API master process is still not running. Check deployment state."
   notify_no_data      = false
   require_full_window = true
 
@@ -21,7 +20,6 @@ resource "datadog_monitor" "cc_api_worker_process_running" {
   name                = "${format("%s Cloud Controller API worker process running", var.env)}"
   type                = "service check"
   message             = "${format("Cloud Controller API worker process is not running. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Cloud Controller API worker process is still not running. Check deployment state."
   notify_no_data      = false
   require_full_window = true
 
@@ -40,7 +38,6 @@ resource "datadog_monitor" "cc_api_healthy" {
   name                = "${format("%s Cloud Controller API healthy", var.env)}"
   type                = "service check"
   message             = "${format("Large portion of Cloud Controller API master unhealthy. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Large portion of Cloud Controller API master still unhealthy. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true
 
@@ -57,7 +54,6 @@ resource "datadog_monitor" "cc_failed_job_count_total_increase" {
   name                = "${format("%s Cloud Controller API failed job count", var.env)}"
   type                = "query alert"
   message             = "${format("Amount of failed jobs in Cloud Controller API grew considerably. See logsearch: '@source.component:cloud_controller_worker AND @level:ERROR' {{#is_alert}}%s{{/is_alert}} @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_notification_in_hours, var.aws_account)}"
-  escalation_message  = "Amount of failed jobs in Cloud Controller API still growing considerably. See logsearch: '@source.component:cloud_controller_worker AND @level:ERROR'"
   require_full_window = false
 
   query = "${format("change(max(last_1m),last_30m):max:cf.cc.failed_job_count.total{deployment:%s}.rollup(avg, 30) > 5", var.env)}"
@@ -71,10 +67,9 @@ resource "datadog_monitor" "cc_failed_job_count_total_increase" {
 }
 
 resource "datadog_monitor" "cc_log_count_error_increase" {
-  name               = "${format("%s Cloud Controller API log error count", var.env)}"
-  type               = "query alert"
-  message            = "${format("Amount of logged errors in Cloud Controller API grew considerably. See logsearch: '@source.component:cloud_controller_ng AND @level:ERROR' {{#is_alert}}%s{{/is_alert}} @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_notification_in_hours, var.aws_account)}"
-  escalation_message = "Amount of logged errors in Cloud Controller API still growing considerably. See logsearch: '@source.component:cloud_controller_ng AND @level:ERROR'"
+  name    = "${format("%s Cloud Controller API log error count", var.env)}"
+  type    = "query alert"
+  message = "${format("Amount of logged errors in Cloud Controller API grew considerably. See logsearch: '@source.component:cloud_controller_ng AND @level:ERROR' {{#is_alert}}%s{{/is_alert}} @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_notification_in_hours, var.aws_account)}"
 
   query               = "${format("avg(last_30m):anomalies(sum:cf.cc.log_count.error{deployment:%s}, 'agile', 2, direction='above') >= 0.5", var.env)}"
   require_full_window = true
@@ -86,7 +81,6 @@ resource "datadog_monitor" "cc_job_queue_length" {
   name                = "${format("%s Cloud Controller API job queue length", var.env)}"
   type                = "query alert"
   message             = "${format("Job queue in Cloud Controller API grew considerably, check the API health. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Job queue in Cloud Controller API still too big, check the API health."
   require_full_window = false
 
   query = "${format("avg(last_30m):max:cf.cc.job_queue_length.total{deployment:%s} > 25", var.env)}"

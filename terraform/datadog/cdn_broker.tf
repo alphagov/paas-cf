@@ -2,7 +2,6 @@ resource "datadog_monitor" "cdn_broker_healthy" {
   name                = "${format("%s cdn_broker healthy", var.env)}"
   type                = "service check"
   message             = "${format("Large portion of cdn brokers unhealthy. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Large portion of cdn brokers still unhealthy. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true
 

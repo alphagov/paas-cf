@@ -2,7 +2,6 @@ resource "datadog_monitor" "auctioneer_lock_held_once" {
   name                = "${format("%s auctioneer lock held exactly once (%s)", var.env, element(list("upper", "lower"), count.index))}"
   type                = "query alert"
   message             = "${format("There is not exactly one auctioneer holding the lock. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "There is still not exactly one auctioneer holding the lock."
   notify_no_data      = false
   require_full_window = true
 

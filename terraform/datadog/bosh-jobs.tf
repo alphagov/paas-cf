@@ -24,11 +24,6 @@ resource "datadog_monitor" "job_healthy" {
     element(null_resource.parsed_job_instances.*.triggers.job_name, count.index), var.aws_account
   )}"
 
-  escalation_message = "${format(
-    "%s bosh job has still too many unhealthy instances",
-    element(null_resource.parsed_job_instances.*.triggers.job_name, count.index)
-  )}"
-
   no_data_timeframe   = "30"
   require_full_window = true
 

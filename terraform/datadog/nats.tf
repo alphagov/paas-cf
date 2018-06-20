@@ -2,7 +2,6 @@ resource "datadog_monitor" "nats_process_running" {
   name                = "${format("%s NATS process running", var.env)}"
   type                = "service check"
   message             = "${format("nats process not running. Check nats state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "nats process still not running. Check nats state."
   notify_no_data      = false
   require_full_window = true
 
@@ -21,7 +20,6 @@ resource "datadog_monitor" "nats_service_open" {
   name                = "${format("%s NATS service is accepting connections", var.env)}"
   type                = "service check"
   message             = "${format("Large portion of NATS service are not accepting connections. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Large portion of NATS service are still not accepting connections. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true
 
@@ -38,7 +36,6 @@ resource "datadog_monitor" "nats_cluster_service_open" {
   name                = "${format("%s NATS cluster service is accepting connections", var.env)}"
   type                = "service check"
   message             = "${format("Large portion of NATS cluster service are not accepting connections. Check deployment state. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
-  escalation_message  = "Large portion of NATS cluster service are still not accepting connections. Check deployment state."
   no_data_timeframe   = "7"
   require_full_window = true
 
