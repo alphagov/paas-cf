@@ -7,7 +7,6 @@ help:
 DEPLOY_ENV_MAX_LENGTH=8
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
-AWS_DEFAULT_REGION ?= eu-west-1
 
 check-env:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
@@ -77,13 +76,14 @@ list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 .PHONY: globals
 PASSWORD_STORE_DIR?=${HOME}/.paas-pass
 globals:
-	$(eval export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION})
 	$(eval export PASSWORD_STORE_DIR=${PASSWORD_STORE_DIR})
 	@true
 
 .PHONY: dev
 dev: globals ## Set Environment to DEV
+	$(eval export AWS_DEFAULT_REGION ?= eu-west-1)
 	$(eval export AWS_ACCOUNT=dev)
+	$(eval export MAKEFILE_ENV_TARGET=dev)
 	$(eval export PERSISTENT_ENVIRONMENT=false)
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
@@ -103,6 +103,7 @@ dev: globals ## Set Environment to DEV
 .PHONY: staging
 staging: globals ## Set Environment to Staging
 	$(eval export AWS_ACCOUNT=staging)
+	$(eval export MAKEFILE_ENV_TARGET=staging)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export OUTPUT_TAG_PREFIX=prod-)
@@ -115,11 +116,32 @@ staging: globals ## Set Environment to Staging
 	$(eval export DEPLOY_ENV=staging)
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AWS_DEFAULT_REGION=eu-west-1)
+	@true
+
+.PHONY: stg-lon
+stg-lon: globals ## Set Environment to stg-lon
+	$(eval export AWS_ACCOUNT=staging)
+	$(eval export MAKEFILE_ENV_TARGET=stg-lon)
+	$(eval export PERSISTENT_ENVIRONMENT=true)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export OUTPUT_TAG_PREFIX=prod-lon-)
+	$(eval export SYSTEM_DNS_ZONE_NAME=london.staging.cloudpipeline.digital)
+	$(eval export APPS_DNS_ZONE_NAME=london.staging.cloudpipelineapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stg-lon@digital.cabinet-office.gov.uk)
+	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-stg-lon.yml)
+	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=stg-lon)
+	$(eval export TEST_HEAVY_LOAD=true)
+	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	@true
 
 .PHONY: prod
 prod: globals ## Set Environment to Production
 	$(eval export AWS_ACCOUNT=prod)
+	$(eval export MAKEFILE_ENV_TARGET=prod)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export INPUT_TAG_PREFIX=prod-)
@@ -132,6 +154,26 @@ prod: globals ## Set Environment to Production
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AWS_DEFAULT_REGION=eu-west-1)
+	@true
+
+.PHONY: prod-lon
+prod-lon: globals ## Set Environment to prod-lon
+	$(eval export AWS_ACCOUNT=prod)
+	$(eval export MAKEFILE_ENV_TARGET=prod-lon)
+	$(eval export PERSISTENT_ENVIRONMENT=true)
+	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export INPUT_TAG_PREFIX=prod-lon-)
+	$(eval export SYSTEM_DNS_ZONE_NAME=london.cloud.service.gov.uk)
+	$(eval export APPS_DNS_ZONE_NAME=london.cloudapps.digital)
+	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod-lon@digital.cabinet-office.gov.uk)
+	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
+	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-prod-lon.yml)
+	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
+	$(eval export ENABLE_DATADOG=true)
+	$(eval export DEPLOY_ENV=prod-lon)
+	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	@true
 
 .PHONY: bosh-cli
@@ -159,10 +201,13 @@ showenv: check-env ## Display environment information
 		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
+.PHONY: upload-all-secrets
+upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets
+
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
 	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to staging/prod))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
@@ -170,7 +215,7 @@ upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S
 .PHONY: upload-compose-secrets
 upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S3
 	$(eval export COMPOSE_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to dev/staging/prod))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${COMPOSE_PASSWORD_STORE_DIR},,$(error Must pass COMPOSE_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${COMPOSE_PASSWORD_STORE_DIR}),,$(error Password store ${COMPOSE_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-compose-secrets.sh
@@ -178,7 +223,7 @@ upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
 	$(eval export OAUTH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment to staging/prod))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-google-oauth-secrets.sh
@@ -186,7 +231,7 @@ upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Consol
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3
 	$(eval export NOTIFY_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${AWS_ACCOUNT},,$(error Must set environment))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${NOTIFY_PASSWORD_STORE_DIR},,$(error Must pass NOTIFY_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${NOTIFY_PASSWORD_STORE_DIR}),,$(error Password store ${NOTIFY_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-notify-secrets.sh

@@ -438,7 +438,7 @@ jobs:
           params:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
-            AWS_ACCOUNT: ((aws_account))
+            MAKEFILE_ENV_TARGET: ((makefile_env_target))
             AWS_DEFAULT_REGION: ((aws_region))
             SELF_UPDATE_PIPELINE: ((self_update_pipeline))
             PIPELINES_TO_UPDATE: ((pipeline_name))
@@ -893,7 +893,7 @@ jobs:
               - -e
               - -c
               - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
                 > vpc-peering-tfvars/vpc-peers.tfvars
 
                 cat vpc-peering-tfvars/vpc-peers.tfvars
@@ -1080,7 +1080,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
                   > vpc-peering-opsfile/vpc-peers.yml
 
                   cat vpc-peering-opsfile/vpc-peers.yml
@@ -1927,7 +1927,7 @@ jobs:
 
                   if ! cf service healthcheck-db > /dev/null; then
                     cf create-service postgres tiny-unencrypted-9.5 healthcheck-db
-                    while ! cf service healthcheck-db | grep -q 'Status: create succeeded'; do
+                    while ! cf service healthcheck-db | grep -q 'create succeeded'; do
                       echo "Waiting for creation of service to complete..."
                       sleep 30
                     done
