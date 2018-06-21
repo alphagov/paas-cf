@@ -66,20 +66,20 @@ prepare_environment() {
   if [ "${ENABLE_DATADOG}" = "true" ] ; then
     # shellcheck disable=SC2154
     if [ -z "${datadog_api_key+x}" ] || [ -z "${datadog_app_key+x}" ] ; then
-      echo "Datadog enabled but could not retrieve api or app key. Did you do run \`make dev upload-datadog-secrets\`?"
+      echo "Datadog enabled but could not retrieve api or app key. Did you do run \`make ${MAKEFILE_ENV_TARGET} upload-datadog-secrets\`?"
       exit 1
     fi
   fi
 
   # shellcheck disable=SC2154
   if [ -z "${compose_api_key+x}" ] ; then
-    echo "Could not retrieve access token for Compose. Did you run \`make ${AWS_ACCOUNT} upload-compose-secrets\`?"
+    echo "Could not retrieve access token for Compose. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-compose-secrets\`?"
     exit 1
   fi
 
   # shellcheck disable=SC2154
   if [ -z "${notify_api_key+x}" ] ; then
-    echo "Could not retrieve api key for Notify. Did you run \`make ${AWS_ACCOUNT} upload-notify-secrets\`?"
+    echo "Could not retrieve api key for Notify. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-notify-secrets\`?"
     exit 1
   fi
 
