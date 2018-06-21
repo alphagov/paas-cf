@@ -192,6 +192,10 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=diego-api/jobs/name=locket/properties/tls/ca_cert
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
   path: /instance_groups/name=api/jobs/name=policy-server/properties/cf_networking/policy_server/uaa_ca
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
@@ -214,6 +218,10 @@
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/properties/cf_networking/vxlan_policy_agent/ca_cert
   value: ((network_policy_ca.certificate))((network_policy_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-api/jobs/name=locket/properties/loggregator/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
   path: /variables/-
