@@ -893,7 +893,7 @@ jobs:
               - -e
               - -c
               - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
                 > vpc-peering-tfvars/vpc-peers.tfvars
 
                 cat vpc-peering-tfvars/vpc-peers.tfvars
@@ -1080,7 +1080,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((aws_account)).vpc_peering.json" \
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
                   > vpc-peering-opsfile/vpc-peers.yml
 
                   cat vpc-peering-opsfile/vpc-peers.yml
