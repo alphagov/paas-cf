@@ -8,7 +8,6 @@ test_password: ((secrets_test_user_password))
 skip_ssl_validation: false
 backend: "diego"
 skip_diego_unsupported_tests: true
-artifacts_directory: "/tmp/artifacts"
 use_existing_user: false
 
 use_log_cache: true
