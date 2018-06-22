@@ -13,6 +13,7 @@ groups:
       - post-deploy
       - smoke-tests
       - acceptance-tests
+      - log-cache-acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
       - performance-tests
@@ -33,6 +34,7 @@ groups:
       - api-availability-tests
       - smoke-tests
       - acceptance-tests
+      - log-cache-acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
       - performance-tests
@@ -2668,76 +2670,96 @@ jobs:
             PREFIX: acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
-        - aggregate:
-          - do:
-            - task: generate-test-config
-              file: paas-cf/concourse/tasks/generate-test-config.yml
+        - do:
+          - task: generate-test-config
+            file: paas-cf/concourse/tasks/generate-test-config.yml
+            params:
+              TEST_PROPERTIES: acceptance_tests
+              APP_DOMAIN: ((apps_dns_zone_name))
+              SYSTEM_DOMAIN: ((system_dns_zone_name))
+          - task: run-tests
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/cf-acceptance-tests
+                  tag: 52752f11595bab840402c22021d34c6ed6b41b70
               params:
-                TEST_PROPERTIES: acceptance_tests
-                APP_DOMAIN: ((apps_dns_zone_name))
-                SYSTEM_DOMAIN: ((system_dns_zone_name))
-            - task: run-tests
-              config:
-                platform: linux
-                image_resource:
-                  type: docker-image
-                  source:
-                    repository: governmentpaas/cf-acceptance-tests
-                    tag: 52752f11595bab840402c22021d34c6ed6b41b70
-                params:
-                  DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
-                inputs:
-                  - name: paas-cf
-                  - name: cf-acceptance-tests
-                    path: src/github.com/cloudfoundry/cf-acceptance-tests
-                  - name: test-config
-                outputs:
-                  - name: artifacts
-                    path: /tmp/artifacts
-                run:
-                  path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
-
-              ensure:
-                task: upload-test-artifacts
-                file: paas-cf/concourse/tasks/upload-test-artifacts.yml
-                params:
-                  TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
-
-          - do:
-            - task: generate-test-config
-              file: paas-cf/concourse/tasks/generate-test-config.yml
+                DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
+              inputs:
+                - name: paas-cf
+                - name: cf-acceptance-tests
+                  path: src/github.com/cloudfoundry/cf-acceptance-tests
+                - name: test-config
+              outputs:
+                - name: artifacts
+                  path: /tmp/artifacts
+              run:
+                path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
+            ensure:
+              task: upload-test-artifacts
+              file: paas-cf/concourse/tasks/upload-test-artifacts.yml
               params:
-                TEST_PROPERTIES: acceptance_log_cache_tests
-                APP_DOMAIN: ((apps_dns_zone_name))
-                SYSTEM_DOMAIN: ((system_dns_zone_name))
-            - task: run-log-cache-tests
-              timeout: 20m
-              config:
-                platform: linux
-                image_resource:
-                  type: docker-image
-                  source:
-                    repository: governmentpaas/cf-acceptance-tests
-                    tag: 52752f11595bab840402c22021d34c6ed6b41b70
-                params:
-                  DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
-                  SKIP_REGEX: "exercises basic loggregator behavior|applies default environment variables while running apps and tasks|applies default environment variables while staging apps"
-                inputs:
-                  - name: paas-cf
-                  - name: cf-acceptance-tests
-                    path: src/github.com/cloudfoundry/cf-acceptance-tests
-                  - name: test-config
-                outputs:
-                  - name: artifacts
-                    path: /tmp/artifacts
-                run:
-                  path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
+                TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+          ensure:
+            task: remove-temp-user
+            file: paas-cf/concourse/tasks/delete_admin.yml
+            params:
+              DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
-        ensure:
-          task: remove-temp-user
-          file: paas-cf/concourse/tasks/delete_admin.yml
+  - name: log-cache-acceptance-tests
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            trigger: true
+          - get: cf-acceptance-tests
+          - get: paas-cf
+            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+          - get: cf-manifest
+            passed: ['post-deploy']
+          - get: cf-secrets
+            passed: ['post-deploy']
+
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
           params:
+            PREFIX: acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
+
+        - do:
+          - task: generate-test-config
+            file: paas-cf/concourse/tasks/generate-test-config.yml
+            params:
+              TEST_PROPERTIES: acceptance_log_cache_tests
+              APP_DOMAIN: ((apps_dns_zone_name))
+              SYSTEM_DOMAIN: ((system_dns_zone_name))
+          - task: run-log-cache-tests
+            timeout: 20m
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/cf-acceptance-tests
+                  tag: 52752f11595bab840402c22021d34c6ed6b41b70
+              params:
+                DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
+                SKIP_REGEX: "exercises basic loggregator behavior|applies default environment variables while running apps and tasks|applies default environment variables while staging apps"
+              inputs:
+                - name: paas-cf
+                - name: cf-acceptance-tests
+                  path: src/github.com/cloudfoundry/cf-acceptance-tests
+                - name: test-config
+              run:
+                path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
+          ensure:
+            task: remove-temp-user
+            file: paas-cf/concourse/tasks/delete_admin.yml
+            params:
+              DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
   - name: custom-acceptance-tests
     plan:
@@ -2836,10 +2858,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'log-cache-acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
             trigger: true
           - get: paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'log-cache-acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
           - get: cf-secrets
