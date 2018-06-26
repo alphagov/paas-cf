@@ -4,6 +4,7 @@
 // @description Strips away some of the cruft from the concourse pipeline view when showing it on monitoring screens.
 // @include     https://deployer.*.cloudpipeline.digital/*
 // @include     https://deployer.cloud.service.gov.uk/*
+// @include     https://deployer.london.cloud.service.gov.uk/*
 // @version     1
 // @grant       none
 // ==/UserScript==
