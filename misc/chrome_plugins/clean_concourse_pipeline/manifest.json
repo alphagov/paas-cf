@@ -4,13 +4,15 @@
   "manifest_version": 2,
   "permissions": [
     "https://*.cloudpipeline.digital/*",
-    "https://deployer.cloud.service.gov.uk/*"
+    "https://deployer.cloud.service.gov.uk/*",
+    "https://deployer.london.cloud.service.gov.uk/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://*.cloudpipeline.digital/*",
-        "https://deployer.cloud.service.gov.uk/*"
+        "https://deployer.cloud.service.gov.uk/*",
+        "https://deployer.london.cloud.service.gov.uk/*"
       ],
       "js": [
         "src/inject.user.js"
