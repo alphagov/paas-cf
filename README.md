@@ -282,4 +282,3 @@ These must be published in each new environment. Visit the [Datadog documentatio
 
 ## Other useful commands
 Type `make` to get the list of all available commands.
-
