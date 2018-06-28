@@ -3282,6 +3282,33 @@ jobs:
                 --preserve secrets_uaa_clients_cdn_broker_secret \
                 --preserve secrets_uaa_clients_datadog_firehose_password \
                 --preserve uaa_clients_cc-service-dashboards_secret \
+                \
+                --preserve cc_bulk_api_password \
+                --preserve cc_internal_api_password \
+                --preserve cc_staging_upload_password \
+                --preserve cf_bosh_password \
+                --preserve router_status_password \
+                --preserve secrets_cdn_broker_admin_password \
+                --preserve secrets_compose_broker_admin_password \
+                --preserve secrets_elasticache_broker_admin_password \
+                --preserve secrets_kibana_admin_password \
+                --preserve secrets_rds_broker_admin_password \
+                --preserve secrets_rds_broker_master_password_seed \
+                --preserve secrets_rds_broker_state_encryption_key \
+                --preserve secrets_uaa_clients_cdn_broker_secret \
+                --preserve uaa_admin_client_secret \
+                --preserve uaa_clients_cc-routing_secret \
+                --preserve uaa_clients_cc_service_key_client_secret \
+                --preserve uaa_clients_cloud_controller_username_lookup_secret \
+                --preserve uaa_clients_doppler_secret \
+                --preserve uaa_clients_gorouter_secret \
+                --preserve uaa_clients_network_policy_secret \
+                --preserve uaa_clients_paas_admin_secret \
+                --preserve uaa_clients_routing_api_client_secret \
+                --preserve uaa_clients_ssh-proxy_secret \
+                --preserve uaa_clients_tcp_emitter_secret \
+                --preserve uaa_clients_tcp_router_secret \
+                --preserve uaa_default_encryption_passphrase \
                 > modified-cf-vars-store/cf-vars-store.yml
       on_success:
         do:
