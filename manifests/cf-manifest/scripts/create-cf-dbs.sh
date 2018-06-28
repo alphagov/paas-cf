@@ -1,14 +1,16 @@
 #!/bin/sh
 set -e
 
+# TODO: Implement this in terraform https://www.terraform.io/docs/providers/postgresql/index.html
+
 # Check environment variables
 export PGPASSWORD=${TF_VAR_secrets_cf_db_master_password:?}
-api_pass=${TF_VAR_secrets_cf_db_api_password:?}
-uaa_pass=${TF_VAR_secrets_cf_db_uaa_password:?}
-bbs_pass=${TF_VAR_secrets_cf_db_bbs_password:?}
-locket_pass=${TF_VAR_secrets_cf_db_locket_password:?}
-network_connectivity_pass=${TF_VAR_secrets_cf_db_network_connectivity_password:?}
-network_policy_pass=${TF_VAR_secrets_cf_db_network_policy_password:?}
+api_pass=${TF_VAR_external_cc_database_password:?}
+uaa_pass=${TF_VAR_external_uaa_database_password:?}
+bbs_pass=${TF_VAR_external_bbs_database_password:?}
+locket_pass=${TF_VAR_external_locket_database_password:?}
+network_connectivity_pass=${TF_VAR_external_network_connectivity_database_password:?}
+network_policy_pass=${TF_VAR_external_policy_server_database_password:?}
 db_address=${TF_VAR_cf_db_address:?}
 
 # See: https://github.com/koalaman/shellcheck/wiki/SC2086#exceptions
