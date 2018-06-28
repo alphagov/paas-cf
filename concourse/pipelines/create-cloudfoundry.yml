@@ -45,8 +45,8 @@ groups:
       - health-snapshot
   - name: credentials
     jobs:
+      - rotate-cf-admin-password
       - rotate-cloudfoundry-credentials
-      - clear-cloudfoundry-credentials
       - expire-aws-keys
       - rotate-cf-certs-cas
       - rotate-cf-certs-leafs
@@ -3154,13 +3154,11 @@ jobs:
         params:
           release: pipeline-pool
 
-  - name: rotate-cloudfoundry-credentials
+  - name: rotate-cf-admin-password
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-secrets
-      - get: cf-manifest
       - get: cf-vars-store
 
     - task: rotate-jwt-secrets
@@ -3189,7 +3187,35 @@ jobs:
         params:
           file: updated-cf-vars-store/cf-vars-store.yml
 
-    - task: update-uaa-admin-password
+    - task: generate-cf-admin-password
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: governmentpaas/bosh-cli-v2
+            tag: c88f3e0b03558c987693fad3f180d9052b77342c
+        inputs:
+          - name: cf-vars-store
+        outputs:
+          - name: rotated-cf-vars-store
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              sed "s/^cf_admin_password:.*$//" cf-vars-store/cf-vars-store.yml \
+                > rotated-cf-vars-store/rotated-cf-vars-store.yml
+
+              bosh interpolate - --vars-store rotated-cf-vars-store/rotated-cf-vars-store.yml <<EOF
+              ---
+              variables:
+              - name: cf_admin_password
+                type: password
+              EOF
+
+    - task: update-cf-admin-password
       config:
         platform: linux
         image_resource:
@@ -3199,10 +3225,7 @@ jobs:
             tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
         inputs:
           - name: paas-cf
-          - name: cf-secrets
-          - name: cf-manifest
-        outputs:
-          - name: rotated-cf-secrets
+          - name: rotated-cf-vars-store
         params:
           UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
         run:
@@ -3213,36 +3236,31 @@ jobs:
             - |
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-              sed "s/^secrets_uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
-                > rotated-cf-secrets/cf-secrets-cleared.yml
-
-              ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                --existing-secrets rotated-cf-secrets/cf-secrets-cleared.yml \
-                > rotated-cf-secrets/cf-secrets.yml
-
-              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-              UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
+              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML uaa_admin_client_secret rotated-cf-vars-store/rotated-cf-vars-store.yml)
+              CF_ADMIN_PASSWORD=$($VAL_FROM_YAML cf_admin_password rotated-cf-vars-store/rotated-cf-vars-store.yml)
 
               uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
-              uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
+              uaac password set admin -p "${CF_ADMIN_PASSWORD}"
       on_success:
-        put: cf-secrets
+        put: cf-vars-store
         params:
-          file: rotated-cf-secrets/cf-secrets.yml
+          file: rotated-cf-vars-store/rotated-cf-vars-store.yml
 
-  - name: clear-cloudfoundry-credentials
+  - name: rotate-cloudfoundry-credentials
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-        passed: ['rotate-cloudfoundry-credentials']
+        passed: ['rotate-cf-admin-password']
       - get: cf-secrets
-        passed: ['rotate-cloudfoundry-credentials']
+      - get: cf-vars-store
+        passed: ['rotate-cf-admin-password']
         trigger: true
+      - get: cf-manifest-pre-vars
       - get: cf-tfstate
 
-    - task: clear-passwords
+    - task: rotate-credentials
       config:
         platform: linux
         image_resource:
@@ -3253,8 +3271,11 @@ jobs:
         inputs:
           - name: paas-cf
           - name: cf-secrets
+          - name: cf-vars-store
+          - name: cf-manifest-pre-vars
         outputs:
           - name: modified-cf-secrets
+          - name: modified-cf-vars-store
         run:
           path: sh
           args:
@@ -3264,10 +3285,38 @@ jobs:
               ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-secrets.rb < \
                 cf-secrets/cf-secrets.yml > \
                 modified-cf-secrets/cf-secrets.yml
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --passwords \
+                --ssh \
+                --rsa \
+                --preserve cc_db_encryption_key \
+                --preserve cf_admin_password \
+                --preserve consul_encrypt_key \
+                --preserve diego_bbs_encryption_keys_passphrase \
+                --preserve diego_ssh_proxy_host_key \
+                --preserve nats_password \
+                --preserve router_route_services_secret \
+                --preserve secrets_cdn_broker_admin_password \
+                --preserve secrets_compose_broker_admin_password \
+                --preserve secrets_elasticache_broker_admin_password \
+                --preserve secrets_kibana_admin_password \
+                --preserve secrets_rds_broker_admin_password \
+                --preserve secrets_rds_broker_master_password_seed \
+                --preserve secrets_rds_broker_state_encryption_key \
+                --preserve secrets_uaa_clients_cdn_broker_secret \
+                --preserve secrets_uaa_clients_datadog_firehose_password \
+                --preserve uaa_clients_cc-service-dashboards_secret \
+                > modified-cf-vars-store/cf-vars-store.yml
       on_success:
-        put: cf-secrets
-        params:
-          file: modified-cf-secrets/cf-secrets.yml
+        do:
+        - put: cf-secrets
+          params:
+            file: modified-cf-secrets/cf-secrets.yml
+        - put: cf-vars-store
+          params:
+            file: modified-cf-vars-store/cf-vars-store.yml
 
     - task: forget-access-keys
       file: paas-cf/concourse/tasks/forget-access-keys.yml
@@ -3322,7 +3371,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --ca \
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --ca \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
@@ -3358,7 +3407,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --leaf \
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --leaf \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
@@ -3394,7 +3443,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --delete \
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --delete \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
@@ -3471,7 +3520,7 @@ jobs:
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
-        - get: cf-secrets
+        - get: cf-vars-store
           passed: ['post-deploy']
 
       - task: assert-should-run

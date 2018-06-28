@@ -2,30 +2,14 @@
 
 require 'yaml'
 
+# cf-secrets.yml
 list_secrets_to_keep = %w{
-  secrets_bbs_encryption_key
-  secrets_cc_db_encryption_key
-  secrets_cdn_broker_admin_password
   secrets_cdn_db_master_password
-  secrets_cf_db_api_password
-  secrets_cf_db_bbs_password
-  secrets_cf_db_locket_password
   secrets_cf_db_master_password
-  secrets_cf_db_uaa_password
-  secrets_compose_broker_admin_password
-  secrets_consul_encrypt_keys
-  secrets_elasticache_broker_admin_password
-  secrets_kibana_admin_password
-  secrets_nats_password
-  secrets_rds_broker_admin_password
-  secrets_rds_broker_master_password_seed
-  secrets_rds_broker_state_encryption_key
-  secrets_route_services_secret
-  secrets_ssh_proxy_host_key
-  secrets_uaa_admin_password
-  secrets_uaa_clients_cc_service_dashboards_password
-  secrets_uaa_clients_cdn_broker_secret
-  secrets_uaa_clients_datadog_firehose_password
+  external_bbs_database_password
+  external_cc_database_password
+  external_locket_database_password
+  external_uaa_database_password
 }
 
 existing_secrets = YAML.safe_load(STDIN)
