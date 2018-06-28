@@ -620,7 +620,7 @@ jobs:
                       --var secrets_cf_db_locket_password:external_locket_database_password \
                       --var secrets_cf_db_uaa_password:external_uaa_database_password \
                       --var secrets_cf_db_bbs_password:external_bbs_database_password \
-                      --var secrets_cf_db_network_connectivity_password:external_network_connectivity_database_password \
+                      --var secrets_cf_db_network_connectivity_password:external_silk_controller_database_password \
                       --var secrets_cf_db_network_policy_password:external_policy_server_database_password
 
             on_success:

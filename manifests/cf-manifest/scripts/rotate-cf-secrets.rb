@@ -10,6 +10,8 @@ list_secrets_to_keep = %w{
   external_cc_database_password
   external_locket_database_password
   external_uaa_database_password
+  external_silk_controller_database_password
+  external_policy_server_database_password
 }
 
 existing_secrets = YAML.safe_load(STDIN)

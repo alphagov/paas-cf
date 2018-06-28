@@ -20,6 +20,9 @@
   path: /instance_groups/name=api/jobs/name=policy-server/properties/cf_networking/policy_server/database/host
   value: ((terraform_outputs_cf_db_address))
 - type: replace
+  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/host
+  value: ((terraform_outputs_cf_db_address))
+- type: replace
   path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/buildpacks/fog_connection/region
   value: ((terraform_outputs_region))
 - type: replace

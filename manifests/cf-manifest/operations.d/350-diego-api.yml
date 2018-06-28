@@ -40,21 +40,5 @@
 - type: remove
   path: /instance_groups/name=diego-api/jobs/name=silk-controller/consumes
 
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/host
-  value: ((terraform_outputs_cf_db_address))
-
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/name
-  value: network_connectivity
-
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/username
-  value: network_connectivity
-
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/password
-  value: ((external_network_connectivity_database_password))
-
 - type: remove
   path: /variables/name=diego_instance_identity_ca

@@ -9,7 +9,7 @@ api_pass=${TF_VAR_external_cc_database_password:?}
 uaa_pass=${TF_VAR_external_uaa_database_password:?}
 bbs_pass=${TF_VAR_external_bbs_database_password:?}
 locket_pass=${TF_VAR_external_locket_database_password:?}
-network_connectivity_pass=${TF_VAR_external_network_connectivity_database_password:?}
+network_connectivity_pass=${TF_VAR_external_silk_controller_database_password:?}
 network_policy_pass=${TF_VAR_external_policy_server_database_password:?}
 db_address=${TF_VAR_cf_db_address:?}
 
