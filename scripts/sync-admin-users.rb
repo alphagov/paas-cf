@@ -20,7 +20,7 @@ users_filename = ARGV[1] || raise("You must pass a file of users as second argum
 source_address = ARGV[2] || raise("You must pass an SES-validated address as third argument")
 
 cf_admin_username = 'admin'
-cf_admin_password = ENV['UAA_ADMIN_PASSWORD'] || raise("Must set $UAA_ADMIN_PASSWORD env var")
+cf_admin_password = ENV['CF_ADMIN_PASSWORD'] || raise("Must set $CF_ADMIN_PASSWORD env var")
 
 puts "Syncing Admin users in #{cf_api_url}..."
 

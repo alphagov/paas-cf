@@ -702,7 +702,7 @@ jobs:
                   exit 0
                 fi
 
-                CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
@@ -822,7 +822,7 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['generate-secrets']
           - get: paas-cf
             passed: ['generate-secrets']
@@ -867,7 +867,7 @@ jobs:
             - name: paas-cf
             - name: pipeline-trigger
             - name: deployed-healthcheck
-            - name: cf-secrets
+            - name: cf-vars-store
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -892,7 +892,7 @@ jobs:
                 export CONCOURSE_ATC_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
                 export CF_PASS
-                CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
@@ -1494,8 +1494,6 @@ jobs:
         passed: ['generate-cf-config']
       - get: bosh-secrets
         passed: ['cf-deploy']
-      - get: cf-secrets
-        passed: ['generate-cf-config']
       - get: cf-vars-store
         passed: ['generate-cf-config']
       - get: bosh-CA-crt
@@ -1512,7 +1510,7 @@ jobs:
         platform: linux
         inputs:
           - name: paas-cf
-          - name: cf-secrets
+          - name: cf-vars-store
           - name: cf-manifest
           - name: cf-tfstate
         outputs:
@@ -1538,17 +1536,17 @@ jobs:
 
               cat << EOT > config/config.sh
               export CF_ADMIN=admin
-              export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
+              export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
               export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
               export UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
               export DOPPLER_ENDPOINT=$($VAL_FROM_YAML instance_groups.scheduler.jobs.tps.properties.capi.tps.traffic_controller_url cf-manifest/cf-manifest.yml)
               export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_rds_broker_elb_dns_name cf-terraform-outputs.yml)
-              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-secrets/cf-secrets.yml)
+              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
-              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-secrets/cf-secrets.yml)
-              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-secrets/cf-secrets.yml)
+              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-vars-store/cf-vars-store.yml)
+              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
-              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
+              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
@@ -1965,7 +1963,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
             - name: cf-manifest
           params:
             DISABLE_USER_CREATION: ((disable_user_creation))
@@ -1980,8 +1978,8 @@ jobs:
                 . ./config/config.sh
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                export UAA_ADMIN_PASSWORD
-                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
+                export CF_ADMIN_PASSWORD
+                CF_ADMIN_PASSWORD=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
                 cd paas-cf/scripts
                 bundle
                 bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
@@ -2058,7 +2056,7 @@ jobs:
             - name: paas-cf
             - name: paas-billing
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -2072,7 +2070,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
@@ -2124,7 +2122,7 @@ jobs:
             - name: paas-cf
             - name: paas-accounts
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -2135,7 +2133,7 @@ jobs:
                 DB_PLAN="tiny-unencrypted-9.5"
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-secrets/cf-secrets.yml)
+                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
@@ -2263,7 +2261,6 @@ jobs:
               - name: paas-cf
               - name: paas-admin-dist
               - name: cf-vars-store
-              - name: cf-secrets
             outputs:
               - name: paas-admin-manifest
             params:
@@ -2297,7 +2294,6 @@ jobs:
                   spruce merge \
                     paas-admin-dist/manifest.yml \
                     paas-admin-env-and-routes.yml \
-                    cf-secrets/cf-secrets.yml \
                     cf-vars-store/cf-vars-store.yml \
                     | spruce merge --cherry-pick applications \
                       > paas-admin-manifest/manifest.yml
@@ -2315,7 +2311,7 @@ jobs:
               - name: paas-admin-dist
               - name: paas-admin-manifest
               - name: config
-              - name: cf-secrets
+              - name: cf-vars-store
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             run:
@@ -2327,7 +2323,7 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   export CF_CLIENT_SECRET
-                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
 
                   . ./config/config.sh
                   cf api "${API_ENDPOINT}"
@@ -2351,7 +2347,6 @@ jobs:
               - name: paas-cf
               - name: paas-log-cache-adapter
               - name: config
-              - name: cf-secrets
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             run:
@@ -2573,7 +2568,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -2587,7 +2582,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
@@ -2635,7 +2630,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: cf-secrets
           run:
             path: sh
             args:
@@ -2711,7 +2705,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
 
       - do:
@@ -2750,7 +2744,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
 
       - do:
@@ -2809,7 +2803,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
 
       - do:
@@ -2861,7 +2855,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
 
@@ -2954,7 +2948,7 @@ jobs:
             passed: ['smoke-tests', 'acceptance-tests', 'log-cache-acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
 
       - do:

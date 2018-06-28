@@ -7,7 +7,7 @@ image_resource:
     tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
 inputs:
   - name: paas-cf
-  - name: cf-secrets
+  - name: cf-vars-store
   - name: cf-manifest
 outputs:
   - name: admin-creds
@@ -30,7 +30,7 @@ run:
       NAME=${PREFIX}-${SUFFIX}
 
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-      UAA_ADMIN_CLIENT_PASS=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
+      UAA_ADMIN_CLIENT_PASS=$($VAL_FROM_YAML uaa_admin_client_secret cf-vars-store/cf-vars-store.yml)
       UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
 
       echo "Creating user ${NAME}"

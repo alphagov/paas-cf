@@ -81,7 +81,7 @@ Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, a
 To interact with a CloudFoundry environment you will need the following:
 
 - the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
-- `API_ENDPOINT` and `UAA_ADMIN_PASSWORD` from `make dev showenv`
+- `API_ENDPOINT` and `CF_ADMIN_PASSWORD` from `make dev showenv`
 
 Then you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), using the `admin` user.
 
