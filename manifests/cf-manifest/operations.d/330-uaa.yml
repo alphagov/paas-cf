@@ -195,14 +195,6 @@
   value: ""
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_router/override?
-  value: true
-
-- type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_router/secret
-  value: ""
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/global?/refreshTokenValiditySeconds
   value: 604800
 
@@ -260,5 +252,26 @@
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaadb/roles/0
   value:
     name: uaa
-    password: ((secrets_cf_db_uaa_password))
+    password: ((external_uaa_database_password))
     tag: admin
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_login_secret
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_notifications_secret
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_paas_metrics_secret
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_paas_billing_secret
+    type: password

@@ -6,5 +6,5 @@
     db_port: 5432
     db_schema: locket
     db_username: locket
-    db_password: "((secrets_cf_db_locket_password))"
+    db_password: "((external_locket_database_password))"
     db_driver: postgres

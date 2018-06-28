@@ -88,3 +88,9 @@
     scope: openid,oauth.approvals,doppler.firehose
     authorities: oauth.login,doppler.firehose
     redirect-uri: https://login.((system_domain))/login
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_datadog_firehose_password
+    type: password

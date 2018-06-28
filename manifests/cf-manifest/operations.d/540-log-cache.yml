@@ -189,11 +189,6 @@
     name: log-cache-scheduler
     release: log-cache
 
-# FIXME: Rename the doppler secrets to our legacy secrets variables
-- type: replace
-  path: /instance_groups/name=doppler/jobs/name=log-cache-cf-auth-proxy/properties/uaa/client_secret
-  value: ((secrets_uaa_clients_doppler_secret))
-
 # FIXME: the log-cache release relies on bosh-dns https://github.com/cloudfoundry/bosh-dns-release
 # to discover the reverse-log-proxy address, but we don not use bosh-dns yet.
 #

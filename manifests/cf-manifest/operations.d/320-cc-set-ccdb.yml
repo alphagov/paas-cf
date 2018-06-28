@@ -7,7 +7,7 @@
     roles:
       - tag: admin
         name: api
-        password: ((secrets_cf_db_api_password))
+        password: ((external_cc_database_password))
     databases:
       - tag: cc
         name: api
