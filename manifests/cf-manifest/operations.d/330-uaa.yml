@@ -212,7 +212,7 @@
 
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/keys/((uaa_jwt_signing_key_old_id))?/signingKey
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/jwt/policy/keys/((uaa_jwt_signing_key_id_old))?/signingKey
   value: ((uaa_jwt_signing_key_old.private_key))
 
 - type: remove

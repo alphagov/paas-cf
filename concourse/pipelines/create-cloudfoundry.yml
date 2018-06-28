@@ -3161,32 +3161,6 @@ jobs:
       - get: paas-cf
       - get: cf-vars-store
 
-    - task: rotate-jwt-secrets
-      config:
-        platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ruby
-            tag: 2.5-slim
-        inputs:
-          - name: paas-cf
-          - name: cf-vars-store
-        outputs:
-          - name: updated-cf-vars-store
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - ./paas-cf/manifests/cf-manifest/scripts/rotate-jwt-keys.rb \
-                < cf-vars-store/cf-vars-store.yml \
-                > updated-cf-vars-store/cf-vars-store.yml
-      on_success:
-        put: cf-vars-store
-        params:
-          file: updated-cf-vars-store/cf-vars-store.yml
-
     - task: generate-cf-admin-password
       config:
         platform: linux
