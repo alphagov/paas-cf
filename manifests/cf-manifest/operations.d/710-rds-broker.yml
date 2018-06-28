@@ -59,7 +59,7 @@
     name: rds_broker
     azs: [z1, z2]
     instances: 2
-    vm_type: small
+    vm_type: medium
     vm_extensions:
       - rds_broker
     stemcell: default
