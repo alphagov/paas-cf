@@ -77,6 +77,14 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-secrets.yml
 
+  - name: cf-vars-store
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: cf-vars-store.yml
+      initial_version: "-"
+
   - name: cf-manifest
     type: s3-iam
     source:
@@ -141,7 +149,7 @@ jobs:
             trigger: true
           - get: bosh-secrets
           - get: paas-cf
-          - get: cf-secrets
+          - get: cf-vars-store
           - get: cf-manifest
           - get: datadog-tfstate
           - get: bosh-CA-crt
@@ -231,6 +239,7 @@ jobs:
           - get: cf-tfstate
           - get: concourse-tfstate
           - get: vpc-tfstate
+          - get: cf-vars-store
           - get: cf-secrets
 
       - task: extract-terraform-variables
@@ -246,6 +255,7 @@ jobs:
             - name: cf-tfstate
             - name: concourse-tfstate
             - name: vpc-tfstate
+            - name: cf-vars-store
             - name: cf-secrets
           outputs:
             - name: terraform-variables
@@ -267,6 +277,9 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
                 < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
                 ls -l terraform-variables/cf-secrets.tfvars.sh
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
+                < cf-vars-store/cf-vars-store.yml > terraform-variables/cf-vars-store.tfvars.sh
+                ls -l terraform-variables/cf-vars-store.tfvars.sh
 
       - task: cf-terraform-destroy
         config:
@@ -298,6 +311,7 @@ jobs:
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
+                . terraform-variables/cf-vars-store.tfvars.sh
 
                 cp cf-tfstate/cf.tfstate updated-cf-tfstate/cf.tfstate
                 terraform init paas-cf/terraform/cloudfoundry

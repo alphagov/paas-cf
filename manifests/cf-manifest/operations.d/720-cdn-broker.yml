@@ -60,3 +60,15 @@
     override: true
     scope: cloud_controller.admin_read_only
     secret: ((secrets_uaa_clients_cdn_broker_secret))
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_cdn_broker_admin_password
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_cdn_broker_secret
+    type: password

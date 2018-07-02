@@ -14,5 +14,5 @@
 - type: replace
   path: /variables/-
   value:
-    name: uaa_jwt_signing_key_old_id
+    name: uaa_jwt_signing_key_id_old
     type: password

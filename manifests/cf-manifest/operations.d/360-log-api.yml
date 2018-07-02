@@ -8,9 +8,5 @@
   path: /instance_groups/name=log-api/jobs/name=route_registrar
 
 - type: replace
-  path: /instance_groups/name=log-api/jobs/name=loggregator_trafficcontroller/properties/loggregator/uaa/client_secret
-  value: ((secrets_uaa_clients_doppler_secret))
-
-- type: replace
   path: /instance_groups/name=log-api/jobs/name=loggregator_trafficcontroller/properties/system_domain
   value: ((terraform_outputs_cf_root_domain))

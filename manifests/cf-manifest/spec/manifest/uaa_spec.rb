@@ -14,7 +14,7 @@ RSpec.describe "uaa properties" do
   context "with and old certificate for jwt signing" do
     let(:manifest) {
       manifest_with_custom_vars_store %{---
-uaa_jwt_signing_key_old_id: 0b3b65a62f37f9deb947f01602ae0a122bf91d7a
+uaa_jwt_signing_key_id_old: 0b3b65a62f37f9deb947f01602ae0a122bf91d7a
 uaa_jwt_signing_key_old:
   private_key: |
     -----BEGIN RSA PRIVATE KEY-----

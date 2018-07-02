@@ -21,12 +21,13 @@ resources:
       tag_filter: ((paas_cf_tag_filter))
       commit_verification_key_ids: ((gpg_ids))
 
-  - name: cf-secrets
+  - name: cf-vars-store
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
-      versioned_file: cf-secrets.yml
+      versioned_file: cf-vars-store.yml
+      initial_version: "-"
 
   - name: cf-manifest
     type: s3-iam
@@ -78,7 +79,7 @@ jobs:
         trigger: true
       - get: bosh-secrets
       - get: paas-cf
-      - get: cf-secrets
+      - get: cf-vars-store
       - get: cf-manifest
       - get: datadog-tfstate
       - get: bosh-CA-crt

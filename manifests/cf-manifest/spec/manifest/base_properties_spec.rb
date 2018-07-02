@@ -154,7 +154,6 @@ RSpec.describe "base properties" do
           "cc_routing",
           "gorouter",
           "tcp_emitter",
-          "tcp_router",
           "ssh-proxy",
           "paas-metrics",
           "cc-service-dashboards",

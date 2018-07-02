@@ -1,6 +1,8 @@
 - type: remove
   path: /instance_groups/name=tcp-router
 - type: remove
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/tcp_router
+- type: remove
   path: /instance_groups/name=api/jobs/name=routing-api
 - type: remove
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/routing_api

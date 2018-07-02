@@ -45,8 +45,8 @@ groups:
       - health-snapshot
   - name: credentials
     jobs:
+      - rotate-cf-admin-password
       - rotate-cloudfoundry-credentials
-      - clear-cloudfoundry-credentials
       - expire-aws-keys
       - rotate-cf-certs-cas
       - rotate-cf-certs-leafs
@@ -465,6 +465,7 @@ jobs:
             trigger: true
           - get: ipsec-CA
           - get: cf-secrets
+          - get: cf-vars-store
           - get: ssh-private-key
           - get: ssh-public-key
       - aggregate:
@@ -542,35 +543,124 @@ jobs:
                 - put: ssh-public-key
                   params:
                     file: generated-ssh-public-key/id_rsa.pub
+        - do:
+          # FIXME: Remove once the secrets have been migrated in all environments
+          - task: migrate-cf-secrets
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: ruby
+                  tag: 2.5-slim
+              inputs:
+                - name: paas-cf
+                - name: cf-secrets
+                  path: existing-cf-secrets
+                - name: cf-vars-store
+                  path: existing-cf-vars-store
+              outputs:
+                - name: migrated-cf-secrets
+                - name: migrated-cf-vars-store
+              run:
+                path: sh
+                args:
+                  - -c
+                  - -e
+                  - |
+                    ./paas-cf/manifests/cf-manifest/scripts/migrate-cf-secrets.rb \
+                      --cf-secrets existing-cf-secrets/cf-secrets.yml \
+                      --cf-secrets-updated migrated-cf-secrets/cf-secrets.yml \
+                      --cf-vars-store existing-cf-vars-store/cf-vars-store.yml \
+                      --cf-vars-store-updated migrated-cf-vars-store/cf-vars-store.yml \
+                      \
+                      --var secrets_bbs_encryption_key:diego_bbs_encryption_keys_passphrase \
+                      --var secrets_bulk_api_password:cc_bulk_api_password \
+                      --var secrets_bulk_api_password:cc_internal_api_password \
+                      --var secrets_cc_db_encryption_key:cc_db_encryption_key \
+                      --var secrets_nats_password:nats_password \
+                      --var secrets_router_password:router_status_password \
+                      --var secrets_route_services_secret:router_route_services_secret \
+                      --var secrets_ssh_proxy_host_key:diego_ssh_proxy_host_key \
+                      --var secrets_staging_upload_password:cc_staging_upload_password \
+                      --var secrets_uaa_admin_client_secret:uaa_admin_client_secret \
+                      --var secrets_uaa_admin_password:cf_admin_password \
+                      --var secrets_uaa_cc_routing_secret:uaa_clients_cc-routing_secret \
+                      --var secrets_uaa_clients_cc_service_dashboards_password:uaa_clients_cc-service-dashboards_secret \
+                      --var secrets_uaa_clients_cc_service_key_client_secret:uaa_clients_cc_service_key_client_secret \
+                      --var secrets_uaa_clients_cloud_controller_username_lookup_secret:uaa_clients_cloud_controller_username_lookup_secret \
+                      --var secrets_uaa_clients_doppler_secret:uaa_clients_doppler_secret \
+                      --var secrets_uaa_clients_gorouter_secret:uaa_clients_gorouter_secret \
+                      --var secrets_uaa_clients_ssh_proxy_secret:uaa_clients_ssh-proxy_secret \
+                      \
+                      --var secrets_consul_encrypt_keys:consul_encrypt_key \
+                      \
+                      --var secrets_cdn_broker_admin_password:secrets_cdn_broker_admin_password \
+                      --var secrets_compose_broker_admin_password:secrets_compose_broker_admin_password \
+                      --var secrets_elasticache_broker_admin_password:secrets_elasticache_broker_admin_password \
+                      --var secrets_paas_accounts_admin_password:secrets_paas_accounts_admin_password \
+                      --var secrets_kibana_admin_password:secrets_kibana_admin_password \
+                      --var secrets_rds_broker_admin_password:secrets_rds_broker_admin_password \
+                      --var secrets_rds_broker_master_password_seed:secrets_rds_broker_master_password_seed \
+                      --var secrets_rds_broker_state_encryption_key:secrets_rds_broker_state_encryption_key \
+                      --var secrets_test_user_password:secrets_test_user_password \
+                      --var secrets_uaa_clients_cdn_broker_secret:secrets_uaa_clients_cdn_broker_secret \
+                      --var secrets_uaa_batch_password:secrets_uaa_batch_password \
+                      --var secrets_uaa_clients_datadog_firehose_password:secrets_uaa_clients_datadog_firehose_password \
+                      --var secrets_uaa_clients_login_secret:secrets_uaa_clients_login_secret \
+                      --var secrets_uaa_clients_notifications_secret:secrets_uaa_clients_notifications_secret \
+                      --var secrets_uaa_clients_paas_metrics_secret:secrets_uaa_clients_paas_metrics_secret \
+                      --var secrets_uaa_clients_paas_billing_secret:secrets_uaa_clients_paas_billing_secret
 
-        - task: generate-cf-secrets
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: 2.5-slim
-            inputs:
-              - name: paas-cf
-              - name: cf-secrets
-                path: existing-cf-secrets
-            outputs:
-              - name: generated-cf-secrets
-            run:
-              path: sh
-              args:
-                - -c
-                - -e
-                - |
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                    --existing-secrets existing-cf-secrets/cf-secrets.yml \
-                    > generated-cf-secrets/cf-secrets.yml
-                  ls -l generated-cf-secrets
-          on_success:
-            put: cf-secrets
-            params:
-              file: generated-cf-secrets/cf-secrets.yml
+                    ./paas-cf/manifests/cf-manifest/scripts/rename-cf-secrets.rb \
+                      --cf-secrets migrated-cf-secrets/cf-secrets.yml \
+                      --cf-secrets-updated migrated-cf-secrets/cf-secrets.yml \
+                      \
+                      --var secrets_cf_db_api_password:external_cc_database_password \
+                      --var secrets_cf_db_locket_password:external_locket_database_password \
+                      --var secrets_cf_db_uaa_password:external_uaa_database_password \
+                      --var secrets_cf_db_bbs_password:external_bbs_database_password \
+                      --var secrets_cf_db_network_connectivity_password:external_silk_controller_database_password \
+                      --var secrets_cf_db_network_policy_password:external_policy_server_database_password
+
+            on_success:
+              do:
+              - put: cf-secrets
+                params:
+                  file: migrated-cf-secrets/cf-secrets.yml
+              - put: cf-vars-store
+                params:
+                  file: migrated-cf-vars-store/cf-vars-store.yml
+
+          - task: generate-cf-secrets
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: ruby
+                  tag: 2.5-slim
+              inputs:
+                - name: paas-cf
+                - name: migrated-cf-secrets
+                  path: existing-cf-secrets
+              outputs:
+                - name: generated-cf-secrets
+              run:
+                path: sh
+                args:
+                  - -c
+                  - -e
+                  - |
+                    ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                      --existing-secrets existing-cf-secrets/cf-secrets.yml \
+                      > generated-cf-secrets/cf-secrets.yml
+                    ls -l generated-cf-secrets
+            on_success:
+              put: cf-secrets
+              params:
+                file: generated-cf-secrets/cf-secrets.yml
+
 
   - name: pre-deploy
     plan:
@@ -581,14 +671,14 @@ jobs:
           - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['generate-secrets']
       - task: wait-for-app-availability-tests
         config:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: cf-secrets
+            - name: cf-vars-store
             - name: deployed-healthcheck
             - name: pipeline-trigger
           params:
@@ -612,7 +702,7 @@ jobs:
                   exit 0
                 fi
 
-                CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
@@ -636,7 +726,6 @@ jobs:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: cf-secrets
             - name: deployed-healthcheck
             - name: pipeline-trigger
           params:
@@ -733,7 +822,7 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['generate-secrets']
           - get: paas-cf
             passed: ['generate-secrets']
@@ -778,7 +867,7 @@ jobs:
             - name: paas-cf
             - name: pipeline-trigger
             - name: deployed-healthcheck
-            - name: cf-secrets
+            - name: cf-vars-store
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -803,7 +892,7 @@ jobs:
                 export CONCOURSE_ATC_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
                 export CF_PASS
-                CF_PASS=$(awk '/uaa_admin_password/ {print $2}' cf-secrets/cf-secrets.yml | tr -d '"')
+                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
@@ -847,7 +936,7 @@ jobs:
           - get: concourse-tfstate
           - get: cf-tfstate
           - get: cf-secrets
-            passed: ['pre-deploy']
+            passed: ['generate-secrets']
 
       - task: extract-terraform-variables
         config:
@@ -1026,6 +1115,7 @@ jobs:
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-vars-store
+            passed: ['generate-secrets'] # FIXME: Remove after migration
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
@@ -1404,8 +1494,6 @@ jobs:
         passed: ['generate-cf-config']
       - get: bosh-secrets
         passed: ['cf-deploy']
-      - get: cf-secrets
-        passed: ['generate-cf-config']
       - get: cf-vars-store
         passed: ['generate-cf-config']
       - get: bosh-CA-crt
@@ -1422,7 +1510,7 @@ jobs:
         platform: linux
         inputs:
           - name: paas-cf
-          - name: cf-secrets
+          - name: cf-vars-store
           - name: cf-manifest
           - name: cf-tfstate
         outputs:
@@ -1448,17 +1536,17 @@ jobs:
 
               cat << EOT > config/config.sh
               export CF_ADMIN=admin
-              export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
+              export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
               export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
               export UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
               export DOPPLER_ENDPOINT=$($VAL_FROM_YAML instance_groups.scheduler.jobs.tps.properties.capi.tps.traffic_controller_url cf-manifest/cf-manifest.yml)
               export RDS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_rds_broker_elb_dns_name cf-terraform-outputs.yml)
-              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-secrets/cf-secrets.yml)
+              export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
-              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-secrets/cf-secrets.yml)
-              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-secrets/cf-secrets.yml)
+              export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-vars-store/cf-vars-store.yml)
+              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
-              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-secrets/cf-secrets.yml)
+              export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
@@ -1875,7 +1963,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
             - name: cf-manifest
           params:
             DISABLE_USER_CREATION: ((disable_user_creation))
@@ -1890,8 +1978,8 @@ jobs:
                 . ./config/config.sh
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                export UAA_ADMIN_PASSWORD
-                UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
+                export CF_ADMIN_PASSWORD
+                CF_ADMIN_PASSWORD=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
                 cd paas-cf/scripts
                 bundle
                 bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
@@ -1968,7 +2056,7 @@ jobs:
             - name: paas-cf
             - name: paas-billing
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -1982,7 +2070,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
@@ -2034,7 +2122,7 @@ jobs:
             - name: paas-cf
             - name: paas-accounts
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -2045,7 +2133,7 @@ jobs:
                 DB_PLAN="tiny-unencrypted-9.5"
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-secrets/cf-secrets.yml)
+                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
@@ -2173,7 +2261,6 @@ jobs:
               - name: paas-cf
               - name: paas-admin-dist
               - name: cf-vars-store
-              - name: cf-secrets
             outputs:
               - name: paas-admin-manifest
             params:
@@ -2207,7 +2294,6 @@ jobs:
                   spruce merge \
                     paas-admin-dist/manifest.yml \
                     paas-admin-env-and-routes.yml \
-                    cf-secrets/cf-secrets.yml \
                     cf-vars-store/cf-vars-store.yml \
                     | spruce merge --cherry-pick applications \
                       > paas-admin-manifest/manifest.yml
@@ -2225,7 +2311,7 @@ jobs:
               - name: paas-admin-dist
               - name: paas-admin-manifest
               - name: config
-              - name: cf-secrets
+              - name: cf-vars-store
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             run:
@@ -2237,7 +2323,7 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   export CF_CLIENT_SECRET
-                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-secrets/cf-secrets.yml)
+                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
 
                   . ./config/config.sh
                   cf api "${API_ENDPOINT}"
@@ -2261,7 +2347,6 @@ jobs:
               - name: paas-cf
               - name: paas-log-cache-adapter
               - name: config
-              - name: cf-secrets
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             run:
@@ -2483,7 +2568,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: cf-secrets
+            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -2497,7 +2582,7 @@ jobs:
                 fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-secrets/cf-secrets.yml)
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
 
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
@@ -2545,7 +2630,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
-            - name: cf-secrets
           run:
             path: sh
             args:
@@ -2621,7 +2705,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
 
       - do:
@@ -2660,7 +2744,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
 
       - do:
@@ -2719,7 +2803,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
 
       - do:
@@ -2771,7 +2855,7 @@ jobs:
             passed: ['post-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
 
@@ -2864,7 +2948,7 @@ jobs:
             passed: ['smoke-tests', 'acceptance-tests', 'log-cache-acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
-          - get: cf-secrets
+          - get: cf-vars-store
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
 
       - do:
@@ -3070,42 +3154,42 @@ jobs:
         params:
           release: pipeline-pool
 
-  - name: rotate-cloudfoundry-credentials
+  - name: rotate-cf-admin-password
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-      - get: cf-secrets
-      - get: cf-manifest
       - get: cf-vars-store
 
-    - task: rotate-jwt-secrets
+    - task: generate-cf-admin-password
       config:
         platform: linux
         image_resource:
           type: docker-image
           source:
-            repository: ruby
-            tag: 2.5-slim
+            repository: governmentpaas/bosh-cli-v2
+            tag: c88f3e0b03558c987693fad3f180d9052b77342c
         inputs:
-          - name: paas-cf
           - name: cf-vars-store
         outputs:
-          - name: updated-cf-vars-store
+          - name: rotated-cf-vars-store
         run:
           path: sh
           args:
             - -e
             - -c
-            - ./paas-cf/manifests/cf-manifest/scripts/rotate-jwt-keys.rb \
-                < cf-vars-store/cf-vars-store.yml \
-                > updated-cf-vars-store/cf-vars-store.yml
-      on_success:
-        put: cf-vars-store
-        params:
-          file: updated-cf-vars-store/cf-vars-store.yml
+            - |
+              sed "s/^cf_admin_password:.*$//" cf-vars-store/cf-vars-store.yml \
+                > rotated-cf-vars-store/rotated-cf-vars-store.yml
 
-    - task: update-uaa-admin-password
+              bosh interpolate - --vars-store rotated-cf-vars-store/rotated-cf-vars-store.yml <<EOF
+              ---
+              variables:
+              - name: cf_admin_password
+                type: password
+              EOF
+
+    - task: update-cf-admin-password
       config:
         platform: linux
         image_resource:
@@ -3115,10 +3199,7 @@ jobs:
             tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
         inputs:
           - name: paas-cf
-          - name: cf-secrets
-          - name: cf-manifest
-        outputs:
-          - name: rotated-cf-secrets
+          - name: rotated-cf-vars-store
         params:
           UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
         run:
@@ -3129,36 +3210,31 @@ jobs:
             - |
               VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-              sed "s/^secrets_uaa_admin_password:.*$//" cf-secrets/cf-secrets.yml \
-                > rotated-cf-secrets/cf-secrets-cleared.yml
-
-              ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                --existing-secrets rotated-cf-secrets/cf-secrets-cleared.yml \
-                > rotated-cf-secrets/cf-secrets.yml
-
-              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_admin_client_secret cf-secrets/cf-secrets.yml)
-              UAA_ADMIN_PASSWORD=$($VAL_FROM_YAML secrets_uaa_admin_password rotated-cf-secrets/cf-secrets.yml)
+              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML uaa_admin_client_secret rotated-cf-vars-store/rotated-cf-vars-store.yml)
+              CF_ADMIN_PASSWORD=$($VAL_FROM_YAML cf_admin_password rotated-cf-vars-store/rotated-cf-vars-store.yml)
 
               uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
-              uaac password set admin -p "${UAA_ADMIN_PASSWORD}"
+              uaac password set admin -p "${CF_ADMIN_PASSWORD}"
       on_success:
-        put: cf-secrets
+        put: cf-vars-store
         params:
-          file: rotated-cf-secrets/cf-secrets.yml
+          file: rotated-cf-vars-store/rotated-cf-vars-store.yml
 
-  - name: clear-cloudfoundry-credentials
+  - name: rotate-cloudfoundry-credentials
     serial: true
     plan:
     - aggregate:
       - get: paas-cf
-        passed: ['rotate-cloudfoundry-credentials']
+        passed: ['rotate-cf-admin-password']
       - get: cf-secrets
-        passed: ['rotate-cloudfoundry-credentials']
+      - get: cf-vars-store
+        passed: ['rotate-cf-admin-password']
         trigger: true
+      - get: cf-manifest-pre-vars
       - get: cf-tfstate
 
-    - task: clear-passwords
+    - task: rotate-credentials
       config:
         platform: linux
         image_resource:
@@ -3169,8 +3245,11 @@ jobs:
         inputs:
           - name: paas-cf
           - name: cf-secrets
+          - name: cf-vars-store
+          - name: cf-manifest-pre-vars
         outputs:
           - name: modified-cf-secrets
+          - name: modified-cf-vars-store
         run:
           path: sh
           args:
@@ -3180,10 +3259,65 @@ jobs:
               ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-secrets.rb < \
                 cf-secrets/cf-secrets.yml > \
                 modified-cf-secrets/cf-secrets.yml
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --passwords \
+                --ssh \
+                --rsa \
+                --preserve cc_db_encryption_key \
+                --preserve cf_admin_password \
+                --preserve consul_encrypt_key \
+                --preserve diego_bbs_encryption_keys_passphrase \
+                --preserve diego_ssh_proxy_host_key \
+                --preserve nats_password \
+                --preserve router_route_services_secret \
+                --preserve secrets_cdn_broker_admin_password \
+                --preserve secrets_compose_broker_admin_password \
+                --preserve secrets_elasticache_broker_admin_password \
+                --preserve secrets_kibana_admin_password \
+                --preserve secrets_rds_broker_admin_password \
+                --preserve secrets_rds_broker_master_password_seed \
+                --preserve secrets_rds_broker_state_encryption_key \
+                --preserve secrets_uaa_clients_cdn_broker_secret \
+                --preserve secrets_uaa_clients_datadog_firehose_password \
+                --preserve uaa_clients_cc-service-dashboards_secret \
+                \
+                --preserve cc_bulk_api_password \
+                --preserve cc_internal_api_password \
+                --preserve cc_staging_upload_password \
+                --preserve cf_bosh_password \
+                --preserve router_status_password \
+                --preserve secrets_cdn_broker_admin_password \
+                --preserve secrets_compose_broker_admin_password \
+                --preserve secrets_elasticache_broker_admin_password \
+                --preserve secrets_kibana_admin_password \
+                --preserve secrets_rds_broker_admin_password \
+                --preserve secrets_rds_broker_master_password_seed \
+                --preserve secrets_rds_broker_state_encryption_key \
+                --preserve secrets_uaa_clients_cdn_broker_secret \
+                --preserve uaa_admin_client_secret \
+                --preserve uaa_clients_cc-routing_secret \
+                --preserve uaa_clients_cc_service_key_client_secret \
+                --preserve uaa_clients_cloud_controller_username_lookup_secret \
+                --preserve uaa_clients_doppler_secret \
+                --preserve uaa_clients_gorouter_secret \
+                --preserve uaa_clients_network_policy_secret \
+                --preserve uaa_clients_paas_admin_secret \
+                --preserve uaa_clients_routing_api_client_secret \
+                --preserve uaa_clients_ssh-proxy_secret \
+                --preserve uaa_clients_tcp_emitter_secret \
+                --preserve uaa_clients_tcp_router_secret \
+                --preserve uaa_default_encryption_passphrase \
+                > modified-cf-vars-store/cf-vars-store.yml
       on_success:
-        put: cf-secrets
-        params:
-          file: modified-cf-secrets/cf-secrets.yml
+        do:
+        - put: cf-secrets
+          params:
+            file: modified-cf-secrets/cf-secrets.yml
+        - put: cf-vars-store
+          params:
+            file: modified-cf-vars-store/cf-vars-store.yml
 
     - task: forget-access-keys
       file: paas-cf/concourse/tasks/forget-access-keys.yml
@@ -3238,7 +3372,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --ca \
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --ca \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
@@ -3274,7 +3408,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --leaf \
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --leaf \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
@@ -3310,7 +3444,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-certs.rb --delete \
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --delete \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 > updated-cf-certs/cf-vars-store.yml
@@ -3387,7 +3521,7 @@ jobs:
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
-        - get: cf-secrets
+        - get: cf-vars-store
           passed: ['post-deploy']
 
       - task: assert-should-run

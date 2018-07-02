@@ -315,3 +315,9 @@
         - 10.0.17.12
     update:
       serial: true
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_kibana_admin_password
+    type: password

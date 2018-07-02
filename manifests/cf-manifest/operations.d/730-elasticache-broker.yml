@@ -110,3 +110,9 @@
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_staging_security_groups/-
   value: elasticache_broker_instances
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_elasticache_broker_admin_password
+    type: password

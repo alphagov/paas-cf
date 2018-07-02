@@ -22,16 +22,12 @@
   value: key-2017-01
 
 - type: replace
-  path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/encryption_keys/0/passphrase
-  value: ((secrets_bbs_encryption_key))
-
-- type: replace
   path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/sql/db_host
   value: ((terraform_outputs_cf_db_address))
 
 - type: replace
   path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/sql/db_password
-  value: ((secrets_cf_db_bbs_password))
+  value: ((external_bbs_database_password))
 
 - type: replace
   path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/sql/db_schema
@@ -44,18 +40,5 @@
 - type: remove
   path: /instance_groups/name=diego-api/jobs/name=silk-controller/consumes
 
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/host
-  value: ((terraform_outputs_cf_db_address))
-
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/name
-  value: network_connectivity
-
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/password
-  value: ((secrets_cf_db_network_connectivity_password))
-
-- type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/database/username
-  value: network_connectivity
+- type: remove
+  path: /variables/name=diego_instance_identity_ca

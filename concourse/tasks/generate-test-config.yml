@@ -8,7 +8,7 @@ image_resource:
 inputs:
   - name: paas-cf
   - name: admin-creds
-  - name: cf-secrets
+  - name: cf-vars-store
 outputs:
   - name: test-config
 run:
@@ -18,7 +18,7 @@ run:
     - -c
     - |
       bosh interpolate --var-errs \
-        --vars-file=cf-secrets/cf-secrets.yml \
+        --vars-file=cf-vars-store/cf-vars-store.yml \
         --var=admin_user="$(cat admin-creds/username)" \
         --var=admin_password="$(cat admin-creds/password)" \
         --var=system_domain="${SYSTEM_DOMAIN}" \

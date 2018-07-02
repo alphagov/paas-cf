@@ -741,3 +741,19 @@
       consul_common: {from: consul_common_link}
       consul_server: nil
       consul_client: {from: consul_client_link}
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_rds_broker_admin_password
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_rds_broker_master_password_seed
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_rds_broker_state_encryption_key
+    type: password

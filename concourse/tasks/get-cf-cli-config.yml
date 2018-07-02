@@ -7,7 +7,7 @@ image_resource:
     tag: 2.5-slim
 inputs:
   - name: paas-cf
-  - name: cf-secrets
+  - name: cf-vars-store
   - name: cf-manifest
 outputs:
   - name: config
@@ -22,7 +22,7 @@ run:
 
       cat << EOT > config/config.sh
       export CF_ADMIN=admin
-      export CF_PASS=$($VAL_FROM_YAML secrets_uaa_admin_password cf-secrets/cf-secrets.yml)
+      export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
 
       SYSTEM_DNS_ZONE_NAME=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.system_domain cf-manifest/cf-manifest.yml)
       export API_ENDPOINT="https://api.\${SYSTEM_DNS_ZONE_NAME}"
