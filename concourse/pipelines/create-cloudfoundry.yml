@@ -465,6 +465,7 @@ jobs:
             trigger: true
           - get: ipsec-CA
           - get: cf-secrets
+          - get: cf-vars-store
           - get: ssh-private-key
           - get: ssh-public-key
       - aggregate:
@@ -542,34 +543,124 @@ jobs:
                 - put: ssh-public-key
                   params:
                     file: generated-ssh-public-key/id_rsa.pub
+        - do:
+          # FIXME: Remove once the secrets have been migrated in all environments
+          - task: migrate-cf-secrets
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: ruby
+                  tag: 2.5-slim
+              inputs:
+                - name: paas-cf
+                - name: cf-secrets
+                  path: existing-cf-secrets
+                - name: cf-vars-store
+                  path: existing-cf-vars-store
+              outputs:
+                - name: migrated-cf-secrets
+                - name: migrated-cf-vars-store
+              run:
+                path: sh
+                args:
+                  - -c
+                  - -e
+                  - |
+                    ./paas-cf/manifests/cf-manifest/scripts/migrate-cf-secrets.rb \
+                      --cf-secrets existing-cf-secrets/cf-secrets.yml \
+                      --cf-secrets-updated migrated-cf-secrets/cf-secrets.yml \
+                      --cf-vars-store existing-cf-vars-store/cf-vars-store.yml \
+                      --cf-vars-store-updated migrated-cf-vars-store/cf-vars-store.yml \
+                      \
+                      --var secrets_bbs_encryption_key:diego_bbs_encryption_keys_passphrase \
+                      --var secrets_bulk_api_password:cc_bulk_api_password \
+                      --var secrets_bulk_api_password:cc_internal_api_password \
+                      --var secrets_cc_db_encryption_key:cc_db_encryption_key \
+                      --var secrets_nats_password:nats_password \
+                      --var secrets_router_password:router_status_password \
+                      --var secrets_route_services_secret:router_route_services_secret \
+                      --var secrets_ssh_proxy_host_key:diego_ssh_proxy_host_key \
+                      --var secrets_staging_upload_password:cc_staging_upload_password \
+                      --var secrets_uaa_admin_client_secret:uaa_admin_client_secret \
+                      --var secrets_uaa_admin_password:cf_admin_password \
+                      --var secrets_uaa_cc_routing_secret:uaa_clients_cc-routing_secret \
+                      --var secrets_uaa_clients_cc_service_dashboards_password:uaa_clients_cc-service-dashboards_secret \
+                      --var secrets_uaa_clients_cc_service_key_client_secret:uaa_clients_cc_service_key_client_secret \
+                      --var secrets_uaa_clients_cloud_controller_username_lookup_secret:uaa_clients_cloud_controller_username_lookup_secret \
+                      --var secrets_uaa_clients_doppler_secret:uaa_clients_doppler_secret \
+                      --var secrets_uaa_clients_gorouter_secret:uaa_clients_gorouter_secret \
+                      --var secrets_uaa_clients_ssh_proxy_secret:uaa_clients_ssh-proxy_secret \
+                      \
+                      --var secrets_consul_encrypt_keys:consul_encrypt_key \
+                      \
+                      --var secrets_cdn_broker_admin_password:secrets_cdn_broker_admin_password \
+                      --var secrets_compose_broker_admin_password:secrets_compose_broker_admin_password \
+                      --var secrets_elasticache_broker_admin_password:secrets_elasticache_broker_admin_password \
+                      --var secrets_paas_accounts_admin_password:secrets_paas_accounts_admin_password \
+                      --var secrets_kibana_admin_password:secrets_kibana_admin_password \
+                      --var secrets_rds_broker_admin_password:secrets_rds_broker_admin_password \
+                      --var secrets_rds_broker_master_password_seed:secrets_rds_broker_master_password_seed \
+                      --var secrets_rds_broker_state_encryption_key:secrets_rds_broker_state_encryption_key \
+                      --var secrets_test_user_password:secrets_test_user_password \
+                      --var secrets_uaa_clients_cdn_broker_secret:secrets_uaa_clients_cdn_broker_secret \
+                      --var secrets_uaa_batch_password:secrets_uaa_batch_password \
+                      --var secrets_uaa_clients_datadog_firehose_password:secrets_uaa_clients_datadog_firehose_password \
+                      --var secrets_uaa_clients_login_secret:secrets_uaa_clients_login_secret \
+                      --var secrets_uaa_clients_notifications_secret:secrets_uaa_clients_notifications_secret \
+                      --var secrets_uaa_clients_paas_metrics_secret:secrets_uaa_clients_paas_metrics_secret \
+                      --var secrets_uaa_clients_paas_billing_secret:secrets_uaa_clients_paas_billing_secret
 
-      - task: generate-cf-secrets
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
-          inputs:
-            - name: paas-cf
-            - name: cf-secrets
-          outputs:
-            - name: generated-cf-secrets
-          run:
-            path: sh
-            args:
-              - -c
-              - -e
-              - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                  --existing-secrets cf-secrets/cf-secrets.yml \
-                  > generated-cf-secrets/cf-secrets.yml
-                ls -l generated-cf-secrets
-        on_success:
-          put: cf-secrets
-          params:
-            file: generated-cf-secrets/cf-secrets.yml
+                    ./paas-cf/manifests/cf-manifest/scripts/rename-cf-secrets.rb \
+                      --cf-secrets migrated-cf-secrets/cf-secrets.yml \
+                      --cf-secrets-updated migrated-cf-secrets/cf-secrets.yml \
+                      \
+                      --var secrets_cf_db_api_password:external_cc_database_password \
+                      --var secrets_cf_db_locket_password:external_locket_database_password \
+                      --var secrets_cf_db_uaa_password:external_uaa_database_password \
+                      --var secrets_cf_db_bbs_password:external_bbs_database_password \
+                      --var secrets_cf_db_network_connectivity_password:external_silk_controller_database_password \
+                      --var secrets_cf_db_network_policy_password:external_policy_server_database_password
+
+            on_success:
+              do:
+              - put: cf-secrets
+                params:
+                  file: migrated-cf-secrets/cf-secrets.yml
+              - put: cf-vars-store
+                params:
+                  file: migrated-cf-vars-store/cf-vars-store.yml
+
+          - task: generate-cf-secrets
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: ruby
+                  tag: 2.5-slim
+              inputs:
+                - name: paas-cf
+                - name: migrated-cf-secrets
+                  path: existing-cf-secrets
+              outputs:
+                - name: generated-cf-secrets
+              run:
+                path: sh
+                args:
+                  - -c
+                  - -e
+                  - |
+                    ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                      --existing-secrets existing-cf-secrets/cf-secrets.yml \
+                      > generated-cf-secrets/cf-secrets.yml
+                    ls -l generated-cf-secrets
+            on_success:
+              put: cf-secrets
+              params:
+                file: generated-cf-secrets/cf-secrets.yml
+
 
   - name: pre-deploy
     plan:
@@ -1024,6 +1115,7 @@ jobs:
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-vars-store
+            passed: ['generate-secrets'] # FIXME: Remove after migration
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: bosh-tfstate
