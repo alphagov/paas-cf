@@ -1558,6 +1558,54 @@ jobs:
               ls -l config/*
 
     - aggregate:
+      - task: remove-unused-ses-smtp-access-keys
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          inputs:
+            - name: cf-tfstate
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            AWS_DEFAULT_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                delete_unused_keys() {
+                  terraform_outputs_key=$1
+                  username=$2
+
+                  jq_path=".modules[].outputs.${terraform_outputs_key}.value"
+                  ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
+                  if [ -z "$ACCESS_KEY_ID" ]; then
+                    echo "could not find $terraform_outputs_key in terraform outputs"
+                    exit 1
+                  fi
+
+                  UNUSED_ACCESS_KEYS=$(\
+                    aws iam list-access-keys --user-name "$username" \
+                    --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
+                    --output text \
+                  )
+                  if [ -z "$UNUSED_ACCESS_KEYS" ]; then
+                    echo "no access keys to revoke"
+                  else
+                    for key in $UNUSED_ACCESS_KEYS; do
+                      echo "deleting key $key for user $username"
+                      aws iam delete-access-key --user-name "$username" --access-key-id "$key"
+                    done
+                  fi
+                }
+
+                delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
+                delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
+
       - task: create-orgs
         config:
           platform: linux
@@ -2644,54 +2692,6 @@ jobs:
 
                 cf blue-green-deploy paas-uaa-assets
                 cf delete -f paas-uaa-assets-old
-
-      - task: remove-unused-ses-smtp-access-keys
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
-          inputs:
-            - name: cf-tfstate
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            AWS_DEFAULT_REGION: ((aws_region))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                delete_unused_keys() {
-                  terraform_outputs_key=$1
-                  username=$2
-
-                  jq_path=".modules[].outputs.${terraform_outputs_key}.value"
-                  ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
-                  if [ -z "$ACCESS_KEY_ID" ]; then
-                    echo "could not find $terraform_outputs_key in terraform outputs"
-                    exit 1
-                  fi
-
-                  UNUSED_ACCESS_KEYS=$(\
-                    aws iam list-access-keys --user-name "$username" \
-                    --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
-                    --output text \
-                  )
-                  if [ -z "$UNUSED_ACCESS_KEYS" ]; then
-                    echo "no access keys to revoke"
-                  else
-                    for key in $UNUSED_ACCESS_KEYS; do
-                      echo "deleting key $key for user $username"
-                      aws iam delete-access-key --user-name "$username" --access-key-id "$key"
-                    done
-                  fi
-                }
-
-                delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
-                delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
