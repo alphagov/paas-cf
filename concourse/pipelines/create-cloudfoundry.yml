@@ -406,7 +406,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: latest
+                tag: 3.7
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -1184,7 +1184,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: latest
+                tag: 3.7
             inputs:
               - name: paas-cf
             outputs:
@@ -3090,7 +3090,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: latest
+                tag: 3.7
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -3531,7 +3531,7 @@ jobs:
             type: docker-image
             source:
               repository: alpine
-              tag: latest
+              tag: 3.7
           inputs:
             - name: deployed-healthcheck
           params:
