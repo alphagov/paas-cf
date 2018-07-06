@@ -1590,6 +1590,7 @@ jobs:
                 cf create-space assets -o admin
 
                 cf create-org govuk-paas
+                cf set-quota govuk-paas medium
                 cf create-space docs -o govuk-paas
                 cf create-space tools -o govuk-paas
                 cf target -o admin
