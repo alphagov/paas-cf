@@ -1,6 +1,6 @@
 ---
 - type: replace
-  path: /addons/name=metron_agent/jobs/name=metron_agent/properties/loggregator/tls/ca_cert
+  path: /addons/name=loggregator_agent/jobs/name=loggregator_agent/properties/loggregator/tls/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace

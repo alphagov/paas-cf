@@ -17,7 +17,7 @@
     sha1: dee838e3a9c317c406ae1bcb84ae42ae862829c2
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: queue
     release: logsearch
@@ -42,7 +42,7 @@
     persistent_disk_type: queue
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: parser
     release: logsearch
@@ -141,7 +141,7 @@
     - name: cf
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: elasticsearch
     release: logsearch
@@ -179,7 +179,7 @@
       serial: true
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: elasticsearch_config
     release: logsearch
@@ -226,7 +226,7 @@
     - name: cf
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: kibana
     release: logsearch
@@ -265,7 +265,7 @@
     - name: cf
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: ingestor_syslog
     release: logsearch

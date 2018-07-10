@@ -45,7 +45,7 @@
     sha1: b358712488c44a09e815f278d6b767f3e82cd3e3
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: datadog-firehose-nozzle
     release: datadog-firehose-nozzle
