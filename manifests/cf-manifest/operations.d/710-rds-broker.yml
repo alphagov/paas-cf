@@ -49,9 +49,9 @@
   path: /releases/-
   value:
     name: rds-broker
-    version: 0.1.37
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.37.tgz
-    sha1: 7c224a33e028c05f4e518b7bc79323fbaac74f35
+    version: 0.1.38
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.38.tgz
+    sha1: 4dd361c256e6d80554014823811fa81aa50bf731
 
 - type: replace
   path: /instance_groups/-
@@ -77,9 +77,9 @@
               db_prefix: "rdsbroker"
               master_password_seed: ((secrets_rds_broker_master_password_seed))
             loggregator:
-              ca_cert: "/var/vcap/jobs/loggregator_agent/config/certs/loggregator_ca.crt"
-              client_cert: "/var/vcap/jobs/loggregator_agent/config/certs/loggregator_agent.crt"
-              client_key: "/var/vcap/jobs/loggregator_agent/config/certs/loggregator_agent.key"
+              ca_cert: "((loggregator_ca.certificate))((loggregator_ca_old.certificate))"
+              client_cert: "((loggregator_rds_metrics_collector.certificate))"
+              client_key: "((loggregator_rds_metrics_collector.private_key))"
       - name: rds-broker
         release: rds-broker
         properties:
@@ -755,3 +755,15 @@
   value:
     name: secrets_rds_broker_state_encryption_key
     type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: loggregator_rds_metrics_collector
+    type: certificate
+    options:
+      ca: loggregator_ca
+      common_name: loggregator_rds_metrics_collector
+      extended_key_usage:
+        - client_auth
+        - server_auth
+
