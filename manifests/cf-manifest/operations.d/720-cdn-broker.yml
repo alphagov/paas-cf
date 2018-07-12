@@ -9,7 +9,7 @@
     sha1: 1d9e2c202192c2d4c726d82de2a46e73ad0177be
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: cdn-broker
     release: cdn-broker

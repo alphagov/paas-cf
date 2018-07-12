@@ -1,5 +1,5 @@
 ---
 
 - type: replace
-  path: /addons/name=metron_agent/jobs/name=metron_agent/properties/metron_agent?/deployment
+  path: /addons/name=loggregator_agent/jobs/name=loggregator_agent/properties/loggregator_agent?/deployment
   value: ((environment))

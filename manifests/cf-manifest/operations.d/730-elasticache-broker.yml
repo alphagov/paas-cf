@@ -9,7 +9,7 @@
     sha1: a1b83e8f8972b71756bc622442590f34ff72a551
 
 - type: replace
-  path: /addons/name=metron_agent/exclude/jobs/-
+  path: /addons/name=loggregator_agent/exclude/jobs/-
   value:
     name: elasticache-broker
     release: elasticache-broker

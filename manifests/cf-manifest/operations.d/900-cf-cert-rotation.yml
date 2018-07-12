@@ -1,6 +1,6 @@
 ---
 - type: replace
-  path: /addons/name=metron_agent/jobs/name=metron_agent/properties/loggregator/tls/ca_cert
+  path: /addons/name=loggregator_agent/jobs/name=loggregator_agent/properties/loggregator/tls/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
@@ -196,27 +196,31 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=api/jobs/name=policy-server/properties/cf_networking/policy_server/uaa_ca
+  path: /instance_groups/name=api/jobs/name=policy-server/properties/uaa_ca
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=silk-daemon/properties/cf_networking/silk_daemon/ca_cert
+  path: /instance_groups/name=diego-cell/jobs/name=silk-daemon/properties/ca_cert
   value: ((silk_ca.certificate))((silk_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_controller/ca_cert
+  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/ca_cert
   value: ((silk_ca.certificate))((silk_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/cf_networking/silk_daemon/ca_cert
+  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/silk_daemon/ca_cert
   value: ((silk_ca.certificate))((silk_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=api/jobs/name=policy-server-internal/properties/cf_networking/policy_server_internal/ca_cert
+  path: /instance_groups/name=diego-api/jobs/name=silk-controller/properties/ca_cert
+  value: ((silk_ca.certificate))((silk_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=policy-server-internal/properties/ca_cert
   value: ((network_policy_ca.certificate))((network_policy_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/properties/cf_networking/vxlan_policy_agent/ca_cert
+  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/properties/ca_cert
   value: ((network_policy_ca.certificate))((network_policy_ca_old.certificate))
 
 - type: replace

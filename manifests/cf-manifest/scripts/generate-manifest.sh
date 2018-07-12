@@ -37,6 +37,7 @@ bosh interpolate \
   --vars-file="${WORKDIR}/environment-variables/environment-variables.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/rename-network.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/aws.yml" \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-blobstore.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-s3-blobstore.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-dbs.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \

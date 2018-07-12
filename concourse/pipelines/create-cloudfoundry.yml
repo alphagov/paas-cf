@@ -264,7 +264,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf-acceptance-tests
-      branch: cf1.38-gds
+      branch: cf2.6-gds
 
   - name: cf-smoke-tests-release
     type: git
