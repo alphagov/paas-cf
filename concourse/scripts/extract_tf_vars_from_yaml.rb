@@ -23,7 +23,7 @@ def process_yaml(yaml_tree, prefix_chain)
       process_yaml(v, prefix_chain + [name])
     }
   else
-    puts "#{prefix_chain.join('_')}='#{yaml_tree}'"
+    puts "#{prefix_chain.join('_').tr('-', '_')}='#{yaml_tree}'"
   end
 end
 
