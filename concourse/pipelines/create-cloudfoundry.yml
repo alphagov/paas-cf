@@ -226,6 +226,15 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-manifest-pre-vars.yml
 
+  - name: logit-secrets
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: logit-secrets.yml
+      initial_version: "-"
+      initial_content_text: ""
+
   - name: cloud-config
     type: s3-iam
     source:
@@ -1027,6 +1036,7 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
+          - get: logit-secrets
 
       - aggregate:
         - task: extract-terraform-outputs
@@ -1160,6 +1170,7 @@ jobs:
               - name: cf-secrets
               - name: environment-variables
               - name: vpc-peering-opsfile
+              - name: logit-secrets
             outputs:
               - name: cf-manifest
               - name: cf-manifest-pre-vars

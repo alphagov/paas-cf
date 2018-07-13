@@ -17,11 +17,12 @@
         release: syslog
         properties:
           syslog:
-            address: logsearch-ingestor.((system_domain))
-            port: 6514
+            address: ((meta.logit.syslog_address))
+            port: ((meta.logit.syslog_port))
             transport: 'tcp'
             tls_enabled: true
-            permitted_peer: "*.((system_domain))"
+            permitted_peer: "*.logit.io"
+            ca_cert: ((meta.logit.ca_cert))
             custom_rule: |
               $MaxMessageSize 64k
               if ($programname startswith "vcap.") then ~
