@@ -12,7 +12,7 @@ These filters can be manually updated in the logit interface. To generate the fi
 
 ## How to generate the Logit Logstash filters
 
-Run `scripts/generate.sh` from the paas-cf directory.
+Run `scripts/generate_logit_filters.sh` from the paas-cf directory.
 
 ### 10\_base.conf
 
