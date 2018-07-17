@@ -181,6 +181,7 @@ private
     extra_args
   )
     copy_terraform_fixtures
+    copy_logit_fixtures
     generate_cf_secrets
     copy_environment_variables
     copy_certs
@@ -248,6 +249,16 @@ private
         "#{dir}/#{file}.yml",
       )
     }
+  end
+
+  def copy_logit_fixtures
+    dir = workdir + '/logit-secrets'
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+
+    FileUtils.cp(
+      root.join("manifests/shared/spec/fixtures/logit-secrets.yml"),
+      "#{dir}/logit-secrets.yml",
+    )
   end
 
   def copy_environment_variables

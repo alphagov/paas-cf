@@ -31,6 +31,7 @@ bosh interpolate \
   --vars-file="${WORKDIR}/terraform-outputs/concourse.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
   --vars-file="${WORKDIR}/cf-secrets/cf-secrets.yml" \
+  --vars-file="${WORKDIR}/logit-secrets/logit-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/static-ips-and-ports.yml" \
   --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
