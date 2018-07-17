@@ -1,0 +1,5 @@
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_aiven_broker_admin_password
+    type: password

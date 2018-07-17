@@ -3192,6 +3192,7 @@ jobs:
                 --preserve router_route_services_secret \
                 --preserve secrets_cdn_broker_admin_password \
                 --preserve secrets_compose_broker_admin_password \
+                --preserve secrets_aiven_broker_admin_password \
                 --preserve secrets_elasticache_broker_admin_password \
                 --preserve secrets_kibana_admin_password \
                 --preserve secrets_rds_broker_admin_password \
