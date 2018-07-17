@@ -13,6 +13,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 . "${SCRIPT_DIR}/lib/compose.sh"
 
 # shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/aiven.sh"
+
+# shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/google-oauth.sh"
 
 # shellcheck disable=SC1090
@@ -60,6 +63,7 @@ prepare_environment() {
   get_git_concourse_pool_clone_full_url_ssh
   get_datadog_secrets
   get_compose_secrets
+  get_aiven_secrets
   get_google_oauth_secrets
   get_notify_secrets
 
@@ -123,6 +127,7 @@ datadog_app_key: "${datadog_app_key:-}"
 compose_api_key: ${compose_api_key:-}
 compose_billing_email: ${compose_billing_email:-}
 compose_billing_password: ${compose_billing_password:-}
+aiven_api_token: ${aiven_api_token:-}
 enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: "${oauth_client_id:-}"
