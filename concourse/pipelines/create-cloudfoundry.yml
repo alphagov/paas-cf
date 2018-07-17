@@ -341,6 +341,12 @@ resources:
       uri: https://github.com/alphagov/paas-compose-scraper
       tag_filter: v0.1.2
 
+  - name: paas-aiven-broker
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-aiven-broker
+      tag_filter: v0.5.0
+
   - name: paas-billing
     type: git
     source:
@@ -1417,6 +1423,7 @@ jobs:
       - get: datadog-tfstate
       - get: paas-compose-broker
       - get: paas-compose-scraper
+      - get: paas-aiven-broker
       - get: paas-billing
       - get: paas-accounts
       - get: paas-admin
@@ -1462,6 +1469,7 @@ jobs:
               export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
               export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-vars-store/cf-vars-store.yml)
+              export AIVEN_BROKER_PASS=$($VAL_FROM_YAML secrets_aiven_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export COMPOSE_BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
               export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
@@ -1807,6 +1815,62 @@ jobs:
                 "
                 cf blue-green-deploy compose-broker
                 cf delete -f compose-broker-old
+
+      - task: deploy-aiven-service-broker
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/cf-cli
+              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          inputs:
+            - name: paas-cf
+            - name: paas-aiven-broker
+            - name: config
+          params:
+            AIVEN_API_TOKEN: ((aiven_api_token))
+            SERVICE_NAME_PREFIX: ((deploy_env))
+            AIVEN_PROJECT: paas-cf-((aws_account))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                  -o admin -s service-brokers
+
+                cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
+                cp ./paas-cf/config/service-brokers/aiven/manifest.yml ./paas-aiven-broker/
+                cd paas-aiven-broker/
+
+                ruby -ryaml -e "
+                  env = {
+                    'AIVEN_USERNAME' => 'aiven-broker',
+                    'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
+                    'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
+                    'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
+                    'AIVEN_PROJECT' => '$AIVEN_PROJECT',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] ||= {}
+                    app['env'].merge!(env)
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf blue-green-deploy aiven-broker
+                cf delete -f aiven-broker-old
+
+                if cf service-brokers | grep "aiven-broker\s"; then
+                  cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                else
+                  cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                fi
 
       - task: deploy-simulated-load-application
         config:
