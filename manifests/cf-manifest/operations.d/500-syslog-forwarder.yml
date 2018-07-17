@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: syslog
-    version: 0.1.3
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/syslog-0.1.3.tgz
-    sha1: d7048c6205929365b7de60c03b6dd16531c29d5d
+    version: "11.3.2"
+    url: https://bosh.io/d/github.com/cloudfoundry/syslog-release?v=11.3.2
+    sha1: 64cf40d44746b50edffa78cb0e0dd6f072fee695
 
 - type: replace
   path: /addons/-
