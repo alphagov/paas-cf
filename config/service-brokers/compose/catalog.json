@@ -15,7 +15,7 @@
       "longDescription": "MongoDB instance",
       "providerDisplayName": "GOV.UK PaaS",
       "documentationUrl": "https://compose.com/mongodb",
-      "supportUrl": "https://www.cloud.service.gov.uk/support.html"
+      "supportUrl": "https://www.cloud.service.gov.uk/support"
     },
     "plans": [{
       "id": "fdfd4fc1-ce69-451c-a436-c2e2795b9abe",
