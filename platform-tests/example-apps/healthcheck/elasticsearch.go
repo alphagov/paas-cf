@@ -89,7 +89,11 @@ type esClient struct {
 }
 
 func (e *esClient) DocumentUrl(index, kind, id string) string {
-	return fmt.Sprintf("%s%s/%s/%s", e.baseURL, index, kind, id)
+	esURL := &url.URL{}
+	esURL, _ = esURL.Parse(e.baseURL)
+	path := fmt.Sprintf("/%s/%s/%s", index, kind, id)
+	esURL.Path = path
+	return esURL.String()
 }
 
 func (e *esClient) GetDocument(index, kind, id string) (*esDocument, error) {
