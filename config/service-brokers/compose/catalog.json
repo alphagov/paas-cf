@@ -32,7 +32,7 @@
     }]
   }, {
     "id": "6e9202f2-c2e1-4de8-8d4a-a8c898fc2d8c",
-    "name": "elasticsearch",
+    "name": "elasticsearch-compose",
     "bindable": true,
     "description": "Elasticsearch instance",
     "requires": [],

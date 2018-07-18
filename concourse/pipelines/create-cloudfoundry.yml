@@ -1782,6 +1782,7 @@ jobs:
             COMPOSE_API_KEY: ((compose_api_key))
             DB_PREFIX: ((deploy_env))
             CLUSTER_NAME: "gds-eu-west1-c00"
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
           run:
             path: sh
             args:
@@ -1816,60 +1817,10 @@ jobs:
                 cf blue-green-deploy compose-broker
                 cf delete -f compose-broker-old
 
-      - task: deploy-aiven-service-broker
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
-          inputs:
-            - name: paas-cf
-            - name: paas-aiven-broker
-            - name: config
-          params:
-            AIVEN_API_TOKEN: ((aiven_api_token))
-            SERVICE_NAME_PREFIX: ((deploy_env))
-            AIVEN_PROJECT: paas-cf-((aws_account))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                . ./config/config.sh
-                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                  -o admin -s service-brokers
-
-                cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
-                cp ./paas-cf/config/service-brokers/aiven/manifest.yml ./paas-aiven-broker/
-                cd paas-aiven-broker/
-
-                ruby -ryaml -e "
-                  env = {
-                    'AIVEN_USERNAME' => 'aiven-broker',
-                    'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
-                    'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
-                    'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
-                    'AIVEN_PROJECT' => '$AIVEN_PROJECT',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] ||= {}
-                    app['env'].merge!(env)
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-                cf blue-green-deploy aiven-broker
-                cf delete -f aiven-broker-old
-
-                if cf service-brokers | grep "aiven-broker\s"; then
-                  cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                if cf service-brokers | grep "compose-broker\s"; then
+                  cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
                 else
-                  cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                  cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
                 fi
 
       - task: deploy-simulated-load-application
@@ -2389,7 +2340,7 @@ jobs:
 
     - aggregate:
       - do:
-        - task: register-compose-broker
+        - task: deploy-aiven-service-broker
           config:
             platform: linux
             image_resource:
@@ -2399,8 +2350,12 @@ jobs:
                 tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
             inputs:
               - name: paas-cf
+              - name: paas-aiven-broker
               - name: config
             params:
+              AIVEN_API_TOKEN: ((aiven_api_token))
+              SERVICE_NAME_PREFIX: ((deploy_env))
+              AIVEN_PROJECT: paas-cf-((aws_account))
               APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
               path: sh
@@ -2410,12 +2365,35 @@ jobs:
                 - -c
                 - |
                   . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                    -o admin -s service-brokers
 
-                  if cf service-brokers | grep "compose-broker\s"; then
-                    cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
+                  cp ./paas-cf/config/service-brokers/aiven/manifest.yml ./paas-aiven-broker/
+                  cd paas-aiven-broker/
+
+                  ruby -ryaml -e "
+                    env = {
+                      'AIVEN_USERNAME' => 'aiven-broker',
+                      'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
+                      'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
+                      'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
+                      'AIVEN_PROJECT' => '$AIVEN_PROJECT',
+                    }
+                    manifest = YAML.load_file('manifest.yml')
+                    manifest['applications'].each { |app|
+                      app['env'] ||= {}
+                      app['env'].merge!(env)
+                    }
+                    File.write('manifest.yml', manifest.to_yaml)
+                  "
+                  cf blue-green-deploy aiven-broker
+                  cf delete -f aiven-broker-old
+
+                  if cf service-brokers | grep "aiven-broker\s"; then
+                    cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
                   else
-                    cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                    cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
                   fi
 
         - task: register-elasticache-broker
