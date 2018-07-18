@@ -26,8 +26,7 @@ func elasticsearchHandler(w http.ResponseWriter, r *http.Request) {
 
 func testElasticsearchConnection(tls bool) error {
 	var credentials struct {
-		URI          string `json:"uri"`
-		CACertBase64 string `json:"ca_certificate_base64"`
+		URI string `json:"uri"`
 	}
 	err := getVCAPServiceCredentials("elasticsearch", &credentials)
 	if err != nil {
@@ -39,12 +38,8 @@ func testElasticsearchConnection(tls bool) error {
 			return err
 		}
 	}
-	tlsConfig, err := buildTLSConfigWithCACert(credentials.CACertBase64)
-	if err != nil {
-		return err
-	}
 	client := &esClient{
-		client:  &http.Client{Transport: &http.Transport{TLSClientConfig: tlsConfig}},
+		client:  &http.Client{},
 		baseURL: credentials.URI,
 	}
 
