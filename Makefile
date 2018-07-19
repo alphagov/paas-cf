@@ -116,6 +116,7 @@ staging: globals ## Set Environment to Staging
 	$(eval export DEPLOY_ENV=staging)
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
 	@true
 
@@ -135,6 +136,7 @@ stg-lon: globals ## Set Environment to stg-lon
 	$(eval export DEPLOY_ENV=stg-lon)
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	@true
 
@@ -154,6 +156,7 @@ prod: globals ## Set Environment to Production
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
 	@true
 
@@ -173,6 +176,7 @@ prod-lon: globals ## Set Environment to prod-lon
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod-lon)
 	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
+	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	@true
 
@@ -202,7 +206,7 @@ showenv: check-env ## Display environment information
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets
+upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets
 
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
@@ -235,6 +239,14 @@ upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3
 	$(if ${NOTIFY_PASSWORD_STORE_DIR},,$(error Must pass NOTIFY_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${NOTIFY_PASSWORD_STORE_DIR}),,$(error Password store ${NOTIFY_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-notify-secrets.sh
+
+.PHONY: upload-aiven-secrets
+upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to S3
+	$(eval export AIVEN_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	$(if ${AIVEN_PASSWORD_STORE_DIR},,$(error Must pass AIVEN_PASSWORD_STORE_DIR=<path_to_password_store>))
+	$(if $(wildcard ${AIVEN_PASSWORD_STORE_DIR}),,$(error Password store ${AIVEN_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-aiven-secrets.sh
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check

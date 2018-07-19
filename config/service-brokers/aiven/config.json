@@ -1,0 +1,42 @@
+{
+  "port": "8080",
+  "log_level": "info",
+  "catalog": {
+    "services": [
+      {
+        "id": "1b45c99b-c90d-45b8-918d-9fb7dcb4beec",
+        "name": "elasticsearch",
+        "description": "Elasticsearch instances provisioned via Aiven",
+        "bindable": true,
+        "plan_updateable": true,
+        "metadata": {
+          "displayName": "Elasticsearch",
+          "providerDisplayName": "GOV.UK PaaS",
+          "supportUrl": "https://www.cloud.service.gov.uk/support"
+        },
+        "plans": [
+          {
+            "id": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
+            "name": "small-ha-es5",
+            "aiven_plan": "business-4",
+            "elasticsearch_version": "5",
+            "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
+            "metadata": {
+              "displayName": "Small, highly available Elasticsearch 5 cluster"
+            }
+          },
+          {
+            "id": "225e97cc-f786-408c-8b59-d2118248a53d",
+            "name": "small-ha-es6",
+            "aiven_plan": "business-4",
+            "elasticsearch_version": "6",
+            "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
+            "metadata": {
+              "displayName": "Small, highly available Elasticsearch 6 cluster"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

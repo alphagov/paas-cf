@@ -26,8 +26,7 @@ func elasticsearchHandler(w http.ResponseWriter, r *http.Request) {
 
 func testElasticsearchConnection(tls bool) error {
 	var credentials struct {
-		URI          string `json:"uri"`
-		CACertBase64 string `json:"ca_certificate_base64"`
+		URI string `json:"uri"`
 	}
 	err := getVCAPServiceCredentials("elasticsearch", &credentials)
 	if err != nil {
@@ -39,12 +38,8 @@ func testElasticsearchConnection(tls bool) error {
 			return err
 		}
 	}
-	tlsConfig, err := buildTLSConfigWithCACert(credentials.CACertBase64)
-	if err != nil {
-		return err
-	}
 	client := &esClient{
-		client:  &http.Client{Transport: &http.Transport{TLSClientConfig: tlsConfig}},
+		client:  &http.Client{},
 		baseURL: credentials.URI,
 	}
 
@@ -94,7 +89,11 @@ type esClient struct {
 }
 
 func (e *esClient) DocumentUrl(index, kind, id string) string {
-	return fmt.Sprintf("%s%s/%s/%s", e.baseURL, index, kind, id)
+	esURL := &url.URL{}
+	esURL, _ = esURL.Parse(e.baseURL)
+	path := fmt.Sprintf("/%s/%s/%s", index, kind, id)
+	esURL.Path = path
+	return esURL.String()
 }
 
 func (e *esClient) GetDocument(index, kind, id string) (*esDocument, error) {
@@ -129,6 +128,7 @@ func (e *esClient) doRequest(method, url string, body io.Reader, expectedStatus 
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Add("Content-Type", "application/json")
 	resp, err := e.client.Do(req)
 	if err != nil {
 		return nil, err
