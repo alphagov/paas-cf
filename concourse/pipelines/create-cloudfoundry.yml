@@ -2356,6 +2356,7 @@ jobs:
               AIVEN_API_TOKEN: ((aiven_api_token))
               SERVICE_NAME_PREFIX: ((deploy_env))
               AIVEN_PROJECT: paas-cf-((aws_account))
+              AIVEN_CLOUD: aws-((aws_region))
               APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             run:
               path: sh
@@ -2379,6 +2380,7 @@ jobs:
                       'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
                       'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
                       'AIVEN_PROJECT' => '$AIVEN_PROJECT',
+                      'AIVEN_CLOUD' => '$AIVEN_CLOUD',
                     }
                     manifest = YAML.load_file('manifest.yml')
                     manifest['applications'].each { |app|
