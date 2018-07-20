@@ -23,3 +23,7 @@ pingdom_contact_ids = [ 14270737, 14270734 ]
 
 datadog_notification_24x7 = "@pagerduty-datadog-24x7"
 datadog_notification_in_hours = "@pagerduty-datadog-in-hours"
+
+# AWS Limits not accesible via API
+aws_limits_elasticache_nodes = 100
+aws_limits_elasticache_cache_parameter_groups = 35
