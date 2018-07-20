@@ -19,7 +19,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 	)
 
 	var (
-		planNames = [2]string{"small-ha-es5", "small-ha-es6"}
+		planNames = [2]string{"small-ha-5.x", "small-ha-6.x"}
 	)
 
 	It("is registered in the marketplace", func() {
