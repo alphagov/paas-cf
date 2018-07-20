@@ -82,6 +82,12 @@ prepare_environment() {
   fi
 
   # shellcheck disable=SC2154
+  if [ -z "${aiven_api_token+x}" ] ; then
+    echo "Could not retrieve API token for Aiven. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-aiven-secrets\`?"
+    exit 1
+  fi
+
+  # shellcheck disable=SC2154
   if [ -z "${notify_api_key+x}" ] ; then
     echo "Could not retrieve api key for Notify. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-notify-secrets\`?"
     exit 1
