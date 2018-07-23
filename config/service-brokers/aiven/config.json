@@ -17,7 +17,7 @@
         "plans": [
           {
             "id": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
-            "name": "small-ha-es5",
+            "name": "small-ha-5.x",
             "aiven_plan": "business-4",
             "elasticsearch_version": "5",
             "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
@@ -27,7 +27,7 @@
           },
           {
             "id": "225e97cc-f786-408c-8b59-d2118248a53d",
-            "name": "small-ha-es6",
+            "name": "small-ha-6.x",
             "aiven_plan": "business-4",
             "elasticsearch_version": "6",
             "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",

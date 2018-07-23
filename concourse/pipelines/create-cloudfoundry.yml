@@ -345,13 +345,13 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker
-      tag_filter: v0.5.0
+      tag_filter: v0.6.0
 
   - name: paas-billing
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: v0.35.0
+      tag_filter: v0.36.0
 
   - name: paas-accounts
     type: git
@@ -2370,7 +2370,6 @@ jobs:
                     -o admin -s service-brokers
 
                   cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
-                  cp ./paas-cf/config/service-brokers/aiven/manifest.yml ./paas-aiven-broker/
                   cd paas-aiven-broker/
 
                   ruby -ryaml -e "
