@@ -1,5 +1,7 @@
 resource "aws_iam_user" "metrics_exporter" {
   name = "metrics-exporter-${var.env}"
+
+  force_destroy = true
 }
 
 # Until this feature request is not solved https://github.com/terraform-providers/terraform-provider-aws/issues/113,

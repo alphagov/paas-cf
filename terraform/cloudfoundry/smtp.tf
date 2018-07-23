@@ -1,5 +1,7 @@
 resource "aws_iam_user" "ses_smtp" {
   name = "ses-smtp-${var.env}"
+
+  force_destroy = true
 }
 
 # Until this feature request is not solved https://github.com/terraform-providers/terraform-provider-aws/issues/113,
