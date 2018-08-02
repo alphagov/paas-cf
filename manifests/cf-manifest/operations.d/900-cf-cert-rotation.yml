@@ -4,6 +4,22 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/api/client/tls/ca
+  value: ((dns_api_tls_ca.certificate))((dns_api_tls_ca_old.certificate))
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/api/server/tls/ca
+  value: ((dns_api_tls_ca.certificate))((dns_api_tls_ca_old.certificate))
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/client/tls/ca
+  value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/server/tls/ca
+  value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
+
+- type: replace
   path: /instance_groups/name=adapter/jobs/name=adapter/properties/scalablesyslog/adapter/tls/ca
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
@@ -307,3 +323,22 @@
       common_name: uaaCA
       is_ca: true
     type: certificate
+
+- type: replace
+  path: /variables/-
+  value:
+    name: dns_api_tls_ca_old
+    options:
+      common_name: dnsApiTlsCa
+      is_ca: true
+    type: certificate
+
+- type: replace
+  path: /variables/-
+  value:
+    name: dns_healthcheck_tls_ca_old
+    type: certificate
+    options:
+      common_name: dnsHealthCheckTlsCa
+      is_ca: true
+
