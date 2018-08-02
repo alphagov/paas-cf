@@ -54,6 +54,13 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
+	a, err := NewAivenClient(
+		os.Getenv("AIVEN_PROJECT"),
+		os.Getenv("AIVEN_API_TOKEN"),
+	)
+	if err != nil {
+		return errors.Wrap(err, "failed to get Aiven connection data")
+	}
 	sess, err := session.NewSession()
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to AWS API")
@@ -71,6 +78,7 @@ func Main() error {
 		SpaceCountGauge(c, 5*time.Minute),               // poll number of spaces
 		UserCountGauge(c, 5*time.Minute),                // poll number of users
 		QuotaGauge(c, 5*time.Minute),                    // poll quota usage
+		AivenCostGauge(a, 5*time.Minute),                // poll aiven cost
 		EventCountGauge(c, "app.crash", 10*time.Minute), // count number of times an event is seen within the interval
 		ELBNodeFailureCountGauge(logger, pingdumb.ReportConfig{
 			Target:  os.Getenv("ELB_ADDRESS"),

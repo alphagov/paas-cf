@@ -2526,6 +2526,8 @@ jobs:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             AWS_REGION: ((aws_region))
+            AIVEN_API_TOKEN: ((aiven_api_token))
+            AIVEN_PROJECT: paas-cf-((aws_account))
           inputs:
             - name: paas-cf
             - name: config
@@ -2569,6 +2571,8 @@ jobs:
                     'AWS_REGION' => '${AWS_REGION}',
                     'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
                     'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
+                    'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
+                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
                   }
                   manifest = YAML.load_file('manifest.yml')
                   manifest['applications'].each { |app|
