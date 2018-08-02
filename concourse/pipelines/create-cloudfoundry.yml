@@ -363,7 +363,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.21.0
+      tag_filter: v0.23.0
 
   - name: paas-log-cache-adapter
     type: git
@@ -2823,6 +2823,8 @@ jobs:
           - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
+          - get: paas-admin
+            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -2838,19 +2840,59 @@ jobs:
             APP_DOMAIN: ((apps_dns_zone_name))
             SYSTEM_DOMAIN: ((system_dns_zone_name))
 
-        - task: "Run custom acceptance tests"
-          file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
-          params:
-            DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
-            DEPLOY_ENV: ((deploy_env))
-            AWS_REGION: ((aws_region))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-
-          ensure:
-            task: upload-test-artifacts
-            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+        - aggregate:
+          - task: "Run custom acceptance tests"
+            file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
             params:
-              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+              DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+              DEPLOY_ENV: ((deploy_env))
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            ensure:
+              task: upload-test-artifacts
+              file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+              params:
+                TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+          - task: "Run paas-admin integration tests"
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: node
+                  tag: 8-alpine
+              params:
+                DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+                DEPLOY_ENV: ((deploy_env))
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              inputs:
+                - name: paas-cf
+                - name: paas-admin
+                - name: admin-creds
+                - name: cf-vars-store
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    if [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
+                      echo 'Skipping because DISABLE_CUSTOM_ACCEPTANCE_TESTS is set'
+                      exit 0
+                    fi
+                    cd paas-admin
+                    npm install
+
+                    ADMIN_USERNAME="$(cat ../admin-creds/username)" \
+                    ADMIN_PASSWORD="$(cat ../admin-creds/password)" \
+                    PAAS_ADMIN_BASE_URL="https://admin.${SYSTEM_DNS_ZONE_NAME}" \
+                    CF_API_BASE_URL="https://api.${SYSTEM_DNS_ZONE_NAME}" \
+                    ACCOUNTS_API_BASE_URL="https://accounts.${SYSTEM_DNS_ZONE_NAME}" \
+                    ACCOUNTS_USERNAME="admin" \
+                    ACCOUNTS_PASSWORD="$(awk '/^secrets_paas_accounts_admin_password:/ { print $2 }' < ../cf-vars-store/cf-vars-store.yml)" \
+                      npm run test:acceptance
 
         ensure:
           task: remove-temp-user
