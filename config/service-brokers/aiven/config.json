@@ -8,7 +8,7 @@
         "name": "elasticsearch",
         "description": "Elasticsearch instances provisioned via Aiven",
         "bindable": true,
-        "plan_updateable": true,
+        "plan_updateable": false,
         "metadata": {
           "displayName": "Elasticsearch",
           "providerDisplayName": "GOV.UK PaaS",
