@@ -30,8 +30,8 @@ EOF
   exit 1
 fi
 
-printf "Organisation:\t%s\n" "$(cf curl "$(cf curl "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.space_url')" | jq -r '.entity.organization_url')" | jq -r '.entity.name')"
-printf "Space:\t\t%s\n" "$(cf curl "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.space_url')" | jq -r '.entity.name')"
-printf "Instance:\t%s\n" "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.name')"
-printf "Managers:\t\n"
+printf "Organisation:\\t%s\\n" "$(cf curl "$(cf curl "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.space_url')" | jq -r '.entity.organization_url')" | jq -r '.entity.name')"
+printf "Space:\\t\\t%s\\n" "$(cf curl "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.space_url')" | jq -r '.entity.name')"
+printf "Instance:\\t%s\\n" "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.name')"
+printf "Managers:\\t\\n"
 cf curl "$(cf curl "$(cf curl /v2/service_instances/"${RDS_INSTANCE_ID}" | jq -r '.entity.space_url')" | jq -r '.entity.organization_url')/managers" | jq -r '.resources[].entity.username'

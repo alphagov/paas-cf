@@ -5,3 +5,4 @@ bin/terraform*
 platform-tests/pkg
 platform-tests/src/results
 terraform/.terraform/
+.venv/
