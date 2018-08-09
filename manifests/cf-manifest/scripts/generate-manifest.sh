@@ -36,6 +36,7 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/static-ips-and-ports.yml" \
   --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
   --vars-file="${WORKDIR}/environment-variables/environment-variables.yml" \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/rename-deployment.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/rename-network.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/aws.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-blobstore.yml" \
@@ -43,6 +44,7 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-dbs.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-uniq-consul-node-name.yml" \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-bosh-dns-for-containers.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   --ops-file="${datadog_opsfile}" \

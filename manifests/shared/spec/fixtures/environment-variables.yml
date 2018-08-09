@@ -2,6 +2,7 @@
 system_domain: unit-test.dev.paas.example.com
 app_domain: unit-test.dev-apps.paas.example.com
 environment: unit-test
+deployment_name: unit-test
 aws_account: dev
 datadog_api_key: abcd1234
 datadog_app_key: abcd1234
