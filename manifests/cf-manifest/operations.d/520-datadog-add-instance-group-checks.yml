@@ -4,10 +4,9 @@
   path: /releases/-
   value:
     name: datadog-for-cloudfoundry
-    version: 0.1.26
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.26.tgz
-    sha1: c47959e19137a2f6420422baa6f8b1f1abe25879
-
+    version: 0.1.27
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/datadog-for-cloudfoundry-0.1.27.tgz
+    sha1: 53b108f7e1a36df064e6d264c4e447d0fbb9f9de
 
 - type: replace
   path: /instance_groups/name=consul/jobs/-
