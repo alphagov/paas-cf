@@ -9,9 +9,9 @@
   path: /releases/-
   value:
     name: log-cache
-    sha: 87134510c23ce5facca665ac025f41a19340f5e9
-    url: https://bosh.io/d/github.com/cloudfoundry/log-cache-release?v=1.1.1
-    version: 1.1.1
+    sha: 8330eee7454c27790869aacdf5b58d497c3007b0
+    url: https://bosh.io/d/github.com/cloudfoundry/log-cache-release?v=1.4.1
+    version: 1.4.1
 
 - type: replace
   path: /instance_groups/name=doppler/jobs/-
