@@ -144,7 +144,7 @@ persistent_environment: ${PERSISTENT_ENVIRONMENT}
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
 gpg_ids: ${gpg_ids}
 EOF
-  echo -e "pipeline_lock_git_private_key: |\n  ${git_id_rsa//$'\n'/$'\n'  }"
+  echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
 
 upload_pipeline() {

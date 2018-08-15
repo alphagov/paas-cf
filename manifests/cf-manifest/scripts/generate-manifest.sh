@@ -17,7 +17,7 @@ if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
 fi
 
 opsfile_args=""
-for i in ${PAAS_CF_DIR}/manifests/cf-manifest/operations.d/*.yml; do
+for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
   opsfile_args="$opsfile_args -o $i"
 done
 

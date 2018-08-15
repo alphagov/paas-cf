@@ -1554,7 +1554,7 @@ jobs:
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                if cf service-brokers | grep "rds-broker\s"; then
+                if cf service-brokers | grep 'rds-broker\s'; then
                   cf update-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
                 else
                   cf create-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
@@ -1631,7 +1631,7 @@ jobs:
                 cf api "${API_ENDPOINT}"
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
 
-                if cf service-brokers | grep "cdn-broker\s"; then
+                if cf service-brokers | grep 'cdn-broker\s'; then
                   cf update-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
                 else
                   cf create-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
@@ -1749,16 +1749,16 @@ jobs:
 
                 cf target -s assets
 
-                if ! cf routes | grep -qE "\s+login.((system_dns_zone_name))\s+/create_account(\s+|$)"; then
+                if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
                   cf create-route assets "login.((system_dns_zone_name))" --path create_account
                 fi
-                if ! cf routes | grep -qE "\s+login.((system_dns_zone_name))\s+/create_account\.do(\s+|$)"; then
+                if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
                   cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
                 fi
-                if ! cf routes | grep -qE "\s+uaa.((system_dns_zone_name))\s+/create_account(\s+|$)"; then
+                if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
                   cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
                 fi
-                if ! cf routes | grep -qE "\s+uaa.((system_dns_zone_name))\s+/create_account\.do(\s+|$)"; then
+                if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
                   cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do;
                 fi
 
@@ -1818,7 +1818,7 @@ jobs:
                 cf blue-green-deploy compose-broker
                 cf delete -f compose-broker-old
 
-                if cf service-brokers | grep "compose-broker\s"; then
+                if cf service-brokers | grep 'compose-broker\s'; then
                   cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
                 else
                   cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
@@ -2393,7 +2393,7 @@ jobs:
                   cf blue-green-deploy aiven-broker
                   cf delete -f aiven-broker-old
 
-                  if cf service-brokers | grep "aiven-broker\s"; then
+                  if cf service-brokers | grep 'aiven-broker\s'; then
                     cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
                   else
                     cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
@@ -2420,7 +2420,7 @@ jobs:
                   . ./config/config.sh
                   echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  if cf service-brokers | grep "elasticache-broker\s"; then
+                  if cf service-brokers | grep 'elasticache-broker\s'; then
                     cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
                   else
                     cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
@@ -2939,7 +2939,7 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 bosh deployment
                 bosh vms | tee vms.txt
-                vms_not_running=$(grep '|' vms.txt | grep -cEv "(\-\-|VM|running)" || true)
+                vms_not_running=$(grep '|' vms.txt | grep -cEv '(\-\-|VM|running)' || true)
                 if [ "${vms_not_running}" -gt "0" ]; then
                   echo "Error: Number of not running VMs: ${vms_not_running}."
                   exit 1

@@ -2,7 +2,7 @@
 
 load_colors() {
   if [ -t 1 ] ; then
-    export ESC_SEQ="\x1b["
+    export ESC_SEQ="\\x1b["
     export COL_RESET="${ESC_SEQ}39;49;00m"
     export COL_LIGHT="${ESC_SEQ}1m"
     export COL_DIM="${ESC_SEQ}2m"
