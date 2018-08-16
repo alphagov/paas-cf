@@ -1,0 +1,25 @@
+---
+
+- type: replace
+  path: /releases/name=bosh-dns
+  value:
+    name: bosh-dns
+    sha1: 3b77329a772483d6c949f1a47ba9734976bc2b31
+    url: https://bosh.io/d/github.com/cloudfoundry/bosh-dns-release?v=1.8.0
+    version: 1.8.0
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/aliases/_.cell.service.cf.internal
+  value:
+    - _.diego-cell.cell.((deployment_name)).bosh
+    - _.isolated-diego-cell.cell.((deployment_name)).bosh
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/aliases/gorouter.service.cf.internal
+  value:
+    - '*.router.router.((deployment_name)).bosh'
+
+- type: remove
+  path: /addons/name=bosh-dns-windows2012
+- type: remove
+  path: /addons/name=bosh-dns-windows2016
