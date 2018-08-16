@@ -7,6 +7,11 @@ CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
 WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
+
+if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
+  opsfile_args="$opsfile_args -o ${CF_DEPLOYMENT_DIR}/operations/scale-to-one-az.yml"
+fi
+
 for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
   opsfile_args="$opsfile_args -o $i"
 done
@@ -19,6 +24,9 @@ if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
    opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml"
 fi
 
+if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
+  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/scale-down-dev.yml"
+fi
 
 # shellcheck disable=SC2086
 bosh interpolate \

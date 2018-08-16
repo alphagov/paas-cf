@@ -153,6 +153,15 @@ module ManifestHelpers
       environment: "prod",
       enable_datadog: "false",
       disable_user_creation: "true",
+      env_specific_manifest: "prod",
+    )
+  end
+
+  def manifest_for_dev
+    render_manifest_with_vars_store(
+      environment: "dev",
+      enable_datadog: "false",
+      disable_user_creation: "true",
     )
   end
 
@@ -204,7 +213,8 @@ private
     environment:,
     enable_datadog:,
     disable_user_creation:,
-    extra_args:
+    extra_args:,
+    env_specific_manifest: "default"
   )
     copy_terraform_fixtures
     copy_logit_fixtures
@@ -216,7 +226,7 @@ private
     env = {
       'PAAS_CF_DIR' => root.to_s,
       'WORKDIR' => workdir,
-      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{environment}.yml").to_s,
+      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{env_specific_manifest}.yml").to_s,
       'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
@@ -231,7 +241,8 @@ private
     environment:,
     enable_datadog:,
     disable_user_creation:,
-    custom_vars_store_content: nil
+    custom_vars_store_content: nil,
+    env_specific_manifest: "default"
   )
     Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
@@ -246,6 +257,7 @@ private
         enable_datadog: enable_datadog,
         disable_user_creation: disable_user_creation,
         extra_args: args,
+        env_specific_manifest: env_specific_manifest,
       )
 
       Cache.instance.vars_store = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
