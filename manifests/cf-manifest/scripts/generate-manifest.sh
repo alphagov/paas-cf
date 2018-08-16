@@ -6,20 +6,19 @@ PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
 CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
 WORKDIR=${WORKDIR:-.}
 
-datadog_opsfile=${PAAS_CF_DIR}/manifests/cf-manifest/operations/noop.yml
-if [ "${ENABLE_DATADOG}" = "true" ] ; then
-  datadog_opsfile="${PAAS_CF_DIR}/manifests/cf-manifest/operations/datadog.yml"
-fi
-
-oauth_opsfile=${PAAS_CF_DIR}/manifests/cf-manifest/operations/noop.yml
-if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-   oauth_opsfile="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml"
-fi
-
 opsfile_args=""
 for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
   opsfile_args="$opsfile_args -o $i"
 done
+
+if [ "${ENABLE_DATADOG}" = "true" ] ; then
+  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/datadog.yml"
+fi
+
+if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
+   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml"
+fi
+
 
 # shellcheck disable=SC2086
 bosh interpolate \
@@ -48,7 +47,5 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-bosh-dns-for-containers.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
-  --ops-file="${datadog_opsfile}" \
-  --ops-file="${oauth_opsfile}" \
   "$@" \
   "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"
