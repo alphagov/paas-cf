@@ -718,6 +718,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
             CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: sh
             args:
@@ -735,8 +736,13 @@ jobs:
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                  echo "Running app-availability-tests but ignoring failures"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app || true
+                else
+                  echo "Running app-availability-tests"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                fi
 
   - name: api-availability-tests
     serial: true
@@ -800,6 +806,7 @@ jobs:
             BRANCH: ((branch_name))
             CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
             AWS_DEFAULT_REGION: ((aws_region))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: sh
             args:
@@ -822,8 +829,13 @@ jobs:
 
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
 
-                echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                  echo "Running api-availability-tests but ignoring failures"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api || true
+                else
+                  echo "Running api-availability-tests"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                fi
         ensure:
           task: delete-job-file
           config:
