@@ -26,4 +26,11 @@
             custom_rule: |
               $MaxMessageSize 64k
               if ($programname startswith "vcap.") then ~
+
+              module(load="impstats"
+                interval="60"
+                severity="7"
+                log.syslog="on"
+                format="json-elasticsearch")
+
             use_tcp_for_file_forwarding_local_transport: true
