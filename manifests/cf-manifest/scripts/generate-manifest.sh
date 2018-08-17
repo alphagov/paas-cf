@@ -18,6 +18,9 @@ done
 
 if [ "${ENABLE_DATADOG}" = "true" ] ; then
   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/datadog.yml"
+  if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
+    opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/scale-down-dev-datadog.yml"
+  fi
 fi
 
 if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
