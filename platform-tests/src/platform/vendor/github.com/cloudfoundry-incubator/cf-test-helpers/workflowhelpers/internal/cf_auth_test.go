@@ -1,35 +1,46 @@
 package internal_test
 
 import (
-	"bytes"
 	"fmt"
 
+	"bytes"
+
+	"github.com/cloudfoundry-incubator/cf-test-helpers/internal"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/internal/fakes"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers/internal"
+	. "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers/internal"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("CfAuth", func() {
-	var cmdStarter *fakes.FakeCmdStarter
-	var reporterOutput *bytes.Buffer
+	var (
+		password string
+
+		cmdStarter *fakes.FakeCmdStarter
+
+		redactor          internal.Redactor
+		reporterOutput    *bytes.Buffer
+		redactingReporter internal.Reporter
+	)
 
 	BeforeEach(func() {
+		password = "foobar"
 		cmdStarter = fakes.NewFakeCmdStarter()
+		redactor = internal.NewRedactor(password)
 		reporterOutput = bytes.NewBuffer([]byte{})
-		GinkgoWriter = reporterOutput
+		redactingReporter = internal.NewRedactingReporter(reporterOutput, redactor)
 	})
 
 	It("runs the cf auth command", func() {
-		internal.CfAuth(cmdStarter, "user", "password").Wait()
+		CfAuth(cmdStarter, redactingReporter, "user", password).Wait()
 		Expect(cmdStarter.CalledWith[0].Executable).To(Equal("cf"))
-		Expect(cmdStarter.CalledWith[0].Args).To(Equal([]string{"auth", "user", "password"}))
+		Expect(cmdStarter.CalledWith[0].Args).To(Equal([]string{"auth", "user", "foobar"}))
 	})
 
 	It("does not reveal the password", func() {
-		internal.CfAuth(cmdStarter, "user", "password").Wait()
+		CfAuth(cmdStarter, redactingReporter, "user", password).Wait()
 		Expect(reporterOutput.String()).To(ContainSubstring("REDACTED"))
-		Expect(reporterOutput.String()).NotTo(ContainSubstring("password"))
+		Expect(reporterOutput.String()).NotTo(ContainSubstring("foobar"))
 	})
 
 	Context("when the starter returns error", func() {
@@ -39,7 +50,7 @@ var _ = Describe("CfAuth", func() {
 
 		It("panics", func() {
 			Expect(func() {
-				internal.CfAuth(cmdStarter, "user", "password").Wait()
+				CfAuth(cmdStarter, redactingReporter, "user", password).Wait()
 			}).To(Panic())
 		})
 	})

@@ -15,7 +15,33 @@
 
 [[projects]]
   name = "github.com/aws/aws-sdk-go"
-  packages = ["aws","aws/awserr","aws/awsutil","aws/client","aws/client/metadata","aws/corehandlers","aws/credentials","aws/credentials/ec2rolecreds","aws/credentials/endpointcreds","aws/credentials/stscreds","aws/defaults","aws/ec2metadata","aws/request","aws/session","aws/signer/v4","private/endpoints","private/protocol","private/protocol/query","private/protocol/query/queryutil","private/protocol/rest","private/protocol/restxml","private/protocol/xml/xmlutil","private/waiter","service/s3","service/sts"]
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/stscreds",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "private/endpoints",
+    "private/protocol",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/restxml",
+    "private/protocol/xml/xmlutil",
+    "private/waiter",
+    "service/s3",
+    "service/sts"
+  ]
   revision = "6c577e9e7b08a6d10bad1c9703227cd0403a8dd7"
   version = "v1.4.22"
 
@@ -31,17 +57,36 @@
 
 [[projects]]
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
-  packages = ["cf","commandreporter","commandstarter","config","generator","helpers","helpers/internal","internal","workflowhelpers","workflowhelpers/internal"]
-  revision = "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
+  packages = [
+    "cf",
+    "commandreporter",
+    "commandstarter",
+    "config",
+    "generator",
+    "helpers",
+    "helpers/internal",
+    "internal",
+    "silentcommandstarter",
+    "workflowhelpers",
+    "workflowhelpers/internal"
+  ]
+  revision = "dc453294914947b630c176d5a38923854d62bf83"
 
 [[projects]]
   name = "github.com/concourse/atc"
-  packages = [".","event"]
+  packages = [
+    ".",
+    "event"
+  ]
   revision = "406261dbd7681e0ed1c8de6366994a4e935e0b55"
 
 [[projects]]
   name = "github.com/concourse/go-concourse"
-  packages = ["concourse","concourse/eventstream","concourse/internal"]
+  packages = [
+    "concourse",
+    "concourse/eventstream",
+    "concourse/internal"
+  ]
   revision = "b260442fef033f8d10163306d5387fdef5547fd2"
 
 [[projects]]
@@ -79,13 +124,48 @@
 
 [[projects]]
   name = "github.com/onsi/ginkgo"
-  packages = [".","config","internal/codelocation","internal/containernode","internal/failer","internal/leafnodes","internal/remote","internal/spec","internal/spec_iterator","internal/specrunner","internal/suite","internal/testingtproxy","internal/writer","reporters","reporters/stenographer","reporters/stenographer/support/go-colorable","reporters/stenographer/support/go-isatty","types"]
+  packages = [
+    ".",
+    "config",
+    "internal/codelocation",
+    "internal/containernode",
+    "internal/failer",
+    "internal/leafnodes",
+    "internal/remote",
+    "internal/spec",
+    "internal/spec_iterator",
+    "internal/specrunner",
+    "internal/suite",
+    "internal/testingtproxy",
+    "internal/writer",
+    "reporters",
+    "reporters/stenographer",
+    "reporters/stenographer/support/go-colorable",
+    "reporters/stenographer/support/go-isatty",
+    "types"
+  ]
   revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
   version = "v1.4.0"
 
 [[projects]]
   name = "github.com/onsi/gomega"
-  packages = [".","format","gbytes","gexec","ghttp","internal/assertion","internal/asyncassertion","internal/oraclematcher","internal/testingtsupport","matchers","matchers/support/goraph/bipartitegraph","matchers/support/goraph/edge","matchers/support/goraph/node","matchers/support/goraph/util","types"]
+  packages = [
+    ".",
+    "format",
+    "gbytes",
+    "gexec",
+    "ghttp",
+    "internal/assertion",
+    "internal/asyncassertion",
+    "internal/oraclematcher",
+    "internal/testingtsupport",
+    "matchers",
+    "matchers/support/goraph/bipartitegraph",
+    "matchers/support/goraph/edge",
+    "matchers/support/goraph/node",
+    "matchers/support/goraph/util",
+    "types"
+  ]
   revision = "c893efa28eb45626cdaa76c9f653b62488858837"
   version = "v1.2.0"
 
@@ -126,13 +206,25 @@
 
 [[projects]]
   name = "golang.org/x/net"
-  packages = ["context","context/ctxhttp","html","html/atom","html/charset","http2","http2/hpack"]
+  packages = [
+    "context",
+    "context/ctxhttp",
+    "html",
+    "html/atom",
+    "html/charset",
+    "http2",
+    "http2/hpack"
+  ]
   revision = "af4fee9d05b66edc24197d189e6118f8ebce8c2b"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/oauth2"
-  packages = [".","clientcredentials","internal"]
+  packages = [
+    ".",
+    "clientcredentials",
+    "internal"
+  ]
   revision = "d89af98d7c6bba047c5a2622f36bc14b8766df85"
 
 [[projects]]
@@ -144,12 +236,38 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
-  packages = ["encoding","encoding/charmap","encoding/htmlindex","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","encoding/unicode","internal/gen","internal/tag","internal/utf8internal","language","runes","transform","unicode/cldr"]
+  packages = [
+    "encoding",
+    "encoding/charmap",
+    "encoding/htmlindex",
+    "encoding/internal",
+    "encoding/internal/identifier",
+    "encoding/japanese",
+    "encoding/korean",
+    "encoding/simplifiedchinese",
+    "encoding/traditionalchinese",
+    "encoding/unicode",
+    "internal/gen",
+    "internal/tag",
+    "internal/utf8internal",
+    "language",
+    "runes",
+    "transform",
+    "unicode/cldr"
+  ]
   revision = "bd91bbf73e9a4a801adbfb97133c992678533126"
 
 [[projects]]
   name = "google.golang.org/appengine"
-  packages = ["internal","internal/base","internal/datastore","internal/log","internal/remote_api","internal/urlfetch","urlfetch"]
+  packages = [
+    "internal",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/remote_api",
+    "internal/urlfetch",
+    "urlfetch"
+  ]
   revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
   version = "v1.0.0"
 
@@ -161,6 +279,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "893563c18be3aa636e9b9fee891641a1b6f3cb7284226d305271ce4b2cedd5d6"
+  inputs-digest = "af4ab1dbb1b375c99e23d09df1d2c73eacddc917ef82a8a61faa6dfc91ffac4f"
   solver-name = "gps-cdcl"
   solver-version = 1
