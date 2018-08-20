@@ -5,7 +5,7 @@
   value:
     - alias: "3468"
       os: ubuntu-trusty
-      version: "3468.54"
+      version: "3468.64"
     - alias: default
       os: ubuntu-trusty
-      version: "3586.26"
+      version: "3586.36"
