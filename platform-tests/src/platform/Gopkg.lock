@@ -73,6 +73,14 @@
   revision = "dc453294914947b630c176d5a38923854d62bf83"
 
 [[projects]]
+  name = "github.com/cloudfoundry/cf-acceptance-tests"
+  packages = [
+    "helpers/config",
+    "helpers/validationerrors"
+  ]
+  revision = "d2cb3b538b87c96266e030004c43a59ea3b96a5a"
+
+[[projects]]
   name = "github.com/concourse/atc"
   packages = [
     ".",
@@ -279,6 +287,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "af4ab1dbb1b375c99e23d09df1d2c73eacddc917ef82a8a61faa6dfc91ffac4f"
+  inputs-digest = "6ca308f4ce5d3c4a42f5bd42809dbf0bce52fee8a6a8867c1adaf03458bd7143"
   solver-name = "gps-cdcl"
   solver-version = 1

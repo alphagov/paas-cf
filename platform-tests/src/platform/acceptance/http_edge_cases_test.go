@@ -31,12 +31,12 @@ var _ = Describe("HTTP edge cases", func() {
 		var appName string
 
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP-DORA")
+			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-DORA")
 			Expect(cf.Cf(
 				"push", appName,
-				"-b", testConfig.RubyBuildpackName,
+				"-b", testConfig.GetRubyBuildpackName(),
 				"-p", "../../../../../cf-acceptance-tests/assets/dora",
-				"-d", testConfig.AppsDomain,
+				"-d", testConfig.GetAppsDomain(),
 				"-i", "1",
 				"-m", "256M",
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
@@ -60,12 +60,12 @@ var _ = Describe("HTTP edge cases", func() {
 		var appName string
 
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP-HTTP-TESTER")
+			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName,
 				"-p", "../../../example-apps/http_tester",
 				"-f", "../../../example-apps/http_tester/manifest.yml",
-				"-d", testConfig.AppsDomain,
+				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
 
@@ -127,15 +127,15 @@ var _ = Describe("HTTP edge cases", func() {
 		})
 
 		It("can connect to other app in the paas", func() {
-			appName2 := generator.PrefixedRandomName(testConfig.NamePrefix, "APP-HTTP-TESTER")
+			appName2 := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName2,
 				"-p", "../../../example-apps/http_tester",
 				"-f", "../../../example-apps/http_tester/manifest.yml",
-				"-d", testConfig.AppsDomain,
+				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			curlArgs := []string{"-k"}
-			response := helpers.CurlApp(testConfig, appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, testConfig.AppsDomain), curlArgs...)
+			response := helpers.CurlApp(testConfig, appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, testConfig.GetAppsDomain()), curlArgs...)
 
 			Expect(response).To(BeEquivalentTo("OK"))
 		})

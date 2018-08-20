@@ -40,12 +40,12 @@ var _ = Describe("X-Forwarded headers", func() {
 		egressIP = strings.TrimSpace(fmt.Sprintf("%s", body))
 		Expect(net.ParseIP(egressIP)).ToNot(BeNil(), "Unable to parse egress IP from %s: %s", egressURL, egressIP)
 
-		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
+		appName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 		Expect(cf.Cf(
 			"push", appName,
 			"-p", "../../../example-apps/http_tester",
 			"-f", "../../../example-apps/http_tester/manifest.yml",
-			"-d", testConfig.AppsDomain,
+			"-d", testConfig.GetAppsDomain(),
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", fmt.Sprintf("X-Forwarded-For: %s", fakeProxyIP)}

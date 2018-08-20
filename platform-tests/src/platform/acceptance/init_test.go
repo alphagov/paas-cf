@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
+	"os"
 	"os/exec"
 	"testing"
 	"time"
@@ -14,9 +15,9 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/config"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
+	"github.com/cloudfoundry/cf-acceptance-tests/helpers/config"
 )
 
 const (
@@ -31,19 +32,21 @@ const (
 )
 
 var (
-	testConfig  *config.Config
+	testConfig  config.CatsConfig
 	httpClient  *http.Client
 	testContext *workflowhelpers.ReproducibleTestSuiteSetup
 )
 
 func TestSuite(t *testing.T) {
+	var err error
 	RegisterFailHandler(Fail)
 
-	testConfig = config.LoadConfig()
+	testConfig, err = config.NewCatsConfig(os.Getenv("CONFIG"))
+	Expect(err).NotTo(HaveOccurred())
 
 	httpClient = &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: testConfig.SkipSSLValidation},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: testConfig.GetSkipSSLValidation()},
 		},
 	}
 
@@ -69,7 +72,7 @@ func TestSuite(t *testing.T) {
 	})
 
 	componentName := "Custom-Acceptance-Tests"
-	if testConfig.ArtifactsDirectory != "" {
+	if testConfig.GetArtifactsDirectory() != "" {
 		helpers.EnableCFTrace(testConfig, componentName)
 	}
 

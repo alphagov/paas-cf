@@ -43,7 +43,7 @@ var _ = Describe("UAA authorization webpage styling", func() {
 
 		customAppURL = url.URL{
 			Scheme: "https",
-			Host:   "paas-uaa-assets." + testConfig.AppsDomain,
+			Host:   "paas-uaa-assets." + testConfig.GetAppsDomain(),
 		}
 		customLogoURL = customAppURL
 		customLogoURL.Path = "/images/product-logo.png"
