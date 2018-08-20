@@ -9,6 +9,7 @@ skip_ssl_validation: false
 backend: "diego"
 skip_diego_unsupported_tests: true
 use_existing_user: false
+name_prefix: ((name_prefix))
 
 use_log_cache: true
 

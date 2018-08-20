@@ -23,5 +23,6 @@ run:
         --var=admin_password="$(cat admin-creds/password)" \
         --var=system_domain="${SYSTEM_DOMAIN}" \
         --var=app_domain="${APP_DOMAIN}" \
+        --var=name_prefix="${NAME_PREFIX:-CATS}" \
         "paas-cf/manifests/cf-manifest/test-config/${TEST_PROPERTIES}.yml" | \
           ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' > test-config/config.json
