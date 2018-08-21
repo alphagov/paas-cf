@@ -395,7 +395,7 @@ resources:
     type: git
     source:
       uri: https://github.com/bosh-prometheus/prometheus-boshrelease
-      tag_filter: v23.0.0
+      tag_filter: v23.1.0
 
 jobs:
   - name: pipeline-lock
