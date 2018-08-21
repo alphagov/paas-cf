@@ -74,26 +74,6 @@ output "cf_ssh_proxy_elb_name" {
   value = "${aws_elb.ssh_proxy.name}"
 }
 
-output "logsearch_ingestor_elb_name" {
-  value = "${aws_elb.logsearch_ingestor.name}"
-}
-
-output "logsearch_ingestor_elb_dns_name" {
-  value = "${aws_elb.logsearch_ingestor.dns_name}"
-}
-
-output "logsearch_elastic_master_elb_name" {
-  value = "${aws_elb.logsearch_es_master.name}"
-}
-
-output "logsearch_elastic_master_elb_dns_name" {
-  value = "${aws_elb.logsearch_es_master.dns_name}"
-}
-
-output "logsearch_elb_name" {
-  value = "${aws_elb.logsearch_kibana.name}"
-}
-
 output "aws_backing_service_cidr_all" {
   value = "${var.aws_backing_service_cidr_all}"
 }

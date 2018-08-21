@@ -1242,8 +1242,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
-          - get: cf-tfstate
-            passed: ['generate-cf-config']
           - get: bosh-secrets
           - get: bosh-CA-crt
 
@@ -1315,57 +1313,6 @@ jobs:
                   ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                   bosh -n update-cloud-config cloud-config/cloud-config.yml
 
-        - do:
-          - task: extract-cf-terraform-outputs
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: ruby
-                  tag: 2.5-slim
-              inputs:
-                - name: paas-cf
-                - name: cf-tfstate
-              outputs:
-                - name: cf-terraform-outputs
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    SCPATH="./paas-cf/concourse/scripts"
-                    SCFILE="extract_tf_vars_from_terraform_state.rb"
-                    $SCPATH/$SCFILE < cf-tfstate/cf.tfstate > cf-terraform-outputs/cf.tfstate.sh
-                    ls -l cf-terraform-outputs/cf.tfstate.sh
-
-          - try:
-              task: disable-elasticsearch-shard-reallocation
-              config:
-                platform: linux
-                image_resource:
-                  type: docker-image
-                  source:
-                    repository: governmentpaas/curl-ssl
-                    tag: 465642da06051a55630d39c899697b678f66a7f7
-                inputs:
-                - name: paas-cf
-                - name: cf-terraform-outputs
-                run:
-                  path: sh
-                  args:
-                  - -e
-                  - -c
-                  - |
-                    echo "This task will fail if you have no Elasticserch master and that is OK."
-                    . cf-terraform-outputs/cf.tfstate.sh
-                    export TF_VAR_logsearch_elastic_master_elb_dns_name
-                    curl -s \
-                      -X PUT \
-                      -d '{"transient":{"cluster.routing.allocation.enable":"none"}}' \
-                      "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
-
       - task: cf-deploy
         config:
           platform: linux
@@ -1391,31 +1338,6 @@ jobs:
               - |
                 ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 bosh -n deploy cf-manifest/cf-manifest.yml
-
-      - task: enable-elasticsearch-shard-reallocation
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/curl-ssl
-              tag: 465642da06051a55630d39c899697b678f66a7f7
-          inputs:
-          - name: paas-cf
-          - name: cf-terraform-outputs
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              . cf-terraform-outputs/cf.tfstate.sh
-              export TF_VAR_logsearch_elastic_master_elb_dns_name
-
-              curl -s \
-                -X PUT \
-                -d '{"transient":{"cluster.routing.allocation.enable":"all"}}' \
-                "${TF_VAR_logsearch_elastic_master_elb_dns_name}:9200/_cluster/settings"
 
   - name: post-deploy
     serial: true
@@ -2441,37 +2363,6 @@ jobs:
                   fi
                   cf enable-service-access redis
 
-      - task: update-kibana-timezone
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-          inputs:
-          - name: paas-cf
-          - name: cf-tfstate
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              SCRIPT_DIR="./paas-cf/concourse/scripts"
-
-              ruby "${SCRIPT_DIR}/extract_terraform_state_to_yaml.rb" \
-                < cf-tfstate/cf.tfstate \
-                > cf-tfstate.yaml
-
-              export ES_HOST
-              ES_HOST=$(ruby "${SCRIPT_DIR}/val_from_yaml.rb" terraform_outputs_logsearch_elastic_master_elb_dns_name cf-tfstate.yaml)
-              export ES_PORT="9200"
-              ruby "${SCRIPT_DIR}/kibana_set_utc.rb"
-
       - task: datadog-terraform-apply
         config:
           platform: linux
@@ -3302,7 +3193,6 @@ jobs:
                 --preserve secrets_compose_broker_admin_password \
                 --preserve secrets_aiven_broker_admin_password \
                 --preserve secrets_elasticache_broker_admin_password \
-                --preserve secrets_kibana_admin_password \
                 --preserve secrets_rds_broker_admin_password \
                 --preserve secrets_rds_broker_master_password_seed \
                 --preserve secrets_rds_broker_state_encryption_key \
@@ -3318,7 +3208,6 @@ jobs:
                 --preserve secrets_cdn_broker_admin_password \
                 --preserve secrets_compose_broker_admin_password \
                 --preserve secrets_elasticache_broker_admin_password \
-                --preserve secrets_kibana_admin_password \
                 --preserve secrets_rds_broker_admin_password \
                 --preserve secrets_rds_broker_master_password_seed \
                 --preserve secrets_rds_broker_state_encryption_key \
