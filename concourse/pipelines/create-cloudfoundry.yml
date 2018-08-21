@@ -1502,7 +1502,6 @@ jobs:
                   -o paas-cf/manifests/prometheus-manifest/operators/cf-alerts.yml \
                   -o paas-cf/manifests/prometheus-manifest/operators/prometheus.yml \
                   -o paas-cf/manifests/prometheus-manifest/operators/alertmanager.yml \
-                  -o paas-cf/manifests/prometheus-manifest/operators/ha-setup.yml \
                   > prometheus-manifest/prometheus-manifest.yml
 
         on_success:
