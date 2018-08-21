@@ -74,11 +74,6 @@ var _ = Describe("TestSpace", func() {
 			Expect(testSpace.QuotaDefinitionTotalMemoryLimit).To(Equal(quotaLimit))
 		})
 
-		It("makes the space ephemeral", func() {
-			testSpace := NewRegularTestSpace(&cfg, quotaLimit)
-			Expect(testSpace.ShouldRemain()).To(BeFalse())
-		})
-
 		Context("when the config specifies that an existing organization should be used", func() {
 			BeforeEach(func() {
 				cfg = config.Config{
@@ -107,56 +102,12 @@ var _ = Describe("TestSpace", func() {
 
 	})
 
-	Describe("NewPersistentAppTestSpace", func() {
-		var quotaDefinitionName, organizationName, spaceName string
-		BeforeEach(func() {
-			quotaDefinitionName = "persistent-quota"
-			organizationName = "persistent-org"
-			spaceName = "persistent-space"
-			cfg = config.Config{
-				PersistentAppOrg:       organizationName,
-				PersistentAppSpace:     spaceName,
-				PersistentAppQuotaName: quotaDefinitionName,
-			}
-		})
-
-		It("gets the quota definition name from the config", func() {
-			testSpace := NewPersistentAppTestSpace(&cfg)
-			Expect(testSpace.QuotaDefinitionName).To(Equal(quotaDefinitionName))
-		})
-
-		It("gets the org name from the config", func() {
-			testSpace := NewPersistentAppTestSpace(&cfg)
-			Expect(testSpace.OrganizationName()).To(Equal(organizationName))
-		})
-
-		It("gets the space name from the config", func() {
-			testSpace := NewPersistentAppTestSpace(&cfg)
-			Expect(testSpace.SpaceName()).To(Equal(spaceName))
-		})
-
-		It("uses default values for the quota", func() {
-			testSpace := NewPersistentAppTestSpace(&cfg)
-			Expect(testSpace.QuotaDefinitionTotalMemoryLimit).To(Equal("10G"))
-			Expect(testSpace.QuotaDefinitionInstanceMemoryLimit).To(Equal("-1"))
-			Expect(testSpace.QuotaDefinitionRoutesLimit).To(Equal("1000"))
-			Expect(testSpace.QuotaDefinitionAppInstanceLimit).To(Equal("-1"))
-			Expect(testSpace.QuotaDefinitionServiceInstanceLimit).To(Equal("100"))
-			Expect(testSpace.QuotaDefinitionAllowPaidServicesFlag).To(Equal("--allow-paid-service-plans"))
-		})
-
-		It("makes the space persistent", func() {
-			testSpace := NewPersistentAppTestSpace(&cfg)
-			Expect(testSpace.ShouldRemain()).To(Equal(true))
-		})
-	})
-
 	Describe("Create", func() {
 		var testSpace *TestSpace
 		var fakeStarter *fakes.FakeCmdStarter
 
 		var spaceName, orgName, quotaName, quotaLimit string
-		var isPersistent, isExistingOrganization, isExistingSpace bool
+		var isExistingOrganization, isExistingSpace bool
 		var timeout time.Duration
 
 		BeforeEach(func() {
@@ -164,7 +115,6 @@ var _ = Describe("TestSpace", func() {
 			orgName = "org"
 			quotaName = "quota"
 			quotaLimit = "10G"
-			isPersistent = false
 			isExistingOrganization = false
 			isExistingSpace = false
 			timeout = 1 * time.Second
@@ -172,7 +122,7 @@ var _ = Describe("TestSpace", func() {
 		})
 
 		JustBeforeEach(func() {
-			testSpace = NewBaseTestSpace(spaceName, orgName, quotaName, quotaLimit, isPersistent, isExistingOrganization, isExistingSpace, timeout, fakeStarter)
+			testSpace = NewBaseTestSpace(spaceName, orgName, quotaName, quotaLimit, isExistingOrganization, isExistingSpace, timeout, fakeStarter)
 		})
 
 		Context("when the organization name is not specified", func() {
@@ -300,7 +250,6 @@ var _ = Describe("TestSpace", func() {
 		var testSpace *TestSpace
 		var fakeStarter *fakes.FakeCmdStarter
 		var spaceName, orgName, quotaName, quotaLimit string
-		var isPersistent bool
 		var isExistingOrganization bool
 		var isExistingSpace bool
 		var timeout time.Duration
@@ -311,7 +260,6 @@ var _ = Describe("TestSpace", func() {
 			orgName = "org"
 			quotaName = "quota"
 			quotaLimit = "10G"
-			isPersistent = false
 			isExistingOrganization = false
 			isExistingSpace = false
 			timeout = 1 * time.Second
@@ -323,7 +271,6 @@ var _ = Describe("TestSpace", func() {
 				orgName,
 				quotaName,
 				quotaLimit,
-				isPersistent,
 				isExistingOrganization,
 				isExistingSpace,
 				timeout,
@@ -419,30 +366,24 @@ var _ = Describe("TestSpace", func() {
 		})
 	})
 
-	Describe("ShouldRemain", func() {
+	Describe("QuotaName", func() {
+
 		var testSpace *TestSpace
-		var isPersistent bool
-		JustBeforeEach(func() {
-			testSpace = NewBaseTestSpace("", "", "", "", isPersistent, false, false, 1*time.Second, nil)
+		BeforeEach(func() {
+			testSpace = nil
 		})
-		Context("when the space is constructed to be ephemeral", func() {
-			BeforeEach(func() {
-				isPersistent = false
-			})
-			It("returns false", func() {
-				Expect(testSpace.ShouldRemain()).To(BeFalse())
+
+		It("returns the quota name", func() {
+			testSpace = NewBaseTestSpace("", "", "my-quota", "", false, false, 1*time.Second, nil)
+			Expect(testSpace.QuotaName()).To(Equal("my-quota"))
+		})
+
+		Context("when the TestSpace is nil", func() {
+			It("returns the empty string", func() {
+				Expect(testSpace.QuotaName()).To(BeEmpty())
 			})
 		})
 
-		Context("when the space is contstructed to be persistent", func() {
-			BeforeEach(func() {
-				isPersistent = true
-			})
-
-			It("returns true", func() {
-				Expect(testSpace.ShouldRemain()).To(BeTrue())
-			})
-		})
 	})
 
 	Describe("OrganizationName", func() {
@@ -452,7 +393,7 @@ var _ = Describe("TestSpace", func() {
 		})
 
 		It("returns the organization name", func() {
-			testSpace = NewBaseTestSpace("", "my-org", "", "", false, false, false, 1*time.Second, nil)
+			testSpace = NewBaseTestSpace("", "my-org", "", "", false, false, 1*time.Second, nil)
 			Expect(testSpace.OrganizationName()).To(Equal("my-org"))
 		})
 
@@ -470,7 +411,7 @@ var _ = Describe("TestSpace", func() {
 		})
 
 		It("returns the organization name", func() {
-			testSpace = NewBaseTestSpace("my-space", "", "", "", false, false, false, 1*time.Second, nil)
+			testSpace = NewBaseTestSpace("my-space", "", "", "", false, false, 1*time.Second, nil)
 			Expect(testSpace.SpaceName()).To(Equal("my-space"))
 		})
 

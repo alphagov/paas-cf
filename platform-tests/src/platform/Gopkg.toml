@@ -47,8 +47,17 @@
 
 [[constraint]]
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
-  revision = "2c7deda19c83f1c2cfde730712b1f36aefc6bf33"
+  revision = "dc453294914947b630c176d5a38923854d62bf83"
 
 [[constraint]]
   name = "github.com/aws/aws-sdk-go"
-	version = "~1.4.11"
+  version = "~1.4.11"
+
+[[constraint]]
+  name = "github.com/cloudfoundry/cf-acceptance-tests"
+  revision = "d2cb3b538b87c96266e030004c43a59ea3b96a5a"
+
+[[prune.project]]
+  name = "github.com/cloudfoundry/cf-acceptance-tests"
+  go-tests = true
+  unused-packages = true

@@ -41,8 +41,8 @@ var _ = Describe("Redis backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 
-			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
-			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-redis")
+			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
+			dbInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-redis")
 
 			By("creating the service: "+dbInstanceName, func() {
 				Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName, "-c", `{"maxmemory_policy": "noeviction"}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
@@ -63,10 +63,10 @@ var _ = Describe("Redis backing service", func() {
 				Expect(cf.Cf(
 					"push", appName,
 					"--no-start",
-					"-b", testConfig.GoBuildpackName,
+					"-b", testConfig.GetGoBuildpackName(),
 					"-p", "../../../example-apps/healthcheck",
 					"-f", "../../../example-apps/healthcheck/manifest.yml",
-					"-d", testConfig.AppsDomain,
+					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
 

@@ -22,14 +22,14 @@ var _ = Describe("cf push", func() {
 
 	Context("when staging an app takes a long time", func() {
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "SLEEPY-APP")
+			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "SLEEPY-APP")
 			Expect(cf.Cf(
 				"push", appName,
 				"-b", "https://github.com/alphagov/paas-cf-sleepy-buildpack",
 				// The contents of this directory are pushed, but not served
 				// See the buildpack for details.
 				"-p", "../../../example-apps/static-app/",
-				"-d", testConfig.AppsDomain,
+				"-d", testConfig.GetAppsDomain(),
 				"--no-start",
 				"--no-manifest",
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))

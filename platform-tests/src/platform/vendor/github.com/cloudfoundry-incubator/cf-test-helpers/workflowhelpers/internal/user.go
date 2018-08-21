@@ -1,15 +1,17 @@
 package internal
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/internal"
 	"github.com/onsi/ginkgo"
-	ginkgoconfig "github.com/onsi/ginkgo/config"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 )
 
 type TestUser struct {
@@ -36,16 +38,14 @@ type adminuserConfig interface {
 }
 
 func NewTestUser(config userConfig, cmdStarter internal.Starter) *TestUser {
-	node := ginkgoconfig.GinkgoConfig.ParallelNode
-	timeTag := time.Now().Format("2006_01_02-15h04m05.999s")
-
 	var regUser, regUserPass string
-	regUser = fmt.Sprintf("%s-USER-%d-%s", config.GetNamePrefix(), node, timeTag)
-	regUserPass = "meow"
 
 	if config.GetUseExistingUser() {
 		regUser = config.GetExistingUser()
 		regUserPass = config.GetExistingUserPassword()
+	} else {
+		regUser = generator.PrefixedRandomName(config.GetNamePrefix(), "USER")
+		regUserPass = generatePassword()
 	}
 
 	if config.GetConfigurableTestPassword() != "" {
@@ -103,4 +103,22 @@ func combineOutputAndRedact(session *Session, redactor internal.Redactor) *Buffe
 	stderr := redactor.Redact(string(session.Err.Contents()))
 
 	return BufferWithBytes(append([]byte(stdout), []byte(stderr)...))
+}
+
+// The key thing that makes a password secure is the _entropy_ that comes from a
+// generator of true random numbers.  But many password rules require a mixure
+// of cases, numbers and special characters.  Here we meet these rules by starting
+// the password with the required upper/lower case, number and special.  Then we make
+// it secure by adding truly random characters.
+func generatePassword() string {
+	const randomBytesLength = 16
+	encoding := base64.RawURLEncoding
+
+	randomBytes := make([]byte, encoding.DecodedLen(randomBytesLength))
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		panic(fmt.Errorf("Could not generate random password: %s", err.Error()))
+	}
+
+	return "A0a!" + encoding.EncodeToString(randomBytes)
 }

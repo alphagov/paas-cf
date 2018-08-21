@@ -22,7 +22,6 @@ func TestSuite(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	testConfig = config.LoadConfig()
-	testConfig.NamePrefix = "PERF"
 
 	testContext := workflowhelpers.NewTestSuiteSetup(testConfig)
 

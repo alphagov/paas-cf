@@ -18,12 +18,12 @@ var _ = Describe("X-Forwarded headers", func() {
 	}
 
 	var _ = BeforeEach(func() {
-		appName := generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
+		appName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 		Expect(cf.Cf(
 			"push", appName,
 			"-p", "../../../example-apps/http_tester",
 			"-f", "../../../example-apps/http_tester/manifest.yml",
-			"-d", testConfig.AppsDomain,
+			"-d", testConfig.GetAppsDomain(),
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", "X-Forwarded-Proto: IPoAC"}

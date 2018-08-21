@@ -2841,6 +2841,7 @@ jobs:
             TEST_PROPERTIES: acceptance_tests
             APP_DOMAIN: ((apps_dns_zone_name))
             SYSTEM_DOMAIN: ((system_dns_zone_name))
+            NAME_PREFIX: ACC
 
         - aggregate:
           - task: "Run custom acceptance tests"
@@ -2972,6 +2973,7 @@ jobs:
             TEST_PROPERTIES: acceptance_tests
             APP_DOMAIN: ((apps_dns_zone_name))
             SYSTEM_DOMAIN: ((system_dns_zone_name))
+            NAME_PREFIX: PERF
 
         - task: run-tests
           config:

@@ -45,8 +45,8 @@ var _ = Describe("Elasticsearch backing service", func() {
 			dbInstanceName string
 		)
 		BeforeEach(func() {
-			appName = generator.PrefixedRandomName(testConfig.NamePrefix, "APP")
-			dbInstanceName = generator.PrefixedRandomName(testConfig.NamePrefix, "test-es")
+			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
+			dbInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-es")
 			Expect(cf.Cf("create-service", serviceName, planNames[0], dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
@@ -56,10 +56,10 @@ var _ = Describe("Elasticsearch backing service", func() {
 			Expect(cf.Cf(
 				"push", appName,
 				"--no-start",
-				"-b", testConfig.GoBuildpackName,
+				"-b", testConfig.GetGoBuildpackName(),
 				"-p", "../../../example-apps/healthcheck",
 				"-f", "../../../example-apps/healthcheck/manifest.yml",
-				"-d", testConfig.AppsDomain,
+				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))

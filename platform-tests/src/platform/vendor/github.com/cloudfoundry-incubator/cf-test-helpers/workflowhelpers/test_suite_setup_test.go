@@ -85,6 +85,7 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 
 	Describe("NewTestSuiteSetup", func() {
 		var cfg config.Config
+		var existingUserCfg config.Config
 		var useExistingUser bool
 		var existingUser, existingUserPassword string
 		var configurableTestPassword string
@@ -113,6 +114,12 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 				AdminUser:                "admin",
 				AdminPassword:            "admin-password",
 			}
+
+			existingUserCfg = config.Config{
+				UseExistingUser:      true,
+				ExistingUser:         "existing-user",
+				ExistingUserPassword: "existing-user-password",
+			}
 		})
 
 		Describe("its RegularUserContext", func() {
@@ -123,13 +130,12 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 
 				Expect(testSpace.OrganizationName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-ORG-.*"))
 				Expect(testSpace.SpaceName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-SPACE-.*"))
-				Expect(testSpace.ShouldRemain()).To(BeFalse())
 			})
 
 			It("has a regular TestUser", func() {
 				setup := NewTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-USER-[0-9]+-.*"))
-				Expect(setup.RegularUserContext().TestUser.Password()).To(Equal("meow"))
+				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-[0-9]+-USER-.*"))
+				Expect(len(setup.RegularUserContext().TestUser.Password())).To(Equal(20))
 			})
 
 			It("uses the api endpoint and SkipSSLValidation from the config", func() {
@@ -161,81 +167,12 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 			Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
 		})
 
-	})
-
-	Describe("NewPersistentAppTestSuiteSetup", func() {
-		var cfg config.Config
-		var orgName, quotaName, spaceName string
-		var apiEndpoint string
-		var skipSSLValidation bool
-
-		BeforeEach(func() {
-			orgName = "my-persistent-org"
-			quotaName = "my-persistent-quota"
-			spaceName = "my-persistent-space"
-			apiEndpoint = "api-endpoint.com"
-			skipSSLValidation = false
-		})
-
-		JustBeforeEach(func() {
-			cfg = config.Config{
-				TimeoutScale:           2.0,
-				NamePrefix:             "UNIT-TESTS",
-				ApiEndpoint:            apiEndpoint,
-				PersistentAppSpace:     spaceName,
-				PersistentAppOrg:       orgName,
-				PersistentAppQuotaName: quotaName,
-				SkipSSLValidation:      skipSSLValidation,
-				AdminUser:              "admin",
-				AdminPassword:          "admin-password",
-			}
-		})
-
-		Describe("its RegularUserContext", func() {
-			It("has a PersistentAppTestSpace", func() {
-				setup := NewPersistentAppTestSuiteSetup(&cfg)
-				testSpace, ok := setup.TestSpace.(*internal.TestSpace)
-				Expect(ok).To(BeTrue())
-
-				Expect(testSpace.OrganizationName()).To(Equal(orgName))
-				Expect(testSpace.SpaceName()).To(Equal(spaceName))
-				Expect(testSpace.QuotaDefinitionName).To(Equal(quotaName))
-				Expect(testSpace.ShouldRemain()).To(BeTrue())
-			})
-
-			It("has a regular TestUser", func() {
-				setup := NewPersistentAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-USER-[0-9]+-.*"))
-				Expect(setup.RegularUserContext().TestUser.Password()).To(Equal("meow"))
-			})
-
-			It("uses the api endpoint and SkipSSLValidation from the config", func() {
-				setup := NewPersistentAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal(apiEndpoint))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(Equal(skipSSLValidation))
-
-				cfg.ApiEndpoint = "api.other-cf.com"
-				cfg.SkipSSLValidation = true
-				setup = NewPersistentAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal("api.other-cf.com"))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(BeTrue())
-			})
-
-			It("uses the short timeout", func() {
-				setup := NewPersistentAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().Timeout).To(Equal(setup.ShortTimeout()))
-			})
-		})
-
-		It("creates an AdminUserContext from the config", func() {
-			setup := NewPersistentAppTestSuiteSetup(&cfg)
-			adminUserContext := setup.AdminUserContext()
-			Expect(adminUserContext.ApiUrl).To(Equal(cfg.ApiEndpoint))
-			Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
-			Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
-			Expect(adminUserContext.TestSpace).To(BeNil())
-			Expect(adminUserContext.SkipSSLValidation).To(Equal(cfg.SkipSSLValidation))
-			Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
+		It("uses the existing user", func() {
+			setup := NewTestSuiteSetup(&existingUserCfg)
+			regularUserContext := setup.RegularUserContext()
+			Expect(setup.SkipUserCreation).To(Equal(existingUserCfg.UseExistingUser))
+			Expect(regularUserContext.TestUser.Username()).To(Equal(existingUserCfg.ExistingUser))
+			Expect(regularUserContext.TestUser.Password()).To(Equal(existingUserCfg.ExistingUserPassword))
 		})
 	})
 
@@ -268,13 +205,12 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 
 				Expect(testSpace.OrganizationName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-ORG-.*"))
 				Expect(testSpace.SpaceName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-SPACE-.*"))
-				Expect(testSpace.ShouldRemain()).To(BeFalse())
 			})
 
 			It("has a regular TestUser", func() {
 				setup := NewSmokeTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-USER-[0-9]+-.*"))
-				Expect(setup.RegularUserContext().TestUser.Password()).To(Equal("meow"))
+				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-[0-9]+-USER-.*"))
+				Expect(len(setup.RegularUserContext().TestUser.Password())).To(Equal(20))
 			})
 
 			It("configures a smoke test setup", func() {
@@ -310,6 +246,7 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 
 	Describe("NewRunawayAppTestSetup", func() {
 		var cfg config.Config
+		var existingUserCfg config.Config
 		var apiEndpoint string
 		var skipSSLValidation bool
 
@@ -327,6 +264,12 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 				AdminUser:         "admin",
 				AdminPassword:     "admin-password",
 			}
+
+			existingUserCfg = config.Config{
+				UseExistingUser:      true,
+				ExistingUser:         "existing-user",
+				ExistingUserPassword: "existing-user-password",
+			}
 		})
 
 		Describe("its RegularUserContext", func() {
@@ -339,13 +282,12 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 				Expect(testSpace.QuotaDefinitionName).To(MatchRegexp("UNIT-TESTS-[0-9]+-QUOTA-.*"))
 				Expect(testSpace.OrganizationName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-ORG-.*"))
 				Expect(testSpace.SpaceName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-SPACE-.*"))
-				Expect(testSpace.ShouldRemain()).To(BeFalse())
 			})
 
 			It("has a regular TestUser", func() {
 				setup := NewRunawayAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-USER-[0-9]+-.*"))
-				Expect(setup.RegularUserContext().TestUser.Password()).To(Equal("meow"))
+				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-[0-9]+-USER-.*"))
+				Expect(len(setup.RegularUserContext().TestUser.Password())).To(Equal(20))
 			})
 
 			It("uses the api endpoint and SkipSSLValidation from the config", func() {
@@ -375,6 +317,14 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 			Expect(adminUserContext.TestSpace).To(BeNil())
 			Expect(adminUserContext.SkipSSLValidation).To(Equal(cfg.SkipSSLValidation))
 			Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
+		})
+
+		It("uses the existing user", func() {
+			setup := NewRunawayAppTestSuiteSetup(&existingUserCfg)
+			regularUserContext := setup.RegularUserContext()
+			Expect(setup.SkipUserCreation).To(Equal(existingUserCfg.UseExistingUser))
+			Expect(regularUserContext.TestUser.Username()).To(Equal(existingUserCfg.ExistingUser))
+			Expect(regularUserContext.TestUser.Password()).To(Equal(existingUserCfg.ExistingUserPassword))
 		})
 	})
 
@@ -584,15 +534,5 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 			Expect(testSpace.DestroyCallCount()).To(Equal(1))
 		})
 
-		Context("when the space should remain", func() {
-			BeforeEach(func() {
-				testSpace.ShouldRemainReturns(true)
-			})
-
-			It("does not destroy the user", func() {
-				testSetup.Teardown()
-				Expect(testSpace.DestroyCallCount()).To(Equal(0))
-			})
-		})
 	})
 })
