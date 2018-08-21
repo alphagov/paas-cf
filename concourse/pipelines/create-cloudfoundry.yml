@@ -2865,6 +2865,7 @@ jobs:
               DEPLOY_ENV: ((deploy_env))
               AWS_REGION: ((aws_region))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             ensure:
               task: upload-test-artifacts
               file: paas-cf/concourse/tasks/upload-test-artifacts.yml
