@@ -57,6 +57,16 @@ make dev pipelines
 ```
 if you want to deploy to DEV account.
 
+Install [yq](https://github.com/mikefarah/yq) and [gron](https://github.com/tomnomnom/gron)
+
+For OSX run the following
+
+```bash
+brew install yq gron
+```
+
+
+
 ### Deploy
 
 Run the `create-cloudfoundry` pipeline. This configure and deploy CloudFoundry.
