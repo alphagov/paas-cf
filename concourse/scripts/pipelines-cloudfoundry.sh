@@ -67,7 +67,7 @@ prepare_environment() {
   get_google_oauth_secrets
   get_notify_secrets
 
-  if [ -n "${SLIM_DEV_DEPLOYMENT}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+  if [ -n "${SLIM_DEV_DEPLOYMENT:-}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
     echo "SLIM_DEV_DEPLOYMENT set for non-dev deployment. Aborting!"
     exit 1
   fi
