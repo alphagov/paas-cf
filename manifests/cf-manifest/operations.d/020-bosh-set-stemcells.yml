@@ -3,9 +3,6 @@
 - type: replace
   path: /stemcells
   value:
-    - alias: "3468"
-      os: ubuntu-trusty
-      version: "3468.64"
     - alias: default
       os: ubuntu-trusty
       version: "3586.36"
