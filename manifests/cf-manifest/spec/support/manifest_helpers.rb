@@ -105,29 +105,64 @@ module ManifestHelpers
 
   def manifest_without_vars_store
     Cache.instance.manifest_without_vars_store ||= \
-      render_manifest("default", "false", "true", [])
+      render_manifest(
+        environment: "default",
+        enable_datadog: "false",
+        disable_user_creation: "true",
+        extra_args: [],
+      )
   end
 
   def manifest_with_defaults
     Cache.instance.manifest_with_defaults ||= \
-      render_manifest_with_vars_store("default", "false", "true", nil)
+      render_manifest_with_vars_store(
+        environment: "default",
+        enable_datadog: "false",
+        disable_user_creation: "true",
+      )
   end
 
   def manifest_with_custom_vars_store(vars_store_content)
-    render_manifest_with_vars_store("default", "false", "true", vars_store_content)
+    render_manifest_with_vars_store(
+      environment: "default",
+      enable_datadog: "false",
+      disable_user_creation: "true",
+      custom_vars_store_content: vars_store_content,
+    )
   end
 
   def manifest_with_datadog_enabled
     Cache.instance.manifest_with_datadog_enabled ||= \
-      render_manifest_with_vars_store("default", "true", "true", nil)
+      render_manifest_with_vars_store(
+        environment: "default",
+        enable_datadog: "true",
+        disable_user_creation: "true",
+      )
   end
 
   def manifest_with_enable_user_creation
-    render_manifest_with_vars_store("default", "false", "false", nil)
+    render_manifest_with_vars_store(
+      environment: "default",
+      enable_datadog: "false",
+      disable_user_creation: "false",
+    )
   end
 
   def manifest_for_prod
-    render_manifest_with_vars_store("prod", "false", "true", nil)
+    render_manifest_with_vars_store(
+      environment: "prod",
+      enable_datadog: "false",
+      disable_user_creation: "true",
+      env_specific_manifest: "prod",
+    )
+  end
+
+  def manifest_for_dev
+    render_manifest_with_vars_store(
+      environment: "dev",
+      enable_datadog: "false",
+      disable_user_creation: "true",
+    )
   end
 
   def cf_deployment_manifest
@@ -175,10 +210,11 @@ private
   end
 
   def render_manifest(
-    environment,
-    enable_datadog,
-    disable_user_creation,
-    extra_args
+    environment:,
+    enable_datadog:,
+    disable_user_creation:,
+    extra_args:,
+    env_specific_manifest: "default"
   )
     copy_terraform_fixtures
     copy_logit_fixtures
@@ -190,7 +226,7 @@ private
     env = {
       'PAAS_CF_DIR' => root.to_s,
       'WORKDIR' => workdir,
-      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{environment}.yml").to_s,
+      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{env_specific_manifest}.yml").to_s,
       'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
@@ -202,10 +238,11 @@ private
   end
 
   def render_manifest_with_vars_store(
-    environment,
-    enable_datadog,
-    disable_user_creation,
-    custom_vars_store_content
+    environment:,
+    enable_datadog:,
+    disable_user_creation:,
+    custom_vars_store_content: nil,
+    env_specific_manifest: "default"
   )
     Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
@@ -215,7 +252,13 @@ private
         --var-errs
         --vars-store=#{vars_store_tempfile.path}
       }
-      output = render_manifest(environment, enable_datadog, disable_user_creation, args)
+      output = render_manifest(
+        environment: environment,
+        enable_datadog: enable_datadog,
+        disable_user_creation: disable_user_creation,
+        extra_args: args,
+        env_specific_manifest: env_specific_manifest,
+      )
 
       Cache.instance.vars_store = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
 

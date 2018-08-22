@@ -1,0 +1,43 @@
+---
+
+# This contains changes to downscale dev environments in addition to the
+# upstream scale-to-one-az.yml opsfile.
+
+# Reverse the scaling down of consul because scaling down an exisiting
+# cluster is non-trivial
+- type: replace
+  path: /instance_groups/name=consul/instances
+  value: 3
+- type: replace
+  path: /instance_groups/name=consul/azs
+  value:
+    - z1
+    - z2
+    - z3
+
+- type: replace
+  path: /instance_groups/name=doppler/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=router/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=diego-cell/instances
+  value: 2
+- type: replace
+  path: /instance_groups/name=diego-cell/azs
+  value:
+    - z1
+    - z2
+    - z3
+
+- type: replace
+  path: /instance_groups/name=rds_broker/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=cdn_broker/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=elasticache_broker/instances
+  value: 1

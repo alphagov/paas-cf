@@ -67,6 +67,11 @@ prepare_environment() {
   get_google_oauth_secrets
   get_notify_secrets
 
+  if [ -n "${SLIM_DEV_DEPLOYMENT}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+    echo "SLIM_DEV_DEPLOYMENT set for non-dev deployment. Aborting!"
+    exit 1
+  fi
+
   if [ "${ENABLE_DATADOG}" = "true" ] ; then
     # shellcheck disable=SC2154
     if [ -z "${datadog_api_key+x}" ] || [ -z "${datadog_app_key+x}" ] ; then
@@ -142,6 +147,7 @@ notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
+slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
 gpg_ids: ${gpg_ids}
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"

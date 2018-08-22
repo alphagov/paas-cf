@@ -2,8 +2,13 @@
 
 set -eu
 
+nodes=16
+if [ "${SLIM_DEV_DEPLOYMENT:-}" = "true" ]; then
+  nodes=8
+fi
+
 if [ -n "${GINKGO_FOCUS:-}" ]; then
-  ginkgo -p -nodes=16 -focus="${GINKGO_FOCUS}"
+  ginkgo -p -nodes="${nodes}" -focus="${GINKGO_FOCUS}"
 else
-  ginkgo -p -nodes=16
+  ginkgo -p -nodes="${nodes}"
 fi

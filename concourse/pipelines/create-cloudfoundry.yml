@@ -463,6 +463,7 @@ jobs:
             SKIP_AWS_CREDENTIAL_VALIDATION: true
             ENABLE_DATADOG: ((enable_datadog))
             NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
@@ -717,6 +718,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
             CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: sh
             args:
@@ -734,8 +736,13 @@ jobs:
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                  echo "Running app-availability-tests but ignoring failures"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app || true
+                else
+                  echo "Running app-availability-tests"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                fi
 
   - name: api-availability-tests
     serial: true
@@ -799,6 +806,7 @@ jobs:
             BRANCH: ((branch_name))
             CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
             AWS_DEFAULT_REGION: ((aws_region))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: sh
             args:
@@ -821,8 +829,13 @@ jobs:
 
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
 
-                echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                  echo "Running api-availability-tests but ignoring failures"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api || true
+                else
+                  echo "Running api-availability-tests"
+                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                fi
         ensure:
           task: delete-job-file
           config:
@@ -1186,6 +1199,7 @@ jobs:
               CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
               ENABLE_DATADOG: ((enable_datadog))
               DISABLE_USER_CREATION: ((disable_user_creation))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             run:
               path: sh
               args:
@@ -2851,6 +2865,7 @@ jobs:
               DEPLOY_ENV: ((deploy_env))
               AWS_REGION: ((aws_region))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             ensure:
               task: upload-test-artifacts
               file: paas-cf/concourse/tasks/upload-test-artifacts.yml
