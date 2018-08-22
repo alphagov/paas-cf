@@ -129,7 +129,7 @@ resource "datadog_monitor" "gorouter_healthy" {
   query = "${format("'http.can_connect'.over('deploy_env:%s','instance:gorouter','url:http://localhost:80/').by('*').last(1).pct_by_status()", var.env)}"
 
   thresholds {
-    critical = 50
+    critical = 55
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:router"]
