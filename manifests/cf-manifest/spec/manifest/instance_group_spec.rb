@@ -34,13 +34,6 @@ RSpec.describe "the instance_groups definitions block" do
     end
   end
 
-  describe "in order to ensure high availability of ingestor" do
-    it "has ingestor serial" do
-      expect("ingestor_z1").to be_updated_serially
-      expect("ingestor_z2").to be_updated_serially
-    end
-  end
-
   describe "in order to start one consul master for consensus" do
     it "has consul serial" do
       expect("consul").to be_updated_serially

@@ -201,7 +201,7 @@ trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
 showenv: check-env ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
-	@scripts/show-cf-secrets.sh kibana_admin_password cf_admin_password
+	@scripts/show-cf-secrets.sh cf_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
