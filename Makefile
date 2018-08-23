@@ -57,7 +57,8 @@ lint_ruby:
 
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
-	git ls-files | grep -v vendor/ | xargs ./scripts/test_posix_newline.sh
+	@# for some reason `git ls-files` is including 'manifests/cf-deployment' in its output...which is a directory
+	git ls-files | grep -v vendor/ | grep -v manifests/cf-deployment | xargs ./scripts/test_posix_newline.sh
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 
