@@ -49,9 +49,9 @@
   path: /releases/-
   value:
     name: rds-broker
-    version: 0.1.42
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.42.tgz
-    sha1: 2715059cde500904bb5dcd084c04a4db1896ee68
+    version: 0.1.43
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.43.tgz
+    sha1: 33a50f7d7ab870a5b6cec3d6a19558bde9f39ba7
 
 - type: replace
   path: /instance_groups/-
@@ -86,7 +86,8 @@
               client_cert: "((diego_locket_client.certificate))"
               client_key: "((diego_locket_client.private_key))"
             scheduler:
-              metrics_collector_interval: 600
+              sql_metrics_collector_interval: 150
+              cloudwatch_metrics_collector_interval: 300
       - name: rds-broker
         release: rds-broker
         properties:
