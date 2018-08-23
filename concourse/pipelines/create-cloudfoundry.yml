@@ -634,10 +634,10 @@ jobs:
               - -c
               - -e
               - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-prometheus-secrets.rb \
+                ./paas-cf/manifests/prometheus-manifest/scripts/generate-prometheus-secrets.rb \
                   --existing-secrets existing-prometheus-vars-store/prometheus-vars-store.yml \
-                    > prometheus-vars-store/prometheus-vars-store.yml
-                  ls -l prometheus-vars-store
+                  > prometheus-vars-store/prometheus-vars-store.yml
+                ls -l prometheus-vars-store
         on_success:
           put: prometheus-vars-store
           params:
@@ -1296,12 +1296,10 @@ jobs:
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
                   ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
-                   -o prometheus-boshrelease/manifests/operators/cf/add-prometheus-uaa-clients.yml \
                     --var-errs \
                     --vars-store cf-vars-store-updated/cf-vars-store.yml \
                     > cf-manifest/cf-manifest.yml
                   ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
-                   -o prometheus-boshrelease/manifests/operators/cf/add-prometheus-uaa-clients.yml \
                     > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
 
           on_success:
@@ -1475,34 +1473,8 @@ jobs:
               - -u
               - -c
               - |
-                bosh_password="$(awk '/bosh_admin_password:/ {print $2}' < bosh-secrets/bosh-secrets.yml)"
-
-                cp \
-                  prometheus-vars-store/prometheus-vars-store.yml \
-                  prometheus-vars-store-updated/
-
-                bosh interpolate prometheus-boshrelease/manifests/prometheus.yml \
-                  --var-errs \
-                  --vars-store prometheus-vars-store-updated/prometheus-vars-store.yml \
-                  --vars-file=cf-vars-store/cf-vars-store.yml \
-                  -o prometheus-boshrelease/manifests/operators/monitor-bosh.yml \
-                  -v bosh_url="${BOSH_URL}" \
-                  -v bosh_username=admin \
-                  -v bosh_password="${bosh_password}" \
-                  --var-file bosh_ca_cert=bosh-CA-crt/bosh-CA.crt \
-                  -v metrics_environment="${CF_DEPLOYMENT_NAME}" \
-                  -o prometheus-boshrelease/manifests/operators/monitor-cf.yml \
-                  -v metron_deployment_name="${CF_DEPLOYMENT_NAME}" \
-                  -v system_domain="${SYSTEM_DNS_ZONE_NAME}"\
-                  -v traffic_controller_external_port=443 \
-                  -o prometheus-boshrelease/manifests/operators/enable-cf-route-registrar.yml \
-                  -v cf_deployment_name="${CF_DEPLOYMENT_NAME}" \
-                  -v skip_ssl_verify=false \
-                  -o paas-cf/manifests/prometheus-manifest/operators/iaas-specifics.yml \
-                  -o paas-cf/manifests/prometheus-manifest/operators/cf-alerts.yml \
-                  -o paas-cf/manifests/prometheus-manifest/operators/prometheus.yml \
-                  -o paas-cf/manifests/prometheus-manifest/operators/alertmanager.yml \
-                  > prometheus-manifest/prometheus-manifest.yml
+                cp prometheus-vars-store/prometheus-vars-store.yml prometheus-vars-store-updated/
+                ./paas-cf/manifests/prometheus-manifest/scripts/generate-prometheus-manifest.sh > prometheus-manifest/prometheus-manifest.yml
 
         on_success:
           aggregate:
@@ -3449,7 +3421,6 @@ jobs:
     plan:
     - aggregate:
       - get: prometheus-vars-store
-        trigger: true
 
     - task: rotate-prometheus-credentials
       config:
@@ -3469,7 +3440,7 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-prometheus-secrets.rb < \
+              ./paas-cf/manifests/prometheus-manifest/scripts/rotate-prometheus-secrets.rb < \
                 prometheus-vars-store/prometheus-vars-store.yml > \
                 modified-prometheus-vars-store/prometheus-vars-store.yml
               ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
