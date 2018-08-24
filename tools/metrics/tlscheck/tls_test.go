@@ -40,13 +40,10 @@ var _ = Describe("TLSCheck", func() {
 			Expect(err).To(HaveOccurred())
 		})
 
-		// FIXME: This should be reverted back, once the https://github.com/chromium/badssl.com/issues/359
-		// has been resolved.
-		//
-		//		It("returns error for certificate with self-signed CA", func() {
-		//			_, err := checker.DaysUntilExpiry("self-signed.badssl.com:443", &tls.Config{})
-		//			Expect(err).To(HaveOccurred())
-		//		})
+		It("returns error for certificate with self-signed CA", func() {
+			_, err := checker.DaysUntilExpiry("self-signed.badssl.com:443", &tls.Config{})
+			Expect(err).To(HaveOccurred())
+		})
 
 		It("returns error for certificate with null cipher suite", func() {
 			_, err := checker.DaysUntilExpiry("null.badssl.com:443", &tls.Config{})
