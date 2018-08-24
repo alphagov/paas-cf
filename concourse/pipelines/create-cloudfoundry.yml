@@ -1144,34 +1144,6 @@ jobs:
                   EOF
 
       - do:
-        # Remove me after this has been applied to everyone's environments #157053110
-        - task: remove-kibana-password
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli-v2
-                tag: c88f3e0b03558c987693fad3f180d9052b77342c
-            inputs:
-              - name: cf-vars-store
-            outputs:
-              - name: cf-vars-store-updated
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  grep -v secrets_kibana_admin_password cf-vars-store/cf-vars-store.yml > cf-vars-store-updated/cf-vars-store.yml
-
-          on_success:
-            aggregate:
-            - put: cf-vars-store
-              params:
-                file: cf-vars-store-updated/cf-vars-store.yml
-
         - task: generate-cloud-config
           config:
             platform: linux
