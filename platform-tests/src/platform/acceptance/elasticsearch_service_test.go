@@ -3,6 +3,8 @@ package acceptance_test
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
@@ -78,12 +80,20 @@ var _ = Describe("Elasticsearch backing service", func() {
 
 		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
-			resp, err := httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test", testConfig))
-			Expect(err).NotTo(HaveOccurred())
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+
+			var resp *http.Response
+			Eventually(
+				func() int {
+					resp, err = httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test", testConfig))
+					Expect(err).NotTo(HaveOccurred())
+					body, err := ioutil.ReadAll(resp.Body)
+					Expect(err).NotTo(HaveOccurred())
+					resp.Body.Close()
+					resp.StatusCode
+				},
+				5*time.Second,
+				100*time.Millisecond,
+			).Should(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 
 			By("disallowing connections without TLS")
 			resp, err = httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test?tls=false", testConfig))
