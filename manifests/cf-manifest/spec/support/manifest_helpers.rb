@@ -221,6 +221,7 @@ private
     generate_cf_secrets
     copy_environment_variables
     copy_certs
+    copy_prom_uaa
     render_vpc_peering_opsfile(environment)
 
     env = {
@@ -323,6 +324,15 @@ private
     FileUtils.cp(
       root.join("manifests/shared/spec/fixtures/ipsec-CA.key"),
       "#{dir}/ipsec-CA.key",
+    )
+  end
+
+  def copy_prom_uaa
+    dir = workdir + '/prometheus-boshrelease/manifests/operators/cf'
+    FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+    FileUtils.cp(
+      root.join("manifests/shared/spec/fixtures/add-prometheus-uaa-clients.yml"),
+      "#{dir}/add-prometheus-uaa-clients.yml",
     )
   end
 

@@ -163,6 +163,8 @@ RSpec.describe "base properties" do
           "paas-admin",
           "user_invitation",
           "network-policy",
+          "cf_exporter",
+          "firehose_exporter",
         )
       }
 
