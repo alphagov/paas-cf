@@ -31,6 +31,8 @@ spec:
 		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
+	cd manifests/prometheus-manifest &&\
+		bundle exec rspec
 	cd terraform/scripts &&\
 		go test
 	cd platform-tests &&\
