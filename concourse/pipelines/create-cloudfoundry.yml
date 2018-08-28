@@ -10,6 +10,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - prometheus-deploy
       - post-deploy
       - smoke-tests
       - acceptance-tests
@@ -1338,6 +1339,71 @@ jobs:
               - |
                 ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 bosh -n deploy cf-manifest/cf-manifest.yml
+
+  - name: prometheus-deploy
+    serial: true
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['cf-deploy']
+            trigger: true
+          - get: paas-cf
+            passed: ['cf-deploy']
+          - get: bosh-secrets
+          - get: bosh-CA-crt
+
+      - task: generate-prometheus-manifest
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli-v2
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+          outputs:
+            - name: prometheus-manifest
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CF_DEPLOYMENT_NAME: ((deploy_env))
+            BOSH_URL: https://((bosh_fqdn)):25555
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+
+                ./paas-cf/manifests/prometheus-manifest/scripts/generate-manifest.sh \
+                  > prometheus-manifest/prometheus-manifest.yml
+
+      - task: prometheus-deploy
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli-v2
+              tag: 777204b5c870fc7ebf0d2b7aa55fcccddfa29c4b
+          inputs:
+            - name: paas-cf
+            - name: prometheus-manifest
+            - name: bosh-secrets
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: prometheus
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+               ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+               bosh -n deploy prometheus-manifest/prometheus-manifest.yml
 
   - name: post-deploy
     serial: true
