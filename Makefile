@@ -37,7 +37,7 @@ spec:
 		./run_tests.sh src/platform/availability/monitor/
 
 lint_yaml:
-	find . -name '*.yml' -not -path '*/vendor/*' | xargs yamllint -c yamllint.yml
+	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus-boshrelease/*' | xargs yamllint -c yamllint.yml
 
 .PHONY: lint_terraform
 lint_terraform: dev ## Lint the terraform files.
@@ -46,7 +46,7 @@ lint_terraform: dev ## Lint the terraform files.
 	@terraform/scripts/lint.sh
 
 lint_shellcheck:
-	find . -name '*.sh' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' | xargs shellcheck
+	find . -name '*.sh' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' -not -path './manifests/prometheus-boshrelease/*' | xargs shellcheck
 
 lint_concourse:
 	cd .. && SHELLCHECK_OPTS="-e SC1091" python paas-cf/concourse/scripts/pipecleaner.py --fatal-warnings paas-cf/concourse/pipelines/*.yml
@@ -58,7 +58,7 @@ lint_ruby:
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
 	@# for some reason `git ls-files` is including 'manifests/cf-deployment' in its output...which is a directory
-	git ls-files | grep -v vendor/ | grep -v manifests/cf-deployment | xargs ./scripts/test_posix_newline.sh
+	git ls-files | grep -v -e vendor/ -e manifests/cf-deployment -e manifests/prometheus-boshrelease | xargs ./scripts/test_posix_newline.sh
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 

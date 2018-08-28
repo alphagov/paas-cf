@@ -1,3 +1,6 @@
 [submodule "manifests/cf-deployment"]
 	path = manifests/cf-deployment
 	url = https://github.com/cloudfoundry/cf-deployment
+[submodule "manifests/prometheus-boshrelease"]
+	path = manifests/prometheus-boshrelease
+	url = https://github.com/bosh-prometheus/prometheus-boshrelease
