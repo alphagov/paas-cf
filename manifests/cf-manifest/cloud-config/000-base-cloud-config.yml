@@ -246,3 +246,9 @@ vm_extensions:
   cloud_properties:
     elbs:
     - ((terraform_outputs_cf_ssh_proxy_elb_name))
+
+- name: bosh_api_client_security_group
+  cloud_properties:
+    security_groups:
+    - ((terraform_outputs_default_security_group))
+    - ((terraform_outputs_bosh_api_client_security_group))

@@ -1,0 +1,48 @@
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=firehose?/relabel_configs/-
+  value:
+    source_labels:
+    - cf_application_info
+    regex: SMOKE.+
+    action: drop
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=firehose?/relabel_configs/-
+  value:
+    source_labels:
+    - cf_application_info
+    regex: CATS.+
+    action: drop
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=cf?/metric_relabel_configs/-
+  value:
+    source_labels:
+    - application_name
+    regex: SMOKE.+
+    action: drop
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=cf?/metric_relabel_configs/-
+  value:
+    source_labels:
+    - application_name
+    regex: CATS.+
+    action: drop
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=cf?/metric_relabel_configs/-
+  value:
+    source_labels:
+    - cf_application_info
+    regex: SMOKE.+
+    action: drop
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=cf?/metric_relabel_configs/-
+  value:
+    source_labels:
+    - cf_application_info
+    regex: CATS.+
+    action: drop

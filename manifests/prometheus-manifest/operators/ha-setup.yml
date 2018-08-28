@@ -1,0 +1,41 @@
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=prometheus2/azs?
+  value:
+  - z1
+  - z2
+  - z3
+
+- type: replace
+  path: /instance_groups/name=alertmanager/instances
+  value: 3
+
+- type: replace
+  path: /instance_groups/name=alertmanager/azs?
+  value:
+  - z1
+  - z2
+  - z3
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/-
+  value:
+    name: route_registrar
+    release: routing
+    consumes:
+      nats:
+        from: nats
+        deployment: ((cf_deployment_name))
+    properties:
+      route_registrar:
+        routes:
+          - name: prometheus
+            registration_interval: 20s
+            prepend_instance_index: true
+            port: 9090
+            uris:
+              - prometheus.((system_domain))

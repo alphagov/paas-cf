@@ -55,6 +55,7 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-uniq-consul-node-name.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-bosh-dns-rename-network-and-deployment.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-bosh-dns-for-containers.yml" \
+  --ops-file="${WORKDIR}/prometheus-boshrelease/manifests/operators/cf/add-prometheus-uaa-clients.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   "$@" \

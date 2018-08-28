@@ -1,0 +1,17 @@
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: node-exporter
+    version: 4.0.0
+    url: https://github.com/bosh-prometheus/node-exporter-boshrelease/releases/download/v4.0.0/node-exporter-4.0.0.tgz
+    sha1: 74b8ca1938e879dfd3977678a562c669cca4d71b
+
+- type: replace
+  path: /addons/-
+  value:
+    name: node_exporter
+    jobs:
+      - name: node_exporter
+        release: node-exporter

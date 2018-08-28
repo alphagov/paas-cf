@@ -5,3 +5,8 @@ bin/terraform*
 platform-tests/pkg
 platform-tests/src/results
 terraform/.terraform/
+# allows a dev to create a top-level tmp scratch dir
+/tmp/
+# allows a dev to create a symlink to ".", which then allows use of file paths directly taken from concourse manifests
+# e.g. `ln -s . paas-cf`
+/paas-cf
