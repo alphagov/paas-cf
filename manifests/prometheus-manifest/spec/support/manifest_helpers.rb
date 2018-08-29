@@ -23,17 +23,7 @@ private
     output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus-manifest/scripts/generate-manifest.sh")
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
-    deep_freeze(PropertyTree.load_yaml(output))
-  end
-
-  def deep_freeze(object)
-    case object
-    when Hash
-      object.each { |_k, v| deep_freeze(v) }
-    when Array
-      object.each { |v| deep_freeze(v) }
-    end
-    object.freeze
+    DeepFreeze.freeze(PropertyTree.load_yaml(output))
   end
 end
 

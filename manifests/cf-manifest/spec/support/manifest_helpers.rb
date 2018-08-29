@@ -152,7 +152,7 @@ private
     output, error, status = Open3.capture3(env, args.join(' '))
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
-    deep_freeze(PropertyTree.load_yaml(output))
+    DeepFreeze.freeze(PropertyTree.load_yaml(output))
   end
 
   def render_manifest_with_vars_store(
@@ -197,7 +197,7 @@ private
     output, error, status = Open3.capture3(env, root.join('manifests/cf-manifest/scripts/generate-cloud-config.sh').to_s)
     expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
-    deep_freeze(PropertyTree.load_yaml(output))
+    DeepFreeze.freeze(PropertyTree.load_yaml(output))
   end
 
   def copy_terraform_fixtures
@@ -246,7 +246,7 @@ private
 
   def load_terraform_fixture
     data = YAML.load_file(root.join("manifests/shared/spec/fixtures/terraform/cf.yml"))
-    deep_freeze(data)
+    DeepFreeze.freeze(data)
   end
 
   def generate_cf_secrets
@@ -261,16 +261,6 @@ private
     file.flush
     file.rewind
     file
-  end
-
-  def deep_freeze(object)
-    case object
-    when Hash
-      object.each { |_k, v| deep_freeze(v) }
-    when Array
-      object.each { |v| deep_freeze(v) }
-    end
-    object.freeze
   end
 end
 
