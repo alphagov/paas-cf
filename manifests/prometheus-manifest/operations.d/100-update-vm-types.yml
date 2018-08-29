@@ -2,9 +2,6 @@
   path: /instance_groups/name=alertmanager/vm_type
   value: nano
 - type: replace
-  path: /instance_groups/name=database/vm_type
-  value: nano
-- type: replace
   path: /instance_groups/name=grafana/vm_type
   value: nano
 - type: replace

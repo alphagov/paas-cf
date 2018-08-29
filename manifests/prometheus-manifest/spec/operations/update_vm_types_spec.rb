@@ -2,7 +2,6 @@
 RSpec.describe "update-vm-types.yml" do
   {
     "alertmanager" => "nano",
-    "database" => "nano",
     "grafana" => "nano",
     "nginx" => "nano",
     "prometheus2" => "medium",

@@ -3,10 +3,6 @@
   value:
     - name: cf
 - type: replace
-  path: /instance_groups/name=database/networks
-  value:
-    - name: cf
-- type: replace
   path: /instance_groups/name=grafana/networks
   value:
     - name: cf
