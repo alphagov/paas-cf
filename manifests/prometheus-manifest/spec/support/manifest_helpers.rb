@@ -1,6 +1,5 @@
 require 'singleton'
 require 'open3'
-require 'yaml'
 
 module ManifestHelpers
   class Cache
@@ -24,7 +23,7 @@ private
     output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus-manifest/scripts/generate-manifest.sh")
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
-    deep_freeze(YAML.safe_load(output))
+    deep_freeze(PropertyTree.load_yaml(output))
   end
 
   def deep_freeze(object)
