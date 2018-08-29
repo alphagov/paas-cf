@@ -18,9 +18,9 @@ support_email="govpaas-alerting-staging@digital.cabinet-office.gov.uk"
 # Disable datadog_monitor.total_routes_drop resource
 datadog_monitor_total_routes_drop_enabled = 0
 
-# 14270737 - Government PaaS Team Maillist
+# 14313354 - GOV.UK PaaS Contact - staging
 # 14270725 - PaaS PagerDuty in hours
-pingdom_contact_ids = [ 14270737, 14270725 ]
+pingdom_contact_ids = [ 14313354, 14270725 ]
 
 datadog_notification_24x7 = "@pagerduty-datadog-in-hours"
 datadog_notification_in_hours = "@pagerduty-datadog-in-hours"
