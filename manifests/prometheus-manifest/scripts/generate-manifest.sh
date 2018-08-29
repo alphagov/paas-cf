@@ -12,5 +12,7 @@ done
 
 # shellcheck disable=SC2086
 bosh interpolate \
+  --var-errs \
+  --vars-store "${VARS_STORE}" \
   ${opsfile_args} \
   "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"

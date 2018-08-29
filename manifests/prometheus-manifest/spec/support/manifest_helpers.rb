@@ -1,5 +1,6 @@
 require 'singleton'
 require 'open3'
+require 'tempfile'
 
 module ManifestHelpers
   class Cache
@@ -16,9 +17,11 @@ private
 
   def render_manifest_with_defaults
     root = Pathname.new(File.expand_path("../../../..", __dir__))
+    vars_store = Tempfile.new(['vars-store', '.yml'])
 
     env = {
       'PAAS_CF_DIR' => root.to_s,
+      'VARS_STORE' => vars_store.path,
     }
     output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus-manifest/scripts/generate-manifest.sh")
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
