@@ -1388,7 +1388,7 @@ jobs:
               - -c
               - |
                 cp prometheus-vars-store/prometheus-vars-store.yml "${VARS_STORE}"
-                ./paas-cf/manifests/prometheus-manifest/scripts/generate-manifest.sh \
+                ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
                   > prometheus-manifest/prometheus-manifest.yml
         on_success:
           put: prometheus-vars-store

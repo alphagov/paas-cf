@@ -3,10 +3,10 @@
 set -euo pipefail
 
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
-PROM_BOSHRELEASE_DIR=${PAAS_CF_DIR}/manifests/prometheus-boshrelease
+PROM_BOSHRELEASE_DIR=${PAAS_CF_DIR}/manifests/prometheus/upstream
 
 opsfile_args=""
-for i in "${PAAS_CF_DIR}"/manifests/prometheus-manifest/operations.d/*.yml; do
+for i in "${PAAS_CF_DIR}"/manifests/prometheus/operations.d/*.yml; do
   opsfile_args+="-o $i "
 done
 

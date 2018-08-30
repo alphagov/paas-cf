@@ -23,7 +23,7 @@ private
       'PAAS_CF_DIR' => root.to_s,
       'VARS_STORE' => vars_store.path,
     }
-    output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus-manifest/scripts/generate-manifest.sh")
+    output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus/scripts/generate-manifest.sh")
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     DeepFreeze.freeze(PropertyTree.load_yaml(output))
