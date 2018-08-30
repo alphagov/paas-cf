@@ -206,8 +206,10 @@ showenv: check-env ## Display environment information
 	@concourse/scripts/environment.sh
 	@scripts/show-cf-secrets.sh cf_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
+		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=$(DEPLOY_ENV)_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
+	@aws s3 cp s3://gds-paas-$(DEPLOY_ENV)-state/prometheus-vars-store.yml - \
+	  | awk -F': ' '$$1 ~ "^(alertmanager|grafana|prometheus)_password$$"{print "export " toupper($$1) "=" $$2}'
 
 .PHONY: upload-all-secrets
 upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets
