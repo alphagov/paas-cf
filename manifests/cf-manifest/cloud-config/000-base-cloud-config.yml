@@ -19,6 +19,10 @@ disk_types:
   disk_size: 5120
   cloud_properties:
     type: gp2
+- name: 10GB
+  disk_size: 10240
+  cloud_properties:
+    type: gp2
 
 networks:
 - name: cf
