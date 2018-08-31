@@ -31,13 +31,15 @@ spec:
 		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
+	cd manifests/prometheus &&\
+		bundle exec rspec
 	cd terraform/scripts &&\
 		go test
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
 
 lint_yaml:
-	find . -name '*.yml' -not -path '*/vendor/*' | xargs yamllint -c yamllint.yml
+	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' | xargs yamllint -c yamllint.yml
 
 .PHONY: lint_terraform
 lint_terraform: dev ## Lint the terraform files.
@@ -46,7 +48,7 @@ lint_terraform: dev ## Lint the terraform files.
 	@terraform/scripts/lint.sh
 
 lint_shellcheck:
-	find . -name '*.sh' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' | xargs shellcheck
+	find . -name '*.sh' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' -not -path './manifests/prometheus/upstream/*' | xargs shellcheck
 
 lint_concourse:
 	cd .. && SHELLCHECK_OPTS="-e SC1091" python paas-cf/concourse/scripts/pipecleaner.py --fatal-warnings paas-cf/concourse/pipelines/*.yml
@@ -58,7 +60,7 @@ lint_ruby:
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
 	@# for some reason `git ls-files` is including 'manifests/cf-deployment' in its output...which is a directory
-	git ls-files | grep -v vendor/ | grep -v manifests/cf-deployment | xargs ./scripts/test_posix_newline.sh
+	git ls-files | grep -v -e vendor/ -e manifests/cf-deployment -e manifests/prometheus/upstream | xargs ./scripts/test_posix_newline.sh
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 
@@ -204,8 +206,10 @@ showenv: check-env ## Display environment information
 	@concourse/scripts/environment.sh
 	@scripts/show-cf-secrets.sh cf_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=${DEPLOY_ENV}_concourse_key_pair" \
+		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=$(DEPLOY_ENV)_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
+	@aws s3 cp s3://gds-paas-$(DEPLOY_ENV)-state/prometheus-vars-store.yml - \
+	  | awk -F': ' '$$1 ~ "^(alertmanager|grafana|prometheus)_password$$"{print "export " toupper($$1) "=" $$2}'
 
 .PHONY: upload-all-secrets
 upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets

@@ -1,0 +1,9 @@
+- type: replace
+  path: /vm_extensions/-
+  value:
+    name: prometheus_lb
+    cloud_properties:
+      lb_target_groups:
+      - ((terraform_outputs_p8s_alertmanager_target_group))
+      - ((terraform_outputs_p8s_grafana_target_group))
+      - ((terraform_outputs_p8s_prometheus_target_group))

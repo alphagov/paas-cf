@@ -1,0 +1,12 @@
+- type: replace
+  path: /instance_groups/name=alertmanager/vm_type
+  value: nano
+- type: replace
+  path: /instance_groups/name=grafana/vm_type
+  value: nano
+- type: replace
+  path: /instance_groups/name=nginx/vm_type
+  value: nano
+- type: replace
+  path: /instance_groups/name=prometheus2/vm_type
+  value: medium

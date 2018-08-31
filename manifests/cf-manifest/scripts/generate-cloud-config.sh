@@ -18,5 +18,6 @@ bosh interpolate \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/050-rds-broker.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/060-cdn-broker.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/070-elasticache-broker.yml" \
+  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/090-prometheus.yml" \
   "$@" \
   "${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/000-base-cloud-config.yml"

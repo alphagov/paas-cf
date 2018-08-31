@@ -1,0 +1,16 @@
+- type: replace
+  path: /instance_groups/name=alertmanager/networks
+  value:
+    - name: cf
+- type: replace
+  path: /instance_groups/name=grafana/networks
+  value:
+    - name: cf
+- type: replace
+  path: /instance_groups/name=nginx/networks
+  value:
+    - name: cf
+- type: replace
+  path: /instance_groups/name=prometheus2/networks
+  value:
+    - name: cf

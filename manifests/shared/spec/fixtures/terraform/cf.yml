@@ -47,3 +47,6 @@ terraform_outputs_router_subnet_cidr_blocks: ""
 terraform_outputs_ses_smtp_host: "SmtpHost"
 terraform_outputs_ses_smtp_aws_access_key_id: "SmtpAccessTokenID"
 terraform_outputs_ses_smtp_password: "SmtpPassword"
+terraform_outputs_p8s_alertmanager_target_group: p8s_alertmanager_target_group
+terraform_outputs_p8s_grafana_target_group: p8s_grafana_target_group
+terraform_outputs_p8s_prometheus_target_group: p8s_prometheus_target_group

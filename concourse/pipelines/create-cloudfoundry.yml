@@ -10,6 +10,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - prometheus-deploy
       - post-deploy
       - smoke-tests
       - acceptance-tests
@@ -370,6 +371,14 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-log-cache-adapter
       tag_filter: v0.1.0
+
+  - name: prometheus-vars-store
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: prometheus-vars-store.yml
+      initial_version: "-"
 
 jobs:
   - name: pipeline-lock
@@ -1338,6 +1347,79 @@ jobs:
               - |
                 ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 bosh -n deploy cf-manifest/cf-manifest.yml
+
+  - name: prometheus-deploy
+    serial: true
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['cf-deploy']
+            trigger: true
+          - get: paas-cf
+            passed: ['cf-deploy']
+          - get: prometheus-vars-store
+          - get: bosh-secrets
+          - get: bosh-CA-crt
+
+      - task: generate-prometheus-manifest
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli-v2
+              tag: 465642da06051a55630d39c899697b678f66a7f7
+          inputs:
+            - name: paas-cf
+            - name: prometheus-vars-store
+          outputs:
+            - name: prometheus-manifest
+            - name: prometheus-vars-store-updated
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CF_DEPLOYMENT_NAME: ((deploy_env))
+            BOSH_URL: https://((bosh_fqdn)):25555
+            VARS_STORE: prometheus-vars-store-updated/prometheus-vars-store.yml
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cp prometheus-vars-store/prometheus-vars-store.yml "${VARS_STORE}"
+                ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
+                  > prometheus-manifest/prometheus-manifest.yml
+        on_success:
+          put: prometheus-vars-store
+          params:
+            file: prometheus-vars-store-updated/prometheus-vars-store.yml
+
+      - task: prometheus-deploy
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/bosh-cli-v2
+              tag: 777204b5c870fc7ebf0d2b7aa55fcccddfa29c4b
+          inputs:
+            - name: paas-cf
+            - name: prometheus-manifest
+            - name: bosh-secrets
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: prometheus
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+               ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+               bosh -n deploy prometheus-manifest/prometheus-manifest.yml
 
   - name: post-deploy
     serial: true
