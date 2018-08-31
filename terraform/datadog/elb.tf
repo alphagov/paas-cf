@@ -3,7 +3,7 @@ resource "datadog_monitor" "abnormal_api_latency_doppler" {
   type    = "query alert"
   message = "${format("{{#is_alert}}We're experiencing >= {{threshold}} change in ELB Latency.{{/is_alert}} \n{{#is_warning}}We're experiencing >= {{warn_threshold}} change in ELB Latency.{{/is_warning}} \n\nVisit the [Team Manual > Responding to alerts > API Latency](%s#api-latency) for more info. @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
 
-  query = "${format("avg(last_1h):anomalies(avg:aws.elb.latency{name:%s-cf-doppler}, 'agile', 2, direction='above', alert_window='last_5m', interval=20, count_default_zero='false', seasonality='weekly') > 0.5", var.env)}"
+  query = "${format("avg(last_1h):anomalies(avg:aws.elb.latency{name:%s-cf-doppler}, 'agile', 2, direction='above', alert_window='last_30m', interval=20, count_default_zero='false', seasonality='weekly') > 0.5", var.env)}"
 
   require_full_window = true
 
