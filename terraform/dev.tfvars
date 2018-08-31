@@ -12,8 +12,8 @@ cdn_db_skip_final_snapshot = "true"
 cdn_db_maintenance_window = "Mon:07:00-Mon:08:00"
 support_email="govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 
-# 14270737 - Government PaaS Team Maillist
-pingdom_contact_ids = [ 14270737 ]
+# 14313350 - GOV.UK PaaS Contact - dev
+pingdom_contact_ids = [ 14313350 ]
 datadog_notification_24x7 = "@govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 datadog_notification_in_hours = "@govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 
