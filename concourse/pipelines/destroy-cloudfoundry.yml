@@ -194,7 +194,7 @@ jobs:
           params:
             file: updated-datadog-tfstate/datadog.tfstate
 
-      - task: delete-deployment
+      - task: delete-deployments
         config:
           platform: linux
           image_resource:
@@ -209,7 +209,6 @@ jobs:
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
-            BOSH_DEPLOYMENT: ((deploy_env))
           outputs:
             - name: deployed-healthcheck
           run:
@@ -219,7 +218,8 @@ jobs:
               - -c
               - |
                 ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-                bosh -n delete-deployment --force
+                bosh -n delete-deployment --force --deployment "((deploy_env))"
+                bosh -n delete-deployment --force --deployment prometheus
                 echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
           put: deployed-healthcheck
