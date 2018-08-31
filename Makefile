@@ -204,12 +204,11 @@ trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
 showenv: check-env ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
-	@scripts/show-cf-secrets.sh cf_admin_password
+	@scripts/show-vars-store-secrets.sh cf-vars-store cf_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=$(DEPLOY_ENV)_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
-	@aws s3 cp s3://gds-paas-$(DEPLOY_ENV)-state/prometheus-vars-store.yml - \
-	  | awk -F': ' '$$1 ~ "^(alertmanager|grafana|prometheus)_password$$"{print "export " toupper($$1) "=" $$2}'
+	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password prometheus_password
 
 .PHONY: upload-all-secrets
 upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets
