@@ -80,6 +80,7 @@ list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 PASSWORD_STORE_DIR?=${HOME}/.paas-pass
 globals:
 	$(eval export PASSWORD_STORE_DIR=${PASSWORD_STORE_DIR})
+	$(eval export LOGIT_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	@true
 
 .PHONY: dev
@@ -211,7 +212,7 @@ showenv: check-env ## Display environment information
 	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password prometheus_password
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets
+upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets
 
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
@@ -252,6 +253,13 @@ upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to S3
 	$(if ${AIVEN_PASSWORD_STORE_DIR},,$(error Must pass AIVEN_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${AIVEN_PASSWORD_STORE_DIR}),,$(error Password store ${AIVEN_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-aiven-secrets.sh
+
+.PHONY: upload-logit-secrets
+upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to S3
+	$(if ${AWS_ACCOUNT},,$(error Must set environment to dev/staging/prod))
+	$(if ${LOGIT_PASSWORD_STORE_DIR},,$(error Must pass LOGIT_PASSWORD_STORE_DIR=<path_to_password_store>))
+	$(if $(wildcard ${LOGIT_PASSWORD_STORE_DIR}),,$(error Password store ${LOGIT_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-logit-secrets.sh
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
