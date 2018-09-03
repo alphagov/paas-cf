@@ -8,6 +8,9 @@ DEPLOY_ENV_MAX_LENGTH=8
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
+LOGSEARCH_BOSHRELEASE_TAG=v209.0.0
+LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=v207.0.0
+
 check-env:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
@@ -288,3 +291,13 @@ tunnel: check-env ## SSH tunnel to internal IPs
 
 stop-tunnel: check-env ## Stop SSH tunnel
 	@echo "stop-tunnel has moved to paas-bootstrap 🐝"
+
+.PHONY: logit-filters
+logit-filters:
+	mkdir -p config/logit/output
+	docker run --rm -it \
+		-v $(CURDIR):/mnt:ro \
+		-v $(CURDIR)/config/logit/output:/output:rw \
+		-w /mnt \
+		jruby:9.1-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
+	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
