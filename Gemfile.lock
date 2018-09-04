@@ -35,7 +35,7 @@ GEM
     em-socksify (0.3.2)
       eventmachine (>= 1.0.0.beta.4)
     eventmachine (1.2.5)
-    ffi (1.9.23)
+    ffi (1.9.25)
     github_merge_sign (1.0.0)
     govuk-lint (3.8.0)
       rubocop (~> 0.52.0)
