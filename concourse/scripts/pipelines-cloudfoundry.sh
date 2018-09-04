@@ -21,6 +21,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 # shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/notify.sh"
 
+# shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/logit.sh"
+
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
@@ -66,6 +69,7 @@ prepare_environment() {
   get_aiven_secrets
   get_google_oauth_secrets
   get_notify_secrets
+  get_logit_ca_cert
 
   if [ -n "${SLIM_DEV_DEPLOYMENT:-}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
     echo "SLIM_DEV_DEPLOYMENT set for non-dev deployment. Aborting!"
@@ -95,6 +99,14 @@ prepare_environment() {
   # shellcheck disable=SC2154
   if [ -z "${notify_api_key+x}" ] ; then
     echo "Could not retrieve api key for Notify. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-notify-secrets\`?"
+    exit 1
+  fi
+
+  # Note: this credential is not interpolated into the pipeline. It is used as a guard against forgetting
+  # to upload the credentials and has been placed here for consistency with the other credentials.
+  # shellcheck disable=SC2154
+  if [ -z "${logit_ca_cert+x}" ] ; then
+    echo "Could not retrieve Logit CA cert. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-logit-secrets\`?"
     exit 1
   fi
 
