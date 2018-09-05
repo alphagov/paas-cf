@@ -352,7 +352,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: v0.39.0
+      tag_filter: v0.41.0
 
   - name: paas-accounts
     type: git
@@ -2002,7 +2002,6 @@ jobs:
               tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            COMPOSE_API_KEY: ((compose_api_key))
             DEPLOY_ENV: ((deploy_env))
           inputs:
             - name: paas-cf
@@ -2043,7 +2042,6 @@ jobs:
                     'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
                     'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                    'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
                   }
                   manifest = YAML.load_file('manifest.yml')
                   manifest['applications'].each { |app|
@@ -2056,6 +2054,9 @@ jobs:
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
+
+                # FIXME: remove once this has reached prod
+                cf unset-env paas-billing COMPOSE_API_KEY
 
                 cf push paas-billing
 
