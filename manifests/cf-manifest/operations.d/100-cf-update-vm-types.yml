@@ -29,6 +29,9 @@
 - type: replace
   path: /instance_groups/name=uaa/vm_type
   value: medium
+- type: replace
+  path: /instance_groups/name=rotate-cc-database-key/vm_type
+  value: small
 
 # TODO: Remove the router vm_type. Not needed with extensions
 - type: replace
