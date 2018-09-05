@@ -2055,9 +2055,6 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                # FIXME: remove once this has reached prod
-                cf unset-env paas-billing COMPOSE_API_KEY
-
                 cf push paas-billing
 
       - task: deploy-paas-accounts
