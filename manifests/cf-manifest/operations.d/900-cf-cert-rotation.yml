@@ -24,6 +24,10 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/public_tls/ca_cert
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/uaa/ca_cert
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
