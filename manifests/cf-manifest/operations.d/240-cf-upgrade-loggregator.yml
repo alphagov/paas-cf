@@ -4,6 +4,6 @@
   path: /releases/name=loggregator
   value:
     name: loggregator
-    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=102.2"
-    version: "102.2"
-    sha1: "1ff4ad235be2720ed119cbb775f6ffdb712e53ea"
+    url: https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=103.1
+    version: "103.1"
+    sha1: 4377aac0179f1e9944ba5b936d59ef0427163f7b
