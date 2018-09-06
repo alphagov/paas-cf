@@ -84,10 +84,15 @@ find_latest_login() {
   echo "$last_logon_times" | tr ' ' '\n' | sort | tail -n 1
 }
 
+quota_name() {
+  quota_url=$( jq -r '.entity.quota_definition_url')
+  cf curl "$quota_url" | jq -r '.entity.name'
+}
+
 orgs=$(get_resources 100 "/v2/organizations")
 org_guids=$(echo "$orgs" | jq -r '.resources[].metadata.guid')
 
-echo "name,guid,created_at,updated_at,managers,users,running_apps,stopped_apps,services,last_logon_time,org_manager_emails"
+echo "name,guid,created_at,updated_at,managers,users,running_apps,stopped_apps,services,last_logon_time,quota,org_manager_emails"
 for guid in $org_guids; do
 
   org=$(org_by_guid "$guid" "$orgs")
@@ -115,9 +120,12 @@ for guid in $org_guids; do
   # Most recent login time across all users in an org
   last_logon_time=$(find_latest_login "$users")
 
+  # quota
+  quota=$(echo "${org}" | quota_name "$guid")
+
   # Space-separated list of emails of org managers
   org_manager_emails=$(echo "$managers" | jq -r ".resources[].entity.username")
   org_manager_emails=$(echo "$org_manager_emails" | tr '\n' ' ')
 
-  echo "$name,$guid,$created_at,$updated_at,$managers_count,$users_count,$running_apps,$stopped_apps,$services,$last_logon_time,$org_manager_emails"
+  echo "$name,$guid,$created_at,$updated_at,$managers_count,$users_count,$running_apps,$stopped_apps,$services,$last_logon_time,$quota,$org_manager_emails"
 done
