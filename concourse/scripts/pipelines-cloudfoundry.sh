@@ -148,8 +148,6 @@ disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 datadog_api_key: "${datadog_api_key:-}"
 datadog_app_key: "${datadog_app_key:-}"
 compose_api_key: ${compose_api_key:-}
-compose_billing_email: ${compose_billing_email:-}
-compose_billing_password: ${compose_billing_password:-}
 aiven_api_token: ${aiven_api_token:-}
 enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
