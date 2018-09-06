@@ -336,12 +336,6 @@ resources:
       uri: https://github.com/alphagov/paas-compose-broker
       tag_filter: v0.15.0
 
-  - name: paas-compose-scraper
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-compose-scraper
-      tag_filter: v0.1.2
-
   - name: paas-aiven-broker
     type: git
     source:
@@ -1441,7 +1435,6 @@ jobs:
       - get: bosh-CA-crt
       - get: datadog-tfstate
       - get: paas-compose-broker
-      - get: paas-compose-scraper
       - get: paas-aiven-broker
       - get: paas-billing
       - get: paas-accounts
@@ -2116,7 +2109,8 @@ jobs:
                 "
                 cf push paas-accounts
 
-      - task: deploy-paas-compose-scraper
+## temp task to be deleted once the pipeline has run
+      - task: delete-paas-compose-scraper
         config:
           platform: linux
           image_resource:
@@ -2124,55 +2118,19 @@ jobs:
             source:
               repository: governmentpaas/cf-cli
               tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
-          params:
-            ENABLE_DATADOG: ((enable_datadog))
-            COMPOSE_BILLING_EMAIL: ((compose_billing_email))
-            COMPOSE_BILLING_PASSWORD: ((compose_billing_password))
-            DATADOG_API_KEY: ((datadog_api_key))
-            DATADOG_APP_KEY: ((datadog_app_key))
-            DEPLOY_ENV: ((deploy_env))
           inputs:
-            - name: paas-cf
-            - name: paas-compose-scraper
-            - name: config
+          - name: paas-cf
+          - name: config
           run:
             path: sh
             args:
-              - -e
-              - -u
-              - -c
-              - |
-                if [ "${ENABLE_DATADOG:-}" != "true" ] ; then
-                  echo "ENABLE_DATADOG=${ENABLE_DATADOG} so skipping paas-compose-scraper deploy"
-                  exit 0
-                fi
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
-
-                cd paas-compose-scraper/
-
-                ruby -ryaml -e "
-                  env = {
-                    'COMPOSE_EMAIL' => '${COMPOSE_BILLING_EMAIL}',
-                    'COMPOSE_PASSWORD' => '${COMPOSE_BILLING_PASSWORD}',
-                    'COMPOSE_ACCOUNT_NAME' => 'gds',
-                    'COMPOSE_CLUSTER_ID' => '5941cf9f859d2c0015000021',
-                    'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
-                    'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
-                    'DATADOG_TAGS' => 'deployment:${DEPLOY_ENV}',
-                    'CHECK_INTERVAL_SECONDS' => '300',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] ||= {}
-                    app['env'].merge!(env)
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-
-                cf push paas-compose-scraper
-
+            - -e
+            - -u
+            - -c
+            - |
+              . ./config/config.sh
+              echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+              cf delete -f -r paas-compose-scraper
       - do:
         - task: build-paas-admin
           config:
