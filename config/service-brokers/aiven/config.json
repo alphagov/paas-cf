@@ -16,6 +16,26 @@
         },
         "plans": [
           {
+            "id": "07264114-c666-440b-934a-015508be4475",
+            "name": "tiny-5.x",
+            "aiven_plan": "startup-4",
+            "elasticsearch_version": "5",
+            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "metadata": {
+              "displayName": "Tiny, NOT Highly Available single-node Elasticsearch 5 cluster"
+            }
+          },
+          {
+            "id": "7c0e6f6a-e443-41a0-83df-981bd35923a9",
+            "name": "tiny-6.x",
+            "aiven_plan": "startup-4",
+            "elasticsearch_version": "6",
+            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "metadata": {
+              "displayName": "Tiny, NOT Highly Available single-node Elasticsearch 6 cluster"
+            }
+          },
+          {
             "id": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
             "name": "small-ha-5.x",
             "aiven_plan": "business-4",
