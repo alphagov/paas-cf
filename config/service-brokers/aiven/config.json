@@ -21,6 +21,7 @@
             "aiven_plan": "startup-4",
             "elasticsearch_version": "5",
             "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "free": true,
             "metadata": {
               "displayName": "Tiny, NOT Highly Available single-node Elasticsearch 5 cluster"
             }
@@ -31,6 +32,7 @@
             "aiven_plan": "startup-4",
             "elasticsearch_version": "6",
             "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "free": true,
             "metadata": {
               "displayName": "Tiny, NOT Highly Available single-node Elasticsearch 6 cluster"
             }
@@ -41,6 +43,7 @@
             "aiven_plan": "business-4",
             "elasticsearch_version": "5",
             "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
+            "free": false,
             "metadata": {
               "displayName": "Small, highly available Elasticsearch 5 cluster"
             }
@@ -51,6 +54,7 @@
             "aiven_plan": "business-4",
             "elasticsearch_version": "6",
             "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
+            "free": false,
             "metadata": {
               "displayName": "Small, highly available Elasticsearch 6 cluster"
             }
