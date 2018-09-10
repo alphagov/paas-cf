@@ -7,9 +7,10 @@ CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
 WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
+maybe_slim_dev_env_args=""
 
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
-  opsfile_args="$opsfile_args -o ${CF_DEPLOYMENT_DIR}/operations/scale-to-one-az.yml"
+  maybe_slim_dev_env_args="-o ${CF_DEPLOYMENT_DIR}/operations/scale-to-one-az.yml"
 fi
 
 for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
@@ -51,8 +52,11 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-s3-blobstore.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-dbs.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-uniq-consul-node-name.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-service-discovery.yml" \
+  ${maybe_slim_dev_env_args} \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/skip-consul-cell-registrations.yml" \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/skip-consul-locks.yml" \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/disable-consul.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   "$@" \

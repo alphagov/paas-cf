@@ -9,24 +9,6 @@
     sha1: 53b108f7e1a36df064e6d264c4e447d0fbb9f9de
 
 - type: replace
-  path: /instance_groups/name=consul/jobs/-
-  value:
-    name: datadog-bosh-dns
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=consul/jobs/-
-  value:
-    name: datadog-consul-agent-client
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=consul/jobs/-
-  value:
-    name: datadog-consul-agent-server
-    release: datadog-for-cloudfoundry
-
-- type: replace
   path: /instance_groups/name=api/jobs/-
   value:
     name: datadog-cc
@@ -42,12 +24,6 @@
     release: datadog-for-cloudfoundry
 
 - type: replace
-  path: /instance_groups/name=api/jobs/-
-  value:
-    name: datadog-consul-agent-client
-    release: datadog-for-cloudfoundry
-
-- type: replace
   path: /instance_groups/name=cc-worker/jobs/-
   value:
     name: datadog-cc-worker
@@ -57,12 +33,6 @@
   path: /instance_groups/name=cc-worker/jobs/-
   value:
     name: datadog-bosh-dns
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=cc-worker/jobs/-
-  value:
-    name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
 
 - type: replace
@@ -84,21 +54,9 @@
     release: datadog-for-cloudfoundry
 
 - type: replace
-  path: /instance_groups/name=diego-api/jobs/-
-  value:
-    name: datadog-consul-agent-client
-    release: datadog-for-cloudfoundry
-
-- type: replace
   path: /instance_groups/name=diego-cell/jobs/-
   value:
     name: datadog-bosh-dns
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/-
-  value:
-    name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
 
 - type: replace
@@ -132,25 +90,7 @@
     release: datadog-for-cloudfoundry
 
 - type: replace
-  path: /instance_groups/name=doppler/jobs/-
-  value:
-    name: datadog-consul-agent-client
-    release: datadog-for-cloudfoundry
-
-- type: replace
   path: /instance_groups/name=log-api/jobs/-
-  value:
-    name: datadog-bosh-dns
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=log-api/jobs/-
-  value:
-    name: datadog-consul-agent-client
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=nats/jobs/-
   value:
     name: datadog-bosh-dns
     release: datadog-for-cloudfoundry
@@ -158,7 +98,7 @@
 - type: replace
   path: /instance_groups/name=nats/jobs/-
   value:
-    name: datadog-consul-agent-client
+    name: datadog-bosh-dns
     release: datadog-for-cloudfoundry
 
 - type: replace
@@ -179,12 +119,6 @@
 - type: replace
   path: /instance_groups/name=router/jobs/-
   value:
-    name: datadog-consul-agent-client
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=router/jobs/-
-  value:
     name: datadog-ipsec
     release: datadog-for-cloudfoundry
 
@@ -198,10 +132,4 @@
   path: /instance_groups/name=uaa/jobs/-
   value:
     name: datadog-bosh-dns
-    release: datadog-for-cloudfoundry
-
-- type: replace
-  path: /instance_groups/name=uaa/jobs/-
-  value:
-    name: datadog-consul-agent-client
     release: datadog-for-cloudfoundry
