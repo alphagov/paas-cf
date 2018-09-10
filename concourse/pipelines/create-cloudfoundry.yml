@@ -364,7 +364,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-log-cache-adapter
-      tag_filter: v0.4.0
+      tag_filter: v0.6.0
 
   - name: prometheus-vars-store
     type: s3-iam
