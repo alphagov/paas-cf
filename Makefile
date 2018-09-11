@@ -154,7 +154,7 @@ prod: globals ## Set Environment to Production
 	$(eval export MAKEFILE_ENV_TARGET=prod)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export INPUT_TAG_PREFIX=prod-)
+	$(eval export INPUT_TAG_PREFIX=prod-lon-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk)
