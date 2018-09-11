@@ -114,6 +114,7 @@ staging: globals ## Set Environment to Staging
 	$(eval export MAKEFILE_ENV_TARGET=staging)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export ENABLE_DESTROY=true)
 	$(eval export OUTPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
