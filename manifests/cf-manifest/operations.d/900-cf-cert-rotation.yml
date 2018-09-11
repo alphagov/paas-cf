@@ -232,6 +232,14 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=bosh-dns-adapter/properties/dnshttps/server/ca
+  value: ((cf_app_sd_ca.certificate))((cf_app_sd_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=service-discovery-controller/properties/dnshttps/client/ca
+  value: ((cf_app_sd_ca.certificate))((cf_app_sd_ca_old.certificate))
+
+- type: replace
   path: /variables/-
   value:
     name: silk_ca_old
@@ -330,3 +338,11 @@
       common_name: dnsHealthCheckTlsCa
       is_ca: true
 
+- type: replace
+  path: /variables/-
+  value:
+    name: cf_app_sd_ca_old
+    options:
+      common_name: service-discovery-controller.service.cf.internal
+      is_ca: true
+    type: certificate
