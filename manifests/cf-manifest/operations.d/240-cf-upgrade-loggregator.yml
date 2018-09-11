@@ -1,9 +1,0 @@
----
-
-- type: replace
-  path: /releases/name=loggregator
-  value:
-    name: loggregator
-    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=102.2"
-    version: "102.2"
-    sha1: "1ff4ad235be2720ed119cbb775f6ffdb712e53ea"

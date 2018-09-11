@@ -4,22 +4,6 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
-  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/api/client/tls/ca
-  value: ((dns_api_tls_ca.certificate))((dns_api_tls_ca_old.certificate))
-
-- type: replace
-  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/api/server/tls/ca
-  value: ((dns_api_tls_ca.certificate))((dns_api_tls_ca_old.certificate))
-
-- type: replace
-  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/client/tls/ca
-  value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
-
-- type: replace
-  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/server/tls/ca
-  value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=adapter/jobs/name=adapter/properties/scalablesyslog/adapter/tls/ca
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
@@ -37,6 +21,10 @@
 
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/mutual_tls/ca_cert
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/public_tls/ca_cert
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
