@@ -2819,6 +2819,74 @@ jobs:
                     ACCOUNTS_PASSWORD="$(awk '/^secrets_paas_accounts_admin_password:/ { print $2 }' < ../cf-vars-store/cf-vars-store.yml)" \
                       npm run test:acceptance
 
+          - task: ensure-buildpacks-exist
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/cf-cli
+                  tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+              inputs:
+                - name: paas-cf
+                - name: cf-vars-store
+              params:
+                CF_ADMIN: admin
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              run:
+                path: bash
+                args:
+                  - -c
+                  - |
+                    set -ueo pipefail
+
+                    CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
+                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+
+                    SORT="sort"
+
+                    cat <<-BUILDPACKS | "$SORT" > desired_buildpacks.txt
+                    binary_buildpack
+                    staticfile_buildpack
+                    java_buildpack
+                    ruby_buildpack
+                    nodejs_buildpack
+                    go_buildpack
+                    python_buildpack
+                    php_buildpack
+                    BUILDPACKS
+
+                    cf buildpacks \
+                       | awk '/_buildpack/ {print $1}' \
+                       | "$SORT" \
+                       > actual_buildpacks.txt
+
+                    # comm is a utility to get common lines between files
+                    # -2 will hide the lines only present in the second file
+                    # -3 will hide the lines common in both
+                    # Therefore -23 will show only lines in the first, which
+                    # should be empty becase we expect `cf buildpacks` to be a
+                    # superset of those defined here
+                    #
+                    # We do not care about buildpack versions for this test
+                    comm -23 \
+                         desired_buildpacks.txt \
+                         actual_buildpacks.txt \
+                         > buildpacks_not_found.txt
+
+                    if grep -q . buildpacks_not_found.txt; then
+                      echo 'Could not find one of the following buildpacks:'
+                      cat buildpacks_not_found.txt
+                      echo '-----'
+                      echo 'List of buildpacks found:'
+                      cat actual_buildpacks.txt
+                      exit 1
+                    else
+                      echo 'All buildpacks present'
+                      exit 0
+                    fi
+
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
