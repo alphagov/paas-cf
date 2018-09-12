@@ -16,9 +16,6 @@ case $TARGET in
   prod-lon)
     API_URL="https://api.london.cloud.service.gov.uk"
     ;;
-  staging)
-    API_URL="https://api.staging.cloudpipeline.digital"
-    ;;
   stg-lon)
     API_URL="https://api.london.staging.cloudpipeline.digital"
     ;;

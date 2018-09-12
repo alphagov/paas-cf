@@ -108,27 +108,6 @@ dev: globals ## Set Environment to DEV
 	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
 	@true
 
-.PHONY: staging
-staging: globals ## Set Environment to Staging
-	$(eval export AWS_ACCOUNT=staging)
-	$(eval export MAKEFILE_ENV_TARGET=staging)
-	$(eval export PERSISTENT_ENVIRONMENT=true)
-	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export ENABLE_DESTROY=true)
-	$(eval export OUTPUT_TAG_PREFIX=prod-)
-	$(eval export SYSTEM_DNS_ZONE_NAME=staging.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=staging.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+staging@digital.cabinet-office.gov.uk)
-	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
-	$(eval export ENV_SPECIFIC_CF_MANIFEST=cf-staging.yml)
-	$(eval export ENABLE_DATADOG=true)
-	$(eval export DEPLOY_ENV=staging)
-	$(eval export TEST_HEAVY_LOAD=true)
-	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
-	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
-	$(eval export AWS_DEFAULT_REGION=eu-west-1)
-	@true
-
 .PHONY: stg-lon
 stg-lon: globals ## Set Environment to stg-lon
 	$(eval export AWS_ACCOUNT=staging)

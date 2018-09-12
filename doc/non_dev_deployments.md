@@ -18,7 +18,7 @@ export AWS_SECRET_ACCESS_KEY=your_staging_secret_key
 The [README](../README.md) instructions contain domain names for the dev
 deployments. For other deployments these will be different. For example, the
 deployer concourse in the staging environment has the URL
-`https://deployer.staging.cloudpipeline.digital/`, and in production
+`https://deployer.london.staging.cloudpipeline.digital/`, and in production
 has the URL `https://deployer.cloud.service.gov.uk/`
 
 The deployment scripts will output the URLs of the targets they're operating
