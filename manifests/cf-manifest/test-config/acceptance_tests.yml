@@ -15,6 +15,7 @@ include_routing: true
 include_internet_dependent: true
 include_logging: true
 include_operator: true
+include_service_discovery: true
 include_services: true
 include_ssh: true
 include_docker: true
