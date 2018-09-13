@@ -2830,6 +2830,7 @@ jobs:
               inputs:
                 - name: paas-cf
                 - name: cf-vars-store
+                - name: cf-manifest
               params:
                 CF_ADMIN: admin
                 SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
@@ -2844,48 +2845,41 @@ jobs:
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                     echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
 
-                    SORT="sort"
-
-                    cat <<-BUILDPACKS | "$SORT" > desired_buildpacks.txt
-                    binary_buildpack
-                    staticfile_buildpack
-                    java_buildpack
-                    ruby_buildpack
-                    nodejs_buildpack
-                    go_buildpack
-                    python_buildpack
-                    php_buildpack
-                    BUILDPACKS
-
                     cf buildpacks \
                        | awk '/_buildpack/ {print $1}' \
-                       | "$SORT" \
                        > actual_buildpacks.txt
 
-                    # comm is a utility to get common lines between files
-                    # -2 will hide the lines only present in the second file
-                    # -3 will hide the lines common in both
-                    # Therefore -23 will show only lines in the first, which
-                    # should be empty becase we expect `cf buildpacks` to be a
-                    # superset of those defined here
-                    #
-                    # We do not care about buildpack versions for this test
-                    comm -23 \
-                         desired_buildpacks.txt \
-                         actual_buildpacks.txt \
-                         > buildpacks_not_found.txt
+                    ruby <<-RUBY
+                    require 'yaml'
+                    YAML
+                      .load_file('cf-manifest/cf-manifest.yml')
+                      .fetch('instance_groups', [])
+                      .find { |g| g['name'] == 'api' }
+                      .fetch('jobs', [])
+                      .find { |j| j['name'] == 'cloud_controller_ng' }
+                      .dig('properties', 'cc', 'install_buildpacks')
+                      .map { |buildpack| buildpack['name'] }
+                      .tap do |expected|
+                        actual = File
+                          .read('actual_buildpacks.txt')
+                          .lines
+                          .map(&:strip)
+                          .to_a
 
-                    if grep -q . buildpacks_not_found.txt; then
-                      echo 'Could not find one of the following buildpacks:'
-                      cat buildpacks_not_found.txt
-                      echo '-----'
-                      echo 'List of buildpacks found:'
-                      cat actual_buildpacks.txt
-                      exit 1
-                    else
-                      echo 'All buildpacks present'
-                      exit 0
-                    fi
+                        puts 'Expected', '-----', expected, '-----'
+                        puts 'Actual',   '-----', actual,   '-----'
+
+                        buildpacks_not_found = expected - actual
+
+                        if buildpacks_not_found.empty?
+                          puts 'Found all buildpacks'
+                          exit 0
+                        else
+                          puts "Could not find #{buildpacks_not_found.inspect}"
+                          exit 1
+                        end
+                      end
+                    RUBY
 
         ensure:
           task: remove-temp-user
