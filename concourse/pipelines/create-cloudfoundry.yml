@@ -2819,6 +2819,68 @@ jobs:
                     ACCOUNTS_PASSWORD="$(awk '/^secrets_paas_accounts_admin_password:/ { print $2 }' < ../cf-vars-store/cf-vars-store.yml)" \
                       npm run test:acceptance
 
+          - task: ensure-buildpacks-exist
+            config:
+              platform: linux
+              image_resource:
+                type: docker-image
+                source:
+                  repository: governmentpaas/cf-cli
+                  tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+              inputs:
+                - name: paas-cf
+                - name: cf-vars-store
+                - name: cf-manifest
+              params:
+                CF_ADMIN: admin
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              run:
+                path: bash
+                args:
+                  - -c
+                  - |
+                    set -ueo pipefail
+
+                    CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
+                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+
+                    cf buildpacks \
+                       | awk '/_buildpack/ {print $1}' \
+                       > actual_buildpacks.txt
+
+                    ruby <<-RUBY
+                    require 'yaml'
+                    YAML
+                      .load_file('cf-manifest/cf-manifest.yml')
+                      .fetch('instance_groups', [])
+                      .find { |g| g['name'] == 'api' }
+                      .fetch('jobs', [])
+                      .find { |j| j['name'] == 'cloud_controller_ng' }
+                      .dig('properties', 'cc', 'install_buildpacks')
+                      .map { |buildpack| buildpack['name'] }
+                      .tap do |expected|
+                        actual = File
+                          .read('actual_buildpacks.txt')
+                          .lines
+                          .map(&:strip)
+                          .to_a
+
+                        puts 'Expected', '-----', expected, '-----'
+                        puts 'Actual',   '-----', actual,   '-----'
+
+                        buildpacks_not_found = expected - actual
+
+                        if buildpacks_not_found.empty?
+                          puts 'Found all buildpacks'
+                          exit 0
+                        else
+                          puts "Could not find #{buildpacks_not_found.inspect}"
+                          exit 1
+                        end
+                      end
+                    RUBY
+
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml

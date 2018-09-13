@@ -202,27 +202,21 @@ RSpec.describe "base properties" do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.install_buildpacks"]
     }
 
-    it "install_buildpacks reference jobs which may include the required packages" do
-      # Previously job name implied a similar package name:
-      #
-      # e.g. the release staticfile-buildpack
-      #      contained the job staticfile_buildpack
-      #      which contained package staticfile-buildpack
-      #
-      # Now the release staticfile-buildpack
-      #     contains the job staticfile_buildpack
-      #     which contains two packages
-      #     - staticfile-buildpack-cflinuxfs2
-      #     - staticfile-buildpack-cflinuxfs3
-      #
-      # We cannot assert that these packages exist without pulling the tarballs
-      # for each, however acceptance tests will catch this, and upstream has
-      # responsibility to stick to this implicit contract
+    it "install_buildpacks reference packages that exist" do
       install_buildpacks_property.each do |pack|
-        job_name = pack.fetch("package").gsub(/-cflinuxfs2$/, '')
-        expect(api_job_names).to include(job_name),
-          "install_buildpacks entry #{pack.fetch('name')} references non-existent job #{job_name}"
+        expect(api_job_names).to include(pack.fetch("package")),
+          "install_buildpacks entry #{pack.fetch('name')} references non-existent package #{pack.fetch('package')}"
       end
+    end
+
+    it "install_buildpacks contains certain named buildpacks" do
+      expected = %w[
+        staticfile_buildpack java_buildpack ruby_buildpack nodejs_buildpack
+        go_buildpack python_buildpack php_buildpack binary_buildpack
+      ]
+      actual = install_buildpacks_property.map { |b| b.fetch('name') }
+
+      expect(expected - actual).to be_empty
     end
   end
 
