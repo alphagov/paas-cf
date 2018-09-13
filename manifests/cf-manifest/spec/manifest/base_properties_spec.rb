@@ -208,6 +208,16 @@ RSpec.describe "base properties" do
           "install_buildpacks entry #{pack.fetch('name')} references non-existent package #{pack.fetch('package')}"
       end
     end
+
+    it "install_buildpacks contains certain named buildpacks" do
+      expected = %w[
+        staticfile_buildpack java_buildpack ruby_buildpack nodejs_buildpack
+        go_buildpack python_buildpack php_buildpack binary_buildpack
+      ]
+      actual = install_buildpacks_property.map { |b| b.fetch('name') }
+
+      expect(expected - actual).to be_empty
+    end
   end
 
   describe "router" do
