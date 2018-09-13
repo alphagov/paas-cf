@@ -155,7 +155,7 @@ output "nat_public_ips_csv" {
 }
 
 output "ses_smtp_host" {
-  value = "email-smtp.${var.region}.amazonaws.com"
+  value = "email-smtp.eu-west-1.amazonaws.com"
 }
 
 output "ses_smtp_aws_access_key_id" {
