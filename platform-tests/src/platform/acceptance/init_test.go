@@ -60,10 +60,6 @@ func TestSuite(t *testing.T) {
 			enableServiceAccess := cf.Cf("enable-service-access", "mongodb", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(enableServiceAccess).To(Exit(0))
 			Expect(enableServiceAccess).To(Say("OK"))
-
-			enableServiceAccess = cf.Cf("enable-service-access", "elasticsearch", "-o", org).Wait(testConfig.DefaultTimeoutDuration())
-			Expect(enableServiceAccess).To(Exit(0))
-			Expect(enableServiceAccess).To(Say("OK"))
 		})
 	})
 

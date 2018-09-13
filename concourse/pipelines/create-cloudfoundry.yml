@@ -2350,6 +2350,7 @@ jobs:
                   else
                     cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
                   fi
+                  cf enable-service-access elasticsearch
 
         - task: register-elasticache-broker
           config:
