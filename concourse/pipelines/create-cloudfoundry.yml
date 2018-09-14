@@ -330,12 +330,6 @@ resources:
     source:
       interval: 5m
 
-  - name: paas-compose-broker
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-compose-broker
-      tag_filter: v0.15.0
-
   - name: paas-aiven-broker
     type: git
     source:
@@ -1434,7 +1428,6 @@ jobs:
         passed: ['generate-cf-config']
       - get: bosh-CA-crt
       - get: datadog-tfstate
-      - get: paas-compose-broker
       - get: paas-aiven-broker
       - get: paas-billing
       - get: paas-accounts
@@ -1480,7 +1473,6 @@ jobs:
               export RDS_BROKER_PASS=$($VAL_FROM_YAML secrets_rds_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export CDN_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_cdn_broker_elb_dns_name cf-terraform-outputs.yml)
               export CDN_BROKER_PASS=$($VAL_FROM_YAML secrets_cdn_broker_admin_password cf-vars-store/cf-vars-store.yml)
-              export COMPOSE_BROKER_PASS=$($VAL_FROM_YAML secrets_compose_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export AIVEN_BROKER_PASS=$($VAL_FROM_YAML secrets_aiven_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
               export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-vars-store/cf-vars-store.yml)
@@ -1805,7 +1797,8 @@ jobs:
                 cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account
                 cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
 
-      - task: deploy-compose-service-broker
+      # FIXME: Remove this task when the broker has been removed everywhere.
+      - task: remove-compose-service-broker
         config:
           platform: linux
           image_resource:
@@ -1815,12 +1808,8 @@ jobs:
               tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
           inputs:
             - name: paas-cf
-            - name: paas-compose-broker
             - name: config
           params:
-            COMPOSE_API_KEY: ((compose_api_key))
-            DB_PREFIX: ((deploy_env))
-            CLUSTER_NAME: "gds-eu-west1-c00"
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
           run:
             path: sh
@@ -1833,33 +1822,13 @@ jobs:
                 cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
                   -o admin -s service-brokers
 
-                cp ./paas-cf/config/service-brokers/compose/catalog.json ./paas-compose-broker/
-                cd paas-compose-broker/
-
-                ruby -ryaml -e "
-                  env = {
-                    'LOG_LEVEL' => 'DEBUG',
-                    'USERNAME' => 'compose-broker',
-                    'PASSWORD' => '${COMPOSE_BROKER_PASS}',
-                    'COMPOSE_API_KEY' => '${COMPOSE_API_KEY}',
-                    'DB_PREFIX' => '${DB_PREFIX}',
-                    'CLUSTER_NAME' => '${CLUSTER_NAME}',
-                    'IP_WHITELIST' => '${BROKER_IP_WHITELIST}',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] ||= {}
-                    app['env'].merge!(env)
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-                cf blue-green-deploy compose-broker
-                cf delete -f compose-broker-old
-
                 if cf service-brokers | grep 'compose-broker\s'; then
-                  cf update-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
-                else
-                  cf create-service-broker compose-broker compose-broker "$COMPOSE_BROKER_PASS" "https://compose-broker.${APPS_DNS_ZONE_NAME}"
+                  cf delete-service-broker compose-broker -f
+                fi
+
+                cf delete -f -r compose-broker
+                if cf routes | grep -q compose-broker-new; then
+                  cf delete-route -f "${APPS_DNS_ZONE_NAME}" --hostname compose-broker-new
                 fi
 
       - task: deploy-simulated-load-application
