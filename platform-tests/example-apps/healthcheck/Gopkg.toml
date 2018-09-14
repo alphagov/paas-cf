@@ -28,7 +28,3 @@
 [[constraint]]
   branch = "master"
   name = "github.com/lib/pq"
-
-[[constraint]]
-  branch = "v2"
-  name = "gopkg.in/mgo.v2"
