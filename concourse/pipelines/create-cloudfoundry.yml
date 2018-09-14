@@ -1831,6 +1831,26 @@ jobs:
                   cf delete-route -f "${APPS_DNS_ZONE_NAME}" --hostname compose-broker-new
                 fi
 
+      # FIXME: Remove this task when the secrets have been removed everywhere.
+      - task: remove-compose-secrets
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/awscli
+              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          params:
+            AWS_DEFAULT_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                aws s3 rm "s3://((state_bucket))/compose-secrets.yml"
+
       - task: deploy-simulated-load-application
         config:
           platform: linux
@@ -3271,7 +3291,6 @@ jobs:
                 --preserve router_status_password \
                 --preserve secrets_aiven_broker_admin_password \
                 --preserve secrets_cdn_broker_admin_password \
-                --preserve secrets_compose_broker_admin_password \
                 --preserve secrets_elasticache_broker_admin_password \
                 --preserve secrets_rds_broker_admin_password \
                 --preserve secrets_rds_broker_master_password_seed \
