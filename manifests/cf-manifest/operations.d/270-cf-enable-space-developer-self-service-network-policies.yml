@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /instance_groups/name=api/jobs/name=policy-server/properties/enable_space_developer_self_service?
+  value: true
