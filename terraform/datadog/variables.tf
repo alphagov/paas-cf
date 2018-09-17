@@ -23,7 +23,7 @@ variable "datadog_notification_in_hours" {
 
 variable "datadog_documentation_url" {
   description = "URL that documents how to respond to specific DataDog alerts. Anchors can be appended to refer to specific alerts."
-  default     = "https://alphagov.github.io/paas-team-manual/support/responding_to_alerts/"
+  default     = "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/"
 }
 
 variable "aws_limits_elasticache_nodes" {
