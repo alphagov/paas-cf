@@ -15,11 +15,8 @@ import (
 
 var _ = Describe("Elasticsearch backing service", func() {
 	const (
-		serviceName = "elasticsearch"
-	)
-
-	var (
-		planNames = []string{"tiny-5.x", "tiny-6.x", "small-ha-5.x", "small-ha-6.x"}
+		serviceName  = "elasticsearch"
+		testPlanName = "tiny-6.x"
 	)
 
 	It("is registered in the marketplace", func() {
@@ -29,10 +26,12 @@ var _ = Describe("Elasticsearch backing service", func() {
 	})
 
 	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
-		Expect(plans).To(Exit(0))
-		for _, planName := range planNames {
-			Expect(plans.Out.Contents()).To(ContainSubstring(planName))
+		expectedPlans := []string{"tiny-5.x", "tiny-6.x", "small-ha-5.x", "small-ha-6.x"}
+
+		actualPlans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(actualPlans).To(Exit(0))
+		for _, plan := range expectedPlans {
+			Expect(actualPlans.Out.Contents()).To(ContainSubstring(plan))
 		}
 	})
 
@@ -47,7 +46,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 			dbInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-es")
-			Expect(cf.Cf("create-service", serviceName, planNames[0], dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 			pollForServiceCreationCompletion(dbInstanceName)
 
