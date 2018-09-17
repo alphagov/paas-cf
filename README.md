@@ -46,7 +46,7 @@ services for the platform.
 Upload the necessary credentials. _This step assumes that the credentials repository and tooling (paas-pass) has been installed. If you do not currently have access to the credentials store you may ask a team member to do this step on your behalf._
 
 ```
-make dev upload-compose-secrets
+make dev upload-all-secrets
 ```
 
 Deploy the pipeline configurations using `make`. Select the target based on

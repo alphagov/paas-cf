@@ -123,7 +123,6 @@ stg-lon: globals ## Set Environment to stg-lon
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=stg-lon)
 	$(eval export TEST_HEAVY_LOAD=true)
-	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	@true
@@ -143,7 +142,6 @@ prod: globals ## Set Environment to Production
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod)
-	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
 	@true
@@ -163,7 +161,6 @@ prod-lon: globals ## Set Environment to prod-lon
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod-lon)
-	$(eval export COMPOSE_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	@true
@@ -195,7 +192,7 @@ showenv: check-env ## Display environment information
 	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password prometheus_password
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-datadog-secrets upload-compose-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets
+upload-all-secrets: upload-datadog-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets
 
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
@@ -204,14 +201,6 @@ upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S
 	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-datadog-secrets.sh
-
-.PHONY: upload-compose-secrets
-upload-compose-secrets: check-env ## Decrypt and upload Compose credentials to S3
-	$(eval export COMPOSE_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
-	$(if ${COMPOSE_PASSWORD_STORE_DIR},,$(error Must pass COMPOSE_PASSWORD_STORE_DIR=<path_to_password_store>))
-	$(if $(wildcard ${COMPOSE_PASSWORD_STORE_DIR}),,$(error Password store ${COMPOSE_PASSWORD_STORE_DIR} does not exist))
-	@scripts/upload-compose-secrets.sh
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3

@@ -10,9 +10,6 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 . "${SCRIPT_DIR}/lib/datadog.sh"
 
 # shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/compose.sh"
-
-# shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/aiven.sh"
 
 # shellcheck disable=SC1090
@@ -65,7 +62,6 @@ prepare_environment() {
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
   get_datadog_secrets
-  get_compose_secrets
   get_aiven_secrets
   get_google_oauth_secrets
   get_notify_secrets
@@ -82,12 +78,6 @@ prepare_environment() {
       echo "Datadog enabled but could not retrieve api or app key. Did you do run \`make ${MAKEFILE_ENV_TARGET} upload-datadog-secrets\`?"
       exit 1
     fi
-  fi
-
-  # shellcheck disable=SC2154
-  if [ -z "${compose_api_key+x}" ] ; then
-    echo "Could not retrieve access token for Compose. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-compose-secrets\`?"
-    exit 1
   fi
 
   # shellcheck disable=SC2154
@@ -147,7 +137,6 @@ disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 datadog_api_key: "${datadog_api_key:-}"
 datadog_app_key: "${datadog_app_key:-}"
-compose_api_key: ${compose_api_key:-}
 aiven_api_token: ${aiven_api_token:-}
 enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
