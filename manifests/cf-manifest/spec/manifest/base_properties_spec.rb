@@ -213,10 +213,16 @@ RSpec.describe "base properties" do
       expected = %w[
         staticfile_buildpack java_buildpack ruby_buildpack nodejs_buildpack
         go_buildpack python_buildpack php_buildpack binary_buildpack
+        dotnet_core_buildpack
       ]
       actual = install_buildpacks_property.map { |b| b.fetch('name') }
 
-      expect(expected - actual).to be_empty
+      expect(expected - actual).to be_empty,
+                                   <<-MSG
+                                   Expected: #{expected.inspect}
+                                   Actual:   #{actual.inspect}
+                                   Diff:     #{(expected - actual).inspect}
+                                   MSG
     end
   end
 
