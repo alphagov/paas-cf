@@ -18,7 +18,7 @@ RSpec.describe JobInstances do
   it "ignores a job with 0 instance" do
     manifest = %{
       jobs:
-      - name: consul
+      - name: ajob
         instances: 0
     }
     tfvars = JobInstances.generate manifest
@@ -28,12 +28,12 @@ RSpec.describe JobInstances do
   it "generates a list when there are several jobs" do
     manifest = %{
       jobs:
-        - name: consul
+        - name: ajob
           instances: 3
         - name: nats
           instances: 2
     }
     tfvars = JobInstances.generate manifest
-    expect(tfvars).to eq("job_instances = [ \"consul:3\", \"nats:2\" ]")
+    expect(tfvars).to eq("job_instances = [ \"ajob:3\", \"nats:2\" ]")
   end
 end
