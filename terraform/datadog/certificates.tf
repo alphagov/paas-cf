@@ -41,13 +41,13 @@ resource "datadog_monitor" "cdn_tls_cert_validity" {
   notify_no_data    = true
   no_data_timeframe = 480
 
-  query = "${format("min(last_4h):min:cdn.tls.certificates.validity{deploy_env:%s}.rollup(avg) <= 0.5", var.env)}"
+  query = "${format("min(last_4h):avg:cdn.tls.certificates.validity{deploy_env:%s} <= 0.85", var.env)}"
 
   require_full_window = false
 
   thresholds {
-    warning  = 0.75
-    critical = 0.5
+    warning  = 0.85
+    critical = 0.75
   }
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors"]
