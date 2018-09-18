@@ -44,10 +44,6 @@
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
 - type: replace
-  path: /instance_groups/name=consul/jobs/name=consul_agent/properties/consul/ca_cert
-  value: ((consul_agent_ca.certificate))((consul_agent_ca_old.certificate))
-
-- type: replace
   path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/auctioneer/ca_cert
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
@@ -256,15 +252,6 @@
     options:
       is_ca: true
       common_name: networkPolicyCA
-
-- type: replace
-  path: /variables/-
-  value:
-    name: consul_agent_ca_old
-    options:
-      common_name: consulCA
-      is_ca: true
-    type: certificate
 
 - type: replace
   path: /variables/-

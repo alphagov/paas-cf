@@ -739,16 +739,6 @@
   value: rds_broker_instances
 
 - type: replace
-  path: /instance_groups/name=rds_broker/jobs/0:before
-  value:
-    name: consul_agent
-    release: consul
-    consumes:
-      consul_common: {from: consul_common_link}
-      consul_server: nil
-      consul_client: {from: consul_client_link}
-
-- type: replace
   path: /variables/-
   value:
     name: secrets_rds_broker_admin_password

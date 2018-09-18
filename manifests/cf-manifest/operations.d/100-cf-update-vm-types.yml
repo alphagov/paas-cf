@@ -9,9 +9,6 @@
   path: /instance_groups/name=cc-worker/vm_type
   value: medium
 - type: replace
-  path: /instance_groups/name=consul/vm_type
-  value: small
-- type: replace
   path: /instance_groups/name=diego-api/vm_type
   value: medium
 - type: replace
