@@ -195,19 +195,9 @@ RSpec.describe "base properties" do
   end
 
   describe "buildpacks" do
-    let(:api_instance_group) { manifest_with_defaults.fetch("instance_groups").find { |j| j.fetch("name") == "api" } }
-    let(:api_job_names) { api_instance_group.fetch("jobs").map { |t| t.fetch("name") } }
-
     let(:install_buildpacks_property) {
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.install_buildpacks"]
     }
-
-    it "install_buildpacks reference packages that exist" do
-      install_buildpacks_property.each do |pack|
-        expect(api_job_names).to include(pack.fetch("package")),
-          "install_buildpacks entry #{pack.fetch('name')} references non-existent package #{pack.fetch('package')}"
-      end
-    end
 
     it "install_buildpacks contains certain named buildpacks" do
       expected = %w[
