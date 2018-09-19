@@ -83,14 +83,14 @@ RSpec.describe SecretGenerator do
 
     it "generates a one-element array of passwords when requested" do
       required_secrets = {
-        "consul_encrypt_keys" => :simple_in_array,
+        "some_encrypt_keys" => :simple_in_array,
       }
       results = SecretGenerator.new(required_secrets).generate
 
 
-      expect(results["consul_encrypt_keys"]).to be_a(Array)
-      expect(results["consul_encrypt_keys"].size).to eq(1)
-      expect(results["consul_encrypt_keys"].first).to match(SIMPLE_PASSWORD_REGEX)
+      expect(results["some_encrypt_keys"]).to be_a(Array)
+      expect(results["some_encrypt_keys"].size).to eq(1)
+      expect(results["some_encrypt_keys"].first).to match(SIMPLE_PASSWORD_REGEX)
     end
 
     it "generates ssh keys when requested" do

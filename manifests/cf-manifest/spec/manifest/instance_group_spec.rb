@@ -34,16 +34,6 @@ RSpec.describe "the instance_groups definitions block" do
     end
   end
 
-  describe "in order to start one consul master for consensus" do
-    it "has consul serial" do
-      expect("consul").to be_updated_serially
-    end
-
-    specify "has consul first" do
-      expect(instance_groups[0]["name"]).to eq("consul")
-    end
-  end
-
   describe "in order to apply BBS migrations before upgrading the diego-cells" do
     it "has diego-api before the cells" do
       expect("diego-api").to be_ordered_before("diego-cell")
@@ -66,19 +56,6 @@ RSpec.describe "the instance_groups definitions block" do
     it "has api before scheduler" do
       expect("api").to be_ordered_before("scheduler")
     end
-  end
-
-  it "should list consul_agent first if present" do
-    instance_groups_with_consul = instance_groups.reject { |i|
-      i["jobs"].select { |j|
-        j["name"] == "consul_agent"
-      }.empty?
-    }
-
-    instance_groups_with_consul.each { |i|
-      expect(i["jobs"].first["name"]).to eq("consul_agent"),
-        "expected '#{i['name']}' instance_group to list 'consul_agent' first"
-    }
   end
 end
 
