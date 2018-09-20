@@ -92,3 +92,165 @@ func TestSecGroupListSpaceResources(t *testing.T) {
 		So(spaces[3].Entity.Name, ShouldEqual, "prod")
 	})
 }
+
+func TestBindStagingSecGroupToSpaces(t *testing.T) {
+	Convey("Associate a security group to a space for staging", t, func() {
+		mocks := []MockRoute{
+			{"PUT", "/v2/security_groups/8efd7c5c-d83c-4786-b399-b7bd548839e1/staging_spaces/329b5923-7de0-486a-9928-b4d78ee24982", "", "", 201, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.BindStagingSecGroupToSpace("8efd7c5c-d83c-4786-b399-b7bd548839e1", "329b5923-7de0-486a-9928-b4d78ee24982")
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestNegativeBindStagingSecGroupToSpaces(t *testing.T) {
+	Convey("Try to associate a security group to a space for staging on a pre-2.68.0 API", t, func() {
+		mocks := []MockRoute{
+			{"PUT", "/v2/security_groups/8efd7c5c-d83c-4786-b399-b7bd548839e1/staging_spaces/329b5923-7de0-486a-9928-b4d78ee24982", "", "", 404, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.BindStagingSecGroupToSpace("8efd7c5c-d83c-4786-b399-b7bd548839e1", "329b5923-7de0-486a-9928-b4d78ee24982")
+		So(err, ShouldNotBeNil)
+	})
+}
+
+func TestListRunningSecGroups(t *testing.T) {
+	Convey("List Running SecGroups", t, func() {
+		mocks := []MockRoute{
+			{"GET", "/v2/config/running_security_groups", listRunningSecGroupsPayload, "", 200, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		secGroups, err := client.ListRunningSecGroups()
+		So(err, ShouldBeNil)
+
+		So(len(secGroups), ShouldEqual, 1)
+		for i := range secGroups {
+			So(secGroups[i].Running, ShouldBeTrue)
+		}
+	})
+}
+
+func TestListStagingSecGroups(t *testing.T) {
+	Convey("List Staging SecGroups", t, func() {
+		mocks := []MockRoute{
+			{"GET", "/v2/config/staging_security_groups", listStagingSecGroupsPayload, "", 200, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		secGroups, err := client.ListStagingSecGroups()
+		So(err, ShouldBeNil)
+
+		So(len(secGroups), ShouldEqual, 1)
+		for i := range secGroups {
+			So(secGroups[i].Staging, ShouldBeTrue)
+		}
+	})
+}
+
+func TestBindRunningSecGroups(t *testing.T) {
+	Convey("Unbind Running Sec Groups", t, func() {
+		mocks := []MockRoute{
+			{"PUT", "/v2/config/running_security_groups/8efd7c5c-d83c-4786-b399-b7bd548839e1", "", "", 200, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.BindRunningSecGroup("8efd7c5c-d83c-4786-b399-b7bd548839e1")
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestUnbindRunningSecGroups(t *testing.T) {
+	Convey("Unbind Running Sec Groups", t, func() {
+		mocks := []MockRoute{
+			{"DELETE", "/v2/config/running_security_groups/8efd7c5c-d83c-4786-b399-b7bd548839e1", "", "", 204, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.UnbindRunningSecGroup("8efd7c5c-d83c-4786-b399-b7bd548839e1")
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestBindStagingSecGroups(t *testing.T) {
+	Convey("Unbind Staging Sec Groups", t, func() {
+		mocks := []MockRoute{
+			{"PUT", "/v2/config/staging_security_groups/8efd7c5c-d83c-4786-b399-b7bd548839e1", "", "", 200, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.BindStagingSecGroup("8efd7c5c-d83c-4786-b399-b7bd548839e1")
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestUnbindStagingSecGroups(t *testing.T) {
+	Convey("Unbind Staging Sec Groups", t, func() {
+		mocks := []MockRoute{
+			{"DELETE", "/v2/config/staging_security_groups/8efd7c5c-d83c-4786-b399-b7bd548839e1", "", "", 204, "", nil},
+		}
+		setupMultiple(mocks, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.UnbindStagingSecGroup("8efd7c5c-d83c-4786-b399-b7bd548839e1")
+		So(err, ShouldBeNil)
+	})
+}

@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"golang.org/x/net/http2/hpack"
 )
@@ -27,8 +28,9 @@ func condSkipFailingTest(t *testing.T) {
 }
 
 func init() {
+	inTests = true
 	DebugGoroutines = true
-	flag.BoolVar(&VerboseLogs, "verboseh2", false, "Verbose HTTP/2 debug logging")
+	flag.BoolVar(&VerboseLogs, "verboseh2", VerboseLogs, "Verbose HTTP/2 debug logging")
 }
 
 func TestSettingString(t *testing.T) {
@@ -65,7 +67,7 @@ func (w twriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-// like encodeHeader, but don't add implicit psuedo headers.
+// like encodeHeader, but don't add implicit pseudo headers.
 func encodeHeaderNoImplicit(t *testing.T, headers ...string) []byte {
 	var buf bytes.Buffer
 	enc := hpack.NewEncoder(&buf)
@@ -195,4 +197,31 @@ func TestSorterPoolAllocs(t *testing.T) {
 	}); allocs > 0 {
 		t.Logf("Keys allocs = %v; want <1", allocs)
 	}
+}
+
+// waitCondition reports whether fn eventually returned true,
+// checking immediately and then every checkEvery amount,
+// until waitFor has elapsed, at which point it returns false.
+func waitCondition(waitFor, checkEvery time.Duration, fn func() bool) bool {
+	deadline := time.Now().Add(waitFor)
+	for time.Now().Before(deadline) {
+		if fn() {
+			return true
+		}
+		time.Sleep(checkEvery)
+	}
+	return false
+}
+
+// waitErrCondition is like waitCondition but with errors instead of bools.
+func waitErrCondition(waitFor, checkEvery time.Duration, fn func() error) error {
+	deadline := time.Now().Add(waitFor)
+	var err error
+	for time.Now().Before(deadline) {
+		if err = fn(); err == nil {
+			return nil
+		}
+		time.Sleep(checkEvery)
+	}
+	return err
 }

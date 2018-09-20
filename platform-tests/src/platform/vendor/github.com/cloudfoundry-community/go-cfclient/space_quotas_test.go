@@ -66,3 +66,69 @@ func TestGetSpaceQuotaByName(t *testing.T) {
 		So(spaceQuota.TotalReservedRoutePorts, ShouldEqual, 80)
 	})
 }
+
+func TestCreateSpaceQuota(t *testing.T) {
+	Convey("Create Space Quota", t, func() {
+		setup(MockRoute{"POST", "/v2/space_quota_definitions", spaceQuotaPayload, "", 201, "", nil}, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		spaceQuotaRequest := SpaceQuotaRequest{
+			Name:             "test-2",
+			OrganizationGuid: "06dcedd4-1f24-49a6-adc1-cce9131a1b2c",
+		}
+
+		spaceQuota, err := client.CreateSpaceQuota(spaceQuotaRequest)
+		So(err, ShouldBeNil)
+
+		So(spaceQuota.Name, ShouldEqual, "test-2")
+		So(spaceQuota.OrganizationGuid, ShouldEqual, "06dcedd4-1f24-49a6-adc1-cce9131a1b2c")
+
+	})
+}
+
+func TestUpdateSpaceQuota(t *testing.T) {
+	Convey("Create Update Quota", t, func() {
+		setup(MockRoute{"PUT", "/v2/space_quota_definitions/9ffd7c5c-d83c-4786-b399-b7bd54883977", spaceQuotaPayload, "", 201, "", nil}, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		spaceQuotaRequest := SpaceQuotaRequest{
+			Name:             "test-2",
+			OrganizationGuid: "06dcedd4-1f24-49a6-adc1-cce9131a1b2c",
+		}
+
+		spaceQuota, err := client.UpdateSpaceQuota("9ffd7c5c-d83c-4786-b399-b7bd54883977", spaceQuotaRequest)
+		So(err, ShouldBeNil)
+
+		So(spaceQuota.Name, ShouldEqual, "test-2")
+		So(spaceQuota.OrganizationGuid, ShouldEqual, "06dcedd4-1f24-49a6-adc1-cce9131a1b2c")
+
+	})
+}
+
+func TestAssignSpaceQuota(t *testing.T) {
+	Convey("Assign Space Quota", t, func() {
+		setup(MockRoute{"PUT", "/v2/space_quota_definitions/9ffd7c5c-d83c-4786-b399-b7bd54883977/spaces/8efd7c5c-d83c-4786-b399-b7bd548839e1", "", "", 201, "", nil}, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.AssignSpaceQuota("9ffd7c5c-d83c-4786-b399-b7bd54883977", "8efd7c5c-d83c-4786-b399-b7bd548839e1")
+		So(err, ShouldBeNil)
+	})
+}

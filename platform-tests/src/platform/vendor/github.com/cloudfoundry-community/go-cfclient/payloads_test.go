@@ -1,10 +1,128 @@
 package cfclient
 
+const listEventsPage1Payload = `{
+  "total_results": 4,
+  "total_pages": 2,
+  "prev_url": null,
+  "next_url": "/v2/events-2?page=2",
+  "resources": [
+    {
+      "metadata": {
+        "guid": "b8ede8e1-afc8-40a1-baae-236a0a77b27b",
+        "url": "/v2/events/b8ede8e1-afc8-40a1-baae-236a0a77b27b",
+        "created_at": "2016-06-08T16:41:23Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "type": "name-167",
+        "actor": "guid-008640fc-d316-4602-9251-c8d09bbdc750",
+        "actor_type": "name-168",
+        "actor_name": "name-169",
+        "actee": "guid-e7790fa4-be2b-4a0f-aa82-c124342b0bb4",
+        "actee_type": "name-170",
+        "actee_name": "name-171",
+        "timestamp": "2016-06-08T16:41:23Z",
+        "metadata": {
+
+        },
+        "space_guid": "3a1368e7-e3b7-46af-a98d-57b9c71445e7",
+        "organization_guid": "86aa12ee-8c4f-4b26-b391-2be6c1730dbc"
+      }
+    },
+    {
+      "metadata": {
+        "guid": "2ccf53a8-d0eb-4807-9bb9-7dd844e65267",
+        "url": "/v2/events/2ccf53a8-d0eb-4807-9bb9-7dd844e65267",
+        "created_at": "2016-06-08T16:41:23Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "type": "name-175",
+        "actor": "guid-52cb38f4-d52d-4201-87e3-8e5650efc8c1",
+        "actor_type": "name-176",
+        "actor_name": "name-177",
+        "actee": "guid-5c4214a1-f295-42ae-bd92-38e7cb8be538",
+        "actee_type": "name-178",
+        "actee_name": "name-179",
+        "timestamp": "2016-06-08T16:41:23Z",
+        "metadata": {
+
+        },
+        "space_guid": "10f0fd9d-dd68-428e-8e93-c00bb8eff0a6",
+        "organization_guid": "aa3fdaaa-42c8-4141-bc22-9792c37aa62f"
+      }
+    },
+    {
+      "metadata": {
+        "guid": "4f9b1fef-2ce4-4877-85e1-0da9114a92cb",
+        "url": "/v2/events/4f9b1fef-2ce4-4877-85e1-0da9114a92cb",
+        "created_at": "2016-06-08T16:41:23Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "type": "name-183",
+        "actor": "guid-d3be7ed1-1c08-43f6-a20d-5cd9287492e1",
+        "actor_type": "name-184",
+        "actor_name": "name-185",
+        "actee": "guid-9844795f-943d-47ed-a997-2c04ee611f5a",
+        "actee_type": "name-186",
+        "actee_name": "name-187",
+        "timestamp": "2016-06-08T16:41:23Z",
+        "metadata": {
+
+        },
+        "space_guid": "f9ef235c-25df-4aa1-bcb4-15eec6f92146",
+        "organization_guid": "24a920db-f551-46af-bf73-e1db972f652a"
+      }
+    }
+  ]
+}`
+
+const listEventsPage2Payload = `{
+  "total_results": 4,
+  "total_pages": 2,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "4f9b1fef-2ce4-4877-85e1-0da9114a92cb",
+        "url": "/v2/events/4f9b1fef-2ce4-4877-85e1-0da9114a92cb",
+        "created_at": "2016-06-08T16:41:23Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "type": "name-183",
+        "actor": "guid-d3be7ed1-1c08-43f6-a20d-5cd9287492e1",
+        "actor_type": "name-184",
+        "actor_name": "name-185",
+        "actee": "guid-9844795f-943d-47ed-a997-2c04ee611f5a",
+        "actee_type": "name-186",
+        "actee_name": "name-187",
+        "timestamp": "2016-06-08T16:41:23Z",
+        "metadata": {
+
+        },
+        "space_guid": "f9ef235c-25df-4aa1-bcb4-15eec6f92146",
+        "organization_guid": "24a920db-f551-46af-bf73-e1db972f652a"
+      }
+    }
+  ]
+}`
+
+const totalEventsPayload = `{
+  "total_results": 4,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": []
+}`
+
 const listOrgsPayload = `{
 "total_results": 6,
-"total_pages": 1,
+"total_pages": 2,
 "prev_url": null,
-"next_url": "/v2/orgsPage2",
+"next_url": "/v2/orgsPage2?results-per-page=2",
 "resources": [
   {
      "metadata": {
@@ -59,7 +177,7 @@ const listOrgsPayload = `{
 
 const listOrgsPayloadPage2 = `{
 "total_results": 6,
-"total_pages": 1,
+"total_pages": 2,
 "prev_url": null,
 "next_url": null,
 "resources": [
@@ -113,6 +231,59 @@ const listOrgsPayloadPage2 = `{
   }
 ]
 }`
+
+const listOrgPeoplePayload = `
+{
+  "total_results": 2,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "uaa-id-231",
+        "url": "/v2/users/uaa-id-231",
+        "created_at": "2016-06-08T16:41:34Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "admin": false,
+        "active": false,
+        "default_space_guid": null,
+        "username": "user1",
+        "spaces_url": "/v2/users/uaa-id-231/spaces",
+        "organizations_url": "/v2/users/uaa-id-231/organizations",
+        "managed_organizations_url": "/v2/users/uaa-id-231/managed_organizations",
+        "billing_managed_organizations_url": "/v2/users/uaa-id-231/billing_managed_organizations",
+        "audited_organizations_url": "/v2/users/uaa-id-231/audited_organizations",
+        "managed_spaces_url": "/v2/users/uaa-id-231/managed_spaces",
+        "audited_spaces_url": "/v2/users/uaa-id-231/audited_spaces"
+      }
+    },
+    {
+      "metadata": {
+        "guid": "uaa-id-232",
+        "url": "/v2/users/uaa-id-232",
+        "created_at": "2016-06-08T16:41:34Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "admin": false,
+        "active": false,
+        "default_space_guid": null,
+        "username": "user2",
+        "spaces_url": "/v2/users/uaa-id-232/spaces",
+        "organizations_url": "/v2/users/uaa-id-232/organizations",
+        "managed_organizations_url": "/v2/users/uaa-id-232/managed_organizations",
+        "billing_managed_organizations_url": "/v2/users/uaa-id-232/billing_managed_organizations",
+        "audited_organizations_url": "/v2/users/uaa-id-232/audited_organizations",
+        "managed_spaces_url": "/v2/users/uaa-id-232/managed_spaces",
+        "audited_spaces_url": "/v2/users/uaa-id-232/audited_spaces"
+      }
+    }
+  ]
+}
+`
 
 const orgByGuidPayload = `{
   "metadata": {
@@ -236,56 +407,6 @@ const orgQuotaPayload = `{
    }
 }`
 
-const associateOrgManagerPayload = `{
-  "metadata": {
-    "guid": "bc7b4caf-f4b8-4d85-b126-0729b9351e56",
-    "url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56",
-    "created_at": "2016-06-08T16:41:34Z",
-    "updated_at": "2016-06-08T16:41:26Z"
-  },
-  "entity": {
-    "name": "name-1735",
-    "billing_enabled": false,
-    "quota_definition_guid": "84eed1c7-cc2d-4823-a578-081fef03ba7d",
-    "status": "active",
-    "quota_definition_url": "/v2/quota_definitions/84eed1c7-cc2d-4823-a578-081fef03ba7d",
-    "spaces_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/spaces",
-    "domains_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/domains",
-    "private_domains_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/private_domains",
-    "users_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/users",
-    "managers_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/managers",
-    "billing_managers_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/billing_managers",
-    "auditors_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/auditors",
-    "app_events_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/app_events",
-    "space_quota_definitions_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/space_quota_definitions"
-  }
-}`
-
-const associateOrgAuditorPayload = `{
-  "metadata": {
-    "guid": "bc7b4caf-f4b8-4d85-b126-0729b9351e56",
-    "url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56",
-    "created_at": "2016-06-08T16:41:34Z",
-    "updated_at": "2016-06-08T16:41:26Z"
-  },
-  "entity": {
-    "name": "name-1735",
-    "billing_enabled": false,
-    "quota_definition_guid": "84eed1c7-cc2d-4823-a578-081fef03ba7d",
-    "status": "active",
-    "quota_definition_url": "/v2/quota_definitions/84eed1c7-cc2d-4823-a578-081fef03ba7d",
-    "spaces_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/spaces",
-    "domains_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/domains",
-    "private_domains_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/private_domains",
-    "users_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/users",
-    "managers_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/managers",
-    "billing_managers_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/billing_managers",
-    "auditors_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/auditors",
-    "app_events_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/app_events",
-    "space_quota_definitions_url": "/v2/organizations/bc7b4caf-f4b8-4d85-b126-0729b9351e56/space_quota_definitions"
-  }
-}`
-
 const associateOrgUserPayload = `{
   "metadata": {
     "guid": "bc7b4caf-f4b8-4d85-b126-0729b9351e56",
@@ -392,7 +513,7 @@ const listSpacesPayload = `{
             "guid": "8efd7c5c-d83c-4786-b399-b7bd548839e1",
             "url": "/v2/spaces/8efd7c5c-d83c-4786-b399-b7bd548839e1",
             "created_at": "2014-09-24T13:54:54+00:00",
-            "updated_at": null
+            "updated_at": "2014-09-24T13:54:54+00:00"
          },
          "entity": {
             "name": "dev",
@@ -416,7 +537,7 @@ const listSpacesPayload = `{
             "guid": "657b5923-7de0-486a-9928-b4d78ee24931",
             "url": "/v2/spaces/657b5923-7de0-486a-9928-b4d78ee24931",
             "created_at": "2014-09-26T13:37:31+00:00",
-            "updated_at": null
+            "updated_at": "2014-09-26T13:37:31+00:00"
          },
          "entity": {
             "name": "demo",
@@ -449,7 +570,7 @@ const listSpacesPayloadPage2 = `{
             "guid": "9ffd7c5c-d83c-4786-b399-b7bd54883977",
             "url": "/v2/spaces/9ffd7c5c-d83c-4786-b399-b7bd54883977",
             "created_at": "2014-09-24T13:54:54+00:00",
-            "updated_at": null
+            "updated_at": "2014-09-24T13:54:54+00:00"
          },
          "entity": {
             "name": "test",
@@ -473,7 +594,7 @@ const listSpacesPayloadPage2 = `{
             "guid": "329b5923-7de0-486a-9928-b4d78ee24982",
             "url": "/v2/spaces/329b5923-7de0-486a-9928-b4d78ee24982",
             "created_at": "2014-09-26T13:37:31+00:00",
-            "updated_at": null
+            "updated_at": "2014-09-26T13:37:31+00:00"
          },
          "entity": {
             "name": "prod",
@@ -493,6 +614,57 @@ const listSpacesPayloadPage2 = `{
          }
       }
    ]
+}`
+
+const listSpacePeoplePayload = `{
+  "total_results": 2,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "uaa-id-411",
+        "url": "/v2/users/uaa-id-411",
+        "created_at": "2016-06-08T16:41:42Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "admin": false,
+        "active": false,
+        "default_space_guid": null,
+        "username": "user1",
+        "spaces_url": "/v2/users/uaa-id-411/spaces",
+        "organizations_url": "/v2/users/uaa-id-411/organizations",
+        "managed_organizations_url": "/v2/users/uaa-id-411/managed_organizations",
+        "billing_managed_organizations_url": "/v2/users/uaa-id-411/billing_managed_organizations",
+        "audited_organizations_url": "/v2/users/uaa-id-411/audited_organizations",
+        "managed_spaces_url": "/v2/users/uaa-id-411/managed_spaces",
+        "audited_spaces_url": "/v2/users/uaa-id-411/audited_spaces"
+      }
+    },
+    {
+      "metadata": {
+        "guid": "uaa-id-412",
+        "url": "/v2/users/uaa-id-412",
+        "created_at": "2016-06-08T16:41:42Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "admin": false,
+        "active": false,
+        "default_space_guid": null,
+        "username": "user2",
+        "spaces_url": "/v2/users/uaa-id-412/spaces",
+        "organizations_url": "/v2/users/uaa-id-412/organizations",
+        "managed_organizations_url": "/v2/users/uaa-id-412/managed_organizations",
+        "billing_managed_organizations_url": "/v2/users/uaa-id-412/billing_managed_organizations",
+        "audited_organizations_url": "/v2/users/uaa-id-412/audited_organizations",
+        "managed_spaces_url": "/v2/users/uaa-id-412/managed_spaces",
+        "audited_spaces_url": "/v2/users/uaa-id-412/audited_spaces"
+      }
+    }
+  ]
 }`
 
 const spaceByGuidPayload = `{
@@ -520,33 +692,7 @@ const spaceByGuidPayload = `{
   }
 }`
 
-const associateSpaceAuditorPayload = `{
-  "metadata": {
-    "guid": "bc7b4caf-f4b8-4d85-b126-0729b9351e56",
-    "url": "/v2/spaces/bc7b4caf-f4b8-4d85-b126-0729b9351e56",
-    "created_at": "2016-06-08T16:41:34Z",
-    "updated_at": "2016-06-08T16:41:26Z"
-  },
-  "entity": {
-    "name": "name-1735",
-    "organization_guid": "227161e2-667b-483f-9821-77257a38997f",
-    "space_quota_definition_guid": null,
-    "allow_ssh": true,
-    "organization_url": "/v2/organizations/227161e2-667b-483f-9821-77257a38997f",
-    "developers_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/developers",
-    "managers_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/managers",
-    "auditors_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/auditors",
-    "apps_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/apps",
-    "routes_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/routes",
-    "domains_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/domains",
-    "service_instances_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/service_instances",
-    "app_events_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/app_events",
-    "events_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/events",
-    "security_groups_url": "/v2/spaces/20e7a265-f50d-4c14-ac7e-42c52f9d9cd7/security_groups"
-   }
-}`
-
-const associateSpaceDeveloperPayload = `{
+const associateSpaceUserPayload = `{
   "metadata": {
     "guid": "bc7b4caf-f4b8-4d85-b126-0729b9351e56",
     "url": "/v2/spaces/bc7b4caf-f4b8-4d85-b126-0729b9351e56",
@@ -929,6 +1075,64 @@ const listSecGroupsPayloadPage2 = `{
    ]
 }`
 
+const listRunningSecGroupsPayload = `{
+  "total_results": 1,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "3014fb5b-cb2c-4ac5-952c-e3a7e04ab028",
+        "url": "/v2/config/running_security_groups/3014fb5b-cb2c-4ac5-952c-e3a7e04ab028",
+        "created_at": "2016-06-08T16:41:21Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "name": "name-6",
+        "rules": [
+          {
+            "protocol": "udp",
+            "ports": "8080",
+            "destination": "198.41.191.47/1"
+          }
+        ],
+        "running_default": true,
+        "staging_default": false
+      }
+    }
+  ]
+}`
+
+const listStagingSecGroupsPayload = `{
+  "total_results": 1,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "611bd883-4b93-403f-af92-3283de22e3f0",
+        "url": "/v2/config/staging_security_groups/611bd883-4b93-403f-af92-3283de22e3f0",
+        "created_at": "2016-06-08T16:41:27Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "name": "name-1372",
+        "rules": [
+          {
+            "protocol": "udp",
+            "ports": "8080",
+            "destination": "198.41.191.47/1"
+          }
+        ],
+        "running_default": false,
+        "staging_default": true
+      }
+    }
+  ]
+}`
+
 const listAppsPayload = `{
    "total_results": 28,
    "total_pages": 1,
@@ -1115,7 +1319,7 @@ const appEnvPayload = `{
   }
 }`
 
-const appPayloadWithEnvironment_json = `{
+const appPayloadWithEnvironment = `{
    "metadata": {
    },
    "entity": {
@@ -1306,6 +1510,46 @@ const spacePayload = `{
    }
 }`
 
+const spaceServiceOfferingsPayload = `{
+  "total_results": 1,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "6ec97e21-e879-4f72-9a80-8ec550ffec30",
+        "url": "/v2/services/6ec97e21-e879-4f72-9a80-8ec550ffec30",
+        "created_at": "2017-10-03T23:47:16Z",
+        "updated_at": "2017-10-10T20:53:28Z"
+      },
+      "entity": {
+        "label": "cool-service",
+        "provider": null,
+        "url": null,
+        "description": "Cool service for CF",
+        "long_description": null,
+        "version": null,
+        "info_url": null,
+        "active": 1,
+        "bindable": 1,
+        "unique_id": "beb05948-0fa8-48bf-bfb2-7b09e6687d37",
+        "extra": "{\"displayName\":\"Super cool service\",\"longDescription\":\"Very cool service.\",\"documentationUrl\":\"https://readthedocs.org\"}",
+        "tags": [
+          "cool"
+        ],
+        "requires": [
+
+        ],
+        "documentation_url": null,
+        "service_broker_guid": "6b3da2f0-c530-4f2b-8fd2-7cd68a21e907",
+        "plan_updateable": 1,
+        "service_plans_url": "/v2/services/6ec97e21-e879-4f72-9a80-8ec550ffec30/service_plans"
+      }
+    }
+  ]
+}`
+
 const orgPayload = `{
    "metadata": {
       "guid": "da0dba14-6064-4f7a-b15a-ff9e677e49b2",
@@ -1422,6 +1666,52 @@ const listServicePlansPayload = `{
     }
   ]
 }`
+
+const getServicePlanByGuidPayload = `{
+  "metadata": {
+    "guid": "6fecf53b-7553-4cb3-b97e-930f9c4e3385",
+    "url": "/v2/service_plans/6fecf53b-7553-4cb3-b97e-930f9c4e3385",
+    "created_at": "2016-06-08T16:41:30Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "name": "name-1575",
+    "free": false,
+    "description": "desc-109",
+    "service_guid": "1ccab853-87c9-45a6-bf99-603032d17fe5",
+    "extra": null,
+    "unique_id": "1bc2884c-ee3d-4f82-a78b-1a657f79aeac",
+    "public": true,
+    "active": true,
+    "bindable": true,
+    "service_url": "/v2/services/1ccab853-87c9-45a6-bf99-603032d17fe5",
+    "service_instances_url": "/v2/service_plans/6fecf53b-7553-4cb3-b97e-930f9c4e3385/service_instances"
+  }
+}
+`
+
+const privateServicePlanPayload = `{
+  "metadata": {
+    "guid": "6fecf53b-7553-4cb3-b97e-930f9c4e3385",
+    "url": "/v2/service_plans/6fecf53b-7553-4cb3-b97e-930f9c4e3385",
+    "created_at": "2016-06-08T16:41:30Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "name": "name-1575",
+    "free": false,
+    "description": "desc-109",
+    "service_guid": "1ccab853-87c9-45a6-bf99-603032d17fe5",
+    "extra": null,
+    "unique_id": "1bc2884c-ee3d-4f82-a78b-1a657f79aeac",
+    "public": false,
+    "active": true,
+    "bindable": true,
+    "service_url": "/v2/services/1ccab853-87c9-45a6-bf99-603032d17fe5",
+    "service_instances_url": "/v2/service_plans/6fecf53b-7553-4cb3-b97e-930f9c4e3385/service_instances"
+  }
+}
+`
 
 const listServicePayload = `{
    "total_results": 22,
@@ -1647,7 +1937,7 @@ var serviceInstancePayload = `{
       "guid": "8423ca96-90ad-411f-b77a-0907844949fc",
       "url": "/v2/service_instances/8423ca96-90ad-411f-b77a-0907844949fc",
       "created_at": "2016-10-21T18:22:56Z",
-      "updated_at": null
+      "updated_at": "2016-10-21T18:22:56Z"
    },
    "entity": {
       "name": "fortunes-db",
@@ -1858,7 +2148,96 @@ const listRoutesPayloadPage2 string = `{
    ]
 }`
 
+const bindRoute string = `
+{
+  "metadata": {
+    "guid": "7803de15-a20f-4dea-bf17-37de56629582",
+    "url": "/v2/routes/7803de15-a20f-4dea-bf17-37de56629582",
+    "created_at": "2016-06-08T16:41:28Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "host": "foo-host",
+    "path": "",
+    "domain_guid": "08167353-32da-4ed9-9ef5-aa7b31bbc009",
+    "space_guid": "b65a9a76-8c55-460b-9162-18b396da66cf",
+    "service_instance_guid": null,
+    "port": null,
+    "domain_url": "/v2/shared_domains/08167353-32da-4ed9-9ef5-aa7b31bbc009",
+    "space_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf",
+    "apps_url": "/v2/routes/7803de15-a20f-4dea-bf17-37de56629582/apps",
+    "route_mappings_url": "/v2/routes/7803de15-a20f-4dea-bf17-37de56629582/route_mappings"
+  }
+}
+`
+
 const createRoute string = `
+{
+  "metadata": {
+    "guid": "b3fe6f31-e897-4e02-b49e-263ca96b4e3a",
+    "url": "/v2/routes/b3fe6f31-e897-4e02-b49e-263ca96b4e3a",
+    "created_at": "2018-05-24T22:16:36Z",
+    "updated_at": "2018-05-24T22:16:36Z"
+  },
+  "entity": {
+    "host": "foo-host",
+    "path": "",
+    "domain_guid": "08167353-32da-4ed9-9ef5-aa7b31bbc009",
+    "space_guid": "b65a9a76-8c55-460b-9162-18b396da66cf",
+    "service_instance_guid": null,
+    "port": null,
+    "domain_url": "/v2/shared_domains/08167353-32da-4ed9-9ef5-aa7b31bbc009",
+    "domain": {
+      "metadata": {
+        "guid": "08167353-32da-4ed9-9ef5-aa7b31bbc009",
+        "url": "/v2/shared_domains/08167353-32da-4ed9-9ef5-aa7b31bbc009",
+        "created_at": "2018-05-11T00:28:15Z",
+        "updated_at": "2018-05-11T00:28:15Z"
+      },
+      "entity": {
+        "name": "apps.pcf.example.com",
+        "router_group_guid": null,
+        "router_group_type": null
+      }
+    },
+    "space_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf",
+    "space": {
+      "metadata": {
+        "guid": "b65a9a76-8c55-460b-9162-18b396da66cf",
+        "url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf",
+        "created_at": "2018-05-18T02:52:35Z",
+        "updated_at": "2018-05-18T02:52:35Z"
+      },
+      "entity": {
+        "name": "dev",
+        "organization_guid": "de84b21e-dd45-4a58-b483-83be15cf1b00",
+        "space_quota_definition_guid": null,
+        "isolation_segment_guid": null,
+        "allow_ssh": true,
+        "organization_url": "/v2/organizations/de84b21e-dd45-4a58-b483-83be15cf1b00",
+        "developers_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/developers",
+        "managers_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/managers",
+        "auditors_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/auditors",
+        "apps_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/apps",
+        "routes_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/routes",
+        "domains_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/domains",
+        "service_instances_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/service_instances",
+        "app_events_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/app_events",
+        "events_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/events",
+        "security_groups_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/security_groups",
+        "staging_security_groups_url": "/v2/spaces/b65a9a76-8c55-460b-9162-18b396da66cf/staging_security_groups"
+      }
+    },
+    "apps_url": "/v2/routes/b3fe6f31-e897-4e02-b49e-263ca96b4e3a/apps",
+    "apps": [
+
+    ],
+    "route_mappings_url": "/v2/routes/b3fe6f31-e897-4e02-b49e-263ca96b4e3a/route_mappings"
+  }
+}
+`
+
+const createTcpRoute string = `
 {
   "metadata": {
     "guid": "78fe5006-1d1c-41ba-94de-eb7002241b82",
@@ -2170,7 +2549,35 @@ const postDomainPayload = `{
   }
 }`
 
-const ListBuildpacksPayload = `{
+const postExternalSharedDomainPayload = `{
+  "metadata": {
+    "guid": "b98aeca1-22b9-49f9-8428-3ace9ea2ba11",
+    "url": "/v2/shared_domains/b98aeca1-22b9-49f9-8428-3ace9ea2ba11",
+    "created_at": "2016-06-08T16:41:39Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "name": "shared-exmaple.com",
+    "internal": false,
+    "router_group_guid": "8483e4f1-d3a3-43e2-ab8c-b05ea40ef8db",
+    "router_group_type": "tcp"
+  }
+}`
+
+const postInternalSharedDomainPayload = `{
+  "metadata": {
+    "guid": "b98aeca1-22b9-49f9-8428-3ace9ea2ba11",
+    "url": "/v2/shared_domains/b98aeca1-22b9-49f9-8428-3ace9ea2ba11",
+    "created_at": "2016-06-08T16:41:39Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "name": "shared-exmaple.com",
+    "internal": true
+  }
+}`
+
+const listBuildpacksPayload = `{
   "total_results": 3,
   "total_pages": 1,
   "prev_url": null,
@@ -2224,7 +2631,7 @@ const ListBuildpacksPayload = `{
   ]
 }`
 
-const ListBuildpacksPayload2 = `{
+const listBuildpacksPayload2 = `{
   "total_results": 3,
   "total_pages": 1,
   "prev_url": "/v2/buildpacks",
@@ -2276,6 +2683,44 @@ const ListBuildpacksPayload2 = `{
       }
     }
   ]
+}`
+
+const buildpackPayload = `{
+  "metadata": {
+    "guid": "c92b6f5f-d2a4-413a-b515-647d059723aa",
+    "url": "/v2/buildpacks/c92b6f5f-d2a4-413a-b515-647d059723aa",
+    "created_at": "2016-06-08T16:41:31Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "name": "name_1",
+    "position": 1,
+    "enabled": true,
+    "locked": false,
+    "filename": "name-1616"
+  }
+}`
+
+const userByGUIDPayload = `{
+  "metadata": {
+    "guid": "72ccf759-43aa-4954-903f-7d892c268e80",
+    "url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80",
+    "created_at": "2017-11-03T01:33:31Z",
+    "updated_at": "2017-11-03T01:33:31Z"
+  },
+  "entity": {
+    "admin": false,
+    "active": false,
+    "default_space_guid": null,
+    "username": "user@example.com",
+    "spaces_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/spaces",
+    "organizations_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/organizations",
+    "managed_organizations_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/managed_organizations",
+    "billing_managed_organizations_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/billing_managed_organizations",
+    "audited_organizations_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/audited_organizations",
+    "managed_spaces_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/managed_spaces",
+    "audited_spaces_url": "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80/audited_spaces"
+  }
 }`
 
 const listUsersPayload = `{
@@ -2540,24 +2985,6 @@ const listIsolationSegmentsPayload = `{
    ]
 }`
 
-const addOrgToIsolationSegmentPayload = `{
-   "guid": "033b4c58-12bb-499a-b05d-4b6fc9e2993b",
-   "name": "shared",
-   "created_at": "2016-10-19T20:25:04Z",
-   "updated_at": "2016-11-08T16:41:26Z",
-   "links": {
-      "self": {
-         "href": "https://api.example.org/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b"
-      },
-      "spaces": {
-         "href": "https://api.example.org/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b/relationships/spaces"
-      },
-      "organizations": {
-         "href": "https://api.example.org/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b/relationships/organizations"
-      }
-   }
-}`
-
 const listServiceKeysPayload = `{
    "total_results": 2,
    "total_pages": 1,
@@ -2637,7 +3064,7 @@ const getServiceKeyPayload = `{
                "amqp": "amqp://100.100.100.100:9008",
                "nhp": "nhp://100.100.100.100:9009",
                "mqtt": "tcp://100.100.100.100:9008",
-               "name": "fcf26687-e176-4784-b181-b3c942fecb62",
+               "name": "ecf26687-e176-4784-b181-b3c942fecb62",
                "nsp": "nsp://100.100.100.100:9008",
                "userid": "cfu-9be3911b-c621-4467-8866-f8b924aaee57",
                "uri": "nhp://100.100.100.100:9008",
@@ -2648,8 +3075,1555 @@ const getServiceKeyPayload = `{
                   }
                ]
             },
-            "service_instance_url": "/v2/service_instances/fcf26687-e176-4784-b181-b3c942fecb62"
+            "service_instance_url": "/v2/service_instances/ecf26687-e176-4784-b181-b3c942fecb62"
         }
+    }
+  ]
+}`
+
+const getServiceKeysPayload = `{
+  "total_results": 2,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+      {
+          "metadata": {
+              "guid": "8be3911b-c621-4467-8866-f8b924aaee57",
+              "url": "/v2/service_keys/8be3911b-c621-4467-8866-f8b924aaee57",
+              "created_at": "2017-05-16T12:14:46Z",
+              "updated_at": "2017-05-16T12:14:46Z"
+          },
+          "entity": {
+              "name": "test01_key",
+              "service_instance_guid": "ecf26687-e176-4784-b181-b3c942fecb62",
+              "credentials": {
+                  "jms": "nhp://100.100.100.100:9008",
+                  "js_uri": "http://100.100.100.100:9008",
+                  "amqp": "amqp://100.100.100.100:9008",
+                  "nhp": "nhp://100.100.100.100:9009",
+                  "mqtt": "tcp://100.100.100.100:9008",
+                  "name": "ecf26687-e176-4784-b181-b3c942fecb62",
+                  "nsp": "nsp://100.100.100.100:9008",
+                  "userid": "cfu-9be3911b-c621-4467-8866-f8b924aaee57",
+                  "uri": "nhp://100.100.100.100:9008",
+                  "uriInfos": [
+                      {
+                          "host": "100.100.100.100",
+                          "port": 9008
+                      }
+                  ]
+              },
+              "service_instance_url": "/v2/service_instances/ecf26687-e176-4784-b181-b3c942fecb62"
+          }
+      },
+      {
+          "metadata": {
+              "guid": "9361b5dc-9262-4a83-8969-9b3469211884",
+              "url": "/v2/service_keys/9361b5dc-9262-4a83-8969-9b3469211884",
+              "created_at": "2017-10-24T17:00:46Z",
+              "updated_at": "2017-10-24T17:00:46Z"
+          },
+          "entity": {
+              "name": "test02_key",
+              "service_instance_guid": "ecf26687-e176-4784-b181-b3c942fecb62",
+              "credentials": {
+                  "jms": "nhp://100.100.47.11:9008",
+                  "js_uri": "http://100.100.47.11:9008",
+                  "amqp": "amqp://100.100.47.11:9008",
+                  "nhp": "nhp://100.100.47.11:9009",
+                  "mqtt": "tcp://100.100.47.11.100:9008",
+                  "name": "ecf26687-e176-4784-b181-b3c942fecb62",
+                  "nsp": "nsp://100.100.47.11:9008",
+                  "userid": "cfu-7fb486c4-4d9e-49cb-b121-3241ece5dc10",
+                  "uri": "nhp://100.100.47.11:9008",
+                  "uriInfos": [
+                      {
+                          "host": "100.100.47.11",
+                          "port": 9008
+                      }
+                  ]
+              },
+              "service_instance_url": "/v2/service_instances/ecf26687-e176-4784-b181-b3c942fecb62"
+          }
+      }
+
+  ]
+}`
+
+const postServiceKeysPayload = `{
+  "metadata": {
+    "guid": "9361b5dc-9262-4a83-8969-9b3469211884",
+    "url": "/v2/service_keys/9361b5dc-9262-4a83-8969-9b3469211884",
+    "created_at": "2017-10-25T17:31:23Z",
+    "updated_at": "2017-10-25T17:31:23Z"
+  },
+  "entity": {
+    "name": "key1",
+    "service_instance_guid": "ecf26687-e176-4784-b181-b3c942fecb62",
+    "credentials": {
+      "jms": "nhp://100.100.47.11:9008",
+      "js_uri": "http://100.100.47.11:9008",
+      "amqp": "amqp://100.100.47.11:9008",
+      "nhp": "nhp://100.100.47.11:9009",
+      "mqtt": "tcp://100.100.47.11.100:9008",
+      "name": "ecf26687-e176-4784-b181-b3c942fecb62",
+      "nsp": "nsp://100.100.47.11:9008",
+      "userid": "cfu-7fb486c4-4d9e-49cb-b121-3241ece5dc10",
+      "uri": "nhp://100.100.47.11:9008",
+      "uriInfos": [
+        {
+          "host": "100.100.47.11",
+          "port": 9008
+        }
+      ]
+    },
+    "service_instance_url": "/v2/service_instances/ecf26687-e176-4784-b181-b3c942fecb62"
+  }
+}`
+
+const postServiceKeysDuplicatePayload = `{
+    "description": "The service key name is taken: key1",
+    "error_code": "CF-ServiceKeyNameTaken",
+    "code": 360001
+}`
+
+const postServiceKeysBadPayload = `{
+  "description": "The service key name is taken: key1",
+  "error_code": "CF-ServiceKeyNameTaken",
+  "code": 360001
+`
+
+const listServiceBrokersPayload = `
+{
+  "total_results": 3,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "90a413fd-a636-4133-8bfb-a94b07839e96",
+        "url": "/v2/service_brokers/90a413fd-a636-4133-8bfb-a94b07839e96",
+        "created_at": "2016-06-08T16:41:22Z",
+        "updated_at": "2016-06-08T16:41:22Z"
+      },
+      "entity": {
+        "name": "name-85",
+        "broker_url": "https://foo.com/url-2",
+        "auth_username": "auth_username-2",
+        "space_guid": "1d43e64d-ed64-43dd-9046-11f422bd407b"
+      }
+    }
+  ]
+}
+`
+
+const getServiceByGuidPayload = `
+{
+  "metadata": {
+    "guid": "53f52780-e93c-4af7-a96c-6958311c40e5",
+    "url": "/v2/services/53f52780-e93c-4af7-a96c-6958311c40e5",
+    "created_at": "2016-06-08T16:41:32Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "label": "label-58",
+    "provider": null,
+    "url": null,
+    "description": "desc-135",
+    "long_description": null,
+    "version": null,
+    "info_url": null,
+    "active": true,
+    "bindable": true,
+    "unique_id": "c181996b-f233-43d1-8901-3a43eafcaacf",
+    "extra": null,
+    "tags": [
+
+    ],
+    "requires": [
+
+    ],
+    "documentation_url": null,
+    "service_broker_guid": "0e7250aa-364f-42c2-8fd2-808b0224376f",
+    "plan_updateable": false,
+    "service_plans_url": "/v2/services/53f52780-e93c-4af7-a96c-6958311c40e5/service_plans"
+  }
+}
+`
+
+const buildpackUploadPayload = `{ "metadata":{ "guid": "my-job-guid" } }`
+
+const buildpackUpdatePayload = `
+{
+  "metadata": {
+    "guid": "c92b6f5f-d2a4-413a-b515-647d059723aa",
+    "url": "/v2/buildpacks/c92b6f5f-d2a4-413a-b515-647d059723aa",
+    "created_at": "2016-06-08T16:41:31Z",
+    "updated_at": "2016-06-08T16:41:31Z"
+  },
+  "entity": {
+    "name": "renamed-buildpack",
+    "position": 2,
+    "enabled": true,
+    "locked": true,
+    "filename": "my-file"
+  }
+}`
+const buildpackCreatePayload = `
+{
+  "metadata": {
+    "guid": "c92b6f5f-d2a4-413a-b515-647d059723aa",
+    "url": "/v2/buildpacks/c92b6f5f-d2a4-413a-b515-647d059723aa",
+    "created_at": "2016-06-08T16:41:31Z",
+    "updated_at": "2016-06-08T16:41:31Z"
+  },
+  "entity": {
+    "name": "test-buildpack",
+    "position": 10,
+    "enabled": true,
+    "locked": false,
+    "filename": null
+  }
+}`
+
+const listAppUsageEventsPayload = `
+{
+  "total_results": 2,
+  "total_pages": 2,
+  "prev_url": null,
+  "next_url": "/v2/app_usage_eventsPage2?results-per-page=2&page=2",
+  "resources": [
+    {
+      "metadata": {
+        "guid": "b32241a5-5508-4d42-893c-360e42a300b6",
+        "url": "/v2/app_usage_events/b32241a5-5508-4d42-893c-360e42a300b6",
+        "created_at": "2016-06-08T16:41:33Z"
+      },
+      "entity": {
+        "state": "STARTED",
+        "previous_state": null,
+        "memory_in_mb_per_instance": 564,
+        "previous_memory_in_mb_per_instance": null,
+        "instance_count": 1,
+        "previous_instance_count": null,
+        "app_guid": "guid-d9fbb7f8-cba5-44a2-b720-c24f1fe5e1c4",
+        "app_name": "name-1663",
+        "space_guid": "guid-5e28f12f-9d80-473e-b826-537b148eb338",
+        "space_name": "name-1664",
+        "org_guid": "guid-036444f4-f2f5-4ea8-a353-e73330ca0f0a",
+        "buildpack_guid": "guid-df37754c-819b-4697-a523-4b457d3c83dd",
+        "buildpack_name": "name-1665",
+        "package_state": "STAGED",
+        "previous_package_state": null,
+        "parent_app_guid": null,
+        "parent_app_name": null,
+        "process_type": "web",
+        "task_name": null,
+        "task_guid": null
+      }
+    },
+    {
+      "metadata": {
+        "guid": "b32241a5-5508-4d42-893c-360e42a300a8",
+        "url": "/v2/app_usage_events/b32241a5-5508-4d42-893c-360e42a300a8",
+        "created_at": "2016-06-08T16:41:33Z"
+      },
+      "entity": {
+        "state": "STARTED",
+        "previous_state": null,
+        "memory_in_mb_per_instance": 564,
+        "previous_memory_in_mb_per_instance": null,
+        "instance_count": 1,
+        "previous_instance_count": null,
+        "app_guid": "guid-d9fbb7f8-cba5-44a2-b720-c24f1fe5e1c4",
+        "app_name": "name-1663",
+        "space_guid": "guid-5e28f12f-9d80-473e-b826-537b148eb338",
+        "space_name": "name-1664",
+        "org_guid": "guid-036444f4-f2f5-4ea8-a353-e73330ca0f0a",
+        "buildpack_guid": "guid-df37754c-819b-4697-a523-4b457d3c83dd",
+        "buildpack_name": "name-1665",
+        "package_state": "STARTED",
+        "previous_package_state": null,
+        "parent_app_guid": null,
+        "parent_app_name": null,
+        "process_type": "web",
+        "task_name": null,
+        "task_guid": null
+      }
+    }
+  ]
+}`
+
+const listAppUsageEventsPayloadPage2 = `
+{
+  "total_results": 2,
+  "total_pages": 2,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "b32241a5-5508-4d42-893c-360e42a300b6",
+        "url": "/v2/app_usage_events/b32241a5-5508-4d42-893c-360e42a300b6",
+        "created_at": "2016-06-08T16:41:33Z"
+      },
+      "entity": {
+        "state": "STOPPED",
+        "previous_state": null,
+        "memory_in_mb_per_instance": 564,
+        "previous_memory_in_mb_per_instance": null,
+        "instance_count": 1,
+        "previous_instance_count": null,
+        "app_guid": "guid-d9fbb7f8-cba5-44a2-b720-c24f1fe5e1c4",
+        "app_name": "name-1663",
+        "space_guid": "guid-5e28f12f-9d80-473e-b826-537b148eb338",
+        "space_name": "name-1664",
+        "org_guid": "guid-036444f4-f2f5-4ea8-a353-e73330ca0f0a",
+        "buildpack_guid": "guid-df37754c-819b-4697-a523-4b457d3c83dd",
+        "buildpack_name": "name-1665",
+        "package_state": "STAGED",
+        "previous_package_state": null,
+        "parent_app_guid": null,
+        "parent_app_name": null,
+        "process_type": "web",
+        "task_name": null,
+        "task_guid": null
+      }
+    },
+    {
+      "metadata": {
+        "guid": "b32241a5-5508-4d42-893c-360e42a300a8",
+        "url": "/v2/app_usage_events/b32241a5-5508-4d42-893c-360e42a300a8",
+        "created_at": "2016-06-08T16:41:33Z"
+      },
+      "entity": {
+        "state": "CRASHED",
+        "previous_state": null,
+        "memory_in_mb_per_instance": 564,
+        "previous_memory_in_mb_per_instance": null,
+        "instance_count": 1,
+        "previous_instance_count": null,
+        "app_guid": "guid-d9fbb7f8-cba5-44a2-b720-c24f1fe5e1c4",
+        "app_name": "name-1663",
+        "space_guid": "guid-5e28f12f-9d80-473e-b826-537b148eb338",
+        "space_name": "name-1664",
+        "org_guid": "guid-036444f4-f2f5-4ea8-a353-e73330ca0f0a",
+        "buildpack_guid": "guid-df37754c-819b-4697-a523-4b457d3c83dd",
+        "buildpack_name": "name-1665",
+        "package_state": "STARTED",
+        "previous_package_state": null,
+        "parent_app_guid": null,
+        "parent_app_name": null,
+        "process_type": "web",
+        "task_name": null,
+        "task_guid": null
+      }
+    }
+  ]
+}`
+
+const listServiceUsageEventsPayload = `
+{
+  "total_results": 2,
+  "total_pages": 2,
+  "prev_url": null,
+  "next_url": "/v2/service_usage_eventsPage2?results-per-page=2&page=2",
+  "resources": [
+    {
+      "metadata": {
+        "guid": "985c09c5-bf5a-44eb-a260-41c532dc0f1d",
+        "url": "/v2/service_usage_events/985c09c5-bf5a-44eb-a260-41c532dc0f1d",
+        "created_at": "2016-06-08T16:41:39Z"
+      },
+      "entity": {
+        "state": "CREATED",
+        "org_guid": "guid-396a8cb9-5524-4a2b-8e9e-2bfc70edb58d",
+        "space_guid": "guid-be1f6fe3-e63a-41a3-b196-3fc084022823",
+        "space_name": "name-1981",
+        "service_instance_guid": "guid-f93250f7-7ef5-4b02-8d33-353919ce8358",
+        "service_instance_name": "name-1982",
+        "service_instance_type": "type-5",
+        "service_plan_guid": "guid-e9d2d5a0-69a6-46ef-bac5-43f3ed177614",
+        "service_plan_name": "name-1983",
+        "service_guid": "guid-34916716-31d7-40c1-9afd-f312996c9654",
+        "service_label": "label-64"
+      }
+    },
+    {
+      "metadata": {
+        "guid": "985c09c5-bf5a-44eb-a260-41c532dc0f2a",
+        "url": "/v2/service_usage_events/985c09c5-bf5a-44eb-a260-41c532dc0f1d",
+        "created_at": "2016-06-08T16:41:39Z"
+      },
+      "entity": {
+        "state": "DELETED",
+        "org_guid": "guid-396a8cb9-5524-4a2b-8e9e-2bfc70edb58d",
+        "space_guid": "guid-be1f6fe3-e63a-41a3-b196-3fc084022823",
+        "space_name": "name-1981",
+        "service_instance_guid": "guid-f93250f7-7ef5-4b02-8d33-353919ce8358",
+        "service_instance_name": "name-1983",
+        "service_instance_type": "type-5",
+        "service_plan_guid": "guid-e9d2d5a0-69a6-46ef-bac5-43f3ed177614",
+        "service_plan_name": "name-1984",
+        "service_guid": "guid-34916716-31d7-40c1-9afd-f312996c9655",
+        "service_label": "label-65"
+      }
+    }
+  ]
+}`
+
+const listServiceUsageEventsPayloadPage2 = `
+{
+  "total_results": 2,
+  "total_pages": 2,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "985c09c5-bf5a-44eb-a260-41c532dc0f3f",
+        "url": "/v2/service_usage_events/985c09c5-bf5a-44eb-a260-41c532dc0f1d",
+        "created_at": "2016-06-08T16:41:39Z"
+      },
+      "entity": {
+        "state": "CREATED",
+        "org_guid": "guid-396a8cb9-5524-4a2b-8e9e-2bfc70edb58d",
+        "space_guid": "guid-be1f6fe3-e63a-41a3-b196-3fc084022823",
+        "space_name": "name-1988",
+        "service_instance_guid": "guid-f93250f7-7ef5-4b02-8d33-353919ce8358",
+        "service_instance_name": "name-1988",
+        "service_instance_type": "type-5",
+        "service_plan_guid": "guid-e9d2d5a0-69a6-46ef-bac5-43f3ed177614",
+        "service_plan_name": "name-1988",
+        "service_guid": "guid-34916716-31d7-40c1-9afd-f312996c9654",
+        "service_label": "label-64"
+      }
+    },
+    {
+      "metadata": {
+        "guid": "985c09c5-bf5a-44eb-a260-41c532dc0f6d",
+        "url": "/v2/service_usage_events/985c09c5-bf5a-44eb-a260-41c532dc0f1d",
+        "created_at": "2016-06-08T16:41:39Z"
+      },
+      "entity": {
+        "state": "UPDATED",
+        "org_guid": "guid-396a8cb9-5524-4a2b-8e9e-2bfc70edb58d",
+        "space_guid": "guid-be1f6fe3-e63a-41a3-b196-3fc084022823",
+        "space_name": "name-1985",
+        "service_instance_guid": "guid-f93250f7-7ef5-4b02-8d33-353919ce8358",
+        "service_instance_name": "name-1985",
+        "service_instance_type": "type-5",
+        "service_plan_guid": "guid-e9d2d5a0-69a6-46ef-bac5-43f3ed177614",
+        "service_plan_name": "name-1985",
+        "service_guid": "guid-34916716-31d7-40c1-9afd-f312996c9655",
+        "service_label": "label-65"
+      }
+    }
+  ]
+}`
+
+const sharePrivateDomainPayload = `{
+  "metadata": {
+    "guid": "3b6f763f-aae1-4177-9b93-f2de6f2a48f2",
+    "url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2",
+    "created_at": "2016-06-08T16:41:35Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "name": "name-1777",
+    "billing_enabled": false,
+    "quota_definition_guid": "8737180b-8587-4244-a37d-a12bffcc24b5",
+    "status": "active",
+    "quota_definition_url": "/v2/quota_definitions/8737180b-8587-4244-a37d-a12bffcc24b5",
+    "spaces_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/spaces",
+    "domains_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/domains",
+    "private_domains_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/private_domains",
+    "users_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/users",
+    "managers_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/managers",
+    "billing_managers_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/billing_managers",
+    "auditors_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/auditors",
+    "app_events_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/app_events",
+    "space_quota_definitions_url": "/v2/organizations/3b6f763f-aae1-4177-9b93-f2de6f2a48f2/space_quota_definitions"
+  }
+}
+`
+const AppUpdatePayload = `
+{
+  "metadata": {
+    "guid": "97f7e56b-addf-4d26-be82-998a06600011",
+    "url": "/v2/apps/97f7e56b-addf-4d26-be82-998a06600011",
+    "created_at": "2018-03-04T16:05:36Z",
+    "updated_at": "2018-03-06T20:46:26Z"
+  },
+  "entity": {
+    "name": "NewName",
+    "production": false,
+    "space_guid": "d17d98b9-5f88-44c6-8dbc-6036c9607ce0",
+    "stack_guid": "46ff2259-d51b-48a3-ac7e-72a86c51d85c",
+    "buildpack": "go_buildpack",
+    "detected_buildpack": "",
+    "detected_buildpack_guid": "d42d6cd9-7c1f-4a01-9251-178b51d1ed47",
+    "environment_json": {
+      "GOPACKAGENAME": "MichaelIsMetal"
+    },
+    "memory": 65,
+    "instances": 1,
+    "disk_quota": 1024,
+    "state": "STOPPED",
+    "version": "ac75afb9-bfa6-426e-b0f6-96866e295f2c",
+    "command": "MichaelIsMetal",
+    "console": false,
+    "debug": "",
+    "staging_task_id": "6379fc80-a71b-4848-812f-520faec910a5",
+    "package_state": "STAGED",
+    "health_check_http_endpoint": "",
+    "health_check_type": "port",
+    "health_check_timeout": 0,
+    "staging_failed_reason": "",
+    "staging_failed_description": "",
+    "diego": true,
+    "docker_image": "",
+    "docker_credentials": {
+      "username": "",
+      "password": ""
+    },
+    "package_updated_at": "2018-03-04T21:31:10Z",
+    "detected_start_command": "./bin/MichaelIsMetal",
+    "enable_ssh": true,
+    "ports": [
+      8080
+    ],
+    "space_url": "/v2/spaces/d17d98b9-5f88-44c6-8dbc-6036c9607ce0",
+    "stack_url": "/v2/stacks/46ff2259-d51b-48a3-ac7e-72a86c51d85c",
+    "routes_url": "/v2/apps/97f7e56b-addf-4d26-be82-998a06600011/routes",
+    "events_url": "/v2/apps/97f7e56b-addf-4d26-be82-998a06600011/events",
+    "service_bindings_url": "/v2/apps/97f7e56b-addf-4d26-be82-998a06600011/service_bindings",
+    "route_mappings_url": "/v2/apps/97f7e56b-addf-4d26-be82-998a06600011/route_mappings"
+  }
+}`
+
+const postServiceBindingPayload = `{
+  "metadata": {
+    "guid": "4e690cd4-66ef-4052-a23d-0d748316f18c",
+    "url": "/v2/service_bindings/4e690cd4-66ef-4052-a23d-0d748316f18c",
+    "created_at": "2016-06-08T16:41:42Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "app_guid": "081d55a0-1bfa-4e51-8d08-273f764988db",
+    "service_instance_guid": "a0029c76-7017-4a74-94b0-54a04ad94b80",
+    "credentials": {
+      "creds-key-63": "creds-val-63"
+    },
+    "name": "prod-db",
+    "binding_options": {
+    },
+    "gateway_data": null,
+    "gateway_name": "",
+    "syslog_drain_url": null,
+    "volume_mounts": [
+    ],
+    "app_url": "/v2/apps/081d55a0-1bfa-4e51-8d08-273f764988db",
+    "service_instance_url": "/v2/user_provided_service_instances/a0029c76-7017-4a74-94b0-54a04ad94b80"
+  }
+}`
+
+const postRouteMappingsPayload = `{
+  "metadata": {
+    "guid": "f869fa46-22b1-40ee-b491-58e321345528",
+    "url": "/v2/route_mappings/f869fa46-22b1-40ee-b491-58e321345528",
+    "created_at": "2016-06-08T16:41:42Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "app_port": 8888,
+    "app_guid": "fa23ddfc-b635-4205-8283-844c53122888",
+    "route_guid": "e00fb1e1-f7d4-4e36-9912-f76a587e9858",
+    "app_url": "/v2/apps/fa23ddfc-b635-4205-8283-844c53122888",
+    "route_url": "/v2/routes/e00fb1e1-f7d4-4e36-9912-f76a587e9858"
+  }
+}`
+
+const listRouteMappingsPayload = `{
+  "total_results": 1,
+  "total_pages": 1,
+  "prev_url": null,
+  "next_url": null,
+  "resources": [
+    {
+      "metadata": {
+        "guid": "63603ed7-bd4a-4475-a371-5b34381e0cf7",
+        "url": "/v2/route_mappings/63603ed7-bd4a-4475-a371-5b34381e0cf7",
+        "created_at": "2016-06-08T16:41:42Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "app_port": 8888,
+        "app_guid": "ee8b175a-2228-4931-be8a-1f6445bd63bc",
+        "route_guid": "eb1c4fcd-7d6d-41d2-bd2f-5811f53b6677",
+        "app_url": "/v2/apps/ee8b175a-2228-4931-be8a-1f6445bd63bc",
+        "route_url": "/v2/routes/eb1c4fcd-7d6d-41d2-bd2f-5811f53b6677"
+      }
+    },
+	{
+      "metadata": {
+        "guid": "63603ed7-bd4a-4475-a371-5b34381e0cf8",
+        "url": "/v2/route_mappings/63603ed7-bd4a-4475-a371-5b34381e0cf8",
+        "created_at": "2016-06-08T16:41:42Z",
+        "updated_at": "2016-06-08T16:41:26Z"
+      },
+      "entity": {
+        "app_port": 8888,
+        "app_guid": "ee8b175a-2228-4931-be8a-1f6445bd63bd",
+        "route_guid": "eb1c4fcd-7d6d-41d2-bd2f-5811f53b6678",
+        "app_url": "/v2/apps/ee8b175a-2228-4931-be8a-1f6445bd63bd",
+        "route_url": "/v2/routes/eb1c4fcd-7d6d-41d2-bd2f-5811f53b6678"
+      }
+    }
+  ]
+}`
+
+const getRouteMappingByGuidPayload = `{
+  "metadata": {
+    "guid": "93eb2527-81b9-4e15-8ba0-2fd8dd8c0c1c",
+    "url": "/v2/route_mappings/93eb2527-81b9-4e15-8ba0-2fd8dd8c0c1c",
+    "created_at": "2016-06-08T16:41:42Z",
+    "updated_at": "2016-06-08T16:41:26Z"
+  },
+  "entity": {
+    "app_port": 8888,
+    "app_guid": "caf3e3a9-1f64-46d3-a0d5-a3d4ae3f4be4",
+    "route_guid": "34931bf5-79d0-4303-b082-df023b3305ce",
+    "app_url": "/v2/apps/caf3e3a9-1f64-46d3-a0d5-a3d4ae3f4be4",
+    "route_url": "/v2/routes/34931bf5-79d0-4303-b082-df023b3305ce"
+  }
+}`
+
+const getEVGPayload = `{
+  "foo": "bar",
+  "val": 3
+}`
+
+const listProcessesPayload1 = `{
+  "pagination": {
+    "total_results": 26,
+    "total_pages": 2,
+    "first": {
+      "href": "https://api.run.example.com/v3/processes?page=1&per_page=20"
+    },
+    "last": {
+      "href": "https://api.run.example.com/v3/processes?page=2&per_page=20"
+    },
+    "next": {
+      "href": "https://api.run.example.com/v3/processesPage2?page=2&per_page=20"
+    },
+    "previous": null
+  },
+  "resources": [
+    {
+      "guid": "30200dd1-64c0-451a-8c37-3c91e05c6741",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 256,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-22T21:06:42Z",
+      "updated_at": "2018-06-05T21:07:08Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/30200dd1-64c0-451a-8c37-3c91e05c6741"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/30200dd1-64c0-451a-8c37-3c91e05c6741/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/30200dd1-64c0-451a-8c37-3c91e05c6741"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/30200dd1-64c0-451a-8c37-3c91e05c6741/stats"
+        }
+      }
+    },
+    {
+      "guid": "0a8eb31c-0450-465d-90a1-837d92895504",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 6,
+      "memory_in_mb": 128,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-22T21:06:43Z",
+      "updated_at": "2018-06-05T21:07:07Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/0a8eb31c-0450-465d-90a1-837d92895504"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/0a8eb31c-0450-465d-90a1-837d92895504/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/0a8eb31c-0450-465d-90a1-837d92895504"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/0a8eb31c-0450-465d-90a1-837d92895504/stats"
+        }
+      }
+    },
+    {
+      "guid": "c55dca62-ff2e-4641-a4ec-9bea56f987b2",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-22T21:17:50Z",
+      "updated_at": "2018-06-05T21:19:26Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/c55dca62-ff2e-4641-a4ec-9bea56f987b2"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/c55dca62-ff2e-4641-a4ec-9bea56f987b2/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/c55dca62-ff2e-4641-a4ec-9bea56f987b2"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/d5ecae4a-3bfc-4302-af74-bee452108316"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/c55dca62-ff2e-4641-a4ec-9bea56f987b2/stats"
+        }
+      }
+    },
+    {
+      "guid": "72fab46a-8bcd-4941-b556-99694627c402",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-29T20:03:48Z",
+      "updated_at": "2018-05-29T20:07:40Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/72fab46a-8bcd-4941-b556-99694627c402"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/72fab46a-8bcd-4941-b556-99694627c402/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/72fab46a-8bcd-4941-b556-99694627c402"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/6d6eaa00-1fba-4c31-9121-db9a72299240"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/72fab46a-8bcd-4941-b556-99694627c402/stats"
+        }
+      }
+    },
+    {
+      "guid": "46b49bad-e469-418d-9f22-2fa8eb8a9144",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 256,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-30T01:19:06Z",
+      "updated_at": "2018-06-05T21:07:07Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/46b49bad-e469-418d-9f22-2fa8eb8a9144"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/46b49bad-e469-418d-9f22-2fa8eb8a9144/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/46b49bad-e469-418d-9f22-2fa8eb8a9144"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/46b49bad-e469-418d-9f22-2fa8eb8a9144/stats"
+        }
+      }
+    },
+    {
+      "guid": "74600cfb-9cc9-4026-8473-f638f44ade12",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 6,
+      "memory_in_mb": 128,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-30T01:19:06Z",
+      "updated_at": "2018-06-05T21:07:07Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/74600cfb-9cc9-4026-8473-f638f44ade12"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/74600cfb-9cc9-4026-8473-f638f44ade12/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/74600cfb-9cc9-4026-8473-f638f44ade12"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/74600cfb-9cc9-4026-8473-f638f44ade12/stats"
+        }
+      }
+    },
+    {
+      "guid": "d782ee5f-8cff-451a-ad30-a0101c7fb430",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 256,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-05-30T17:57:29Z",
+      "updated_at": "2018-05-30T18:20:20Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/d782ee5f-8cff-451a-ad30-a0101c7fb430"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/d782ee5f-8cff-451a-ad30-a0101c7fb430/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/d782ee5f-8cff-451a-ad30-a0101c7fb430"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/6d6eaa00-1fba-4c31-9121-db9a72299240"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/d782ee5f-8cff-451a-ad30-a0101c7fb430/stats"
+        }
+      }
+    },
+    {
+      "guid": "1b4d1907-3a54-46e6-ac73-d4732af2a28b",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": 360
+        }
+      },
+      "created_at": "2018-06-05T19:41:09Z",
+      "updated_at": "2018-06-05T21:06:35Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/1b4d1907-3a54-46e6-ac73-d4732af2a28b"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/1b4d1907-3a54-46e6-ac73-d4732af2a28b/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/1b4d1907-3a54-46e6-ac73-d4732af2a28b"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/1b4d1907-3a54-46e6-ac73-d4732af2a28b/stats"
+        }
+      }
+    },
+    {
+      "guid": "bec57af6-4b84-4698-a366-1c4de1f4cc1e",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "none",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T19:41:09Z",
+      "updated_at": "2018-06-05T21:06:14Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/bec57af6-4b84-4698-a366-1c4de1f4cc1e"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/bec57af6-4b84-4698-a366-1c4de1f4cc1e/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/bec57af6-4b84-4698-a366-1c4de1f4cc1e"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/bec57af6-4b84-4698-a366-1c4de1f4cc1e/stats"
+        }
+      }
+    },
+    {
+      "guid": "5d449f8d-999a-4720-9296-5b6afce15a69",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 2048,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "none",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T19:41:09Z",
+      "updated_at": "2018-06-05T21:06:20Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/5d449f8d-999a-4720-9296-5b6afce15a69"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/5d449f8d-999a-4720-9296-5b6afce15a69/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/5d449f8d-999a-4720-9296-5b6afce15a69"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/5d449f8d-999a-4720-9296-5b6afce15a69/stats"
+        }
+      }
+    },
+    {
+      "guid": "57a598af-c4a6-4ade-8db6-05679ae092f5",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": 180
+        }
+      },
+      "created_at": "2018-06-05T19:45:25Z",
+      "updated_at": "2018-06-05T21:10:23Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/57a598af-c4a6-4ade-8db6-05679ae092f5"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/57a598af-c4a6-4ade-8db6-05679ae092f5/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/57a598af-c4a6-4ade-8db6-05679ae092f5"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/1c17814c-e195-4ea5-9be2-6d01d9bf6007"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/57a598af-c4a6-4ade-8db6-05679ae092f5/stats"
+        }
+      }
+    },
+    {
+      "guid": "79616d63-1075-4c02-a058-574a01314206",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "none",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T21:04:37Z",
+      "updated_at": "2018-06-05T21:04:48Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/79616d63-1075-4c02-a058-574a01314206"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/79616d63-1075-4c02-a058-574a01314206/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/79616d63-1075-4c02-a058-574a01314206"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/79616d63-1075-4c02-a058-574a01314206/stats"
+        }
+      }
+    },
+    {
+      "guid": "a2298d27-57fe-41e9-ad1e-f540427a0949",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": 360
+        }
+      },
+      "created_at": "2018-06-05T21:04:37Z",
+      "updated_at": "2018-06-05T21:06:34Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/a2298d27-57fe-41e9-ad1e-f540427a0949"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/a2298d27-57fe-41e9-ad1e-f540427a0949/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/a2298d27-57fe-41e9-ad1e-f540427a0949"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/a2298d27-57fe-41e9-ad1e-f540427a0949/stats"
+        }
+      }
+    },
+    {
+      "guid": "a98f0649-4e31-435a-bb61-a96364c366a4",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 2048,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "none",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T21:04:38Z",
+      "updated_at": "2018-06-05T21:04:49Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/a98f0649-4e31-435a-bb61-a96364c366a4"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/a98f0649-4e31-435a-bb61-a96364c366a4/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/a98f0649-4e31-435a-bb61-a96364c366a4"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/a98f0649-4e31-435a-bb61-a96364c366a4/stats"
+        }
+      }
+    },
+    {
+      "guid": "6aa28ed8-d377-4225-b853-80001e64113b",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 3,
+      "memory_in_mb": 64,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T21:07:29Z",
+      "updated_at": "2018-06-05T21:08:02Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/6aa28ed8-d377-4225-b853-80001e64113b"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/6aa28ed8-d377-4225-b853-80001e64113b/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/6aa28ed8-d377-4225-b853-80001e64113b"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/2bd2080e-b9d7-4911-a607-a4e5adb00b59"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/6aa28ed8-d377-4225-b853-80001e64113b/stats"
+        }
+      }
+    },
+    {
+      "guid": "dfc0f648-a3c8-4f46-b0a4-425136f238c6",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 64,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T21:08:19Z",
+      "updated_at": "2018-06-05T21:08:41Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/dfc0f648-a3c8-4f46-b0a4-425136f238c6"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/dfc0f648-a3c8-4f46-b0a4-425136f238c6/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/dfc0f648-a3c8-4f46-b0a4-425136f238c6"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/2bd2080e-b9d7-4911-a607-a4e5adb00b59"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/dfc0f648-a3c8-4f46-b0a4-425136f238c6/stats"
+        }
+      }
+    },
+    {
+      "guid": "ba159a14-a3b5-4711-95c7-4bf89ff89a6c",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 2,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": 180
+        }
+      },
+      "created_at": "2018-06-05T21:08:57Z",
+      "updated_at": "2018-06-05T21:10:23Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/ba159a14-a3b5-4711-95c7-4bf89ff89a6c"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/ba159a14-a3b5-4711-95c7-4bf89ff89a6c/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/ba159a14-a3b5-4711-95c7-4bf89ff89a6c"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/1c17814c-e195-4ea5-9be2-6d01d9bf6007"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/ba159a14-a3b5-4711-95c7-4bf89ff89a6c/stats"
+        }
+      }
+    },
+    {
+      "guid": "c7d20ea3-028b-4559-9f0c-a61966abc163",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 3,
+      "memory_in_mb": 256,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-05T21:11:44Z",
+      "updated_at": "2018-06-05T21:12:00Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/c7d20ea3-028b-4559-9f0c-a61966abc163"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/c7d20ea3-028b-4559-9f0c-a61966abc163/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/c7d20ea3-028b-4559-9f0c-a61966abc163"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/7443e429-eee3-48ea-89cb-c9d3234c7fbf"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/c7d20ea3-028b-4559-9f0c-a61966abc163/stats"
+        }
+      }
+    },
+    {
+      "guid": "956ca6e5-6560-49c6-ae01-843144b24ec5",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": 120
+        }
+      },
+      "created_at": "2018-06-05T21:12:01Z",
+      "updated_at": "2018-06-05T21:12:54Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/956ca6e5-6560-49c6-ae01-843144b24ec5"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/956ca6e5-6560-49c6-ae01-843144b24ec5/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/956ca6e5-6560-49c6-ae01-843144b24ec5"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/7443e429-eee3-48ea-89cb-c9d3234c7fbf"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/956ca6e5-6560-49c6-ae01-843144b24ec5/stats"
+        }
+      }
+    },
+    {
+      "guid": "787fd0c1-d827-4c9e-975b-acd73267a583",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-29T18:31:10Z",
+      "updated_at": "2018-06-29T18:31:10Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/787fd0c1-d827-4c9e-975b-acd73267a583"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/787fd0c1-d827-4c9e-975b-acd73267a583/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/787fd0c1-d827-4c9e-975b-acd73267a583"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/787fd0c1-d827-4c9e-975b-acd73267a583/stats"
+        }
+      }
+    }
+  ]
+}`
+
+const listProcessesPayload2 = `{
+  "pagination": {
+    "total_results": 26,
+    "total_pages": 2,
+    "first": {
+      "href": "https://api.run.example.com/v3/processes?page=1&per_page=20"
+    },
+    "last": {
+      "href": "https://api.run.example.com/v3/processes?page=2&per_page=20"
+    },
+    "next": null,
+    "previous": {
+      "href": "https://api.run.example.com/v3/processes?page=1&per_page=20"
+    }
+  },
+  "resources": [
+    {
+      "guid": "09eb0d25-75b0-48e1-b45f-1636ea5bbe0c",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-06-29T18:32:35Z",
+      "updated_at": "2018-06-29T18:32:35Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/09eb0d25-75b0-48e1-b45f-1636ea5bbe0c"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/09eb0d25-75b0-48e1-b45f-1636ea5bbe0c/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/09eb0d25-75b0-48e1-b45f-1636ea5bbe0c"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/60fa9e9b-c6eb-47a7-92ad-f438e775d234"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/09eb0d25-75b0-48e1-b45f-1636ea5bbe0c/stats"
+        }
+      }
+    },
+    {
+      "guid": "00944be5-fe20-43ba-abe2-8fcc41ee2edc",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-07-13T20:17:23Z",
+      "updated_at": "2018-07-18T17:20:59Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/00944be5-fe20-43ba-abe2-8fcc41ee2edc"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/00944be5-fe20-43ba-abe2-8fcc41ee2edc/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/00944be5-fe20-43ba-abe2-8fcc41ee2edc"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/a40da3ef-f0a3-4374-a7af-9c867382b30c"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/00944be5-fe20-43ba-abe2-8fcc41ee2edc/stats"
+        }
+      }
+    },
+    {
+      "guid": "750ce4f3-3c28-4acc-9b50-357dc7dde27a",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-07-17T14:46:37Z",
+      "updated_at": "2018-07-17T14:46:37Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/750ce4f3-3c28-4acc-9b50-357dc7dde27a"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/750ce4f3-3c28-4acc-9b50-357dc7dde27a/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/750ce4f3-3c28-4acc-9b50-357dc7dde27a"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/a40da3ef-f0a3-4374-a7af-9c867382b30c"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/750ce4f3-3c28-4acc-9b50-357dc7dde27a/stats"
+        }
+      }
+    },
+    {
+      "guid": "2274c4c4-7e6e-413f-b976-e8210ddcc748",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 256,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-08-06T21:45:14Z",
+      "updated_at": "2018-08-07T18:11:33Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/2274c4c4-7e6e-413f-b976-e8210ddcc748"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/2274c4c4-7e6e-413f-b976-e8210ddcc748/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/2274c4c4-7e6e-413f-b976-e8210ddcc748"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/939eb497-671b-46cb-abd2-26e89129cc5b"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/2274c4c4-7e6e-413f-b976-e8210ddcc748/stats"
+        }
+      }
+    },
+    {
+      "guid": "bc69b3fe-0d80-4508-a1d2-9bc53269287f",
+      "type": "web",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 128,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "port",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-08-07T22:27:14Z",
+      "updated_at": "2018-08-08T16:09:41Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/bc69b3fe-0d80-4508-a1d2-9bc53269287f"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/bc69b3fe-0d80-4508-a1d2-9bc53269287f/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/bc69b3fe-0d80-4508-a1d2-9bc53269287f"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/a40da3ef-f0a3-4374-a7af-9c867382b30c"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/bc69b3fe-0d80-4508-a1d2-9bc53269287f/stats"
+        }
+      }
+    },
+    {
+      "guid": "4b32fba5-ec34-40e1-9511-0a25c8f93d8f",
+      "type": "worker",
+      "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+      "instances": 1,
+      "memory_in_mb": 1024,
+      "disk_in_mb": 1024,
+      "health_check": {
+        "type": "process",
+        "data": {
+          "timeout": null
+        }
+      },
+      "created_at": "2018-08-07T22:28:44Z",
+      "updated_at": "2018-08-08T16:09:41Z",
+      "links": {
+        "self": {
+          "href": "https://api.run.example.com/v3/processes/4b32fba5-ec34-40e1-9511-0a25c8f93d8f"
+        },
+        "scale": {
+          "href": "https://api.run.example.com/v3/processes/4b32fba5-ec34-40e1-9511-0a25c8f93d8f/actions/scale",
+          "method": "POST"
+        },
+        "app": {
+          "href": "https://api.run.example.com/v3/apps/bc69b3fe-0d80-4508-a1d2-9bc53269287f"
+        },
+        "space": {
+          "href": "https://api.run.example.com/v3/spaces/a40da3ef-f0a3-4374-a7af-9c867382b30c"
+        },
+        "stats": {
+          "href": "https://api.run.example.com/v3/processes/4b32fba5-ec34-40e1-9511-0a25c8f93d8f/stats"
+        }
+      }
     }
   ]
 }`

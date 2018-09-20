@@ -1,6 +1,7 @@
 package cfclient
 
 import (
+	"net/http"
 	"reflect"
 	"testing"
 
@@ -53,5 +54,60 @@ func TestServiceBindingByGuid(t *testing.T) {
 
 		So(serviceBinding.Guid, ShouldEqual, "foo-bar-baz")
 		So(serviceBinding.AppGuid, ShouldEqual, "app-bar-baz")
+	})
+}
+
+func TestDeleteServiceBinding(t *testing.T) {
+	Convey("Delete service binding", t, func() {
+		setup(MockRoute{"DELETE", "/v2/service_bindings/guid", "", "", http.StatusNoContent, "", nil}, t)
+		defer teardown()
+
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.DeleteServiceBinding("guid")
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestCreateServiceBinding(t *testing.T) {
+	Convey("Create service binding", t, func() {
+		body := `{"app_guid":"app-guid","service_instance_guid":"service-instance-guid"}`
+		setup(MockRoute{"POST", "/v2/service_bindings", postServiceBindingPayload, "", http.StatusCreated, "", &body}, t)
+		defer teardown()
+
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		binding, err := client.CreateServiceBinding("app-guid", "service-instance-guid")
+		So(err, ShouldBeNil)
+		So(binding.Guid, ShouldEqual, "4e690cd4-66ef-4052-a23d-0d748316f18c")
+		So(binding.AppGuid, ShouldEqual, "081d55a0-1bfa-4e51-8d08-273f764988db")
+		So(binding.ServiceInstanceGuid, ShouldEqual, "a0029c76-7017-4a74-94b0-54a04ad94b80")
+	})
+}
+
+func TestCreateRouteServiceBinding(t *testing.T) {
+	Convey("Create route service binding", t, func() {
+		setup(MockRoute{"PUT", "/v2/user_provided_service_instances/5badd282-6e07-4fc6-a8c4-78be99040774/routes/237d9236-7997-4b1a-be8d-2aaf2d85421a", "", "", http.StatusCreated, "", nil}, t)
+		defer teardown()
+
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		err = client.CreateRouteServiceBinding("237d9236-7997-4b1a-be8d-2aaf2d85421a", "5badd282-6e07-4fc6-a8c4-78be99040774")
+		So(err, ShouldBeNil)
 	})
 }

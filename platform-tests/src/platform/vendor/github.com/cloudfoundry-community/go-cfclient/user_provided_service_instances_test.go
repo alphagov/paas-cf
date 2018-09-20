@@ -67,3 +67,51 @@ func TestListUserProvidedServiceInstances(t *testing.T) {
 		So(instance.RoutesUrl, ShouldEqual, "/v2/user_provided_service_instances/54e4c645-7d20-4271-8c27-8cc904e1e7ee/routes")
 	})
 }
+
+func TestCreateUserProvidedServiceInstance(t *testing.T) {
+	Convey("Create User Provided Service Instance", t, func() {
+		setup(MockRoute{"POST", "/v2/user_provided_service_instances", userProvidedServiceInstancePayload, "", 201, "", nil}, t)
+		defer teardown()
+
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		upsRequest := UserProvidedServiceInstanceRequest{Credentials: map[string]interface{}{"creds-key-58": "creds-val-58"}, SyslogDrainUrl: "https://foo.com/url-104"}
+		upsInstance, err := client.CreateUserProvidedServiceInstance(upsRequest)
+
+		So(err, ShouldBeNil)
+		So(upsInstance.Guid, ShouldEqual, "e9358711-0ad9-4f2a-b3dc-289d47c17c87")
+		So(upsInstance.Name, ShouldEqual, "name-1700")
+		So(upsInstance.Credentials["creds-key-58"], ShouldEqual, "creds-val-58")
+		So(upsInstance.SyslogDrainUrl, ShouldEqual, "https://foo.com/url-104")
+	})
+}
+
+func TestUpdateUserProvidedServiceInstance(t *testing.T) {
+	Convey("Update User Provided Service Instance", t, func() {
+		setup(MockRoute{"PUT", "/v2/user_provided_service_instances/e9358711-0ad9-4f2a-b3dc-289d47c17c87", userProvidedServiceInstancePayload, "", 201, "", nil}, t)
+		defer teardown()
+
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		upsRequest := UserProvidedServiceInstanceRequest{Credentials: map[string]interface{}{"creds-key-58": "creds-val-58"}, SyslogDrainUrl: "https://foo.com/url-104"}
+		upsInstance, err := client.UpdateUserProvidedServiceInstance("e9358711-0ad9-4f2a-b3dc-289d47c17c87", upsRequest)
+
+		So(err, ShouldBeNil)
+		So(upsInstance.Guid, ShouldEqual, "e9358711-0ad9-4f2a-b3dc-289d47c17c87")
+		So(upsInstance.Name, ShouldEqual, "name-1700")
+		So(upsInstance.Credentials["creds-key-58"], ShouldEqual, "creds-val-58")
+		So(upsInstance.SyslogDrainUrl, ShouldEqual, "https://foo.com/url-104")
+	})
+}
