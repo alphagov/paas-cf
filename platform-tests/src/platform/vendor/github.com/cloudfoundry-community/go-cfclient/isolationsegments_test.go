@@ -139,8 +139,8 @@ func TestIsolationSegmentMethods(t *testing.T) {
 		mocks := []MockRoute{
 			{"GET", "/v3/isolation_segments", listIsolationSegmentsPayload, "", http.StatusOK, "", nil},
 			{"DELETE", "/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b", "", "", http.StatusNoContent, "", nil},
-			{"POST", "/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b/relationships/organizations", "", "", http.StatusCreated, "", &postData},
-			{"DELETE", "/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b/relationships/organizations", "", "", http.StatusNoContent, "", nil},
+			{"POST", "/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b/relationships/organizations", "", "", http.StatusOK, "", &postData},
+			{"DELETE", "/v3/isolation_segments/033b4c58-12bb-499a-b05d-4b6fc9e2993b/relationships/organizations/theKittenIsTheShark", "", "", http.StatusNoContent, "", nil},
 			{"PUT", "/v2/spaces/theKittenIsTheShark", "", "", http.StatusCreated, "", nil},
 			{"DELETE", "/v2/spaces/theKittenIsTheShark/isolation_segment", "", "", http.StatusNoContent, "", nil},
 		}

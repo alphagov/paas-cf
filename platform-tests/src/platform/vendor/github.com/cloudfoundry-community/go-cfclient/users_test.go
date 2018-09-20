@@ -6,6 +6,25 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func TestGetUserByGUID(t *testing.T) {
+	Convey("Get user by GUID", t, func() {
+		setup(MockRoute{"GET", "/v2/users/72ccf759-43aa-4954-903f-7d892c268e80", userByGUIDPayload, "", 200, "", nil}, t)
+		defer teardown()
+		c := &Config{
+			ApiAddress: server.URL,
+			Token:      "foobar",
+		}
+		client, err := NewClient(c)
+		So(err, ShouldBeNil)
+
+		user, err := client.GetUserByGUID("72ccf759-43aa-4954-903f-7d892c268e80")
+		So(err, ShouldBeNil)
+
+		So(user.Guid, ShouldEqual, "72ccf759-43aa-4954-903f-7d892c268e80")
+		So(user.Username, ShouldEqual, "user@example.com")
+	})
+}
+
 func TestListUsers(t *testing.T) {
 	Convey("List Users", t, func() {
 		mocks := []MockRoute{

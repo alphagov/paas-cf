@@ -2,18 +2,31 @@
 
 
 [[projects]]
+  digest = "1:b856d8248663c39265a764561c1a1a149783f6cc815feb54a1f3a591b91f6eca"
+  name = "github.com/Masterminds/semver"
+  packages = ["."]
+  pruneopts = ""
+  revision = "c7af12943936e8c39859482e61f0574c2fd7fc75"
+  version = "v1.4.2"
+
+[[projects]]
+  digest = "1:32fa3ff538ddd0b8312f56bcb15ef3340eee00891cd9c76464746b7cebcac210"
   name = "github.com/PuerkitoBio/goquery"
   packages = ["."]
+  pruneopts = ""
   revision = "e1271ee34c6a305e38566ecd27ae374944907ee9"
   version = "v1.1.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:8012998ddb3eed9cc0a3b2512d1f37d0947fd604868049cc698d9dc6ea1bd46c"
   name = "github.com/andybalholm/cascadia"
   packages = ["."]
+  pruneopts = ""
   revision = "349dd0209470eabd9514242c688c403c0926d266"
 
 [[projects]]
+  digest = "1:01842c027feebee8960f834fa057496492d764e0cf085fd6dc93319681b809ac"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -40,22 +53,28 @@
     "private/protocol/xml/xmlutil",
     "private/waiter",
     "service/s3",
-    "service/sts"
+    "service/sts",
   ]
+  pruneopts = ""
   revision = "6c577e9e7b08a6d10bad1c9703227cd0403a8dd7"
   version = "v1.4.22"
 
 [[projects]]
+  digest = "1:611e5f4357220f2c5e2ef92193b33b4e7ecf840596d857079df4048b5d2a0398"
   name = "github.com/bmizerany/pat"
   packages = ["."]
+  pruneopts = ""
   revision = "c068ca2f0aacee5ac3681d68e4d0a003b7d1fd2c"
 
 [[projects]]
+  digest = "1:427639ee47c23651bc2c23be07008fdac9be3fc7ef769aaea0f59e609b2aca34"
   name = "github.com/cloudfoundry-community/go-cfclient"
   packages = ["."]
-  revision = "dbe382d68b57a2345f60b71935eb6e8cfa7e5895"
+  pruneopts = ""
+  revision = "149e140bbeec150b461d9257942bd7777b6ad513"
 
 [[projects]]
+  digest = "1:cbe7adb2668414d5e996fa1404b87e38b8f7ed08e80d9a8fcd9c2afeefdebee4"
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
   packages = [
     "cf",
@@ -68,69 +87,97 @@
     "internal",
     "silentcommandstarter",
     "workflowhelpers",
-    "workflowhelpers/internal"
+    "workflowhelpers/internal",
   ]
+  pruneopts = ""
   revision = "dc453294914947b630c176d5a38923854d62bf83"
 
 [[projects]]
+  digest = "1:28c8da34b529691ca33b1dd18bba29ed2fb9f738e8bed7f086672df57ff91268"
   name = "github.com/cloudfoundry/cf-acceptance-tests"
   packages = [
     "helpers/config",
-    "helpers/validationerrors"
+    "helpers/validationerrors",
   ]
+  pruneopts = "UT"
   revision = "d2cb3b538b87c96266e030004c43a59ea3b96a5a"
 
 [[projects]]
+  branch = "master"
+  digest = "1:458a7743018a51b622fac1a2c19f351673966b1a227586bc820d7c01a2c24f27"
+  name = "github.com/cloudfoundry/gofileutils"
+  packages = ["fileutils"]
+  pruneopts = ""
+  revision = "4d0c80011a0f37da1711c184028bc40137cd45af"
+
+[[projects]]
+  digest = "1:6032642eaa661e60df74515bef1ebfa556c4f935aefcdc23bd08b4b4e532aa5e"
   name = "github.com/concourse/atc"
   packages = [
     ".",
-    "event"
+    "event",
   ]
+  pruneopts = ""
   revision = "406261dbd7681e0ed1c8de6366994a4e935e0b55"
 
 [[projects]]
+  digest = "1:304f37a5bdcedf1396b5fc6120942836d094cf2214f6b436ea07e836ce84c727"
   name = "github.com/concourse/go-concourse"
   packages = [
     "concourse",
     "concourse/eventstream",
-    "concourse/internal"
+    "concourse/internal",
   ]
+  pruneopts = ""
   revision = "b260442fef033f8d10163306d5387fdef5547fd2"
 
 [[projects]]
+  digest = "1:3804b8bce830c0cdfc9fdc4bc782e70d897c7d5ac9301f148935bc49dffadf72"
   name = "github.com/go-ini/ini"
   packages = ["."]
+  pruneopts = ""
   revision = "5b3e00af70a9484542169a976dcab8d03e601a17"
   version = "v1.30.0"
 
 [[projects]]
+  digest = "1:a8747050e9847bd4eff5cf9635f590604e5028c14e37877995f62d3cc9b61281"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
+  pruneopts = ""
   revision = "3852dcfda249c2097355a6aabb199a28d97b30df"
 
 [[projects]]
   branch = "master"
+  digest = "1:304c322b62533a48ac052ffee80f67087fce1bc07186cd4e610a1b0e77765836"
   name = "github.com/hashicorp/errwrap"
   packages = ["."]
+  pruneopts = ""
   revision = "7554cd9344cec97297fa6649b055a8c98c2a1e55"
 
 [[projects]]
+  digest = "1:30ee02c120bb50fe24b237d87314e7045f83f28b35467529233dc76911ca1f34"
   name = "github.com/hashicorp/go-multierror"
   packages = ["."]
+  pruneopts = ""
   revision = "8c5f0ad9360406a3807ce7de6bc73269a91a6e51"
 
 [[projects]]
+  digest = "1:e6f0b9e4dced4b6b5fedb810e2125a9f74dfe2ef1598c55ecb25e8b3d8f514ea"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
+  pruneopts = ""
   revision = "3433f3ea46d9f8019119e7dd41274e112a2359a9"
   version = "0.2.2"
 
 [[projects]]
+  digest = "1:ef2c25093248f6eb65ffd17f0ffe3b1c6f7c6a29deee72536e47a9be10db84fd"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
+  pruneopts = ""
   revision = "281073eb9eb092240d33ef253c404f1cca550309"
 
 [[projects]]
+  digest = "1:32b27072cd55bd2fb7244de0425943d125da6a552ae2b6517cdd965a662baf18"
   name = "github.com/onsi/ginkgo"
   packages = [
     ".",
@@ -150,12 +197,14 @@
     "reporters/stenographer",
     "reporters/stenographer/support/go-colorable",
     "reporters/stenographer/support/go-isatty",
-    "types"
+    "types",
   ]
+  pruneopts = ""
   revision = "9eda700730cba42af70d53180f9dcce9266bc2bc"
   version = "v1.4.0"
 
 [[projects]]
+  digest = "1:a4e59d0b2821c983b58c317f141cd77df20570979632da8a7a352e5d12698de7"
   name = "github.com/onsi/gomega"
   packages = [
     ".",
@@ -172,47 +221,62 @@
     "matchers/support/goraph/edge",
     "matchers/support/goraph/node",
     "matchers/support/goraph/util",
-    "types"
+    "types",
   ]
+  pruneopts = ""
   revision = "c893efa28eb45626cdaa76c9f653b62488858837"
   version = "v1.2.0"
 
 [[projects]]
+  digest = "1:bd684c17e4d8f611ebfeb473e1dcd43b493cb6306ee64010412e378db69e5a4a"
   name = "github.com/peterhellberg/link"
   packages = ["."]
+  pruneopts = ""
   revision = "d1cebc7ea14a5fc0de7cb4a45acae773161642c6"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:7365acd48986e205ccb8652cc746f09c8b7876030d53710ea6ef7d0bd0dcd7ca"
   name = "github.com/pkg/errors"
   packages = ["."]
+  pruneopts = ""
   revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
   version = "v0.8.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:208a966ea8c776692f7c207513765def77b3e9f2af7ffac048aee8261a6479db"
   name = "github.com/streadway/quantile"
   packages = ["."]
+  pruneopts = ""
   revision = "b0c588724d25ae13f5afb3d90efec0edc636432b"
 
 [[projects]]
+  digest = "1:0c530cc3b0ce448d7924e9820b0ff4f7246e4deab6342d75404f56ccc3426463"
   name = "github.com/tedsuo/rata"
   packages = ["."]
+  pruneopts = ""
   revision = "b15ebd8bd97ae9202eb00c076d59b2f2824bce37"
 
 [[projects]]
+  digest = "1:e424112befb86831a2ac0e801c252828704fac81ed58230999ca0d2e409302c9"
   name = "github.com/tsenart/vegeta"
   packages = ["lib"]
+  pruneopts = ""
   revision = "9f28db162ce19bb52817af4fd9b5801b1f2772c5"
   version = "v6.3.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:f1ddb267e59afd889997e0b013898419eaf2fe9305b5e8cbccf2163509ef033c"
   name = "github.com/vito/go-sse"
   packages = ["sse"]
+  pruneopts = ""
   revision = "fd69d275caac5d78d793e77ddbe9bd2001d9b88d"
 
 [[projects]]
+  branch = "master"
+  digest = "1:fbdbb6cf8db3278412c9425ad78b26bb8eb788181f26a3ffb3e4f216b314f86a"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -220,29 +284,37 @@
     "html",
     "html/atom",
     "html/charset",
+    "http/httpguts",
     "http2",
-    "http2/hpack"
+    "http2/hpack",
+    "idna",
   ]
-  revision = "af4fee9d05b66edc24197d189e6118f8ebce8c2b"
+  pruneopts = ""
+  revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
 
 [[projects]]
   branch = "master"
+  digest = "1:119b9c6d2bc95bbf8a69777ed361562b32cc7f22e8610a553d8f9e17d74a0406"
   name = "golang.org/x/oauth2"
   packages = [
     ".",
     "clientcredentials",
-    "internal"
+    "internal",
   ]
+  pruneopts = ""
   revision = "d89af98d7c6bba047c5a2622f36bc14b8766df85"
 
 [[projects]]
   branch = "master"
+  digest = "1:5b10d2a0d1d7103d88617b2fc877b5aefb22b4fca0cbd6a600ff816f2fb511d3"
   name = "golang.org/x/sys"
   packages = ["unix"]
+  pruneopts = ""
   revision = "9aade4d3a3b7e6d876cd3823ad20ec45fc035402"
 
 [[projects]]
   branch = "master"
+  digest = "1:653926785eac385fd1d61dc16360a5194c68d4bf2541234363a9375d2e88a039"
   name = "golang.org/x/text"
   packages = [
     "encoding",
@@ -257,15 +329,23 @@
     "encoding/unicode",
     "internal/gen",
     "internal/tag",
+    "internal/triegen",
+    "internal/ucd",
     "internal/utf8internal",
     "language",
     "runes",
+    "secure/bidirule",
     "transform",
-    "unicode/cldr"
+    "unicode/bidi",
+    "unicode/cldr",
+    "unicode/norm",
+    "unicode/rangetable",
   ]
+  pruneopts = ""
   revision = "bd91bbf73e9a4a801adbfb97133c992678533126"
 
 [[projects]]
+  digest = "1:934fb8966f303ede63aa405e2c8d7f0a427a05ea8df335dfdc1833dd4d40756f"
   name = "google.golang.org/appengine"
   packages = [
     "internal",
@@ -274,19 +354,43 @@
     "internal/log",
     "internal/remote_api",
     "internal/urlfetch",
-    "urlfetch"
+    "urlfetch",
   ]
+  pruneopts = ""
   revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
   version = "v1.0.0"
 
 [[projects]]
+  branch = "v2"
+  digest = "1:f0620375dd1f6251d9973b5f2596228cc8042e887cd7f827e4220bc1ce8c30e2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "a83829b6f1293c91addabc89d0571c246397bbf4"
+  pruneopts = ""
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6ca308f4ce5d3c4a42f5bd42809dbf0bce52fee8a6a8867c1adaf03458bd7143"
+  input-imports = [
+    "github.com/PuerkitoBio/goquery",
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/s3",
+    "github.com/cloudfoundry-community/go-cfclient",
+    "github.com/cloudfoundry-incubator/cf-test-helpers/cf",
+    "github.com/cloudfoundry-incubator/cf-test-helpers/config",
+    "github.com/cloudfoundry-incubator/cf-test-helpers/generator",
+    "github.com/cloudfoundry-incubator/cf-test-helpers/helpers",
+    "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers",
+    "github.com/cloudfoundry/cf-acceptance-tests/helpers/config",
+    "github.com/concourse/atc",
+    "github.com/concourse/go-concourse/concourse",
+    "github.com/onsi/ginkgo",
+    "github.com/onsi/gomega",
+    "github.com/onsi/gomega/gbytes",
+    "github.com/onsi/gomega/gexec",
+    "github.com/onsi/gomega/ghttp",
+    "github.com/tsenart/vegeta/lib",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

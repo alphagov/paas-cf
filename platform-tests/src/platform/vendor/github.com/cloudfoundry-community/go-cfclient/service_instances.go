@@ -1,8 +1,11 @@
 package cfclient
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 
 	"github.com/pkg/errors"
@@ -15,6 +18,14 @@ type ServiceInstancesResponse struct {
 	Resources []ServiceInstanceResource `json:"resources"`
 }
 
+type ServiceInstanceRequest struct {
+	Name            string                 `json:"name"`
+	SpaceGuid       string                 `json:"space_guid"`
+	ServicePlanGuid string                 `json:"service_plan_guid"`
+	Parameters      map[string]interface{} `json:"parameters,omitempty"`
+	Tags            []string               `json:"tags,omitempty"`
+}
+
 type ServiceInstanceResource struct {
 	Meta   Meta            `json:"metadata"`
 	Entity ServiceInstance `json:"entity"`
@@ -22,6 +33,8 @@ type ServiceInstanceResource struct {
 
 type ServiceInstance struct {
 	Name               string                 `json:"name"`
+	CreatedAt          string                 `json:"created_at"`
+	UpdatedAt          string                 `json:"updated_at"`
 	Credentials        map[string]interface{} `json:"credentials"`
 	ServicePlanGuid    string                 `json:"service_plan_guid"`
 	SpaceGuid          string                 `json:"space_guid"`
@@ -69,9 +82,7 @@ func (c *Client) ListServiceInstancesByQuery(query url.Values) ([]ServiceInstanc
 			return nil, errors.Wrap(err, "Error unmarshaling service instances")
 		}
 		for _, instance := range sir.Resources {
-			instance.Entity.Guid = instance.Meta.Guid
-			instance.Entity.c = c
-			instances = append(instances, instance.Entity)
+			instances = append(instances, c.mergeServiceInstance(instance))
 		}
 
 		requestUrl = sir.NextUrl
@@ -102,11 +113,61 @@ func (c *Client) GetServiceInstanceByGuid(guid string) (ServiceInstance, error) 
 	if err != nil {
 		return ServiceInstance{}, errors.Wrap(err, "Error JSON parsing service instance response")
 	}
-	sir.Entity.Guid = sir.Meta.Guid
-	sir.Entity.c = c
-	return sir.Entity, nil
+	return c.mergeServiceInstance(sir), nil
 }
 
 func (c *Client) ServiceInstanceByGuid(guid string) (ServiceInstance, error) {
 	return c.GetServiceInstanceByGuid(guid)
+}
+
+func (c *Client) mergeServiceInstance(instance ServiceInstanceResource) ServiceInstance {
+	instance.Entity.Guid = instance.Meta.Guid
+	instance.Entity.CreatedAt = instance.Meta.CreatedAt
+	instance.Entity.UpdatedAt = instance.Meta.UpdatedAt
+	instance.Entity.c = c
+	return instance.Entity
+}
+
+func (c *Client) CreateServiceInstance(req ServiceInstanceRequest) (ServiceInstance, error) {
+	var sir ServiceInstanceResource
+
+	buf := bytes.NewBuffer(nil)
+	err := json.NewEncoder(buf).Encode(req)
+	if err != nil {
+		return ServiceInstance{}, err
+	}
+
+	r := c.NewRequestWithBody("POST", "/v2/service_instances?accepts_incomplete=true", buf)
+
+	res, err := c.DoRequest(r)
+	if err != nil {
+		return ServiceInstance{}, err
+	}
+
+	if res.StatusCode != http.StatusAccepted {
+		return ServiceInstance{}, errors.Wrapf(err, "Error creating service, response code: %d", res.StatusCode)
+	}
+
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return ServiceInstance{}, errors.Wrap(err, "Error reading service instance response")
+	}
+
+	err = json.Unmarshal(data, &sir)
+	if err != nil {
+		return ServiceInstance{}, errors.Wrap(err, "Error JSON parsing service instance response")
+	}
+
+	return c.mergeServiceInstance(sir), nil
+}
+
+func (c *Client) DeleteServiceInstance(guid string, recursive, async bool) error {
+	resp, err := c.DoRequest(c.NewRequest("DELETE", fmt.Sprintf("/v2/service_instances/%s?recursive=%t&async=%t", guid, recursive, async)))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != http.StatusAccepted {
+		return errors.Wrapf(err, "Error deleting service instance %s, response code %d", guid, resp.StatusCode)
+	}
+	return nil
 }
