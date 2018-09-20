@@ -1144,11 +1144,11 @@ jobs:
         - task: generate-cloud-config
           config:
             platform: linux
-            image_resource:
+            image_resource: &gov-paas-bosh-cli-v2-image-resource
               type: docker-image
               source:
                 repository: governmentpaas/bosh-cli-v2
-                tag: c88f3e0b03558c987693fad3f180d9052b77342c
+                tag: 4012d25ceb903b46908a830b8e05773ced1c8f86
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1174,11 +1174,7 @@ jobs:
         - task: generate-cf-manifest
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli-v2
-                tag: c88f3e0b03558c987693fad3f180d9052b77342c
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: cf-vars-store
               - name: paas-cf
@@ -1246,11 +1242,7 @@ jobs:
         - task: get-and-upload-stemcell
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli-v2
-                tag: c88f3e0b03558c987693fad3f180d9052b77342c
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: bosh-secrets
               - name: paas-cf
@@ -1287,11 +1279,7 @@ jobs:
         - task: update-cloud-config
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli-v2
-                tag: c88f3e0b03558c987693fad3f180d9052b77342c
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: cloud-config
               - name: bosh-secrets
@@ -1313,11 +1301,7 @@ jobs:
       - task: cf-deploy
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/bosh-cli-v2
-              tag: c88f3e0b03558c987693fad3f180d9052b77342c
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
             - name: cf-manifest
@@ -1352,11 +1336,7 @@ jobs:
       - task: generate-prometheus-manifest
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/bosh-cli-v2
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
             - name: prometheus-vars-store
@@ -1386,11 +1366,7 @@ jobs:
       - task: prometheus-deploy
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/bosh-cli-v2
-              tag: 777204b5c870fc7ebf0d2b7aa55fcccddfa29c4b
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
             - name: prometheus-manifest
@@ -2231,11 +2207,7 @@ jobs:
       - task: run-bosh-cleanup
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/bosh-cli-v2
-              tag: c88f3e0b03558c987693fad3f180d9052b77342c
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
             - name: bosh-secrets
@@ -2864,11 +2836,7 @@ jobs:
       - task: test-bosh-vms
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/bosh-cli-v2
-              tag: c88f3e0b03558c987693fad3f180d9052b77342c
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
             - name: cf-manifest
@@ -3122,11 +3090,7 @@ jobs:
     - task: generate-cf-admin-password
       config:
         platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: governmentpaas/bosh-cli-v2
-            tag: c88f3e0b03558c987693fad3f180d9052b77342c
+        image_resource: *gov-paas-bosh-cli-v2-image-resource
         inputs:
           - name: cf-vars-store
         outputs:
