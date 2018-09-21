@@ -2,11 +2,12 @@
 set -euo pipefail
 
 # Required env vars
-# CONCOURSE_URL
-# CONCOURSE_ATC_USER
-# CONCOURSE_ATC_PASSWORD
-# FLY_CMD
-# FLY_TARGET
+# shellcheck disable=SC2086
+: $CONCOURSE_URL \
+  $CONCOURSE_ATC_USER \
+  $CONCOURSE_ATC_PASSWORD \
+  $FLY_CMD \
+  $FLY_TARGET
 
 fetch_fly() {
   echo "Downloading fly .."
