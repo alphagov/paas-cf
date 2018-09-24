@@ -22,6 +22,9 @@ const readyStateCheckInterval = setInterval(() => {
     const $topBar = document.querySelector('#top-bar-app');
     $topBar.style.display = 'none';
 
+    const $groupsBar = document.querySelector('.groups-bar');
+    $groupsBar.style.display = 'none';
+
     const $bottom = document.querySelector('.bottom');
     // Remove the padding because the top bar isn't there any more.
     $bottom.style.paddingTop = '0';
