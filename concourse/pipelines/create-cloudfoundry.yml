@@ -1877,6 +1877,7 @@ jobs:
               tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
           params:
             DISABLE_HEALTHCHECK_DB: ((disable_healthcheck_db))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
           inputs:
             - name: paas-cf
             - name: config
@@ -1913,8 +1914,17 @@ jobs:
                   '
                 fi
 
-                cf blue-green-deploy healthcheck
-                cf delete -f healthcheck-old
+                ruby -ryaml -e "
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each do |app|
+                    app['routes'] = [
+                      { 'route' => 'healthcheck.${APPS_DNS_ZONE_NAME}' }
+                    ]
+                  end
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf zero-downtime-push healthcheck -f manifest.yml
 
                 cd "${BUILD_ROOT}"
                 echo "yes" > deployed-healthcheck/healthcheck-deployed
