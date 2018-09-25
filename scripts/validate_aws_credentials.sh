@@ -15,7 +15,7 @@ if [ -z "$AWS_ACCOUNT" ]; then
   exit 255;
 fi
 
-if ! aws iam get-user > /dev/null 2>&1; then
+if ! aws sts get-caller-identity > /dev/null 2>&1; then
   echo "Current AWS credentials are invalid, please refresh them using create_sts_token.sh"
   exit 255;
 fi
