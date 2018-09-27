@@ -8,27 +8,28 @@
 // @version     1
 // @grant       none
 // ==/UserScript==
-var readyStateCheckInterval = setInterval(function() {
-    if (document.readyState === "complete") {
-        clearInterval(readyStateCheckInterval);
+const readyStateCheckInterval = setInterval(() => {
+  if (document.readyState === 'complete') {
+    clearInterval(readyStateCheckInterval);
 
-        console.log("Monitor mode is go");
-        var element = document.getElementsByClassName("legend")[0];
-        element.parentNode.removeChild(element);
+    console.log('Monitor mode is go');
+    const $legend = document.querySelector('.legend');
+    $legend.style.display = 'none';
 
-        var element = document.getElementsByClassName("lower-right-info")[0];
-        element.parentNode.removeChild(element);
+    const $infoBox = document.querySelector('.lower-right-info');
+    $infoBox.style.display = 'none';
 
-        var hostname = location.hostname.replace("deployer.", "").replace(".cloudpipeline.digital","");
+    const $topBar = document.querySelector('#top-bar-app');
+    $topBar.style.display = 'none';
 
-        var element = document.getElementById("top-bar-app");
-        element.innerHTML = "&nbsp;<font size=5>" + hostname + "</font>";
-        // Move it to the bottom because there's more space there.
-        element.style.position = "absolute";
-        element.style.bottom = "0";
+    const $groupsBar = document.querySelector('.groups-bar');
+    $groupsBar.style.display = 'none';
 
-        var element = document.getElementsByClassName("bottom")[0];
-        // Remove the padding because the top bar isn't there any more.
-        element.style.paddingTop = "0";
-    }
+    const $bottom = document.querySelector('.bottom');
+    // Remove the padding because the top bar isn't there any more.
+    $bottom.style.paddingTop = '0';
+
+    const hostname = window.location.hostname.replace('deployer.', '').replace('.cloudpipeline.digital', '');
+    document.body.insertAdjacentHTML('beforeend', `<div style="bottom: 0; font-size: 24px; padding: 16px; position: absolute;">${hostname}</div>`);
+  }
 }, 2000);
