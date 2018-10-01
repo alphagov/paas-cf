@@ -53,12 +53,6 @@ prepare_environment() {
 
   state_bucket=gds-paas-${DEPLOY_ENV}-state
 
-  if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
-    gpg_ids="[]"
-  else
-    gpg_ids="[$(xargs < "${SCRIPT_DIR}/../../.gpg-id" | tr ' ' ',')]"
-  fi
-
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
   get_datadog_secrets
@@ -147,7 +141,6 @@ auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
 slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
-gpg_ids: ${gpg_ids}
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
