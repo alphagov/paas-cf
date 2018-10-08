@@ -2343,6 +2343,7 @@ jobs:
             TF_VAR_datadog_api_key: ((datadog_api_key))
             TF_VAR_datadog_app_key: ((datadog_app_key))
             TF_VAR_aws_account: ((aws_account))
+            TF_VAR_region: ((aws_region))
             ENABLE_DATADOG: ((enable_datadog))
           run:
             path: sh
