@@ -1290,6 +1290,28 @@ jobs:
                 ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
                 bosh -n deploy cf-manifest/cf-manifest.yml
 
+      - task: rotate-cc-db-encryption-keys
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-manifest
+            - name: bosh-secrets
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                bosh run-errand rotate-cc-database-key
+
   - name: prometheus-deploy
     serial: true
     plan:
