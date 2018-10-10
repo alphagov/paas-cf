@@ -162,6 +162,18 @@ vm_types:
       size: 10240
       type: gp2
 
+- name: errand
+  network: cf
+  env:
+    bosh:
+      password: ((secrets_vcap_password))
+  cloud_properties:
+    instance_type: t2.small
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+    iam_instance_profile: bosh-errand
+
 - name: medium
   network: cf
   env:
