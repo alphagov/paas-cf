@@ -163,6 +163,7 @@ RSpec.describe "base properties" do
           "paas-admin",
           "user_invitation",
           "network-policy",
+          "metric-exporter",
         )
       }
 
