@@ -236,6 +236,10 @@
   value: ((cf_app_sd_ca.certificate))((cf_app_sd_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/instance_identity_ca_cert
+  value: ((diego_instance_identity_ca.certificate))((diego_instance_identity_ca_old.certificate))
+
+- type: replace
   path: /variables/-
   value:
     name: silk_ca_old
@@ -331,5 +335,15 @@
     name: cf_app_sd_ca_old
     options:
       common_name: service-discovery-controller.service.cf.internal
+      is_ca: true
+    type: certificate
+
+- type: replace
+  path: /variables/-
+  value:
+    name: diego_instance_identity_ca_old
+    options:
+      ca: application_ca
+      common_name: instanceIdentityCA
       is_ca: true
     type: certificate

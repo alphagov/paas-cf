@@ -32,12 +32,6 @@
   value: ((cell_memory_capacity_mb))
 
 - type: remove
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/instance_identity_ca_cert
-
-- type: remove
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/instance_identity_key
-
-- type: remove
   path: /instance_groups/name=diego-cell/jobs/name=route_emitter/properties/tcp
 
 - type: remove

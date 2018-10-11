@@ -39,6 +39,3 @@
 
 - type: remove
   path: /instance_groups/name=diego-api/jobs/name=silk-controller/consumes
-
-- type: remove
-  path: /variables/name=diego_instance_identity_ca
