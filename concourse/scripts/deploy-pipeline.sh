@@ -31,11 +31,18 @@ echo "Concourse API target ${FLY_TARGET}"
 echo "Pipeline ${pipeline}"
 echo "Config file ${config}"
 
+if [ "${SKIP_COMMIT_VERIFICATION:-}" = "true" ] ; then
+  gpg_option="--load-vars-from=./concourse/vars-files/gpg-keys-empty.yml"
+else
+  gpg_option="--load-vars-from=./concourse/vars-files/gpg-keys.yml"
+fi
+
 $FLY_CMD -t "${FLY_TARGET}" \
    set-pipeline \
    --config "${config}" \
    --pipeline "${pipeline}" \
    --load-vars-from "${varsfile}" \
+   "${gpg_option}" \
    --non-interactive
 
 $FLY_CMD -t "${FLY_TARGET}" \

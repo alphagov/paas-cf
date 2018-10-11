@@ -19,7 +19,7 @@ resources:
       uri: https://github.com/alphagov/paas-cf.git
       branch: ((branch_name))
       tag_filter: ((paas_cf_tag_filter))
-      commit_verification_key_ids: ((gpg_ids))
+      commit_verification_keys: ((gpg_public_keys))
 
   - name: cf-tfstate
     type: s3-iam
