@@ -27,13 +27,6 @@
 - type: remove
   path: /instance_groups/name=router/jobs/name=gorouter/properties/routing_api
 
-- type: replace
-  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/backends?
-  value:
-    cert_chain: ((router_ssl.certificate))
-    enable_tls: true
-    private_key: ((router_ssl.private_key))
-
   # Upstream uses application_ca and service_cf_internal_ca
   # We want to use these but also rotate them
   #
