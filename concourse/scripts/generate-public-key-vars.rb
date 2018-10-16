@@ -26,3 +26,4 @@ annotated_output = """# THIS FILE WAS GENERATED AUTOMATICALLY. DO NOT EDIT
 #{output}"""
 File.write(output_file, annotated_output)
 puts "Public keys written to #{output_file}"
+puts "Note: we don't yet have a way of producing a canonical output via GPG, so when you run this script you may see changes to everybody's public keys. These differences are okay to commit - what matters is they are derived from the correct public key IDs."
