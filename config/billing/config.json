@@ -1000,6 +1000,32 @@
 					"vat_code": "Standard"
 				}
 			]
+		},
+		{
+			"name": "elasticsearch medium-ha-5.x",
+			"valid_from": "2018-10-01",
+			"plan_guid": "242a4782-7454-4ff4-93b2-dd88b333cb46",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 1.096",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "elasticsearch medium-ha-6.x",
+			"valid_from": "2018-10-01",
+			"plan_guid": "760e9fc7-9402-4869-8ac6-babdc9e02247",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 1.096",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
 		}
 	]
 }
