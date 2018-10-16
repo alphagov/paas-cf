@@ -58,6 +58,28 @@
             "metadata": {
               "displayName": "Small, highly available Elasticsearch 6 cluster"
             }
+          },
+          {
+            "id": "242a4782-7454-4ff4-93b2-dd88b333cb46",
+            "name": "medium-ha-5.x",
+            "aiven_plan": "business-8",
+            "elasticsearch_version": "5",
+            "description": "3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Medium, highly available Elasticsearch 5 cluster"
+            }
+          },
+          {
+            "id": "760e9fc7-9402-4869-8ac6-babdc9e02247",
+            "name": "medium-ha-6.x",
+            "aiven_plan": "business-8",
+            "elasticsearch_version": "6",
+            "description": "3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Medium, highly available Elasticsearch 6 cluster"
+            }
           }
         ]
       }

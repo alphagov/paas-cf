@@ -1975,6 +1975,8 @@ jobs:
                   done
                 fi
 
+                cp paas-cf/config/billing/config.json paas-billing/
+
                 cd paas-billing
 
                 ruby -ryaml -e "
