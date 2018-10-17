@@ -8,6 +8,11 @@
     version: 1.0.21
     sha1: 4721a43418533ac13d7d5e9ca179b8aec42218cb
 
+  # FIXME: remove this when upgrading to binary-buildpack >= 1.0.25
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks/name=binary_buildpack/package
+  value: binary-buildpack
+
 - type: replace
   path: /releases/name=dotnet-core-buildpack
   value:
