@@ -54,7 +54,6 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-service-discovery.yml" \
   ${slim_dev_deployment} \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/skip-consul-cell-registrations.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/disable-consul.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
