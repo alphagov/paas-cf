@@ -79,7 +79,7 @@ show_next_steps() {
   echo 'Please create invite the required users to this organisation using paas admin by visiting:'
   echo
   echo -e -n "${COL_BLUE:-}"
-  echo "https://admin.cloud.service.gov.uk/organisations/${guid}/users/invite"
+  echo "$(cf target | sed -n 's|api endpoint: *https://api.|https://admin.|p')/organisations/${guid}/users/invite"
   echo -e -n "${COL_RESET:-}"
   echo
   echo '******************************************'
