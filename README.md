@@ -210,6 +210,23 @@ pipelines or its resources or jobs.
 
 Note that the *Deployer Concourse* and *MicroBOSH* VMs will be kept running.
 
+## Morning kick-off of deployment
+
+The pipeline `deployment-kick-off` can trigger for you the deployment in
+the morning, so the environment is ready for you before you start work.
+
+This feature is opt-in and must be enable **every day** by unpausing the
+`deployer-timer` resource in `deployment-kick-off`, either manually or
+by running:
+
+```
+make dev unpause-kick-off
+```
+
+The `deployer-timer` would be disabled automatically just after the
+deployment is kick-off, to prevent the next day to happen again. You can
+avoid this by pausing the job `pause-kick-off`
+
 ## aws-cli
 
 You might need [aws-cli][] installed on your machine to debug a deployment.

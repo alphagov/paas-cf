@@ -185,6 +185,14 @@ pipelines: check-env ## Upload pipelines to Concourse
 trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
 	concourse/scripts/trigger-deploy.sh
 
+.PHONY: pause-kick-off
+pause-kick-off: check-env ## Pause the morning kick-off of deployment.
+	concourse/scripts/pause-kick-off.sh pause
+
+.PHONY: pause-kick-off
+unpause-kick-off: check-env ## Unpause the morning kick-off of deployment.
+	concourse/scripts/pause-kick-off.sh unpause
+
 .PHONY: showenv
 showenv: check-env ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
