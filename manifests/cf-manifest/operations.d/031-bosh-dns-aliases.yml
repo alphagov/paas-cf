@@ -1,0 +1,23 @@
+---
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=_.cell.service.cf.internal/targets
+  value:
+  - query: _
+    instance_group: diego-cell
+    network: cell
+    deployment: ((deployment_name))
+    domain: bosh
+  - query: _
+    instance_group: isolated-diego-cell
+    network: cell
+    deployment: ((deployment_name))
+    domain: bosh
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=gorouter.service.cf.internal/targets
+  value:
+  - query: '*'
+    instance_group: router
+    network: router
+    deployment: ((deployment_name))
+    domain: bosh

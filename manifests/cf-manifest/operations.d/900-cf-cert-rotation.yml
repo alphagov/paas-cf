@@ -240,6 +240,22 @@
   value: ((diego_instance_identity_ca.certificate))((diego_instance_identity_ca_old.certificate))
 
 - type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/api/client/tls/ca
+  value: ((dns_api_tls_ca.certificate))((dns_api_tls_ca_old.certificate))
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/api/server/tls/ca
+  value: ((dns_api_tls_ca.certificate))((dns_api_tls_ca_old.certificate))
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/client/tls/ca
+  value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
+
+- type: replace
+  path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/server/tls/ca
+  value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
+
+- type: replace
   path: /variables/-
   value:
     name: silk_ca_old
@@ -315,10 +331,10 @@
   path: /variables/-
   value:
     name: dns_api_tls_ca_old
-    options:
-      common_name: dnsApiTlsCa
-      is_ca: true
     type: certificate
+    options:
+      is_ca: true
+      common_name: dns-api-tls-ca
 
 - type: replace
   path: /variables/-
@@ -326,8 +342,8 @@
     name: dns_healthcheck_tls_ca_old
     type: certificate
     options:
-      common_name: dnsHealthCheckTlsCa
       is_ca: true
+      common_name: dns-healthcheck-tls-ca
 
 - type: replace
   path: /variables/-
