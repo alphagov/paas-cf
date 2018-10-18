@@ -1,9 +1,0 @@
----
-
-- type: replace
-  path: /releases/name=cf-networking
-  value:
-    name: "cf-networking"
-    version: "2.16.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cf-networking-release?v=2.16.0"
-    sha1: "9f34333f6a41c66b39fdde1971b03ed466a248d3"
