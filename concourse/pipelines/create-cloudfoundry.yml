@@ -1,4 +1,42 @@
 ---
+meta:
+  containers:
+    awscli: &awscli-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/awscli
+        tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+    bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/bosh-cli-v2
+        tag: 4012d25ceb903b46908a830b8e05773ced1c8f86
+    cf-acceptance-tests: &cf-acceptance-tests-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/cf-acceptance-tests
+        tag: 52752f11595bab840402c22021d34c6ed6b41b70
+    cf-cli: &cf-cli-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/cf-cli
+        tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+    git-ssh: &git-ssh-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/git-ssh
+        tag: 465642da06051a55630d39c899697b678f66a7f7
+    ruby-slim: &ruby-slim-image-resource
+      type: docker-image
+      source:
+        repository: ruby
+        tag: 2.5-slim
+    terraform: &terraform-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/terraform
+        tag: f810666094e6c65eeb183f9833b231aa24df6811
+
 groups:
   - name: deploy
     jobs:
@@ -379,11 +417,7 @@ jobs:
       - task: init-pipeline-pool
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/git-ssh
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+          image_resource: *git-ssh-image-resource
           inputs:
             - name: paas-cf
             - name: git-ssh-private-key
@@ -518,11 +552,7 @@ jobs:
         - task: generate-deployments-ssh-keypair
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/git-ssh
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+            image_resource: *git-ssh-image-resource
             inputs:
               - name: paas-cf
               - name: ssh-private-key
@@ -559,11 +589,7 @@ jobs:
       - task: generate-cf-secrets
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
+          image_resource: *ruby-slim-image-resource
           inputs:
             - name: paas-cf
             - name: cf-secrets
@@ -605,11 +631,7 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CF_ADMIN: admin
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           run:
             path: sh
             args:
@@ -651,11 +673,7 @@ jobs:
             - name: pipeline-trigger
           params:
             AWS_DEFAULT_REGION: ((aws_region))
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          image_resource: *awscli-image-resource
           run:
             path: sh
             args:
@@ -698,11 +716,7 @@ jobs:
       - task: run-tests
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-acceptance-tests
-              tag: 52752f11595bab840402c22021d34c6ed6b41b70
+          image_resource: *cf-acceptance-tests-image-resource
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -756,11 +770,7 @@ jobs:
       - task: upload-job-file
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          image_resource: *awscli-image-resource
           inputs:
             - name: pipeline-trigger
             - name: deployed-healthcheck
@@ -784,11 +794,7 @@ jobs:
       - task: run-tests
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-acceptance-tests
-              tag: 52752f11595bab840402c22021d34c6ed6b41b70
+          image_resource: *cf-acceptance-tests-image-resource
           inputs:
             - name: paas-cf
             - name: pipeline-trigger
@@ -837,11 +843,7 @@ jobs:
           task: delete-job-file
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/awscli
-                tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+            image_resource: *awscli-image-resource
             inputs:
               - name: pipeline-trigger
             run:
@@ -873,11 +875,7 @@ jobs:
       - task: extract-terraform-variables
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
+          image_resource: *ruby-slim-image-resource
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
@@ -901,11 +899,7 @@ jobs:
       - task: generate-peer-tfvars
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
+          image_resource: *ruby-slim-image-resource
           inputs:
             - name: paas-cf
           outputs:
@@ -924,11 +918,7 @@ jobs:
       - task: terraform-apply
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/terraform
-              tag: f810666094e6c65eeb183f9833b231aa24df6811
+          image_resource: *terraform-image-resource
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -970,11 +960,7 @@ jobs:
       - task: add-aws-users-to-groups
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          image_resource: *awscli-image-resource
           params:
             DEPLOY_ENV: ((deploy_env))
           run:
@@ -989,11 +975,7 @@ jobs:
       - task: extract-cf-terraform-outputs
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
+          image_resource: *ruby-slim-image-resource
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -1058,11 +1040,7 @@ jobs:
         - task: extract-terraform-outputs
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: 2.5-slim
+            image_resource: *ruby-slim-image-resource
             inputs:
               - name: paas-cf
               - name: vpc-tfstate
@@ -1089,11 +1067,7 @@ jobs:
         - task: generate-peer-opsfile
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ruby
-                tag: 2.5-slim
+            image_resource: *ruby-slim-image-resource
             inputs:
               - name: paas-cf
             outputs:
@@ -1144,11 +1118,7 @@ jobs:
         - task: generate-cloud-config
           config:
             platform: linux
-            image_resource: &gov-paas-bosh-cli-v2-image-resource
-              type: docker-image
-              source:
-                repository: governmentpaas/bosh-cli-v2
-                tag: 4012d25ceb903b46908a830b8e05773ced1c8f86
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
               - name: terraform-outputs
@@ -1422,11 +1392,7 @@ jobs:
           - name: config
         params:
           SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-        image_resource:
-          type: docker-image
-          source:
-            repository: ruby
-            tag: 2.5-slim
+        image_resource: *ruby-slim-image-resource
         run:
           path: sh
           args:
@@ -1466,11 +1432,7 @@ jobs:
       - task: create-orgs
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           inputs:
             - name: paas-cf
             - name: config
@@ -1515,11 +1477,7 @@ jobs:
       - task: register-rds-broker
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           inputs:
             - name: paas-cf
             - name: config
@@ -1591,11 +1549,7 @@ jobs:
       - task: register-cdn-broker
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           inputs:
             - name: paas-cf
             - name: config
@@ -1625,11 +1579,7 @@ jobs:
             - name: config
             - name: cf-manifest
           params:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           run:
             path: sh
             args:
@@ -1650,11 +1600,7 @@ jobs:
             - name: config
             - name: cf-manifest
           params:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           run:
             path: sh
             args:
@@ -1675,11 +1621,7 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           run:
             path: sh
             args:
@@ -1700,11 +1642,7 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           run:
             path: sh
             args:
@@ -1724,11 +1662,7 @@ jobs:
       - task: block-create-account-endpoints
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           inputs:
             - name: paas-cf
             - name: config
@@ -1776,11 +1710,7 @@ jobs:
       - task: deploy-simulated-load-application
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           params:
             TEST_HEAVY_LOAD: ((test_heavy_load))
           inputs:
@@ -1870,11 +1800,7 @@ jobs:
       - task: deploy-healthcheck
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           params:
             DISABLE_HEALTHCHECK_DB: ((disable_healthcheck_db))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -1936,11 +1862,7 @@ jobs:
       - task: deploy-paas-billing
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
@@ -2003,11 +1925,7 @@ jobs:
       - task: deploy-paas-accounts
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
@@ -2137,11 +2055,7 @@ jobs:
         - task: deploy-paas-admin
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+            image_resource: *cf-cli-image-resource
             inputs:
               - name: paas-cf
               - name: paas-admin-dist
@@ -2174,11 +2088,7 @@ jobs:
         - task: deploy-paas-log-cache-adapter
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+            image_resource: *cf-cli-image-resource
             inputs:
               - name: paas-cf
               - name: paas-log-cache-adapter
@@ -2242,11 +2152,7 @@ jobs:
         - task: deploy-aiven-service-broker
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+            image_resource: *cf-cli-image-resource
             inputs:
               - name: paas-cf
               - name: paas-aiven-broker
@@ -2301,11 +2207,7 @@ jobs:
         - task: register-elasticache-broker
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-cli
-                tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+            image_resource: *cf-cli-image-resource
             inputs:
               - name: paas-cf
               - name: config
@@ -2329,11 +2231,7 @@ jobs:
       - task: datadog-terraform-apply
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/terraform
-              tag: f810666094e6c65eeb183f9833b231aa24df6811
+          image_resource: *terraform-image-resource
           inputs:
             - name: datadog-tfstate
             - name: paas-cf
@@ -2383,11 +2281,7 @@ jobs:
       - task: deploy-paas-metrics
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           params:
             ENABLE_DATADOG: ((enable_datadog))
             DATADOG_API_KEY: ((datadog_api_key))
@@ -2457,11 +2351,7 @@ jobs:
       - task: deploy-paas-uaa-assets
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/cf-cli
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          image_resource: *cf-cli-image-resource
           inputs:
             - name: paas-cf
             - name: config
@@ -2483,11 +2373,7 @@ jobs:
       - task: remove-unused-ses-smtp-access-keys
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          image_resource: *awscli-image-resource
           inputs:
             - name: cf-tfstate
           params:
@@ -2599,11 +2485,7 @@ jobs:
           - task: run-tests
             config:
               platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/cf-acceptance-tests
-                  tag: 52752f11595bab840402c22021d34c6ed6b41b70
+              image_resource: *cf-acceptance-tests-image-resource
               params:
                 DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
               inputs:
@@ -2659,11 +2541,7 @@ jobs:
             timeout: 20m
             config:
               platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/cf-acceptance-tests
-                  tag: 52752f11595bab840402c22021d34c6ed6b41b70
+              image_resource: *cf-acceptance-tests-image-resource
               params:
                 DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
                 SKIP_REGEX: "exercises basic loggregator behavior|applies default environment variables while running apps and tasks|applies default environment variables while staging apps"
@@ -2769,11 +2647,7 @@ jobs:
           - task: ensure-buildpacks-exist
             config:
               platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/cf-cli
-                  tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+              image_resource: *cf-cli-image-resource
               inputs:
                 - name: paas-cf
                 - name: cf-vars-store
@@ -2905,11 +2779,7 @@ jobs:
         - task: run-tests
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/cf-acceptance-tests
-                tag: 52752f11595bab840402c22021d34c6ed6b41b70
+            image_resource: *cf-acceptance-tests-image-resource
             inputs:
               - name: paas-cf
               - name: test-config
@@ -2943,11 +2813,7 @@ jobs:
 
       - task: tag-release
         config:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/git-ssh
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+          image_resource: *git-ssh-image-resource
           platform: linux
           params:
             aws_account: ((aws_account))
@@ -2980,11 +2846,7 @@ jobs:
       - get: pipeline-pool
       - task: update-datadog
         config:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/git-ssh
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+          image_resource: *git-ssh-image-resource
           platform: linux
           params:
             DATADOG_API_KEY: ((datadog_api_key))
@@ -3052,11 +2914,7 @@ jobs:
       - get: pipeline-pool
       - task: print-pipeline-lock-state
         config:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/git-ssh
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+          image_resource: *git-ssh-image-resource
           platform: linux
           inputs:
           - name: pipeline-pool
@@ -3171,11 +3029,7 @@ jobs:
     - task: rotate-credentials
       config:
         platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ruby
-            tag: 2.5-slim
+        image_resource: *ruby-slim-image-resource
         inputs:
           - name: paas-cf
           - name: cf-secrets
@@ -3279,11 +3133,7 @@ jobs:
     - task: rotate-cf-certs
       config:
         platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ruby
-            tag: 2.5-slim
+        image_resource: *ruby-slim-image-resource
         inputs:
           - name: paas-cf
           - name: cf-manifest-pre-vars
@@ -3315,11 +3165,7 @@ jobs:
     - task: rotate-cf-certs
       config:
         platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ruby
-            tag: 2.5-slim
+        image_resource: *ruby-slim-image-resource
         inputs:
           - name: paas-cf
           - name: cf-manifest-pre-vars
@@ -3351,11 +3197,7 @@ jobs:
     - task: rotate-cf-certs
       config:
         platform: linux
-        image_resource:
-          type: docker-image
-          source:
-            repository: ruby
-            tag: 2.5-slim
+        image_resource: *ruby-slim-image-resource
         inputs:
           - name: paas-cf
           - name: cf-manifest-pre-vars
@@ -3381,11 +3223,7 @@ jobs:
     plan:
       - task: ssh-keygen
         config:
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/git-ssh
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+          image_resource: *git-ssh-image-resource
           platform: linux
           outputs:
           - name: generated-git-keys
@@ -3491,11 +3329,7 @@ jobs:
             task: alert
             config:
               platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: governmentpaas/awscli
-                  tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+              image_resource: *awscli-image-resource
               params:
                 AWS_DEFAULT_REGION: ((aws_region))
                 DEPLOY_ENV: ((deploy_env))
@@ -3536,11 +3370,7 @@ jobs:
       - task: check-certificates
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ruby
-              tag: 2.5-slim
+          image_resource: *ruby-slim-image-resource
           inputs:
             - name: paas-cf
             - name: cf-vars-store
@@ -3581,11 +3411,7 @@ jobs:
           AWS_DEFAULT_REGION: ((aws_region))
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          image_resource: *awscli-image-resource
           inputs:
             - name: bosh-secrets
             - name: bosh-CA-crt
@@ -3673,11 +3499,7 @@ jobs:
           URL: s3://((state_bucket))/health-snapshot-data.json
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: governmentpaas/awscli
-              tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+          image_resource: *awscli-image-resource
           outputs:
             - name: health-snapshot-secrets
           run:
