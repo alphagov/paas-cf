@@ -4,8 +4,8 @@ This directory contains the logstash filters to be used in logit.io to parse
 the logs from our Cloud Foundry platform.
 
 The scripts are based on
- - Upstream [logsearch filters](https://github.com/logsearch/logsearch-boshrelease/tree/develop/src/logsearch-config/src/logstash-filters)
- - [logsearch-for-cloudfoundry filters](https://github.com/alphagov/paas-logsearch-for-cloudfoundry)
+ - Upstream [logsearch filters](https://github.com/cloudfoundry-community/logsearch-boshrelease/tree/develop/src/logsearch-config/src/logstash-filters)
+ - [logsearch-for-cloudfoundry filters](https://github.com/cloudfoundry-community/logsearch-for-cloudfoundry)
  - Custom filters added adhoc by us.
 
 These filters can be manually updated in the logit interface. To generate the filters or update them, follow the instructions in this file.
