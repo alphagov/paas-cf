@@ -100,18 +100,18 @@ prompt_to_invite_user() {
 }
 
 prompt_to_add_user_to_mailing_list() {
-  echo '******************************************
+  echo -e "******************************************
 As a new account has been created please remember to update the
 gov-uk-paas-announce mailing list. You can do that by inviting the user to the
 group by using this URL:
 
-https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/gov-uk-paas-announce/invite
+${COL_BLUE:-}https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/gov-uk-paas-announce/invite${COL_RESET:-}
 
 As a welcome message you can use the text from here:
 
-https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
+${COL_BLUE:-}https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce${COL_RESET:-}
 
-******************************************'
+******************************************"
   read -p 'Please confirm that you have added the users to the mailing list. [Yy]' -r
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     echo
