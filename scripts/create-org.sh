@@ -68,7 +68,7 @@ create_org_space() {
   cf curl -X DELETE "/v2/organizations/${guid}/users" -d "{\"username\": \"${admin_user}\"}"
 }
 
-show_next_steps() {
+prompt_to_invite_user() {
   if [ -z "${guid:-}" ]; then
     >&2 echo 'Expected guid not to be empty. Aborting'
     exit 1
@@ -87,9 +87,9 @@ show_next_steps() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     echo
     echo -e -n "${COL_GREEN:-}"
-    echo "Good job - have a nice day"
+    echo "Thank you"
     echo -e -n "${COL_RESET:-}"
-    exit 0
+    echo
   else
     >&2 echo
     >&2 echo -e -n "${COL_RED:-}"
@@ -97,7 +97,34 @@ show_next_steps() {
     >&2 echo -e -n "${COL_RESET:-}"
     exit 1
   fi
+}
 
+prompt_to_add_user_to_mailing_list() {
+  echo '******************************************
+As a new account has been created please remember to update the
+gov-uk-paas-announce mailing list. You can do that by inviting the user to the
+group by using this URL:
+
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!managemembers/gov-uk-paas-announce/invite
+
+As a welcome message you can use the text from here:
+
+https://groups.google.com/a/digital.cabinet-office.gov.uk/forum/#!forum/gov-uk-paas-announce
+
+******************************************'
+  read -p 'Please confirm that you have added the users to the mailing list. [Yy]' -r
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    echo
+    echo -e -n "${COL_GREEN:-}"
+    echo "Good job - have a nice day"
+    echo -e -n "${COL_RESET:-}"
+  else
+    >&2 echo
+    >&2 echo -e -n "${COL_RED:-}"
+    >&2 echo "Ok, you really should add the users though, or they won't get their emails."
+    >&2 echo -e -n "${COL_RESET:-}"
+    exit 1
+  fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -118,4 +145,5 @@ done
 load_colors
 check_params_and_environment
 create_org_space
-show_next_steps
+prompt_to_invite_user
+prompt_to_add_user_to_mailing_list
