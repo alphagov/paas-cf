@@ -15,12 +15,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 52752f11595bab840402c22021d34c6ed6b41b70
+        tag: 51c4648c56a18e28a295e73963b65fdbfe76e52f
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+        tag: 51c4648c56a18e28a295e73963b65fdbfe76e52f
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:

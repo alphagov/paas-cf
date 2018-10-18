@@ -7,7 +7,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/cf-cli
-    tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+    tag: 51c4648c56a18e28a295e73963b65fdbfe76e52f
 run:
   path: sh
   args:
