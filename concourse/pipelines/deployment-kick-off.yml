@@ -69,8 +69,6 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            AWS_ACCOUNT: ((aws_account))
-            AWS_DEFAULT_REGION: ((aws_region))
             DEPLOY_ENV: ((deploy_env))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
@@ -81,4 +79,31 @@ jobs:
               - |
                 echo "Pipeline kick-off is enabled. Updating. (set ENABLE_MORNING_DEPLOYMENT=false to disable)"
 
-                make -C ./paas-cf "${AWS_ACCOUNT}" trigger-deploy
+                make -C ./paas-cf "((makefile_env_target))" trigger-deploy
+
+  - name: pause-kick-off
+    serial: true
+    plan:
+      - get: deployment-timer
+        trigger: true
+      - get: paas-cf
+      - task: pause-kick-off
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/self-update-pipelines
+              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+          inputs:
+            - name: paas-cf
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            SKIP_AWS_CREDENTIAL_VALIDATION: true
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                make -C ./paas-cf "((makefile_env_target))" pause-kick-off
