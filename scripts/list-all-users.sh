@@ -21,4 +21,4 @@ get_users() {
 
 for s in $(seq 0 500 "$(get_number_of_users)"); do
   get_users "$s"
-done
+done | sort --field-separator=@ --key=2 --key=1
