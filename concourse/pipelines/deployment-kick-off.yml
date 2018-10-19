@@ -17,13 +17,12 @@ resources:
       stop: 7:30 AM
 
 jobs:
-  - name: kick-off
+  - name: await-kick-off
     serial: true
     plan:
       - get: deployment-timer
         trigger: true
       - get: paas-cf
-
       - task: await-turn
         config:
           platform: linux
@@ -39,6 +38,14 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
           run:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
+
+  - name: kick-off
+    serial: true
+    plan:
+      - get: deployment-timer
+        trigger: true
+        passed: [await-kick-off]
+      - get: paas-cf
 
       - task: startup-rds-instances
         config:
