@@ -67,7 +67,7 @@ apps_in_state() {
 services_in_org() {
   guid="$1"
   summary=$(cf curl "/v2/organizations/${guid}/summary")
-  echo "$summary" | jq -r "[.spaces[].service_count] | add"
+  echo "$summary" | jq -r "reduce .spaces[] as \$space (0; . + \$space.service_count)"
 }
 
 find_latest_login() {
