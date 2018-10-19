@@ -4,75 +4,70 @@
   path: /releases/name=binary-buildpack
   value:
     name: binary-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/binary-buildpack-release?v=1.0.21
-    version: 1.0.21
-    sha1: 4721a43418533ac13d7d5e9ca179b8aec42218cb
-
-  # FIXME: remove this when upgrading to binary-buildpack >= 1.0.25
-- type: replace
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks/name=binary_buildpack/package
-  value: binary-buildpack
+    url: https://bosh.io/d/github.com/cloudfoundry/binary-buildpack-release?v=1.0.27
+    version: 1.0.27
+    sha1: f0022e0632d31d5bbb0e0a5e424244bad83158a1
 
 - type: replace
   path: /releases/name=dotnet-core-buildpack
   value:
     name: dotnet-core-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/dotnet-core-buildpack-release?v=2.1.4
-    version: 2.1.4
-    sha1: dc92805765ed73604d5c542d736aea7bffed8b11
+    url: https://bosh.io/d/github.com/cloudfoundry/dotnet-core-buildpack-release?v=2.1.5
+    version: 2.1.5
+    sha1: 188dace870c94749a3abc21cb538c08e0f4f3d8c
 
 - type: replace
   path: /releases/name=go-buildpack
   value:
     name: go-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/go-buildpack-release?v=1.8.26
-    version: 1.8.26
-    sha1: 2a11862007592ba34e768e7b9544a9698de59a17
+    url: https://bosh.io/d/github.com/cloudfoundry/go-buildpack-release?v=1.8.28
+    version: 1.8.28
+    sha1: cde33a1eda5392dd5c887d4d72568aabefb1f20a
 
 - type: replace
   path: /releases/name=java-buildpack
   value:
     name: java-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/java-buildpack-release?v=4.15
-    version: "4.15"
-    sha1: 78face238cf11ea5b1f13eebb7b7befcddb365dc
+    url: https://bosh.io/d/github.com/cloudfoundry/java-buildpack-release?v=4.16.1
+    version: "4.16.1"
+    sha1: 2e24d3da499fc62fd3f012f13188e7e7e7857c2a
 
 - type: replace
   path: /releases/name=nodejs-buildpack
   value:
     name: nodejs-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.30
-    version: 1.6.30
-    sha1: b9d2d4f516a95a3f6de179a829dec4deaa155828
+    url: https://bosh.io/d/github.com/cloudfoundry/nodejs-buildpack-release?v=1.6.32
+    version: 1.6.32
+    sha1: 69c02ed7bfcc145447222b7366d6ad41c07d86e5
 
 - type: replace
   path: /releases/name=php-buildpack
   value:
     name: php-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/php-buildpack-release?v=4.3.59
-    version: 4.3.59
-    sha1: f1c6ebf8538aa6de07055cf919246caad695eb3a
+    url: https://bosh.io/d/github.com/cloudfoundry/php-buildpack-release?v=4.3.61
+    version: 4.3.61
+    sha1: 9c5f9f040135fda81da44c6e1b0a1da878b04bfb
 
 - type: replace
   path: /releases/name=python-buildpack
   value:
     name: python-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/python-buildpack-release?v=1.6.20
-    version: 1.6.20
-    sha1: db9ab75edf8d96172d3f15a07799f8faf15b24d7
+    url: https://bosh.io/d/github.com/cloudfoundry/python-buildpack-release?v=1.6.21
+    version: 1.6.21
+    sha1: 03b8618c5940889529e0aa6c129436e17c2a28d3
 
 - type: replace
   path: /releases/name=ruby-buildpack
   value:
     name: ruby-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/ruby-buildpack-release?v=1.7.22
-    version: 1.7.22
-    sha1: 8b2baf552d6f51933fbf37ccacbabbcbd9c7ae6d
+    url: https://bosh.io/d/github.com/cloudfoundry/ruby-buildpack-release?v=1.7.24
+    version: 1.7.24
+    sha1: d696be61e29dd0ea60129df148747831feece51f
 
 - type: replace
   path: /releases/name=staticfile-buildpack
   value:
     name: staticfile-buildpack
-    url: https://bosh.io/d/github.com/cloudfoundry/staticfile-buildpack-release?v=1.4.31
-    version: 1.4.31
-    sha1: 7371d1b2b4c1e677e8364ce5e1bc325158796b38
+    url: https://bosh.io/d/github.com/cloudfoundry/staticfile-buildpack-release?v=1.4.32
+    version: 1.4.32
+    sha1: 5851241b881f3315383fe4d2a50ca89fe2a5d331
