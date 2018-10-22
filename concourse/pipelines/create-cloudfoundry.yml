@@ -372,7 +372,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker
-      tag_filter: v0.9.0
+      tag_filter: v0.10.0
 
   - name: paas-billing
     type: git
