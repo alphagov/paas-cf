@@ -1301,6 +1301,8 @@ jobs:
           inputs:
             - name: paas-cf
             - name: prometheus-vars-store
+            - name: bosh-secrets
+            - name: bosh-CA-crt
           outputs:
             - name: prometheus-manifest
             - name: prometheus-vars-store-updated
@@ -1317,6 +1319,24 @@ jobs:
               - -c
               - |
                 cp prometheus-vars-store/prometheus-vars-store.yml "${VARS_STORE}"
+
+                export VARS_FILE=./prometheus-vars-file.yml
+
+                bosh interpolate - \
+                  --var-errs \
+                  --vars-file bosh-secrets/bosh-secrets.yml \
+                  --var-file bosh_ca_cert=./bosh-CA-crt/bosh-CA.crt \
+                > ./prometheus-vars-file.yml \
+                <<EOF
+                ---
+                metrics_environment: ${CF_DEPLOYMENT_NAME}
+                bosh_url: ${BOSH_URL}
+                bosh_username: admin
+                bosh_password: ((secrets.bosh_admin_password))
+                bosh_ca_cert: ((bosh_ca_cert))
+                EOF
+
+
                 ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
                   > prometheus-manifest/prometheus-manifest.yml
         on_success:
