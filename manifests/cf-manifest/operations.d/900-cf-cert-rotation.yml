@@ -100,6 +100,18 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=log-api/jobs/name=reverse_log_proxy_gateway/properties/logs_provider/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=log-api/jobs/name=reverse_log_proxy_gateway/properties/cc/ca_cert
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=log-api/jobs/name=reverse_log_proxy_gateway/properties/uaa/ca_cert
+  value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
+
+- type: replace
   path: /instance_groups/name=router/jobs/name=gorouter/properties/uaa/ca_cert
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 

@@ -3,3 +3,5 @@
   path: /instance_groups/name=smoke-tests
 - type: remove
   path: /releases/name=cf-smoke-tests
+- type: remove
+  path: /releases/name=cf-cli
