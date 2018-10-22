@@ -5,6 +5,12 @@ set -eu -o pipefail
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
 WORKDIR=${WORKDIR:-.}
 
+opsfile_args=""
+for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/cloud-config/operations.d/*.yml; do
+  opsfile_args+="-o $i "
+done
+
+# shellcheck disable=SC2086
 bosh interpolate \
   --var-errs \
   --vars-file="${WORKDIR}/terraform-outputs/vpc.yml" \
@@ -15,9 +21,6 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
   --vars-file="${WORKDIR}/environment-variables/environment-variables.yml" \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/050-rds-broker.yml" \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/060-cdn-broker.yml" \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/070-elasticache-broker.yml" \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/operations/090-prometheus.yml" \
+  ${opsfile_args} \
   "$@" \
   "${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/000-base-cloud-config.yml"
