@@ -1,0 +1,8 @@
+- type: replace
+  path: /vm_extensions/-
+  value:
+    name: bosh_client
+    cloud_properties:
+      security_groups:
+      - ((terraform_outputs_default_security_group))
+      - ((terraform_outputs_bosh_api_client_security_group))
