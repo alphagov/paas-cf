@@ -1,8 +1,7 @@
 ---
 metrics_environment: dev
 bosh_url: http://bosh.example.com
-bosh_username: admin
-bosh_password: bosh1234
+uaa_bosh_exporter_client_secret: bosh1234
 bosh_ca_cert: |
   -----BEGIN CERTIFICATE-----
   STUB_BOSH_CA_KEY_00000000000000000000000000000000000000000000000

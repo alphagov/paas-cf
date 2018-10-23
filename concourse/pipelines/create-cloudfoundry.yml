@@ -1331,8 +1331,7 @@ jobs:
                 ---
                 metrics_environment: ${CF_DEPLOYMENT_NAME}
                 bosh_url: ${BOSH_URL}
-                bosh_username: admin
-                bosh_password: ((secrets.bosh_admin_password))
+                uaa_bosh_exporter_client_secret: ((secrets.bosh_bosh_exporter_password))
                 bosh_ca_cert: ((bosh_ca_cert))
                 EOF
 
