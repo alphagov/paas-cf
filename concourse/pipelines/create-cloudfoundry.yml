@@ -1340,8 +1340,8 @@ jobs:
                 ---
                 metrics_environment: ${CF_DEPLOYMENT_NAME}
                 bosh_url: ${BOSH_URL}
-                bosh_username: admin
-                bosh_password: ((secrets.bosh_admin_password))
+                bosh_username: prometheus
+                bosh_password: ((secrets.bosh_prometheus_password))
                 bosh_ca_cert: ((bosh_ca_cert))
                 EOF
 
