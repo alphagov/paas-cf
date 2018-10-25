@@ -218,7 +218,12 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BOSH_CLIENT=admin
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                export BOSH_CLIENT
+                export BOSH_CLIENT_SECRET
+
                 bosh -n delete-deployment --force --deployment "((deploy_env))"
                 bosh -n delete-deployment --force --deployment prometheus
                 echo "no" > deployed-healthcheck/healthcheck-deployed
