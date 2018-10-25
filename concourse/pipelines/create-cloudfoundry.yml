@@ -81,7 +81,6 @@ groups:
     jobs:
       - continuous-smoke-tests
       - check-certificates
-      - health-snapshot
   - name: credentials
     jobs:
       - rotate-cf-admin-password
@@ -281,24 +280,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cloud-config.yml
 
-  - name: health-snapshot-data
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: health-snapshot-data.json
-      initial_version: "-"
-      initial_content_text: "{}"
-
-  - name: health-snapshot-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: health-snapshot-secrets.yml
-      initial_version: "-"
-      initial_content_text: ""
-
   - name: deployed-healthcheck
     type: s3-iam
     source:
@@ -362,11 +343,6 @@ resources:
     type: time
     source:
       interval: 720h
-
-  - name: health-snapshot-timer
-    type: time
-    source:
-      interval: 5m
 
   - name: paas-aiven-broker
     type: git
@@ -3424,130 +3400,3 @@ jobs:
                 EOF
 
                 ./paas-cf/concourse/scripts/check-certificates.rb 30 < ipsec_cert.yml
-
-  - name: health-snapshot
-    serial: true
-    build_logs_to_retain: 25
-    plan:
-      - get: health-snapshot-timer
-        trigger: true
-      - get: bosh-secrets
-      - get: bosh-CA-crt
-      - get: vpc-tfstate
-      - task: generate-snapshot-json
-        timeout: 3m
-        params:
-          BOSH_ENVIRONMENT: ((bosh_fqdn))
-          BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
-          BOSH_DEPLOYMENT: ((deploy_env))
-          AWS_DEFAULT_REGION: ((aws_region))
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          inputs:
-            - name: bosh-secrets
-            - name: bosh-CA-crt
-            - name: vpc-tfstate
-          outputs:
-            - name: health-snapshot-data
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                log() { echo "$@" 1>&2; }
-
-                bosh_curl(){
-                  path="$1"
-                  out="$2"
-                  bosh_password=$(awk '/bosh_admin_password/ { print $2 }' < bosh-secrets/bosh-secrets.yml)
-                  bosh_api="https://admin:${bosh_password}@${BOSH_ENVIRONMENT}:25555"
-                  curl -o "${out}" --dump-header response.headers --fail --silent --show-error --cacert "${BOSH_CA_CERT}" "${bosh_api}${path}"
-                  if grep -q '302 Moved' < response.headers; then
-                    task_path=$(awk '/Location/ { print $2 }' < response.headers | sed -E 's|https://[^/]+||')
-                    while true; do
-                      curl -o task.data --fail --silent --show-error --cacert "${BOSH_CA_CERT}" "${bosh_api}${task_path}"
-                      log "waiting for task to complete: $(cat task.data)"
-                      if [ "$(jq -r .state < task.data)" = "done" ]; then
-                        break
-                      fi
-                      sleep 1
-                    done
-                    curl -o result.jsonl --fail --silent --show-error --cacert "${BOSH_CA_CERT}" "${bosh_api}${task_path}/output?type=result"
-                    jq -s . result.jsonl > "${out}"
-                  fi
-                }
-
-                yaml2json(){
-                  python -c 'import sys, yaml, json; y=yaml.load(sys.stdin.read()); print json.dumps(y)'
-                }
-
-                log "fetching bosh state..."
-                bosh_curl "/deployments/${BOSH_DEPLOYMENT}/instances?format=full" instances.json
-                bosh_curl "/deployments/${BOSH_DEPLOYMENT}/vms?format=full" vms.json
-
-                log "extracting details from cloud config..."
-                bosh_curl "/configs?latest=true" configs.json
-                jq -r '.[] | select(.type == "cloud") | .content' < configs.json | yaml2json | jq .azs > azs.json
-                jq -r '.[] | select(.type == "cloud") | .content' < configs.json | yaml2json | jq '[.vm_extensions[] | select(.cloud_properties.elbs) | {name: .name, elbs: .cloud_properties.elbs}]' > elb_extensions.json
-                jq -r '.[] | select(.type == "cloud") | .content' < configs.json | yaml2json | jq '[.vm_types[] | {name: .name, elbs: .cloud_properties.elbs, type: .cloud_properties.instance_type}]' > vm_types.json
-
-                log "fetching aws state..."
-                vpc_id=$(jq -r '.modules[0].outputs.vpc_id.value' vpc-tfstate/vpc.tfstate)
-                aws elb describe-load-balancers --query "LoadBalancerDescriptions[?VPCId=='${vpc_id}']" > elbs.json
-                aws ec2 describe-instances --filters "Name=vpc-id,Values=${vpc_id}" | jq '[.Reservations[].Instances[]]' > ec2.json
-
-                log "building state json..."
-                jq -s "{ \
-                  bosh: { \
-                    instances:.[0], \
-                    vms: .[1], \
-                    azs: .[2], \
-                    elbs: .[3], \
-                    vm_types: .[4], \
-                  }, \
-                  aws: { \
-                    elbs: .[5], \
-                    ec2: .[6], \
-                  } \
-                }" \
-                  instances.json \
-                  vms.json \
-                  azs.json \
-                  elb_extensions.json \
-                  vm_types.json \
-                  elbs.json \
-                  ec2.json \
-                > health-snapshot-data/health-snapshot-data.json
-
-                log "OK"
-      - put: health-snapshot-data
-        params:
-          file: health-snapshot-data/health-snapshot-data.json
-      - task: sign-snapshot-url
-        params:
-          URL: s3://((state_bucket))/health-snapshot-data.json
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          outputs:
-            - name: health-snapshot-secrets
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                secrets_file="health-snapshot-secrets/health-snapshot-secrets.yml"
-                echo "generating secrets to access health snapshot data"
-                echo "granting access to ${URL} for 7 days"
-                one_week="604800"
-                signed_url=$(aws s3 presign --expires-in "${one_week}" "${URL}")
-                echo "---" > $secrets_file
-                echo "snapshot_url: ${signed_url}" >> $secrets_file
-      - put: health-snapshot-secrets
-        params:
-          file: health-snapshot-secrets/health-snapshot-secrets.yml
