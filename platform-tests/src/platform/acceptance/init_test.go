@@ -81,7 +81,7 @@ func pollForServiceCreationCompletion(dbInstanceName string) {
 	Eventually(func() *Buffer {
 		fmt.Fprint(GinkgoWriter, ".")
 		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
-		Expect(command).To(Exit(0))
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service creation phase: ", string(command.Out.Contents())))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
 	fmt.Fprint(GinkgoWriter, "done\n")
@@ -92,7 +92,7 @@ func pollForServiceUpdateCompletion(dbInstanceName string) {
 	Eventually(func() *Buffer {
 		fmt.Fprint(GinkgoWriter, ".")
 		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
-		Expect(command).To(Exit(0))
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service update phase: ", string(command.Out.Contents())))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("update succeeded"))
 	fmt.Fprint(GinkgoWriter, "done\n")
@@ -103,7 +103,7 @@ func pollForServiceDeletionCompletion(dbInstanceName string) {
 	Eventually(func() *Buffer {
 		fmt.Fprint(GinkgoWriter, ".")
 		command := quietCf("cf", "services").Wait(testConfig.DefaultTimeoutDuration())
-		Expect(command).To(Exit(0))
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf services: ", string(command.Out.Contents())))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
 	fmt.Fprint(GinkgoWriter, "done\n")
