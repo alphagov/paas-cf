@@ -1230,6 +1230,11 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
+                  BOSH_CLIENT=admin
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  export BOSH_CLIENT
+                  export BOSH_CLIENT_SECRET
+
                   stemcell_index=0
                   while true; do
                     if ! $VAL_FROM_YAML "stemcells.${stemcell_index}" cf-manifest/cf-manifest.yml > /dev/null 2>&1; then
@@ -1240,7 +1245,7 @@ jobs:
                     STEMCELL_OS=$($VAL_FROM_YAML "stemcells.${stemcell_index}.os" cf-manifest/cf-manifest.yml)
 
                     wget "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-${STEMCELL_OS}-go_agent?v=${STEMCELL_VERSION}" -O stemcell.tgz
-                    ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+
                     bosh -n upload-stemcell stemcell.tgz
 
                     stemcell_index=$((stemcell_index + 1))
@@ -1265,7 +1270,12 @@ jobs:
                 - -e
                 - -c
                 - |
-                  ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  BOSH_CLIENT=admin
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  export BOSH_CLIENT
+                  export BOSH_CLIENT_SECRET
+
                   bosh -n update-cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
@@ -1287,7 +1297,12 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BOSH_CLIENT=admin
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                export BOSH_CLIENT
+                export BOSH_CLIENT_SECRET
+
                 bosh -n deploy cf-manifest/cf-manifest.yml
 
   - name: prometheus-deploy
@@ -1352,8 +1367,13 @@ jobs:
               - -e
               - -c
               - |
-               ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
-               bosh -n deploy prometheus-manifest/prometheus-manifest.yml
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BOSH_CLIENT=admin
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                export BOSH_CLIENT
+                export BOSH_CLIENT_SECRET
+
+                bosh -n deploy prometheus-manifest/prometheus-manifest.yml
 
   - name: post-deploy
     serial: true
@@ -2144,7 +2164,12 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BOSH_CLIENT=admin
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                export BOSH_CLIENT
+                export BOSH_CLIENT_SECRET
+
                 bosh -n clean-up --all
 
     - aggregate:
@@ -2739,7 +2764,12 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/bosh_login.sh bosh-secrets/bosh-secrets.yml
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BOSH_CLIENT=admin
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                export BOSH_CLIENT
+                export BOSH_CLIENT_SECRET
+
                 bosh deployment
                 bosh vms | tee vms.txt
                 vms_not_running=$(grep '|' vms.txt | grep -cEv '(\-\-|VM|running)' || true)
