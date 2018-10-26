@@ -1918,7 +1918,7 @@ jobs:
                   done
                 fi
 
-                cp "paas-cf/config/billing/${AWS_REGION}.json" paas-billing/config.json
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
 
                 cd paas-billing
 
