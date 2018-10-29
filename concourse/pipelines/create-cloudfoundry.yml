@@ -1884,6 +1884,7 @@ jobs:
           platform: linux
           image_resource: *cf-cli-image-resource
           params:
+            AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
           inputs:
@@ -1917,7 +1918,7 @@ jobs:
                   done
                 fi
 
-                cp paas-cf/config/billing/config.json paas-billing/
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
 
                 cd paas-billing
 
