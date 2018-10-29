@@ -44,6 +44,23 @@ check_params_and_environment() {
   if ! cf orgs >/dev/null 2>&1; then
     abort "You need to be logged into CF CLI"
   fi
+
+  if [[ "$(cf api)" =~ https://api.cloud.service.gov.uk ]]; then
+    read -p 'New orgs should be created in London by default. Are you sure? [Yy]' -r
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      echo
+      echo -e -n "${COL_GREEN:-}"
+      echo "Creating org in Ireland"
+      echo -e -n "${COL_RESET:-}"
+      echo
+    else
+      >&2 echo
+      >&2 echo -e -n "${COL_RED:-}"
+      >&2 echo "Exitting. Please login to London: cf login -a https://api.london.cloud.service.gov.uk --sso"
+      >&2 echo -e -n "${COL_RESET:-}"
+      exit 1
+    fi
+  fi
 }
 
 create_org_space() {

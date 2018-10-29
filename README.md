@@ -239,57 +239,6 @@ providing them to the interactive configure command.
 [variety of other methods]: http://docs.aws.amazon.com/cli/latest/userguide/installing.html
 [access keys using environment variables]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-environment
 
-## Creating Users
-
-### Creating new ogranisations
-
-Once you got the OK from the Product and Delivery managers to create
-an organisations with a user, you can use the script `./scripts/create-user.sh`
-to automatically create them:
-
-```
-./scripts/create-user.sh -o orgname -e email@example.com
-```
-
-Run `./scripts/create-user.sh` for detailed help.
-
-The script will create the organisation if it doesnt exist, create the user and
-email them the password. You must have the aws cli and cf cli installed, and be
-logged into the cf environment you want to create users for
-
-### Creating new accounts
-
-When receiving a request to create a new account, we do require that the email address
-has someone on the receiving end even for accounts that are meant for automated services.
-This is because we want to be able to send notifications related specifically to that
-user and we want to ensure that there is someone to respond on the other end. We do also
-require that an org is specified when requesting new account - as there should be no user
-in our platform that is not a member of any org. That's why our user creation script also
-requires you to specify org. User will be then added to sandbox space of that org upon creation:
-
-```
-./scripts/create-user.sh -o orgname -e real@email.com
-```
-
-### Creating Org managers
-
-By default, the script creates an unprivileged users. To create an org manager,
-pass the `-m` option to the script.
-
-### Verifying email address
-
-User creation script sends notification to user with a temporary password upon creation or reset.
-Script uses our support email address (gov-uk-paas-support@digital.cabinet-office.gov.uk) as sender,
-so that any replies of users go to our support. Script uses [AWS SES](https://aws.amazon.com/ses/) to
-send emails. This service requires that the sender address is verified. We have done this for our
-current support address in all our AWS accounts already, but in case you need to verify the address
-again (or in case we decide to use different, not yet verified address), run
-
-```
-aws ses verify-email-identity --email-address support@email.com --region eu-west-1
-```
-
-and click on the link in the resulting email.
 
 ## Pingdom checks
 Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/pingdom.md)
