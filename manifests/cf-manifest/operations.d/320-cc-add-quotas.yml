@@ -12,6 +12,11 @@
       non_basic_services_allowed: false
       total_routes: 1000
       total_services: 10
+    gds-non-chargeable:
+      memory_limit: 5120
+      non_basic_services_allowed: false
+      total_routes: 1000
+      total_services: 10
     large:
       memory_limit: 102400
       non_basic_services_allowed: true
