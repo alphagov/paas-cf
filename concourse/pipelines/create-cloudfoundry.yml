@@ -366,7 +366,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.44.0
+      tag_filter: v0.45.0
 
   - name: paas-log-cache-adapter
     type: git
@@ -2018,6 +2018,7 @@ jobs:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
               NOTIFY_API_KEY: ((notify_api_key))
               NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
+              AWS_REGION: ((aws_region))
             run:
               path: sh
               args:
@@ -2040,6 +2041,7 @@ jobs:
                       NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                       NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
                       SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
+                      AWS_REGION: "$AWS_REGION"
                   EOF
 
                   spruce merge \
