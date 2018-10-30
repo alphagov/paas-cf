@@ -4,6 +4,6 @@
   path: /releases/name=cflinuxfs2
   value:
     name: cflinuxfs2
-    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.242.0
-    version: 1.242.0
-    sha1: 99821c729c05646c203a684a15a0971a5af08e35
+    url: https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.244.0
+    version: 1.244.0
+    sha1: 67f473bb1296b1faf598bceef2a36e9584b510f0
