@@ -9,7 +9,6 @@ RSpec.describe "vm_extensions" do
 
   describe "bosh_client" do
     it "Should add the bosh_client security group" do
-      puts manifest['vm_extensions']
       expect(manifest['vm_extensions.bosh_client.cloud_properties.security_groups']).to_not be_empty
     end
   end
