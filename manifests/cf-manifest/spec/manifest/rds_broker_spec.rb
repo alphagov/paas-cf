@@ -1,12 +1,11 @@
 
 RSpec.describe "RDS broker properties" do
-  let(:manifest) { manifest_with_defaults }
+  let(:manifest) { manifest_without_vars_store }
 
   describe "adding RDS access to application security groups" do
     it "appends a security group definition" do
       defs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.security_group_definitions")
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
-
       rds_sg = defs.find { |d| d["name"] == "rds_broker_instances" }
       expect(rds_sg).to be
       expect(rds_sg["rules"]).to eq([{

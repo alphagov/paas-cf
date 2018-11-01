@@ -1,0 +1,409 @@
+---
+- type: replace
+  path: /meta?/rds_broker
+  value:
+    default_mysql_rds_properties: &default_mysql_rds_properties
+      storage_type: "gp2"
+      auto_minor_version_upgrade: true
+      multi_az: false
+      storage_encrypted: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: ((terraform_outputs_rds_broker_dbs_subnet_group))
+      vpc_security_group_ids:
+        - ((terraform_outputs_rds_broker_dbs_security_group_id))
+      engine: "mysql"
+      engine_version: "5.7"
+      db_parameter_group_name: ((terraform_outputs_rds_broker_mysql57_db_parameter_group))
+
+    tiny_plan_rds_properties: &tiny_plan_rds_properties
+      db_instance_class: "db.t2.micro"
+      allocated_storage: 5
+      backup_retention_period: 0
+      skip_final_snapshot: true
+    small_plan_rds_properties: &small_plan_rds_properties
+      db_instance_class: "db.t2.small"
+      allocated_storage: 20
+    medium_plan_rds_properties: &medium_plan_rds_properties
+      db_instance_class: "db.m4.large"
+      allocated_storage: 100
+    large_plan_rds_properties: &large_plan_rds_properties
+      db_instance_class: "db.m4.2xlarge"
+      allocated_storage: 512
+    xlarge_plan_rds_properties: &xlarge_plan_rds_properties
+      db_instance_class: "db.m4.4xlarge"
+      allocated_storage: 2048
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog?/services?/-
+  value:
+    id: 4b888513-1dc3-4b9b-bdcd-51f4c03675a4
+    name: "mysql"
+    description: "AWS RDS MySQL service"
+    bindable: true
+    tags:
+      - "mysql"
+      - "relational"
+    metadata:
+      displayName: "AWS RDS MySQL"
+      imageUrl: ""
+      longDescription: "AWS RDS MySQL service"
+      providerDisplayName: "Amazon Web Services"
+      documentationUrl: "https://aws.amazon.com/documentation/rds/"
+      supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
+    plan_updateable: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: 69977068-8ef5-4172-bfdb-e8cea3c14d01
+    name: "tiny-unencrypted-5.7"
+    description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.micro."
+    free: true
+    metadata:
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *tiny_plan_rds_properties # yamllint disable-line
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "b0ccc8c9-09b0-4c3e-9880-091cc41c2ab5"
+    name: "small-5.7"
+    description: "20GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.036
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "6aa563c1-5aeb-46a1-9509-badcf5995c96"
+    name: "small-ha-5.7"
+    description: "20GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.072
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "29cdedeb-e910-4a7a-b606-2c4e42eea478"
+    name: "medium-5.7"
+    description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.193
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "8d139b9e-bc82-4749-8ad6-7733980292d6"
+    name: "medium-ha-5.7"
+    description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.386
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "98a9b7cf-e067-4915-8190-ce8224dd04dc"
+    name: "large-5.7"
+    description: "512GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.772
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "d5efbf83-5e00-47a5-a668-2ef1307d5a23"
+    name: "large-ha-5.7"
+    description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.544
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "e03020e8-eaed-49c2-bd58-23b7cb871c22"
+    name: "xlarge-5.7"
+    description: "2TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.545
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "4edc975c-3f07-46f1-bd87-ecb35b76298f"
+    name: "xlarge-ha-5.7"
+    description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 3.090
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+# Deprecated unencrypted plans
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "72279ebd-6001-4e38-aaef-72b68c4fa6fd"
+    name: "small-ha-unencrypted-5.7"
+    description: "20GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.t2.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.072
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      multi_az: true
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "4eb35ca9-a7ec-46c6-b137-d819848536cd"
+    name: "medium-unencrypted-5.7"
+    description: "100GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.193
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "e60edf62-b701-4e38-846f-b0b3db728349"
+    name: "medium-ha-unencrypted-5.7"
+    description: "100GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.386
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      multi_az: true
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "6725bf1f-71e8-447a-b6a1-659247fcc03c"
+    name: "large-unencrypted-5.7"
+    description: "512GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.772
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6"
+    name: "large-ha-unencrypted-5.7"
+    description: "512GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.544
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "a37144bf-4e05-451b-87ba-0a2c57a23a91"
+    name: "xlarge-unencrypted-5.7"
+    description: "2TB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.545
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "065a7de5-28e8-4de1-8a39-4b4f752e2f2f"
+    name: "xlarge-ha-unencrypted-5.7"
+    description: "2TB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 3.090
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      multi_az: true
+
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "7fdde6ea-cc27-466c-86aa-46181fc20d25"
+    name: "small-unencrypted-5.7"
+    description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.036
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+
+
