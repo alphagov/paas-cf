@@ -98,6 +98,10 @@ output "rds_broker_postgres95_db_parameter_group" {
   value = "${aws_db_parameter_group.rds_broker_postgres95.id}"
 }
 
+output "rds_broker_postgres10_db_parameter_group" {
+  value = "${aws_db_parameter_group.rds_broker_postgres10.id}"
+}
+
 output "rds_broker_mysql57_db_parameter_group" {
   value = "${aws_db_parameter_group.rds_broker_mysql57.id}"
 }

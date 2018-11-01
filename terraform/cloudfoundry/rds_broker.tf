@@ -107,6 +107,23 @@ resource "aws_db_parameter_group" "rds_broker_postgres95" {
   }
 }
 
+resource "aws_db_parameter_group" "rds_broker_postgres10" {
+  name        = "rdsbroker-postgres10-${var.env}"
+  family      = "postgres10"
+  description = "RDS Broker Postgres 10 parameter group"
+
+  parameter {
+    apply_method = "pending-reboot"
+    name         = "rds.force_ssl"
+    value        = "1"
+  }
+
+  parameter {
+    name  = "rds.log_retention_period"
+    value = "10080"                    // 7 days in minutes
+  }
+}
+
 resource "aws_db_parameter_group" "rds_broker_mysql57" {
   name        = "rdsbroker-mysql57-${var.env}"
   family      = "mysql5.7"
