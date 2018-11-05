@@ -1,0 +1,8 @@
+- type: replace
+  path: /instance_groups/name=firehose/networks
+  value:
+  - name: cf
+
+- type: replace
+  path: /instance_groups/name=firehose/vm_type
+  value: medium
