@@ -1484,10 +1484,12 @@ jobs:
                 cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
                 cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
                 cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname status
+                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname '*'
 
                 # Reserve the london app name so that we don't cause conflicts
                 # when we roll out the London region.
                 cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname london
+
 
       - task: register-rds-broker
         config:
