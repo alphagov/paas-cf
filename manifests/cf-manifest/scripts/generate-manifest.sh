@@ -4,6 +4,7 @@ set -eu -o pipefail
 
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
 CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
+PROMETHEUS_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/prometheus/upstream
 WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
@@ -53,6 +54,7 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-dbs.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-service-discovery.yml" \
+  --ops-file="${PROMETHEUS_DEPLOYMENT_DIR}/manifests/operators/cf/add-prometheus-uaa-clients.yml" \
   ${slim_dev_deployment} \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/disable-consul.yml" \
   ${opsfile_args} \

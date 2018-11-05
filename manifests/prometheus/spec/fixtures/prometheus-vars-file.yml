@@ -10,4 +10,9 @@ bosh_ca_cert: |
   0000000000000000000000000000000000000000000000000000000000000000
   0000000000000000000000000000000000000000000000000000000000000000
   -----END CERTIFICATE-----
-
+metron_deployment_name: dev
+skip_ssl_verify: false
+system_domain: example.com
+traffic_controller_external_port: 443
+uaa_clients_cf_exporter_secret: secret
+uaa_clients_firehose_exporter_secret: secret

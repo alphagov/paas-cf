@@ -1293,6 +1293,7 @@ jobs:
           - get: prometheus-vars-store
           - get: bosh-secrets
           - get: bosh-CA-crt
+          - get: cf-vars-store
 
       - task: generate-prometheus-manifest
         config:
@@ -1303,6 +1304,7 @@ jobs:
             - name: prometheus-vars-store
             - name: bosh-secrets
             - name: bosh-CA-crt
+            - name: cf-vars-store
           outputs:
             - name: prometheus-manifest
             - name: prometheus-vars-store-updated
@@ -1311,6 +1313,7 @@ jobs:
             CF_DEPLOYMENT_NAME: ((deploy_env))
             BOSH_URL: https://((bosh_fqdn)):25555
             VARS_STORE: prometheus-vars-store-updated/prometheus-vars-store.yml
+            METRON_DEPLOYMENT_NAME: ((deploy_env))
           run:
             path: sh
             args:
@@ -1325,14 +1328,21 @@ jobs:
                 bosh interpolate - \
                   --var-errs \
                   --vars-file bosh-secrets/bosh-secrets.yml \
+                  --vars-file cf-vars-store/cf-vars-store.yml \
                   --var-file bosh_ca_cert=./bosh-CA-crt/bosh-CA.crt \
                 > ./prometheus-vars-file.yml \
                 <<EOF
                 ---
-                metrics_environment: ${CF_DEPLOYMENT_NAME}
-                bosh_url: ${BOSH_URL}
+                metrics_environment: $CF_DEPLOYMENT_NAME
+                bosh_url: $BOSH_URL
                 uaa_bosh_exporter_client_secret: ((secrets.bosh_bosh_exporter_password))
                 bosh_ca_cert: ((bosh_ca_cert))
+                system_domain: $SYSTEM_DNS_ZONE_NAME
+                metron_deployment_name: $METRON_DEPLOYMENT_NAME
+                skip_ssl_verify: false
+                traffic_controller_external_port: 443
+                uaa_clients_cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
+                uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
                 EOF
 
 
