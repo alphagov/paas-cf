@@ -145,28 +145,6 @@ RSpec.describe "base properties" do
       subject(:clients) { uaa.fetch("clients") }
 
       it {
-        expect(clients.keys).to contain_exactly(
-          "login",
-          "cf",
-          "notifications",
-          "doppler",
-          "cloud_controller_username_lookup",
-          "cc_routing",
-          "gorouter",
-          "tcp_emitter",
-          "ssh-proxy",
-          "paas-metrics",
-          "cc-service-dashboards",
-          "cc_service_key_client",
-          "cdn_broker",
-          "paas-billing",
-          "paas-admin",
-          "user_invitation",
-          "network-policy",
-        )
-      }
-
-      it {
         clients.each { |_, config|
           expect(config).to have_key("override")
           expect(config["override"]).to be true
