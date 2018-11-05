@@ -1059,37 +1059,6 @@ jobs:
 
                   cat vpc-peering-opsfile/vpc-peers.yml
 
-        - task: generate-environment-variables
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: alpine
-                tag: 3.7
-            inputs:
-              - name: paas-cf
-            outputs:
-              - name: environment-variables
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  cat <<EOF > environment-variables/environment-variables.yml
-                  ---
-                  system_domain: ((system_dns_zone_name))
-                  app_domain: ((apps_dns_zone_name))
-                  environment: ((deploy_env))
-                  deployment_name: ((deploy_env))
-                  aws_account: ((aws_account))
-                  datadog_api_key: ((datadog_api_key))
-                  datadog_app_key: ((datadog_app_key))
-                  oauth_client_id: ((oauth_client_id))
-                  oauth_client_secret: ((oauth_client_secret))
-                  EOF
-
       - do:
         - task: generate-cloud-config
           config:
@@ -1099,7 +1068,6 @@ jobs:
               - name: paas-cf
               - name: terraform-outputs
               - name: cf-secrets
-              - name: environment-variables
             outputs:
               - name: cloud-config
             params:
@@ -1127,7 +1095,6 @@ jobs:
               - name: ipsec-CA
               - name: terraform-outputs
               - name: cf-secrets
-              - name: environment-variables
               - name: vpc-peering-opsfile
               - name: logit-secrets
             outputs:
@@ -1146,6 +1113,19 @@ jobs:
                 - -u
                 - -c
                 - |
+                  cat <<EOF > environment-variables.yml
+                  ---
+                  system_domain: ((system_dns_zone_name))
+                  app_domain: ((apps_dns_zone_name))
+                  environment: ((deploy_env))
+                  deployment_name: ((deploy_env))
+                  aws_account: ((aws_account))
+                  datadog_api_key: ((datadog_api_key))
+                  datadog_app_key: ((datadog_app_key))
+                  oauth_client_id: ((oauth_client_id))
+                  oauth_client_secret: ((oauth_client_secret))
+                  EOF
+
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
                   ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
