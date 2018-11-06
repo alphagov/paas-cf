@@ -81,7 +81,7 @@ var _ = Describe("Configured routes and domains", func() {
 				err = json.Unmarshal(orgCommand.Buffer().Contents(), &orgResp)
 				Expect(err).NotTo(HaveOccurred())
 
-				expectedOrgName = "govuk-paas"
+				expectedOrgName := "govuk-paas"
 				Expect(orgResp.Entity.Name).To(Equal(expectedOrgName),
 					"Expected org for wildcard '*' in shared domain '%s' to be '%s', got '%s'",
 					sharedDomain.Entity.Name, expectedOrgName, orgResp.Entity.Name,
