@@ -100,7 +100,7 @@ func buildsWithVersion(team concourse.Team, pipelineName, resourceName, resource
 	if err != nil {
 		return nil, err
 	} else if !resourceExists {
-		return nil, fmt.Errorf("Resource: %s did not exist in Concourse", resourceVersions)
+		return nil, fmt.Errorf("Resource: %v did not exist in Concourse", resourceVersions)
 	}
 
 	for _, version := range resourceVersions {

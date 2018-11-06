@@ -17,7 +17,7 @@ check-env:
 	$(if ${DEPLOY_ENV_VALID_CHARS},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) must use only alphanumeric chars and hyphens, otherwise derived names will be malformatted))
 	@./scripts/validate_aws_credentials.sh
 
-test: spec lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
+test: spec compile_platform_tests lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
 
 spec:
 	cd scripts &&\
@@ -40,6 +40,16 @@ spec:
 		go test
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
+
+compile_platform_tests:
+	GOPATH="$$(pwd)/platform-tests:$${GOPATH}" \
+	go test -run ^$$ \
+		platform/acceptance \
+		platform/availability/api \
+		platform/availability/app \
+		platform/availability/helpers \
+		platform/availability/monitor \
+		platform/performance
 
 lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' | xargs yamllint -c yamllint.yml
