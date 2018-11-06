@@ -20,7 +20,6 @@ bosh interpolate \
   --vars-file="${WORKDIR}/cf-secrets/cf-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
-  --vars-file="${WORKDIR}/environment-variables/environment-variables.yml" \
   ${opsfile_args} \
   "$@" \
   "${PAAS_CF_DIR}/manifests/cf-manifest/cloud-config/000-base-cloud-config.yml"

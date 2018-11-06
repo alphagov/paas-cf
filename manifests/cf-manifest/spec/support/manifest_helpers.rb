@@ -223,11 +223,9 @@ private
   end
 
   def copy_environment_variables
-    dir = workdir + '/environment-variables'
-    FileUtils.mkdir(dir) unless Dir.exist?(dir)
     FileUtils.cp(
       root.join("manifests/shared/spec/fixtures/environment-variables.yml"),
-      "#{dir}/environment-variables.yml",
+      "#{workdir}/environment-variables.yml",
     )
   end
 
