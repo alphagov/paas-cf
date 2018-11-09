@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /releases/name=capi
+  value:
+    name: capi
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/capi-0.1.1.tgz
+    sha1: d0072aa5990eeb055e95379299ab67a2b7f28275

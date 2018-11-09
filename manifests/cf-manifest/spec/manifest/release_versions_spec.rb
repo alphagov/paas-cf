@@ -15,7 +15,7 @@ RSpec.describe "release versions" do
   end
 
   specify "release versions match their download URL version" do
-    manifest_with_defaults.fetch("releases").each do |release|
+    manifest_without_vars_store.fetch("releases").each do |release|
       expect(release.fetch('version')).to match_version_from_url(release.fetch('url')),
         "expected release #{release['name']} version #{release['version']} to have matching version in URL: #{release['url']}"
     end
@@ -26,7 +26,7 @@ RSpec.describe "release versions" do
       Gem::Version.new(v.gsub(/^v/, '').gsub(/^([0-9]+)$/, '0.0.\1'))
     end
 
-    manifest_releases = manifest_with_defaults.fetch("releases").map { |release|
+    manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
       [release['name'], release['version']]
     }.to_h
 
@@ -36,6 +36,19 @@ RSpec.describe "release versions" do
       if manifest_releases.has_key? release['name']
         cf_deployment_release_version = release.fetch('version')
         manifest_release_version = manifest_releases[release['name']]
+
+
+        # Special case for capi-release. See commit message
+        if release['name'] == 'capi'
+          custom_capi_release_version = normalise_version('0.1.1')
+          expect(normalise_version(manifest_release_version)).to be(custom_capi_release_version),
+            "expected #{release['name']} to be using our own built tarball #{custom_capi_release_version} not #{manifest_release_version}"
+
+          expected_upstream_capi_release_version = normalise_version('1.71.0')
+          expect(normalise_version(cf_deployment_release_version)).to be(expected_upstream_capi_release_version),
+            "expected #{release['name']} upstream to be #{expected_upstream_capi_release_version} not #{cf_deployment_release_version}. We might need to rebase our forked capi-release repo and generate a new tarball"
+          next
+        end
 
         expect(normalise_version(manifest_release_version)).to be >= normalise_version(cf_deployment_release_version),
           "expected #{release['name']} release version #{manifest_release_version} not to be older than #{cf_deployment_release_version} as defined in cf-deployment"
