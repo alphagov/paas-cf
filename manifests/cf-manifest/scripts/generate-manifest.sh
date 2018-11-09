@@ -56,7 +56,6 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-service-discovery.yml" \
   --ops-file="${PROMETHEUS_DEPLOYMENT_DIR}/manifests/operators/cf/add-prometheus-uaa-clients.yml" \
   ${slim_dev_deployment} \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/disable-consul.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   "$@" \

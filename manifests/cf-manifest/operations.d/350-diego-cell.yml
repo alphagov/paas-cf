@@ -12,7 +12,17 @@
 
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=cflinuxfs2-rootfs-setup/properties/cflinuxfs2-rootfs/trusted_certs
-  value: ((aws_rds_combined_ca_bundle))
+  value: |
+    ((application_ca.certificate))
+    ((aws_rds_combined_ca_bundle))
+    ((uaa_ca.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs
+  value: |
+    ((application_ca.certificate))
+    ((aws_rds_combined_ca_bundle))
+    ((uaa_ca.certificate))
 
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden?/log_level
