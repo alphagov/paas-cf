@@ -26,6 +26,7 @@ users=$(curl \
 if jq -e '.resources | length != 1' <<< "$users" > /dev/null; then
   >&2 echo "$users"
   >&2 echo "Expected to find exactly one user for email $email"
+  exit 1
 fi
 
 user_guid=$(jq -r '.resources[0].id' <<< "$users")
