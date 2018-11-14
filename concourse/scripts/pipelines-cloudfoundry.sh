@@ -91,11 +91,9 @@ prepare_environment() {
   fi
 
   # shellcheck disable=SC2154
-  if [ -z "${pagerduty_spike_integration_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
-    echo "Could not retrieve intgration key for Pagerduty. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
+  if [ -z "${pagerduty_integration_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+    echo "Could not retrieve integration key for Pagerduty. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
     exit 1
-  else
-    echo "Could not retrieve intgration key for Pagerduty. Using default"
   fi
 
   # Note: this credential is not interpolated into the pipeline. It is used as a guard against forgetting
@@ -144,7 +142,7 @@ disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 datadog_api_key: "${datadog_api_key:-}"
 datadog_app_key: "${datadog_app_key:-}"
 aiven_api_token: ${aiven_api_token:-}
-pagerduty_spike_integration_key: "${pagerduty_spike_integration_key:-this-is-not-a-pagerduty-key}"
+pagerduty_integration_key: "${pagerduty_integration_key:-this-is-not-a-pagerduty-key}"
 enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: "${oauth_client_id:-}"

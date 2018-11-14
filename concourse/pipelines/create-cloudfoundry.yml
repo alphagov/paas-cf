@@ -105,8 +105,8 @@ resource_types:
 - name: pagerduty-notification-resource
   type: docker-image
   source:
-    repository: fidelityinternational/pagerduty-notification-resource
-    tag: latest
+    repository: governmentpaas/pagerduty-notification-resource
+    tag: 2018-11-15
 
 resources:
   - name: pipeline-trigger
