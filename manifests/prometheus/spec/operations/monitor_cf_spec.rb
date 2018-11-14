@@ -6,8 +6,8 @@ RSpec.describe "Monitor CF" do
     expect(firehose["networks"]).to eq([{ "name" => "cf" }])
   end
 
-  it "adds the cf_exporter job" do
-    expect(manifest_with_defaults.get("instance_groups.prometheus2.jobs.cf_exporter")).to_not be_nil
+  it "does not add the cf_exporter job" do
+    expect(manifest_with_defaults.get("instance_groups.prometheus2.jobs.cf_exporter")).to be_nil
   end
 
   it "adds the cloudfoundry_dashboards job" do
