@@ -372,12 +372,6 @@ resources:
       uri: https://github.com/alphagov/paas-admin
       tag_filter: v0.48.0
 
-  - name: paas-log-cache-adapter
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-log-cache-adapter
-      tag_filter: v0.6.0
-
   - name: prometheus-vars-store
     type: s3-iam
     source:
@@ -1392,7 +1386,6 @@ jobs:
       - get: paas-billing
       - get: paas-accounts
       - get: paas-admin
-      - get: paas-log-cache-adapter
 
     - task: retrieve-config
       config:
@@ -2104,13 +2097,12 @@ jobs:
                   cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
 
       - do:
-        - task: deploy-paas-log-cache-adapter
+        - task: remove-paas-log-cache-adapter
           config:
             platform: linux
             image_resource: *cf-cli-image-resource
             inputs:
               - name: paas-cf
-              - name: paas-log-cache-adapter
               - name: config
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
@@ -2126,24 +2118,7 @@ jobs:
                   cf auth "${CF_ADMIN}" "${CF_PASS}"
                   cf target -o admin -s monitoring
 
-                  cd paas-log-cache-adapter
-
-                  ruby -ryaml -e "
-                    env = {
-                      'LOG_CACHE_API' => 'https://log-cache.${SYSTEM_DNS_ZONE_NAME}',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] = {} unless app['env']
-                      app['env'].merge!(env)
-                      app['routes'] = [
-                        { 'route' => 'metrics.${SYSTEM_DNS_ZONE_NAME}' }
-                      ]
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
-
-                  cf zero-downtime-push paas-log-cache-adapter -f manifest.yml
+                  cf delete paas-log-cache-adapter -r -f
 
       - task: run-bosh-cleanup
         config:
