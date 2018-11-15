@@ -214,7 +214,7 @@ showenv: check-env ## Display environment information
 	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password prometheus_password
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-datadog-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets
+upload-all-secrets: upload-datadog-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
 
 .PHONY: upload-datadog-secrets
 upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
@@ -254,6 +254,13 @@ upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to S3
 	$(if ${LOGIT_PASSWORD_STORE_DIR},,$(error Must pass LOGIT_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${LOGIT_PASSWORD_STORE_DIR}),,$(error Password store ${LOGIT_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-logit-secrets.sh
+
+.PHONY: upload-pagerduty-secrets
+upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials to S3
+	$(eval export PAGERDUTY_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	$(if $(wildcard ${PAGERDUTY_PASSWORD_STORE_DIR}),,$(error Password store ${PAGERDUTY_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-pagerduty-secrets.sh
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check

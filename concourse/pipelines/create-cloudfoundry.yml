@@ -102,6 +102,12 @@ resource_types:
     repository: governmentpaas/semver-resource
     tag: ecbdd201e122b44de99a40ac9f24407c1a43b9a2
 
+- name: pagerduty-notification-resource
+  type: docker-image
+  source:
+    repository: governmentpaas/pagerduty-notification-resource
+    tag: 2018-11-15
+
 resources:
   - name: pipeline-trigger
     type: semver-iam
@@ -381,6 +387,11 @@ resources:
       region_name: ((aws_region))
       versioned_file: prometheus-vars-store.yml
       initial_version: "-"
+
+  - name: pagerduty-notify
+    type: pagerduty-notification-resource
+    source:
+      service_key: ((pagerduty_integration_key))
 
 jobs:
   - name: pipeline-lock
@@ -3345,27 +3356,19 @@ jobs:
             SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: smoke-tests-run
+          attempts: 3
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
+          params:
+            AWS_DEFAULT_REGION: ((aws_region))
+            DEPLOY_ENV: ((deploy_env))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+            EMAIL_ON_SMOKE_TEST_FAILURE: true
           on_failure:
-            task: alert
-            config:
-              platform: linux
-              image_resource: *awscli-image-resource
-              params:
-                AWS_DEFAULT_REGION: ((aws_region))
-                DEPLOY_ENV: ((deploy_env))
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-              inputs:
-                - name: paas-cf
-              run:
-                path: sh
-                args:
-                - -e
-                - -c
-                - |
-                  paas-cf/concourse/scripts/smoke_tests_email.sh \
-                    "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
+            put: pagerduty-notify
+            params:
+              action: trigger
+              description: "((deploy_env)) concourse continuous smoketests errors"
           ensure:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
