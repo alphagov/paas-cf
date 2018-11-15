@@ -507,29 +507,29 @@ jobs:
             params:
               file: generated-ipsec-CA/ipsec-CA.tar.gz
 
-      - task: generate-cf-secrets
-        config:
-          platform: linux
-          image_resource: *ruby-slim-image-resource
-          inputs:
-            - name: paas-cf
-            - name: cf-secrets
-          outputs:
-            - name: generated-cf-secrets
-          run:
-            path: sh
-            args:
-              - -c
-              - -e
-              - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                  --existing-secrets cf-secrets/cf-secrets.yml \
-                  > generated-cf-secrets/cf-secrets.yml
-                ls -l generated-cf-secrets
-        on_success:
-          put: cf-secrets
-          params:
-            file: generated-cf-secrets/cf-secrets.yml
+        - task: generate-cf-secrets
+          config:
+            platform: linux
+            image_resource: *ruby-slim-image-resource
+            inputs:
+              - name: paas-cf
+              - name: cf-secrets
+            outputs:
+              - name: generated-cf-secrets
+            run:
+              path: sh
+              args:
+                - -c
+                - -e
+                - |
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                    --existing-secrets cf-secrets/cf-secrets.yml \
+                    > generated-cf-secrets/cf-secrets.yml
+                  ls -l generated-cf-secrets
+          on_success:
+            put: cf-secrets
+            params:
+              file: generated-cf-secrets/cf-secrets.yml
 
   - name: pre-deploy
     plan:
