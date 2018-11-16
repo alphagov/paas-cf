@@ -169,22 +169,6 @@ resources:
       # This is an empty tar.gz file base64 encoded
       initial_content_binary: "H4sICMtSp1YAA2NvbmNvdXJzZS1jZXJ0cy50YXIA7cEBDQAAAMKg909tDjegAAAAAAAAAAAAgDcDmt4dJwAoAAA="
 
-  - name: ssh-private-key
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: id_rsa
-      region_name: ((aws_region))
-      initial_version: "-"
-
-  - name: ssh-public-key
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: id_rsa.pub
-      region_name: ((aws_region))
-      initial_version: "-"
-
   - name: git-ssh-private-key
     type: s3-iam
     source:
@@ -499,8 +483,6 @@ jobs:
             trigger: true
           - get: ipsec-CA
           - get: cf-secrets
-          - get: ssh-private-key
-          - get: ssh-public-key
       - aggregate:
         - task: generate-ipsec-CA
           config:
@@ -536,66 +518,29 @@ jobs:
             params:
               file: generated-ipsec-CA/ipsec-CA.tar.gz
 
-        - task: generate-deployments-ssh-keypair
+        - task: generate-cf-secrets
           config:
             platform: linux
-            image_resource: *git-ssh-image-resource
+            image_resource: *ruby-slim-image-resource
             inputs:
               - name: paas-cf
-              - name: ssh-private-key
-              - name: ssh-public-key
+              - name: cf-secrets
             outputs:
-              - name: generated-ssh-private-key
-              - name: generated-ssh-public-key
+              - name: generated-cf-secrets
             run:
               path: sh
               args:
-                - -e
                 - -c
+                - -e
                 - |
-                  if [ -s ssh-private-key/id_rsa ] ; then
-                    echo "Deployments private key non-zero size, skipping generation..."
-                    echo "Key uploads will fail and this is OK as no new keys have been generated."
-                    exit 0
-                  fi
-
-                  echo "Generating new ssh key pair for deployments..."
-                  ssh-keygen -t rsa -b 4096 -f id_rsa -N ''
-                  cp id_rsa generated-ssh-private-key
-                  cp id_rsa.pub generated-ssh-public-key
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
+                    --existing-secrets cf-secrets/cf-secrets.yml \
+                    > generated-cf-secrets/cf-secrets.yml
+                  ls -l generated-cf-secrets
           on_success:
-            try:
-              aggregate:
-                - put: ssh-private-key
-                  params:
-                    file: generated-ssh-private-key/id_rsa
-                - put: ssh-public-key
-                  params:
-                    file: generated-ssh-public-key/id_rsa.pub
-
-      - task: generate-cf-secrets
-        config:
-          platform: linux
-          image_resource: *ruby-slim-image-resource
-          inputs:
-            - name: paas-cf
-            - name: cf-secrets
-          outputs:
-            - name: generated-cf-secrets
-          run:
-            path: sh
-            args:
-              - -c
-              - -e
-              - |
-                ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                  --existing-secrets cf-secrets/cf-secrets.yml \
-                  > generated-cf-secrets/cf-secrets.yml
-                ls -l generated-cf-secrets
-        on_success:
-          put: cf-secrets
-          params:
-            file: generated-cf-secrets/cf-secrets.yml
+            put: cf-secrets
+            params:
+              file: generated-cf-secrets/cf-secrets.yml
 
   - name: pre-deploy
     plan:
