@@ -67,19 +67,21 @@ module ManifestHelpers
   end
 
   def manifest_for_prod
-    render_manifest_with_vars_store(
+    render_manifest(
       environment: "prod",
       enable_datadog: "false",
       disable_user_creation: "true",
       env_specific_manifest: "prod",
+      extra_args: [],
     )
   end
 
   def manifest_for_dev
-    render_manifest_with_vars_store(
+    render_manifest(
       environment: "dev",
       enable_datadog: "false",
       disable_user_creation: "true",
+      extra_args: [],
     )
   end
 

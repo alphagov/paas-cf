@@ -15,7 +15,7 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 51c4648c56a18e28a295e73963b65fdbfe76e52f
+        tag: a4abdc079caf1eccb11a6bd2c486469cd9d0362a
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
@@ -52,7 +52,6 @@ groups:
       - post-deploy
       - smoke-tests
       - acceptance-tests
-      - log-cache-acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
       - performance-tests
@@ -73,7 +72,6 @@ groups:
       - api-availability-tests
       - smoke-tests
       - acceptance-tests
-      - log-cache-acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
       - performance-tests
@@ -283,13 +281,13 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf4.5
+      branch: cf6.0
 
   - name: cf-smoke-tests-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-smoke-tests-release
-      tag_filter: "40.0.9"
+      tag_filter: "40.0.17"
       submodules:
       - "src/smoke_tests"
 
@@ -357,12 +355,6 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-admin
       tag_filter: v0.48.0
-
-  - name: paas-log-cache-adapter
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-log-cache-adapter
-      tag_filter: v0.6.0
 
   - name: prometheus-vars-store
     type: s3-iam
@@ -1339,7 +1331,6 @@ jobs:
       - get: paas-billing
       - get: paas-accounts
       - get: paas-admin
-      - get: paas-log-cache-adapter
 
     - task: retrieve-config
       config:
@@ -2051,13 +2042,12 @@ jobs:
                   cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
 
       - do:
-        - task: deploy-paas-log-cache-adapter
+        - task: remove-paas-log-cache-adapter
           config:
             platform: linux
             image_resource: *cf-cli-image-resource
             inputs:
               - name: paas-cf
-              - name: paas-log-cache-adapter
               - name: config
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
@@ -2073,24 +2063,7 @@ jobs:
                   cf auth "${CF_ADMIN}" "${CF_PASS}"
                   cf target -o admin -s monitoring
 
-                  cd paas-log-cache-adapter
-
-                  ruby -ryaml -e "
-                    env = {
-                      'LOG_CACHE_API' => 'https://log-cache.${SYSTEM_DNS_ZONE_NAME}',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] = {} unless app['env']
-                      app['env'].merge!(env)
-                      app['routes'] = [
-                        { 'route' => 'metrics.${SYSTEM_DNS_ZONE_NAME}' }
-                      ]
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
-
-                  cf zero-downtime-push paas-log-cache-adapter -f manifest.yml
+                  cf delete paas-log-cache-adapter -r -f
 
       - task: run-bosh-cleanup
         config:
@@ -2481,55 +2454,6 @@ jobs:
             params:
               DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
 
-  - name: log-cache-acceptance-tests
-    plan:
-      - aggregate:
-          - get: pipeline-trigger
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
-            trigger: true
-          - get: cf-acceptance-tests
-          - get: paas-cf
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
-          - get: cf-manifest
-            passed: ['post-deploy']
-          - get: cf-vars-store
-            passed: ['post-deploy']
-
-      - do:
-        - task: create-temp-user
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: acceptance-test-user
-            DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
-
-        - do:
-          - task: generate-test-config
-            file: paas-cf/concourse/tasks/generate-test-config.yml
-            params:
-              TEST_PROPERTIES: acceptance_log_cache_tests
-              APP_DOMAIN: ((apps_dns_zone_name))
-              SYSTEM_DOMAIN: ((system_dns_zone_name))
-          - task: run-log-cache-tests
-            timeout: 20m
-            config:
-              platform: linux
-              image_resource: *cf-acceptance-tests-image-resource
-              params:
-                DISABLE_CF_ACCEPTANCE_TESTS: ((disable_cf_acceptance_tests))
-                SKIP_REGEX: "exercises basic loggregator behavior|applies default environment variables while running apps and tasks|applies default environment variables while staging apps"
-              inputs:
-                - name: paas-cf
-                - name: cf-acceptance-tests
-                  path: src/github.com/cloudfoundry/cf-acceptance-tests
-                - name: test-config
-              run:
-                path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
-          ensure:
-            task: remove-temp-user
-            file: paas-cf/concourse/tasks/delete_admin.yml
-            params:
-              DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
-
   - name: custom-acceptance-tests
     plan:
       - aggregate:
@@ -2730,10 +2654,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'log-cache-acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
             trigger: true
           - get: paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'log-cache-acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: cf-manifest
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
           - get: cf-vars-store

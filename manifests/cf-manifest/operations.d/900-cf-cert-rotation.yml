@@ -267,6 +267,9 @@
   path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/server/tls/ca
   value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
 
+# /instance_groups/name=diego-cell/jobs/name=cflinuxfs2-rootfs-setup/properties/cflinuxfs2-rootfs/trusted_certs
+# /instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs
+
 - type: replace
   path: /variables/-
   value:

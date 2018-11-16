@@ -9,9 +9,8 @@ WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
 
-slim_dev_deployment=""
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
-  slim_dev_deployment="--ops-file=${CF_DEPLOYMENT_DIR}/operations/scale-to-one-az.yml"
+  opsfile_args="$opsfile_args -o ${CF_DEPLOYMENT_DIR}/operations/scale-to-one-az.yml"
 fi
 
 for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
@@ -26,7 +25,7 @@ if [ "${ENABLE_DATADOG}" = "true" ] ; then
 fi
 
 if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml"
+  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml"
 fi
 
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
@@ -55,8 +54,6 @@ bosh interpolate \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-service-discovery.yml" \
   --ops-file="${PROMETHEUS_DEPLOYMENT_DIR}/manifests/operators/cf/add-prometheus-uaa-clients.yml" \
-  ${slim_dev_deployment} \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/disable-consul.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   "$@" \
