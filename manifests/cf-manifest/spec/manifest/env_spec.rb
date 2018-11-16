@@ -1,6 +1,6 @@
 
 RSpec.describe "Environment specific configuration" do
-  let(:default_manifest) { manifest_with_defaults }
+  let(:default_manifest) { manifest_without_vars_store }
   let(:prod_manifest) { manifest_for_prod }
 
   def get_instance_group_instances(manifest, instance_group_name)
