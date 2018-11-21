@@ -3,9 +3,9 @@
   path: /releases/-
   value:
     name: rds-broker
-    version: 0.1.46
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.46.tgz
-    sha1: 9a8af95c8cae7cfcacb877ce71b2e8614150d639
+    version: 0.1.47
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-0.1.47.tgz
+    sha1: 16f467a6ae0fa3994ed0dd8e4199b2cbcfebf314
 
 - type: replace
   path: /instance_groups/-

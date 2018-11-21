@@ -17,7 +17,7 @@ import (
 var _ = Describe("Postgres backing service", func() {
 	const (
 		serviceName  = "postgres"
-		testPlanName = "tiny-unencrypted-9.5"
+		testPlanName = "tiny-unencrypted-10.5"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -40,6 +40,15 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-9.5"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-9.5"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-9.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-10.5"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-10.5"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-unencrypted-9.5"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-ha-unencrypted-9.5"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-unencrypted-9.5"))
