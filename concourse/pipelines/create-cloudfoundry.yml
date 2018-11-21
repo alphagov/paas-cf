@@ -342,7 +342,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: v0.44.0
+      tag_filter: v0.46.0
 
   - name: paas-accounts
     type: git
@@ -1897,19 +1897,38 @@ jobs:
                     'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
                   }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
+
+                  api = YAML.load_file('manifest-api.yml')
+                  api['applications'].each { |app|
                     app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
+                    app['env'] = app['env'].merge(env)
                     app['services'] = ['billing-db']
                     app['routes'] = [
                       { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
                     ]
                   }
-                  File.write('manifest.yml', manifest.to_yaml)
+                  File.write('manifest-api.yml', api.to_yaml)
+
+                  collector = YAML.load_file('manifest-collector.yml')
+                  collector['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = ['billing-db']
+                  }
+                  File.write('manifest-collector.yml', collector.to_yaml)
                 "
 
-                cf push paas-billing
+                # FIXME: remove this once all production envs have run this at
+                # least once. It's harmless to leave here, however.
+                cf rename paas-billing paas-billing-collector || true
+
+                cf zero-downtime-push \
+                  paas-billing-api \
+                  -f manifest-api.yml
+
+                cf push \
+                  paas-billing-collector \
+                  -f manifest-collector.yml
 
       - task: deploy-paas-accounts
         config:
