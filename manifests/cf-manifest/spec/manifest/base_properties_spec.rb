@@ -5,8 +5,12 @@ RSpec.describe "base properties" do
     expect(manifest["name"]).to eq(terraform_fixture(:environment))
   end
 
-  it "has global max_in_flight set to 1" do
-    expect(manifest["update"].fetch("max_in_flight")).to eq(1)
+  it "has global max_in_flight set to 30%" do
+    expect(manifest["update"].fetch("max_in_flight")).to eq('30%')
+  end
+
+  it "has global canaries set to 1" do
+    expect(manifest["update"].fetch("canaries")).to eq(1)
   end
 
   it "does not have meta top level key" do
