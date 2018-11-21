@@ -34,6 +34,9 @@ cleanup() {
 }
 trap 'cleanup' EXIT
 
+mkdir -p "${HOME}/.cf/plugins" "${CF_HOME}/.cf"
+ln -s "${HOME}/.cf/plugins" "${CF_HOME}/.cf/plugins"
+
 export CF_HOME
 export CF_SUBSHELL_TARGET=$TARGET
 
