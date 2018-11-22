@@ -109,3 +109,18 @@ resource "datadog_monitor" "cc_gorouter_latency" {
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
 
+resource "datadog_monitor" "cc_gorouter_unregistry" {
+  name                = "${format("%s Cloud Controller is unregistering from gorouter", var.env)}"
+  type                = "query alert"
+  message             = "${format("Cloud Controller is unregistering from gorouter, this probably means it is failing its route_registrar healthcheck. This could be due to high load, and may indicate that the API servers need to be scaled up @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  require_full_window = false
+
+  query = "${format("max(last_10m):per_hour(avg:cf.gorouter.unregistry_message.CloudController{deployment:%s}) > 10", var.env)}"
+
+  thresholds {
+    warning  = "5"
+    critical = "10"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
+}
