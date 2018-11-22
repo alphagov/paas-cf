@@ -1624,6 +1624,28 @@ jobs:
                   cf curl /v2/shared_domains -d '{"name": "apps.internal", "internal": true}'
                 fi
 
+      - task: set-uaa-idp-email-domains
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-vars-store
+          params:
+            LOGIN_URL: https://login.((system_dns_zone_name))
+            UAA_URL: https://uaa.((system_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                export UAA_ADMIN_CLIENT_SECRET
+                UAA_ADMIN_CLIENT_SECRET=$(./paas-cf/concourse/scripts/val_from_yaml.rb uaa_admin_client_secret cf-vars-store/cf-vars-store.yml)
+
+                ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
+
     - aggregate:
       - task: block-create-account-endpoints
         config:
