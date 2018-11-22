@@ -13,4 +13,11 @@ RSpec.describe "Environment specific configuration" do
 
     expect(default_cell_instances).to be < prod_cell_instances
   end
+
+  it "should allow a higher number of instances of API servers in production" do
+    default_api_instances = get_instance_group_instances(default_manifest, "api")
+    prod_api_instances = get_instance_group_instances(prod_manifest, "api")
+
+    expect(default_api_instances).to be < prod_api_instances
+  end
 end
