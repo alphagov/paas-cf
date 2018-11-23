@@ -92,3 +92,35 @@ resource "datadog_monitor" "cc_job_queue_length" {
 
   tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
 }
+
+resource "datadog_monitor" "cc_gorouter_latency" {
+  name                = "${format("%s Cloud Controller latency as reported by gorouter", var.env)}"
+  type                = "query alert"
+  message             = "${format("Average latency of cloud controller calls is high - this may be due to a high proportion of expensive API calls or it may indicate that the API servers need to be scaled up @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  require_full_window = false
+
+  query = "${format("avg(last_10m):max:cf.gorouter.latency.CloudController{deployment:%s} by {ip} > 200", var.env)}"
+
+  thresholds {
+    warning  = "150"
+    critical = "200"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
+}
+
+resource "datadog_monitor" "cc_gorouter_unregistry" {
+  name                = "${format("%s Cloud Controller is unregistering from gorouter", var.env)}"
+  type                = "query alert"
+  message             = "${format("Cloud Controller is unregistering from gorouter, this probably means it is failing its route_registrar healthcheck. This could be due to high load, and may indicate that the API servers need to be scaled up @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.aws_account)}"
+  require_full_window = false
+
+  query = "${format("max(last_10m):per_hour(avg:cf.gorouter.unregistry_message.CloudController{deployment:%s}) > 10", var.env)}"
+
+  thresholds {
+    warning  = "5"
+    critical = "10"
+  }
+
+  tags = ["deployment:${var.env}", "service:${var.env}_monitors", "job:api"]
+}
