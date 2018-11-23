@@ -262,6 +262,13 @@ upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials 
 	$(if $(wildcard ${PAGERDUTY_PASSWORD_STORE_DIR}),,$(error Password store ${PAGERDUTY_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-pagerduty-secrets.sh
 
+.PHONY: upload-alertmanager-pagerduty-secrets
+upload-alertmanager-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials to S3
+	$(eval export ALERTMANAGER_PAGERDUTY_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	$(if $(wildcard ${ALERTMANAGER_PAGERDUTY_PASSWORD_STORE_DIR}),,$(error Password store ${ALERTMANAGER_PAGERDUTY_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-alertmanager-pagerduty-secrets.sh
+
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))

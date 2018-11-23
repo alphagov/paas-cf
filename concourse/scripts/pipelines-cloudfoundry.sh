@@ -24,6 +24,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 # shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/pagerduty.sh"
 
+# shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/alertmanager-pagerduty.sh"
+
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
@@ -64,6 +67,7 @@ prepare_environment() {
   get_notify_secrets
   get_logit_ca_cert
   get_pagerduty_secrets
+  get_alertmanager_pagerduty_secrets
 
   if [ -n "${SLIM_DEV_DEPLOYMENT:-}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
     echo "SLIM_DEV_DEPLOYMENT set for non-dev deployment. Aborting!"
@@ -93,6 +97,12 @@ prepare_environment() {
   # shellcheck disable=SC2154
   if [ -z "${pagerduty_integration_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
     echo "Could not retrieve integration key for Pagerduty. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
+    exit 1
+  fi
+
+  # shellcheck disable=SC2154
+  if [ -z "${alertmanager_pagerduty_integration_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+    echo "Could not retrieve integration key for Pagerduty. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-alertmanager-pagerduty-secrets\`?"
     exit 1
   fi
 
@@ -143,6 +153,7 @@ datadog_api_key: "${datadog_api_key:-}"
 datadog_app_key: "${datadog_app_key:-}"
 aiven_api_token: ${aiven_api_token:-}
 pagerduty_integration_key: "${pagerduty_integration_key:-this-is-not-a-pagerduty-key}"
+alertmanager_pagerduty_integration_key: "${alertmanager_pagerduty_integration_key:-this-is-not-a-pagerduty-key}"
 enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: "${oauth_client_id:-}"

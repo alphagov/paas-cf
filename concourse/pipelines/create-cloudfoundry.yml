@@ -1297,6 +1297,7 @@ jobs:
                 traffic_controller_external_port: 443
                 uaa_clients_cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
                 uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
+                alertmanager_pagerduty_service_key: ((alertmanager_pagerduty_integration_key))
                 aws_account: ((aws_account))
                 EOF
 

@@ -18,6 +18,14 @@
       notify: ".*email.*"
 
 - type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/route/routes?/-
+  value:
+    receiver: pagerduty-receiver
+    continue: true
+    match_re:
+      notify: ".*pagerduty.*"
+
+- type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
   value:
     name: default-receiver
@@ -30,3 +38,10 @@
     - send_resolved: true
       from: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
       to: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: 'pagerduty-receiver'
+    pagerduty_configs:
+    - service_key: "((alertmanager_pagerduty_service_key))"
