@@ -1,0 +1,32 @@
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/route?
+  value:
+    receiver: default-receiver
+    group_by:
+    # FIXME: not sure about these values
+    - deployment
+    group_wait: 30s
+    group_interval: 1m
+    repeat_interval: 1h
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/route/routes?/-
+  value:
+    receiver: email-receiver
+    continue: true
+    match_re:
+      notify: ".*email.*"
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: default-receiver
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: 'email-receiver'
+    email_configs:
+    - send_resolved: true
+      from: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
+      to: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
