@@ -11,10 +11,21 @@ for i in "${PAAS_CF_DIR}"/manifests/prometheus/operations.d/*.yml; do
   opsfile_args+="-o $i "
 done
 
+alerts_opsfile_args=""
+for i in "${PAAS_CF_DIR}"/manifests/prometheus/alerts.d/*.yml; do
+  alerts_opsfile_args+="-o $i "
+done
+
+vars_files=""
+for i in ${VARS_FILES}; do
+  vars_files+="--vars-file $i "
+done
+
 # shellcheck disable=SC2086
 bosh interpolate \
   --var-errs \
   --vars-store "${VARS_STORE}" \
-  --vars-file "${VARS_FILE}" \
+  ${vars_files} \
   ${opsfile_args} \
+  ${alerts_opsfile_args} \
   "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"
