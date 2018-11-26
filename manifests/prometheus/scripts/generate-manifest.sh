@@ -17,6 +17,7 @@ for i in "${PAAS_CF_DIR}"/manifests/prometheus/alerts.d/*.yml; do
 done
 
 vars_files=""
+# shellcheck disable=SC2153
 for i in ${VARS_FILES}; do
   vars_files+="--vars-file $i "
 done
