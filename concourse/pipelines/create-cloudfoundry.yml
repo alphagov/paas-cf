@@ -1998,8 +1998,7 @@ jobs:
 
                   echo "Uploading $file"
 
-                  # Create a JSON payload of the form {"content":"..."}
-                  body=$(echo '{}' | jq --compact-output --arg content "$(cat "$file")" '{ content: $content }')
+                  body=$(ruby -rjson -e "puts ({content:File.read('$file')}).to_json")
 
                   curl --silent --fail --include \
                     --request PUT \
