@@ -158,3 +158,33 @@ func CopyMetrics(dst MetricWriter, src MetricReader) error {
 		}
 	}
 }
+
+// MultiMetricWriter is a writer which forwards the received events to multiple writers
+type MultiMetricWriter struct {
+	writers []MetricWriter
+}
+
+// NewMultiMetricWriter creates a new MultiMetricWriter instance
+func NewMultiMetricWriter(writers ...MetricWriter) *MultiMetricWriter {
+	return &MultiMetricWriter{
+		writers: writers,
+	}
+}
+
+// AddWriter registers a new writer
+func (m *MultiMetricWriter) AddWriter(writer MetricWriter) {
+	m.writers = append(m.writers, writer)
+}
+
+// WriteMetrics forwards the received events to the registered writers
+func (m *MultiMetricWriter) WriteMetrics(metrics []Metric) error {
+	var errs error
+	for _, writer := range m.writers {
+		err := writer.WriteMetrics(metrics)
+		if err != nil {
+			errs = multierror.Append(errs, err)
+		}
+	}
+
+	return errs
+}
