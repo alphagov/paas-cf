@@ -2,9 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	multierror "github.com/hashicorp/go-multierror"
 )
 
 const (
@@ -41,6 +44,18 @@ type Metric struct {
 	Time  time.Time
 	Value float64
 	Tags  []string
+}
+
+func (m Metric) String() string {
+	return fmt.Sprintf(
+		"[%s] id=%s %s:%s=%.04f (%s)",
+		m.Time.Format("2006-01-02T15:04:05-0700"),
+		m.ID,
+		m.Kind,
+		m.Name,
+		m.Value,
+		strings.Join(m.Tags, ","),
+	)
 }
 
 type PollFunc func(MetricWriter) error
