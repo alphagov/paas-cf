@@ -54,8 +54,8 @@ func (c *AivenClient) GetInvoices() ([]AivenInvoice, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-    if resp.StatusCode != http.StatusOK {
-    	return nil, fmt.Errorf("Returned statuscode from aiven %d", resp.StatusCode)
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Returned statuscode from aiven %d", resp.StatusCode)
 	}
 	bodyBuffer, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -79,7 +79,6 @@ func AivenCostGauge(client *AivenClient, interval time.Duration) MetricReadClose
 			return err
 		}
 
-		fmt.Println(invoices)
 		for _, invoice := range invoices {
 			if invoice.State == "estimate" {
 				currentCost, err := strconv.ParseFloat(invoice.Cost, 64)
