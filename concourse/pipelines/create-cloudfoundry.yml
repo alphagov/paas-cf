@@ -1968,6 +1968,7 @@ jobs:
                   done
                 fi
 
+                (
                 cd paas-accounts
 
                 ruby -ryaml -e "
@@ -1987,6 +1988,28 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
                 cf push paas-accounts
+                )
+
+                (
+                echo "Uploading documents"
+                cd paas-cf/config/accounts/documents
+
+                for file in *.md; do
+
+                  echo "Uploading $file"
+
+                  # Create a JSON payload of the form {"content":"..."}
+                  body=$(echo '{}' | jq --compact-output --arg content "$(cat "$file")" '{ content: $content }')
+
+                  curl --silent --fail --include \
+                    --request PUT \
+                    --user "admin:${BASIC_AUTH_PASSWORD}" \
+                    --header "Content-Type: application/json" \
+                    --data "$body" \
+                    "https://accounts.${SYSTEM_DNS_ZONE_NAME}/documents/${file%.md}"
+
+                done
+                )
 
       - do:
         - task: build-paas-admin
