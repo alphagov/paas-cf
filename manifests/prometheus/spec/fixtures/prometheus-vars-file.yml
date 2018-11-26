@@ -16,3 +16,5 @@ system_domain: example.com
 traffic_controller_external_port: 443
 uaa_clients_cf_exporter_secret: secret
 uaa_clients_firehose_exporter_secret: secret
+alertmanager_pagerduty_service_key: 1234567890
+aws_account: dev
