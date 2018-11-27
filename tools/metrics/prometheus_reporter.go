@@ -9,12 +9,12 @@ import (
 
 // PrometheusReporter is translating events into Prometheus metrics
 type PrometheusReporter struct {
-	registry   *prometheus.Registry
+	registry   prometheus.Registerer
 	metricVecs map[string]interface{}
 }
 
 // NewPrometheusReporter creates a new PrometheusReporter instance
-func NewPrometheusReporter(registry *prometheus.Registry) *PrometheusReporter {
+func NewPrometheusReporter(registry prometheus.Registerer) *PrometheusReporter {
 	return &PrometheusReporter{
 		registry:   registry,
 		metricVecs: map[string]interface{}{},
