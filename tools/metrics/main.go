@@ -74,11 +74,10 @@ func Main() error {
 
 	// create a client
 	c, err := NewClient(ClientConfig{
-		ApiAddress:        os.Getenv("CF_API_ADDRESS"),
-		ClientID:          os.Getenv("CF_CLIENT_ID"),
-		ClientSecret:      os.Getenv("CF_CLIENT_SECRET"),
-		SkipSslValidation: os.Getenv("CF_SKIP_SSL_VALIDATION") == "true",
-		Logger:            logger,
+		ApiAddress:   os.Getenv("CF_API_ADDRESS"),
+		ClientID:     os.Getenv("CF_CLIENT_ID"),
+		ClientSecret: os.Getenv("CF_CLIENT_SECRET"),
+		Logger:       logger,
 	})
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")

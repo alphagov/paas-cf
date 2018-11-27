@@ -46,7 +46,6 @@ cf set-env paas-metrics CF_CLIENT_SECRET "SECRET"           # UAA client secret
 cf set-env paas-metrics AWS_REGION "eu-west-1"              # AWS region your CloudFront distributions are in
 cf set-env paas-metrics AWS_ACCESS_KEY_ID "access_key"      # Key for a user capable of listing CloudFront distributions
 cf set-env paas-metrics AWS_SECRET_ACCESS_KEY "secret"      # Secret key for the user above
-cf set-env paas-metrics CF_SKIP_SSL_VALIDATION "true"       # [OPTIONAL] set to true if insecure
 cf set-env paas-metrics LOG_LEVEL "0"                       # [OPTIONAL] set to 0 for more detailed logs
 cf set-env paas-metrics DEPLOY_ENV "prod"                   # [OPTIONAL] set to tag metrics with env
 cf set-env paas-metrics TLS_DOMAINS "ssl1.com,ssl2.com"     # [OPTIONAL] csv list of domains to monitor TLS certs for

@@ -2352,7 +2352,6 @@ jobs:
                     'CF_CLIENT_ID' => 'paas-metrics',
                     'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                    'CF_SKIP_SSL_VALIDATION' => 'true',
                     'DATADOG_API_KEY' => '${DATADOG_API_KEY:-}',
                     'DATADOG_APP_KEY' => '${DATADOG_APP_KEY:-}',
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
