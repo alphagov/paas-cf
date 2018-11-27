@@ -21,16 +21,6 @@ import (
 	"code.cloudfoundry.org/lager"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Cache-Control", "max-age=0,no-store,no-cache")
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(struct {
-		OK bool
-	}{
-		OK: true,
-	})
-}
-
 func initPrometheus() (*prometheus.Registry, http.Handler) {
 	registry := prometheus.NewRegistry()
 	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
@@ -54,7 +44,16 @@ func getHTTPPort() int {
 func runHTTPServer(port int, metricsHandler http.Handler) {
 	addr := fmt.Sprintf(":%d", port)
 
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "max-age=0,no-store,no-cache")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(struct {
+			OK bool
+		}{
+			OK: true,
+		})
+	})
+
 	http.Handle("/metrics", metricsHandler)
 
 	go http.ListenAndServe(addr, nil)
