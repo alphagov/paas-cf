@@ -1273,6 +1273,7 @@ jobs:
                 uaa_bosh_exporter_client_secret: ((secrets.bosh_bosh_exporter_password))
                 bosh_ca_cert: ((bosh_ca_cert))
                 system_domain: $SYSTEM_DNS_ZONE_NAME
+                app_domain: ((apps_dns_zone_name))
                 metron_deployment_name: $METRON_DEPLOYMENT_NAME
                 skip_ssl_verify: false
                 traffic_controller_external_port: 443
@@ -1280,7 +1281,6 @@ jobs:
                 uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
                 aws_account: ((aws_account))
                 EOF
-
 
                 ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
                   > prometheus-manifest/prometheus-manifest.yml

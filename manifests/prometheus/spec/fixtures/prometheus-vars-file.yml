@@ -13,6 +13,7 @@ bosh_ca_cert: |
 metron_deployment_name: dev
 skip_ssl_verify: false
 system_domain: example.com
+app_domain: apps.example.com
 traffic_controller_external_port: 443
 uaa_clients_cf_exporter_secret: secret
 uaa_clients_firehose_exporter_secret: secret
