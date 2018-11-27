@@ -90,6 +90,7 @@ func AivenCostGauge(client *AivenClient, interval time.Duration) MetricReadClose
 					Time:  time.Now(),
 					Name:  "aiven.estimated.cost",
 					Value: currentCost,
+					Unit:  "pounds",
 				})
 			}
 		}

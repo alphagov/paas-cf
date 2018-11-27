@@ -52,30 +52,35 @@ func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
 				Time:  time.Now(),
 				Name:  "op.quota.services.reserved", // number of services reserved by quotas
 				Value: float64(reservedServices),
+				Unit:  "count",
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.services.allocated", // number of services in use
 				Value: float64(allocatedServices),
+				Unit:  "count",
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.memory.reserved", // memory reserved by org quotas
 				Value: float64(reservedMemory),
+				Unit:  "megabytes",
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.memory.allocated", // memory allocated to apps
 				Value: float64(allocatedMemory),
+				Unit:  "megabytes",
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.routes.reserved", // number of routes reserved
 				Value: float64(reservedRoutes),
+				Unit:  "count",
 			},
 		})
 	})
@@ -177,6 +182,7 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 						"state:" + state,
 						fmt.Sprintf("trial_org:%t", orgIsTrial),
 					},
+					Unit: "count",
 				})
 			}
 		}
@@ -275,6 +281,7 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 							fmt.Sprintf("trial_org:%t", orgIsTrial),
 							fmt.Sprintf("free_service:%t", servicePlanIsFree),
 						},
+						Unit: "count",
 					})
 				}
 			}
@@ -309,6 +316,7 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				Name:  "op.orgs.count",
 				Value: float64(count),
 				Tags:  []string{"quota:" + name},
+				Unit:  "count",
 			})
 		}
 		return w.WriteMetrics(metrics)
@@ -327,6 +335,7 @@ func SpaceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				Time:  time.Now(),
 				Name:  "op.spaces.count",
 				Value: float64(len(spaces)),
+				Unit:  "count",
 			},
 		})
 	})
@@ -350,6 +359,7 @@ func EventCountGauge(c *Client, eventType string, interval time.Duration) Metric
 			Time: time.Now(),
 			Kind: Gauge,
 			Name: "op.events." + eventType,
+			Unit: "count",
 		}
 		for batchUrl != "" {
 			var batch struct {

@@ -28,12 +28,14 @@ func ELBNodeFailureCountGauge(logger lager.Logger, config pingdumb.ReportConfig,
 				Time:  time.Now(),
 				Name:  "aws.elb.unhealthy_node_count",
 				Value: float64(len(failures)),
+				Unit:  "count",
 			},
 			{
 				Kind:  Gauge,
 				Time:  time.Now(),
 				Name:  "aws.elb.healthy_node_count",
 				Value: float64(len(r.Checks) - len(failures)),
+				Unit:  "count",
 			},
 		})
 	})

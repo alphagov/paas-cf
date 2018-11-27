@@ -37,6 +37,12 @@ func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
 
 		metricName := strings.Replace(event.Name, ".", "_", -1)
 
+		if event.Unit != "" {
+			if !strings.HasSuffix(metricName, event.Unit) {
+				metricName = metricName + "_" + strings.ToLower(event.Unit)
+			}
+		}
+
 		switch event.Kind {
 		case Counter:
 			vec, exists := p.metricVecs[event.Name]

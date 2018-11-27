@@ -44,16 +44,18 @@ type Metric struct {
 	Time  time.Time
 	Value float64
 	Tags  []string
+	Unit  string
 }
 
 func (m Metric) String() string {
 	return fmt.Sprintf(
-		"[%s] id=%s %s:%s=%.04f (%s)",
+		"[%s] id=%s %s:%s=%.04f %s (%s)",
 		m.Time.Format("2006-01-02T15:04:05-0700"),
 		m.ID,
 		m.Kind,
 		m.Name,
 		m.Value,
+		m.Unit,
 		strings.Join(m.Tags, ","),
 	)
 }

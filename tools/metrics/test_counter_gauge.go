@@ -10,6 +10,7 @@ func TestCounterGauge(interval time.Duration) MetricReadCloser {
 			Time:  time.Now(),
 			Name:  "test.counter",
 			Value: 1,
+			Unit:  "count",
 		})
 		return w.WriteMetrics(metrics)
 	})
