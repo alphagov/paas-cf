@@ -1,0 +1,7 @@
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/smtp?
+  value:
+    smarthost:  ((terraform_outputs_ses_smtp_host)):587
+    auth_username: ((terraform_outputs_ses_smtp_aws_access_key_id))
+    auth_password: ((terraform_outputs_ses_smtp_password))
+    require_tls: true
