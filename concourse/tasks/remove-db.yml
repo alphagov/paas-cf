@@ -29,6 +29,9 @@ run:
         exit 0
       fi
       if cf services | grep -q "${DB_NAME}"; then
-        cf unbind-service "${BOUND_APP}" "${DB_NAME}" || true
+        # shellcheck disable=SC2153
+        for app in ${BOUND_APPS}; do
+          cf unbind-service "${app}" "${DB_NAME}" || true
+        done
         cf delete-service "${DB_NAME}" -f
       fi
