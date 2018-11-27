@@ -163,7 +163,7 @@ jobs:
           ORG: admin
           SPACE: healthchecks
           DB_NAME: healthcheck-db
-          BOUND_APP: healthcheck
+          BOUND_APPS: healthcheck
 
       - task: remove-billing-db
         file: paas-cf/concourse/tasks/remove-db.yml
@@ -171,7 +171,7 @@ jobs:
           ORG: admin
           SPACE: billing
           DB_NAME: billing-db
-          BOUND_APP: paas-billing
+          BOUND_APPS: paas-billing-api paas-billing-collector
 
       - task: remove-accounts-db
         file: paas-cf/concourse/tasks/remove-db.yml
@@ -179,7 +179,7 @@ jobs:
           ORG: admin
           SPACE: billing
           DB_NAME: accounts-db
-          BOUND_APP: paas-accounts
+          BOUND_APPS: paas-accounts
 
       - task: datadog-TF-destroy
         file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
