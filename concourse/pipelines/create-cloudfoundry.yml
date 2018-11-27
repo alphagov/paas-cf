@@ -1222,6 +1222,26 @@ jobs:
           - get: bosh-secrets
           - get: bosh-CA-crt
           - get: cf-vars-store
+          - get: cf-tfstate
+
+      - task: extract-terraform-outputs
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          outputs:
+            - name: terraform-outputs
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                  < cf-tfstate/cf.tfstate \
+                  > terraform-outputs/cf.yml
 
       - task: generate-prometheus-manifest
         config:
@@ -1233,6 +1253,7 @@ jobs:
             - name: bosh-secrets
             - name: bosh-CA-crt
             - name: cf-vars-store
+            - name: terraform-outputs
           outputs:
             - name: prometheus-manifest
             - name: prometheus-vars-store-updated
@@ -1251,7 +1272,10 @@ jobs:
               - |
                 cp prometheus-vars-store/prometheus-vars-store.yml "${VARS_STORE}"
 
-                export VARS_FILE=./prometheus-vars-file.yml
+                export VARS_FILES="
+                  ./prometheus-vars-file.yml
+                  ./terraform-outputs/cf.yml
+                "
 
                 bosh interpolate - \
                   --var-errs \
@@ -1271,6 +1295,7 @@ jobs:
                 traffic_controller_external_port: 443
                 uaa_clients_cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
                 uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
+                aws_account: ((aws_account))
                 EOF
 
 

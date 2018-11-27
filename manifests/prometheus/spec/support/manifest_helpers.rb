@@ -22,7 +22,10 @@ private
     env = {
       'PAAS_CF_DIR' => root.to_s,
       'VARS_STORE' => vars_store.path,
-      'VARS_FILE' => "#{root}/manifests/prometheus/spec/fixtures/prometheus-vars-file.yml",
+      'VARS_FILES' => [
+        "#{root}/manifests/prometheus/spec/fixtures/prometheus-vars-file.yml",
+        "#{root}/manifests/shared/spec/fixtures/terraform/cf.yml",
+      ].join(' ')
     }
     output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus/scripts/generate-manifest.sh")
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
