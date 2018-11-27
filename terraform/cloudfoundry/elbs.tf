@@ -118,7 +118,7 @@ resource "aws_elb" "cf_router" {
     instance_protocol  = "ssl"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "${data.aws_acm_certificate.apps.arn}"
+    ssl_certificate_id = "${aws_acm_certificate_validation.apps.certificate_arn}"
   }
 
   listener {
