@@ -13,3 +13,13 @@
       annotations:
         summary: Syslog drains
         description: "Consider scaling the adapters to cope with the number of syslog drains."
+    - alert: CFSyslogDrainsCritical
+      expr: firehose_value_metric_cf_syslog_drain_scheduler_drains > 300
+      labels:
+        deployment: ((metrics_environment))
+        severity: critical
+        notify: email
+        runbook: "https://github.com/cloudfoundry/cf-syslog-drain-release/tree/v6.4#syslog-adapter"
+      annotations:
+        summary: Syslog drains
+        description: "Consider scaling the adapters to cope with the number of syslog drains."
