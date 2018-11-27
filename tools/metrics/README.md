@@ -89,6 +89,12 @@ You could then consume it by copying the metrics to a writer using CopyMetrics:
 _ = CopyMetrics(reporter, RandomMetric)
 ```
 
+### Debugging
+
+If you run the app with `DEBUG=1` it will write all metrics to the stdout.
+
+If you want to disable the DataDog reporter you can pass `DISABLE_DATADOG=1`.
+
 ### Running tests
 
 You can execute tests with the standard go test command from this dir:

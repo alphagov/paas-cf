@@ -6,8 +6,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
 	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
@@ -27,15 +31,40 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func server() error {
-	addr := ":" + os.Getenv("PORT")
+func initPrometheus() (*prometheus.Registry, http.Handler) {
+	registry := prometheus.NewRegistry()
+	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
+	return registry, handler
+}
+
+func getHTTPPort() int {
+	portStr := os.Getenv("PORT")
+	if portStr != "" {
+		port, err := strconv.Atoi(portStr)
+		if err != nil {
+			log.Fatalln("PORT is invalid")
+			return 0
+		}
+		return port
+	}
+
+	return 8080
+}
+
+func runHTTPServer(port int, metricsHandler http.Handler) {
+	addr := fmt.Sprintf(":%d", port)
+
 	http.HandleFunc("/", handler)
-	return http.ListenAndServe(addr, nil)
+	http.Handle("/metrics", metricsHandler)
+
+	go http.ListenAndServe(addr, nil)
 }
 
 func Main() error {
-	// serve something
-	go server()
+	prometheusRegistry, prometheusHandler := initPrometheus()
+
+	runHTTPServer(getHTTPPort(), prometheusHandler)
+
 	// create a logger
 	logger := lager.NewLogger("metrics")
 	logLevel := lager.INFO
@@ -43,6 +72,7 @@ func Main() error {
 		logLevel = lager.DEBUG
 	}
 	logger.RegisterSink(lager.NewWriterSink(os.Stdout, logLevel))
+
 	// create a client
 	c, err := NewClient(ClientConfig{
 		ApiAddress:        os.Getenv("CF_API_ADDRESS"),
@@ -54,6 +84,7 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
+
 	a, err := NewAivenClient(
 		os.Getenv("AIVEN_PROJECT"),
 		os.Getenv("AIVEN_API_TOKEN"),
@@ -61,10 +92,12 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to get Aiven connection data")
 	}
+
 	sess, err := session.NewSession()
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to AWS API")
 	}
+
 	cfs := NewCloudFrontService(sess)
 	tlsChecker := &tlscheck.TLSChecker{}
 
@@ -92,18 +125,31 @@ func Main() error {
 	}
 	metrics := NewMultiMetricReader(gauges...)
 	defer metrics.Close()
-	// create a reporter
-	reporter := NewDatadogReporter(DatadogConfig{
-		ApiKey:        os.Getenv("DATADOG_API_KEY"),
-		AppKey:        os.Getenv("DATADOG_APP_KEY"),
-		Logger:        logger,
-		BatchSize:     100,
-		BatchInterval: 60 * time.Second,
-		Tags:          []string{"deploy_env:" + os.Getenv("DEPLOY_ENV")},
-	})
-	// copy all the metrics to the reporter
+
+	prometheusReporter := NewPrometheusReporter(prometheusRegistry)
+
+	multiWriter := NewMultiMetricWriter(
+		prometheusReporter,
+	)
+
+	if os.Getenv("DISABLE_DATADOG") != "1" {
+		dataDogreporter := NewDatadogReporter(DatadogConfig{
+			ApiKey:        os.Getenv("DATADOG_API_KEY"),
+			AppKey:        os.Getenv("DATADOG_APP_KEY"),
+			Logger:        logger,
+			BatchSize:     100,
+			BatchInterval: 60 * time.Second,
+			Tags:          []string{"deploy_env:" + os.Getenv("DEPLOY_ENV")},
+		})
+		multiWriter.AddWriter(dataDogreporter)
+	}
+
+	if os.Getenv("DEBUG") == "1" {
+		multiWriter.AddWriter(StdOutWriter{})
+	}
+
 	for {
-		if err := CopyMetrics(reporter, metrics); err != nil {
+		if err := CopyMetrics(multiWriter, metrics); err != nil {
 			logger.Error("error-streaming-metrics", err)
 		}
 	}
