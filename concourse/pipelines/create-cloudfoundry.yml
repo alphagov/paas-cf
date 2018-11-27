@@ -1251,7 +1251,9 @@ jobs:
               - |
                 cp prometheus-vars-store/prometheus-vars-store.yml "${VARS_STORE}"
 
-                export VARS_FILE=./prometheus-vars-file.yml
+                export VARS_FILES="
+                  ./prometheus-vars-file.yml
+                "
 
                 bosh interpolate - \
                   --var-errs \
