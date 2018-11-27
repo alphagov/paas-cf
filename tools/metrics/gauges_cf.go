@@ -300,6 +300,9 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 		}
 		metrics := []Metric{}
 		for name, count := range counters {
+			if strings.HasPrefix(name, "ACC-") || strings.HasPrefix(name, "CATS-") || strings.HasPrefix(name, "SMOKE-") {
+				continue
+			}
 			metrics = append(metrics, Metric{
 				Kind:  Gauge,
 				Time:  time.Now(),
