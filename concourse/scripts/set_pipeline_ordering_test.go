@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -47,10 +46,7 @@ var _ = Describe("set_pipeline_ordering", func() {
 		populateFlyrc(tmpHome, flyrcTarget, concourse.URL(), bearerToken)
 
 		cmd := exec.Command("./set_pipeline_ordering.rb", "pipeline-one,pipeline-two")
-		cmd.Env = mergeEnvLists(
-			[]string{"HOME=" + tmpHome, "FLY_TARGET=" + flyrcTarget},
-			os.Environ(),
-		)
+		cmd.Env = append(os.Environ(), "HOME="+tmpHome, "FLY_TARGET="+flyrcTarget)
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, 1).Should(gexec.Exit(0))
@@ -60,10 +56,7 @@ var _ = Describe("set_pipeline_ordering", func() {
 
 	It("errors if no pipelines given on cmdline", func() {
 		cmd := exec.Command("./set_pipeline_ordering.rb")
-		cmd.Env = mergeEnvLists(
-			[]string{"HOME=" + tmpHome, "FLY_TARGET=" + flyrcTarget},
-			os.Environ(),
-		)
+		cmd.Env = append(os.Environ(), "HOME="+tmpHome, "FLY_TARGET="+flyrcTarget)
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, 1).Should(gexec.Exit(1))
@@ -74,10 +67,8 @@ var _ = Describe("set_pipeline_ordering", func() {
 
 	It("errors if FLY_TARGET isn't set", func() {
 		cmd := exec.Command("./set_pipeline_ordering.rb", "pipeline-one,pipeline-two")
-		cmd.Env = mergeEnvLists(
-			[]string{"HOME=" + tmpHome},
-			os.Environ(),
-		)
+		cmd.Env = append(os.Environ(), "HOME="+tmpHome)
+
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, 1).Should(gexec.Exit(1))
@@ -85,10 +76,8 @@ var _ = Describe("set_pipeline_ordering", func() {
 		Expect(concourse.ReceivedRequests()).To(HaveLen(0))
 
 		cmd = exec.Command("./set_pipeline_ordering.rb", "pipeline-one,pipeline-two")
-		cmd.Env = mergeEnvLists(
-			[]string{"HOME=" + tmpHome, "FLY_TARGET="},
-			os.Environ(),
-		)
+		cmd.Env = append(os.Environ(), "HOME="+tmpHome, "FLY_TARGET=")
+
 		session, err = gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, 1).Should(gexec.Exit(1))
@@ -100,10 +89,8 @@ var _ = Describe("set_pipeline_ordering", func() {
 		populateFlyrc(tmpHome, flyrcTarget, concourse.URL(), bearerToken)
 
 		cmd := exec.Command("./set_pipeline_ordering.rb", "pipeline-one,pipeline-two")
-		cmd.Env = mergeEnvLists(
-			[]string{"HOME=" + tmpHome, "FLY_TARGET=different-target"},
-			os.Environ(),
-		)
+		cmd.Env = append(os.Environ(), "HOME="+tmpHome, "FLY_TARGET=different-target")
+
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, 1).Should(gexec.Exit(1))
@@ -118,10 +105,7 @@ var _ = Describe("set_pipeline_ordering", func() {
 		populateFlyrc(tmpHome, flyrcTarget, concourse.URL(), bearerToken)
 
 		cmd := exec.Command("./set_pipeline_ordering.rb", "pipeline-one,pipeline-two")
-		cmd.Env = mergeEnvLists(
-			[]string{"HOME=" + tmpHome, "FLY_TARGET=" + flyrcTarget},
-			os.Environ(),
-		)
+		cmd.Env = append(os.Environ(), "HOME="+tmpHome, "FLY_TARGET="+flyrcTarget)
 		session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, 1).Should(gexec.Exit(1))
@@ -130,31 +114,6 @@ var _ = Describe("set_pipeline_ordering", func() {
 		Expect(concourse.ReceivedRequests()).To(HaveLen(1))
 	})
 })
-
-// MergeEnvLists merges the two environment lists such that
-// variables with the same name in "in" replace those in "out".
-// This always returns a newly allocated slice.
-//
-// Lifted from src/cmd/go/internal/base/env.go in the go source tree.
-//
-// FIXME: When we upgrade to Go 1.9, this can be removed and replaced with a
-// simple `cmd.Env := append(os.Environ(), "FOO=bar")` because Go 1.9 de-dups
-// the list (https://golang.org/doc/go1.9#os/exec).
-func mergeEnvLists(in, out []string) []string {
-	out = append([]string(nil), out...)
-NextVar:
-	for _, inkv := range in {
-		k := strings.SplitAfterN(inkv, "=", 2)[0]
-		for i, outkv := range out {
-			if strings.HasPrefix(outkv, k) {
-				out[i] = inkv
-				continue NextVar
-			}
-		}
-		out = append(out, inkv)
-	}
-	return out
-}
 
 func populateFlyrc(homedir, target, url, token string) {
 	filePath := homedir + "/.flyrc"
