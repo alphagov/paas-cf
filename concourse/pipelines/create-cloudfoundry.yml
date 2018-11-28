@@ -35,7 +35,7 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: f810666094e6c65eeb183f9833b231aa24df6811
+        tag: 6efea7a479f9336019155cc039ad33d2c8845cb0
 
 groups:
   - name: deploy
@@ -878,23 +878,6 @@ jobs:
           put: cf-tfstate
           params:
             file: updated-tfstate/cf.tfstate
-
-      # FIXME: Move this operation to Terraform when this feature is added:
-      # https://github.com/terraform-providers/terraform-provider-aws/issues/113
-      - task: add-aws-users-to-groups
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              aws iam add-user-to-group --user-name "ses-smtp-${DEPLOY_ENV}" --group-name email-senders
-              aws iam add-user-to-group --user-name "metrics-exporter-${DEPLOY_ENV}" --group-name metrics-exporters
 
       - task: extract-cf-terraform-outputs
         config:

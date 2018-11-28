@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/terraform
-    tag: 9cad30b5d5889a0b72173f39701d1620e24df82c
+    tag: 6efea7a479f9336019155cc039ad33d2c8845cb0
 inputs:
   - name: paas-cf
   - name: datadog-tfstate

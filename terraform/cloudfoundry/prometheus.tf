@@ -89,11 +89,14 @@ resource "aws_lb_listener" "prometheus" {
   ssl_policy        = "${var.default_elb_security_policy}"
   certificate_arn   = "${data.aws_acm_certificate.system.arn}"
 
-  # FIXME: use a fixed-response 404 when we've upgraded to a version of the AWS
-  # provider that supports this (1.6 does not).
   default_action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.p8s_grafana.arn}"
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Hostname not known"
+      status_code  = "404"
+    }
   }
 }
 
