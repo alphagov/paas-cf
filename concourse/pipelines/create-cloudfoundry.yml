@@ -2011,7 +2011,7 @@ jobs:
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
-                cf push paas-accounts
+                cf zero-downtime-push paas-accounts -f manifest.yml
 
       - do:
         - task: build-paas-admin
