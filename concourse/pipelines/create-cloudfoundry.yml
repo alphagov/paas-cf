@@ -839,39 +839,6 @@ jobs:
 
                 cat vpc-peering-tfvars/vpc-peers.tfvars
 
-      # FIXME: remove this when it's run everywhere.
-      - task: extract-acm-cert-arn
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-          inputs:
-            - name: cf-tfstate
-          outputs:
-            - name: apps-cert
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              tf_cert_details=$(jq -r '.modules[].resources."aws_acm_certificate.apps"' cf-tfstate/cf.tfstate)
-              if [ "${tf_cert_details}" = "null" ]; then
-                echo "Finding cert to import"
-                cert_arn=$(aws acm list-certificates \
-                  --query "CertificateSummaryList[?DomainName==\`*.((apps_dns_zone_name))\`].CertificateArn" \
-                  --output text)
-                if [ -n "${cert_arn}" ]; then
-                  echo "${cert_arn}" > apps-cert/import_arn.txt
-                  echo "Found cert to import: $(cat apps-cert/import_arn.txt)"
-                else
-                  echo "No existing cert found. Skipping import..."
-                fi
-              else
-                echo "TF state already includes a non-data cert resource. Skipping import..."
-              fi
-
       - task: terraform-apply
         config:
           platform: linux
@@ -881,7 +848,6 @@ jobs:
             - name: paas-cf
             - name: cf-tfstate
             - name: vpc-peering-tfvars
-            - name: apps-cert
           outputs:
             - name: updated-tfstate
           params:
@@ -901,25 +867,6 @@ jobs:
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
                 terraform init paas-cf/terraform/cloudfoundry
-
-                # FIXME: remove this when it's run everywhere.
-                if [ -f apps-cert/import_arn.txt ]; then
-                  existing_cert_arn=$(cat apps-cert/import_arn.txt)
-                  echo "Importing existing cert with arn ${existing_cert_arn}"
-                  echo "Removing existing data resource"
-                  terraform state rm \
-                    -state=updated-tfstate/cf.tfstate \
-                    aws_acm_certificate.apps
-
-                  echo "Importing new resource"
-                  terraform import \
-                    -state=updated-tfstate/cf.tfstate \
-                    -config=paas-cf/terraform/cloudfoundry \
-                    aws_acm_certificate.apps \
-                    "${existing_cert_arn}"
-                fi
-
-
                 terraform apply \
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
