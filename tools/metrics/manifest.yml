@@ -6,6 +6,6 @@ applications:
    instances: 1
    buildpack: go_buildpack
    env:
-     GOVERSION: 1.9
+     GOVERSION: 1.11
      GOPACKAGENAME: github.com/alphagov/paas-cf/tools/metrics
    command: ./bin/metrics

@@ -2,9 +2,12 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"strings"
 	"time"
 
-	"github.com/pkg/errors"
+	multierror "github.com/hashicorp/go-multierror"
 )
 
 const (
@@ -41,6 +44,20 @@ type Metric struct {
 	Time  time.Time
 	Value float64
 	Tags  []string
+	Unit  string
+}
+
+func (m Metric) String() string {
+	return fmt.Sprintf(
+		"[%s] id=%s %s:%s=%.04f %s (%s)",
+		m.Time.Format("2006-01-02T15:04:05-0700"),
+		m.ID,
+		m.Kind,
+		m.Name,
+		m.Value,
+		m.Unit,
+		strings.Join(m.Tags, ","),
+	)
 }
 
 type PollFunc func(MetricWriter) error
@@ -142,4 +159,34 @@ func CopyMetrics(dst MetricWriter, src MetricReader) error {
 			return err
 		}
 	}
+}
+
+// MultiMetricWriter is a writer which forwards the received events to multiple writers
+type MultiMetricWriter struct {
+	writers []MetricWriter
+}
+
+// NewMultiMetricWriter creates a new MultiMetricWriter instance
+func NewMultiMetricWriter(writers ...MetricWriter) *MultiMetricWriter {
+	return &MultiMetricWriter{
+		writers: writers,
+	}
+}
+
+// AddWriter registers a new writer
+func (m *MultiMetricWriter) AddWriter(writer MetricWriter) {
+	m.writers = append(m.writers, writer)
+}
+
+// WriteMetrics forwards the received events to the registered writers
+func (m *MultiMetricWriter) WriteMetrics(metrics []Metric) error {
+	var errs error
+	for _, writer := range m.writers {
+		err := writer.WriteMetrics(metrics)
+		if err != nil {
+			errs = multierror.Append(errs, err)
+		}
+	}
+
+	return errs
 }

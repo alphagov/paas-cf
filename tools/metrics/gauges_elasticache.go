@@ -37,6 +37,7 @@ func ElasticCacheInstancesGauge(
 			Time:  time.Now(),
 			Name:  "aws.elasticache.cache_parameter_group.count",
 			Value: float64(cacheParameterGroupCount),
+			Unit:  "count",
 		})
 
 		nodeCount := int64(0)
@@ -58,6 +59,7 @@ func ElasticCacheInstancesGauge(
 			Time:  time.Now(),
 			Name:  "aws.elasticache.node.count",
 			Value: float64(nodeCount),
+			Unit:  "count",
 		})
 
 		return w.WriteMetrics(metrics)
