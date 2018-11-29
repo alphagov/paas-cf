@@ -23,7 +23,7 @@ func NewPrometheusReporter(registry prometheus.Registerer) *PrometheusReporter {
 
 // WriteMetrics converts the received metrics into Prometheus metrics.
 // Any metrics are registered in the Prometheus registry the first time they created and we update these metrics later.
-// This was we can manage counters correctly.
+// This way we can manage counters correctly.
 func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
 	var errs error
 	for _, event := range events {
