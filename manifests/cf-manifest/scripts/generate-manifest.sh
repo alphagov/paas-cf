@@ -32,6 +32,11 @@ if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/scale-down-dev.yml"
 fi
 
+vars_store_args=""
+if [ -n "${VARS_STORE:-}" ]; then
+  vars_store_args=" --var-errs --vars-store ${VARS_STORE}"
+fi
+
 # shellcheck disable=SC2086
 bosh interpolate \
   --var-file ipsec_ca.private_key="${WORKDIR}/ipsec-CA/ipsec-CA.key" \
@@ -56,5 +61,5 @@ bosh interpolate \
   --ops-file="${PROMETHEUS_DEPLOYMENT_DIR}/manifests/operators/cf/add-prometheus-uaa-clients.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
-  "$@" \
+  ${vars_store_args} \
   "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"

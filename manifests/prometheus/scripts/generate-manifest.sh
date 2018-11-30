@@ -21,11 +21,15 @@ for i in ${VARS_FILES}; do
   varsfile_args+="--vars-file $i "
 done
 
+vars_store_args=""
+if [ -n "${VARS_STORE:-}" ]; then
+  vars_store_args=" --var-errs --vars-store ${VARS_STORE}"
+fi
+
 # shellcheck disable=SC2086
 bosh interpolate \
-  --var-errs \
-  --vars-store "${VARS_STORE}" \
   ${varsfile_args} \
   ${opsfile_args} \
   ${alerts_opsfile_args} \
+  ${vars_store_args} \
   "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"
