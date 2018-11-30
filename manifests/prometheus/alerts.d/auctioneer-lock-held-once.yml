@@ -1,0 +1,16 @@
+# Source: firehose-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AuctioneerLockHeldOnce
+    rules:
+      - alert: AuctioneerLockHeldOnce_Critical
+        expr: "sum(firehose_value_metric_auctioneer_lock_held) != 1"
+        labels:
+          severity: critical
+          notify: email
+        annotations:
+          summary: there is not exactly one auctioneer holding the lock.
+
