@@ -26,33 +26,40 @@ RSpec.describe "release versions" do
       Gem::Version.new(v.gsub(/^v/, '').gsub(/^([0-9]+)$/, '0.0.\1'))
     end
 
+    pinned_releases = {
+      "capi" => {
+        local: "0.1.1",
+        upstream: "1.71.0"
+      }
+    }
+
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
       [release['name'], release['version']]
     }.to_h
 
-    cf_deployment_manifest.fetch("releases").each do |release|
-      next if release['name'].end_with? '-buildpack'
+    cf_deployment_releases = cf_deployment_manifest.fetch("releases").map { |release|
+      [release['name'], release['version']]
+    }.to_h
 
-      if manifest_releases.has_key? release['name']
-        cf_deployment_release_version = release.fetch('version')
-        manifest_release_version = manifest_releases[release['name']]
+    unpinned_cf_deployment_releases = cf_deployment_releases.reject { |name, _version|
+      pinned_releases.has_key? name
+    }.to_h
 
+    unpinned_cf_deployment_releases.each { |name, version|
+      next if name.end_with? '-buildpack'
+      next unless manifest_releases.has_key? name
+      expect(normalise_version(manifest_releases[name])).to be >= normalise_version(version),
+        "expected #{name} release version #{manifest_releases[name]} to be older than #{version} as defined in cf-deployment. Maybe you need to pin it?"
+    }
 
-        # Special case for capi-release. See commit message
-        if release['name'] == 'capi'
-          custom_capi_release_version = normalise_version('0.1.1')
-          expect(normalise_version(manifest_release_version)).to be(custom_capi_release_version),
-            "expected #{release['name']} to be using our own built tarball #{custom_capi_release_version} not #{manifest_release_version}"
+    pinned_releases.each { |name, pinned_versions|
+      expect(manifest_releases).to have_key(name), "expected pinned release #{name} for found in manifest"
+      expect(cf_deployment_releases).to have_key(name), "expected pinned release #{name} for found in cf-deployment"
+      expect(normalise_version(manifest_releases[name])).to be(normalise_version(pinned_versions[:local])),
+         "expected #{name} to be using our own built tarball #{pinned_versions[:local]} not #{manifest_releases[name]}"
 
-          expected_upstream_capi_release_version = normalise_version('1.71.0')
-          expect(normalise_version(cf_deployment_release_version)).to be(expected_upstream_capi_release_version),
-            "expected #{release['name']} upstream to be #{expected_upstream_capi_release_version} not #{cf_deployment_release_version}. We might need to rebase our forked capi-release repo and generate a new tarball"
-          next
-        end
-
-        expect(normalise_version(manifest_release_version)).to be >= normalise_version(cf_deployment_release_version),
-          "expected #{release['name']} release version #{manifest_release_version} not to be older than #{cf_deployment_release_version} as defined in cf-deployment"
-      end
-    end
+      expect(normalise_version(cf_deployment_releases[name])).to be(normalise_version(pinned_versions[:upstream])),
+        "expected #{name} upstream to be #{pinned_versions[:upstream]} not #{cf_deployment_releases[name]}. We might need to rebase our forked #{name} release and generate a new tarball, or use the upstream version."
+    }
   end
 end
