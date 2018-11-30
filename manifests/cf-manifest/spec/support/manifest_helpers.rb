@@ -27,7 +27,6 @@ module ManifestHelpers
         environment: "default",
         enable_datadog: "false",
         disable_user_creation: "true",
-        extra_args: [],
       )
   end
 
@@ -71,8 +70,8 @@ module ManifestHelpers
       environment: "prod",
       enable_datadog: "false",
       disable_user_creation: "true",
+      vars_store_file: nil,
       env_specific_manifest: "prod",
-      extra_args: [],
     )
   end
 
@@ -81,7 +80,6 @@ module ManifestHelpers
       environment: "dev",
       enable_datadog: "false",
       disable_user_creation: "true",
-      extra_args: [],
     )
   end
 
@@ -133,7 +131,7 @@ private
     environment:,
     enable_datadog:,
     disable_user_creation:,
-    extra_args:,
+    vars_store_file: nil,
     env_specific_manifest: "default"
   )
     copy_terraform_fixtures
@@ -150,7 +148,12 @@ private
       'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
-    args = ["#{root}/manifests/cf-manifest/scripts/generate-manifest.sh"] + extra_args
+
+    if vars_store_file
+      env["VARS_STORE"] = vars_store_file
+    end
+
+    args = ["#{root}/manifests/cf-manifest/scripts/generate-manifest.sh"]
     output, error, status = Open3.capture3(env, args.join(' '))
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
@@ -168,15 +171,11 @@ private
       vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
       vars_store_tempfile.close
 
-      args = %W{
-        --var-errs
-        --vars-store=#{vars_store_tempfile.path}
-      }
       output = render_manifest(
         environment: environment,
         enable_datadog: enable_datadog,
         disable_user_creation: disable_user_creation,
-        extra_args: args,
+        vars_store_file: vars_store_tempfile.path,
         env_specific_manifest: env_specific_manifest,
       )
 

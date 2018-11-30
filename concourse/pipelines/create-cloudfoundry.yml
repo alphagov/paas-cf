@@ -1120,10 +1120,11 @@ jobs:
 
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
-                    --var-errs \
-                    --vars-store cf-vars-store-updated/cf-vars-store.yml \
-                    > cf-manifest/cf-manifest.yml
+
+                  VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
+                    ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
+                      > cf-manifest/cf-manifest.yml
+
                   ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
                     > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
 
