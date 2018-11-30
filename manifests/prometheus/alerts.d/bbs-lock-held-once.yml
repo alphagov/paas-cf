@@ -12,5 +12,5 @@
           severity: critical
           notify: email
         annotations:
-          summary: ((metrics_environment)) there is not exactly one BBS holding the lock.
+          summary: there is not exactly one BBS holding the lock.
 

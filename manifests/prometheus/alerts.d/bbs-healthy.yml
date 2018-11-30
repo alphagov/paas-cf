@@ -13,4 +13,3 @@
           notify: email
         annotations:
           summary: BBS health check failed. Check BBS status immediately.
-
