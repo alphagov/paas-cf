@@ -1,0 +1,16 @@
+# Source: firehose-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BbsLockHeldOnce
+    rules:
+      - alert: BbsLockHeldOnce_Critical
+        expr: "sum(firehose_value_metric_bbs_lock_held) != 1"
+        labels:
+          severity: critical
+          notify: email
+        annotations:
+          summary: ((metrics_environment)) there is not exactly one BBS holding the lock.
+
