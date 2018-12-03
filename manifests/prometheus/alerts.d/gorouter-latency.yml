@@ -1,0 +1,28 @@
+# Source: firehose-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: GorouterLatency
+    rules:
+      - record: "cc:firehose_value_metric_gorouter_latency:avg10m"
+        expr: avg_over_time(firehose_value_metric_gorouter_latency[10m])
+
+      - &alert
+        alert: GorouterLatency_Warning
+        expr: cc:firehose_value_metric_gorouter_latency:avg10m > 750
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: Gorouter latency
+          description: Gorouter latency is too high ({{ $value | printf \"%.0f\" }}ms") on {{ $labels.bosh_job_ip }}
+          url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#gorouter-high-latency-alerts"
+
+      - <<: *alert
+        alert: GorouterLatency_Critical
+        expr: cc:firehose_value_metric_gorouter_latency:avg10m > 1500
+        labels:
+          severity: critical
+          notify: email
