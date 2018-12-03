@@ -1,0 +1,25 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AivenEstimatedCostHigh
+    rules:
+      - &alert
+        alert: AivenEstimatedCostHigh_Warning
+        expr: paas_aiven_estimated_cost_pounds > 2600
+        for: 1h
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: "Aiven estimated cost is high, possibly need to alert finance."
+          description: "The estimated monthly cost of Aiven is currently £{{ $value | printf \"%.2f\" }}, possibly need to alert finance."
+
+      - <<: *alert
+        alert: AivenEstimatedCostHigh_Critical
+        expr: paas_aiven_estimated_cost_pounds > 3100
+        labels:
+          severity: critical
+          notify: email
