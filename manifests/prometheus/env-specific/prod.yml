@@ -1,1 +1,3 @@
 ---
+
+aws_limits_elasticache_cache_parameter_groups: 100
