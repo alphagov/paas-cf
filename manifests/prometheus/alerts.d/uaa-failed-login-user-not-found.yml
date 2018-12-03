@@ -1,0 +1,17 @@
+# Source: firehose-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: UAAFailedLoginUserNotFound
+    rules:
+      - alert: UAAFailedLoginUserNotFound_Warning
+        expr: sum(increase(firehose_value_metric_uaa_audit_service_user_not_found_count[1h])) > 10
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: "UAA - Failed login: user not found"
+          description: "Anomalous levels of authentication attempts with a user name that does not exist. Number of failed login attempts per hour: {{ $value | printf \"%.0f\" }}"
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#failed-logins"
