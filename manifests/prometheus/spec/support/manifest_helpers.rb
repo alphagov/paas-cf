@@ -25,6 +25,7 @@ private
       'VARS_FILES' => [
         "#{root}/manifests/prometheus/spec/fixtures/prometheus-vars-file.yml",
         "#{root}/manifests/shared/spec/fixtures/terraform/cf.yml",
+        "#{root}/manifests/prometheus/env-specific/default.yml",
       ].join(' ')
     }
     output, error, status = Open3.capture3(env, "#{root}/manifests/prometheus/scripts/generate-manifest.sh")

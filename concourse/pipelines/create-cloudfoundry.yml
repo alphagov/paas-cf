@@ -1263,10 +1263,12 @@ jobs:
               - -c
               - |
 
-                export VARS_FILES="
+                VARS_FILES="
                   ./prometheus-vars-file.yml
                   ./terraform-outputs/cf.yml
+                  ./paas-cf/manifests/prometheus/env-specific/((env_specific_bosh_vars_file))
                 "
+                export VARS_FILES
 
                 bosh interpolate - \
                   --var-errs \
