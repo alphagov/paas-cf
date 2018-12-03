@@ -49,7 +49,7 @@ bosh interpolate \
   --vars-file="${WORKDIR}/cf-secrets/cf-secrets.yml" \
   --vars-file="${WORKDIR}/logit-secrets/logit-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
-  --vars-file="${CF_ENV_SPECIFIC_MANIFEST}" \
+  --vars-file="${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   --vars-file="${WORKDIR}/environment-variables.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/rename-network-and-deployment.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/aws.yml" \

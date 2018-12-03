@@ -71,7 +71,7 @@ module ManifestHelpers
       enable_datadog: "false",
       disable_user_creation: "true",
       vars_store_file: nil,
-      env_specific_manifest: "prod",
+      env_specific_bosh_vars_file: "prod.yml",
     )
   end
 
@@ -132,7 +132,7 @@ private
     enable_datadog:,
     disable_user_creation:,
     vars_store_file: nil,
-    env_specific_manifest: "default"
+    env_specific_bosh_vars_file: "default.yml"
   )
     copy_terraform_fixtures
     copy_logit_fixtures
@@ -144,7 +144,7 @@ private
     env = {
       'PAAS_CF_DIR' => root.to_s,
       'WORKDIR' => workdir,
-      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{env_specific_manifest}.yml").to_s,
+      'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s,
       'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
@@ -165,7 +165,7 @@ private
     enable_datadog:,
     disable_user_creation:,
     custom_vars_store_content: nil,
-    env_specific_manifest: "default"
+    env_specific_bosh_vars_file: "default.yml"
   )
     Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
@@ -176,7 +176,7 @@ private
         enable_datadog: enable_datadog,
         disable_user_creation: disable_user_creation,
         vars_store_file: vars_store_tempfile.path,
-        env_specific_manifest: env_specific_manifest,
+        env_specific_bosh_vars_file: env_specific_bosh_vars_file,
       )
 
       Cache.instance.vars_store = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
@@ -193,7 +193,7 @@ private
     env = {
       'PAAS_CF_DIR' => root.to_s,
       'WORKDIR' => workdir,
-      'CF_ENV_SPECIFIC_MANIFEST' => root.join("manifests/cf-manifest/env-specific/cf-#{environment}.yml").to_s,
+      'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{environment}.yml").to_s,
     }
     output, error, status = Open3.capture3(env, root.join('manifests/cf-manifest/scripts/generate-cloud-config.sh').to_s)
     expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
