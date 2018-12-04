@@ -1,0 +1,134 @@
+# Source: firehose-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: DiskSpaceLowEphemeral
+    rules:
+    - &alert
+      alert: DiskSpaceLowEphemeral_Warning
+      expr: bosh_job_ephemeral_disk_percent > 75.0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "Disk space low on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+        description: "The disk usage is at {{ $value | printf \"%.0f\" }}% on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+
+    - <<: *alert
+      alert: DiskSpaceLowEphemeral_Critical
+      expr: bosh_job_ephemeral_disk_percent > 85.0
+      labels:
+        severity: critical
+        notify: email
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: InodesLowEphemeral
+    rules:
+    - &alert
+      alert: InodesLowEphemeralEphemeral_Warning
+      expr: bosh_job_ephemeral_disk_inode_percent > 75.0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "Running out of inodes on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+        description: "The inode usage is at {{ $value | printf \"%.0f\" }}% on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+
+    - <<: *alert
+      alert: InodesLowEphemeralEphemeral_Critical
+      expr: bosh_job_ephemeral_disk_inode_percent > 85.0
+      labels:
+        severity: critical
+        notify: email
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: DiskSpaceLowPersistent
+    rules:
+    - &alert
+      alert: DiskSpaceLowPersistent_Warning
+      expr: bosh_job_persistent_disk_percent > 75.0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "Disk space low on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+        description: "The disk usage is at {{ $value | printf \"%.0f\" }}% on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+
+    - <<: *alert
+      alert: DiskSpaceLowPersistent_Critical
+      expr: bosh_job_persistent_disk_percent > 85.0
+      labels:
+        severity: critical
+        notify: email
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: InodesLowPersistent
+    rules:
+    - &alert
+      alert: InodesLowPersistent_Warning
+      expr: bosh_job_persistent_disk_inode_percent > 75.0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "Running out of inodes on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+        description: "The inode usage is at {{ $value | printf \"%.0f\" }}% on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+
+    - <<: *alert
+      alert: InodesLowPersistent_Critical
+      expr: bosh_job_persistent_disk_inode_percent > 85.0
+      labels:
+        severity: critical
+        notify: email
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: DiskSpaceLowSystem
+    rules:
+    - &alert
+      alert: DiskSpaceLowSystem_Warning
+      expr: bosh_job_system_disk_percent > 75.0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "Disk space low on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+        description: "The disk usage is at {{ $value | printf \"%.0f\" }}% on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+
+    - <<: *alert
+      alert: DiskSpaceLowSystem_Critical
+      expr: bosh_job_system_disk_percent > 85.0
+      labels:
+        severity: critical
+        notify: email
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: InodesLowSystem
+    rules:
+    - &alert
+      alert: InodesLowSystem_Warning
+      expr: bosh_job_system_disk_inode_percent > 75.0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "Running out of inodes on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+        description: "The inode usage is at {{ $value | printf \"%.0f\" }}% on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
+
+    - <<: *alert
+      alert: InodesLowSystem_Critical
+      expr: bosh_job_system_disk_inode_percent > 85.0
+      labels:
+        severity: critical
+        notify: email
