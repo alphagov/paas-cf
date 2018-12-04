@@ -1,0 +1,37 @@
+# Source: firehose-exporter
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: RouterTotalRoutesDrop
+    rules:
+      - record: gorouter:total_routes:mean5m
+        expr: avg_over_time(firehose_value_metric_gorouter_total_routes[5m])
+      - record: gorouter:total_routes:delta5m
+        expr: delta(firehose_value_metric_gorouter_total_routes[5m])
+      - &alert
+        alert: RouterTotalRoutesDrop_Warning
+        expr: >
+          100 *
+          min_over_time(gorouter:total_routes:delta5m[30m])
+          / on() group_left() gorouter:total_routes:mean5m
+          < -20
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: Router total routes drop
+          description: >
+            {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_id }}
+            Router total routes count has dropped {{ $value | printf "%.0f" }}% in 5m
+            within the last 30m.
+      - <<: *alert
+        alert: RouterTotalRoutesDrop_Critical
+        expr: >
+          100 *
+          min_over_time(gorouter:total_routes:delta5m[30m])
+          / on() group_left() gorouter:total_routes:mean5m
+          < -20
+        labels:
+          severity: critical
+          notify: email
