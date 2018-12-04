@@ -35,3 +35,23 @@
         labels:
           severity: critical
           notify: email
+
+      - alert: RouterTotalRoutesDiscrepancy
+        expr: >
+          100 *
+          abs(
+            firehose_value_metric_gorouter_total_routes
+            - on() group_left() max(firehose_value_metric_gorouter_total_routes)
+          )
+          / on() group_left() max(firehose_value_metric_gorouter_total_routes)
+          > 3
+        for: 5m
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: Router total routes discrepancy
+          description: >
+            {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_id }}
+            Router registered total routes discrepancy of {{ $value | printf "%.0f" }}%
+            compared to the maximum number or registered routes.
