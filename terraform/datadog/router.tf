@@ -138,7 +138,7 @@ resource "datadog_monitor" "gorouter_healthy" {
 resource "datadog_monitor" "gorouter_latency" {
   name                = "${format("%s gorouter latency", var.env)}"
   type                = "metric alert"
-  message             = "${format("Gorouter latency too high. See: %s#Gorouter-high-latency-alerts @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
+  message             = "${format("Gorouter latency too high. See: %s#gorouter-high-latency-alerts @govpaas-alerting-%s@digital.cabinet-office.gov.uk", var.datadog_documentation_url, var.aws_account)}"
   no_data_timeframe   = "7"
   require_full_window = true
 
