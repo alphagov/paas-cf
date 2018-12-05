@@ -122,7 +122,7 @@ pipeline_trigger_file: ${pipeline_name}.trigger
 branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
-cf_env_specific_manifest: ${ENV_SPECIFIC_CF_MANIFEST}
+env_specific_bosh_vars_file: ${ENV_SPECIFIC_BOSH_VARS_FILE}
 INPUT_TAG_PREFIX: ${INPUT_TAG_PREFIX:-}
 OUTPUT_TAG_PREFIX: ${OUTPUT_TAG_PREFIX:-}
 paas_cf_tag_filter: ${INPUT_TAG_PREFIX:+${INPUT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*}

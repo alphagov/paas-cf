@@ -1,0 +1,16 @@
+# Source: bosh-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BoshSwapUtilisation
+    rules:
+      - alert: BoshSwapUtilisation_Critical
+        expr: "avg_over_time(bosh_job_swap_percent[30m]) >= 25"
+        labels:
+          severity: critical
+          notify: email
+        annotations:
+          summary: "High swap usage on {{ $labels.bosh_job_name }}{{ $labels.bosh_job_index }}"
+          description: "{{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }} swap usage was {{ $value | printf \"%.0f\" }}% in the last 30m on average"

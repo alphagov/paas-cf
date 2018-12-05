@@ -1010,7 +1010,7 @@ jobs:
             outputs:
               - name: cloud-config
             params:
-              CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+              ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
             run:
               path: sh
               args:
@@ -1041,7 +1041,7 @@ jobs:
               - name: cf-manifest-pre-vars
               - name: cf-vars-store-updated
             params:
-              CF_ENV_SPECIFIC_MANIFEST: paas-cf/manifests/cf-manifest/env-specific/((cf_env_specific_manifest))
+              ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
               ENABLE_DATADOG: ((enable_datadog))
               DISABLE_USER_CREATION: ((disable_user_creation))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
@@ -1263,10 +1263,12 @@ jobs:
               - -c
               - |
 
-                export VARS_FILES="
+                VARS_FILES="
                   ./prometheus-vars-file.yml
                   ./terraform-outputs/cf.yml
+                  ./paas-cf/manifests/prometheus/env-specific/((env_specific_bosh_vars_file))
                 "
+                export VARS_FILES
 
                 bosh interpolate - \
                   --var-errs \

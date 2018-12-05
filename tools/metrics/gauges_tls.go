@@ -88,7 +88,7 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 				Tags: []string{
 					fmt.Sprintf("hostname:%s", customDomain.AliasDomain),
 				},
-				Unit: "days",
+				Unit: "",
 			})
 		}
 		return w.WriteMetrics(metrics)

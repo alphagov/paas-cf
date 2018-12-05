@@ -1,0 +1,17 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AWSELBUnhealthyNodes
+    rules:
+    - alert: AWSELBUnhealthyNodes_Warning
+      expr: max_over_time(paas_aws_elb_unhealthy_node_count[5m]) > 0
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "At least one ELB node is not responding"
+        description: Requests to the healthcheck app via {{ $value | printf \"%.0f\" }} of the ELB IP addresses failed.
+        url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#intermittent-elb-failures
