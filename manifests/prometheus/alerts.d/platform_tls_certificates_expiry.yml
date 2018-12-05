@@ -1,0 +1,32 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: PlatformTLSCertificateExpiresSoon
+    rules:
+
+      - alert: PlatformTLSCertificateExpiresSoon_Warning
+        expr: "paas_tls_certificates_validity_days <= 30"
+        for: 5m
+        annotations:
+          summary: "A platform TLS certificate is close to expiry"
+          description: "The TLS certificate for the platform domain {{ $labels.hostname }} expires in {{ $value }} days"
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+        labels:
+          severity: warning
+          notify: email
+          service: elb
+
+      - alert: PlatformTLSCertificateExpiresSoon_Critical
+        expr: "paas_tls_certificates_validity_days <= 7"
+        for: 5m
+        annotations:
+          summary: "A platform TLS certificate is very close to expiry"
+          description: "The TLS certificate for the platform domain {{ $labels.hostname }} has almost expired!"
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+        labels:
+          severity: critical
+          notify: email
+          service: elb
