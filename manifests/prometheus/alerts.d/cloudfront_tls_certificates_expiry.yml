@@ -1,0 +1,32 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: CloudFrontTLSCertificateExpiresSoon
+    rules:
+
+      - alert: CloudFrontTLSCertificateExpiresSoon_Warning
+        expr: "paas_cdn_tls_certificates_expiry_days <= 21"
+        for: 5m
+        annotations:
+          summary: "A tenant/CloudFront TLS certificate is close to expiry"
+          description: "The CloudFront TLS certificate for the tenant domain {{ $labels.hostname }} expires in {{ $value }} days"
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+        labels:
+          severity: warning
+          notify: email
+          service: cloudfront
+
+      - alert: CloudFrontTLSCertificateExpiresSoon_Critical
+        expr: "paas_cdn_tls_certificates_expiry_days <= 7"
+        for: 5m
+        annotations:
+          summary: "A tenant/CloudFront TLS certificate is very close to expiry"
+          description: "The CloudFront TLS certificate for the tenant domain {{ $labels.hostname }} has almost expired!"
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+        labels:
+          severity: critical
+          notify: email
+          service: cloudfront
