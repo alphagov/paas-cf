@@ -2470,11 +2470,11 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-smoke-tests-release
           - get: paas-cf
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-vars-store
@@ -2509,11 +2509,11 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
           - get: paas-cf
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-vars-store
@@ -2564,10 +2564,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-vars-store
@@ -2714,10 +2714,10 @@ jobs:
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
           - get: bosh-secrets
           - get: bosh-CA-crt
