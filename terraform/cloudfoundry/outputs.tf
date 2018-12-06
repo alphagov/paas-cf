@@ -177,3 +177,11 @@ output "metrics_exporter_aws_access_key_id" {
 output "metrics_exporter_aws_secret_access_key" {
   value = "${aws_iam_access_key.metrics_exporter.secret}"
 }
+
+output "yace_aws_access_key_id" {
+  value = "${aws_iam_access_key.yace.id}"
+}
+
+output "yace_aws_secret_access_key" {
+  value = "${aws_iam_access_key.yace.secret}"
+}
