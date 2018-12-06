@@ -1,0 +1,5 @@
+---
+
+- type: replace
+  path: /tags?/deploy_env
+  value: ((environment))
