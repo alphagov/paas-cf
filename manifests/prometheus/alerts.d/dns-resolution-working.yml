@@ -1,0 +1,24 @@
+# Source: blackbox-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: DNSResolutionWorking
+    rules:
+    - &alert
+      alert: DNSResolutionWorking_Warning
+      expr: (count_over_time(dns_resolution_probe_success[5m]) - sum_over_time(dns_resolution_probe_success[5m])) / count_over_time(dns_resolution_probe_success[5m]) > 0.25
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "DNS Resolution is failing on {{ $labels.address }}"
+        description: "If this persisists, consider contacting AWS Support."
+
+    - <<: *alert
+      alert: DNSResolutionWorking_Critical
+      expr: (count_over_time(dns_resolution_probe_success[5m]) - sum_over_time(dns_resolution_probe_success[5m])) / count_over_time(dns_resolution_probe_success[5m]) > 0.75
+      labels:
+        severity: critical
+        notify: email

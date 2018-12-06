@@ -3,6 +3,7 @@
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
   value:
     job_name: dns_resolution
+    scrape_interval: 10s
     metrics_path: /probe
     params:
       module:

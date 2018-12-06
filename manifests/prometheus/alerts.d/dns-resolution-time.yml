@@ -1,0 +1,24 @@
+# Source: blackbox-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: DNSResolutionTime
+    rules:
+    - &alert
+      alert: DNSResolutionTime_Warning
+      expr: avg_over_time(dns_resolution_probe_dns_lookup_time_seconds[5m]) > 0.1
+      labels:
+        severity: warning
+        notify: email
+      annotations:
+        summary: "DNS Resolution is slow on {{ $labels.address }}"
+        description: "If this persisists, consider contacting AWS Support."
+
+    - <<: *alert
+      alert: DNSResolutionTime_Critical
+      expr: avg_over_time(dns_resolution_probe_dns_lookup_time_seconds[5m]) > 0.2
+      labels:
+        severity: critical
+        notify: email
