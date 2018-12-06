@@ -2499,7 +2499,7 @@ jobs:
                 cf blue-green-deploy paas-uaa-assets
                 cf delete -f paas-uaa-assets-old
 
-      - task: remove-unused-ses-smtp-access-keys
+      - task: remove-unused-iam-access-keys
         config:
           platform: linux
           image_resource: *awscli-image-resource
@@ -2542,6 +2542,7 @@ jobs:
 
                 delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
                 delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
+                delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
