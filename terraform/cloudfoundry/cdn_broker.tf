@@ -122,7 +122,8 @@ resource "aws_db_instance" "cdn" {
   auto_minor_version_upgrade = true
 
   tags {
-    Name = "${var.env}-cdn"
+    Name       = "${var.env}-cdn"
+    deploy_env = "${var.env}"
   }
 }
 
