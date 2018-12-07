@@ -7,8 +7,7 @@
     rules:
       - &alert
         alert: BoshDiegoCellAvailableMemory_Warning
-        expr: avg(bosh_job_mem_percent{bosh_job_name="diego-cell"}) >= 45
-        for: 2h
+        expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 45
         labels:
           severity: warning
           notify: email
@@ -19,7 +18,7 @@
 
       - <<: *alert
         alert: BoshDiegoCellAvailableMemory_Critical
-        expr: avg(bosh_job_mem_percent{bosh_job_name="diego-cell"}) >= 50
+        expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 50
         labels:
           severity: critical
           notify: email

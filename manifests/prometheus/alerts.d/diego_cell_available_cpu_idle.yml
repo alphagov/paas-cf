@@ -7,8 +7,7 @@
     rules:
       - &alert
         alert: BoshDiegoCellIdleCPU_Warning
-        expr: avg(bosh_job_cpu_idle{bosh_job_name="diego-cell"}) < 37
-        for: 1d
+        expr: avg(avg_over_time(bosh_job_cpu_idle{bosh_job_name="diego-cell"}[1d])) < 37
         labels:
           severity: warning
           notify: email
@@ -19,7 +18,7 @@
 
       - <<: *alert
         alert: BoshDiegoCellIdleCPU_Critical
-        expr: avg(bosh_job_cpu_idle{bosh_job_name="diego-cell"}) < 33
+        expr: avg(avg_over_time(bosh_job_cpu_idle{bosh_job_name="diego-cell"}[1d])) < 33
         labels:
           severity: critical
           notify: email
