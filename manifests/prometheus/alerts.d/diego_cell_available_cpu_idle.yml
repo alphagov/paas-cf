@@ -5,29 +5,21 @@
   value:
     name: BoshDiegoCellIdleCPU
     rules:
-      - record: bosh_job_cpu_idle
-        expr: 100 - (bosh_job_cpu_sys + bosh_job_cpu_user + bosh_job_cpu_wait)
-      - record: bosh_job:cpu_idle:diego_cell:avg5m
-        expr: avg_over_time(bosh_job_cpu_idle{environment="((metrics_environment))",bosh_job_name="diego-cell"}[5m])
       - &alert
         alert: BoshDiegoCellIdleCPU_Warning
-        expr:  bosh_job:cpu_idle:diego_cell:avg5m < 37
+        expr: avg(bosh_job_cpu_idle{bosh_job_name="diego-cell"}) < 37
         for: 1d
         labels:
           severity: warning
           notify: email
         annotations:
-          summary: Low CPU idle on {{ $labels.bosh_job_name }}.
-          description: >
-            {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_id }}
-            CPU idle percentage was low {{ $value | printf "%.0f" }}%
-            in the last 1 day on average.
-            Review if we need to scale...
+          summary: Cell idle CPU is low
+          description: There is only {{ $value | printf "%.0f" }}% CPU idle on average on cells. Review if we need to scale...
           url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
 
       - <<: *alert
         alert: BoshDiegoCellIdleCPU_Critical
-        expr: bosh_job:cpu_idle:diego_cell:avg5m < 33
+        expr: avg(bosh_job_cpu_idle{bosh_job_name="diego-cell"}) < 33
         labels:
           severity: critical
           notify: email
