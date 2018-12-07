@@ -1,0 +1,25 @@
+# Source: cloudwatch-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: EC2CPUCreditsLow
+    rules:
+      - &alert
+        alert: EC2CPUCreditsLow_Warning
+        expr: avg_over_time(aws_ec2_cpucreditbalance_minimum[30m]) <= 20
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: "EC2 CPU credits are low on {{ $labels.tag_Name }}"
+          description: "Instance {{ $labels.tag_Name }} has only {{ $value | printf \"%.0f\" }} CPU credits left and may perform badly."
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#cpu-credits"
+
+      - <<: *alert
+        alert: EC2CPUCreditsLow_Critical
+        expr: avg_over_time(aws_ec2_cpucreditbalance_minimum[30m]) <= 1
+        labels:
+          severity: critical
+          notify: email
