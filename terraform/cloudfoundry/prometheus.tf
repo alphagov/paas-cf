@@ -25,6 +25,7 @@ resource "aws_security_group" "prometheus-lb" {
 
     cidr_blocks = [
       "${compact(var.admin_cidrs)}",
+      "${var.concourse_elastic_ip}/32",
     ]
   }
 
