@@ -41,7 +41,9 @@ func TestSuite(t *testing.T) {
 	RegisterFailHandler(Fail)
 
 	testConfig, err = config.NewCatsConfig(os.Getenv("CONFIG"))
-	Expect(err).NotTo(HaveOccurred())
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	httpClient = &http.Client{
 		Transport: &http.Transport{
