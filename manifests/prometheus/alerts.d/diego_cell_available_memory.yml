@@ -9,15 +9,14 @@
         expr: 100 - avg_over_time(bosh_job_mem_percent{environment="((metrics_environment))",bosh_job_name="diego-cell"}[5m])
       - &alert
         alert: BoshDiegoCellAvailableMemory_Warning
-        expr: bosh_job:mem_percent:diego_cell:avg5m < 55
+        expr: avg(bosh_job:mem_percent:diego_cell:avg5m) < 55
         for: 2h
         labels:
           severity: warning
           notify: email
         annotations:
-          summary: Low memory free on {{ $labels.bosh_job_name }}.
+          summary: Low memory free on diego-cell.
           description: >
-            {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_id }}
             memory free was low {{ $value | printf "%.0f" }}%
             in the last two hours on average.
             Review if we need to scale...
@@ -25,7 +24,7 @@
 
       - <<: *alert
         alert: BoshDiegoCellAvailableMemory_Critical
-        expr: bosh_job:mem_percent:diego_cell:avg5m < 50
+        expr: avg(bosh_job:mem_percent:diego_cell:avg5m) < 50
         labels:
           severity: critical
           notify: email
