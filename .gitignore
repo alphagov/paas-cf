@@ -2,6 +2,7 @@
 bin/fly*
 bin/terraform*
 .idea/
+.vscode/
 platform-tests/pkg
 platform-tests/src/results
 terraform/.terraform/
