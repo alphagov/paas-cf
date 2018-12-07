@@ -1,0 +1,26 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: "prometheus"
+    version: "23.1.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=23.1.0"
+    sha1: "23e5f469c2e290efefde1166107f874c32374ff7"
+
+- type: replace
+  path: /addons?/-
+  value:
+    name: prometheus-blackbox-exporter
+    jobs:
+      - name: blackbox_exporter
+        release: prometheus
+        properties:
+          blackbox_exporter:
+            config:
+              modules:
+                dns_canary:
+                  prober: dns
+                  timeout: 1s
+                  dns:
+                    query_name: __canary.((system_domain))
+                    query_type: "A"

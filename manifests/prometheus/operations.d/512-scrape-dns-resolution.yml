@@ -1,0 +1,36 @@
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/-
+  value:
+    job_name: dns_resolution
+    scrape_interval: 10s
+    metrics_path: /probe
+    params:
+      module:
+        - dns_canary
+      target:
+        - 169.254.0.2 # hardcoded to the default bosh-dns address
+    file_sd_configs:
+      - files:
+        - "/var/vcap/store/bosh_exporter/bosh_target_groups.json"
+    relabel_configs:
+      - source_labels:
+        - __meta_bosh_job_process_name
+        regex: ^bosh-dns$
+        action: keep
+      - source_labels:
+          - __address__
+        regex: "(.*)"
+        target_label: address
+        replacement: "${1}"
+      - source_labels:
+          - __address__
+        regex: "(.*)"
+        target_label: __address__
+        replacement: "${1}:9115"
+    metric_relabel_configs:
+      - source_labels:
+          - __name__
+        regex: "(.*)"
+        target_label: __name__
+        replacement: "dns_resolution_${1}"
