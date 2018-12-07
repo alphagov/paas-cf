@@ -1,0 +1,25 @@
+# Source: cloudwatch-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: RDSCPUDiskUtilisation
+    rules:
+      - &alert
+        alert: RDSCPUDiskUtilisation_Warning
+        expr: aws_rds_freestoragespace_minimum <= 2 * 1024 ^ 3
+        labels:
+          severity: warning
+          notify: email
+        annotations:
+          summary: "RDS free storage space is low on {{ $labels.tag_Name }}"
+          description: "RDS Instance {{ $labels.tag_Name }} has only {{ $value | humanize1024 }}B free storage."
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#rds-disk-utilisation"
+
+      - <<: *alert
+        alert: RDSCPUDiskUtilisation_Critical
+        expr: aws_rds_freestoragespace_minimum <= 1 * 1024 ^ 3
+        labels:
+          severity: critical
+          notify: email
