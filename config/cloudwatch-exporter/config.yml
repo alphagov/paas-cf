@@ -1,0 +1,35 @@
+---
+discovery:
+  exportedTagsOnMetrics:
+    ec2:
+      - Name
+    rds:
+      - Name
+  jobs:
+    - type: "ec2"
+      region: (( grab $AWS_REGION ))
+      searchTags:
+        - Key: deploy_env
+          Value: (( concat "^" $DEPLOY_ENV "$" ))
+      metrics:
+        - name: CPUCreditBalance
+          statistics:
+            - Minimum
+          period: 60
+          length: 600
+    - type: "rds"
+      region: (( grab $AWS_REGION ))
+      searchTags:
+        - Key: deploy_env
+          Value: (( concat "^" $DEPLOY_ENV "$" ))
+      metrics:
+        - name: FreeStorageSpace
+          statistics:
+            - Minimum
+          period: 60
+          length: 600
+        - name: CPUCreditBalance
+          statistics:
+            - Minimum
+          period: 60
+          length: 600

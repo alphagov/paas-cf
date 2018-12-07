@@ -26,4 +26,8 @@ run:
         aws_iam_access_key.metrics_exporter
       echo "metrics exporter access key no longer managed by terraform."
 
+      terraform state rm -state=updated-tfstate/cf.tfstate \
+        aws_iam_access_key.yace
+      echo "yace access key no longer managed by terraform."
+
       echo "next successful deployment run will delete the unused keys"

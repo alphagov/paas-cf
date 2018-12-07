@@ -377,6 +377,12 @@ resources:
     source:
       service_key: ((pagerduty_integration_key))
 
+  - name: paas-yet-another-cloudwatch-exporter
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter
+      tag_filter: 0.10.0
+
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1215,6 +1221,7 @@ jobs:
           - get: bosh-CA-crt
           - get: cf-vars-store
           - get: cf-tfstate
+          - get: paas-yet-another-cloudwatch-exporter
 
       - task: extract-terraform-outputs
         config:
@@ -1234,6 +1241,35 @@ jobs:
                 ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
                   < cf-tfstate/cf.tfstate \
                   > terraform-outputs/cf.yml
+
+      - task: retrieve-config
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: cf-vars-store
+            - name: terraform-outputs
+          outputs:
+            - name: config
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          image_resource: *ruby-slim-image-resource
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                cat << EOT > config/config.sh
+                export CF_ADMIN=admin
+                export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
+                export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                export YACE_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_yace_aws_access_key_id terraform-outputs/cf.yml)
+                export YACE_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_yace_aws_secret_access_key terraform-outputs/cf.yml)
+                EOT
+
 
       - task: generate-prometheus-manifest
         config:
@@ -1336,6 +1372,48 @@ jobs:
                 export BOSH_CLIENT_SECRET
 
                 bosh -n deploy prometheus-manifest/prometheus-manifest.yml
+
+      - task: deploy-cloudwatch-exporter
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            AWS_REGION: ((aws_region))
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: paas-yet-another-cloudwatch-exporter
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                spruce merge paas-cf/config/cloudwatch-exporter/config.yml > paas-yet-another-cloudwatch-exporter/src/config.yml
+
+                cd paas-yet-another-cloudwatch-exporter/src
+
+                cat << EOF > manifest.yml
+                ---
+                applications:
+                  - name: cloudwatch-exporter
+                    memory: 128M
+                    disk_quota: 100M
+                    instances: 1
+                    buildpack: go_buildpack
+                    health-check-type: http
+                    env:
+                      GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
+                      AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
+                      AWS_SECRET_ACCESS_KEY: "${YACE_AWS_SECRET_ACCESS_KEY}"
+                    command: "src -listen-address=0.0.0.0:\$PORT"
+                EOF
+
+                cf zero-downtime-push cloudwatch-exporter -f manifest.yml
 
   - name: post-deploy
     serial: true
@@ -2421,7 +2499,7 @@ jobs:
                 cf blue-green-deploy paas-uaa-assets
                 cf delete -f paas-uaa-assets-old
 
-      - task: remove-unused-ses-smtp-access-keys
+      - task: remove-unused-iam-access-keys
         config:
           platform: linux
           image_resource: *awscli-image-resource
@@ -2464,6 +2542,7 @@ jobs:
 
                 delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
                 delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
+                delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
