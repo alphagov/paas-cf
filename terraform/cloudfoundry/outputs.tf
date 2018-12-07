@@ -55,7 +55,8 @@ output "cf_db_address" {
 }
 
 output "cdn_db_connection_string" {
-  value = "${format("postgresql://%v:%v@%v/%v", aws_db_instance.cdn.username, var.secrets_cdn_db_master_password, aws_db_instance.cdn.address, aws_db_instance.cdn.name)}"
+  sensitive = true
+  value     = "${format("postgresql://%v:%v@%v/%v", aws_db_instance.cdn.username, var.secrets_cdn_db_master_password, aws_db_instance.cdn.address, aws_db_instance.cdn.name)}"
 }
 
 output "cf_router_elb_name" {
@@ -163,25 +164,31 @@ output "ses_smtp_host" {
 }
 
 output "ses_smtp_aws_access_key_id" {
-  value = "${aws_iam_access_key.ses_smtp.id}"
+  sensitive = true
+  value     = "${aws_iam_access_key.ses_smtp.id}"
 }
 
 output "ses_smtp_password" {
-  value = "${aws_iam_access_key.ses_smtp.ses_smtp_password}"
+  sensitive = true
+  value     = "${aws_iam_access_key.ses_smtp.ses_smtp_password}"
 }
 
 output "metrics_exporter_aws_access_key_id" {
-  value = "${aws_iam_access_key.metrics_exporter.id}"
+  sensitive = true
+  value     = "${aws_iam_access_key.metrics_exporter.id}"
 }
 
 output "metrics_exporter_aws_secret_access_key" {
-  value = "${aws_iam_access_key.metrics_exporter.secret}"
+  sensitive = true
+  value     = "${aws_iam_access_key.metrics_exporter.secret}"
 }
 
 output "yace_aws_access_key_id" {
-  value = "${aws_iam_access_key.yace.id}"
+  sensitive = true
+  value     = "${aws_iam_access_key.yace.id}"
 }
 
 output "yace_aws_secret_access_key" {
-  value = "${aws_iam_access_key.yace.secret}"
+  sensitive = true
+  value     = "${aws_iam_access_key.yace.secret}"
 }
