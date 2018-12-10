@@ -13,6 +13,6 @@
 
 - type: replace
   path: /instance_groups/name=prometheus2/persistent_disk_type?
-  value: 10GB
+  value: 100GB
 - type: remove
   path: /instance_groups/name=prometheus2/persistent_disk
