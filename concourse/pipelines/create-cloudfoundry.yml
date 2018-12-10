@@ -36,6 +36,11 @@ meta:
       source:
         repository: governmentpaas/terraform
         tag: 6efea7a479f9336019155cc039ad33d2c8845cb0
+    curl-ssl: &curl-ssl-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/curl-ssl
+        tag: 6efea7a479f9336019155cc039ad33d2c8845cb0
 
 groups:
   - name: deploy
@@ -1242,33 +1247,7 @@ jobs:
                   < cf-tfstate/cf.tfstate \
                   > terraform-outputs/cf.yml
 
-      - task: retrieve-config
-        config:
-          platform: linux
-          inputs:
-            - name: paas-cf
-            - name: cf-vars-store
-            - name: terraform-outputs
-          outputs:
-            - name: config
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          image_resource: *ruby-slim-image-resource
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-                cat << EOT > config/config.sh
-                export CF_ADMIN=admin
-                export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
-                export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                export YACE_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_yace_aws_access_key_id terraform-outputs/cf.yml)
-                export YACE_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_yace_aws_secret_access_key terraform-outputs/cf.yml)
-                EOT
 
 
       - task: generate-prometheus-manifest
@@ -1346,6 +1325,36 @@ jobs:
             params:
               file: prometheus-manifest-pre-vars/prometheus-manifest-pre-vars.yml
 
+      - task: retrieve-config
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: cf-vars-store
+            - name: terraform-outputs
+            - name: prometheus-vars-store
+          outputs:
+            - name: config
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          image_resource: *ruby-slim-image-resource
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                cat << EOT > config/config.sh
+                export CF_ADMIN=admin
+                export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
+                export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                export YACE_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_yace_aws_access_key_id terraform-outputs/cf.yml)
+                export YACE_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_yace_aws_secret_access_key terraform-outputs/cf.yml)
+                export GRAFANA_PASS=$($VAL_FROM_YAML grafana_password prometheus-vars-store/prometheus-vars-store.yml)
+                EOT
+
       - task: prometheus-deploy
         config:
           platform: linux
@@ -1414,6 +1423,35 @@ jobs:
                 EOF
 
                 cf zero-downtime-push cloudwatch-exporter -f manifest.yml
+
+      - task: upload-grafana-dashboards
+        config:
+          platform: linux
+          image_resource: *curl-ssl-image-resource
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: config
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
+                  sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
+                  | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
+                  | curl "https://grafana.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
+                    --user "admin:$GRAFANA_PASS" \
+                    --header 'Content-Type: application/json' \
+                    --data "@-" \
+                    --fail \
+                    --include
+                done
 
   - name: post-deploy
     serial: true
