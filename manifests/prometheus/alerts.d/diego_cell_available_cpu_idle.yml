@@ -10,7 +10,6 @@
         expr: avg(avg_over_time(bosh_job_cpu_idle{bosh_job_name="diego-cell"}[1d])) < 37
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: Cell idle CPU is low
           description: There is only {{ $value | printf "%.0f" }}% CPU idle on average on cells. Review if we need to scale...
@@ -21,4 +20,3 @@
         expr: avg(avg_over_time(bosh_job_cpu_idle{bosh_job_name="diego-cell"}[1d])) < 33
         labels:
           severity: critical
-          notify: email

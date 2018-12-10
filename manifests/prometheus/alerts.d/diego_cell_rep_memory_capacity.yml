@@ -16,7 +16,6 @@
         for: 2h
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: Rep low free memory capacity
           description: >
@@ -30,4 +29,3 @@
         expr: rep_memory_capacity_pct:avg5m < 33
         labels:
           severity: critical
-          notify: email

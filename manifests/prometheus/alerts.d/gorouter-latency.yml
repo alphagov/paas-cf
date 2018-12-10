@@ -14,7 +14,6 @@
         expr: cc:firehose_value_metric_gorouter_latency:avg10m > 750
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: Gorouter latency
           description: Gorouter latency is too high ({{ $value | printf \"%.0f\" }}ms") on {{ $labels.bosh_job_ip }}
@@ -25,4 +24,3 @@
         expr: cc:firehose_value_metric_gorouter_latency:avg10m > 1500
         labels:
           severity: critical
-          notify: email

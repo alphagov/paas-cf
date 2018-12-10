@@ -16,7 +16,6 @@
         for: 2h
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: Rep Container Capacity
           description: >
@@ -30,4 +29,3 @@
         expr: rep_container_capacity_pct:avg5m > 80
         labels:
           severity: critical
-          notify: email

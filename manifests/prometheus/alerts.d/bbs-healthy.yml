@@ -10,6 +10,5 @@
         expr: min(bosh_job_process_healthy{bosh_job_process_name="bbs"}) < 1
         labels:
           severity: critical
-          notify: email
         annotations:
           summary: BBS health check failed. Check BBS status immediately.

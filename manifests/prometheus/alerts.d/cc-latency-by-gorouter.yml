@@ -14,7 +14,6 @@
         expr: cc:firehose_value_metric_gorouter_latency_cloud_controller:avg10m > 200
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: "Cloud Controller latency as reported by gorouter"
           description: "Average latency of cloud controller calls is high ({{ $value | printf \"%.0f\" }}ms) - this may be due to a high proportion of expensive API calls or it may indicate that the API servers need to be scaled up"
@@ -24,4 +23,3 @@
         expr: cc:firehose_value_metric_gorouter_latency_cloud_controller:avg10m > 250
         labels:
           severity: critical
-          notify: email

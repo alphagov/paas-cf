@@ -10,7 +10,6 @@
         expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 45
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: Cell available memory is low
           description: There is only {{ $value | printf "%.0f" }}% memory free on average on cells. Review if we need to scale...
@@ -21,4 +20,3 @@
         expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 50
         labels:
           severity: critical
-          notify: email
