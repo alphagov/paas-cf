@@ -24,6 +24,8 @@
     email_configs:
       - from: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
         to: govpaas-alerting-((aws_account))+warning@digital.cabinet-office.gov.uk
+        headers:
+          Subject: "[((metrics_environment))] [warning] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
@@ -32,3 +34,5 @@
     email_configs:
       - from: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
         to: govpaas-alerting-((aws_account))+critical@digital.cabinet-office.gov.uk
+        headers:
+          Subject: "[((metrics_environment))] [critical] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
