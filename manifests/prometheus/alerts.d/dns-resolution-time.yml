@@ -8,7 +8,7 @@
     rules:
     - &alert
       alert: DNSResolutionTime_Warning
-      expr: avg_over_time(dns_resolution_probe_dns_lookup_time_seconds[5m]) > 0.1
+      expr: avg_over_time(dns_resolution_probe_duration_seconds[5m]) > 0.1
       labels:
         severity: warning
       annotations:
@@ -17,6 +17,6 @@
 
     - <<: *alert
       alert: DNSResolutionTime_Critical
-      expr: avg_over_time(dns_resolution_probe_dns_lookup_time_seconds[5m]) > 0.2
+      expr: avg_over_time(dns_resolution_probe_duration_seconds[5m]) > 0.2
       labels:
         severity: critical
