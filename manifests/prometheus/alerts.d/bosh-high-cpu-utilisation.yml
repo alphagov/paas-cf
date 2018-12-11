@@ -14,7 +14,6 @@
         expr: "bosh_job:bosh_job_cpu:avg1h > 70"
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: "High cpu utilisation on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
           description: "{{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }} CPU utilisation was over {{ $value | printf \"%.0f\" }}% in the last hour on average"
@@ -24,4 +23,3 @@
         expr: "bosh_job:bosh_job_cpu:avg1h > 90"
         labels:
           severity: critical
-          notify: email

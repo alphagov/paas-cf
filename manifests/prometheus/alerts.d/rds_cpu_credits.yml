@@ -11,7 +11,6 @@
         expr: avg_over_time(aws_rds_cpucreditbalance_minimum[30m]) <= 20
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: "RDS CPU credits are low on {{ $labels.tag_Name }}"
           description: "RDS instance {{ $labels.tag_Name }} has only {{ $value | printf \"%.0f\" }} CPU credits left and may perform badly."
@@ -22,4 +21,3 @@
         expr: avg_over_time(aws_rds_cpucreditbalance_minimum[30m]) <= 1
         labels:
           severity: critical
-          notify: email

@@ -14,7 +14,6 @@
         expr: max(delta(firehose_value_metric_cc_failed_job_count_total:avg30m[30m])) > 3
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: "Cloud Controller API failed job count"
           description: "Amount of failed jobs in Cloud Controller API grew considerably in the last hour: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.component:cloud_controller_worker AND @level:ERROR'"
@@ -24,4 +23,3 @@
         expr: max(delta(firehose_value_metric_cc_failed_job_count_total:avg30m[30m])) > 5
         labels:
           severity: critical
-          notify: email

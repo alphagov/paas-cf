@@ -16,7 +16,6 @@
           url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
         labels:
           severity: warning
-          notify: email
           service: elb
 
       - alert: PlatformTLSCertificateExpiresSoon_Critical
@@ -28,5 +27,4 @@
           url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
         labels:
           severity: critical
-          notify: email
           service: elb

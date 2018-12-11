@@ -11,7 +11,6 @@
       for: 10m
       labels:
         severity: critical
-        notify: email
       annotations:
         summary: "Cloud Controller is unregistering from gorouter"
         description: Cloud Controller is unregistering from gorouter, this probably means it is failing its route_registrar healthcheck. This could be due to high load, and may indicate that the API servers need to be scaled up.

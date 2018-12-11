@@ -10,7 +10,5 @@
         expr: "sum(firehose_value_metric_bbs_lock_held) != 1"
         labels:
           severity: critical
-          notify: email
         annotations:
           summary: there is not exactly one BBS holding the lock.
-

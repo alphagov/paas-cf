@@ -12,7 +12,6 @@
         for: 1h
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: "Number of elasticache nodes is close to the limit"
           description: "We are using {{ $value | printf \"%.0f\" }} of 100 Elasticache nodes. We might have to contact AWS support to raise the limit."
@@ -22,4 +21,3 @@
         expr: paas_aws_elasticache_node_count > 90
         labels:
           severity: critical
-          notify: email

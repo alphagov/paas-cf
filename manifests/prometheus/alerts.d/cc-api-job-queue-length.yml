@@ -11,7 +11,6 @@
         expr: avg_over_time(firehose_value_metric_cc_job_queue_length_total[30m]) > 20
         labels:
           severity: warning
-          notify: email
         annotations:
           summary: "Cloud Controller API job queue length"
           description: "Job queue in Cloud Controller API grew considerably, check the API health: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.component:cloud_controller_ng AND @level:ERROR'"
@@ -21,4 +20,3 @@
         expr: avg_over_time(firehose_value_metric_cc_job_queue_length_total[30m]) > 25
         labels:
           severity: critical
-          notify: email
