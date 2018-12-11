@@ -9,3 +9,7 @@
 - type: replace
   path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/server?/root_url
   value: https://grafana.((system_domain))
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/prometheus?/use_external_url?
+  value: false
