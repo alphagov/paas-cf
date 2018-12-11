@@ -2,7 +2,7 @@ RSpec.describe "setting persistent disks" do
   {
     "alertmanager" => "5GB",
     "grafana" => "5GB",
-    "prometheus2" => "10GB",
+    "prometheus2" => "100GB",
   }.each do |name, type|
     it "sets the persistent_disk_type for #{name} to #{type}" do
       expect(manifest_with_defaults.get("instance_groups.#{name}.persistent_disk_type")).to eq(type)
