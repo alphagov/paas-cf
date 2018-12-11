@@ -211,7 +211,7 @@ showenv: check-env ## Display environment information
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=$(DEPLOY_ENV)_concourse_key_pair" \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
-	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password prometheus_password
+	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password grafana_mon_password prometheus_password
 
 .PHONY: upload-all-secrets
 upload-all-secrets: upload-datadog-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets

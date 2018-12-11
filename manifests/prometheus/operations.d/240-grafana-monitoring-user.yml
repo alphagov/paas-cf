@@ -1,0 +1,12 @@
+- type: replace
+  path: /variables/-
+  value:
+    name: grafana_mon_password
+    type: password
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/users?/seeded_global_users/-
+  value:
+    name: mon
+    email: mon
+    login: mon
+    password: ((grafana_mon_password))
