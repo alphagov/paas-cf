@@ -1,0 +1,18 @@
+# Source: concourse
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseSmoketestsFailures
+    rules:
+      - record: "concourse_continuous_smoke_tests_failures"
+        expr: sum(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"} or (absent(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"})-1))
+
+      - alert: ConcourseSmoketestsFailures
+        expr: increase(concourse_continuous_smoke_tests_failures[1h]) >= 3
+        labels:
+          severity: critical
+        annotations:
+          summary: Concourse continuous-smoke-tests failures
+          description: The continuous-smoke-tests Concourse job has been failing for a while now.

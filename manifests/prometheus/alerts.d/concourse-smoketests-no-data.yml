@@ -1,0 +1,16 @@
+# Source: concourse
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseSmoketestsNoData
+    rules:
+      - alert: ConcourseSmoketestsNoData
+        expr: absent(concourse_builds_finished{pipeline="create-cloudfoundry",exported_job="continuous-smoke-tests"})
+        for: 30m
+        labels:
+          severity: critical
+        annotations:
+          summary: Concourse continuous-smoke-tests no data
+          description: The continuous-smoke-tests Concourse job has not been reporting data for a while now.
