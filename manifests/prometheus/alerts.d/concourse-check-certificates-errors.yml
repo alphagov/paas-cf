@@ -1,0 +1,18 @@
+# Source: concourse
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseCheckCertificatesErrors
+    rules:
+      - record: "concourse_check_certificates_errors"
+        expr: sum(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="errored"} or (absent(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="errored"})-1))
+
+      - alert: ConcourseCheckCertificatesErrors
+        expr: increase(concourse_check_certificates_errors[3d]) >= 2
+        labels:
+          severity: critical
+        annotations:
+          summary: Concourse check-certificates errors
+          description: The check-certificates Concourse job has been erroring for a while now. Check the health/check-certificates job on Concourse.

@@ -1,0 +1,16 @@
+# Source: concourse
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseCheckCertificatesNoData
+    rules:
+      - alert: ConcourseCheckCertificatesNoData
+        expr: absent(concourse_builds_finished{pipeline="create-cloudfoundry",exported_job="check-certificates"})
+        for: 2d
+        labels:
+          severity: critical
+        annotations:
+          summary: Concourse check-certificates no data
+          description: The check-certificates Concourse job has not been reporting data for a while now. Check the health/check-certificates job on Concourse.
