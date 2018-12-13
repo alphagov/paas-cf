@@ -619,11 +619,7 @@
                 "postfixFontSize": "50%",
                 "prefix": "",
                 "prefixFontSize": "50%",
-                "rangeMaps": [{
-                    "from": "null",
-                    "text": "N/A",
-                    "to": "null"
-                }],
+                "rangeMaps": [],
                 "sparkline": {
                     "fillColor": "rgba(31, 118, 189, 0.18)",
                     "full": false,
@@ -632,13 +628,13 @@
                 },
                 "tableColumn": "",
                 "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\"})",
+                    "expr": "count(ALERTS{alertstate=\"firing\"}) or vector(0)",
                     "format": "time_series",
                     "instant": true,
                     "intervalFactor": 1,
                     "refId": "A"
                 }],
-                "thresholds": "0,1",
+                "thresholds": "1,1",
                 "title": "Firing Alerts",
                 "type": "singlestat",
                 "valueFontSize": "200%",
