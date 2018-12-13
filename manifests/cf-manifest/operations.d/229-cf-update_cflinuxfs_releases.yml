@@ -4,9 +4,9 @@
   path: /releases/name=cflinuxfs2
   value:
     name: cflinuxfs2
-    version: "1.251.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.251.0"
-    sha1: "6d2954eb343b9aaaf23d38355fe0c3e85c2de36e"
+    version: "1.255.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.255.0"
+    sha1: "8fdfe5cfc1c961dbc385150e6008878e3572701d"
 
 - type: replace
   path: /releases/name=cflinuxfs3
