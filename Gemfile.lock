@@ -24,8 +24,6 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
-    dogapi (1.24.0)
-      multi_json
     em-http-request (1.1.5)
       addressable (>= 2.3.4)
       cookiejar (!= 0.3.1)
@@ -113,7 +111,6 @@ DEPENDENCIES
   aws-sdk (~> 2.3.8)
   cf-uaa-lib (~> 3.11.0)
   cf-uaac (~> 4.1.0)
-  dogapi
   github_merge_sign (= 1.0.0)
   govuk-lint (~> 3.8.0)
   json-minify (~> 0.0.2)
