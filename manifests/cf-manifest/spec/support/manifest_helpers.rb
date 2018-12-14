@@ -9,7 +9,6 @@ module ManifestHelpers
     attr_accessor :workdir
     attr_accessor :manifest_with_defaults
     attr_accessor :manifest_without_vars_store
-    attr_accessor :manifest_with_datadog_enabled
     attr_accessor :cf_deployment_manifest
     attr_accessor :cloud_config_with_defaults
     attr_accessor :terraform_fixture
@@ -25,7 +24,6 @@ module ManifestHelpers
     Cache.instance.manifest_without_vars_store ||= \
       render_manifest(
         environment: "default",
-        enable_datadog: "false",
         disable_user_creation: "true",
       )
   end
@@ -34,7 +32,6 @@ module ManifestHelpers
     Cache.instance.manifest_with_defaults ||= \
       render_manifest_with_vars_store(
         environment: "default",
-        enable_datadog: "false",
         disable_user_creation: "true",
       )
   end
@@ -42,25 +39,14 @@ module ManifestHelpers
   def manifest_with_custom_vars_store(vars_store_content)
     render_manifest_with_vars_store(
       environment: "default",
-      enable_datadog: "false",
       disable_user_creation: "true",
       custom_vars_store_content: vars_store_content,
     )
   end
 
-  def manifest_with_datadog_enabled
-    Cache.instance.manifest_with_datadog_enabled ||= \
-      render_manifest_with_vars_store(
-        environment: "default",
-        enable_datadog: "true",
-        disable_user_creation: "true",
-      )
-  end
-
   def manifest_with_enable_user_creation
     render_manifest_with_vars_store(
       environment: "default",
-      enable_datadog: "false",
       disable_user_creation: "false",
     )
   end
@@ -68,7 +54,6 @@ module ManifestHelpers
   def manifest_for_prod
     render_manifest(
       environment: "prod",
-      enable_datadog: "false",
       disable_user_creation: "true",
       vars_store_file: nil,
       env_specific_bosh_vars_file: "prod.yml",
@@ -78,7 +63,6 @@ module ManifestHelpers
   def manifest_for_dev
     render_manifest(
       environment: "dev",
-      enable_datadog: "false",
       disable_user_creation: "true",
     )
   end
@@ -129,7 +113,6 @@ private
 
   def render_manifest(
     environment:,
-    enable_datadog:,
     disable_user_creation:,
     vars_store_file: nil,
     env_specific_bosh_vars_file: "default.yml"
@@ -145,7 +128,6 @@ private
       'PAAS_CF_DIR' => root.to_s,
       'WORKDIR' => workdir,
       'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s,
-      'ENABLE_DATADOG' => enable_datadog,
       'DISABLE_USER_CREATION' => disable_user_creation
     }
 
@@ -162,7 +144,6 @@ private
 
   def render_manifest_with_vars_store(
     environment:,
-    enable_datadog:,
     disable_user_creation:,
     custom_vars_store_content: nil,
     env_specific_bosh_vars_file: "default.yml"
@@ -173,7 +154,6 @@ private
 
       output = render_manifest(
         environment: environment,
-        enable_datadog: enable_datadog,
         disable_user_creation: disable_user_creation,
         vars_store_file: vars_store_tempfile.path,
         env_specific_bosh_vars_file: env_specific_bosh_vars_file,

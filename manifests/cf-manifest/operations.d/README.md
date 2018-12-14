@@ -22,5 +22,5 @@ We try to follow this convention to number the files:
     - 700-900 new features: additional instance groups (e.g. brokers)
     - 900 things that need to run at last (e.g. cert rotation and prune)
 
-Any special file that would be added optionally (e.g. OAuth or datadog) shall
+Any special file that would be added optionally (e.g. OAuth) shall
 be in the `../operations/*` directory.
