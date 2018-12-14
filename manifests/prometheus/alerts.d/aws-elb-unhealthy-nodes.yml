@@ -12,5 +12,5 @@
         severity: warning
       annotations:
         summary: "At least one ELB node is not responding"
-        description: Requests to the healthcheck app via {{ $value | printf \"%.0f\" }} of the ELB IP addresses failed.
+        description: "Requests to the healthcheck app via {{ $value | printf \"%.0f\" }} of the ELB IP addresses failed."
         url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#intermittent-elb-failures
