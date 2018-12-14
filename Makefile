@@ -114,7 +114,6 @@ dev: globals ## Set Environment to DEV
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=default.yml)
 	$(eval export DISABLE_HEALTHCHECK_DB=true)
-	$(eval export ENABLE_DATADOG ?= false)
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
 	$(eval export DISABLE_PIPELINE_LOCKING=true)
 	$(eval export TEST_HEAVY_LOAD=true)
@@ -134,7 +133,6 @@ stg-lon: globals ## Set Environment to stg-lon
 	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stg-lon@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=stg-lon.yml)
-	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=stg-lon)
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
@@ -154,7 +152,6 @@ prod: globals ## Set Environment to Production
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=prod.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
-	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
@@ -173,7 +170,6 @@ prod-lon: globals ## Set Environment to prod-lon
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
 	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=prod-lon.yml)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
-	$(eval export ENABLE_DATADOG=true)
 	$(eval export DEPLOY_ENV=prod-lon)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
@@ -214,15 +210,7 @@ showenv: check-env ## Display environment information
 	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password grafana_mon_password prometheus_password
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-datadog-secrets upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
-
-.PHONY: upload-datadog-secrets
-upload-datadog-secrets: check-env ## Decrypt and upload Datadog credentials to S3
-	$(eval export DATADOG_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
-	$(if ${DATADOG_PASSWORD_STORE_DIR},,$(error Must pass DATADOG_PASSWORD_STORE_DIR=<path_to_password_store>))
-	$(if $(wildcard ${DATADOG_PASSWORD_STORE_DIR}),,$(error Password store ${DATADOG_PASSWORD_STORE_DIR} does not exist))
-	@scripts/upload-datadog-secrets.sh
+upload-all-secrets: upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
