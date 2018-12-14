@@ -8,7 +8,6 @@ import (
 )
 
 var _ = Describe("Checking the TLS version", func() {
-
 	testHostPortGetters := map[string]func() string{
 		"apps_apex": func() string {
 			return testConfig.GetAppsDomain() + ":443"
@@ -18,6 +17,12 @@ var _ = Describe("Checking the TLS version", func() {
 		},
 		"system": func() string {
 			return testConfig.GetApiEndpoint() + ":443"
+		},
+		"doppler": func() string {
+			return "doppler." + GetConfigFromEnvironment("SYSTEM_DNS_ZONE_NAME") + ":443"
+		},
+		"concourse": func() string {
+			return "deployer." + GetConfigFromEnvironment("SYSTEM_DNS_ZONE_NAME") + ":443"
 		},
 	}
 
