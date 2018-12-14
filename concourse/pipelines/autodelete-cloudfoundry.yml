@@ -64,13 +64,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: healthcheck-deployed
 
-  - name: datadog-tfstate
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: datadog.tfstate
-      region_name: ((aws_region))
-
 jobs:
   - name: delete
     serial: true
@@ -81,7 +74,6 @@ jobs:
       - get: paas-cf
       - get: cf-vars-store
       - get: cf-manifest
-      - get: datadog-tfstate
       - get: bosh-CA-crt
 
       - task: get-cf-cli-config
@@ -110,20 +102,6 @@ jobs:
           SPACE: billing
           DB_NAME: accounts-db
           BOUND_APPS: paas-accounts
-
-      - task: datadog-TF-destroy
-        file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
-        params:
-          TF_VAR_datadog_api_key: ((datadog_api_key))
-          TF_VAR_datadog_app_key: ((datadog_app_key))
-          TF_VAR_env: ((deploy_env))
-          TF_VAR_aws_account: ((aws_account))
-          TF_VAR_region: ((aws_region))
-          ENABLE_DATADOG: ((enable_datadog))
-        ensure:
-          put: datadog-tfstate
-          params:
-            file: updated-datadog-tfstate/datadog.tfstate
 
       - task: await-turn
         config:
