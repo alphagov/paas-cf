@@ -2416,7 +2416,6 @@ jobs:
                     'CF_CLIENT_ID' => 'paas-metrics',
                     'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                    'DISABLE_DATADOG' => '1',
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
                     'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
                     'TLS_DOMAINS' => [

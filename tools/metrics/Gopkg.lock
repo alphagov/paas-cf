@@ -55,14 +55,6 @@
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
 
 [[projects]]
-  digest = "1:1cf61f0228e64d1bfddaa42bfd1f5047ed3626925b9bea69bbcb9168472dae23"
-  name = "github.com/cenkalti/backoff"
-  packages = ["."]
-  pruneopts = ""
-  revision = "61153c768f31ee5f130071d08fc82b85208528de"
-  version = "v1.1.0"
-
-[[projects]]
   branch = "master"
   digest = "1:de2b6a6c75268ad79b0f5ca149546c86ab47452a9f959dfd6cef1a52d5786808"
   name = "github.com/cloudfoundry-community/go-cfclient"
@@ -325,14 +317,6 @@
   pruneopts = ""
   revision = "287cf08546ab5e7e37d55a84f7ed3fd1db036de5"
 
-[[projects]]
-  digest = "1:26ca2e876a260ffaa701b6cc65a3eba747a94f6683c428a8d038f4949777048c"
-  name = "gopkg.in/zorkian/go-datadog-api.v2"
-  packages = ["."]
-  pruneopts = ""
-  revision = "659bba33a1626ab76f393d6878dc3e4f13253f6d"
-  version = "v2.3"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -353,8 +337,8 @@
     "github.com/onsi/gomega",
     "github.com/onsi/gomega/gbytes",
     "github.com/pkg/errors",
+    "github.com/prometheus/client_golang/prometheus",
     "github.com/prometheus/client_golang/prometheus/promhttp",
-    "gopkg.in/zorkian/go-datadog-api.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
