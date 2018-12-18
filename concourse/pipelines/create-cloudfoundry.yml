@@ -1520,9 +1520,6 @@ jobs:
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
               EOT
 
-              paas-cf/scripts/job_instances.rb cf-manifest/cf-manifest.yml \
-                > config/job_instances.tfvars
-
               ls -l config/*
 
     - aggregate:
@@ -2395,56 +2392,19 @@ jobs:
                   fi
                   cf enable-service-access redis
 
-      - task: datadog-terraform-apply
-        config:
-          platform: linux
-          image_resource: *terraform-image-resource
-          inputs:
-            - name: datadog-tfstate
-            - name: paas-cf
-            - name: config
-          outputs:
-            - name: updated-tfstate
-          params:
-            TF_VAR_env: ((deploy_env))
-            TF_VAR_datadog_api_key: ((datadog_api_key))
-            TF_VAR_datadog_app_key: ((datadog_app_key))
-            TF_VAR_aws_account: ((aws_account))
-            TF_VAR_region: ((aws_region))
-            ENABLE_DATADOG: ((enable_datadog))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
-                terraform init paas-cf/terraform/datadog
-
-                if [ -n "${TF_VAR_datadog_api_key}" ] && [ -n "${TF_VAR_datadog_app_key}" ] && [ "${ENABLE_DATADOG}" = "false" ]; then
-                  echo "Datadog disabled but keys present, running check cleanup..."
-                  terraform destroy -force \
-                      -state=updated-tfstate/datadog.tfstate \
-                      -var-file="paas-cf/terraform/${TF_VAR_aws_account}.tfvars" \
-                      paas-cf/terraform/datadog
-                  exit 0
-                fi
-
-                if [ "${ENABLE_DATADOG}" = "true" ]; then
-                  terraform apply \
-                    -auto-approve=true \
-                    -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                    -state=updated-tfstate/datadog.tfstate \
-                    -var-file=config/job_instances.tfvars \
-                    paas-cf/terraform/datadog
-                else
-                  echo "Datadog disabled, skipping terraform run..."
-                  cp datadog-tfstate/datadog.tfstate updated-tfstate/datadog.tfstate
-                fi
+      - task: datadog-terraform-destroy
+        file: paas-cf/concourse/tasks/terraform_destroy_datadog.yml
+        params:
+          TF_VAR_env: ((deploy_env))
+          TF_VAR_datadog_api_key: ((datadog_api_key))
+          TF_VAR_datadog_app_key: ((datadog_app_key))
+          TF_VAR_aws_account: ((aws_account))
+          TF_VAR_region: ((aws_region))
+          ENABLE_DATADOG: ((enable_datadog))
         ensure:
           put: datadog-tfstate
           params:
-            file: updated-tfstate/datadog.tfstate
+            file: updated-datadog-tfstate/datadog.tfstate
 
       - task: deploy-paas-metrics
         config:
