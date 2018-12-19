@@ -24,6 +24,9 @@ def parse_args
   parser.on("--preserve VAR", "variables to not rotate") { |v|
     options[:vars_to_preserve] << v
   }
+  parser.on("--rotate VAR", "variables to do rotate. Will rotate all if not set.") { |v|
+    options[:vars_to_rotate] = (options[:vars_to_rotate] || []) << v
+  }
   parser.parse!
 
   if options[:vars_store].nil? || options[:manifest].nil?
@@ -75,10 +78,13 @@ def rotate(manifest, vars_store,
            passwords: false,
            rsa: false,
            ssh: false,
+           vars_to_rotate: nil,
            vars_to_preserve: [],
            delete: false)
 
-  vars = manifest.fetch("variables").reject { |v| vars_to_preserve.include?(v["name"]) }
+  vars = manifest.fetch("variables")
+  vars = vars.select { |v| vars_to_rotate.include?(v["name"].gsub(/_old$/, '')) } unless vars_to_rotate.nil?
+  vars = vars.reject { |v| vars_to_preserve.include?(v["name"]) }
 
   if delete
     return delete_old(vars, vars_store)
