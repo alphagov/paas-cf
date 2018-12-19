@@ -88,6 +88,7 @@ groups:
     jobs:
       - rotate-cf-admin-password
       - rotate-cloudfoundry-credentials
+      - rotate-database-encryption-keys
       - rotate-prometheus-credentials
       - expire-aws-keys
       - rotate-cf-certs-cas
@@ -3101,6 +3102,7 @@ jobs:
                 --rsa \
                 --preserve cc_bulk_api_password \
                 --preserve cc_db_encryption_key \
+                --preserve cc_db_encryption_key_id \
                 --preserve cc_internal_api_password \
                 --preserve cc_staging_upload_password \
                 --preserve cf_admin_password \
@@ -3150,6 +3152,42 @@ jobs:
         put: cf-tfstate
         params:
           file: updated-tfstate/cf.tfstate
+
+  - name: rotate-database-encryption-keys
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-vars-store
+      - get: cf-manifest-pre-vars
+
+    - task: rotate-db-encryption-key
+      config:
+        platform: linux
+        image_resource: *ruby-slim-image-resource
+        inputs:
+          - name: paas-cf
+          - name: cf-vars-store
+          - name: cf-manifest-pre-vars
+        outputs:
+          - name: modified-cf-vars-store
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --passwords \
+                --rotate cc_db_encryption_key \
+                --rotate cc_db_encryption_key_id \
+                > modified-cf-vars-store/cf-vars-store.yml
+      on_success:
+        put: cf-vars-store
+        params:
+          file: modified-cf-vars-store/cf-vars-store.yml
 
   - name: rotate-prometheus-credentials
     serial: true

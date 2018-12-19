@@ -1,5 +1,0 @@
----
-
-- type: replace
-  path: /instance_groups/name=rotate-cc-database-key/vm_extensions?/-
-  value: cf_rds_client_sg
