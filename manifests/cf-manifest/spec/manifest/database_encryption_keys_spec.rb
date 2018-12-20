@@ -26,16 +26,6 @@ RSpec.describe "database encryption keys" do
         expect(keys).to include("((cc_db_encryption_key_id))" => "((cc_db_encryption_key))")
         expect(keys).to include("((cc_db_encryption_key_id_old))" => "((cc_db_encryption_key_old))")
       end
-
-      # FIXME: this key 'encryption_key_0' should be after the first deployment
-      # with the new ((cc_db_encryption_key_id))
-      it "the cf-deployment 'encryption_key_0' key is being temporary set" do
-        properties = manifest.fetch(job_properties_path)
-
-        keys = properties.fetch("cc").fetch("database_encryption").fetch("keys")
-
-        expect(keys).to include("encryption_key_0" => "((cc_db_encryption_key_encryption_key_0))")
-      end
     end
 
     it "only has ((cc_db_encryption_key)) in the expected locations" do
@@ -83,19 +73,6 @@ RSpec.describe "database encryption keys" do
       expect(keys).to include(
         "label" => "((uaa_default_encryption_passphrase_id_old))",
         "passphrase" => "((uaa_default_encryption_passphrase_old))",
-      )
-    end
-
-    # FIXME: this key 'encryption_key_0' should be after the first deployment
-    # with the new ((cc_db_encryption_key_id))
-    it "the cf-deployment 'default_key' key is being temporary set" do
-      properties = manifest.fetch("instance_groups.uaa.jobs.uaa.properties")
-
-      keys = properties.fetch("encryption").fetch("encryption_keys")
-
-      expect(keys).to include(
-        "label" => "default_key",
-        "passphrase" => "((uaa_default_encryption_passphrase_default_key))",
       )
     end
   end
