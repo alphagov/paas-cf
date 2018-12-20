@@ -45,4 +45,35 @@ RSpec.describe "database encryption keys" do
       expect(found_locations).to contain_exactly(*expected_locations)
     end
   end
+
+  describe "UAA database encryption key" do
+    it "has a default encryption key configured" do
+      properties = manifest.fetch("instance_groups.uaa.jobs.uaa.properties")
+
+      active_key_label = properties.fetch("encryption").fetch("active_key_label")
+      keys = properties.fetch("encryption").fetch("encryption_keys")
+
+      expect(active_key_label).to eq("((uaa_default_encryption_passphrase_id))")
+
+      expect(keys).to include(
+        "label" => "((uaa_default_encryption_passphrase_id))",
+        "passphrase" => "((uaa_default_encryption_passphrase))",
+      )
+    end
+
+    it "it keeps the _old key as key" do
+      properties = manifest.fetch("instance_groups.uaa.jobs.uaa.properties")
+
+      keys = properties.fetch("encryption").fetch("encryption_keys")
+
+      expect(keys).to include(
+        "label" => "((uaa_default_encryption_passphrase_id))",
+        "passphrase" => "((uaa_default_encryption_passphrase))",
+      )
+      expect(keys).to include(
+        "label" => "((uaa_default_encryption_passphrase_id_old))",
+        "passphrase" => "((uaa_default_encryption_passphrase_old))",
+      )
+    end
+  end
 end
