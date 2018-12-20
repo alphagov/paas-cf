@@ -1054,20 +1054,6 @@ jobs:
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
 
-                  # FIXME: populate the old value of 'encryption_key_0' for CC
-                  # and 'default_key' for UAA.
-                  # These keys should be removed after the first deployment
-                  # of this code.
-                  if ! grep -e '^cc_db_encryption_key_encryption_key_0:' cf-vars-store/cf-vars-store.yml; then
-                    awk '
-                      /^cc_db_encryption_key:/ {print "cc_db_encryption_key_encryption_key_0:", $2}
-                      /^uaa_default_encryption_passphrase:/ {print "uaa_default_encryption_passphrase_default_key:", $2}
-                      {print}
-                    ' \
-                    < cf-vars-store/cf-vars-store.yml \
-                    > cf-vars-store-updated/cf-vars-store.yml
-                  fi
-
                   VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
                     ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
                       > cf-manifest/cf-manifest.yml
@@ -3306,8 +3292,6 @@ jobs:
                 --preserve uaa_clients_tcp_router_secret \
                 --preserve uaa_default_encryption_passphrase \
                 --preserve uaa_default_encryption_passphrase_id \
-                --preserve cc_db_encryption_key_encryption_key_0 \
-                --preserve uaa_default_encryption_passphrase_default_key \
                 > modified-cf-vars-store/cf-vars-store.yml
       on_success:
         do:

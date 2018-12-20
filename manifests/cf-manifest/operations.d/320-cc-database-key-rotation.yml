@@ -10,8 +10,6 @@
     keys:
       ((cc_db_encryption_key_id)): "((cc_db_encryption_key))"
       ((cc_db_encryption_key_id_old)): "((cc_db_encryption_key_old))"
-      # FIXME: remove this key once we have deployed and rotated this once
-      encryption_key_0: "((cc_db_encryption_key_encryption_key_0))"
 
 - type: replace
   path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/database_encryption?
@@ -37,11 +35,4 @@
   path: /variables/-
   value:
     name: cc_db_encryption_key_id_old
-    type: password
-
-# FIXME: remove this key once we have deployed and rotated this once
-- type: replace
-  path: /variables/-
-  value:
-    name: cc_db_encryption_key_encryption_key_0
     type: password
