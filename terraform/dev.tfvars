@@ -14,8 +14,6 @@ support_email="govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 
 # 14313350 - GOV.UK PaaS Contact - dev
 pingdom_contact_ids = [ 14313350 ]
-datadog_notification_24x7 = "@govpaas-alerting-dev@digital.cabinet-office.gov.uk"
-datadog_notification_in_hours = "@govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 
 # AWS Limits not accesible via API
 aws_limits_elasticache_nodes = 100

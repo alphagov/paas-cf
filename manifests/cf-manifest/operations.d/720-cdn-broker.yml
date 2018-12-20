@@ -47,8 +47,6 @@
       - name: cdn-cron
         release: cdn-broker
         properties: *cdn-broker-properties
-      - name: datadog-cdn-broker
-        release: datadog-for-cloudfoundry
     networks:
       - name: cf
 

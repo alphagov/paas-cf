@@ -7,9 +7,6 @@ export TARGET_CONCOURSE=deployer
 $("${SCRIPT_DIR}/environment.sh" "$@")
 
 # shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/datadog.sh"
-
-# shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/aiven.sh"
 
 # shellcheck disable=SC1090
@@ -58,7 +55,6 @@ prepare_environment() {
 
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
-  get_datadog_secrets
   get_aiven_secrets
   get_google_oauth_secrets
   get_notify_secrets
@@ -68,14 +64,6 @@ prepare_environment() {
   if [ -n "${SLIM_DEV_DEPLOYMENT:-}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
     echo "SLIM_DEV_DEPLOYMENT set for non-dev deployment. Aborting!"
     exit 1
-  fi
-
-  if [ "${ENABLE_DATADOG}" = "true" ] ; then
-    # shellcheck disable=SC2154
-    if [ -z "${datadog_api_key+x}" ] || [ -z "${datadog_app_key+x}" ] ; then
-      echo "Datadog enabled but could not retrieve api or app key. Did you do run \`make ${MAKEFILE_ENV_TARGET} upload-datadog-secrets\`?"
-      exit 1
-    fi
   fi
 
   # shellcheck disable=SC2154
@@ -139,11 +127,8 @@ bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
-datadog_api_key: "${datadog_api_key:-}"
-datadog_app_key: "${datadog_app_key:-}"
 aiven_api_token: ${aiven_api_token:-}
 pagerduty_integration_key: "${pagerduty_integration_key:-this-is-not-a-pagerduty-key}"
-enable_datadog: ${ENABLE_DATADOG}
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: "${oauth_client_id:-}"
 oauth_client_secret: "${oauth_client_secret:-}"

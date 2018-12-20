@@ -2,7 +2,7 @@
 
 ### Overview
 
-Collects useful usage/platform metrics that are not currently provided by our other integrations, then reports those events somewhere useful (currently datadog).
+Collects useful usage/platform metrics that are not currently provided by our other integrations, then reports those events somewhere useful.
 
 ### Metrics
 
@@ -37,8 +37,6 @@ cf push paas-metrics --no-start
 You'll need some environment variables set (you could also add these to the manifest)...
 
 ```bash
-cf set-env paas-metrics DATADOG_API_KEY "API_KEY"           # Datadog secret key
-cf set-env paas-metrics DATADOG_APP_KEY "APP_KEY"           # Datadog app key
 cf set-env paas-metrics ELB_ADDRESS "https://healthcheck/"  # Address of an ELB to check
 cf set-env paas-metrics CF_API_ADDRESS "ENDPOINT"           # Cloud Foundry API endpoint URL
 cf set-env paas-metrics CF_CLIENT_ID "UAA_CLIENT_ID"        # UAA client with cloud_foundry.global_auditor scope
@@ -64,7 +62,7 @@ There is a `MetricReader` / `MetricWriter` interface similar to `io.Reader` / `i
 
 "gauges" are implemented as `MetricReaders` that are merged into a single stream of `Metrics` (see [main.go](main.go)).
 
-"reporters" are implemented as `MetricWriters` (see [datadog_reporter.go](datadog_reporter.go)).
+"reporters" are implemented as `MetricWriters` (see [prometheus_reporter.go](prometheus_reporter.go)).
 
 An example gauge that polls pointlessly for random numbers using the `NewMetricPoller` helper might look like:
 
@@ -72,7 +70,7 @@ An example gauge that polls pointlessly for random numbers using the `NewMetricP
 var RandomMetric := NewMetricPoller(10 * time.Second, func(w MetricWriter) error {
 	return w.WriteMetrics([]Metric{
 		{
-			Kind: Gauge, // only "gauge" type supported by Datadog unfortunately
+			Kind: Gauge,
 			Name: "my.random.thing",
 			Time: time.Now(),
 			Value: rand.Float64(100.0),
@@ -91,8 +89,6 @@ _ = CopyMetrics(reporter, RandomMetric)
 ### Debugging
 
 If you run the app with `DEBUG=1` it will write all metrics to the stdout.
-
-If you want to disable the DataDog reporter you can pass `DISABLE_DATADOG=1`.
 
 ### Running tests
 

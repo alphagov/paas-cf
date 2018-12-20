@@ -24,7 +24,7 @@ Requirements:
  * You must login with the cf client with an "admin" user.
 
 Where:
-  <guid> Instance GUID obtained from DataDog or Kibana.
+  <guid> Instance GUID obtained from metrics or Kibana.
 
 EOF
   exit 1

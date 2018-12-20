@@ -130,18 +130,6 @@ func Main() error {
 		prometheusReporter,
 	)
 
-	if os.Getenv("DISABLE_DATADOG") != "1" {
-		dataDogreporter := NewDatadogReporter(DatadogConfig{
-			ApiKey:        os.Getenv("DATADOG_API_KEY"),
-			AppKey:        os.Getenv("DATADOG_APP_KEY"),
-			Logger:        logger,
-			BatchSize:     100,
-			BatchInterval: 60 * time.Second,
-			Tags:          []string{"deploy_env:" + os.Getenv("DEPLOY_ENV")},
-		})
-		multiWriter.AddWriter(dataDogreporter)
-	}
-
 	if os.Getenv("DEBUG") == "1" {
 		multiWriter.AddWriter(StdOutWriter{})
 	}

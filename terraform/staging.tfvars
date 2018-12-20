@@ -14,16 +14,9 @@ bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="govpaas-alerting-staging@digital.cabinet-office.gov.uk"
 
-# Enabled/disabled resources
-# Disable datadog_monitor.total_routes_drop resource
-datadog_monitor_total_routes_drop_enabled = 0
-
 # 14313354 - GOV.UK PaaS Contact - staging
 # 14270725 - PaaS PagerDuty in hours
 pingdom_contact_ids = [ 14313354, 14270725 ]
-
-datadog_notification_24x7 = "@pagerduty-datadog-in-hours"
-datadog_notification_in_hours = "@pagerduty-datadog-in-hours"
 
 aws_limits_elasticache_nodes = 100
 aws_limits_elasticache_cache_parameter_groups = 20
