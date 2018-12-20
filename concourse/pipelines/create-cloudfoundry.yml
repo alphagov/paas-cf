@@ -2363,24 +2363,6 @@ jobs:
                   fi
                   cf enable-service-access redis
 
-      # FIXME: remove this when it's been run everywhere
-      - task: remove-datadog-state
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            AWS_DEFAULT_REGION: ((aws_region))
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                aws s3 rm "s3://gds-paas-${DEPLOY_ENV}-state/datadog.tfstate"
-                aws s3 rm "s3://gds-paas-${DEPLOY_ENV}-state/datadog-secrets.yml"
-
       - task: deploy-paas-metrics
         config:
           platform: linux
