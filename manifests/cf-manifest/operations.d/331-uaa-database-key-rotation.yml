@@ -26,6 +26,9 @@
       passphrase: ((uaa_default_encryption_passphrase))
     - label: ((uaa_default_encryption_passphrase_id_old))
       passphrase: ((uaa_default_encryption_passphrase_old))
+    # FIXME: remove this key once we have deployed and rotated this once
+    - label: default_key
+      passphrase: ((uaa_default_encryption_passphrase_default_key))
 
 - type: replace
   path: /variables/-
@@ -43,4 +46,11 @@
   path: /variables/-
   value:
     name: uaa_default_encryption_passphrase_id_old
+    type: password
+
+# FIXME: remove this key once we have deployed and rotated this once
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_default_encryption_passphrase_default_key
     type: password
