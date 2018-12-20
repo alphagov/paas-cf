@@ -3167,6 +3167,7 @@ jobs:
 
   - name: rotate-cf-admin-password
     serial: true
+    serial_groups: [smoke-tests]
     plan:
     - aggregate:
       - get: paas-cf
@@ -3230,6 +3231,7 @@ jobs:
 
   - name: rotate-cloudfoundry-credentials
     serial: true
+    serial_groups: [smoke-tests]
     plan:
     - aggregate:
       - get: paas-cf
