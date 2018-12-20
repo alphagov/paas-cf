@@ -1447,6 +1447,7 @@ jobs:
       - get: paas-billing
       - get: paas-accounts
       - get: paas-admin
+      - get: logit-secrets
 
     - task: retrieve-config
       config:
@@ -1456,6 +1457,7 @@ jobs:
           - name: cf-vars-store
           - name: cf-manifest
           - name: cf-tfstate
+          - name: logit-secrets
         outputs:
           - name: config
         params:
@@ -1489,6 +1491,7 @@ jobs:
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
+              export LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
               EOT
 
               ls -l config/*
@@ -1758,6 +1761,29 @@ jobs:
                 UAA_ADMIN_CLIENT_SECRET=$(./paas-cf/concourse/scripts/val_from_yaml.rb uaa_admin_client_secret cf-vars-store/cf-vars-store.yml)
 
                 ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
+
+      - task: create-logit-syslog-drains
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: config
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                cf target -o admin -s public
+                if ! cf service logit-syslog-drain > /dev/null; then
+                  cf create-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
+                else
+                  cf update-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
+                fi
 
     - aggregate:
       - task: block-create-account-endpoints
@@ -2180,6 +2206,8 @@ jobs:
                     routes:
                     - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
                     instances: 2
+                    services:
+                     - logit-syslog-drain
                     env:
                       OAUTH_CLIENT_ID: "paas-admin"
                       OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
