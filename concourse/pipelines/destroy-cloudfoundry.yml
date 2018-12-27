@@ -49,12 +49,12 @@ resources:
       region_name: ((aws_region))
       key: ((pipeline_trigger_file))
 
-  - name: bosh-secrets
+  - name: bosh-vars-store
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
-      versioned_file: bosh-secrets.yml
+      versioned_file: bosh-vars-store.yml
 
   - name: bosh-CA-crt
     type: s3-iam
@@ -139,7 +139,7 @@ jobs:
           - get: pipeline-trigger
             passed: ['init']
             trigger: true
-          - get: bosh-secrets
+          - get: bosh-vars-store
           - get: paas-cf
           - get: cf-vars-store
           - get: cf-manifest
@@ -181,7 +181,7 @@ jobs:
               repository: governmentpaas/bosh-cli-v2
               tag: 4012d25ceb903b46908a830b8e05773ced1c8f86
           inputs:
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-CA-crt
           params:
@@ -197,7 +197,7 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
                 export BOSH_CLIENT_SECRET
 
