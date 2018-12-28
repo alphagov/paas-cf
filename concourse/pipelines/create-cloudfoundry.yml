@@ -1497,6 +1497,132 @@ jobs:
               ls -l config/*
 
     - aggregate:
+      - task: upload-buildpacks
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: config
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                # cflinuxfs2
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    binary_buildpack cflinuxfs2 \
+                    binary-buildpack-cflinuxfs2-v1.0.27.zip \
+                    https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.27/binary-buildpack-cflinuxfs2-v1.0.27.zip \
+                    90e04df12df78f6d06ef127aa9992f505b7e51e21cb5ac97b68bc7e742193635
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    dotnet_core_buildpack cflinuxfs2 \
+                    dotnet-core-buildpack-cflinuxfs2-v2.1.5.zip \
+                    https://github.com/cloudfoundry/dotnet-core-buildpack/releases/download/v2.1.5/dotnet-core-buildpack-cflinuxfs2-v2.1.5.zip \
+                    842eb15864cc16f9e27914ebaf073d15107153010d53ea93b95a5a2d16ac0496
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    go_buildpack cflinuxfs2 \
+                    go-buildpack-cflinuxfs2-v1.8.28.zip \
+                    https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.28/go-buildpack-cflinuxfs2-v1.8.28.zip \
+                    3ff74706148d4f611a5ccbec8daf8649128d31de86f201e56acf0d6be498c1e3
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    java_buildpack cflinuxfs2 \
+                    java-buildpack-cflinuxfs2-v4.16.1.zip \
+                    https://github.com/cloudfoundry/java-buildpack/releases/download/v4.16.1/java-buildpack-v4.16.1.zip \
+                    b02b6fe9f71fbdcc060e81860723a752a5e455dd63b37ca3d41caa63c130b563
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    nodejs_buildpack cflinuxfs2 \
+                    nodejs-buildpack-cflinuxfs2-v1.6.32.zip \
+                    https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.6.32/nodejs-buildpack-cflinuxfs2-v1.6.32.zip \
+                    7bf4d46acfc017de78e371d38ab6e7e4e62b83adcfdbf3e1330de559910a46da
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    php_buildpack cflinuxfs2 \
+                    php-buildpack-cflinuxfs2-v4.3.61.zip \
+                    https://github.com/cloudfoundry/php-buildpack/releases/download/v4.3.61/php-buildpack-cflinuxfs2-v4.3.61.zip \
+                    59e28f34e1be08cdcd222e8e297bbfa9f9f2318ad7f57b535f452f90b003d972
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    python_buildpack cflinuxfs2 \
+                    python-buildpack-cflinuxfs2-v1.6.21.zip \
+                    https://github.com/cloudfoundry/python-buildpack/releases/download/v1.6.21/python-buildpack-cflinuxfs2-v1.6.21.zip \
+                    f9414b0e79131853d9e129cd1ce0bf73a780686fd4498b75190c25870e3580b2
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    ruby_buildpack cflinuxfs2 \
+                    ruby-buildpack-cflinuxfs2-v1.7.27.zip \
+                    https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.27/ruby-buildpack-cflinuxfs2-v1.7.27.zip \
+                    e83acd222bec81e14bf64e5aa520403f9e6e8217bd2b07b744d08a356b4062fc
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    staticfile_buildpack cflinuxfs2 \
+                    staticfile-buildpack-cflinuxfs2-v1.4.32.zip \
+                    https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.32/staticfile-buildpack-cflinuxfs2-v1.4.32.zip \
+                    a726e4877a6c794966c0e999158d2500ed36dc3571546e073fe0cdd090b45d4b
+
+                # cflinuxfs3
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    binary_buildpack cflinuxfs3 \
+                    binary-buildpack-cflinuxfs3-v1.0.27.zip \
+                    https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.27/binary-buildpack-cflinuxfs3-v1.0.27.zip \
+                    bf22f827a9f44ad7dd4ad848decbd7b9d1c9de8f6042c9ee64448a1501fdc5cc
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    dotnet_core_buildpack cflinuxfs3 \
+                    dotnet-core-buildpack-cflinuxfs3-v2.1.5.zip \
+                    https://github.com/cloudfoundry/dotnet-core-buildpack/releases/download/v2.1.5/dotnet-core-buildpack-cflinuxfs3-v2.1.5.zip \
+                    6634e01b86fd7af541c19288ed9dd069126d9c9e1f508a63662dbb9781f4bae2
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    go_buildpack cflinuxfs3 \
+                    go-buildpack-cflinuxfs3-v1.8.28.zip \
+                    https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.28/go-buildpack-cflinuxfs3-v1.8.28.zip \
+                    a344c51df41ce0ce0e411d2b981bbf3395b1a848cd3ce8b135e4648e3c50ab7d
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    java_buildpack cflinuxfs3 \
+                    java-buildpack-cflinuxfs3-v4.16.1.zip \
+                    https://github.com/cloudfoundry/java-buildpack/releases/download/v4.16.1/java-buildpack-v4.16.1.zip \
+                    b02b6fe9f71fbdcc060e81860723a752a5e455dd63b37ca3d41caa63c130b563
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    nodejs_buildpack cflinuxfs3 \
+                    nodejs-buildpack-cflinuxfs3-v1.6.32.zip \
+                    https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.6.32/nodejs-buildpack-cflinuxfs3-v1.6.32.zip \
+                    dfd67dbde6e4c1330fdac773302cc2bd12c07085f6d0354ee8d4b73ac8558c5e
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    php_buildpack cflinuxfs3 \
+                    php-buildpack-cflinuxfs3-v4.3.61.zip \
+                    https://github.com/cloudfoundry/php-buildpack/releases/download/v4.3.61/php-buildpack-cflinuxfs3-v4.3.61.zip \
+                    51f0b636067106badd30f9f14d6d0b049b299e7befe7429aa1ced6aa2792bfe0
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    python_buildpack cflinuxfs3 \
+                    python-buildpack-cflinuxfs3-v1.6.21.zip \
+                    https://github.com/cloudfoundry/python-buildpack/releases/download/v1.6.21/python-buildpack-cflinuxfs3-v1.6.21.zip \
+                    c7c5f464c8a918b7c5b12b33fd38bf6f2cdd7d94602a42b0e70cba061f68e5ea
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    ruby_buildpack cflinuxfs3 \
+                    ruby-buildpack-cflinuxfs3-v1.7.27.zip \
+                    https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.27/ruby-buildpack-cflinuxfs3-v1.7.27.zip \
+                    f934d2008543c6fa8a6ca471c71ef3d176d4ec598a4f7ded3913c4b52f96108a
+
+                ./paas-cf/concourse/scripts/upload-buildpack.sh \
+                    staticfile_buildpack cflinuxfs3 \
+                    staticfile-buildpack-cflinuxfs3-v1.4.32.zip \
+                    https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.32/staticfile-buildpack-cflinuxfs3-v1.4.32.zip \
+                    7473873333aa4c18ffe4f92cce9ad270770881563a91dd7d0c4e13b8ea20efc7
+
       - task: create-orgs
         config:
           platform: linux
