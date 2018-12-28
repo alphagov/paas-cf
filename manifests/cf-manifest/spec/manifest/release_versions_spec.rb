@@ -66,4 +66,10 @@ RSpec.describe "release versions" do
         "expected #{name} upstream to be #{pinned_versions[:upstream]} not #{cf_deployment_releases[name]}. We might need to rebase our forked #{name} release and generate a new tarball, or use the upstream version."
     }
   end
+
+  specify "releases do not include buildpacks" do
+    manifest_without_vars_store.fetch("releases").each do |release|
+      expect(release.fetch('name')).not_to end_with('-buildpack')
+    end
+  end
 end
