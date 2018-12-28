@@ -6,6 +6,7 @@ PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
 PROM_BOSHRELEASE_DIR=${PAAS_CF_DIR}/manifests/prometheus/upstream
 WORKDIR=${WORKDIR:-.}
 
+
 opsfile_args=""
 for i in "${PAAS_CF_DIR}"/manifests/prometheus/operations.d/*.yml; do
   opsfile_args+="-o $i "
@@ -24,6 +25,10 @@ done
 vars_store_args=""
 if [ -n "${VARS_STORE:-}" ]; then
   vars_store_args=" --var-errs --vars-store ${VARS_STORE}"
+fi
+
+if [ "${ENABLE_ALERT_EMAILS:-}" == "false" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/disable-email.yml"
 fi
 
 # shellcheck disable=SC2086

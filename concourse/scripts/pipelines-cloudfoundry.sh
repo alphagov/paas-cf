@@ -118,6 +118,7 @@ system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
 ALERT_EMAIL_ADDRESS: ${ALERT_EMAIL_ADDRESS:-}
+ENABLE_ALERT_EMAILS: ${ENABLE_ALERT_EMAILS:-true}
 NEW_ACCOUNT_EMAIL_ADDRESS: "${NEW_ACCOUNT_EMAIL_ADDRESS:-}"
 disable_healthcheck_db: ${DISABLE_HEALTHCHECK_DB:-}
 test_heavy_load: ${TEST_HEAVY_LOAD:-false}
