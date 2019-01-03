@@ -5,7 +5,7 @@
     name: "prometheus"
     version: "23.1.0"
     url: "https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=23.1.0"
-    sha1: "23e5f469c2e290efefde1166107f874c32374ff7"
+    sha1: "d9ef31b8e57d8668de14cdf976cbaffa78a80897"
 
 - type: replace
   path: /addons?/-
