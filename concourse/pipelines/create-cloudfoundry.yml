@@ -88,6 +88,7 @@ groups:
     jobs:
       - rotate-cf-admin-password
       - rotate-cloudfoundry-credentials
+      - rotate-database-encryption-keys
       - rotate-prometheus-credentials
       - expire-aws-keys
       - rotate-cf-certs-cas
@@ -1051,6 +1052,20 @@ jobs:
 
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
+
+                  # FIXME: populate the old value of 'encryption_key_0' for CC
+                  # and 'default_key' for UAA.
+                  # These keys should be removed after the first deployment
+                  # of this code.
+                  if ! grep -e '^cc_db_encryption_key_encryption_key_0:' cf-vars-store/cf-vars-store.yml; then
+                    awk '
+                      /^cc_db_encryption_key:/ {print "cc_db_encryption_key_encryption_key_0:", $2}
+                      /^uaa_default_encryption_passphrase:/ {print "uaa_default_encryption_passphrase_default_key:", $2}
+                      {print}
+                    ' \
+                    < cf-vars-store/cf-vars-store.yml \
+                    > cf-vars-store-updated/cf-vars-store.yml
+                  fi
 
                   VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
                     ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
@@ -2437,6 +2452,58 @@ jobs:
                 export BOSH_CLIENT_SECRET
 
                 bosh -n clean-up --all
+      - do:
+        - task: rotate-cc-db-encryption-keys
+          config:
+            platform: linux
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
+            inputs:
+              - name: paas-cf
+              - name: bosh-secrets
+              - name: bosh-CA-crt
+            params:
+              BOSH_ENVIRONMENT: ((bosh_fqdn))
+              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_DEPLOYMENT: ((deploy_env))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  BOSH_CLIENT=admin
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  export BOSH_CLIENT
+                  export BOSH_CLIENT_SECRET
+
+                  bosh run-errand rotate-cc-database-key --when-changed
+
+        - task: rotate-uaa-db-encryption-keys
+          config:
+            platform: linux
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
+            inputs:
+              - name: paas-cf
+              - name: bosh-secrets
+              - name: bosh-CA-crt
+            params:
+              BOSH_ENVIRONMENT: ((bosh_fqdn))
+              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_DEPLOYMENT: ((deploy_env))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                  BOSH_CLIENT=admin
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  export BOSH_CLIENT
+                  export BOSH_CLIENT_SECRET
+
+                  bosh run-errand rotate-uaa-database-key --when-changed
 
     - aggregate:
       - do:
@@ -3203,6 +3270,7 @@ jobs:
                 --rsa \
                 --preserve cc_bulk_api_password \
                 --preserve cc_db_encryption_key \
+                --preserve cc_db_encryption_key_id \
                 --preserve cc_internal_api_password \
                 --preserve cc_staging_upload_password \
                 --preserve cf_admin_password \
@@ -3234,6 +3302,9 @@ jobs:
                 --preserve uaa_clients_tcp_emitter_secret \
                 --preserve uaa_clients_tcp_router_secret \
                 --preserve uaa_default_encryption_passphrase \
+                --preserve uaa_default_encryption_passphrase_id \
+                --preserve cc_db_encryption_key_encryption_key_0 \
+                --preserve uaa_default_encryption_passphrase_default_key \
                 > modified-cf-vars-store/cf-vars-store.yml
       on_success:
         do:
@@ -3252,6 +3323,44 @@ jobs:
         put: cf-tfstate
         params:
           file: updated-tfstate/cf.tfstate
+
+  - name: rotate-database-encryption-keys
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-vars-store
+      - get: cf-manifest-pre-vars
+
+    - task: rotate-db-encryption-key
+      config:
+        platform: linux
+        image_resource: *ruby-slim-image-resource
+        inputs:
+          - name: paas-cf
+          - name: cf-vars-store
+          - name: cf-manifest-pre-vars
+        outputs:
+          - name: modified-cf-vars-store
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
+                --vars-store cf-vars-store/cf-vars-store.yml \
+                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
+                --passwords \
+                --rotate cc_db_encryption_key \
+                --rotate cc_db_encryption_key_id \
+                --rotate uaa_default_encryption_passphrase \
+                --rotate uaa_default_encryption_passphrase_id \
+                > modified-cf-vars-store/cf-vars-store.yml
+      on_success:
+        put: cf-vars-store
+        params:
+          file: modified-cf-vars-store/cf-vars-store.yml
 
   - name: rotate-prometheus-credentials
     serial: true

@@ -1,0 +1,56 @@
+---
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: rotate-uaa-database-key
+    instances: 1
+    azs: [z1]
+    lifecycle: errand
+    vm_type: errand
+    stemcell: default
+    networks:
+    - name: ((network_name))
+    vm_extensions:
+    - cf_rds_client_sg
+    jobs:
+    - name: uaa_key_rotator
+      release: uaa
+      properties: {}
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/encryption
+  value:
+    active_key_label: ((uaa_default_encryption_passphrase_id))
+    encryption_keys:
+    - label: ((uaa_default_encryption_passphrase_id))
+      passphrase: ((uaa_default_encryption_passphrase))
+    - label: ((uaa_default_encryption_passphrase_id_old))
+      passphrase: ((uaa_default_encryption_passphrase_old))
+    # FIXME: remove this key once we have deployed and rotated this once
+    - label: default_key
+      passphrase: ((uaa_default_encryption_passphrase_default_key))
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_default_encryption_passphrase_old
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_default_encryption_passphrase_id
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_default_encryption_passphrase_id_old
+    type: password
+
+# FIXME: remove this key once we have deployed and rotated this once
+- type: replace
+  path: /variables/-
+  value:
+    name: uaa_default_encryption_passphrase_default_key
+    type: password

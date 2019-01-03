@@ -1,0 +1,47 @@
+---
+- type: replace
+  path: /instance_groups/name=rotate-cc-database-key/vm_extensions?/-
+  value: cf_rds_client_sg
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/database_encryption?
+  value: &cc-database-encryption
+    current_key_label: "((cc_db_encryption_key_id))"
+    keys:
+      ((cc_db_encryption_key_id)): "((cc_db_encryption_key))"
+      ((cc_db_encryption_key_id_old)): "((cc_db_encryption_key_old))"
+      # FIXME: remove this key once we have deployed and rotated this once
+      encryption_key_0: "((cc_db_encryption_key_encryption_key_0))"
+
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/database_encryption?
+  value: *cc-database-encryption
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/database_encryption?
+  value: *cc-database-encryption
+
+- type: replace
+  path: /variables/-
+  value:
+    name: cc_db_encryption_key_old
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: cc_db_encryption_key_id
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: cc_db_encryption_key_id_old
+    type: password
+
+# FIXME: remove this key once we have deployed and rotated this once
+- type: replace
+  path: /variables/-
+  value:
+    name: cc_db_encryption_key_encryption_key_0
+    type: password
