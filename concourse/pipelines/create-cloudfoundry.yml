@@ -20,7 +20,7 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 51c4648c56a18e28a295e73963b65fdbfe76e52f
+        tag: b77e27029dfcb85f6c58f0a59298d05cc5eeb903
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
