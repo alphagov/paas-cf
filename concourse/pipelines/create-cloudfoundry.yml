@@ -71,6 +71,7 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
+      - cleanup-deleted-cf-users
   - name: tests
     jobs:
       - app-availability-tests
@@ -3678,3 +3679,35 @@ jobs:
                 EOF
 
                 ./paas-cf/concourse/scripts/check-certificates.rb 30 < ipsec_cert.yml
+
+  - name: cleanup-deleted-cf-users
+    serial: true
+    plan:
+      - aggregate:
+        - get: paas-cf
+        - get: cf-vars-store
+
+      - task: cleanup-deleted-cf-users
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-vars-store
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+              CF_USER=admin
+              CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
+              API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+
+              echo | cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}"
+
+              ./paas-cf/scripts/cleanup-deleted-cf-users.sh --delete
