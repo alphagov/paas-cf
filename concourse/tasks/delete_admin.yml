@@ -9,6 +9,7 @@ inputs:
   - name: paas-cf
   - name: cf-manifest
   - name: admin-creds
+  - name: cf-vars-store
 run:
   path: sh
   args:
@@ -24,11 +25,12 @@ run:
       VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
       SYSTEM_DNS_ZONE_NAME=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.system_domain cf-manifest/cf-manifest.yml)
       API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+      CF_ADMIN=admin
+      CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
       USERNAME=$(cat admin-creds/username)
-      PASSWORD=$(cat admin-creds/password)
 
       echo "Removing user ${USERNAME}"
 
-      echo | cf login -a "${API_ENDPOINT}" -u "${USERNAME}" -p "${PASSWORD}"
+      echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
       cf delete-user "${USERNAME}" -f
