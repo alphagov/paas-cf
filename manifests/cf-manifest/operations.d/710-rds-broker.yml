@@ -43,7 +43,7 @@
           client_cert: "((diego_locket_client.certificate))"
           client_key: "((diego_locket_client.private_key))"
         scheduler:
-          sql_metrics_collector_interval: 150
+          sql_metrics_collector_interval: 60
           cloudwatch_metrics_collector_interval: 300
 
 - type: replace
