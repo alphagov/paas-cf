@@ -1,0 +1,57 @@
+---
+- type: remove
+  path: /releases/name=binary-buildpack
+
+- type: remove
+  path: /releases/name=dotnet-core-buildpack
+
+- type: remove
+  path: /releases/name=go-buildpack
+
+- type: remove
+  path: /releases/name=java-buildpack
+
+- type: remove
+  path: /releases/name=nodejs-buildpack
+
+- type: remove
+  path: /releases/name=php-buildpack
+
+- type: remove
+  path: /releases/name=python-buildpack
+
+- type: remove
+  path: /releases/name=ruby-buildpack
+
+- type: remove
+  path: /releases/name=staticfile-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=binary-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=dotnet-core-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=go-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=java-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=nodejs-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=php-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=python-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=ruby-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=staticfile-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks

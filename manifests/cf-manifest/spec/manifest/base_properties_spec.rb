@@ -181,20 +181,8 @@ RSpec.describe "base properties" do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.install_buildpacks"]
     }
 
-    it "install_buildpacks contains certain named buildpacks" do
-      expected = %w[
-        staticfile_buildpack java_buildpack ruby_buildpack nodejs_buildpack
-        go_buildpack python_buildpack php_buildpack binary_buildpack
-        dotnet_core_buildpack
-      ]
-      actual = install_buildpacks_property.map { |b| b.fetch('name') }
-
-      expect(expected - actual).to be_empty,
-                                   <<-MSG
-                                   Expected: #{expected.inspect}
-                                   Actual:   #{actual.inspect}
-                                   Diff:     #{(expected - actual).inspect}
-                                   MSG
+    it "install_buildpacks does not contain buildpacks" do
+      expect(install_buildpacks_property).to be_nil.or be_empty
     end
   end
 
