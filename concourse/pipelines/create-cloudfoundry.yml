@@ -2922,7 +2922,7 @@ jobs:
                     ruby <<-RUBY
                     require 'yaml'
                     YAML
-                      .load_file('cf-manifest/cf-manifest.yml')
+                      .load_file('paas-cf/manifests/cf-deployment/cf-deployment.yml')
                       .fetch('instance_groups', [])
                       .find { |g| g['name'] == 'api' }
                       .fetch('jobs', [])
