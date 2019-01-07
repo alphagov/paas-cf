@@ -151,12 +151,12 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh.tfstate
 
-  - name: bosh-secrets
+  - name: bosh-vars-store
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
-      versioned_file: bosh-secrets.yml
+      versioned_file: bosh-vars-store.yml
 
   - name: bosh-CA-crt
     type: s3-iam
@@ -1054,20 +1054,6 @@ jobs:
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
 
-                  # FIXME: populate the old value of 'encryption_key_0' for CC
-                  # and 'default_key' for UAA.
-                  # These keys should be removed after the first deployment
-                  # of this code.
-                  if ! grep -e '^cc_db_encryption_key_encryption_key_0:' cf-vars-store/cf-vars-store.yml; then
-                    awk '
-                      /^cc_db_encryption_key:/ {print "cc_db_encryption_key_encryption_key_0:", $2}
-                      /^uaa_default_encryption_passphrase:/ {print "uaa_default_encryption_passphrase_default_key:", $2}
-                      {print}
-                    ' \
-                    < cf-vars-store/cf-vars-store.yml \
-                    > cf-vars-store-updated/cf-vars-store.yml
-                  fi
-
                   VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
                     ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
                       > cf-manifest/cf-manifest.yml
@@ -1101,7 +1087,7 @@ jobs:
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
-          - get: bosh-secrets
+          - get: bosh-vars-store
           - get: bosh-CA-crt
 
       - aggregate:
@@ -1110,7 +1096,7 @@ jobs:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
-              - name: bosh-secrets
+              - name: bosh-vars-store
               - name: paas-cf
               - name: cf-manifest
               - name: bosh-CA-crt
@@ -1127,7 +1113,7 @@ jobs:
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
                   export BOSH_CLIENT_SECRET
 
@@ -1153,7 +1139,7 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: cloud-config
-              - name: bosh-secrets
+              - name: bosh-vars-store
               - name: paas-cf
               - name: bosh-CA-crt
             params:
@@ -1168,7 +1154,7 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
                   export BOSH_CLIENT_SECRET
 
@@ -1181,7 +1167,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -1195,7 +1181,7 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
                 export BOSH_CLIENT_SECRET
 
@@ -1211,7 +1197,7 @@ jobs:
           - get: paas-cf
             passed: ['cf-deploy']
           - get: prometheus-vars-store
-          - get: bosh-secrets
+          - get: bosh-vars-store
           - get: bosh-CA-crt
           - get: cf-vars-store
           - get: cf-tfstate
@@ -1236,9 +1222,6 @@ jobs:
                   < cf-tfstate/cf.tfstate \
                   > terraform-outputs/cf.yml
 
-
-
-
       - task: generate-prometheus-manifest
         config:
           platform: linux
@@ -1246,7 +1229,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: prometheus-vars-store
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: bosh-CA-crt
             - name: cf-vars-store
             - name: terraform-outputs
@@ -1267,7 +1250,6 @@ jobs:
               - -u
               - -c
               - |
-
                 VARS_FILES="
                   ./prometheus-vars-file.yml
                   ./terraform-outputs/cf.yml
@@ -1277,7 +1259,7 @@ jobs:
 
                 bosh interpolate - \
                   --var-errs \
-                  --vars-file bosh-secrets/bosh-secrets.yml \
+                  --vars-file bosh-vars-store/bosh-vars-store.yml \
                   --vars-file cf-vars-store/cf-vars-store.yml \
                   --var-file bosh_ca_cert=./bosh-CA-crt/bosh-CA.crt \
                 > ./prometheus-vars-file.yml \
@@ -1285,7 +1267,7 @@ jobs:
                 ---
                 metrics_environment: $CF_DEPLOYMENT_NAME
                 bosh_url: $BOSH_URL
-                uaa_bosh_exporter_client_secret: ((secrets.bosh_bosh_exporter_password))
+                uaa_bosh_exporter_client_secret: ((bosh_exporter_password))
                 bosh_ca_cert: ((bosh_ca_cert))
                 system_domain: $SYSTEM_DNS_ZONE_NAME
                 app_domain: ((apps_dns_zone_name))
@@ -1352,7 +1334,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: prometheus-manifest
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -1366,7 +1348,7 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
                 export BOSH_CLIENT_SECRET
 
@@ -1456,7 +1438,7 @@ jobs:
         passed: ['generate-cf-config']
       - get: cf-tfstate
         passed: ['generate-cf-config']
-      - get: bosh-secrets
+      - get: bosh-vars-store
         passed: ['cf-deploy']
       - get: cf-vars-store
         passed: ['generate-cf-config']
@@ -2434,7 +2416,7 @@ jobs:
           image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -2448,7 +2430,7 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
                 export BOSH_CLIENT_SECRET
 
@@ -2460,7 +2442,7 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
-              - name: bosh-secrets
+              - name: bosh-vars-store
               - name: bosh-CA-crt
             params:
               BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -2474,7 +2456,7 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
                   export BOSH_CLIENT_SECRET
 
@@ -2486,7 +2468,7 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
-              - name: bosh-secrets
+              - name: bosh-vars-store
               - name: bosh-CA-crt
             params:
               BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -2500,7 +2482,7 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
                   export BOSH_CLIENT_SECRET
 
@@ -2967,7 +2949,7 @@ jobs:
           - get: paas-cf
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
-          - get: bosh-secrets
+          - get: bosh-vars-store
           - get: bosh-CA-crt
       - task: test-bosh-vms
         config:
@@ -2976,7 +2958,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -2990,7 +2972,7 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
                 export BOSH_CLIENT_SECRET
 
@@ -3306,8 +3288,6 @@ jobs:
                 --preserve uaa_clients_tcp_router_secret \
                 --preserve uaa_default_encryption_passphrase \
                 --preserve uaa_default_encryption_passphrase_id \
-                --preserve cc_db_encryption_key_encryption_key_0 \
-                --preserve uaa_default_encryption_passphrase_default_key \
                 > modified-cf-vars-store/cf-vars-store.yml
       on_success:
         do:

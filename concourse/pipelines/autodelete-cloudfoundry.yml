@@ -43,12 +43,12 @@ resources:
       stop: 6:00 -0000
       interval: 2h
 
-  - name: bosh-secrets
+  - name: bosh-vars-store
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
-      versioned_file: bosh-secrets.yml
+      versioned_file: bosh-vars-store.yml
 
   - name: bosh-CA-crt
     type: s3-iam
@@ -70,7 +70,7 @@ jobs:
     plan:
       - get: delete-timer
         trigger: true
-      - get: bosh-secrets
+      - get: bosh-vars-store
       - get: paas-cf
       - get: cf-vars-store
       - get: cf-manifest
@@ -123,7 +123,7 @@ jobs:
           platform: linux
           inputs:
             - name: delete-timer
-            - name: bosh-secrets
+            - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-CA-crt
           params:
@@ -144,9 +144,10 @@ jobs:
               - |
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML secrets.bosh_admin_password bosh-secrets/bosh-secrets.yml)
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
                 export BOSH_CLIENT_SECRET
+
 
                 bosh -n delete-deployment --force --deployment "((deploy_env))"
                 bosh -n delete-deployment --force --deployment prometheus
