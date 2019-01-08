@@ -11,7 +11,6 @@ module ManifestHelpers
     attr_accessor :manifest_without_vars_store
     attr_accessor :cf_deployment_manifest
     attr_accessor :cloud_config_with_defaults
-    attr_accessor :cf_secrets_file
     attr_accessor :vars_store
   end
 
@@ -74,11 +73,6 @@ module ManifestHelpers
     Cache.instance.cloud_config_with_defaults ||= render_cloud_config
   end
 
-  def cf_secrets_file
-    Cache.instance.cf_secrets_file ||= generate_cf_secrets
-    Cache.instance.cf_secrets_file.path
-  end
-
   def property_tree(tree)
     PropertyTree.new(tree)
   end
@@ -113,7 +107,7 @@ private
   )
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
     copy_fixture_file('logit-secrets.yml', "#{workdir}/logit-secrets")
-    generate_cf_secrets
+    generate_cf_secrets_fixture("#{workdir}/cf-secrets")
     copy_fixture_file('environment-variables.yml', workdir)
     copy_ipsec_cert_fixtures("#{workdir}/ipsec-CA")
     render_vpc_peering_opsfile(environment)
@@ -161,7 +155,7 @@ private
 
   def render_cloud_config(environment = "default")
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
-    generate_cf_secrets
+    generate_cf_secrets_fixture("#{workdir}/cf-secrets")
     copy_fixture_file('environment-variables.yml', workdir)
 
     env = {
@@ -173,20 +167,6 @@ private
     expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     DeepFreeze.freeze(PropertyTree.load_yaml(output))
-  end
-
-  def generate_cf_secrets
-    dir = workdir + '/cf-secrets'
-    FileUtils.mkdir(dir) unless Dir.exist?(dir)
-    file = File::open("#{dir}/cf-secrets.yml", 'w')
-    output, error, status = Open3.capture3(File.expand_path("../../../scripts/generate-cf-secrets.rb", __FILE__))
-    unless status.success?
-      raise "Error generating cf-secrets, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
-    end
-    file.write(output)
-    file.flush
-    file.rewind
-    file
   end
 end
 
