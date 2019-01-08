@@ -19,7 +19,7 @@ RSpec.describe "networks" do
       it "should set the correct subnet ID" do
         network["subnets"].length.times do |i|
           subnet_fixture_key = "#{net_name}#{i + 1}_subnet_id"
-          expect(network["subnets"][i]["cloud_properties"]["subnet"]).to eq(terraform_fixture(subnet_fixture_key))
+          expect(network["subnets"][i]["cloud_properties"]["subnet"]).to eq(terraform_fixture_value(subnet_fixture_key))
         end
       end
     end

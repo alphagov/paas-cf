@@ -2,7 +2,7 @@ RSpec.describe "base properties" do
   let(:manifest) { manifest_with_defaults }
 
   it "sets the top-level manifest name" do
-    expect(manifest["name"]).to eq(terraform_fixture(:environment))
+    expect(manifest["name"]).to eq(terraform_fixture_value(:environment))
   end
 
   it "has global max_in_flight set to 30%" do
@@ -52,11 +52,11 @@ RSpec.describe "base properties" do
     }
 
     it "sets the system_domain from the terraform outputs" do
-      expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture(:cf_root_domain))
+      expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture_value(:cf_root_domain))
     end
     it "sets the app domains" do
       expect(cloud_controller_ng_properties["app_domains"]).to match_array([
-        terraform_fixture(:cf_apps_domain),
+        terraform_fixture_value(:cf_apps_domain),
       ])
     end
 
@@ -64,7 +64,7 @@ RSpec.describe "base properties" do
       let(:fog_connection) { subject.fetch("fog_connection") }
 
       specify { expect(fog_connection).to include("use_iam_profile" => true) }
-      specify { expect(fog_connection).to include("region" => terraform_fixture(:region)) }
+      specify { expect(fog_connection).to include("region" => terraform_fixture_value(:region)) }
       specify { expect(fog_connection).to include("provider" => "AWS") }
     end
 
@@ -73,7 +73,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("buildpack_directory_key" => "#{terraform_fixture(:environment)}-cf-buildpacks") }
+      it { is_expected.to include("buildpack_directory_key" => "#{terraform_fixture_value(:environment)}-cf-buildpacks") }
     end
 
     describe "droplets" do
@@ -81,7 +81,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("droplet_directory_key" => "#{terraform_fixture(:environment)}-cf-droplets") }
+      it { is_expected.to include("droplet_directory_key" => "#{terraform_fixture_value(:environment)}-cf-droplets") }
     end
 
     describe "packages" do
@@ -89,7 +89,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("app_package_directory_key" => "#{terraform_fixture(:environment)}-cf-packages") }
+      it { is_expected.to include("app_package_directory_key" => "#{terraform_fixture_value(:environment)}-cf-packages") }
     end
 
     describe "resource_pool" do
@@ -97,7 +97,7 @@ RSpec.describe "base properties" do
 
       it_behaves_like "a component with an AWS connection"
 
-      it { is_expected.to include("resource_directory_key" => "#{terraform_fixture(:environment)}-cf-resources") }
+      it { is_expected.to include("resource_directory_key" => "#{terraform_fixture_value(:environment)}-cf-resources") }
     end
   end
 
@@ -133,17 +133,17 @@ RSpec.describe "base properties" do
     describe "links" do
       subject(:links) { login.fetch("links") }
 
-      it { is_expected.to include("passwd" => "https://login.#{terraform_fixture(:cf_root_domain)}/forgot_password") }
+      it { is_expected.to include("passwd" => "https://login.#{terraform_fixture_value(:cf_root_domain)}/forgot_password") }
       it { is_expected.to include("signup" => "https://www.cloud.service.gov.uk/signup") }
-      it { is_expected.to include("homeRedirect" => "https://admin.#{terraform_fixture(:cf_root_domain)}/") }
+      it { is_expected.to include("homeRedirect" => "https://admin.#{terraform_fixture_value(:cf_root_domain)}/") }
     end
   end
 
   describe "uaa" do
     subject(:uaa) { manifest["instance_groups.uaa.jobs.uaa.properties.uaa"] }
 
-    it { is_expected.to include("issuer" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
-    it { is_expected.to include("url" => "https://uaa.#{terraform_fixture(:cf_root_domain)}") }
+    it { is_expected.to include("issuer" => "https://uaa.#{terraform_fixture_value(:cf_root_domain)}") }
+    it { is_expected.to include("url" => "https://uaa.#{terraform_fixture_value(:cf_root_domain)}") }
 
     describe "clients" do
       subject(:clients) { uaa.fetch("clients") }
@@ -158,7 +158,7 @@ RSpec.describe "base properties" do
       describe "login" do
         subject(:client) { clients.fetch("login") }
         it {
-          is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture(:cf_root_domain)}")
+          is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
         }
       end
     end
