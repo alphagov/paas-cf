@@ -32,6 +32,8 @@ spec:
 		bundle exec rspec
 	cd manifests/shared &&\
 		bundle exec rspec
+	cd manifests/cloud-config &&\
+		bundle exec rspec
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
 	cd manifests/prometheus &&\

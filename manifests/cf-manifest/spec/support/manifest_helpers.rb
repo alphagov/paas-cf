@@ -10,7 +10,6 @@ module ManifestHelpers
     attr_accessor :manifest_with_defaults
     attr_accessor :manifest_without_vars_store
     attr_accessor :cf_deployment_manifest
-    attr_accessor :cloud_config_with_defaults
     attr_accessor :vars_store
   end
 
@@ -67,10 +66,6 @@ module ManifestHelpers
 
   def cf_deployment_manifest
     Cache.instance.cf_deployment_manifest ||= YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
-  end
-
-  def cloud_config_with_defaults
-    Cache.instance.cloud_config_with_defaults ||= render_cloud_config
   end
 
   def property_tree(tree)
@@ -151,22 +146,6 @@ private
 
       output
     }
-  end
-
-  def render_cloud_config(environment = "default")
-    copy_terraform_fixtures("#{workdir}/terraform-outputs")
-    generate_cf_secrets_fixture("#{workdir}/cf-secrets")
-    copy_fixture_file('environment-variables.yml', workdir)
-
-    env = {
-      'PAAS_CF_DIR' => root.to_s,
-      'WORKDIR' => workdir,
-      'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{environment}.yml").to_s,
-    }
-    output, error, status = Open3.capture3(env, root.join('manifests/cf-manifest/scripts/generate-cloud-config.sh').to_s)
-    expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
-
-    DeepFreeze.freeze(PropertyTree.load_yaml(output))
   end
 end
 

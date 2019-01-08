@@ -998,15 +998,13 @@ jobs:
               - name: cf-secrets
             outputs:
               - name: cloud-config
-            params:
-              ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  paas-cf/manifests/cf-manifest/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
+                  paas-cf/manifests/cloud-config/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
 
           on_success:
             put: cloud-config
