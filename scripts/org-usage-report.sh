@@ -2,13 +2,14 @@
 
 set -eu
 
+CF_HOME=${CF_HOME:-~}
 UAA_TOKEN=$(cf oauth-token)
-UAA_API=$(jq -r '.UaaEndpoint' < ~/.cf/config.json)
+UAA_API=$(jq -r '.UaaEndpoint' < "${CF_HOME}/.cf/config.json")
 
 # Assert logged in
 cf target > /dev/null
 
-TARGET=$(jq -r '.Target' < ~/.cf/config.json)
+TARGET=$(jq -r '.Target' < "${CF_HOME}/.cf/config.json")
 echo "Targetting CF API: $TARGET" 1>&2
 
 paginate() {
