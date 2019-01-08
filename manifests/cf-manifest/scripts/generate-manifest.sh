@@ -37,7 +37,6 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/data/000-aws-rds-combined-ca-bundle-pem.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/vpc.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/bosh.yml" \
-  --vars-file="${WORKDIR}/terraform-outputs/concourse.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
   --vars-file="${WORKDIR}/cf-secrets/cf-secrets.yml" \
   --vars-file="${WORKDIR}/logit-secrets/logit-secrets.yml" \
