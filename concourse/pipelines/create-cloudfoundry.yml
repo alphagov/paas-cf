@@ -1654,6 +1654,7 @@ jobs:
                 cf set-quota govuk-paas medium
                 cf create-space docs -o govuk-paas
                 cf create-space tools -o govuk-paas
+
                 cf target -o admin
                 cf share-private-domain govuk-paas "((system_dns_zone_name))"
 
@@ -1669,6 +1670,12 @@ jobs:
                 # when we roll out the London region.
                 cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname london
 
+                cf target -o admin -s public
+                if ! cf service logit-syslog-drain > /dev/null; then
+                  cf create-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
+                else
+                  cf update-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
+                fi
 
       - task: register-rds-broker
         config:
@@ -1887,29 +1894,6 @@ jobs:
                 UAA_ADMIN_CLIENT_SECRET=$(./paas-cf/concourse/scripts/val_from_yaml.rb uaa_admin_client_secret cf-vars-store/cf-vars-store.yml)
 
                 ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
-
-      - task: create-logit-syslog-drains
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          inputs:
-            - name: config
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
-
-                cf target -o admin -s public
-                if ! cf service logit-syslog-drain > /dev/null; then
-                  cf create-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
-                else
-                  cf update-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
-                fi
 
     - aggregate:
       - task: block-create-account-endpoints
