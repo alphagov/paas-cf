@@ -7,8 +7,7 @@
     name: CFCloudControllerUnregistry
     rules:
     - alert: CFCloudControllerUnregistry
-      expr: avg(rate(firehose_counter_event_gorouter_unregistry_message_cloud_controller_total[10m])*60*10) or vector(0) > 1.5
-      for: 10m
+      expr: avg(increase(firehose_counter_event_gorouter_unregistry_message_cloud_controller_total[10m])) >= 10
       labels:
         severity: critical
       annotations:
