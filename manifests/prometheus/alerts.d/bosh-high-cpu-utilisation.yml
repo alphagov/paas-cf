@@ -23,3 +23,12 @@
         expr: "bosh_job:bosh_job_cpu:avg1h > 90"
         labels:
           severity: critical
+
+# FIXME: there is no easy way currently to remove upstream alerts
+# This effectively disables the upstream CPU alert by increasing the threshold to a really high value
+# If a node has a really high load for a long time it's still useful to know about it
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=bosh_alerts/properties?/bosh_alerts/job_high_cpu_load
+  value:
+    threshold: 50
+    evaluation_time: 1h
