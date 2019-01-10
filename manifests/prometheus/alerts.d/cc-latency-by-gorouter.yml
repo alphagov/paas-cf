@@ -6,12 +6,9 @@
   value:
     name: CloudControllerLatencyByGorouter
     rules:
-      - record: "cc:firehose_value_metric_gorouter_latency_cloud_controller:avg10m"
-        expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[10m]))
-
       - &alert
         alert: CloudControllerLatencyByGorouter_Warning
-        expr: cc:firehose_value_metric_gorouter_latency_cloud_controller:avg10m > 200
+        expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[30m])) > 500
         labels:
           severity: warning
         annotations:
@@ -20,6 +17,6 @@
 
       - <<: *alert
         alert: CloudControllerLatencyByGorouter_Critical
-        expr: cc:firehose_value_metric_gorouter_latency_cloud_controller:avg10m > 250
+        expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[10m])) > 1000
         labels:
           severity: critical
