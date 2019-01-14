@@ -934,7 +934,6 @@ jobs:
             passed: ['cf-terraform']
           - get: cf-vars-store
           - get: vpc-tfstate
-          - get: concourse-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
@@ -949,7 +948,6 @@ jobs:
               - name: paas-cf
               - name: vpc-tfstate
               - name: bosh-tfstate
-              - name: concourse-tfstate
               - name: cf-tfstate
             outputs:
               - name: terraform-outputs
@@ -959,7 +957,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  for state in vpc bosh concourse cf; do
+                  for state in vpc bosh cf; do
                     ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
                       < ${state}-tfstate/${state}.tfstate \
                       > terraform-outputs/${state}.yml
@@ -998,15 +996,13 @@ jobs:
               - name: cf-secrets
             outputs:
               - name: cloud-config
-            params:
-              ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  paas-cf/manifests/cf-manifest/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
+                  paas-cf/manifests/cloud-config/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
 
           on_success:
             put: cloud-config

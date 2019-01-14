@@ -10,11 +10,11 @@ RSpec.describe "RDS broker properties" do
       expect(rds_sg).to be
       expect(rds_sg["rules"]).to eq([{
         "protocol" => "tcp",
-        "destination" => terraform_fixture("aws_backing_service_cidr_all"),
+        "destination" => terraform_fixture_value("aws_backing_service_cidr_all"),
         "ports" => "5432",
       }, {
         "protocol" => "tcp",
-        "destination" => terraform_fixture("aws_backing_service_cidr_all"),
+        "destination" => terraform_fixture_value("aws_backing_service_cidr_all"),
         "ports" => "3306",
       }])
     end
@@ -198,8 +198,8 @@ RSpec.describe "RDS broker properties" do
           end
           it "sets the db subnet group and security groups from terraform" do
             expect(rds_properties).to include(
-              "db_subnet_group_name" => terraform_fixture("rds_broker_dbs_subnet_group"),
-              "vpc_security_group_ids" => [terraform_fixture("rds_broker_dbs_security_group_id")],
+              "db_subnet_group_name" => terraform_fixture_value("rds_broker_dbs_subnet_group"),
+              "vpc_security_group_ids" => [terraform_fixture_value("rds_broker_dbs_security_group_id")],
             )
           end
         end
@@ -556,8 +556,8 @@ RSpec.describe "RDS broker properties" do
           end
           it "sets the db subnet group and security groups from terraform" do
             expect(rds_properties).to include(
-              "db_subnet_group_name" => terraform_fixture("rds_broker_dbs_subnet_group"),
-              "vpc_security_group_ids" => [terraform_fixture("rds_broker_dbs_security_group_id")],
+              "db_subnet_group_name" => terraform_fixture_value("rds_broker_dbs_subnet_group"),
+              "vpc_security_group_ids" => [terraform_fixture_value("rds_broker_dbs_security_group_id")],
             )
           end
         end

@@ -12,7 +12,7 @@ RSpec.describe "ElastiCache broker properties" do
       expect(elasticache_sg).to be
       expect(elasticache_sg["rules"]).to eq([{
         "protocol" => "tcp",
-        "destination" => terraform_fixture("aws_backing_service_cidr_all"),
+        "destination" => terraform_fixture_value("aws_backing_service_cidr_all"),
         "ports" => "6379",
       }])
     end

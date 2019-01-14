@@ -2,6 +2,7 @@ require 'ipaddr'
 
 RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }
+  let(:cloud_config) { cloud_config_with_defaults }
 
   specify "it must have a name" do
     expect(manifest["name"]).to be
@@ -30,7 +31,7 @@ RSpec.describe "generic manifest validations" do
   end
 
   describe "jobs cross-references" do
-    specify "all jobs reference vm_types that exist", skip: true do
+    specify "all jobs reference vm_types that exist" do
       vm_type_names = cloud_config["vm_types"].map { |r| r["name"] }
       manifest["instance_groups"].each do |job|
         expect(vm_type_names).to include(job["vm_type"]),
@@ -38,7 +39,7 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    specify "all jobs reference vm_extensions that exist", skip: true do
+    specify "all jobs reference vm_extensions that exist" do
       vm_extension_names = cloud_config.fetch("vm_extensions", []).map { |r| r["name"] }
       manifest["instance_groups"].each do |job|
         job.fetch("vm_extensions", []).each do |extension|
@@ -58,7 +59,7 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    specify "all jobs reference availability zones that exist", skip: true do
+    specify "all jobs reference availability zones that exist" do
       azs_names = cloud_config["azs"].map { |r| r["name"] }
       manifest["instance_groups"].each do |job|
         expect(job.has_key?("azs")).to be(true),
@@ -81,7 +82,7 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    describe "networks", skip: true do
+    describe "networks" do
       let(:networks_by_name) {
         cloud_config["networks"].each_with_object({}) { |net, result| result[net["name"]] = net }
       }
@@ -97,7 +98,7 @@ RSpec.describe "generic manifest validations" do
       end
     end
 
-    specify "all jobs reference disk_types that exist", skip: true do
+    specify "all jobs reference disk_types that exist" do
       disk_type_names = cloud_config.fetch("disk_types", {}).map { |p| p["name"] }
 
       manifest["instance_groups"].each do |job|

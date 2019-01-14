@@ -7,8 +7,8 @@ RSpec.describe "vm_types" do
 
     it "should use the correct elb instance" do
       expect(pool["cloud_properties"]["elbs"]).to match_array([
-        terraform_fixture(:cf_router_elb_name),
-        terraform_fixture(:cf_router_system_domain_elb_name),
+        terraform_fixture_value(:cf_router_elb_name),
+        terraform_fixture_value(:cf_router_system_domain_elb_name),
       ])
     end
   end

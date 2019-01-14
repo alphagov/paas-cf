@@ -85,13 +85,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-manifest.yml
 
-  - name: concourse-manifest
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: concourse-manifest.yml
-
   - name: deployed-healthcheck
     type: s3-iam
     source:
@@ -104,7 +97,6 @@ jobs:
     serial: true
     plan:
       - get: paas-cf
-      - get: concourse-manifest
       - task: self-update-pipeline
         config:
           platform: linux
@@ -115,7 +107,6 @@ jobs:
               tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
           inputs:
             - name: paas-cf
-            - name: concourse-manifest
           params:
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
