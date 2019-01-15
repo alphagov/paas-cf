@@ -364,7 +364,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter
-      tag_filter: 0.10.0
+      branch: gds_master 
 
 jobs:
   - name: pipeline-lock
