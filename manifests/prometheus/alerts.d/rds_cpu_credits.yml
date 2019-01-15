@@ -8,7 +8,7 @@
     rules:
       - &alert
         alert: RDSCPUCreditsLow_Warning
-        expr: avg_over_time(aws_rds_cpucreditbalance_minimum[30m]) <= 20
+        expr: avg_over_time(aws_rds_cpucredit_balance_minimum[30m]) <= 20
         labels:
           severity: warning
         annotations:
@@ -18,6 +18,6 @@
 
       - <<: *alert
         alert: RDSCPUCreditsLow_Critical
-        expr: avg_over_time(aws_rds_cpucreditbalance_minimum[30m]) <= 1
+        expr: avg_over_time(aws_rds_cpucredit_balance_minimum[30m]) <= 1
         labels:
           severity: critical
