@@ -10,5 +10,11 @@
         "account_id": "604925858717",
         "vpc_id": "vpc-0338ce744086cd767",
         "subnet_cidr": "172.16.4.0/22"
+    },
+    {
+        "peer_name": "dit-staging_hmrc",
+        "account_id": "001221602192",
+        "vpc_id": "vpc-085373a9956d4aa79",
+        "subnet_cidr": "172.16.8.0/22"
     }
 ]
