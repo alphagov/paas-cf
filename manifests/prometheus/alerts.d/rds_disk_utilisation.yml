@@ -8,7 +8,7 @@
     rules:
       - &alert
         alert: RDSCPUDiskUtilisation_Warning
-        expr: aws_rds_freestoragespace_minimum <= 2 * 1024 ^ 3
+        expr: aws_rds_free_storage_space_minimum <= 2 * 1024 ^ 3
         labels:
           severity: warning
         annotations:
@@ -18,6 +18,6 @@
 
       - <<: *alert
         alert: RDSCPUDiskUtilisation_Critical
-        expr: aws_rds_freestoragespace_minimum <= 1 * 1024 ^ 3
+        expr: aws_rds_free_storage_space_minimum <= 1 * 1024 ^ 3
         labels:
           severity: critical
