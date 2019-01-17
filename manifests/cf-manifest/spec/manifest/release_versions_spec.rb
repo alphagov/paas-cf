@@ -31,10 +31,6 @@ RSpec.describe "release versions" do
         local: "0.1.1",
         upstream: "1.71.0"
       },
-      "cf-networking" => {
-        local: "0.1.1",
-        upstream: "2.18.0"
-      },
     }
 
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
