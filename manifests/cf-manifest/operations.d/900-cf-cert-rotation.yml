@@ -267,6 +267,22 @@
   path: /addons/name=bosh-dns/jobs/name=bosh-dns/properties/health/server/tls/ca
   value: ((dns_healthcheck_tls_ca.certificate))((dns_healthcheck_tls_ca_old.certificate))
 
+- type: replace
+  path: /addons/name=loggregator_agent/jobs/name=loggr-expvar-forwarder/properties/log_agent/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=ssh_proxy/properties/backends/tls/ca_certificates/0
+  value: ((application_ca.certificate))((application_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=log-cache-expvar-forwarder/properties/loggregator_agent/tls/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=doppler/jobs/name=log-cache-expvar-forwarder/properties/loggregator_agent/tls/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
 # /instance_groups/name=diego-cell/jobs/name=cflinuxfs2-rootfs-setup/properties/cflinuxfs2-rootfs/trusted_certs
 # /instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs
 
