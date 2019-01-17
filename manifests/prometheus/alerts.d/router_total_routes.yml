@@ -43,7 +43,7 @@
           )
           / on() group_left() max(firehose_value_metric_gorouter_total_routes)
           > 3
-        for: 5m
+        for: 10m
         labels:
           severity: warning
         annotations:

@@ -9,6 +9,7 @@
     - &alert
       alert: DNSResolutionWorking_Warning
       expr: (count_over_time(dns_resolution_probe_success[5m]) - sum_over_time(dns_resolution_probe_success[5m])) / count_over_time(dns_resolution_probe_success[5m]) > 0.25
+      for: 10m
       labels:
         severity: warning
       annotations:
