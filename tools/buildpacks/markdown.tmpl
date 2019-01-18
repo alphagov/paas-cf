@@ -1,0 +1,14 @@
+# BuildPack Release {{ .ReleaseDate }}
+
+## Planned Releases:
+{{ range .Data }}
+{{ $buildpack := .Buildpack }}
+### {{ .Buildpack.Name }}: {{ .Buildpack.Version}}
+{{ if .Changes }}
+| Dependency | Version(s) Removed | Version(s) Added |
+|------------|--------------------|------------------|
+{{ range $key, $value := .Changes }}| {{ $key }} | {{ if $value.Removals }}{{ range $index, $version := $value.Removals }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }} | {{ if $value.Additions }}{{ range $index, $version := $value.Additions }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }} |
+{{ end }}{{ end }}
+Release notes:
+{{ range $version := .ReleaseNoteVersions }}
+* [cloudfoundry/{{ $buildpack.RepoName }}:{{ $version }}](https://github.com/cloudfoundry/{{ $buildpack.RepoName }}/releases/tag/{{ $version }}){{ end }}{{ end }}
