@@ -1,7 +1,4 @@
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
-github.com/adam-hanna/arrayOperations v0.2.5 h1:zphKpB5HGhHDkztF2oLcvnqIAu/L/YU3FB/9UghdsO0=
-github.com/adam-hanna/arrayOperations v0.2.5/go.mod h1:PhqKQzzPMRjFcC4Heh+kxha3nMvJ6lQNKuVEgoyimgU=
-github.com/alphagov/paas-cf v0.0.0-20190117112157-967c64e63b76 h1:KlMcRi2rGIOupHrb+AVb0Gx3r1qntonInUBQuDSiEQc=
 github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/google/go-github v17.0.0+incompatible h1:N0LgJ1j65A7kfXrZnUDaYCs/Sf4rEjNlfyDHW9dolSY=
