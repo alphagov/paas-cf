@@ -1,0 +1,9 @@
+---
+
+- type: replace
+  path: /releases/name=prometheus
+  value:
+    name: prometheus
+    version: 0.0.1548085118
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/prometheus-0.0.1548085118.tgz
+    sha1: dead42725aeffcdaf9279818c3e8428e157feb90
