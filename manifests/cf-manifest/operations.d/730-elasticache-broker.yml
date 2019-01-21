@@ -61,16 +61,22 @@
                   plans:
                     - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
                       name: tiny-clustered-3.2
-                      description: 568MB RAM, clustered (1 shard), single node, no failover, daily backups
+                      description: DEPRECATED - do not use, 568MB RAM, clustered (1 shard), single node, no failover, daily backups
                       free: true
                       metadata:
                         displayName: Redis Clustered Tiny
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
-                      name: tiny-unclustered-3.2
-                      description: 568MB RAM, non-clustered, single node, no failover, no backups
+                      name: tiny-3.2
+                      description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
                       free: true
                       metadata:
-                        displayName: Redis Non-clustered Tiny
+                        displayName: Redis tiny
+                    - id: b6949ea7-5c98-4c69-b981-4b5318ea8b7c
+                      name: medium-ha-3.2
+                      description: 6.37GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis medium highly-available
 
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab:
@@ -87,8 +93,18 @@
                 instance_type: cache.t2.micro
                 replicas_per_node_group: 0
                 shard_count: 1
-                snapshot_retention_limit: 0
+                snapshot_retention_limit: 7
                 automatic_failover_enabled: false
+                parameters:
+                  cluster-enabled: 'no'
+                  maxmemory-policy: volatile-lru
+                  reserved-memory: '0'
+              b6949ea7-5c98-4c69-b981-4b5318ea8b7c:
+                instance_type: cache.m5.large
+                replicas_per_node_group: 1
+                shard_count: 1
+                snapshot_retention_limit: 7
+                automatic_failover_enabled: true
                 parameters:
                   cluster-enabled: 'no'
                   maxmemory-policy: volatile-lru
