@@ -12,6 +12,10 @@ for i in "${PAAS_CF_DIR}"/manifests/prometheus/operations.d/*.yml; do
   opsfile_args+="-o $i "
 done
 
+if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/scale-down-dev.yml "
+fi
+
 alerts_opsfile_args=""
 for i in "${PAAS_CF_DIR}"/manifests/prometheus/alerts.d/*.yml; do
   alerts_opsfile_args+="-o $i "

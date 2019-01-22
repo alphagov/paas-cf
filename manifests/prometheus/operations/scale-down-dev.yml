@@ -1,0 +1,19 @@
+---
+
+# This contains changes to downscale dev Prometheus environments
+
+- type: replace
+  path: /instance_groups/name=nginx_z2/instances
+  value: 0
+- type: replace
+  path: /instance_groups/name=alertmanager/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=prometheus2/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=grafana/instances
+  value: 1
+- type: replace
+  path: /instance_groups/name=firehose/instances
+  value: 1

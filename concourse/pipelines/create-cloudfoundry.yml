@@ -1239,6 +1239,7 @@ jobs:
             BOSH_URL: https://((bosh_fqdn)):25555
             METRON_DEPLOYMENT_NAME: ((deploy_env))
             ENABLE_ALERT_EMAILS: ((ENABLE_ALERT_EMAILS))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: sh
             args:
@@ -1399,6 +1400,7 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           inputs:
             - name: paas-cf
             - name: config
@@ -1410,15 +1412,22 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
+                AZ_COUNT=2
+                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                  AZ_COUNT=1
+                fi
+
                 for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
-                  sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
-                  | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
-                  | curl "https://grafana.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
-                    --user "admin:$GRAFANA_PASS" \
-                    --header 'Content-Type: application/json' \
-                    --data "@-" \
-                    --fail \
-                    --include
+                  for az in $(seq 1 $AZ_COUNT); do
+                    sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
+                    | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
+                    | curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
+                      --user "admin:$GRAFANA_PASS" \
+                      --header 'Content-Type: application/json' \
+                      --data "@-" \
+                      --fail \
+                      --include
+                  done;
                 done
 
   - name: post-deploy
