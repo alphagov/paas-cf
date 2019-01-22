@@ -3457,11 +3457,13 @@ jobs:
               fi
       - do:
         - task: create-temp-user
+          timeout: 5m
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: cont-smoketest-user
 
         - task: smoke-tests-config
+          timeout: 1m
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: smoke_tests
@@ -3470,6 +3472,7 @@ jobs:
 
         - task: smoke-tests-run
           attempts: 3
+          timeout: 10m
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           params:
             AWS_DEFAULT_REGION: ((aws_region))
