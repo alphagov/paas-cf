@@ -2327,85 +2327,84 @@ jobs:
                   bosh run-errand rotate-uaa-database-key --when-changed
 
     - aggregate:
-      - do:
-        - task: deploy-aiven-service-broker
-          config:
-            platform: linux
-            image_resource: *cf-cli-image-resource
-            inputs:
-              - name: paas-cf
-              - name: paas-aiven-broker
-              - name: config
-            params:
-              AIVEN_API_TOKEN: ((aiven_api_token))
-              SERVICE_NAME_PREFIX: ((deploy_env))
-              AIVEN_PROJECT: paas-cf-((aws_account))
-              AIVEN_CLOUD: aws-((aws_region))
-              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  . ./config/config.sh
-                  cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                    -o admin -s service-brokers
+      - task: deploy-aiven-service-broker
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: paas-aiven-broker
+            - name: config
+          params:
+            AIVEN_API_TOKEN: ((aiven_api_token))
+            SERVICE_NAME_PREFIX: ((deploy_env))
+            AIVEN_PROJECT: paas-cf-((aws_account))
+            AIVEN_CLOUD: aws-((aws_region))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                  -o admin -s service-brokers
 
-                  cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
-                  cd paas-aiven-broker/
+                cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
+                cd paas-aiven-broker/
 
-                  ruby -ryaml -e "
-                    env = {
-                      'AIVEN_USERNAME' => 'aiven-broker',
-                      'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
-                      'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
-                      'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
-                      'AIVEN_PROJECT' => '$AIVEN_PROJECT',
-                      'AIVEN_CLOUD' => '$AIVEN_CLOUD',
-                      'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
-                    }
-                    manifest = YAML.load_file('manifest.yml')
-                    manifest['applications'].each { |app|
-                      app['env'] ||= {}
-                      app['env'].merge!(env)
-                    }
-                    File.write('manifest.yml', manifest.to_yaml)
-                  "
-                  cf blue-green-deploy aiven-broker
-                  cf delete -f aiven-broker-old
+                ruby -ryaml -e "
+                  env = {
+                    'AIVEN_USERNAME' => 'aiven-broker',
+                    'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
+                    'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
+                    'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
+                    'AIVEN_PROJECT' => '$AIVEN_PROJECT',
+                    'AIVEN_CLOUD' => '$AIVEN_CLOUD',
+                    'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] ||= {}
+                    app['env'].merge!(env)
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf blue-green-deploy aiven-broker
+                cf delete -f aiven-broker-old
 
-                  if cf service-brokers | grep 'aiven-broker\s'; then
-                    cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
-                  else
-                    cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
-                  fi
-                  cf enable-service-access elasticsearch
+                if cf service-brokers | grep 'aiven-broker\s'; then
+                  cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                else
+                  cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                fi
+                cf enable-service-access elasticsearch
 
-        - task: register-elasticache-broker
-          config:
-            platform: linux
-            image_resource: *cf-cli-image-resource
-            inputs:
-              - name: paas-cf
-              - name: config
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+      - task: register-elasticache-broker
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: config
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
 
-                  if cf service-brokers | grep 'elasticache-broker\s'; then
-                    cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
-                  else
-                    cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
-                  fi
-                  cf enable-service-access redis
+                if cf service-brokers | grep 'elasticache-broker\s'; then
+                  cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
+                else
+                  cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
+                fi
+                cf enable-service-access redis
 
       - task: deploy-paas-metrics
         config:
