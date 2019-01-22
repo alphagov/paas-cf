@@ -14,8 +14,8 @@
           severity: warning
         annotations:
           summary: Gorouter latency
-          description: "Gorouter latency is too high ({{ $value | printf \"%.0f\" }}ms) on {{ $labels.bosh_job_ip }}"
-          url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#gorouter-high-latency-alerts"
+          description: "All Gorouter latencies are too high (min {{ $value | printf \"%.0f\" }}ms)"
+          url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#gorouter-high-latency-alerts
 
       - <<: *alert
         alert: GorouterLatency_Critical
