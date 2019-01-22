@@ -80,6 +80,21 @@ RSpec.describe "release versions" do
     expect(paas_version).to be >= upstream_version, "we should upgrade the cf-smoke-tests-release's tag_filter in the create-cloundfoundry pipeline to #{upstream_version} or greater"
   end
 
+  specify "cf-acceptance-tests version should be the same as the CF manifest version" do
+    cf_manifest_version = cf_deployment_manifest
+      .fetch('manifest_version')
+
+    cf_acceptance_tests_resource = cf_pipeline
+      .fetch('resources')
+      .select { |v| v['name'] == 'cf-acceptance-tests' }
+      .fetch(0)
+
+    upstream_version = Gem::Version.new(cf_manifest_version.gsub(/^v/, '').gsub(/\.0$/, ''))
+    paas_version = Gem::Version.new(cf_acceptance_tests_resource['source']['branch'].gsub(/^cf/, ''))
+
+    expect(paas_version).to be >= upstream_version, "we should upgrade the cf-acceptance-tests' branch in the create-cloundfoundry pipeline to 'cf#{upstream_version}'"
+  end
+
   specify "releases do not include buildpacks" do
     manifest_without_vars_store.fetch("releases").each do |release|
       expect(release.fetch('name')).not_to end_with('-buildpack')
