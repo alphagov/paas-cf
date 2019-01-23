@@ -2273,31 +2273,6 @@ jobs:
 
                   cf delete paas-log-cache-adapter -r -f
 
-      - task: run-bosh-cleanup
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          inputs:
-            - name: paas-cf
-            - name: bosh-vars-store
-            - name: bosh-CA-crt
-          params:
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
-            BOSH_DEPLOYMENT: ((deploy_env))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
-                export BOSH_CLIENT
-                export BOSH_CLIENT_SECRET
-
-                bosh -n clean-up --all
       - do:
         - task: rotate-cc-db-encryption-keys
           config:
@@ -2557,6 +2532,32 @@ jobs:
                 delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
                 delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
                 delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
+
+      - task: run-bosh-cleanup
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: bosh-vars-store
+            - name: bosh-CA-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_DEPLOYMENT: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BOSH_CLIENT=admin
+                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
+                export BOSH_CLIENT
+                export BOSH_CLIENT_SECRET
+
+                bosh -n clean-up --all
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
