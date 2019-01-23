@@ -250,7 +250,7 @@
                 "stack": false,
                 "steppedLine": false,
                 "targets": [{
-                        "expr": "firehose_value_metric_bbs_lr_ps_running",
+                        "expr": "max(firehose_value_metric_bbs_lr_ps_running)",
                         "format": "time_series",
                         "interval": "",
                         "intervalFactor": 1,
@@ -258,7 +258,7 @@
                         "refId": "A"
                     },
                     {
-                        "expr": "firehose_value_metric_bbs_lr_ps_desired",
+                        "expr": "max(firehose_value_metric_bbs_lr_ps_desired)",
                         "format": "time_series",
                         "intervalFactor": 1,
                         "legendFormat": "LRPsDesired",
