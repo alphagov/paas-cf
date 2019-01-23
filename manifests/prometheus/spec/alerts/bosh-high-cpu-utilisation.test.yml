@@ -41,5 +41,3 @@ tests:
             exp_annotations:
               summary: "High cpu utilisation on test/0"
               description: "test/0 CPU utilisation was over 95% in the last hour on average"
-
-         
