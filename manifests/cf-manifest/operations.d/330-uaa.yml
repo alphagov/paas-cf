@@ -275,3 +275,7 @@
   value:
     name: secrets_uaa_clients_paas_billing_secret
     type: password
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cf_smoke_tests/override?
+  value: true

@@ -10,6 +10,7 @@ module ManifestHelpers
     attr_accessor :manifest_with_defaults
     attr_accessor :manifest_without_vars_store
     attr_accessor :cf_deployment_manifest
+    attr_accessor :cf_pipeline
     attr_accessor :vars_store
   end
 
@@ -66,6 +67,10 @@ module ManifestHelpers
 
   def cf_deployment_manifest
     Cache.instance.cf_deployment_manifest ||= YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
+  end
+
+  def cf_pipeline
+    Cache.instance.cf_pipeline ||= YAML.load_file(root.join('concourse/pipelines/create-cloudfoundry.yml'))
   end
 
   def property_tree(tree)

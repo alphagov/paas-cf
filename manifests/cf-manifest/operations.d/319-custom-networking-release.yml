@@ -1,8 +1,0 @@
----
-- type: replace
-  path: /releases/name=cf-networking
-  value:
-    name: cf-networking
-    version: 0.1.1
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cf-networking-0.1.1.tgz
-    sha1: a5666172d8c595acafd17155ff1e3e68b46e4915

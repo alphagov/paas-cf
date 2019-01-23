@@ -28,12 +28,8 @@ RSpec.describe "release versions" do
 
     pinned_releases = {
       "capi" => {
-        local: "0.1.1",
-        upstream: "1.71.0"
-      },
-      "cf-networking" => {
-        local: "0.1.1",
-        upstream: "2.18.0"
+        local: "0.1.2",
+        upstream: "1.74.0"
       },
     }
 
@@ -65,6 +61,38 @@ RSpec.describe "release versions" do
       expect(normalise_version(cf_deployment_releases[name])).to be(normalise_version(pinned_versions[:upstream])),
         "expected #{name} upstream to be #{pinned_versions[:upstream]} not #{cf_deployment_releases[name]}. We might need to rebase our forked #{name} release and generate a new tarball, or use the upstream version."
     }
+  end
+
+  specify "cf-smoke-tests-release version is not older than in upstream" do
+    cf_smoke_tests_release = cf_deployment_manifest
+      .fetch('releases')
+      .select { |v| v['name'] == 'cf-smoke-tests' }
+      .fetch(0)
+
+    cf_smoke_tests_resource = cf_pipeline
+      .fetch('resources')
+      .select { |v| v['name'] == 'cf-smoke-tests-release' }
+      .fetch(0)
+
+    upstream_version = Gem::Version.new(cf_smoke_tests_release['version'])
+    paas_version = Gem::Version.new(cf_smoke_tests_resource['source']['tag_filter'])
+
+    expect(paas_version).to be >= upstream_version, "we should upgrade the cf-smoke-tests-release's tag_filter in the create-cloundfoundry pipeline to #{upstream_version} or greater"
+  end
+
+  specify "cf-acceptance-tests version should be the same as the CF manifest version" do
+    cf_manifest_version = cf_deployment_manifest
+      .fetch('manifest_version')
+
+    cf_acceptance_tests_resource = cf_pipeline
+      .fetch('resources')
+      .select { |v| v['name'] == 'cf-acceptance-tests' }
+      .fetch(0)
+
+    upstream_version = Gem::Version.new(cf_manifest_version.gsub(/^v/, '').gsub(/\.0$/, ''))
+    paas_version = Gem::Version.new(cf_acceptance_tests_resource['source']['branch'].gsub(/^cf/, ''))
+
+    expect(paas_version).to be >= upstream_version, "we should upgrade the cf-acceptance-tests' branch in the create-cloundfoundry pipeline to 'cf#{upstream_version}'"
   end
 
   specify "releases do not include buildpacks" do
