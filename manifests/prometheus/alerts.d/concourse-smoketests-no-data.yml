@@ -8,7 +8,7 @@
     rules:
       - alert: ConcourseSmoketestsNoData
         expr: absent(concourse_builds_finished{pipeline="create-cloudfoundry",exported_job="continuous-smoke-tests"})
-        for: 30m
+        for: 15m
         labels:
           severity: critical
         annotations:
