@@ -4,3 +4,4 @@ applications:
    memory: 64M
    disk_quota: 100M
    instances: 2
+   stack: cflinuxfs3
