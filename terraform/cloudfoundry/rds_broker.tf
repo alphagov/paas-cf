@@ -107,10 +107,10 @@ resource "aws_db_parameter_group" "rds_broker_postgres95" {
   }
 }
 
-resource "aws_db_parameter_group" "rds_broker_postgres95_pg_stat_statements" {
-  name        = "rdsbroker-postgres95-${var.env}-pg-stat-statements"
+resource "aws_db_parameter_group" "rds_broker_postgres95_shared_preload_libraries" {
+  name        = "rdsbroker-postgres95-${var.env}-shared-preload-libraries"
   family      = "postgres9.5"
-  description = "RDS Broker Postgres 9.5 parameter group with pg_stat_statments shared preload library"
+  description = "RDS Broker Postgres 9.5 parameter group with some shared_preload_libraries enabled"
 
   parameter {
     apply_method = "pending-reboot"
