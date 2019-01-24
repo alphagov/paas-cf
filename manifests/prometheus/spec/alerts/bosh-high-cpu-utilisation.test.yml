@@ -1,0 +1,43 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1h
+    input_series:
+      - series: "bosh_job_cpu_sys{bosh_job_name='test',bosh_job_index='0'}"
+        values: 60 80 95
+
+      - series: "bosh_job_cpu_user{bosh_job_name='test',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+      - series: "bosh_job_cpu_wait{bosh_job_name='test',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: BoshHighCPUUtilisation_Warning
+      - eval_time: 61m
+        alertname: BoshHighCPUUtilisation_Warning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              bosh_job_name: 'test'
+              bosh_job_index: '0'
+            exp_annotations:
+              summary: "High cpu utilisation on test/0"
+              description: "test/0 CPU utilisation was over 80% in the last hour on average"
+      - eval_time: 121m
+        alertname: BoshHighCPUUtilisation_Critical
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              bosh_job_name: 'test'
+              bosh_job_index: '0'
+            exp_annotations:
+              summary: "High cpu utilisation on test/0"
+              description: "test/0 CPU utilisation was over 95% in the last hour on average"

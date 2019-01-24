@@ -1,0 +1,29 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 5m
+    input_series:
+      - series: 'firehose_value_metric_gorouter_latency{bosh_job_ip="0.0.0.1"}'
+        values: 600 600 600 800 800 800 800
+      - series: 'firehose_value_metric_gorouter_latency{bosh_job_ip="0.0.0.2"}'
+        values: 900 900 900 900 900 900 900
+      - series: 'firehose_value_metric_gorouter_latency{bosh_job_ip="0.0.0.3"}'
+        values: 900 900 900 900 900 900 900
+
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: GorouterLatency_Warning
+      - eval_time: 31m
+        alertname: GorouterLatency_Warning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              description: "All Gorouter latencies are too high (min 800ms)"
+              summary: "Gorouter latency"
+              url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#gorouter-high-latency-alerts

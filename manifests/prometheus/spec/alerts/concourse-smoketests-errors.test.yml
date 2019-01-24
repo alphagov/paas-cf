@@ -1,0 +1,24 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 15m
+    input_series:
+      - series: 'concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="errored"}'
+        values: 10 11 12 13 14
+
+    alert_rule_test:
+      - alertname: ConcourseSmoketestsErrors
+        eval_time: 10m
+      - alertname: ConcourseSmoketestsErrors
+        eval_time: 1h
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: Concourse continuous-smoke-tests errors
+              description: The continuous-smoke-tests Concourse job has been erroring for a while now.

@@ -6,6 +6,7 @@ env:
   global:
     - TF_VERSION="0.11.1"
     - BOSH_CLI_VERSION="2.0.48"
+    - PROMETHEUS_VERSION="2.6.1"
     - DEPLOY_ENV="travis"
 
 addons:
@@ -38,6 +39,17 @@ before_install:
     set -e
     wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64
     mv bosh-cli-${BOSH_CLI_VERSION}-linux-amd64 ~/bin/bosh && chmod +x ~/bin/bosh
+    set +e
+  - |
+    echo "Fetching Promtool ${PROMETHEUS_VERSION}"
+    set -e
+    wget -O prometheus.tgz "https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz"
+    tar xzf "prometheus.tgz" \
+       -C $HOME/bin/ \
+       --wildcards \
+       --wildcards-match-slash \
+       --strip-components=1 \
+       '*promtool'
     set +e
   - pip install --user yamllint
   - GIMME_OUTPUT=$(gimme 1.11 | tee -a $HOME/.bashrc) && eval "$GIMME_OUTPUT"
