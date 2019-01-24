@@ -178,10 +178,10 @@ RSpec.describe "base properties" do
     describe "executor" do
       subject(:executor) { manifest["instance_groups.diego-cell.jobs.rep.properties.diego.executor"] }
 
-      it "should have a memory_capacity_mb of at least 30G" do
+      it "should have a memory_capacity_mb of at least 32G" do
         memory_capacity_mb = executor['memory_capacity_mb']
         expect(memory_capacity_mb).to be_a_kind_of(Integer)
-        expect(memory_capacity_mb).to be >= (30 * 1024)
+        expect(memory_capacity_mb).to be >= (32 * 1024)
       end
     end
   end

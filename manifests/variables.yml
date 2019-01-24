@@ -1,5 +1,5 @@
 ---
-cell_instance_type: r4.xlarge
+cell_instance_type: r5.xlarge
 
 # Advertised memory capacity of the cells.
 #
@@ -13,9 +13,9 @@ cell_instance_type: r4.xlarge
 #
 # For instance:
 #
-# ruby -e 'puts "cell_memory_capacity_mb: #{ (30662 * 1.66).floor }";'
+# ruby -e 'puts "cell_memory_capacity_mb: #{ (32 * 1024 * 1.66).floor }";'
 #
-cell_memory_capacity_mb: 50898
+cell_memory_capacity_mb: 54394
 
 # Used by cf-deployment/operations/rename-network-and-deployment.yml
 network_name: cf
