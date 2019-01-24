@@ -5,6 +5,7 @@ applications:
    disk_quota: 512M
    instances: 1
    buildpack: go_buildpack
+   stack: cflinuxfs3
    env:
      GOVERSION: 1.11
      GOPACKAGENAME: github.com/alphagov/paas-cf/tools/metrics
