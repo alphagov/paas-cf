@@ -1383,6 +1383,7 @@ jobs:
                     instances: 1
                     buildpack: go_buildpack
                     health-check-type: http
+                    stack: cflinuxfs3
                     env:
                       GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
                       AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
