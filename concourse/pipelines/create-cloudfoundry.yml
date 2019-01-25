@@ -1412,7 +1412,8 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                AZ_COUNT=2
+                # FIXME: change this back to 2 when Prometheus can run again in an HA setup
+                AZ_COUNT=1
                 if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
                   AZ_COUNT=1
                 fi
