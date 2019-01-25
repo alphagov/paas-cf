@@ -1,0 +1,49 @@
+- type: remove
+  path: /instance_groups/name=nginx
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    &nginx
+    name: nginx_z1
+    azs:
+      - z1
+    instances: 1
+    vm_type: nano
+    stemcell: default
+    networks:
+      - name: cf
+    vm_extensions:
+      - prometheus_lb_z1
+    jobs:
+      - &nginx_job
+        name: nginx
+        release: prometheus
+        properties:
+          nginx:
+            alertmanager:
+              auth_users:
+                - name: admin
+                  password: ((alertmanager_password))
+              cross_zone_load_balancing: false
+            prometheus:
+              auth_users:
+                - name: admin
+                  password: ((prometheus_password))
+              cross_zone_load_balancing: false
+            grafana:
+              cross_zone_load_balancing: false
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    <<: *nginx
+    name: nginx_z2
+    azs:
+      - z2
+    vm_extensions:
+      - prometheus_lb_z2
+    jobs:
+      - <<: *nginx_job
+        provides:
+          nginx: nil

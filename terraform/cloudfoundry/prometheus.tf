@@ -38,12 +38,17 @@ resource "aws_security_group" "prometheus-lb" {
   }
 }
 
-output "p8s_alertmanager_target_group" {
-  value = "${aws_lb_target_group.p8s_alertmanager.name}"
+output "p8s_alertmanager_target_group_z1" {
+  value = "${element(aws_lb_target_group.p8s_alertmanager.*.name, 0)}"
+}
+
+output "p8s_alertmanager_target_group_z2" {
+  value = "${element(aws_lb_target_group.p8s_alertmanager.*.name, 1)}"
 }
 
 resource "aws_lb_target_group" "p8s_alertmanager" {
-  name     = "${var.env}-p8s-alertmanager"
+  count    = "${length(var.prometheus_azs)}"
+  name     = "${var.env}-p8s-alertmanager-${element(var.prometheus_azs, count.index)}"
   port     = 9093
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -51,14 +56,23 @@ resource "aws_lb_target_group" "p8s_alertmanager" {
   health_check {
     matcher = "200-499"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
-output "p8s_grafana_target_group" {
-  value = "${aws_lb_target_group.p8s_grafana.name}"
+output "p8s_grafana_target_group_z1" {
+  value = "${element(aws_lb_target_group.p8s_grafana.*.name, 0)}"
+}
+
+output "p8s_grafana_target_group_z2" {
+  value = "${element(aws_lb_target_group.p8s_grafana.*.name, 1)}"
 }
 
 resource "aws_lb_target_group" "p8s_grafana" {
-  name     = "${var.env}-p8s-grafana"
+  count    = "${length(var.prometheus_azs)}"
+  name     = "${var.env}-p8s-grafana-${element(var.prometheus_azs, count.index)}"
   port     = 3000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -66,20 +80,33 @@ resource "aws_lb_target_group" "p8s_grafana" {
   health_check {
     matcher = "200-499"
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
-output "p8s_prometheus_target_group" {
-  value = "${aws_lb_target_group.p8s_prometheus.name}"
+output "p8s_prometheus_target_group_z1" {
+  value = "${element(aws_lb_target_group.p8s_prometheus.*.name, 0)}"
+}
+
+output "p8s_prometheus_target_group_z2" {
+  value = "${element(aws_lb_target_group.p8s_prometheus.*.name, 1)}"
 }
 
 resource "aws_lb_target_group" "p8s_prometheus" {
-  name     = "${var.env}-p8s-prometheus"
+  count    = "${length(var.prometheus_azs)}"
+  name     = "${var.env}-p8s-prometheus-${element(var.prometheus_azs, count.index)}"
   port     = 9090
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
     matcher = "200-499"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
@@ -102,53 +129,57 @@ resource "aws_lb_listener" "prometheus" {
 }
 
 resource "aws_lb_listener_rule" "p8s_alertmanager" {
+  count        = "${length(var.prometheus_azs)}"
   listener_arn = "${aws_lb_listener.prometheus.arn}"
-  priority     = 1
+  priority     = "${count.index+1}"
 
   action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.p8s_alertmanager.arn}"
+    target_group_arn = "${element(aws_lb_target_group.p8s_alertmanager.*.arn, count.index)}"
   }
 
   condition {
     field  = "host-header"
-    values = ["alertmanager.*"]
+    values = ["alertmanager-${count.index+1}.*"]
   }
 }
 
 resource "aws_lb_listener_rule" "p8s_grafana" {
+  count        = "${length(var.prometheus_azs)}"
   listener_arn = "${aws_lb_listener.prometheus.arn}"
-  priority     = 2
+  priority     = "${count.index+3}"
 
   action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.p8s_grafana.arn}"
+    target_group_arn = "${element(aws_lb_target_group.p8s_grafana.*.arn, count.index)}"
   }
 
   condition {
     field  = "host-header"
-    values = ["grafana.*"]
+    values = ["grafana-${count.index+1}.*"]
   }
 }
 
 resource "aws_lb_listener_rule" "p8s_prometheus" {
+  count        = "${length(var.prometheus_azs)}"
   listener_arn = "${aws_lb_listener.prometheus.arn}"
-  priority     = 3
+  priority     = "${count.index+5}"
 
   action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.p8s_prometheus.arn}"
+    target_group_arn = "${element(aws_lb_target_group.p8s_prometheus.*.arn, count.index)}"
   }
 
   condition {
     field  = "host-header"
-    values = ["prometheus.*"]
+    values = ["prometheus-${count.index+1}.*"]
   }
 }
 
 resource "aws_route53_record" "alertmanager" {
+  count   = "${length(var.prometheus_azs)}"
   zone_id = "${var.system_dns_zone_id}"
-  name    = "alertmanager.${var.system_dns_zone_name}."
+  name    = "alertmanager-${count.index+1}.${var.system_dns_zone_name}."
   type    = "A"
 
   alias {
@@ -159,8 +190,9 @@ resource "aws_route53_record" "alertmanager" {
 }
 
 resource "aws_route53_record" "grafana" {
+  count   = "${length(var.prometheus_azs)}"
   zone_id = "${var.system_dns_zone_id}"
-  name    = "grafana.${var.system_dns_zone_name}."
+  name    = "grafana-${count.index+1}.${var.system_dns_zone_name}."
   type    = "A"
 
   alias {
@@ -171,8 +203,9 @@ resource "aws_route53_record" "grafana" {
 }
 
 resource "aws_route53_record" "prometheus" {
+  count   = "${length(var.prometheus_azs)}"
   zone_id = "${var.system_dns_zone_id}"
-  name    = "prometheus.${var.system_dns_zone_name}."
+  name    = "prometheus-${count.index+1}.${var.system_dns_zone_name}."
   type    = "A"
 
   alias {

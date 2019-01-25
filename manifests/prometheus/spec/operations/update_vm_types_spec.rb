@@ -3,7 +3,6 @@ RSpec.describe "update-vm-types.yml" do
   {
     "alertmanager" => "nano",
     "grafana" => "nano",
-    "nginx" => "nano",
     "prometheus2" => "medium",
   }.each do |name, type|
     it "sets the vm_type for #{name} to #{type}" do

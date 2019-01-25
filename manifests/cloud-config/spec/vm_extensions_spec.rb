@@ -1,9 +1,10 @@
 RSpec.describe "vm_extensions" do
   let(:manifest) { cloud_config_with_defaults }
 
-  describe "prometheus_lb" do
-    it "Should add the prometheus lb config" do
-      expect(manifest['vm_extensions.prometheus_lb.cloud_properties.lb_target_groups']).to_not be_empty
+  describe "prometheus" do
+    it "Should add the target group configs" do
+      expect(manifest['vm_extensions.prometheus_lb_z1.cloud_properties.lb_target_groups']).to_not be_empty
+      expect(manifest['vm_extensions.prometheus_lb_z2.cloud_properties.lb_target_groups']).to_not be_empty
     end
   end
 
