@@ -41,6 +41,8 @@
     name: nginx_z2
     azs:
       - z2
+    # TODO: remove this line when the Prometheus cluster can be HA again
+    instances: 0
     vm_extensions:
       - prometheus_lb_z2
     jobs:
