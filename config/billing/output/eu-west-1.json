@@ -1070,7 +1070,7 @@
 			]
 		},
 		{
-			"name": "redis tiny-unclustered-3.2",
+			"name": "redis tiny-3.2",
 			"valid_from": "2017-01-01",
 			"plan_guid": "c84d1bef-9500-4ce9-88b2-c0bd421bbf8a",
 			"number_of_nodes": 1,
