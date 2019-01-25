@@ -10,4 +10,4 @@ applications:
    env:
      GOVERSION: go1.8
      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck
-     
+
