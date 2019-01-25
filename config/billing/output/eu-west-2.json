@@ -1084,6 +1084,20 @@
 			]
 		},
 		{
+			"name": "redis medium-ha-3.2",
+			"valid_from": "2019-01-01",
+			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "cloudfront cdn-route",
 			"valid_from": "2017-01-01",
 			"plan_guid": "fc055c72-1075-44c9-9aee-bddd52e1b053",
