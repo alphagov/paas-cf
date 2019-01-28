@@ -1,3 +1,4 @@
 ---
 
 aws_limits_elasticache_cache_parameter_groups: 20
+aws_limits_elasticache_nodes: 100

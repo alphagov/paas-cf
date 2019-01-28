@@ -8,7 +8,7 @@
     rules:
       - &alert
         alert: ElasticacheNodeCountCloseToLimit_Warning
-        expr: paas_aws_elasticache_node_count > 80
+        expr: paas_aws_elasticache_node_count > ((aws_limits_elasticache_nodes)) / 100 * 80
         for: 1h
         labels:
           severity: warning
@@ -18,6 +18,6 @@
 
       - <<: *alert
         alert: ElasticacheNodeCountCloseToLimit_Critical
-        expr: paas_aws_elasticache_node_count > 90
+        expr: paas_aws_elasticache_node_count > ((aws_limits_elasticache_nodes)) / 100 * 90
         labels:
           severity: critical
