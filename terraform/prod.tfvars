@@ -17,7 +17,3 @@ support_email="gov-uk-paas-support@digital.cabinet-office.gov.uk"
 # 14313358 - GOV.UK PaaS Contact - prod
 # 14270734 - PaaS PagerDuty 24x7
 pingdom_contact_ids = [ 14313358, 14270734 ]
-
-# AWS Limits not accesible via API
-aws_limits_elasticache_nodes = 100
-aws_limits_elasticache_cache_parameter_groups = 100

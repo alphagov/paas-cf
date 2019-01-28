@@ -17,6 +17,3 @@ support_email="govpaas-alerting-staging@digital.cabinet-office.gov.uk"
 # 14313354 - GOV.UK PaaS Contact - staging
 # 14270725 - PaaS PagerDuty in hours
 pingdom_contact_ids = [ 14313354, 14270725 ]
-
-aws_limits_elasticache_nodes = 100
-aws_limits_elasticache_cache_parameter_groups = 20

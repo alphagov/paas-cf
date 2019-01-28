@@ -14,7 +14,3 @@ support_email="govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 
 # 14313350 - GOV.UK PaaS Contact - dev
 pingdom_contact_ids = [ 14313350 ]
-
-# AWS Limits not accesible via API
-aws_limits_elasticache_nodes = 100
-aws_limits_elasticache_cache_parameter_groups = 20
