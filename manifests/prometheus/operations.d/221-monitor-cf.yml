@@ -6,3 +6,8 @@
 - type: replace
   path: /instance_groups/name=firehose/vm_type
   value: medium
+
+- type: replace
+  path: /instance_groups/name=firehose/jobs/name=firehose_exporter/properties/firehose_exporter/doppler/idle_timeout?
+  value: 5m
+
