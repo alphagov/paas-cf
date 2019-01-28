@@ -3,4 +3,4 @@
 	url = https://github.com/cloudfoundry/cf-deployment
 [submodule "manifests/prometheus/upstream"]
 	path = manifests/prometheus/upstream
-	url = https://github.com/bosh-prometheus/prometheus-boshrelease
+	url = https://github.com/alphagov/paas-prometheus-boshrelease
