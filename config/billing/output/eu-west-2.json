@@ -1070,7 +1070,7 @@
 			]
 		},
 		{
-			"name": "redis tiny-unclustered-3.2",
+			"name": "redis tiny-3.2",
 			"valid_from": "2017-01-01",
 			"plan_guid": "c84d1bef-9500-4ce9-88b2-c0bd421bbf8a",
 			"number_of_nodes": 1,
@@ -1078,6 +1078,20 @@
 				{
 					"name": "instance",
 					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis medium-ha-3.2",
+			"valid_from": "2019-01-01",
+			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
 					"currency_code": "USD",
 					"vat_code": "Standard"
 				}
