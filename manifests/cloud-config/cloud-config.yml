@@ -145,7 +145,6 @@ vm_types:
       type: gp2
 
 - name: nano
-  network: cf
   env:
     bosh:
       password: ((secrets_vcap_password))
@@ -156,7 +155,6 @@ vm_types:
       type: gp2
 
 - name: small
-  network: cf
   env:
     bosh:
       password: ((secrets_vcap_password))
@@ -167,7 +165,6 @@ vm_types:
       type: gp2
 
 - name: errand
-  network: cf
   env:
     bosh:
       password: ((secrets_vcap_password))
@@ -179,7 +176,6 @@ vm_types:
     iam_instance_profile: bosh-errand
 
 - name: medium
-  network: cf
   env:
     bosh:
       password: ((secrets_vcap_password))
@@ -190,7 +186,6 @@ vm_types:
       type: gp2
 
 - name: large
-  network: cf
   env:
     bosh:
       password: ((secrets_vcap_password))
@@ -201,7 +196,6 @@ vm_types:
       type: gp2
 
 - name: router
-  network: router
   env:
     bosh:
       password: ((secrets_vcap_password))
@@ -215,7 +209,6 @@ vm_types:
     - ((terraform_outputs_cf_router_system_domain_elb_name))
 
 - name: cell
-  network: cell
   env:
     bosh:
       password: ((secrets_vcap_password))
