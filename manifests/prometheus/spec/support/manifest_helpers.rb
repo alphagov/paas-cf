@@ -38,6 +38,7 @@ private
     copy_fixture_file('bosh-vars-store.yml', "#{workdir}/bosh-vars-store")
     copy_fixture_file('cf-vars-store.yml', "#{workdir}/cf-vars-store")
     copy_fixture_file('bosh-CA.crt', "#{workdir}/bosh-CA-crt")
+    copy_fixture_file('bosh-secrets.yml', "#{workdir}/bosh-secrets")
 
     env = fake_env_vars
     env['PAAS_CF_DIR'] = root.to_s

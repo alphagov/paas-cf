@@ -1203,6 +1203,7 @@ jobs:
           - get: prometheus-vars-store
           - get: bosh-vars-store
           - get: bosh-CA-crt
+          - get: bosh-secrets
           - get: cf-vars-store
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
@@ -1237,6 +1238,7 @@ jobs:
             - name: bosh-CA-crt
             - name: cf-vars-store
             - name: terraform-outputs
+            - name: bosh-secrets
           outputs:
             - name: prometheus-manifest
             - name: prometheus-manifest-pre-vars
