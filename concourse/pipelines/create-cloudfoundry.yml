@@ -326,19 +326,19 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: v0.47.0
+      tag_filter: v0.48.0
 
   - name: paas-accounts
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts
-      tag_filter: v0.3.0
+      tag_filter: v0.4.0
 
   - name: paas-admin
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.51.0
+      tag_filter: v0.52.0
 
   - name: prometheus-vars-store
     type: s3-iam
@@ -1384,6 +1384,7 @@ jobs:
                     instances: 1
                     buildpack: go_buildpack
                     health-check-type: http
+                    stack: cflinuxfs3
                     env:
                       GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
                       AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
