@@ -1,14 +1,10 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/web?/external_url?
-  value: https://prometheus.((system_domain))
+  value: https://prometheus-1.((system_domain))
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/web?/external_url
-  value: https://alertmanager.((system_domain))
-
-- type: replace
-  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/server?/root_url
-  value: https://grafana.((system_domain))
+  value: https://alertmanager-1.((system_domain))
 
 - type: replace
   path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/prometheus?/use_external_url?
