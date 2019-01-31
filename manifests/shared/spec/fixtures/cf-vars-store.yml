@@ -1,0 +1,2 @@
+uaa_clients_cf_exporter_secret: dummy_cf_exporter_secret
+uaa_clients_firehose_exporter_secret: dummy_firehose_exporter_secret
