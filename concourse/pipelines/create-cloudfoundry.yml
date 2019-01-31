@@ -151,6 +151,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh.tfstate
 
+  - name: bosh-secrets
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: bosh-secrets.yml
+
   - name: bosh-vars-store
     type: s3-iam
     source:
@@ -930,6 +937,7 @@ jobs:
           - get: paas-cf
             passed: ['cf-terraform']
           - get: ipsec-CA
+          - get: bosh-secrets
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-vars-store
@@ -1017,6 +1025,7 @@ jobs:
               - name: paas-cf
               - name: ipsec-CA
               - name: terraform-outputs
+              - name: bosh-secrets
               - name: cf-secrets
               - name: vpc-peering-opsfile
               - name: logit-secrets

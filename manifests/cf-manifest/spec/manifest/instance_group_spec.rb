@@ -57,6 +57,16 @@ RSpec.describe "the instance_groups definitions block" do
       expect("api").to be_ordered_before("scheduler")
     end
   end
+
+  specify "all instance_groups have a bosh password set" do
+    missing = []
+    instance_groups.each do |ig|
+      pw = ig.dig("env", "bosh", "password")
+      missing << ig['name'] if pw.nil? || pw.empty?
+    end
+    expect(missing).to be_empty,
+      "Expected instance_groups #{missing.inspect} to have env.bosh.password set"
+  end
 end
 
 RSpec.describe "registration of routes for services behind GoRouter" do
