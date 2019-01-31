@@ -993,7 +993,6 @@ jobs:
             inputs:
               - name: paas-cf
               - name: terraform-outputs
-              - name: cf-secrets
             outputs:
               - name: cloud-config
             run:

@@ -145,9 +145,6 @@ vm_types:
       type: gp2
 
 - name: nano
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: t2.nano
     ephemeral_disk:
@@ -155,9 +152,6 @@ vm_types:
       type: gp2
 
 - name: small
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: t2.small
     ephemeral_disk:
@@ -165,9 +159,6 @@ vm_types:
       type: gp2
 
 - name: errand
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: t2.small
     ephemeral_disk:
@@ -176,9 +167,6 @@ vm_types:
     iam_instance_profile: bosh-errand
 
 - name: medium
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: t2.medium
     ephemeral_disk:
@@ -186,9 +174,6 @@ vm_types:
       type: gp2
 
 - name: large
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: m4.large
     ephemeral_disk:
@@ -196,9 +181,6 @@ vm_types:
       type: gp2
 
 - name: router
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: c4.large
     ephemeral_disk:
@@ -209,9 +191,6 @@ vm_types:
     - ((terraform_outputs_cf_router_system_domain_elb_name))
 
 - name: cell
-  env:
-    bosh:
-      password: ((secrets_vcap_password))
   cloud_properties:
     instance_type: ((cell_instance_type))
     ephemeral_disk:

@@ -14,11 +14,6 @@ generator = SecretGenerator.new(
   "external_uaa_database_password" => :simple,
   "external_silk_controller_database_password" => :simple,
   "external_policy_server_database_password" => :simple,
-  # SHA512 password for vms
-  # This secret is used in the cloud-config to set the password for the
-  # vcap user. But we do not really login ever as vcap git user directly
-  # NOTE: pending confirm.
-  "secrets_vcap_password" => :sha512_crypted,
 )
 
 option_parser = OptionParser.new do |opts|
