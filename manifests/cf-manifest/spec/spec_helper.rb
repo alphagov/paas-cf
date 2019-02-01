@@ -17,8 +17,6 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-$workdir = nil
-
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -41,16 +39,6 @@ RSpec.configure do |config|
     # a real object. This is generally recommended, and will default to
     # `true` in RSpec 4.
     mocks.verify_partial_doubles = true
-  end
-
-  config.before(:suite) do
-    $workdir = Dir.mktmpdir('paas-cf-test')
-  end
-
-  config.after(:suite) do
-    if !$workdir.nil?
-      FileUtils.rm_rf($workdir)
-    end
   end
 
 # The settings below are suggested to provide a good initial experience
