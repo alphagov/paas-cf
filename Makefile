@@ -208,7 +208,7 @@ showenv: check-env ## Display environment information
 	@concourse/scripts/environment.sh
 	@scripts/show-vars-store-secrets.sh cf-vars-store cf_admin_password
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters 'Name=tag:Name,Values=concourse/*' "Name=key-name,Values=$(DEPLOY_ENV)_concourse_key_pair" \
+		--filters "Name=tag:deploy_env,Values=${DEPLOY_ENV}" 'Name=tag:instance_group,Values=concourse' \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
 	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password grafana_mon_password prometheus_password
 
