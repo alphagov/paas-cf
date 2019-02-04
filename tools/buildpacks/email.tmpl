@@ -1,0 +1,26 @@
+Hi,
+
+We will be upgrading most of the platform's buildpacks on or after {{ .ReleaseDate }}.
+
+We’re letting you know about the planned buildpack updates so you can make any necessary changes to your application before the upgrade takes place. Please make sure that the versions of the languages you’ve pinned are compatible with the versions available in the planned releases. If you've pinned the patch version, please review the release notes below to confirm if it's supported. We recommend pinning the minor version to minimise the changes required.
+
+If you have any problems using the new versions in the buildpacks, or working to these timelines, please contact us via our help desk: gov-uk-paas-support@digital.cabinet-office.gov.uk.
+
+Regards,
+
+The GOV.UK PaaS team
+
+# Planned Releases:
+{{ range $index := .Data }}
+{{ $buildpack := .Buildpack }}
+## {{ .Buildpack.Name }}: {{ .Buildpack.Version}}
+{{ range $key, $value := .Changes }} {{ if or $value.Additions $value.Removals }}
+* {{ $key }}:
+    * Removed: {{ if $value.Removals }}{{ range $index, $version := $value.Removals }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }}
+    * Added: {{ if $value.Additions }}{{ range $index, $version := $value.Additions }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }}{{ end }}{{ end }}
+
+Release notes:
+{{ range $version := .ReleaseNoteVersions }}
+* https://github.com/cloudfoundry/{{ $buildpack.RepoName }}/releases/tag/{{ $version }}{{ end }}
+--------{{ if $index }}
+{{ end }}{{ end }}
