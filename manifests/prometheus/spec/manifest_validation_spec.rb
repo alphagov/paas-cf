@@ -30,6 +30,16 @@ RSpec.describe "generic manifest validations" do
     end
   end
 
+  specify "all instance_groups have a bosh password set" do
+    missing = []
+    manifest.fetch('instance_groups').each do |ig|
+      pw = ig.dig("env", "bosh", "password")
+      missing << ig['name'] if pw.nil? || pw.empty?
+    end
+    expect(missing).to be_empty,
+      "Expected instance_groups #{missing.inspect} to have env.bosh.password set"
+  end
+
   describe "jobs cross-references" do
     specify "all jobs reference vm_types that exist" do
       vm_type_names = cloud_config["vm_types"].map { |r| r["name"] }

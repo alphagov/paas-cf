@@ -23,7 +23,6 @@ private
     workdir = Dir.mktmpdir('paas-cf-test')
 
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
-    generate_cf_secrets_fixture("#{workdir}/cf-secrets")
 
     env = {
       'PAAS_CF_DIR' => root.to_s,

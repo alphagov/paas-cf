@@ -16,7 +16,6 @@ bosh interpolate \
   --vars-file="${WORKDIR}/terraform-outputs/vpc.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/bosh.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
-  --vars-file="${WORKDIR}/cf-secrets/cf-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   ${opsfile_args} \
   "${PAAS_CF_DIR}/manifests/cloud-config/cloud-config.yml"

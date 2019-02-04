@@ -83,8 +83,7 @@ private
     Pathname(File.expand_path("../../../..", __dir__))
   end
 
-  def render_vpc_peering_opsfile(environment = "dev")
-    dir = workdir + '/vpc-peering-opsfile'
+  def render_vpc_peering_opsfile(dir, environment = "dev")
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
     file = File::open("#{dir}/vpc-peers.yml", 'w')
     output, error, status =
@@ -105,12 +104,15 @@ private
     vars_store_file: nil,
     env_specific_bosh_vars_file: "default.yml"
   )
+    workdir = Dir.mktmpdir('paas-cf-test')
+
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
     copy_fixture_file('logit-secrets.yml', "#{workdir}/logit-secrets")
+    copy_fixture_file('bosh-secrets.yml', "#{workdir}/bosh-secrets")
     generate_cf_secrets_fixture("#{workdir}/cf-secrets")
     copy_fixture_file('environment-variables.yml', workdir)
     copy_ipsec_cert_fixtures("#{workdir}/ipsec-CA")
-    render_vpc_peering_opsfile(environment)
+    render_vpc_peering_opsfile("#{workdir}/vpc-peering-opsfile", environment)
 
     env = {
       'PAAS_CF_DIR' => root.to_s,
@@ -128,6 +130,8 @@ private
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     DeepFreeze.freeze(PropertyTree.load_yaml(output))
+  ensure
+    FileUtils.rm_rf(workdir)
   end
 
   def render_manifest_with_vars_store(

@@ -151,6 +151,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh.tfstate
 
+  - name: bosh-secrets
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: bosh-secrets.yml
+
   - name: bosh-vars-store
     type: s3-iam
     source:
@@ -930,6 +937,7 @@ jobs:
           - get: paas-cf
             passed: ['cf-terraform']
           - get: ipsec-CA
+          - get: bosh-secrets
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: cf-vars-store
@@ -993,7 +1001,6 @@ jobs:
             inputs:
               - name: paas-cf
               - name: terraform-outputs
-              - name: cf-secrets
             outputs:
               - name: cloud-config
             run:
@@ -1018,6 +1025,7 @@ jobs:
               - name: paas-cf
               - name: ipsec-CA
               - name: terraform-outputs
+              - name: bosh-secrets
               - name: cf-secrets
               - name: vpc-peering-opsfile
               - name: logit-secrets
@@ -1195,6 +1203,7 @@ jobs:
           - get: prometheus-vars-store
           - get: bosh-vars-store
           - get: bosh-CA-crt
+          - get: bosh-secrets
           - get: cf-vars-store
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
@@ -1229,17 +1238,20 @@ jobs:
             - name: bosh-CA-crt
             - name: cf-vars-store
             - name: terraform-outputs
+            - name: bosh-secrets
           outputs:
             - name: prometheus-manifest
             - name: prometheus-manifest-pre-vars
             - name: prometheus-vars-store-updated
           params:
+            AWS_ACCOUNT: ((aws_account))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            CF_DEPLOYMENT_NAME: ((deploy_env))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
             BOSH_URL: https://((bosh_fqdn)):25555
-            METRON_DEPLOYMENT_NAME: ((deploy_env))
             ENABLE_ALERT_EMAILS: ((ENABLE_ALERT_EMAILS))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            ENV_SPECIFIC_BOSH_VARS_FILE: ((env_specific_bosh_vars_file))
           run:
             path: sh
             args:
@@ -1247,35 +1259,6 @@ jobs:
               - -u
               - -c
               - |
-                VARS_FILES="
-                  ./prometheus-vars-file.yml
-                  ./terraform-outputs/cf.yml
-                  ./paas-cf/manifests/prometheus/env-specific/((env_specific_bosh_vars_file))
-                "
-                export VARS_FILES
-
-                bosh interpolate - \
-                  --var-errs \
-                  --vars-file bosh-vars-store/bosh-vars-store.yml \
-                  --vars-file cf-vars-store/cf-vars-store.yml \
-                  --var-file bosh_ca_cert=./bosh-CA-crt/bosh-CA.crt \
-                > ./prometheus-vars-file.yml \
-                <<EOF
-                ---
-                metrics_environment: $CF_DEPLOYMENT_NAME
-                bosh_url: $BOSH_URL
-                uaa_bosh_exporter_client_secret: ((bosh_exporter_password))
-                bosh_ca_cert: ((bosh_ca_cert))
-                system_domain: $SYSTEM_DNS_ZONE_NAME
-                app_domain: ((apps_dns_zone_name))
-                metron_deployment_name: $METRON_DEPLOYMENT_NAME
-                skip_ssl_verify: false
-                traffic_controller_external_port: 443
-                uaa_clients_cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
-                uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
-                aws_account: ((aws_account))
-                EOF
-
                 cp prometheus-vars-store/prometheus-vars-store.yml prometheus-vars-store-updated/
 
                 VARS_STORE=prometheus-vars-store-updated/prometheus-vars-store.yml \
