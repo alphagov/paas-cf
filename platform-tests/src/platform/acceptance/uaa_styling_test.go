@@ -4,14 +4,15 @@ import (
 	"crypto/sha512"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/url"
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
-	"io/ioutil"
-	"net/url"
-	"strings"
 )
 
 var _ = Describe("UAA authorization webpage styling", func() {
@@ -43,7 +44,7 @@ var _ = Describe("UAA authorization webpage styling", func() {
 
 		customAppURL = url.URL{
 			Scheme: "https",
-			Host:   "paas-uaa-assets." + testConfig.GetAppsDomain(),
+			Host:   "paas-uaa-assets." + GetConfigFromEnvironment("SYSTEM_DNS_ZONE_NAME"),
 		}
 		customLogoURL = customAppURL
 		customLogoURL.Path = "/images/product-logo.png"
