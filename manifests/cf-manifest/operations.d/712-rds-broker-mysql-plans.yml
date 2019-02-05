@@ -16,7 +16,6 @@
         - ((terraform_outputs_rds_broker_dbs_security_group_id))
       engine: "mysql"
       engine_version: "5.7"
-      db_parameter_group_name: ((terraform_outputs_rds_broker_mysql57_db_parameter_group))
 
     tiny_plan_rds_properties: &tiny_plan_rds_properties
       db_instance_class: "db.t2.micro"
