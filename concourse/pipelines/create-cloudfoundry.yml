@@ -2499,7 +2499,6 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
           run:
             path: sh
@@ -2518,7 +2517,6 @@ jobs:
                   manifest['applications'].each do |app|
                     app['routes'] = [
                       { 'route' => 'paas-uaa-assets.${SYSTEM_DNS_ZONE_NAME}' },
-                      { 'route' => 'paas-uaa-assets.${APPS_DNS_ZONE_NAME}' },
                     ]
                   end
                   File.write('manifest.yml', manifest.to_yaml)
