@@ -6,13 +6,19 @@
   value:
     name: ConcourseSmoketestsFailures
     rules:
-      - record: "concourse_continuous_smoke_tests_failures"
-        expr: sum(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"} or (absent(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"})-1))
-
-      - alert: ConcourseSmoketestsFailures
-        expr: increase(concourse_continuous_smoke_tests_failures[1h]) >= 3
+      - alert: ConcourseSmoketestsFailuresWarning
+        expr: increase(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"}[1h]) >= 2
         labels:
-          severity: critical
+          severity: warning
         annotations:
           summary: Concourse continuous-smoke-tests failures
-          description: The continuous-smoke-tests Concourse job has been failing for a while now.
+          description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
+
+      - alert: ConcourseSmoketestsFailuresCritical
+        expr: increase(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"}[30m]) >= 3
+        labels:
+          severity: critical
+          notify: pagerduty
+        annotations:
+          summary: Concourse continuous-smoke-tests failures
+          description: The continuous-smoke-tests Concourse job has failed at least three times in the last 30 minutes.
