@@ -2498,6 +2498,9 @@ jobs:
           inputs:
             - name: paas-cf
             - name: config
+          params:
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
           run:
             path: sh
             args:
@@ -2510,8 +2513,18 @@ jobs:
 
                 cd paas-cf/tools/paas-uaa-assets
 
-                cf blue-green-deploy paas-uaa-assets
-                cf delete -f paas-uaa-assets-old
+                ruby -ryaml -e "
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each do |app|
+                    app['routes'] = [
+                      { 'route' => 'paas-uaa-assets.${SYSTEM_DNS_ZONE_NAME}' },
+                      { 'route' => 'paas-uaa-assets.${APPS_DNS_ZONE_NAME}' },
+                    ]
+                  end
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf zero-downtime-push paas-uaa-assets -f ./manifest.yml
 
       - task: remove-unused-iam-access-keys
         config:

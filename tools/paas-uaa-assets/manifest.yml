@@ -5,3 +5,4 @@ applications:
    disk_quota: 100M
    instances: 2
    stack: cflinuxfs3
+   buildpack: staticfile_buildpack
