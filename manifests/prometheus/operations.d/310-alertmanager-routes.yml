@@ -13,9 +13,15 @@
       - receiver: warning-receiver
         match:
           severity: "warning"
+        continue: true
       - receiver: critical-receiver
         match:
           severity: "critical"
+        continue: true
+      - receiver: pagerduty-receiver
+        match:
+          notify: "pagerduty"
+        repeat_interval: 4h
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
@@ -36,3 +42,11 @@
         to: govpaas-alerting-((aws_account))+critical@digital.cabinet-office.gov.uk
         headers:
           Subject: "[((metrics_environment))] [critical] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: pagerduty-receiver
+    pagerduty_configs:
+      - service_key: ((alertmanager_pagerduty_service_key))
+        description: "[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"

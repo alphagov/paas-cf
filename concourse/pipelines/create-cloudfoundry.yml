@@ -108,12 +108,6 @@ resource_types:
     repository: governmentpaas/semver-resource
     tag: ecbdd201e122b44de99a40ac9f24407c1a43b9a2
 
-- name: pagerduty-notification-resource
-  type: docker-image
-  source:
-    repository: governmentpaas/pagerduty-notification-resource
-    tag: 2018-11-15
-
 resources:
   - name: pipeline-trigger
     type: semver-iam
@@ -362,16 +356,18 @@ resources:
       region_name: ((aws_region))
       versioned_file: prometheus-manifest-pre-vars.yml
 
-  - name: pagerduty-notify
-    type: pagerduty-notification-resource
-    source:
-      service_key: ((pagerduty_integration_key))
-
   - name: paas-yet-another-cloudwatch-exporter
     type: git
     source:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter
       branch: gds_master
+
+  - name: pagerduty-secrets
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: pagerduty-secrets.yml
 
 jobs:
   - name: pipeline-lock
@@ -1207,6 +1203,7 @@ jobs:
           - get: cf-vars-store
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
+          - get: pagerduty-secrets
 
       - task: extract-terraform-outputs
         config:
@@ -1239,6 +1236,7 @@ jobs:
             - name: cf-vars-store
             - name: terraform-outputs
             - name: bosh-secrets
+            - name: pagerduty-secrets
           outputs:
             - name: prometheus-manifest
             - name: prometheus-manifest-pre-vars
@@ -3477,7 +3475,6 @@ jobs:
             SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: smoke-tests-run
-          attempts: 3
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           params:
             AWS_DEFAULT_REGION: ((aws_region))
@@ -3485,11 +3482,6 @@ jobs:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
             EMAIL_ON_SMOKE_TEST_FAILURE: ((ENABLE_ALERT_EMAILS))
-          on_failure:
-            put: pagerduty-notify
-            params:
-              action: trigger
-              description: "((deploy_env)) concourse continuous smoketests errors"
           ensure:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml

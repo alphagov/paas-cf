@@ -78,9 +78,11 @@ prepare_environment() {
     exit 1
   fi
 
+  # Note: this credential is not interpolated into the pipeline. It is used as a guard against forgetting
+  # to upload the credentials and has been placed here for consistency with the other credentials.
   # shellcheck disable=SC2154
-  if [ -z "${pagerduty_integration_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
-    echo "Could not retrieve integration key for Pagerduty. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
+  if [ -z "${alertmanager_pagerduty_service_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+    echo "Could not retrieve PagerDuty service key for Alertmanager. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
     exit 1
   fi
 
@@ -129,7 +131,6 @@ disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 aiven_api_token: ${aiven_api_token:-}
-pagerduty_integration_key: "${pagerduty_integration_key:-this-is-not-a-pagerduty-key}"
 concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
 oauth_client_id: "${oauth_client_id:-}"
 oauth_client_secret: "${oauth_client_secret:-}"
