@@ -13,7 +13,6 @@
         expr: increase(concourse_continuous_smoke_tests_errors[1h]) >= 3
         labels:
           severity: critical
-          notify: pagerduty
         annotations:
           summary: Concourse continuous-smoke-tests errors
           description: The continuous-smoke-tests Concourse job has been erroring for a while now.

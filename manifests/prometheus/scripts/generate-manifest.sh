@@ -26,8 +26,8 @@ if [ -n "${VARS_STORE:-}" ]; then
   vars_store_args=" --var-errs --vars-store ${VARS_STORE}"
 fi
 
-if [ "${ENABLE_ALERT_EMAILS:-}" == "false" ]; then
-  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/disable-email.yml"
+if [ "${ENABLE_ALERT_NOTIFICATIONS:-}" == "false" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/disable-alert-notifications.yml"
 fi
 
 variables_file="$(mktemp)"

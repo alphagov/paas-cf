@@ -453,7 +453,7 @@ jobs:
             AWS_DEFAULT_REGION: ((aws_region))
             SELF_UPDATE_PIPELINE: ((self_update_pipeline))
             PIPELINES_TO_UPDATE: ((pipeline_name))
-            ENABLE_ALERT_EMAILS: ((ENABLE_ALERT_EMAILS))
+            ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
             BOSH_AZ: ((bosh_az))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
             NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
@@ -1247,7 +1247,7 @@ jobs:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
             BOSH_URL: https://((bosh_fqdn)):25555
-            ENABLE_ALERT_EMAILS: ((ENABLE_ALERT_EMAILS))
+            ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             ENV_SPECIFIC_BOSH_VARS_FILE: ((env_specific_bosh_vars_file))
           run:
@@ -3481,7 +3481,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-            EMAIL_ON_SMOKE_TEST_FAILURE: ((ENABLE_ALERT_EMAILS))
+            EMAIL_ON_SMOKE_TEST_FAILURE: ((ENABLE_ALERT_NOTIFICATIONS))
           ensure:
             task: upload-test-artifacts
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
