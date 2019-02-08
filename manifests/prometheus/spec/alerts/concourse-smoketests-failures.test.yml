@@ -1,0 +1,56 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 5m
+    input_series:
+      - series: 'concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"}'
+        values: 10 10 10 11 11 11 12 12 13
+
+    alert_rule_test:
+      - alertname: ConcourseSmoketestsFailuresWarning
+        eval_time: 25m
+
+      - alertname: ConcourseSmoketestsFailuresWarning
+        eval_time: 30m
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              exported_job: continuous-smoke-tests
+              pipeline: create-cloudfoundry
+              status: failed
+            exp_annotations:
+              summary: Concourse continuous-smoke-tests failures
+              description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
+
+      - alertname: ConcourseSmoketestsFailuresWarning
+        eval_time: 60m
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              exported_job: continuous-smoke-tests
+              pipeline: create-cloudfoundry
+              status: failed
+            exp_annotations:
+              summary: Concourse continuous-smoke-tests failures
+              description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
+
+      - alertname: ConcourseSmoketestsFailuresCritical
+        eval_time: 35m
+
+      - alertname: ConcourseSmoketestsFailuresCritical
+        eval_time: 40m
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              notify: pagerduty
+              exported_job: continuous-smoke-tests
+              pipeline: create-cloudfoundry
+              status: failed
+            exp_annotations:
+              summary: Concourse continuous-smoke-tests failures
+              description: The continuous-smoke-tests Concourse job has failed at least three times in the last 30 minutes.
