@@ -21,12 +21,14 @@ test: spec compile_platform_tests lint_yaml lint_terraform lint_shellcheck lint_
 
 spec:
 	cd scripts &&\
+		go get -d -t . &&\
 		go test
 	cd scripts &&\
 		bundle exec rspec
 	cd tools/metrics &&\
 		go test -v ./...
 	cd concourse/scripts &&\
+		go get -d -t . &&\
 		go test
 	cd concourse/scripts &&\
 		bundle exec rspec
@@ -39,6 +41,7 @@ spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
 	cd terraform/scripts &&\
+		go get -d -t . &&\
 		go test
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
