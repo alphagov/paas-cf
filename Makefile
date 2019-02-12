@@ -47,7 +47,7 @@ spec:
 		./run_tests.sh src/platform/availability/monitor/
 
 compile_platform_tests:
-	GOPATH="$$(pwd)/platform-tests:$${GOPATH}" \
+	GOPATH="$$(pwd)/platform-tests" \
 	go test -run ^$$ \
 		platform/acceptance \
 		platform/availability/api \
