@@ -26,8 +26,8 @@ if [ -n "${VARS_STORE:-}" ]; then
   vars_store_args=" --var-errs --vars-store ${VARS_STORE}"
 fi
 
-if [ "${ENABLE_ALERT_EMAILS:-}" == "false" ]; then
-  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/disable-email.yml"
+if [ "${ENABLE_ALERT_NOTIFICATIONS:-}" == "false" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/disable-alert-notifications.yml"
 fi
 
 variables_file="$(mktemp)"
@@ -58,6 +58,7 @@ bosh interpolate \
   --vars-file="${variables_file}" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
   --vars-file="${WORKDIR}/bosh-secrets/bosh-secrets.yml" \
+  --vars-file="${WORKDIR}/pagerduty-secrets/pagerduty-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/prometheus/env-specific/${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   --var-file bosh_ca_cert="${WORKDIR}/bosh-CA-crt/bosh-CA.crt" \
   ${opsfile_args} \

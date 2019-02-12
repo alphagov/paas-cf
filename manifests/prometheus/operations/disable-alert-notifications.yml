@@ -4,3 +4,6 @@
 
 - type: remove
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=critical-receiver/email_configs
+
+- type: remove
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=pagerduty-receiver/pagerduty_configs

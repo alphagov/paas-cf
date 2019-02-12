@@ -8,9 +8,17 @@
     rules:
       - alert: ConcourseSmoketestsNoData
         expr: absent(concourse_builds_finished{pipeline="create-cloudfoundry",exported_job="continuous-smoke-tests"})
-        for: 30m
+        for: 15m
         labels:
-          severity: critical
+          severity: warning
         annotations:
           summary: Concourse continuous-smoke-tests no data
           description: The continuous-smoke-tests Concourse job has not been reporting data for a while now.
+
+      - alert: ConcourseSmoketestsNotRunning
+        expr: sum(increase(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry"}[15m])) == 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Concourse continuous-smoke-tests job is not running
+          description: The continuous-smoke-tests Concourse job has not been running for a while now.
