@@ -2487,11 +2487,14 @@ jobs:
                   manifest['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'].merge!(env)
+                    app['routes'] = [
+                      { 'route' => 'paas-metrics.${APPS_DNS_ZONE_NAME}' },
+                    ]
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                cf push paas-metrics
+                cf zero-downtime-push paas-metrics -f ./manifest.yml
 
       - task: deploy-paas-uaa-assets
         config:
