@@ -3,6 +3,7 @@ AllCops:
     - 'vendor/**/*'
     - 'scripts/vendor/**/*'
     - 'platform-tests/src/platform/vendor/**/*'
+    - 'platform-tests/example-apps/healthcheck/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
   TargetRubyVersion: 2.5
 Layout/IndentHeredoc:

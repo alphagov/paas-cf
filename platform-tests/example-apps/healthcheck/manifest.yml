@@ -2,12 +2,11 @@
 applications:
  - name: healthcheck
    memory: 64M
-   disk_quota: 100M
+   disk_quota: 256M
    instances: 2
    command: "./bin/healthcheck"
    buildpack: go_buildpack
    stack: cflinuxfs3
    env:
-     GOVERSION: go1.8
+     GOVERSION: go1.11
      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck
-
