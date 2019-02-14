@@ -1,0 +1,69 @@
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: s3-broker
+    version: 0.0.1550145061
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.0.1550145061.tgz
+    sha1: d1263c9fc4eaa591aa342aaf0e80a36e14dbad0d
+
+- type: replace
+  path: /addons/name=loggregator_agent/exclude/jobs/-
+  value:
+    name: s3-broker
+    release: s3-broker
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: s3_broker
+    azs: [z1, z2]
+    instances: 2
+    vm_type: nano
+    vm_extensions:
+      - s3_broker
+    stemcell: default
+    networks:
+      - name: cf
+    jobs:
+      - name: s3-broker
+        release: s3-broker
+        properties:
+          s3-broker:
+            port: 80
+            basic_auth_username: s3-broker
+            basic_auth_password: ((secrets_s3_broker_admin_password))
+            log_level: INFO
+            aws_region: "((terraform_outputs_region))"
+            resource_prefix: "paas-s3-broker-((environment))-"
+            iam_user_path: "/paas-s3-broker/"
+            deploy_environment: "((environment))"
+            catalog:
+              services:
+                - id: 36880794-1682-4a4b-8771-be655904237d
+                  name: aws-s3-bucket
+                  description: Object storage with AWS S3
+                  metadata:
+                    displayName: AWS S3 Object Store
+                    longDescription: AWS S3 Object Store
+                    providerDisplayName: GOV.UK PaaS
+                    documentationUrl: https://docs.cloud.service.gov.uk/#s3
+                    supportUrl: https://www.cloud.service.gov.uk/support.html
+                  tags:
+                    - s3
+                  bindable: true
+                  plan_updateable: false
+                  plans:
+                    - id: 24efab31-8cbd-47c0-8513-a9345f3c512b
+                      name: default
+                      description: A single S3 bucket
+                      free: false
+                      metadata:
+                        displayName: A single S3 bucket
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_s3_broker_admin_password
+    type: password

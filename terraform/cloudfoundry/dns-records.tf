@@ -78,6 +78,14 @@ resource "aws_route53_record" "elasticache_broker" {
   records = ["${aws_elb.elasticache_broker.dns_name}"]
 }
 
+resource "aws_route53_record" "s3_broker" {
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "s3-broker.${var.system_dns_zone_name}."
+  type    = "CNAME"
+  ttl     = "60"
+  records = ["${aws_elb.s3_broker.dns_name}"]
+}
+
 resource "aws_route53_record" "status" {
   zone_id = "${var.system_dns_zone_id}"
   name    = "status.${var.system_dns_zone_name}."

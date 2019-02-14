@@ -1476,6 +1476,8 @@ jobs:
               export BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
               export ELASTICACHE_BROKER_PASS=$($VAL_FROM_YAML secrets_elasticache_broker_admin_password cf-vars-store/cf-vars-store.yml)
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
+              export S3_BROKER_PASS=$($VAL_FROM_YAML secrets_s3_broker_admin_password cf-vars-store/cf-vars-store.yml)
+              export S3_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_s3_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
               export LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
@@ -1666,6 +1668,33 @@ jobs:
                   cf create-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
                 fi
                 cf enable-service-access cdn-route
+
+      - task: register-s3-broker
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: config
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                if cf service-brokers | grep 's3-broker\s'; then
+                  cf update-service-broker s3-broker s3-broker "${S3_BROKER_PASS}" "https://${S3_BROKER_SERVER}"
+                else
+                  cf create-service-broker s3-broker s3-broker "${S3_BROKER_PASS}" "https://${S3_BROKER_SERVER}"
+                fi
+
+                # TODO: remove '-o admin' when we are happy to release this to the world
+                cf enable-service-access aws-s3-bucket -o admin
 
       - task: set-security-groups-from-manifest
         config:

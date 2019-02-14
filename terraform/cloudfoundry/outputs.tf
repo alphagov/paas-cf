@@ -135,6 +135,14 @@ output "elasticache_broker_instances_security_group_id" {
   value = "${aws_security_group.elasticache_broker_instances.id}"
 }
 
+output "s3_broker_elb_name" {
+  value = "${aws_elb.s3_broker.name}"
+}
+
+output "s3_broker_elb_dns_name" {
+  value = "${aws_route53_record.s3_broker.fqdn}"
+}
+
 output "cdn_broker_elb_name" {
   value = "${aws_elb.cdn_broker.name}"
 }

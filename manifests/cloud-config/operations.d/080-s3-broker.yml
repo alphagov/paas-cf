@@ -1,0 +1,12 @@
+---
+
+- type: replace
+  path: /vm_extensions/-
+  value:
+    name: s3_broker
+    cloud_properties:
+      iam_instance_profile: s3-broker
+      security_groups:
+      - ((terraform_outputs_default_security_group))
+      elbs:
+      - ((terraform_outputs_s3_broker_elb_name))
