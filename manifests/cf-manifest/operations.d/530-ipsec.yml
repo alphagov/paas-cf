@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: ipsec
-    sha1: 6a9e252162519e50f6c511c489ba304a286d496a
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.3.tgz
-    version: 0.1.3
+    version: 0.1.4
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.4.tgz
+    sha1: 37358e942d1507d31d2080e94ba376510fc8ce76
 
 - type: replace
   path: /instance_groups/name=router/jobs/-
