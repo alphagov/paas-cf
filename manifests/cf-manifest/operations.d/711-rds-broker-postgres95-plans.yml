@@ -16,6 +16,7 @@
         - ((terraform_outputs_rds_broker_dbs_security_group_id))
       engine: "postgres"
       engine_version: "9.5"
+      engine_family: "postgres9.5"
       default_extensions: ["uuid-ossp", "postgis"]
       allowed_extensions: ["uuid-ossp", "postgis", "pg_stat_statements"]
 
