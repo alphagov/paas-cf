@@ -1694,7 +1694,11 @@ jobs:
                 fi
 
                 # TODO: remove '-o admin' when we are happy to release this to the world
-                cf enable-service-access aws-s3-bucket -o admin
+                if cf service-access | grep "aws-s3-bucket\s"; then
+                  echo "already enabled"
+                else
+                  cf enable-service-access aws-s3-bucket -o admin
+                fi
 
       - task: set-security-groups-from-manifest
         config:
