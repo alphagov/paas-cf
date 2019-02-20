@@ -15,7 +15,7 @@
       vpc_security_group_ids:
         - ((terraform_outputs_rds_broker_dbs_security_group_id))
       engine: "postgres"
-      engine_version: "10.5"
+      engine_version: "10"
       db_parameter_group_name: ((terraform_outputs_rds_broker_postgres10_db_parameter_group))
       postgres_extensions: ["uuid-ossp", "postgis", "citext"]
 
