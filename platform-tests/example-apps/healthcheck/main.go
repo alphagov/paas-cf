@@ -15,6 +15,7 @@ func main() {
 	http.HandleFunc("/db", dbHandler)
 	http.HandleFunc("/elasticsearch-test", elasticsearchHandler)
 	http.HandleFunc("/redis-test", redisHandler)
+	http.HandleFunc("/s3-test", s3Handler)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal(err)

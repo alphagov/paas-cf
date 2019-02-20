@@ -30,5 +30,8 @@
   path: /instance_groups/name=elasticache_broker/instances
   value: 1
 - type: replace
+  path: /instance_groups/name=s3_broker/instances
+  value: 1
+- type: replace
   path: /instance_groups/name=api/instances
   value: 1
