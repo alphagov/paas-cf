@@ -215,8 +215,8 @@ RSpec.describe "RDS broker properties" do
         shared_examples "postgres 10.5 plans" do
           let(:rds_properties) { subject.fetch("rds_properties") }
 
-          it "uses postgres 10.5" do
-            expect(rds_properties["engine_version"]).to eq("10.5")
+          it "uses postgres 10" do
+            expect(rds_properties["engine_version"]).to eq("10")
           end
         end
 
