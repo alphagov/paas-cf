@@ -6,18 +6,10 @@
   value:
     name: DNSResolutionWorking
     rules:
-    - &alert
-      alert: DNSResolutionWorking_Warning
-      expr: (count_over_time(dns_resolution_probe_success[5m]) - sum_over_time(dns_resolution_probe_success[5m])) / count_over_time(dns_resolution_probe_success[5m]) > 0.25
-      for: 10m
+    - alert: DNSResolutionWorking
+      expr: sum_over_time(dns_resolution_probe_success[15m]) / count_over_time(dns_resolution_probe_success[15m]) < 0.9
       labels:
         severity: warning
       annotations:
         summary: "DNS Resolution is failing on {{ $labels.address }}"
         description: "If this persisists, consider contacting AWS Support."
-
-    - <<: *alert
-      alert: DNSResolutionWorking_Critical
-      expr: (count_over_time(dns_resolution_probe_success[5m]) - sum_over_time(dns_resolution_probe_success[5m])) / count_over_time(dns_resolution_probe_success[5m]) > 0.75
-      labels:
-        severity: critical
