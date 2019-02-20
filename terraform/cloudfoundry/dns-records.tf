@@ -42,6 +42,14 @@ resource "aws_route53_record" "system_apex" {
   }
 }
 
+resource "aws_route53_record" "google_site_verification" {
+  zone_id = "${var.apps_dns_zone_id}"
+  name    = "${var.apps_dns_zone_name}."
+  type    = "TXT"
+  ttl     = "300"
+  records = ["google-site-verification=N2Pyk2D-qppi7bFBYUrdq3E3gNXOcwOacJMkIV_12Ec"]
+}
+
 resource "aws_route53_record" "apps_apex" {
   zone_id = "${var.apps_dns_zone_id}"
   name    = "${var.apps_dns_zone_name}."
