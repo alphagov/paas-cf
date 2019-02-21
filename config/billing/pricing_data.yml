@@ -9,6 +9,7 @@ defaults: &defaults
   aiven_elasticsearch_startup_4: "0.178"
   aiven_elasticsearch_business_4: "0.548"
   aiven_elasticsearch_business_8: "1.096"
+  aiven_elasticsearch_business_16: "2.192"
 
 eu-west-1:
   <<: *defaults
