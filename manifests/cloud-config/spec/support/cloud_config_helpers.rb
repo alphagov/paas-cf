@@ -4,13 +4,12 @@ require 'tempfile'
 require 'yaml'
 
 module CloudConfigHelpers
-  class Cache
+  class Cache < ::Hash
     include Singleton
-    attr_accessor :cloud_config_with_defaults
   end
 
   def cloud_config_with_defaults
-    Cache.instance.cloud_config_with_defaults ||= render_cloud_config
+    Cache.instance[:cloud_config_with_defaults] ||= render_cloud_config
   end
 
 private
