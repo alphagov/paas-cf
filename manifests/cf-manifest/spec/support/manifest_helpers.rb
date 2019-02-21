@@ -39,12 +39,12 @@ module ManifestHelpers
     )
   end
 
-  def manifest_for_prod
-    render_manifest(
-      environment: "prod",
+  def manifest_for_env(deploy_env)
+    Cache.instance["manifest_for_env_#{deploy_env}"] ||= render_manifest(
+      environment: deploy_env,
       disable_user_creation: "true",
       vars_store_file: nil,
-      env_specific_bosh_vars_file: "prod.yml",
+      env_specific_bosh_vars_file: "#{deploy_env}.yml",
     )
   end
 
