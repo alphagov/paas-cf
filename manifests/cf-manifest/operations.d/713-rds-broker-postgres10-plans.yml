@@ -16,8 +16,9 @@
         - ((terraform_outputs_rds_broker_dbs_security_group_id))
       engine: "postgres"
       engine_version: "10"
-      db_parameter_group_name: ((terraform_outputs_rds_broker_postgres10_db_parameter_group))
-      postgres_extensions: ["uuid-ossp", "postgis", "citext"]
+      engine_family: "postgres10"
+      default_extensions: ["uuid-ossp", "postgis", "citext"]
+      allowed_extensions: ["uuid-ossp", "postgis", "citext", "pg_stat_statements"]
 
     tiny_plan_rds_properties: &tiny_plan_rds_properties
       db_instance_class: "db.t2.micro"
