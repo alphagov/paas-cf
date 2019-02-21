@@ -6,16 +6,11 @@ require 'tempfile'
 module ManifestHelpers
   class Cache
     include Singleton
-    attr_accessor :workdir
     attr_accessor :manifest_with_defaults
     attr_accessor :manifest_without_vars_store
     attr_accessor :cf_deployment_manifest
     attr_accessor :cf_pipeline
     attr_accessor :vars_store
-  end
-
-  def workdir
-    Cache.instance.workdir ||= $workdir
   end
 
   def manifest_without_vars_store
