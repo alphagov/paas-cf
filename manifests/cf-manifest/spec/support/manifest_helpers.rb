@@ -4,22 +4,12 @@ require 'singleton'
 require 'tempfile'
 
 module ManifestHelpers
-  class Cache
+  class Cache < ::Hash
     include Singleton
-    attr_accessor :workdir
-    attr_accessor :manifest_with_defaults
-    attr_accessor :manifest_without_vars_store
-    attr_accessor :cf_deployment_manifest
-    attr_accessor :cf_pipeline
-    attr_accessor :vars_store
-  end
-
-  def workdir
-    Cache.instance.workdir ||= $workdir
   end
 
   def manifest_without_vars_store
-    Cache.instance.manifest_without_vars_store ||= \
+    Cache.instance[:manifest_without_vars_store] ||= \
       render_manifest(
         environment: "default",
         disable_user_creation: "true",
@@ -27,7 +17,7 @@ module ManifestHelpers
   end
 
   def manifest_with_defaults
-    Cache.instance.manifest_with_defaults ||= \
+    Cache.instance[:manifest_with_defaults] ||= \
       render_manifest_with_vars_store(
         environment: "default",
         disable_user_creation: "true",
@@ -49,12 +39,12 @@ module ManifestHelpers
     )
   end
 
-  def manifest_for_prod
-    render_manifest(
-      environment: "prod",
+  def manifest_for_env(deploy_env)
+    Cache.instance["manifest_for_env_#{deploy_env}"] ||= render_manifest(
+      environment: deploy_env,
       disable_user_creation: "true",
       vars_store_file: nil,
-      env_specific_bosh_vars_file: "prod.yml",
+      env_specific_bosh_vars_file: "#{deploy_env}.yml",
     )
   end
 
@@ -66,11 +56,11 @@ module ManifestHelpers
   end
 
   def cf_deployment_manifest
-    Cache.instance.cf_deployment_manifest ||= YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
+    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
   end
 
   def cf_pipeline
-    Cache.instance.cf_pipeline ||= YAML.load_file(root.join('concourse/pipelines/create-cloudfoundry.yml'))
+    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join('concourse/pipelines/create-cloudfoundry.yml'))
   end
 
   def property_tree(tree)
@@ -141,7 +131,7 @@ private
     env_specific_bosh_vars_file: "default.yml"
   )
     Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
-      vars_store_tempfile << (custom_vars_store_content || Cache.instance.vars_store)
+      vars_store_tempfile << (custom_vars_store_content || Cache.instance[:vars_store])
       vars_store_tempfile.close
 
       output = render_manifest(
@@ -151,7 +141,7 @@ private
         env_specific_bosh_vars_file: env_specific_bosh_vars_file,
       )
 
-      Cache.instance.vars_store = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
+      Cache.instance[:vars_store] = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
 
       output
     }

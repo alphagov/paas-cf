@@ -3,13 +3,12 @@ require 'open3'
 require 'tempfile'
 
 module ManifestHelpers
-  class Cache
+  class Cache < ::Hash
     include Singleton
-    attr_accessor :manifest_with_defaults
   end
 
   def manifest_with_defaults
-    Cache.instance.manifest_with_defaults ||=
+    Cache.instance[:manifest_with_defaults] ||=
       render_manifest_with_defaults
   end
 

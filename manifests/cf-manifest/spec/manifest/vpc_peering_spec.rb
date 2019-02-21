@@ -10,7 +10,7 @@ RSpec.describe "VPC peering" do
   end
 
   describe "when environment is prod" do
-    let(:manifest) { manifest_for_prod }
+    let(:manifest) { manifest_for_env("prod") }
 
     it "adds additional security groups" do
       expect(properties.fetch('cc.security_group_definitions.vpc_peer_dit')).to eq(
