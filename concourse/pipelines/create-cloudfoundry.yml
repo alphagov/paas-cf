@@ -1564,10 +1564,6 @@ jobs:
                   cf update-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
                 fi
 
-                # FIXME: remove this when it's run everywhere.
-                cf target -o admin -s assets
-                cf delete-route -f "${APPS_DNS_ZONE_NAME}" --hostname paas-uaa-assets
-
       - task: register-rds-broker
         config:
           platform: linux
