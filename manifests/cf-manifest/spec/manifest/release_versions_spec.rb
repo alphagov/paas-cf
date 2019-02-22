@@ -27,10 +27,6 @@ RSpec.describe "release versions" do
     end
 
     pinned_releases = {
-      "capi" => {
-        local: "0.1.2",
-        upstream: "1.74.0",
-      },
       "log-cache" => {
         local: "0.1.3",
         upstream: "2.0.2",
