@@ -2087,13 +2087,6 @@ jobs:
                   File.write('manifest-collector.yml', collector.to_yaml)
                 "
 
-                # FIXME: remove this once all production envs have run this at
-                # least once. It's harmless to leave here, however.
-                apps="$(cf apps)"
-                if echo "${apps}" | grep -qe '^paas-billing '; then
-                  cf rename paas-billing paas-billing-collector
-                fi
-
                 cf zero-downtime-push \
                   paas-billing-api \
                   -f manifest-api.yml
