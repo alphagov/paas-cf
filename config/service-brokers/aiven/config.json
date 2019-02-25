@@ -6,7 +6,7 @@
       {
         "id": "1b45c99b-c90d-45b8-918d-9fb7dcb4beec",
         "name": "elasticsearch",
-        "description": "Elasticsearch instances provisioned via Aiven. (Elasticsearch 5.x plans are deprecated and will be removed on 2019/04/16.)",
+        "description": "Elasticsearch instances provisioned via Aiven",
         "bindable": true,
         "plan_updateable": true,
         "metadata": {
@@ -15,17 +15,6 @@
           "supportUrl": "https://www.cloud.service.gov.uk/support"
         },
         "plans": [
-          {
-            "id": "07264114-c666-440b-934a-015508be4475",
-            "name": "tiny-5.x",
-            "aiven_plan": "startup-4",
-            "elasticsearch_version": "5",
-            "description": "[DEPRECATED] NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
-            "free": true,
-            "metadata": {
-              "displayName": "[DEPRECATED] Tiny, NOT Highly Available single-node Elasticsearch 5 cluster"
-            }
-          },
           {
             "id": "7c0e6f6a-e443-41a0-83df-981bd35923a9",
             "name": "tiny-6.x",
@@ -38,17 +27,6 @@
             }
           },
           {
-            "id": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
-            "name": "small-ha-5.x",
-            "aiven_plan": "business-4",
-            "elasticsearch_version": "5",
-            "description": "[DEPRECATED] 3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
-            "free": false,
-            "metadata": {
-              "displayName": "[DEPRECATED] Small, highly available Elasticsearch 5 cluster"
-            }
-          },
-          {
             "id": "225e97cc-f786-408c-8b59-d2118248a53d",
             "name": "small-ha-6.x",
             "aiven_plan": "business-4",
@@ -57,17 +35,6 @@
             "free": false,
             "metadata": {
               "displayName": "Small, highly available Elasticsearch 6 cluster"
-            }
-          },
-          {
-            "id": "242a4782-7454-4ff4-93b2-dd88b333cb46",
-            "name": "medium-ha-5.x",
-            "aiven_plan": "business-8",
-            "elasticsearch_version": "5",
-            "description": "[DEPRECATED] 3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
-            "free": false,
-            "metadata": {
-              "displayName": "[DEPRECATED] Medium, highly available Elasticsearch 5 cluster"
             }
           },
           {
