@@ -1609,15 +1609,15 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -p
-                tiny-unencrypted-10.5
-                small-10.5
-                small-ha-10.5
-                medium-10.5
-                medium-ha-10.5
-                large-10.5
-                large-ha-10.5
-                xlarge-10.5
-                xlarge-ha-10.5
+                tiny-unencrypted-10
+                small-10
+                small-ha-10
+                medium-10
+                medium-ha-10
+                large-10
+                large-ha-10
+                xlarge-10
+                xlarge-ha-10
                 EOF
 
                 # Disable deprecated plans
