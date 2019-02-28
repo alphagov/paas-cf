@@ -31,13 +31,3 @@ tests:
             exp_annotations:
               summary: "High cpu utilisation on test/0"
               description: "test/0 CPU utilisation was over 80% in the last hour on average"
-      - eval_time: 121m
-        alertname: BoshHighCPUUtilisation_Critical
-        exp_alerts:
-          - exp_labels:
-              severity: critical
-              bosh_job_name: 'test'
-              bosh_job_index: '0'
-            exp_annotations:
-              summary: "High cpu utilisation on test/0"
-              description: "test/0 CPU utilisation was over 95% in the last hour on average"

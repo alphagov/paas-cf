@@ -6,8 +6,7 @@
   value:
     name: GorouterLatency
     rules:
-      - &alert
-        alert: GorouterLatency_Warning
+      - alert: GorouterLatency_Warning
         expr: min(avg_over_time(firehose_value_metric_gorouter_latency[5m])) > 750
         for: 15m
         labels:
@@ -16,9 +15,3 @@
           summary: Gorouter latency
           description: "All Gorouter latencies are too high (min {{ $value | printf \"%.0f\" }}ms)"
           url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#gorouter-high-latency-alerts
-
-      - <<: *alert
-        alert: GorouterLatency_Critical
-        expr: min(avg_over_time(firehose_value_metric_gorouter_latency[5m])) > 1500
-        labels:
-          severity: critical
