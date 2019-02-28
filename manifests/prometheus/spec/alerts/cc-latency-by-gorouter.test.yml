@@ -1,0 +1,34 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 10m
+    input_series:
+      - series: "firehose_value_metric_gorouter_latency_cloud_controller{router_instance='1'}"
+        values: '0 400 400 400 507+3x5'
+
+      - series: "firehose_value_metric_gorouter_latency_cloud_controller{router_instance='2'}"
+        values: '0 400 400 400 510+5x5'
+
+    alert_rule_test:
+      # Does not fire before half an hour
+      - eval_time: 20m
+        alertname: CloudControllerLatencyByGorouter_Warning
+
+      # Does not fire when the value is not high enough
+      - eval_time: 40m
+        alertname: CloudControllerLatencyByGorouter_Warning
+
+      # Fires when the average of the last 30 minutes is above the threshold
+      - eval_time: 70m
+        alertname: CloudControllerLatencyByGorouter_Warning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "Cloud Controller latency as reported by gorouter"
+              description: "Average latency of cloud controller calls is high (514ms) - this may be due to a high proportion of expensive API calls or it may indicate that the API servers need to be scaled up"

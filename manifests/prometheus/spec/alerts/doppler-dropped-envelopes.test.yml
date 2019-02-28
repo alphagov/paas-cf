@@ -1,0 +1,41 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 30m
+    input_series:
+      - series: "firehose_counter_event_loggregator_doppler_dropped_total{bosh_job_id='1'}"
+        values: 50 0 0 0 12 25
+
+      - series: "firehose_counter_event_loggregator_doppler_dropped_total{bosh_job_id='2'}"
+        values: 50 0 0 0 12 25
+
+      - series: "firehose_counter_event_loggregator_doppler_dropped_total{bosh_job_id='3'}"
+        values: 50 0 0 0 12 25
+
+      - series: "firehose_counter_event_loggregator_doppler_dropped_total{bosh_job_id='4'}"
+        values: 50 0 0 0 12 25
+
+    alert_rule_test:
+      # Does not fire without an hour of data points
+      - eval_time: 30m
+        alertname: DopplerDroppedEnvelopes_Warning
+
+      # Does not fire when the sum of the increases
+      # of gorouter latencies is less than the threshold
+      - eval_time: 90m
+        alertname: DopplerDroppedEnvelopes_Warning
+
+      # Fires when the average of the last 30 minutes is above the threshold
+      - eval_time: 180m
+        alertname: DopplerDroppedEnvelopes_Warning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "Doppler - dropped envelopes"
+              description: "A Doppler VM dropped 104 envelopes in an hour. Investigate whether this is a one-off or we need to scale our Dopplers."
