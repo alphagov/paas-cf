@@ -1,0 +1,34 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 10m
+    input_series:
+      - series: "firehose_counter_event_gorouter_unregistry_message_cloud_controller_total"
+        values: 0 5 14 28
+
+
+    alert_rule_test:
+      # Does not fire with insufficient data
+      - eval_time: 10m
+        alertname: CFCloudControllerUnregistry
+        
+      # Does not fire when the average increase
+      # over the last 10 minutes is less than the threshold
+      - eval_time: 20m
+        alertname: CFCloudControllerUnregistry
+
+
+      - eval_time: 30m
+        alertname: CFCloudControllerUnregistry
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: "Cloud Controller is unregistering from gorouter"
+              description: Cloud Controller is unregistering from gorouter, this probably means it is failing its route_registrar healthcheck. This could be due to high load, and may indicate that the API servers need to be scaled up.
+              

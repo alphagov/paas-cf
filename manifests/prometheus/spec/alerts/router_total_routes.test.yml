@@ -1,0 +1,115 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - /dev/stdin
+
+evaluation_interval: 1m
+
+tests:
+  # RouterTotalRoutesDrop
+  - interval: 1m
+    input_series:
+      - series: "firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='1'}"
+              #  0  40->25  40->15
+        values: '40 40-1x5  40-5x5'
+
+      - series: "firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='2'}"
+        values: '40+0x15'
+
+      - series: "firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='3'}"
+        values: '40+0x15'
+
+    alert_rule_test:
+      # Does not fire without an 5 minutes of data points
+      - eval_time: 1m
+        alertname: RouterTotalRoutesDrop
+
+      # Does not fire the delta as a percentage of the
+      # total is gt than the threshold
+      - eval_time: 6m
+        alertname: RouterTotalRoutesDrop
+
+      # Fires when the average of the last 30 minutes is above the threshold
+      - eval_time: 10m
+        alertname: RouterTotalRoutesDrop
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              bosh_job_id: 1
+              bosh_job_name: test
+            exp_annotations:
+              summary: Router total routes drop
+              description: >
+                test/1
+                Router total routes count has dropped -33% in 5m.
+
+  # RouterTotalRoutesDiscrepency
+  # Does not fire when all routers have the same number of routes
+  - interval: 10m
+    input_series:
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='1'}
+        values: '100+0x10'
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='2'}
+        values: '100+0x10'
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='3'}
+        values: '100+0x10'
+
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: RouterTotalRoutesDiscrepancy
+
+  # Does not fire when a router has less than
+  # 3 percent fewer routes than the maximum
+  - interval: 10m
+    input_series:
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='1'}
+        values: '100+0x10'
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='2'}
+        values: '100+0x10'
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='3'}
+        values: '98+0x10'
+
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: RouterTotalRoutesDiscrepancy
+
+  # Does not fire when a router has had more than
+  # 3 percent fewer routes than the maximum for
+  # less than 10 minutes
+  - interval: 10m
+    input_series:
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='1'}
+        values: '100+0x10'
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='2'}
+        values: '100+0x10'
+      - series: firehose_value_metric_gorouter_total_routes{bosh_job_name='test', bosh_job_id='3'}
+        values: '100+0x5 95+0x5'
+
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: RouterTotalRoutesDiscrepancy
+
+  # Fires when a router has had more than
+  # 3 percent fewer routes than the maximum
+  # for at least 10 minutes
+  - interval: 1m
+    input_series:
+      - series: 'firehose_value_metric_gorouter_total_routes{bosh_job_name="router", bosh_job_id="1"}'
+        values: '100+0x30'
+      - series: 'firehose_value_metric_gorouter_total_routes{bosh_job_name="router", bosh_job_id="2"}'
+        values: '95+0x30'
+
+    alert_rule_test:
+      - eval_time: 15m
+        alertname: RouterTotalRoutesDiscrepancy
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              bosh_job_id: 2
+              bosh_job_name: router
+            exp_annotations:
+              summary: Router total routes discrepancy
+              description: >
+                router/2
+                Router registered total routes discrepancy of 5%
+                compared to the maximum number or registered routes.
