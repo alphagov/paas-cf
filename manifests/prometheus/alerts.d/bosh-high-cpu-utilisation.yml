@@ -9,20 +9,13 @@
       - record: "bosh_job:bosh_job_cpu:avg1h"
         expr: avg_over_time(bosh_job_cpu_sys{bosh_job_name!="diego-cell",bosh_job_name!="concourse"}[1h]) + avg_over_time(bosh_job_cpu_user{bosh_job_name!="diego-cell",bosh_job_name!="concourse"}[1h]) + avg_over_time(bosh_job_cpu_wait{bosh_job_name!="diego-cell",bosh_job_name!="concourse"}[1h])
 
-      - &alert
-        alert: BoshHighCPUUtilisation_Warning
+      - alert: BoshHighCPUUtilisation_Warning
         expr: "bosh_job:bosh_job_cpu:avg1h > 70"
         labels:
           severity: warning
         annotations:
           summary: "High cpu utilisation on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
           description: "{{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }} CPU utilisation was over {{ $value | printf \"%.0f\" }}% in the last hour on average"
-
-      - <<: *alert
-        alert: BoshHighCPUUtilisation_Critical
-        expr: "bosh_job:bosh_job_cpu:avg1h > 90"
-        labels:
-          severity: critical
 
 # FIXME: there is no easy way currently to remove upstream alerts
 # This effectively disables the upstream CPU alert by increasing the threshold to a really high value

@@ -17,14 +17,3 @@
         labels:
           severity: warning
           service: elb
-
-      - alert: PlatformTLSCertificateExpiresSoon_Critical
-        expr: "paas_tls_certificates_validity_days <= 7"
-        for: 5m
-        annotations:
-          summary: "A platform TLS certificate is very close to expiry"
-          description: "The TLS certificate for the platform domain {{ $labels.hostname }} has almost expired!"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
-        labels:
-          severity: critical
-          service: elb

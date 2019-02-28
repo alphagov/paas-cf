@@ -6,17 +6,10 @@
   value:
     name: DNSResolutionTime
     rules:
-    - &alert
-      alert: DNSResolutionTime_Warning
+    - alert: DNSResolutionTime_Warning
       expr: avg_over_time(dns_resolution_probe_duration_seconds[10m]) > 0.2
       labels:
         severity: warning
       annotations:
         summary: "DNS Resolution is slow on {{ $labels.address }}"
         description: "If this persisists, consider contacting AWS Support."
-
-    - <<: *alert
-      alert: DNSResolutionTime_Critical
-      expr: avg_over_time(dns_resolution_probe_duration_seconds[10m]) > 0.5
-      labels:
-        severity: critical

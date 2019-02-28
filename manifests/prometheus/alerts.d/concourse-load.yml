@@ -9,20 +9,10 @@
       - record: "bosh_job:bosh_job_cpu:avg1h"
         expr: avg_over_time(bosh_job_load_avg01{bosh_job_name="concourse"}[1h])
 
-      - &alert
-        alert: ConcourseHighCPUUtilisation_Warning
+      - alert: ConcourseHighCPUUtilisation_Warning
         expr: "bosh_job:bosh_job_cpu:avg1h > 150"
         labels:
           severity: warning
         annotations:
           summary: "High cpu utilisation on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
-          description: "{{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }} CPU utilisation was over {{ $value | printf \"%.0f\" }}% in the last hour on average"
-
-      - <<: *alert
-        alert: ConcourseHighCPUUtilisation_Critical
-        expr: "bosh_job:bosh_job_cpu:avg1h > 200"
-        labels:
-          severity: critical
-        annotations:
-          summary: "Critical cpu utilisation on {{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }}"
           description: "{{ $labels.bosh_job_name }}/{{ $labels.bosh_job_index }} CPU utilisation was over {{ $value | printf \"%.0f\" }}% in the last hour on average"

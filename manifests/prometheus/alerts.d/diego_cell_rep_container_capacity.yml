@@ -10,8 +10,7 @@
           100 *
           sum(avg_over_time(firehose_value_metric_rep_container_count{environment="((metrics_environment))"}[5m])) by (environment) /
           sum(avg_over_time(firehose_value_metric_rep_capacity_total_containers{environment="((metrics_environment))"}[5m])) by (environment)
-      - &alert
-        alert: DiegoCellRepContainerCapacity_Warning
+      - alert: DiegoCellRepContainerCapacity_Warning
         expr:  rep_container_capacity_pct:avg5m > 75
         for: 2h
         labels:
@@ -23,9 +22,3 @@
             in the last 2 hours on average.
             Review if we need to scale...
           url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
-
-      - <<: *alert
-        alert: DiegoCellRepContainerCapacity_Critical
-        expr: rep_container_capacity_pct:avg5m > 80
-        labels:
-          severity: critical
