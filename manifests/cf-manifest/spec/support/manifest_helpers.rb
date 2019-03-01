@@ -63,6 +63,10 @@ module ManifestHelpers
     Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join('concourse/pipelines/create-cloudfoundry.yml'))
   end
 
+  def monitor_remote_pipeline
+    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join('concourse/pipelines/monitor-remote.yml'))
+  end
+
   def property_tree(tree)
     PropertyTree.new(tree)
   end

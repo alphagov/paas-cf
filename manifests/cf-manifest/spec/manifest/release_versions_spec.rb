@@ -84,6 +84,24 @@ RSpec.describe "release versions" do
     expect(paas_version).to be >= upstream_version, "we should upgrade the cf-smoke-tests-release's tag_filter in the create-cloundfoundry pipeline to #{upstream_version} or greater"
   end
 
+  specify "create-cloudfoundry cf-smoke-tests-release version to match monitor-remote" do
+    cf_smoke_tests_resource_version = cf_pipeline
+      .fetch('resources')
+      .select { |v| v['name'] == 'cf-smoke-tests-release' }
+      .fetch(0)
+      .fetch('source')
+      .fetch('tag_filter')
+
+    monitor_remote_smoke_tests_resource_version = monitor_remote_pipeline
+      .fetch('resources')
+      .select { |v| v['name'] == 'cf-smoke-tests-release' }
+      .fetch(0)
+      .fetch('source')
+      .fetch('tag_filter')
+
+    expect(monitor_remote_smoke_tests_resource_version).to eq(cf_smoke_tests_resource_version)
+  end
+
   specify "cf-acceptance-tests version should be the same as the CF manifest version" do
     cf_manifest_version = cf_deployment_manifest
       .fetch('manifest_version')

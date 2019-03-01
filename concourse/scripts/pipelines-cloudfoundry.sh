@@ -139,6 +139,9 @@ auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
 disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
 slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
+monitored_state_bucket: ${MONITORED_STATE_BUCKET:-}
+monitored_aws_region: ${MONITORED_AWS_REGION:-}
+monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
@@ -191,6 +194,9 @@ update_pipeline() {
         echo "WARNING: Pipeline to autodelete Cloud Foundry has NOT been setup"
         echo "         To enable it, set ENABLE_AUTODELETE=true"
       fi
+    ;;
+    monitor-*)
+      upload_pipeline
     ;;
     *)
       echo "ERROR: Unknown pipeline definition: $pipeline_name"
