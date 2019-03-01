@@ -1,0 +1,94 @@
+---
+resource_types:
+- name: s3-iam
+  type: docker-image
+  source:
+    repository: governmentpaas/s3-resource
+    tag: fda60bf4c5f85e96c16f704e128e5ead9e84d30d
+
+resources:
+- name: paas-cf
+  type: git
+  source:
+    uri: https://github.com/alphagov/paas-cf.git
+    branch: ((branch_name))
+    tag_filter: ((paas_cf_tag_filter))
+    commit_verification_keys: ((gpg_public_keys))
+
+- name: cf-smoke-tests-release
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry/cf-smoke-tests-release
+    tag_filter: "40.0.44"
+    submodules:
+      - "src/smoke_tests"
+
+- name: test-config
+  type: s3-iam
+  source:
+    bucket: ((monitored_state_bucket))
+    region_name: ((monitored_aws_region))
+    versioned_file: smoke-test-config.json
+
+- name: every-5m
+  type: time
+  source: {interval: 5m}
+
+jobs:
+- name: self-update-pipeline
+  serial: true
+  plan:
+  - get: paas-cf
+    trigger: true
+  - task: self-update-pipeline
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: governmentpaas/self-update-pipelines
+          tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+      inputs:
+      - name: paas-cf
+      params:
+        DEPLOY_ENV: ((deploy_env))
+        BRANCH: ((branch_name))
+        MAKEFILE_ENV_TARGET: ((makefile_env_target))
+        AWS_DEFAULT_REGION: ((aws_region))
+        SELF_UPDATE_PIPELINE: ((self_update_pipeline))
+        PIPELINES_TO_UPDATE: ((pipeline_name))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        BOSH_AZ: ((bosh_az))
+        SKIP_AWS_CREDENTIAL_VALIDATION: true
+        NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
+        SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+        MONITORED_DEPLOY_ENV: ((monitored_deploy_env))
+        MONITORED_STATE_BUCKET: ((monitored_state_bucket))
+        MONITORED_AWS_REGION: ((monitored_aws_region))
+      run:
+        path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
+
+- name: smoke-tests
+  serial: true
+  plan:
+  - aggregate:
+    - get: test-config
+    - get: paas-cf
+    - get: cf-smoke-tests-release
+    - get: every-5m
+      trigger: true
+  - task: smoke-tests-run
+    file: paas-cf/concourse/tasks/smoke-tests-run.yml
+    params:
+      AWS_DEFAULT_REGION: ((aws_region))
+      DEPLOY_ENV: ((deploy_env))
+      SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+      ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+      EMAIL_ON_SMOKE_TEST_FAILURE: ((ENABLE_ALERT_NOTIFICATIONS))
+      SMOKE_TEST_CONFIG: ./test-config/smoke-test-config.json
+      MONITORED_DEPLOY_ENV: ((monitored_deploy_env))
+    ensure:
+      task: upload-test-artifacts
+      file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+      params:
+        TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
