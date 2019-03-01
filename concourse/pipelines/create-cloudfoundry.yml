@@ -95,6 +95,7 @@ groups:
       - rotate-cf-certs-cas
       - rotate-cf-certs-leafs
       - delete-old-cf-certs
+      - set-smoke-test-creds
 resource_types:
 - name: s3-iam
   type: docker-image
@@ -275,6 +276,13 @@ resources:
       tag_filter: "40.0.44"
       submodules:
       - "src/smoke_tests"
+
+  - name: smoke-test-config
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: smoke-test-config.json
 
   - name: git-keys
     type: s3-iam
@@ -3347,6 +3355,48 @@ jobs:
         put: cf-vars-store
         params:
           file: updated-cf-certs/cf-vars-store.yml
+
+  - name: set-smoke-test-creds
+    serial: true
+    plan:
+    - aggregate:
+      - get: paas-cf
+      - get: cf-vars-store
+    - task: retrieve-config
+      config:
+        image_resource: *ruby-slim-image-resource
+        platform: linux
+        inputs:
+          - name: paas-cf
+          - name: cf-vars-store
+        outputs:
+          - name: config
+        params:
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+              cat << EOT > config/config.sh
+              export CF_ADMIN=admin
+              export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
+              export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+              EOT
+
+              ls -l config/*
+
+    - task: set-smoke-test-creds
+      file: paas-cf/concourse/tasks/set-smoke-test-creds.yml
+      params:
+        APP_DOMAIN: ((apps_dns_zone_name))
+        SYSTEM_DOMAIN: ((system_dns_zone_name))
+        STATE_BUCKET: ((state_bucket))
+    - put: smoke-test-config
+      params: { file: new-smoke-test-config/smoke-test-config.json }
 
   - name: delete-old-cf-certs
     serial: true
