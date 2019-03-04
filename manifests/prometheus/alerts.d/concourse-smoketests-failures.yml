@@ -14,3 +14,25 @@
         annotations:
           summary: Concourse continuous-smoke-tests failures
           description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseSmoketestsRemoteFailures
+    rules:
+      - alert: ConcourseSmoketestsRemoteFailuresWarning
+        expr: increase(concourse_builds_finished{exported_job="smoke-tests",pipeline=~"monitor-.+",status="failed"}[1h]) >= 2
+        labels:
+          severity: warning
+        annotations:
+          summary: "Concourse remote smoke-tests failures on {{ $labels.pipeline }} pipeline"
+          description: "The Concourse job running smoke-tests remotely (in the {{ $labels.pipeline }} pipeline) has failed at least twice in the last hour."
+
+      - alert: ConcourseSmoketestsRemoteFailuresCritical
+        expr: increase(concourse_builds_finished{exported_job="smoke-tests",pipeline=~"monitor-.+",status="failed"}[30m]) >= 3
+        labels:
+          severity: critical
+          notify: pagerduty
+        annotations:
+          summary: "Concourse remote smoke-tests failures on {{ $labels.pipeline }} pipeline"
+          description: "The Concourse job running smoke-tests remotely (in the {{ $labels.pipeline }} pipeline) has failed at least three times in the last 30 minutes."
