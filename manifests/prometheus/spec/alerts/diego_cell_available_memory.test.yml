@@ -1,7 +1,7 @@
 ---
 rule_files:
   # See alerts_validation_spec.rb for details of how stdin gets set:
-  - /dev/stdin
+  - spec/alerts/fixtures/rules.yml
 
 evaluation_interval: 1m
 
@@ -16,7 +16,7 @@ tests:
       # Does not fire with insufficient data
       - eval_time: 12h
         alertname: BoshDiegoCellAvailableMemory_Warning
-        
+
       # Does not fire when the average of the averages over
       # the last 24h window is less than the threshold
       - eval_time: 48h
