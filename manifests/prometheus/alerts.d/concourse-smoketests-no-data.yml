@@ -22,3 +22,25 @@
         annotations:
           summary: Concourse continuous-smoke-tests job is not running
           description: The continuous-smoke-tests Concourse job has not been running for a while now.
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseSmoketestsRemoteNoData
+    rules:
+      - alert: ConcourseSmoketestsRemoteNoData
+        expr: absent(concourse_builds_finished{pipeline=~"monitor-.+",exported_job="smoke-tests"})
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Concourse remote smoke-tests no data for {{ $labels.pipeline }} pipeline"
+          description: "The Concourse job running smoke-tests remotely (in the {{ $labels.pipeline }} pipeline) has not been reporting data for a while now."
+
+      - alert: ConcourseSmoketestsRemoteNotRunning
+        expr: sum(increase(concourse_builds_finished{exported_job="smoke-tests",pipeline=~"monitor-.+"}[15m])) == 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "Concourse remote smoke-tests job is not running for {{ $labels.pipeline }} pipeline"
+          description: "The Concourse job running smoke-tests remotely (in the {{ $labels.pipeline }} pipeline) has not been running for a while now."

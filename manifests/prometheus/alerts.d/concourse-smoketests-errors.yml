@@ -13,3 +13,16 @@
         annotations:
           summary: Concourse continuous-smoke-tests errors
           description: The continuous-smoke-tests Concourse job has an increased error rate
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseSmoketestsRemoteErrors
+    rules:
+      - alert: ConcourseSmoketestsRemoteErrors
+        expr: increase(concourse_builds_finished{exported_job="smoke-tests",pipeline=~"monitor-.+",status="errored"}[30m]) >= 3
+        labels:
+          severity: warning
+        annotations:
+          summary: "Concourse remote smoke-tests errors on {{ $labels.pipeline }} pipeline"
+          description: "The Concourse job running smoke-tests remotely (in the {{ $labels.pipeline }} pipeline) has an increased error rate"
