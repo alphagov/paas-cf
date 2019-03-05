@@ -42,9 +42,17 @@ resource "aws_route53_record" "system_apex" {
   }
 }
 
-resource "aws_route53_record" "spf_and_google_site_verification" {
+resource "aws_route53_record" "spf_and_google_site_verification_apps" {
   zone_id = "${var.apps_dns_zone_id}"
   name    = "${var.apps_dns_zone_name}."
+  type    = "TXT"
+  ttl     = "300"
+  records = ["v=spf1 -all", "google-site-verification=N2Pyk2D-qppi7bFBYUrdq3E3gNXOcwOacJMkIV_12Ec"]
+}
+
+resource "aws_route53_record" "spf_and_google_site_verification_system" {
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "${var.system_dns_zone_name}."
   type    = "TXT"
   ttl     = "300"
   records = ["v=spf1 -all", "google-site-verification=N2Pyk2D-qppi7bFBYUrdq3E3gNXOcwOacJMkIV_12Ec"]
