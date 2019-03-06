@@ -6,17 +6,10 @@
   value:
     name: CloudControllerLatencyByGorouter
     rules:
-      - &alert
-        alert: CloudControllerLatencyByGorouter_Warning
+      - alert: CloudControllerLatencyByGorouter_Warning
         expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[30m])) > 500
         labels:
           severity: warning
         annotations:
           summary: "Cloud Controller latency as reported by gorouter"
           description: "Average latency of cloud controller calls is high ({{ $value | printf \"%.0f\" }}ms) - this may be due to a high proportion of expensive API calls or it may indicate that the API servers need to be scaled up"
-
-      - <<: *alert
-        alert: CloudControllerLatencyByGorouter_Critical
-        expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[10m])) > 1000
-        labels:
-          severity: critical

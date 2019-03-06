@@ -6,17 +6,10 @@
   value:
     name: CCLogErrorCount
     rules:
-      - &alert
-        alert: CCLogErrorCount_Warning
+      - alert: CCLogErrorCount_Warning
         expr: sum(increase(firehose_value_metric_cc_log_count_error[1h])) > 20
         labels:
           severity: warning
         annotations:
           summary: "Cloud Controller API log error count"
           description: "Amount of logged errors in Cloud Controller API grew considerably in the last hour: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.component:cloud_controller_ng AND @level:ERROR'"
-
-      - <<: *alert
-        alert: CCLogErrorCount_Critical
-        expr: sum(increase(firehose_value_metric_cc_log_count_error[1h])) > 40
-        labels:
-          severity: critical

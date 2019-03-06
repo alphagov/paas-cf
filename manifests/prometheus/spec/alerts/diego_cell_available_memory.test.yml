@@ -1,0 +1,34 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - spec/alerts/fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 12h
+    input_series:
+      - series: 'bosh_job_mem_percent{bosh_job_name="diego-cell"}'
+        values: 0 35 40 35 40 50 50 50 50
+
+
+    alert_rule_test:
+      # Does not fire with insufficient data
+      - eval_time: 12h
+        alertname: BoshDiegoCellAvailableMemory_Warning
+
+      # Does not fire when the average of the averages over
+      # the last 24h window is less than the threshold
+      - eval_time: 48h
+        alertname: BoshDiegoCellAvailableMemory_Warning
+
+
+      - eval_time: 72h
+        alertname: BoshDiegoCellAvailableMemory_Warning
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: Cell available memory is low
+              description: There is only 47% memory free on average on cells. Review if we need to scale...
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision

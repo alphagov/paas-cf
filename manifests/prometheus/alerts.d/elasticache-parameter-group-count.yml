@@ -6,8 +6,7 @@
   value:
     name: ElasticacheParamGroupCountCloseToLimit
     rules:
-      - &alert
-        alert: ElasticacheParamGroupCountCloseToLimit_Warning
+      - alert: ElasticacheParamGroupCountCloseToLimit_Warning
         expr: paas_aws_elasticache_cache_parameter_group_count > ((aws_limits_elasticache_cache_parameter_groups)) / 100 * 80
         for: 1h
         labels:
@@ -15,9 +14,3 @@
         annotations:
           summary: "Number of elasticache cache parameter groups is close to the limit"
           description: "We are using {{ $value | printf \"%.0f\" }} of ((aws_limits_elasticache_cache_parameter_groups)) Elasticache parameter groups. We might have to contact AWS support to raise the limit."
-
-      - <<: *alert
-        alert: ElasticacheParamGroupCountCloseToLimit_Critical
-        expr: paas_aws_elasticache_cache_parameter_group_count > ((aws_limits_elasticache_cache_parameter_groups)) / 100 * 90
-        labels:
-          severity: critical

@@ -17,14 +17,3 @@
         labels:
           severity: warning
           service: cloudfront
-
-      - alert: CloudFrontInvalidTLSCertificates_Critical
-        expr: "count(paas_cdn_tls_certificates_validity == 0) >= 5"
-        for: 5m
-        annotations:
-          summary: "At least 5 tenant/CloudFront TLS certificates are invalid"
-          description: "At least 5 tenant/CloudFront TLS certificates are invalid"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
-        labels:
-          severity: critical
-          service: cloudfront

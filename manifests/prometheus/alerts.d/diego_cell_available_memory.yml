@@ -5,8 +5,7 @@
   value:
     name: BoshDiegoCellAvailableMemory
     rules:
-      - &alert
-        alert: BoshDiegoCellAvailableMemory_Warning
+      - alert: BoshDiegoCellAvailableMemory_Warning
         expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 45
         labels:
           severity: warning
@@ -14,9 +13,3 @@
           summary: Cell available memory is low
           description: There is only {{ $value | printf "%.0f" }}% memory free on average on cells. Review if we need to scale...
           url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
-
-      - <<: *alert
-        alert: BoshDiegoCellAvailableMemory_Critical
-        expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 50
-        labels:
-          severity: critical
