@@ -2,6 +2,10 @@
 RET_CODE=0
 
 test_posix_newline() {
+  if [ -L "$1" ]; then
+    RET_CODE=0
+    return
+  fi
   if [ ! -f "$1" ]; then
     echo "$1 is not a regular file" 1>&2
     RET_CODE=1
