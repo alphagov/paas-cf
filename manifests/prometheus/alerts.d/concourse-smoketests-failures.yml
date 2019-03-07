@@ -15,6 +15,15 @@
           summary: Concourse continuous-smoke-tests failures
           description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
 
+      - alert: ConcourseSmoketestsFailuresCritical
+        expr: increase(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"}[30m]) >= 3
+        labels:
+          severity: critical
+          notify: pagerduty
+        annotations:
+          summary: Concourse continuous-smoke-tests failures
+          description: The continuous-smoke-tests Concourse job has failed at least three times in the last 30 minutes.
+
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
