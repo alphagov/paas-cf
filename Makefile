@@ -17,7 +17,7 @@ check-env:
 	$(if ${DEPLOY_ENV_VALID_CHARS},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) must use only alphanumeric chars and hyphens, otherwise derived names will be malformatted))
 	@./scripts/validate_aws_credentials.sh
 
-test: spec compile_platform_tests lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines ## Run linting tests
+test: spec compile_platform_tests lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines lint_symlinks ## Run linting tests
 
 spec:
 	cd scripts &&\
@@ -79,6 +79,18 @@ lint_ruby:
 lint_posix_newlines:
 	@# for some reason `git ls-files` is including 'manifests/cf-deployment' in its output...which is a directory
 	git ls-files | grep -v -e vendor/ -e manifests/cf-deployment -e manifests/prometheus/upstream | xargs ./scripts/test_posix_newline.sh
+
+.PHONY: lint_symlinks
+lint_symlinks:
+	# This mini-test tests that our script correctly identifies hanging symlinks
+	@rm -f "$$TMPDIR/test-lint_symlinks"
+	@ln -s /this/does/not/exist "$$TMPDIR/test-lint_symlinks"
+	! echo "$$TMPDIR/test-lint_symlinks" | ./scripts/test_symlinks.sh 2>/dev/null # If <<this<< errors, the script is broken
+	@rm "$$TMPDIR/test-lint_symlinks"
+	# Successful end of mini-test
+	find . -type l -not -path '*/vendor/*' \
+	| grep -v $$(git submodule foreach 'echo -e ^./$$path' --quiet) \
+	| ./scripts/test_symlinks.sh
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 
