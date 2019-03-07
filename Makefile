@@ -115,7 +115,7 @@ dev: globals ## Set Environment to DEV
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=govpaas-alerting-dev@digital.cabinet-office.gov.uk)
+	$(eval export ALERT_EMAIL_ADDRESS?=govpaas-alerting-dev@digital.cabinet-office.gov.uk)
 	$(eval export ENABLE_ALERT_NOTIFICATIONS ?= false)
 	$(eval export SKIP_COMMIT_VERIFICATION=true)
 	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=default.yml)
@@ -192,6 +192,15 @@ ssh_bosh: ## SSH to the bosh server
 .PHONY: pipelines
 pipelines: check-env ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-cloudfoundry.sh
+
+# This target matches any "monitor-" prefix; the "$(*)" magic variable
+# contains the wildcard suffix (not the entire target name).
+monitor-%: export MONITORED_DEPLOY_ENV=$(*)
+monitor-%: export MONITORED_STATE_BUCKET=gds-paas-$(*)-state
+monitor-%: export PIPELINES_TO_UPDATE=monitor-$(*)
+monitor-%: check-env ## Upload an optional, cross-region monitoring pipeline to Concourse
+	MONITORED_AWS_REGION=$$(aws s3api get-bucket-location --bucket $$MONITORED_STATE_BUCKET --output text --query LocationConstraint) \
+		concourse/scripts/pipelines-cloudfoundry.sh
 
 .PHONY: trigger-deploy
 trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.

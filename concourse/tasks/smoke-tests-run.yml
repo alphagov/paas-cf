@@ -21,7 +21,7 @@ run:
     if [ "$EMAIL_ON_SMOKE_TEST_FAILURE" = "true" ]; then
       if [ "$TEST_EXIT_CODE" -gt 0 ]; then
         paas-cf/concourse/scripts/smoke_tests_email.sh \
-          "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}"
+          "${DEPLOY_ENV}" "${SYSTEM_DNS_ZONE_NAME}" "${ALERT_EMAIL_ADDRESS}" "${MONITORED_DEPLOY_ENV}"
       fi
     fi
     exit $TEST_EXIT_CODE

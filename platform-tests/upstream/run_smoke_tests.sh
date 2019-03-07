@@ -2,8 +2,22 @@
 
 set -eu
 
+relative_to_absolute_path() {
+  echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+}
+
+set +u
+CONFIG="${SMOKE_TEST_CONFIG:-./test-config/config.json}"
+set -u
+
+CONFIG="$(relative_to_absolute_path "${CONFIG}")"
+
+[ -f "$CONFIG" ] || {
+    echo "Config file \"${CONFIG}\" does not exist"
+    exit 1
+}
+
 export CONFIG
-CONFIG="$(pwd)/test-config/config.json"
 
 echo "Linking smoke-tests directory inside $GOPATH"
 CF_GOPATH=/go/src/github.com/cloudfoundry
