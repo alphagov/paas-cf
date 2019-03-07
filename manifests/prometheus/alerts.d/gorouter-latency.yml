@@ -6,7 +6,7 @@
   value:
     name: GorouterLatency
     rules:
-      - alert: GorouterLatency_Warning
+      - alert: GorouterLatency
         expr: min(avg_over_time(firehose_value_metric_gorouter_latency[5m])) > 750
         for: 15m
         labels:

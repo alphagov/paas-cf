@@ -6,7 +6,7 @@
   value:
     name: RDSCPUDiskUtilisation
     rules:
-      - alert: RDSCPUDiskUtilisation_Warning
+      - alert: RDSCPUDiskUtilisation
         expr: aws_rds_free_storage_space_minimum <= 2 * 1024 ^ 3
         labels:
           severity: warning

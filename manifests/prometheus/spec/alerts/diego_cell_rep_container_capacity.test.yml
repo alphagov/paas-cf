@@ -24,18 +24,18 @@ tests:
       # Does not fire when the percentage of container
       # capacity used is below the threshold
       - eval_time: 2h
-        alertname: DiegoCellRepContainerCapacity_Warning
+        alertname: DiegoCellRepContainerCapacity
 
       # Does not fire when the percentage of container
       # capacity used has not been above the threshold
       # for long enough
       - eval_time: 4h
-        alertname: DiegoCellRepContainerCapacity_Warning
+        alertname: DiegoCellRepContainerCapacity
 
       # Fires when the percentage of container capacity
       # used has been above the threshold for 2 hours
       - eval_time: 5h
-        alertname: DiegoCellRepContainerCapacity_Warning
+        alertname: DiegoCellRepContainerCapacity
         exp_alerts:
           - exp_labels:
               severity: warning

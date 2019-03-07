@@ -5,7 +5,7 @@
   value:
     name: BoshDiegoCellIdleCPU
     rules:
-      - alert: BoshDiegoCellIdleCPU_Warning
+      - alert: BoshDiegoCellIdleCPU
         expr: avg(avg_over_time(bosh_job_cpu_idle{bosh_job_name="diego-cell"}[1d])) < 37
         labels:
           severity: warning

@@ -6,7 +6,7 @@
   value:
     name: CCLogErrorCount
     rules:
-      - alert: CCLogErrorCount_Warning
+      - alert: CCLogErrorCount
         expr: sum(increase(firehose_value_metric_cc_log_count_error[1h])) > 20
         labels:
           severity: warning

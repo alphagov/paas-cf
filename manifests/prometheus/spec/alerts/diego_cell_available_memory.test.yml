@@ -15,16 +15,16 @@ tests:
     alert_rule_test:
       # Does not fire with insufficient data
       - eval_time: 12h
-        alertname: BoshDiegoCellAvailableMemory_Warning
+        alertname: BoshDiegoCellAvailableMemory
 
       # Does not fire when the average of the averages over
       # the last 24h window is less than the threshold
       - eval_time: 48h
-        alertname: BoshDiegoCellAvailableMemory_Warning
+        alertname: BoshDiegoCellAvailableMemory
 
 
       - eval_time: 72h
-        alertname: BoshDiegoCellAvailableMemory_Warning
+        alertname: BoshDiegoCellAvailableMemory
         exp_alerts:
           - exp_labels:
               severity: warning

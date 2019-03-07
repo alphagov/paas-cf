@@ -24,17 +24,17 @@ tests:
       # Does not fire when the percentage of free memory
       # is above the threshold
       - eval_time: 2h
-        alertname: DiegoCellRepMemoryCapacity_Warning
+        alertname: DiegoCellRepMemoryCapacity
 
       # Does not fire when the percentage of free memory
       # has not been below the threshold for long enough
       - eval_time: 4h
-        alertname: DiegoCellRepMemoryCapacity_Warning
+        alertname: DiegoCellRepMemoryCapacity
 
       # Fires when the percentage of free memory
       # has been below the threshold for 2 hours
       - eval_time: 5h
-        alertname: DiegoCellRepMemoryCapacity_Warning
+        alertname: DiegoCellRepMemoryCapacity
         exp_alerts:
           - exp_labels:
               severity: warning

@@ -17,15 +17,15 @@ tests:
     alert_rule_test:
       # Does not fire before half an hour
       - eval_time: 20m
-        alertname: CloudControllerLatencyByGorouter_Warning
+        alertname: CloudControllerLatencyByGorouter
 
       # Does not fire when the value is not high enough
       - eval_time: 40m
-        alertname: CloudControllerLatencyByGorouter_Warning
+        alertname: CloudControllerLatencyByGorouter
 
       # Fires when the average of the last 30 minutes is above the threshold
       - eval_time: 70m
-        alertname: CloudControllerLatencyByGorouter_Warning
+        alertname: CloudControllerLatencyByGorouter
         exp_alerts:
           - exp_labels:
               severity: warning

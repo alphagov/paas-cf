@@ -7,7 +7,7 @@
     name: CloudFrontInvalidTLSCertificates
     rules:
 
-      - alert: CloudFrontInvalidTLSCertificates_Warning
+      - alert: CloudFrontInvalidTLSCertificates
         expr: "count(paas_cdn_tls_certificates_validity == 0) >= 3"
         for: 5m
         annotations:

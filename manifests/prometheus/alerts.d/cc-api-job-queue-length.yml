@@ -6,7 +6,7 @@
   value:
     name: CCJobQueueCount
     rules:
-      - alert: CCJobQueueCount_Warning
+      - alert: CCJobQueueCount
         expr: avg_over_time(firehose_value_metric_cc_job_queue_length_total[30m]) > 20
         labels:
           severity: warning
