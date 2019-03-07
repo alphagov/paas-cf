@@ -23,16 +23,16 @@ tests:
     alert_rule_test:
       # Does not fire without an hour of data points
       - eval_time: 30m
-        alertname: DopplerDroppedEnvelopes_Warning
+        alertname: DopplerDroppedEnvelopes
 
       # Does not fire when the sum of the increases
       # of gorouter latencies is less than the threshold
       - eval_time: 90m
-        alertname: DopplerDroppedEnvelopes_Warning
+        alertname: DopplerDroppedEnvelopes
 
       # Fires when the average of the last 30 minutes is above the threshold
       - eval_time: 180m
-        alertname: DopplerDroppedEnvelopes_Warning
+        alertname: DopplerDroppedEnvelopes
         exp_alerts:
           - exp_labels:
               severity: warning

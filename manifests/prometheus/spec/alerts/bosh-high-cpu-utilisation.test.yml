@@ -20,9 +20,9 @@ tests:
 
     alert_rule_test:
       - eval_time: 30m
-        alertname: BoshHighCPUUtilisation_Warning
+        alertname: BoshHighCPUUtilisation
       - eval_time: 61m
-        alertname: BoshHighCPUUtilisation_Warning
+        alertname: BoshHighCPUUtilisation
         exp_alerts:
           - exp_labels:
               severity: warning

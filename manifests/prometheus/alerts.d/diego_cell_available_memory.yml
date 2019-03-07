@@ -5,7 +5,7 @@
   value:
     name: BoshDiegoCellAvailableMemory
     rules:
-      - alert: BoshDiegoCellAvailableMemory_Warning
+      - alert: BoshDiegoCellAvailableMemory
         expr: avg(avg_over_time(bosh_job_mem_percent{bosh_job_name="diego-cell"}[1d])) >= 45
         labels:
           severity: warning

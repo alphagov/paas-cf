@@ -6,7 +6,7 @@
   value:
     name: DNSResolutionTime
     rules:
-    - alert: DNSResolutionTime_Warning
+    - alert: DNSResolutionTime
       expr: avg_over_time(dns_resolution_probe_duration_seconds[10m]) > 0.2
       labels:
         severity: warning

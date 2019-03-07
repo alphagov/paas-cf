@@ -10,7 +10,7 @@
           100 *
           sum(avg_over_time(firehose_value_metric_rep_capacity_remaining_memory{environment="((metrics_environment))"}[5m])) by (environment) /
           sum(avg_over_time(firehose_value_metric_rep_capacity_total_memory{environment="((metrics_environment))"}[5m])) by (environment)
-      - alert: DiegoCellRepMemoryCapacity_Warning
+      - alert: DiegoCellRepMemoryCapacity
         expr:  rep_memory_capacity_pct:avg5m < 35
         for: 2h
         labels:
