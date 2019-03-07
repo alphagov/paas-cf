@@ -4,7 +4,6 @@ set -eu -o pipefail
 
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
 CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
-PROMETHEUS_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/prometheus/upstream
 WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
@@ -44,14 +43,6 @@ bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   --vars-file="${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   --vars-file="${WORKDIR}/environment-variables.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/rename-network-and-deployment.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/aws.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-blobstore.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-s3-blobstore.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-external-dbs.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/stop-skipping-tls-validation.yml" \
-  --ops-file="${CF_DEPLOYMENT_DIR}/operations/enable-service-discovery.yml" \
-  --ops-file="${PROMETHEUS_DEPLOYMENT_DIR}/manifests/operators/cf/add-prometheus-uaa-clients.yml" \
   ${opsfile_args} \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   ${vars_store_args} \
