@@ -6,7 +6,7 @@
   value:
     name: AWSELBUnhealthyNodes
     rules:
-    - alert: AWSELBUnhealthyNodes_Warning
+    - alert: AWSELBUnhealthyNodes
       expr: max_over_time(paas_aws_elb_unhealthy_node_count[5m]) > 0
       labels:
         severity: warning

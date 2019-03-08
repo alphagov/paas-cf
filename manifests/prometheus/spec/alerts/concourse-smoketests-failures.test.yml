@@ -23,7 +23,6 @@ tests:
               exported_job: continuous-smoke-tests
               pipeline: create-cloudfoundry
               status: failed
-              notify: pagerduty
             exp_annotations:
               summary: Concourse continuous-smoke-tests failures
               description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
@@ -36,7 +35,6 @@ tests:
               exported_job: continuous-smoke-tests
               pipeline: create-cloudfoundry
               status: failed
-              notify: pagerduty
             exp_annotations:
               summary: Concourse continuous-smoke-tests failures
               description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
