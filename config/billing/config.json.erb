@@ -97,6 +97,63 @@
 		},
 		{
 			"name": "app",
+			"valid_from": "2017-01-01",
+			"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "platform",
+					"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>) * <%= price("platform_fee") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "staging",
+			"valid_from": "2017-01-01",
+			"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "platform",
+					"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>) * <%= price("platform_fee") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "task",
+			"valid_from": "2017-01-01",
+			"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "platform",
+					"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>) * <%= price("platform_fee") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "app",
 			"valid_from": "2019-03-01",
 			"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
 			"components": [
