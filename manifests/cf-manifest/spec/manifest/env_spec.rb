@@ -21,6 +21,13 @@ RSpec.describe "Environment specific configuration" do
     expect(default_api_instances).to be < prod_api_instances
   end
 
+  it "should allow a higher number of instances of Doppler instances in production" do
+    default_doppler_instances = get_instance_group_instances(default_manifest, "doppler")
+    prod_doppler_instances = get_instance_group_instances(prod_manifest, "doppler")
+
+    expect(default_doppler_instances).to be < prod_doppler_instances
+  end
+
   %w(prod prod-lon stg-lon).each do |env|
     context "for the #{env} environment" do
       let(:env_manifest) { manifest_for_env(env) }
