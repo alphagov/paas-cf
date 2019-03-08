@@ -6,7 +6,7 @@
   value:
     name: UAAFailedLoginUserNotFound
     rules:
-      - alert: UAAFailedLoginUserNotFound_Warning
+      - alert: UAAFailedLoginUserNotFound
         expr: sum(increase(firehose_value_metric_uaa_audit_service_user_not_found_count[1h])) > 10
         labels:
           severity: warning
