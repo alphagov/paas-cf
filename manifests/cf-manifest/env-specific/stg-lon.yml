@@ -2,3 +2,4 @@
 cell_instances: 6
 router_instances: 3
 api_instances: 2
+doppler_instances: 3
