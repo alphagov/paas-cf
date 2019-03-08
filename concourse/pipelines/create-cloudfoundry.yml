@@ -2403,11 +2403,13 @@ jobs:
                   manifest['applications'].each { |app|
                     app['env'] ||= {}
                     app['env'].merge!(env)
+                    app['routes'] = [
+                      { 'route' => 'aiven-broker.${APPS_DNS_ZONE_NAME}' },
+                    ]
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
-                cf blue-green-deploy aiven-broker
-                cf delete -f aiven-broker-old
+                cf zero-downtime-push aiven-broker -f ./manifest.yml
 
                 if cf service-brokers | grep 'aiven-broker\s'; then
                   cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
