@@ -2041,6 +2041,9 @@ jobs:
                 if [ "${DEPLOY_ENV}" = "prod" ]; then
                   BILLING_DB_PLAN="medium-9.5"
                 fi
+                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                  BILLING_DB_PLAN="medium-9.5"
+                fi
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
