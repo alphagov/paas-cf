@@ -10,7 +10,6 @@
         expr: increase(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"}[1h]) >= 2
         labels:
           severity: warning
-          notify: pagerduty
         annotations:
           summary: Concourse continuous-smoke-tests failures
           description: The continuous-smoke-tests Concourse job has failed at least twice in the last hour.
