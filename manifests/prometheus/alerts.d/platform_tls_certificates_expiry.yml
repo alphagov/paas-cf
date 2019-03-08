@@ -7,7 +7,7 @@
     name: PlatformTLSCertificateExpiresSoon
     rules:
 
-      - alert: PlatformTLSCertificateExpiresSoon_Warning
+      - alert: PlatformTLSCertificateExpiresSoon
         expr: "paas_tls_certificates_validity_days <= 30"
         for: 5m
         annotations:

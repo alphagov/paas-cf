@@ -6,7 +6,7 @@
   value:
     name: ElasticacheNodeCountCloseToLimit
     rules:
-      - alert: ElasticacheNodeCountCloseToLimit_Warning
+      - alert: ElasticacheNodeCountCloseToLimit
         expr: paas_aws_elasticache_node_count > ((aws_limits_elasticache_nodes)) / 100 * 80
         for: 1h
         labels:

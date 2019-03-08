@@ -6,7 +6,7 @@
   value:
     name: CFSyslogDrains
     rules:
-    - alert: CFSyslogDrains_Warning
+    - alert: CFSyslogDrains
       expr: firehose_value_metric_cf_syslog_drain_scheduler_drains > 250
       labels:
         severity: warning

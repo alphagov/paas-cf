@@ -17,9 +17,9 @@ tests:
 
     alert_rule_test:
       - eval_time: 15m
-        alertname: GorouterLatency_Warning
+        alertname: GorouterLatency
       - eval_time: 31m
-        alertname: GorouterLatency_Warning
+        alertname: GorouterLatency
         exp_alerts:
           - exp_labels:
               severity: warning

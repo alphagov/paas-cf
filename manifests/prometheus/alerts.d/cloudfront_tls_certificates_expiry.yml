@@ -7,7 +7,7 @@
     name: CloudFrontTLSCertificateExpiresSoon
     rules:
 
-      - alert: CloudFrontTLSCertificateExpiresSoon_Warning
+      - alert: CloudFrontTLSCertificateExpiresSoon
         expr: "paas_cdn_tls_certificates_expiry_days <= 21"
         for: 5m
         annotations:

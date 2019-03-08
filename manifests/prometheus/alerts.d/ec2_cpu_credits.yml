@@ -6,7 +6,7 @@
   value:
     name: EC2CPUCreditsLow
     rules:
-      - alert: EC2CPUCreditsLow_Warning
+      - alert: EC2CPUCreditsLow
         expr: avg_over_time(aws_ec2_cpucredit_balance_minimum[30m]) <= 20
         labels:
           severity: warning
