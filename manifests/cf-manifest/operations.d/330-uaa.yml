@@ -222,9 +222,6 @@
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/groups?/cloud_controller.global_auditor
   value: Global Auditor read only group
 
-- type: remove
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/users/name=bosh
-
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/scim/users/name=admin/groups
   value:
