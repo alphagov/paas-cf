@@ -27,6 +27,12 @@
   path: /releases/name=staticfile-buildpack
 
 - type: remove
+  path: /releases/name=r-buildpack
+
+- type: remove
+  path: /releases/name=nginx-buildpack
+
+- type: remove
   path: /instance_groups/name=api/jobs/name=binary-buildpack
 
 - type: remove
@@ -52,6 +58,12 @@
 
 - type: remove
   path: /instance_groups/name=api/jobs/name=staticfile-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=r-buildpack
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=nginx-buildpack
 
 - type: remove
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks
