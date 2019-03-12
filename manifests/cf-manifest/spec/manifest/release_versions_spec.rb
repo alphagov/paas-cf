@@ -28,8 +28,8 @@ RSpec.describe "release versions" do
 
     pinned_releases = {
       "log-cache" => {
-        local: "0.1.3",
-        upstream: "2.0.2",
+        local: "0.1.4",
+        upstream: "2.1.1",
       },
     }
 
