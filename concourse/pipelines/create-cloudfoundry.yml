@@ -2786,39 +2786,46 @@ jobs:
                     echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
 
                     cf buildpacks \
-                       | awk '/_buildpack/ {print $1}' \
-                       > actual_buildpacks.txt
+                    | awk 'NR>3 && $6 != "" && $1 ~ /_buildpack$/ { print $1, $6 } ' \
+                    > actual_buildpacks.txt
 
                     ruby <<-RUBY
                     require 'yaml'
-                    YAML
-                      .load_file('paas-cf/manifests/cf-deployment/cf-deployment.yml')
-                      .fetch('instance_groups', [])
-                      .find { |g| g['name'] == 'api' }
-                      .fetch('jobs', [])
-                      .find { |j| j['name'] == 'cloud_controller_ng' }
-                      .dig('properties', 'cc', 'install_buildpacks')
-                      .map { |buildpack| buildpack['name'] }
-                      .tap do |expected|
-                        actual = File
-                          .read('actual_buildpacks.txt')
-                          .lines
-                          .map(&:strip)
-                          .to_a
 
-                        puts 'Expected', '-----', expected, '-----'
-                        puts 'Actual',   '-----', actual,   '-----'
+                    expected = YAML
+                      .load_file('paas-cf/config/buildpacks.yml')
+                      .fetch('buildpacks', [])
+                      .map { |pack| pack['name']+' '+pack['stack'] }
 
-                        buildpacks_not_found = expected - actual
+                    actual = File
+                      .read('actual_buildpacks.txt')
+                      .lines
+                      .map(&:strip)
+                      .to_a
 
-                        if buildpacks_not_found.empty?
-                          puts 'Found all buildpacks'
-                          exit 0
-                        else
-                          puts "Could not find #{buildpacks_not_found.inspect}"
-                          exit 1
-                        end
-                      end
+                    puts 'Expected', '-----', expected, '-----'
+                    puts 'Actual',   '-----', actual,   '-----'
+
+                    expected_but_missing = expected - actual
+                    present_but_unexpected = actual - expected
+
+                    exit_code = 0
+
+                    if expected_but_missing.empty?
+                      puts 'All expected buildpacks found in CF'
+                    else
+                      puts "Could not find #{expected_but_missing.inspect}"
+                      exit_code = 1
+                    end
+
+                    if present_but_unexpected.empty?
+                      puts 'No unexpected buildpacks found in CF'
+                    else
+                      puts "Unexpected buildpacks found: #{present_but_unexpected.inspect}"
+                      exit_code = 1
+                    end
+
+                    exit exit_code
                     RUBY
 
         ensure:
