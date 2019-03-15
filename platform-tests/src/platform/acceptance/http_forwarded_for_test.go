@@ -8,12 +8,12 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/hashicorp/go-retryablehttp"
 
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net"
-	"net/http"
 	"strings"
 )
 
@@ -31,7 +31,7 @@ var _ = Describe("X-Forwarded headers", func() {
 	)
 
 	BeforeEach(func() {
-		resp, err := http.Get(egressURL)
+		resp, err := retryablehttp.Get(egressURL)
 		Expect(err).ToNot(HaveOccurred(), "Unable to get egress IP from %s", egressURL)
 		defer resp.Body.Close()
 
