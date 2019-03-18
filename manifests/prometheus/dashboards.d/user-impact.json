@@ -598,9 +598,9 @@
                 "interval": null,
                 "links": [{
                     "targetBlank": true,
-                    "title": "https://prometheus.__SYSTEM_DNS_ZONE_NAME__/alerts",
+                    "title": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts",
                     "type": "absolute",
-                    "url": "https://prometheus.__SYSTEM_DNS_ZONE_NAME__/alerts"
+                    "url": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts"
                 }],
                 "mappingType": 1,
                 "mappingTypes": [{
