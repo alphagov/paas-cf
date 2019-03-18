@@ -1,5 +1,5 @@
 ---
-cell_instances: 18
+cell_instances: 21
 router_instances: 3
 api_instances: 4
 doppler_instances: 12
