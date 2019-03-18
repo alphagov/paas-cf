@@ -1,7 +1,14 @@
 dist: trusty
 sudo: false
 rvm:
+  - 2.5.3
+# Travis currently translates "2.5" into "2.5.4", which has bundler problems.
+# This build is here to discover when "2.5" stops breaking. It's allowed to fail by
+# the "matrix" key, below
   - 2.5
+matrix:
+  allow_failures:
+    - rvm: 2.5
 env:
   global:
     - TF_VERSION="0.11.1"
