@@ -1,7 +1,7 @@
 dist: trusty
 sudo: false
 rvm:
-  - 2.5
+  - 2.5.3
 env:
   global:
     - TF_VERSION="0.11.1"
