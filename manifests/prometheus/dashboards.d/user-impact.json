@@ -418,14 +418,14 @@
                 "id": 11,
                 "legend": {
                     "alignAsTable": false,
-                    "avg": true,
-                    "current": true,
-                    "max": true,
-                    "min": true,
+                    "avg": false,
+                    "current": false,
+                    "max": false,
+                    "min": false,
                     "rightSide": false,
-                    "show": false,
+                    "show": true,
                     "total": false,
-                    "values": true
+                    "values": false
                 },
                 "lines": true,
                 "linewidth": 1,
@@ -439,18 +439,28 @@
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
-                    "expr": "bosh_job_mem_percent{bosh_job_name=\"diego-cell\"}",
-                    "format": "time_series",
-                    "instant": false,
-                    "intervalFactor": 1,
-                    "legendFormat": "{{bosh_job_id}} ({{bosh_job_ip}})",
-                    "refId": "A"
-                }],
+                "targets": [
+                    {
+                        "expr": "count(firehose_value_metric_rep_capacity_total_memory)",
+                        "format": "time_series",
+                        "instant": false,
+                        "intervalFactor": 1,
+                        "legendFormat": "Current",
+                        "refId": "A",
+                        "hide": false
+                    },
+                    {
+                        "refId": "B",
+                        "expr": "ceil(count(firehose_value_metric_rep_capacity_total_memory) * on () (100 - rep_memory_capacity_pct:avg5m) / (100 - 33))",
+                        "intervalFactor": 1,
+                        "format": "time_series",
+                        "legendFormat": "Required"
+                    }
+                ],
                 "thresholds": [],
-                "timeFrom": null,
+                "timeFrom": "30d",
                 "timeShift": null,
-                "title": "Cell Used Memory",
+                "title": "Number of cells (last 30 days)",
                 "tooltip": {
                     "shared": true,
                     "sort": 2,
@@ -464,13 +474,14 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "decimals": 0,
-                        "format": "percent",
+                        "format": "short",
                         "label": null,
                         "logBase": 1,
                         "max": null,
-                        "min": "0",
+                        "min": null,
                         "show": true
                     },
                     {
@@ -485,7 +496,8 @@
                 "yaxis": {
                     "align": false,
                     "alignLevel": null
-                }
+                },
+                "timeRegions": []
             },
             {
                 "aliasColors": {},
