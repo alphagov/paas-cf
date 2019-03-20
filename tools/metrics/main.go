@@ -100,6 +100,7 @@ func Main() error {
 	tlsChecker := &tlscheck.TLSChecker{}
 
 	ecs := NewElasticacheService(sess)
+	s3 := NewS3Service(sess)
 
 	// Combine all metrics into single stream
 	gauges := []MetricReader{
@@ -117,6 +118,7 @@ func Main() error {
 		}, 30*time.Second),
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
 		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
+		S3BucketsGauge(logger, s3, 1*time.Hour),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))
