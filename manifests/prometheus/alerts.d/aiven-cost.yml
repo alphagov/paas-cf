@@ -7,8 +7,7 @@
     name: AivenEstimatedCostHigh
     rules:
       - alert: AivenEstimatedCostHigh
-        expr: paas_aiven_estimated_cost_pounds > 6500
-        for: 1h
+        expr: delta(paas_aiven_estimated_cost_pounds[24h]) * 30 > 20000
         labels:
           severity: critical
         annotations:

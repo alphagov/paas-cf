@@ -1,0 +1,32 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how this gets set:
+  - spec/alerts/fixtures/rules.yml
+
+evaluation_interval: 1h
+
+tests:
+  - interval: 1h
+    input_series:
+      - series: "paas_aiven_estimated_cost_pounds"
+        values: 0+100x24 2500+10x24
+
+    alert_rule_test:
+
+      # Alert should not be firing initially
+      - eval_time: 1h
+        alertname: AivenEstimatedCostHigh
+
+      # Alert should be firing after we've been spending £100 / hour for the last 24 hours
+      - eval_time: 24h
+        alertname: AivenEstimatedCostHigh
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: "Aiven estimated cost is high, possibly need to alert finance."
+              description: "The estimated monthly cost of Aiven is currently £72000.00, possibly need to alert finance."
+
+      # Alert should not be firing after we've been spending £10 / hour for the last 24 hours
+      - eval_time: 48h
+        alertname: AivenEstimatedCostHigh
