@@ -155,11 +155,27 @@
   revision = "7554cd9344cec97297fa6649b055a8c98c2a1e55"
 
 [[projects]]
+  digest = "1:05334858a0cfb538622a066e065287f63f42bee26a7fda93a789674225057201"
+  name = "github.com/hashicorp/go-cleanhttp"
+  packages = ["."]
+  pruneopts = ""
+  revision = "e8ab9daed8d1ddd2d3c4efba338fe2eeae2e4f18"
+  version = "v0.5.0"
+
+[[projects]]
   digest = "1:30ee02c120bb50fe24b237d87314e7045f83f28b35467529233dc76911ca1f34"
   name = "github.com/hashicorp/go-multierror"
   packages = ["."]
   pruneopts = ""
   revision = "8c5f0ad9360406a3807ce7de6bc73269a91a6e51"
+
+[[projects]]
+  digest = "1:776139dc18d63ef223ffaca5d8e9a3057174890f84393d3c881e934100b66dbc"
+  name = "github.com/hashicorp/go-retryablehttp"
+  packages = ["."]
+  pruneopts = ""
+  revision = "73489d0a1476f0c9e6fb03f9c39241523a496dfd"
+  version = "v0.5.2"
 
 [[projects]]
   digest = "1:e6f0b9e4dced4b6b5fedb810e2125a9f74dfe2ef1598c55ecb25e8b3d8f514ea"
@@ -385,6 +401,7 @@
     "github.com/cloudfoundry/cf-acceptance-tests/helpers/config",
     "github.com/concourse/atc",
     "github.com/concourse/go-concourse/concourse",
+    "github.com/hashicorp/go-retryablehttp",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
     "github.com/onsi/gomega/gbytes",

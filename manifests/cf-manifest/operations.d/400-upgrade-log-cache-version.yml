@@ -2,7 +2,7 @@
   path: /releases/name=log-cache
   value:
     name: log-cache
-    # This is v2.0.2 + a backported fix for a pagination issue - https://github.com/alphagov/paas-log-cache-release/pull/1
-    version: 0.1.3
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/log-cache-0.1.3.tgz
-    sha1: 64c599779c7e1efda39ffba306daf21d3361c852
+    # This is v2.1.1 + a backported fix for a 2nd pagination issue - https://github.com/alphagov/paas-log-cache-release/pull/1 was merged upstream; pull/2 was not
+    version: 0.1.4
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/log-cache-0.1.4.tgz
+    sha1: 88e591efab85f338560a66af1e741dbde886272b

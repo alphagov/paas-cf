@@ -42,12 +42,14 @@ RSpec.describe "base properties" do
       expect(default["os"]).to eq(cf_deployment_default.fetch("os"))
     end
 
-    it "stemcell version is not older than the one in cf-deployment" do
+    it "stemcell version is not older than the one in cf-deployment **iff they're the same major version**" do
       default = stemcells.find { |s| s["alias"] == "default" }
       cf_deployment_default = cf_deployment_manifest.fetch("stemcells").find { |s| s["alias"] == "default" }
 
-      expect(Gem::Version.new(default["version"])).to be >= Gem::Version.new(cf_deployment_default.fetch("version")),
+      if default["version"].to_s.split(".")[0] == cf_deployment_default.fetch("version").to_s.split(".")[0]
+        expect(Gem::Version.new(default["version"])).to be >= Gem::Version.new(cf_deployment_default.fetch("version")),
         "the stemcell version should not be older than in cf-deployment"
+      end
     end
   end
 
