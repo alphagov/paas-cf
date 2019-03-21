@@ -1,0 +1,16 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: S3BucketCountCloseToLimit
+    rules:
+      - alert: S3BucketCountCloseToLimit
+        expr: paas_aws_s3_buckets_count > ((aws_limits_s3_buckets)) / 100 * 80
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Number of S3 buckets is close to the limit"
+          description: "We are using {{ $value | printf \"%.0f\" }} of ((aws_limits_s3_buckets)) S3 buckets. We might have to contact AWS support to raise the limit."
