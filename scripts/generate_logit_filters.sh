@@ -53,9 +53,13 @@ echo "filter {" > /output/generated_logit_filters.conf
 sed -i 's/^ *$//g' /output/generated_logit_filters.conf
 
 sed -i \
-    "s/if \[@source\]\[component\] != \"vcap.uaa\".*/if [@source][component] != \"uaa\" {/" \
+    "s/if \[@source\]\[component\] != \"vcap.uaa\".*/if [@source][component] != \"uaa\" and [@source][component] != \"app\" {/" \
+    /output/generated_logit_filters.conf
+
+sed -i \
+    "s/if \[@index_type\] == \"platform\" {/if [@index_type] == \"platform\" and [@source][component] != \"app\" {/" \
     /output/generated_logit_filters.conf
 
 sed -i \
     "s/vcap\.uaa/uaa/" \
-    /output/generated_logit_filters.conf	
+    /output/generated_logit_filters.conf
