@@ -132,6 +132,10 @@
   value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
 
 - type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cc_deployment_updater/properties/cc/mutual_tls/ca_cert
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
   path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/uaa/ca_cert
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
