@@ -20,3 +20,6 @@
   path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/ccdb
   value: *cloud_controller_ng_ccdb
 
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cc_deployment_updater/properties/ccdb
+  value: *cloud_controller_ng_ccdb
