@@ -26,12 +26,7 @@ RSpec.describe "release versions" do
       Gem::Version.new(v.gsub(/^v/, '').gsub(/^([0-9]+)$/, '0.0.\1'))
     end
 
-    pinned_releases = {
-      "log-cache" => {
-        local: "0.1.4",
-        upstream: "2.1.1",
-      },
-    }
+    pinned_releases = {}
 
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
       [release['name'], release['version']]
