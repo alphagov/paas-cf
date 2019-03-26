@@ -1697,12 +1697,6 @@ jobs:
                   cf create-service-broker s3-broker s3-broker "${S3_BROKER_PASS}" "https://${S3_BROKER_SERVER}"
                 fi
 
-                # TODO: enable the service globally when we are happy to release this to the world
-                cf target -o admin -s public
-                if ! cf marketplace | grep -q "aws-s3-bucket"; then
-                  cf enable-service-access aws-s3-bucket -o admin
-                fi
-
       - task: set-security-groups-from-manifest
         config:
           platform: linux
@@ -1812,7 +1806,33 @@ jobs:
 
                 ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
 
+
+
     - aggregate:
+      - task: enable-s3-broker
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: config
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                # TODO: enable the service globally when we are happy to release this to the world (move back to `register-s3-broker` job)
+                cf target -o admin -s public
+                if ! cf marketplace | grep -q "aws-s3-bucket"; then
+                  cf enable-service-access aws-s3-bucket -o admin
+                fi
+
       - task: block-create-account-endpoints
         config:
           platform: linux
