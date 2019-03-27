@@ -26,12 +26,7 @@ RSpec.describe "release versions" do
       Gem::Version.new(v.gsub(/^v/, '').gsub(/^([0-9]+)$/, '0.0.\1'))
     end
 
-    pinned_releases = {
-      "log-cache" => {
-        local: "0.1.4",
-        upstream: "2.1.1",
-      },
-    }
+    pinned_releases = {}
 
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
       [release['name'], release['version']]
@@ -106,6 +101,11 @@ RSpec.describe "release versions" do
       .fetch('resources')
       .select { |v| v['name'] == 'cf-acceptance-tests' }
       .fetch(0)
+
+    if cf_manifest_version == 'v7.7.0'
+      expect(cf_acceptance_tests_resource['source']['branch']).to be == 'cf7.6', "There's no cf7.7 branch, so we're using the cf7.6 acceptance tests branch for cf-deployment 7.7. Next time we update cf-deployment we should check if there's a branch in cf-acceptance-tests for it and remove this conditional if so. See https://github.com/cloudfoundry/cf-acceptance-tests/branches/all?utf8=%E2%9C%93&query=cf"
+      next
+    end
 
     upstream_version = Gem::Version.new(cf_manifest_version.gsub(/^v/, '').gsub(/\.0$/, ''))
     paas_version = Gem::Version.new(cf_acceptance_tests_resource['source']['branch'].gsub(/^cf/, ''))
