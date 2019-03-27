@@ -725,6 +725,56 @@ buildpacks:
     version: 1.15.9
     cf_stacks:
     - cflinuxfs3
+- name: nginx_buildpack
+  repo_name: nginx-buildpack
+  stack: cflinuxfs2
+  version: v1.0.8
+  sha: 34f2a634bfe3769fb6692d0c0ee4d0c42f51b1c5e3a5583d1b5ea3adfcdbc8f5
+  filename: nginx-buildpack-cflinuxfs2-v1.0.8.zip
+  url: https://github.com/cloudfoundry/nginx-buildpack/releases/download/v1.0.8/nginx-buildpack-cflinuxfs2-v1.0.8.zip
+  dependencies:
+  - name: nginx
+    version: 1.14.2
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: nginx
+    version: 1.15.8
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: openresty
+    version: 1.13.6.2
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+- name: r_buildpack
+  repo_name: r-buildpack
+  stack: cflinuxfs2
+  version: v1.0.8
+  sha: 4e641141681c1f00b89cdb235f43ff9ae929e6bf9550a1f1b6eac0da7b328dcb
+  filename: r-buildpack-cflinuxfs2-v1.0.8.zip
+  url: https://github.com/cloudfoundry/r-buildpack/releases/download/v1.0.8/r-buildpack-cflinuxfs2-v1.0.8.zip
+  dependencies:
+  - name: r
+    version: 3.4.3
+    cf_stacks:
+    - cflinuxfs2
+  - name: r
+    version: 3.4.4
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: r
+    version: 3.5.2
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: r
+    version: 3.5.3
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
 - name: binary_buildpack
   repo_name: binary-buildpack
   stack: cflinuxfs3
@@ -1450,4 +1500,54 @@ buildpacks:
   - name: nginx
     version: 1.15.9
     cf_stacks:
+    - cflinuxfs3
+- name: nginx_buildpack
+  repo_name: nginx-buildpack
+  stack: cflinuxfs3
+  version: v1.0.8
+  sha: 18b5f7ee6b63b7c6463ef97b5706f4db0c260bc7efc7024f1508930b7be69bf9
+  filename: nginx-buildpack-cflinuxfs3-v1.0.8.zip
+  url: https://github.com/cloudfoundry/nginx-buildpack/releases/download/v1.0.8/nginx-buildpack-cflinuxfs3-v1.0.8.zip
+  dependencies:
+  - name: nginx
+    version: 1.14.2
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: nginx
+    version: 1.15.8
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: openresty
+    version: 1.13.6.2
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+- name: r_buildpack
+  repo_name: r-buildpack
+  stack: cflinuxfs3
+  version: v1.0.8
+  sha: e1717a96610edec81e5d3fdddf08e1404697333cbc8e9aee439c6bb4a3b45403
+  filename: r-buildpack-cflinuxfs3-v1.0.8.zip
+  url: https://github.com/cloudfoundry/r-buildpack/releases/download/v1.0.8/r-buildpack-cflinuxfs3-v1.0.8.zip
+  dependencies:
+  - name: r
+    version: 3.4.3
+    cf_stacks:
+    - cflinuxfs2
+  - name: r
+    version: 3.4.4
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: r
+    version: 3.5.2
+    cf_stacks:
+    - cflinuxfs2
+    - cflinuxfs3
+  - name: r
+    version: 3.5.3
+    cf_stacks:
+    - cflinuxfs2
     - cflinuxfs3
