@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/alphagov/paas-cf/platform-tests/example-apps/http_tester",
-	"GoVersion": "go1.8",
+	"GoVersion": "go1.11",
 	"GodepVersion": "v79",
 	"Packages": [
 		"./..."
