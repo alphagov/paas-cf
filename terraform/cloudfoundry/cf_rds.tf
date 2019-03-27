@@ -47,7 +47,7 @@ resource "aws_db_instance" "cf" {
   parameter_group_name = "${aws_db_parameter_group.cf_pg_9_5.id}"
 
   storage_type               = "gp2"
-  backup_window              = "02:00-03:00"
+  backup_window              = "09:00-10:00"
   maintenance_window         = "${var.cf_db_maintenance_window}"
   multi_az                   = "${var.cf_db_multi_az}"
   backup_retention_period    = "${var.cf_db_backup_retention_period}"

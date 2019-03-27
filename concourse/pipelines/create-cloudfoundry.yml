@@ -1883,8 +1883,8 @@ jobs:
 
                 cf target -o admin -s healthchecks
 
-                cd paas-cf/platform-tests/example-apps/healthcheck
-                cf push simulated-load -i 180
+                #cd paas-cf/platform-tests/example-apps/healthcheck
+                cf push simulated-load --docker-image julman99/eatmemory -c '/bin/eatmemory 500M' -m 1G --health-check-type process -i 100
 
                 timeout=300
                 deadline=$(($(date +%s) + timeout))
