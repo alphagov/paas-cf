@@ -1528,7 +1528,7 @@ jobs:
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
                 cf create-org admin
-                cf set-quota admin medium
+                cf set-quota admin 2xlarge
 
                 cf create-space monitoring -o admin
                 cf create-space service-brokers -o admin
