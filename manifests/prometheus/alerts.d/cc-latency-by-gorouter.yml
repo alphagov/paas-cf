@@ -7,7 +7,8 @@
     name: CloudControllerLatencyByGorouter
     rules:
       - alert: CloudControllerLatencyByGorouter
-        expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[30m])) > 500
+        expr: avg(avg_over_time(firehose_value_metric_gorouter_latency_cloud_controller[5m])) > 500
+        for: 15m
         labels:
           severity: warning
         annotations:
