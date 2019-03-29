@@ -136,6 +136,16 @@
     scope: openid,password.write,scim.read,scim.write,scim.invite,uaa.user
     secret: ((secrets_uaa_clients_login_secret))
 
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/noisy-neighbor-nozzle?
+  value:
+    access-token-validity: 1209600
+    authorities: doppler.firehose,uaa.resource,cloud_controller.admin_read_only
+    authorized-grant-types: client_credentials,refresh_token
+    override: true
+    scope: doppler.firehose
+    secret: ((secrets_uaa_clients_noisy_neighbor_nozzle_secret))
+
 - type: remove
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/routing_api_client
 
@@ -271,6 +281,11 @@
   path: /variables/-
   value:
     name: secrets_uaa_clients_paas_billing_secret
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_noisy_neighbor_nozzle_secret
     type: password
 
 - type: replace
