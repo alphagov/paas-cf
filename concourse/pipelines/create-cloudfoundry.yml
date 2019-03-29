@@ -2163,7 +2163,7 @@ jobs:
                 UAA_ADDR="${UAA_ENDPOINT}"
                 LOGGREGATOR_ADDR="${LOGGREGATOR_ENDPOINT}"
                 NOZZLE_INSTANCES="2"
-                SUBSCRIPTION_ID="$(date +%s | sha256sum | base64 | head -c 64 ; echo)"
+                SUBSCRIPTION_ID="$(head -c 64 < /dev/random | base64)"
 
 
                 cat << EOF > nozzle-manifest.yml
