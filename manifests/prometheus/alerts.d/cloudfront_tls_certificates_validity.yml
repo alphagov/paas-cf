@@ -17,3 +17,4 @@
         labels:
           severity: warning
           service: cloudfront
+          layer: tenant
