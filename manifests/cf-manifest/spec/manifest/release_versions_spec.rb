@@ -103,7 +103,7 @@ RSpec.describe "release versions" do
       .fetch(0)
 
     if cf_manifest_version == 'v7.7.0'
-      expect(cf_acceptance_tests_resource['source']['branch']).to be == 'cf7.6', "There's no cf7.7 branch, so we're using the cf7.6 acceptance tests branch for cf-deployment 7.7. Next time we update cf-deployment we should check if there's a branch in cf-acceptance-tests for it and remove this conditional if so. See https://github.com/cloudfoundry/cf-acceptance-tests/branches/all?utf8=%E2%9C%93&query=cf"
+      expect(cf_acceptance_tests_resource['source']['branch']).to be == 'master', "There's no cf7.7 branch, so we're using the master acceptance tests branch (specifying commit c2159c0) for cf-deployment 7.7. Next time we update cf-deployment we should check if there's a branch in cf-acceptance-tests for it and remove this conditional if so. See https://github.com/cloudfoundry/cf-acceptance-tests/branches/all?utf8=%E2%9C%93&query=cf"
       next
     end
 

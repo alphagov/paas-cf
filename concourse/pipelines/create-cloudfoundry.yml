@@ -267,7 +267,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf7.6
+      branch: master
 
   - name: cf-smoke-tests-release
     type: git
@@ -341,7 +341,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts
-      tag_filter: v0.4.0
+      tag_filter: v0.5.0
 
   - name: paas-admin
     type: git
@@ -2747,6 +2747,7 @@ jobs:
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
+            version: {ref: c2159c05d325b5d5546302c24ff8f723387418d9}
           - get: paas-cf
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
@@ -2808,6 +2809,7 @@ jobs:
           - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
+            version: {ref: c2159c05d325b5d5546302c24ff8f723387418d9}
           - get: paas-admin
             passed: ['post-deploy']
 

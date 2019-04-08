@@ -11,7 +11,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/google/go-github/v21/github"
+	"github.com/google/go-github/v24/github"
 	"golang.org/x/oauth2"
 	yaml "gopkg.in/yaml.v2"
 )
