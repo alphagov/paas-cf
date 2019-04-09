@@ -2,6 +2,16 @@
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/quota_definitions?
   value:
+    8xlarge:
+      memory_limit: 138400
+      non_basic_services_allowed: true
+      total_routes: 4000
+      total_services: 720
+    4xlarge:
+      memory_limit: 819200
+      non_basic_services_allowed: true
+      total_routes: 2000
+      total_services: 320
     2xlarge:
       memory_limit: 409600
       non_basic_services_allowed: true
