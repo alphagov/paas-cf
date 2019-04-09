@@ -3,7 +3,7 @@
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/quota_definitions?
   value:
     8xlarge:
-      memory_limit: 138400
+      memory_limit: 1638400
       non_basic_services_allowed: true
       total_routes: 4000
       total_services: 720
