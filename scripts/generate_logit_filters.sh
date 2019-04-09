@@ -63,3 +63,21 @@ sed -i \
 sed -i \
     "s/vcap\.uaa/uaa/" \
     /output/generated_logit_filters.conf
+
+prune_guids='
+  prune {
+    blacklist_names = [
+      "[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}"
+    ]
+  }
+'
+
+# capture then re-output to prevent empty file
+final_output="$(
+  cat \
+    <(head -n -1 /output/generated_logit_filters.conf) \
+    <(echo "$prune_guids") \
+    <(echo "}")
+)"
+
+echo "$final_output" > /output/generated_logit_filters.conf
