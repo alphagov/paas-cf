@@ -267,7 +267,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: master
+      branch: cf7.9
 
   - name: cf-smoke-tests-release
     type: git
@@ -2747,7 +2747,6 @@ jobs:
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
-            version: {ref: 5550ae6462f849142a341f7f8e2bd2ba6571943f}
           - get: paas-cf
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
@@ -2809,7 +2808,6 @@ jobs:
           - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
-            version: {ref: 5550ae6462f849142a341f7f8e2bd2ba6571943f}
           - get: paas-admin
             passed: ['post-deploy']
 
