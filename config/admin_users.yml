@@ -1,6 +1,4 @@
 ---
-- email: "andras.ferencz-szabo@digital.cabinet-office.gov.uk"
-  origin: "google"
 - email: "chris.farmiloe@digital.cabinet-office.gov.uk"
   origin: "google"
 - email: "lee.porte@digital.cabinet-office.gov.uk"
@@ -16,4 +14,6 @@
 - email: "sam.crang@digital.cabinet-office.gov.uk"
   origin: "google"
 - email: "tom.whitwell@digital.cabinet-office.gov.uk"
+  origin: "google"
+- email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
   origin: "google"
