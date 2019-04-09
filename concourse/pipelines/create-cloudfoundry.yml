@@ -2747,7 +2747,7 @@ jobs:
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
-            version: {ref: c2159c05d325b5d5546302c24ff8f723387418d9}
+            version: {ref: 5550ae6462f849142a341f7f8e2bd2ba6571943f}
           - get: paas-cf
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
