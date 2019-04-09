@@ -2809,7 +2809,7 @@ jobs:
           - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
-            version: {ref: c2159c05d325b5d5546302c24ff8f723387418d9}
+            version: {ref: 5550ae6462f849142a341f7f8e2bd2ba6571943f}
           - get: paas-admin
             passed: ['post-deploy']
 
