@@ -2,6 +2,6 @@
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/rate_limiter?
   value:
     enabled: true
-    general_limit: 4000
+    general_limit: 50000
     reset_interval_in_minutes: 60
     unauthenticated_limit: 100
