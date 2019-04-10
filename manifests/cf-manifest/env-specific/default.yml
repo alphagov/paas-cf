@@ -4,3 +4,4 @@ router_instances: 2
 api_instances: 2
 doppler_instances: 6
 log_api_instances: 2
+cc_hourly_rate_limit: 10000
