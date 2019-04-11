@@ -601,7 +601,7 @@
                     "thresholdMarkers": true
                 },
                 "gridPos": {
-                    "h": 8,
+                    "h": 4,
                     "w": 4,
                     "x": 20,
                     "y": 16
@@ -640,14 +640,14 @@
                 },
                 "tableColumn": "",
                 "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\"}) or vector(0)",
+                    "expr": "count(ALERTS{alertstate=\"firing\",layer!=\"tenant\"}) or vector(0)",
                     "format": "time_series",
                     "instant": true,
                     "intervalFactor": 1,
                     "refId": "A"
                 }],
                 "thresholds": "1,1",
-                "title": "Firing Alerts",
+                "title": "Platform Alerts",
                 "type": "singlestat",
                 "valueFontSize": "200%",
                 "valueMaps": [{
@@ -676,12 +676,12 @@
                     "thresholdMarkers": true
                 },
                 "gridPos": {
-                    "h": 8,
+                    "h": 4,
                     "w": 4,
                     "x": 20,
-                    "y": 16
+                    "y": 20
                 },
-                "id": 5,
+                "id": 14,
                 "interval": null,
                 "links": [{
                     "targetBlank": true,
@@ -715,14 +715,14 @@
                 },
                 "tableColumn": "",
                 "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\"}) or vector(0)",
+                    "expr": "count(ALERTS{alertstate=\"firing\",layer=\"tenant\"}) or vector(0)",
                     "format": "time_series",
                     "instant": true,
                     "intervalFactor": 1,
                     "refId": "A"
                 }],
                 "thresholds": "1,1",
-                "title": "Firing Alerts",
+                "title": "Tenant Alerts",
                 "type": "singlestat",
                 "valueFontSize": "200%",
                 "valueMaps": [{
