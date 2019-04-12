@@ -1468,8 +1468,6 @@ jobs:
         passed: ['generate-cf-config']
       - get: bosh-CA-crt
       - get: paas-aiven-broker
-      - get: paas-billing
-      - get: paas-accounts
       - get: logit-secrets
 
     - task: retrieve-config
