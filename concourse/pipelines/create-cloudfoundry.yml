@@ -2560,6 +2560,7 @@ jobs:
 
       - aggregate:
         - get: paas-cf
+          trigger: true
           passed: ['post-deploy']
 
         - get: cf-vars-store
@@ -2662,6 +2663,7 @@ jobs:
 
       - aggregate:
         - get: paas-cf
+          trigger: true
           passed: ['post-deploy']
 
         - get: cf-manifest
@@ -2848,6 +2850,7 @@ jobs:
 
       - aggregate:
         - get: paas-cf
+          trigger: true
           passed: ['post-deploy']
 
         - get: cf-vars-store
