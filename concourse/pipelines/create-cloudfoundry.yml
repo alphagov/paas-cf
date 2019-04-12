@@ -58,6 +58,7 @@ groups:
       - deploy-paas-accounts
       - deploy-paas-admin
       - deploy-paas-billing
+      - deploy-paas-metrics
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -2194,68 +2195,6 @@ jobs:
                 fi
                 cf enable-service-access redis
 
-      - task: deploy-paas-metrics
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            AWS_REGION: ((aws_region))
-            AIVEN_API_TOKEN: ((aiven_api_token))
-            AIVEN_PROJECT: paas-cf-((aws_account))
-          inputs:
-            - name: paas-cf
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
-
-                cd paas-cf/tools/metrics
-
-                ruby -ryaml -e "
-                  env = {
-                    'CF_CLIENT_ID' => 'paas-metrics',
-                    'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
-                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
-                    'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
-                    'TLS_DOMAINS' => [
-                      'healthcheck.${APPS_DNS_ZONE_NAME}',
-                      'api.${SYSTEM_DNS_ZONE_NAME}',
-                      'uaa.${SYSTEM_DNS_ZONE_NAME}',
-                      '${APPS_DNS_ZONE_NAME}'
-                    ].join(','),
-                    'AWS_REGION' => '${AWS_REGION}',
-                    'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
-                    'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
-                    'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
-                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
-                    app['routes'] = [
-                      { 'route' => 'paas-metrics.${APPS_DNS_ZONE_NAME}' },
-                    ]
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-
-                cf zero-downtime-push paas-metrics -f ./manifest.yml
-
       - task: deploy-paas-uaa-assets
         config:
           platform: linux
@@ -2984,6 +2923,91 @@ jobs:
                 cf push \
                   paas-billing-collector \
                   -f manifest-collector.yml
+
+  - name: deploy-paas-metrics
+    serial: true
+    plan:
+      - get: paas-cf
+        trigger: true
+        passed: ['post-deploy']
+
+      - aggregate:
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            AWS_REGION: ((aws_region))
+            AIVEN_API_TOKEN: ((aiven_api_token))
+            AIVEN_PROJECT: paas-cf-((aws_account))
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                cd paas-cf/tools/metrics
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-metrics',
+                    'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                    'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
+                    'TLS_DOMAINS' => [
+                      'healthcheck.${APPS_DNS_ZONE_NAME}',
+                      'api.${SYSTEM_DNS_ZONE_NAME}',
+                      'uaa.${SYSTEM_DNS_ZONE_NAME}',
+                      '${APPS_DNS_ZONE_NAME}'
+                    ].join(','),
+                    'AWS_REGION' => '${AWS_REGION}',
+                    'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
+                    'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
+                    'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
+                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                    app['routes'] = [
+                      { 'route' => 'paas-metrics.${APPS_DNS_ZONE_NAME}' },
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf zero-downtime-push paas-metrics -f ./manifest.yml
 
   - name: performance-tests
     plan:
