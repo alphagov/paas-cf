@@ -2798,7 +2798,7 @@ jobs:
             PREFIX: paas-admin-test-user
             DISABLE_ADMIN_USER_CREATION: false
 
-        - task: integration-tests
+        - task: acceptance-tests
           config:
             platform: linux
             image_resource:
