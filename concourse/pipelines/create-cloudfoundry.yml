@@ -377,12 +377,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: pagerduty-secrets.yml
 
-  - name: gh-release-noisy-neighbor-nozzle
-    type: github-release
-    source:
-      user: cloudfoundry
-      repository: noisy-neighbor-nozzle
-
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1449,8 +1443,6 @@ jobs:
       - get: paas-accounts
       - get: paas-admin
       - get: logit-secrets
-      - get: gh-release-noisy-neighbor-nozzle
-        version: { tag: 'v1.5.1' }
 
     - task: retrieve-config
       config:
@@ -2122,96 +2114,6 @@ jobs:
                 cf push \
                   paas-billing-collector \
                   -f manifest-collector.yml
-
-      - task: deploy-noisy-neighbor-nozzle
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            AWS_REGION: ((aws_region))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-            UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
-            LOGGREGATOR_ENDPOINT: "wss://doppler.((system_dns_zone_name)):443"
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-          inputs:
-            - name: paas-cf
-            - name: gh-release-noisy-neighbor-nozzle
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_noisy_neighbor_nozzle_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
-
-                tar -zxf gh-release-noisy-neighbor-nozzle/noisy-neighbor.tgz -C .
-
-                cd noisy-neighbor
-
-                CLIENT_ID="noisy-neighbor-nozzle"
-                CLIENT_SECRET="${CF_CLIENT_SECRET}"
-                SKIP_CERT_VERIFY="false"
-                UAA_ADDR="${UAA_ENDPOINT}"
-                LOGGREGATOR_ADDR="${LOGGREGATOR_ENDPOINT}"
-                NOZZLE_INSTANCES="2"
-                SUBSCRIPTION_ID="$(head -c 64 < /dev/random | base64)"
-
-
-                cat << EOF > nozzle-manifest.yml
-                ---
-                applications:
-                  - name: nn-nozzle
-                    buildpack: binary_buildpack
-                    command: ./nozzle
-                    memory: 128M
-                    instances: $NOZZLE_INSTANCES
-                    env:
-                      UAA_ADDR: "$UAA_ADDR"
-                      CLIENT_ID: "$CLIENT_ID"
-                      CLIENT_SECRET: "$CLIENT_SECRET"
-                      LOGGREGATOR_ADDR: "$LOGGREGATOR_ADDR"
-                      SKIP_CERT_VERIFY: "$SKIP_CERT_VERIFY"
-                      SUBSCRIPTION_ID: "$SUBSCRIPTION_ID"
-
-                EOF
-
-                cf zero-downtime-push \
-                  nn-nozzle \
-                  -f nozzle-manifest.yml
-
-                NOZZLE_APP_GUID=$(cf app --guid nn-nozzle)
-
-                cat << EOF > accumulator-manifest.yml
-                ---
-                applications:
-                  - name: nn-accumulator
-                    buildpack: binary_buildpack
-                    command: ./accumulator
-                    memory: 128M
-                    instances: 1
-                    env:
-                      UAA_ADDR: "$UAA_ADDR"
-                      CLIENT_ID: "$CLIENT_ID"
-                      CLIENT_SECRET: "$CLIENT_SECRET"
-                      NOZZLE_ADDRS: https://nn-nozzle.((apps_dns_zone_name))
-                      NOZZLE_COUNT: "$NOZZLE_INSTANCES"
-                      NOZZLE_APP_GUID: "$NOZZLE_APP_GUID"
-                      SKIP_CERT_VERIFY: "$SKIP_CERT_VERIFY"
-
-                EOF
-
-                cf zero-downtime-push \
-                  nn-accumulator \
-                  -f accumulator-manifest.yml
 
       - task: deploy-paas-accounts
         config:
