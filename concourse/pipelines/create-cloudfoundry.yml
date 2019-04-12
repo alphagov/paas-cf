@@ -57,6 +57,7 @@ groups:
       - post-deploy
       - deploy-paas-accounts
       - deploy-paas-admin
+      - deploy-paas-billing
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -2034,88 +2035,6 @@ jobs:
           params:
             file: deployed-healthcheck/healthcheck-deployed
 
-      - task: deploy-paas-billing
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            AWS_REGION: ((aws_region))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-          inputs:
-            - name: paas-cf
-            - name: paas-billing
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                BILLING_DB_PLAN="tiny-unencrypted-9.5"
-                if [ "${DEPLOY_ENV}" = "prod" ]; then
-                  BILLING_DB_PLAN="medium-9.5"
-                fi
-                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
-                  BILLING_DB_PLAN="medium-9.5"
-                fi
-
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
-
-                if ! cf service billing-db > /dev/null; then
-                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
-                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
-                    sleep 30
-                  done
-                fi
-
-                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
-
-                cd paas-billing
-
-                ruby -ryaml -e "
-                  env = {
-                    'CF_CLIENT_ID' => 'paas-billing',
-                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
-                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
-                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                  }
-
-                  api = YAML.load_file('manifest-api.yml')
-                  api['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'] = app['env'].merge(env)
-                    app['services'] = ['billing-db']
-                    app['routes'] = [
-                      { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
-                    ]
-                  }
-                  File.write('manifest-api.yml', api.to_yaml)
-
-                  collector = YAML.load_file('manifest-collector.yml')
-                  collector['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'] = app['env'].merge(env)
-                    app['services'] = ['billing-db']
-                  }
-                  File.write('manifest-collector.yml', collector.to_yaml)
-                "
-
-                cf zero-downtime-push \
-                  paas-billing-api \
-                  -f manifest-api.yml
-
-                cf push \
-                  paas-billing-collector \
-                  -f manifest-collector.yml
-
       - do:
         - task: remove-paas-log-cache-adapter
           config:
@@ -2958,6 +2877,113 @@ jobs:
         ensure:
           task: remove-temp-user
           file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: deploy-paas-billing
+    serial: true
+    plan:
+      - get: paas-billing
+        trigger: true
+
+      - aggregate:
+        - get: paas-cf
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy-paas-billing
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            AWS_REGION: ((aws_region))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                BILLING_DB_PLAN="tiny-unencrypted-9.5"
+                if [ "${DEPLOY_ENV}" = "prod" ]; then
+                  BILLING_DB_PLAN="medium-9.5"
+                fi
+                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                  BILLING_DB_PLAN="medium-9.5"
+                fi
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service billing-db > /dev/null; then
+                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
+                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
+
+                cd paas-billing
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-billing',
+                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
+                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                  }
+
+                  api = YAML.load_file('manifest-api.yml')
+                  api['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = ['billing-db']
+                    app['routes'] = [
+                      { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                  }
+                  File.write('manifest-api.yml', api.to_yaml)
+
+                  collector = YAML.load_file('manifest-collector.yml')
+                  collector['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = ['billing-db']
+                  }
+                  File.write('manifest-collector.yml', collector.to_yaml)
+                "
+
+                cf zero-downtime-push \
+                  paas-billing-api \
+                  -f manifest-api.yml
+
+                cf push \
+                  paas-billing-collector \
+                  -f manifest-collector.yml
 
   - name: performance-tests
     plan:
