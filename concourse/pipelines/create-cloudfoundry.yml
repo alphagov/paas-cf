@@ -66,6 +66,31 @@ groups:
       - performance-tests
       - tag-release
       - pipeline-unlock
+  - name: platform-core
+    jobs:
+      - pipeline-lock
+      - pre-deploy
+      - generate-secrets
+      - app-availability-tests
+      - api-availability-tests
+      - cf-terraform
+      - generate-cf-config
+      - cf-deploy
+      - prometheus-deploy
+      - post-deploy
+      - smoke-tests
+      - acceptance-tests
+      - custom-acceptance-tests
+      - bosh-tests
+      - performance-tests
+      - tag-release
+      - pipeline-unlock
+  - name: platform-services
+    jobs:
+      - deploy-paas-accounts
+      - deploy-paas-admin
+      - deploy-paas-billing
+      - deploy-paas-metrics
   - name: operator
     jobs:
       - generate-git-keys
