@@ -55,6 +55,7 @@ groups:
       - cf-deploy
       - prometheus-deploy
       - post-deploy
+      - deploy-paas-accounts
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -1445,7 +1446,7 @@ jobs:
       - get: logit-secrets
 
     - task: retrieve-config
-      config:
+      config: &post-deploy-config
         platform: linux
         inputs:
           - name: paas-cf
@@ -2114,83 +2115,6 @@ jobs:
                 cf push \
                   paas-billing-collector \
                   -f manifest-collector.yml
-
-      - task: deploy-paas-accounts
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-          inputs:
-            - name: paas-cf
-            - name: paas-accounts
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                DB_PLAN="tiny-unencrypted-9.5"
-
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
-
-                if ! cf service accounts-db > /dev/null; then
-                  cf create-service postgres "${DB_PLAN}" accounts-db
-                  while ! cf service accounts-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
-                    sleep 30
-                  done
-                fi
-
-                (
-                cd paas-accounts
-
-                ruby -ryaml -e "
-                  env = {
-                    'BASIC_AUTH_USERNAME' => 'admin',
-                    'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
-                    app['services'] = ['accounts-db']
-                    app['routes'] = [
-                      { 'route' => 'accounts.${SYSTEM_DNS_ZONE_NAME}' }
-                    ]
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-                cf zero-downtime-push paas-accounts -f manifest.yml
-                )
-
-                (
-                echo "Uploading documents"
-                cd paas-cf/config/accounts/documents
-
-                for file in *.md; do
-
-                  echo "Uploading $file"
-
-                  body=$(ruby -rjson -e "puts ({content:File.read('$file')}).to_json")
-
-                  curl --silent --fail --include \
-                    --request PUT \
-                    --user "admin:${BASIC_AUTH_PASSWORD}" \
-                    --header "Content-Type: application/json" \
-                    --data "$body" \
-                    "https://accounts.${SYSTEM_DNS_ZONE_NAME}/documents/${file%.md}"
-
-                done
-                )
 
       - do:
         - task: build-paas-admin
@@ -2899,6 +2823,108 @@ jobs:
                 else
                   echo "Success: All VMs are up and running."
                 fi
+
+  - name: deploy-paas-accounts
+    serial: true
+    plan:
+      - get: paas-accounts
+        trigger: true
+
+      - aggregate:
+        - get: paas-cf
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy-paas-accounts
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-accounts
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                DB_PLAN="tiny-unencrypted-9.5"
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service accounts-db > /dev/null; then
+                  cf create-service postgres "${DB_PLAN}" accounts-db
+                  while ! cf service accounts-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                (
+                cd paas-accounts
+
+                ruby -ryaml -e "
+                  env = {
+                    'BASIC_AUTH_USERNAME' => 'admin',
+                    'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                    app['services'] = ['accounts-db']
+                    app['routes'] = [
+                      { 'route' => 'accounts.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf zero-downtime-push paas-accounts -f manifest.yml
+                )
+
+                (
+                echo "Uploading documents"
+                cd paas-cf/config/accounts/documents
+
+                for file in *.md; do
+
+                  echo "Uploading $file"
+
+                  body=$(ruby -rjson -e "puts ({content:File.read('$file')}).to_json")
+
+                  curl --silent --fail --include \
+                    --request PUT \
+                    --user "admin:${BASIC_AUTH_PASSWORD}" \
+                    --header "Content-Type: application/json" \
+                    --data "$body" \
+                    "https://accounts.${SYSTEM_DNS_ZONE_NAME}/documents/${file%.md}"
+
+                done
+                )
 
   - name: performance-tests
     plan:
