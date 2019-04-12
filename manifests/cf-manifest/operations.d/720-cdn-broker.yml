@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: cdn-broker
-    version: 0.1.10
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.10.tgz
-    sha1: f87500708e59bbdcf9da43b34025310f245d8477
+    version: 0.1.11
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.11.tgz
+    sha1: fd788ca994f617aa00fa855d40cf269b32171530
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
