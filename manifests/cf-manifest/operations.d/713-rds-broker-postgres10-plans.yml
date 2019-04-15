@@ -64,7 +64,7 @@
         "plpgsql",
         "pltcl",
         "plv8",
-        "PostGIS",
+        "postgis",
         "postgis_tiger_geocoder",
         "postgis_topology",
         "postgres_fdw",
