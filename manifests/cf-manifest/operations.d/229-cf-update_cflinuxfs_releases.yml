@@ -1,12 +1,10 @@
 ---
 
-- type: replace
+- type: remove
   path: /releases/name=cflinuxfs2
-  value:
-    name: "cflinuxfs2"
-    version: "1.281.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs2-release?v=1.281.0"
-    sha1: "1bdcf24c1fb9baf324aebab8ba28f8e64b846305"
+
+- type: remove
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/stacks/name=cflinuxfs2
 
 - type: replace
   path: /releases/name=cflinuxfs3
