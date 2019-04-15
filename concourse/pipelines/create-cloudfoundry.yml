@@ -55,6 +55,10 @@ groups:
       - cf-deploy
       - prometheus-deploy
       - post-deploy
+      - deploy-paas-accounts
+      - deploy-paas-admin
+      - deploy-paas-billing
+      - deploy-paas-metrics
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -62,6 +66,31 @@ groups:
       - performance-tests
       - tag-release
       - pipeline-unlock
+  - name: platform-core
+    jobs:
+      - pipeline-lock
+      - pre-deploy
+      - generate-secrets
+      - app-availability-tests
+      - api-availability-tests
+      - cf-terraform
+      - generate-cf-config
+      - cf-deploy
+      - prometheus-deploy
+      - post-deploy
+      - smoke-tests
+      - acceptance-tests
+      - custom-acceptance-tests
+      - bosh-tests
+      - performance-tests
+      - tag-release
+      - pipeline-unlock
+  - name: platform-services
+    jobs:
+      - deploy-paas-accounts
+      - deploy-paas-admin
+      - deploy-paas-billing
+      - deploy-paas-metrics
   - name: operator
     jobs:
       - generate-git-keys
@@ -1439,13 +1468,10 @@ jobs:
         passed: ['generate-cf-config']
       - get: bosh-CA-crt
       - get: paas-aiven-broker
-      - get: paas-billing
-      - get: paas-accounts
-      - get: paas-admin
       - get: logit-secrets
 
     - task: retrieve-config
-      config:
+      config: &post-deploy-config
         platform: linux
         inputs:
           - name: paas-cf
@@ -2033,276 +2059,6 @@ jobs:
           params:
             file: deployed-healthcheck/healthcheck-deployed
 
-      - task: deploy-paas-billing
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            AWS_REGION: ((aws_region))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-          inputs:
-            - name: paas-cf
-            - name: paas-billing
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                BILLING_DB_PLAN="tiny-unencrypted-9.5"
-                if [ "${DEPLOY_ENV}" = "prod" ]; then
-                  BILLING_DB_PLAN="medium-9.5"
-                fi
-                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
-                  BILLING_DB_PLAN="medium-9.5"
-                fi
-
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
-
-                if ! cf service billing-db > /dev/null; then
-                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
-                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
-                    sleep 30
-                  done
-                fi
-
-                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
-
-                cd paas-billing
-
-                ruby -ryaml -e "
-                  env = {
-                    'CF_CLIENT_ID' => 'paas-billing',
-                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
-                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
-                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                  }
-
-                  api = YAML.load_file('manifest-api.yml')
-                  api['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'] = app['env'].merge(env)
-                    app['services'] = ['billing-db']
-                    app['routes'] = [
-                      { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
-                    ]
-                  }
-                  File.write('manifest-api.yml', api.to_yaml)
-
-                  collector = YAML.load_file('manifest-collector.yml')
-                  collector['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'] = app['env'].merge(env)
-                    app['services'] = ['billing-db']
-                  }
-                  File.write('manifest-collector.yml', collector.to_yaml)
-                "
-
-                cf zero-downtime-push \
-                  paas-billing-api \
-                  -f manifest-api.yml
-
-                cf push \
-                  paas-billing-collector \
-                  -f manifest-collector.yml
-
-      - task: deploy-paas-accounts
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-          inputs:
-            - name: paas-cf
-            - name: paas-accounts
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                DB_PLAN="tiny-unencrypted-9.5"
-
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
-
-                if ! cf service accounts-db > /dev/null; then
-                  cf create-service postgres "${DB_PLAN}" accounts-db
-                  while ! cf service accounts-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
-                    sleep 30
-                  done
-                fi
-
-                (
-                cd paas-accounts
-
-                ruby -ryaml -e "
-                  env = {
-                    'BASIC_AUTH_USERNAME' => 'admin',
-                    'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
-                    app['services'] = ['accounts-db']
-                    app['routes'] = [
-                      { 'route' => 'accounts.${SYSTEM_DNS_ZONE_NAME}' }
-                    ]
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-                cf zero-downtime-push paas-accounts -f manifest.yml
-                )
-
-                (
-                echo "Uploading documents"
-                cd paas-cf/config/accounts/documents
-
-                for file in *.md; do
-
-                  echo "Uploading $file"
-
-                  body=$(ruby -rjson -e "puts ({content:File.read('$file')}).to_json")
-
-                  curl --silent --fail --include \
-                    --request PUT \
-                    --user "admin:${BASIC_AUTH_PASSWORD}" \
-                    --header "Content-Type: application/json" \
-                    --data "$body" \
-                    "https://accounts.${SYSTEM_DNS_ZONE_NAME}/documents/${file%.md}"
-
-                done
-                )
-
-      - do:
-        - task: build-paas-admin
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: node
-                tag: 8-alpine
-            inputs:
-              - name: paas-admin
-            outputs:
-              - name: paas-admin-dist
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  cd paas-admin
-                  npm install
-                  NODE_ENV=production npm run build
-
-                  cp -Ra . ../paas-admin-dist
-
-        - task: render-manifest-paas-admin
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/spruce
-                tag: c735581beb174ecc95ca1a7b57eff444af3bf099
-            inputs:
-              - name: paas-cf
-              - name: paas-admin-dist
-              - name: cf-vars-store
-            outputs:
-              - name: paas-admin-manifest
-            params:
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              NOTIFY_API_KEY: ((notify_api_key))
-              NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
-              AWS_REGION: ((aws_region))
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  cat <<EOF > paas-admin-env-and-routes.yml
-                  applications:
-                  - name: paas-admin
-                    routes:
-                    - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
-                    instances: 2
-                    services:
-                     - logit-syslog-drain
-                    env:
-                      OAUTH_CLIENT_ID: "paas-admin"
-                      OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
-                      API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
-                      BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                      ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
-                      ACCOUNTS_SECRET: "(( grab secrets_paas_accounts_admin_password ))"
-                      NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
-                      NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
-                      SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
-                      AWS_REGION: "$AWS_REGION"
-                  EOF
-
-                  spruce merge \
-                    paas-admin-dist/manifest.yml \
-                    paas-admin-env-and-routes.yml \
-                    cf-vars-store/cf-vars-store.yml \
-                    | spruce merge --cherry-pick applications \
-                      > paas-admin-manifest/manifest.yml
-
-        - task: deploy-paas-admin
-          config:
-            platform: linux
-            image_resource: *cf-cli-image-resource
-            inputs:
-              - name: paas-cf
-              - name: paas-admin-dist
-              - name: paas-admin-manifest
-              - name: config
-              - name: cf-vars-store
-            params:
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                  export CF_CLIENT_SECRET
-                  CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
-
-                  . ./config/config.sh
-                  cf api "${API_ENDPOINT}"
-                  cf auth "${CF_ADMIN}" "${CF_PASS}"
-                  cf target -o admin -s public
-
-                  cd paas-admin-dist
-
-                  cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
-
       - do:
         - task: remove-paas-log-cache-adapter
           config:
@@ -2461,68 +2217,6 @@ jobs:
                   cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
                 fi
                 cf enable-service-access redis
-
-      - task: deploy-paas-metrics
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            AWS_REGION: ((aws_region))
-            AIVEN_API_TOKEN: ((aiven_api_token))
-            AIVEN_PROJECT: paas-cf-((aws_account))
-          inputs:
-            - name: paas-cf
-            - name: config
-            - name: cf-vars-store
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
-
-                cd paas-cf/tools/metrics
-
-                ruby -ryaml -e "
-                  env = {
-                    'CF_CLIENT_ID' => 'paas-metrics',
-                    'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
-                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
-                    'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
-                    'TLS_DOMAINS' => [
-                      'healthcheck.${APPS_DNS_ZONE_NAME}',
-                      'api.${SYSTEM_DNS_ZONE_NAME}',
-                      'uaa.${SYSTEM_DNS_ZONE_NAME}',
-                      '${APPS_DNS_ZONE_NAME}'
-                    ].join(','),
-                    'AWS_REGION' => '${AWS_REGION}',
-                    'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
-                    'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
-                    'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
-                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
-                    app['routes'] = [
-                      { 'route' => 'paas-metrics.${APPS_DNS_ZONE_NAME}' },
-                    ]
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-
-                cf zero-downtime-push paas-metrics -f ./manifest.yml
 
       - task: deploy-paas-uaa-assets
         config:
@@ -2710,8 +2404,6 @@ jobs:
           - get: cf-vars-store
             passed: ['post-deploy']
           - get: cf-acceptance-tests
-          - get: paas-admin
-            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -2742,46 +2434,6 @@ jobs:
               file: paas-cf/concourse/tasks/upload-test-artifacts.yml
               params:
                 TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
-
-          - task: "Run paas-admin integration tests"
-            config:
-              platform: linux
-              image_resource:
-                type: docker-image
-                source:
-                  repository: node
-                  tag: 8-alpine
-              params:
-                DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
-                DEPLOY_ENV: ((deploy_env))
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              inputs:
-                - name: paas-cf
-                - name: paas-admin
-                - name: admin-creds
-                - name: cf-vars-store
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    if [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
-                      echo 'Skipping because DISABLE_CUSTOM_ACCEPTANCE_TESTS is set'
-                      exit 0
-                    fi
-                    cd paas-admin
-                    npm install
-
-                    ADMIN_USERNAME="$(cat ../admin-creds/username)" \
-                    ADMIN_PASSWORD="$(cat ../admin-creds/password)" \
-                    PAAS_ADMIN_BASE_URL="https://admin.${SYSTEM_DNS_ZONE_NAME}" \
-                    CF_API_BASE_URL="https://api.${SYSTEM_DNS_ZONE_NAME}" \
-                    ACCOUNTS_API_BASE_URL="https://accounts.${SYSTEM_DNS_ZONE_NAME}" \
-                    ACCOUNTS_USERNAME="admin" \
-                    ACCOUNTS_PASSWORD="$(awk '/^secrets_paas_accounts_admin_password:/ { print $2 }' < ../cf-vars-store/cf-vars-store.yml)" \
-                      npm run test:acceptance
 
           - task: ensure-buildpacks-exist
             config:
@@ -2899,6 +2551,489 @@ jobs:
                 else
                   echo "Success: All VMs are up and running."
                 fi
+
+  - name: deploy-paas-accounts
+    serial: true
+    plan:
+      - get: paas-accounts
+        trigger: true
+
+      - aggregate:
+        - get: paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy-paas-accounts
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-accounts
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                DB_PLAN="tiny-unencrypted-9.5"
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service accounts-db > /dev/null; then
+                  cf create-service postgres "${DB_PLAN}" accounts-db
+                  while ! cf service accounts-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                (
+                cd paas-accounts
+
+                ruby -ryaml -e "
+                  env = {
+                    'BASIC_AUTH_USERNAME' => 'admin',
+                    'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                    app['services'] = ['accounts-db']
+                    app['routes'] = [
+                      { 'route' => 'accounts.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf zero-downtime-push paas-accounts -f manifest.yml
+                )
+
+                (
+                echo "Uploading documents"
+                cd paas-cf/config/accounts/documents
+
+                for file in *.md; do
+
+                  echo "Uploading $file"
+
+                  body=$(ruby -rjson -e "puts ({content:File.read('$file')}).to_json")
+
+                  curl --silent --fail --include \
+                    --request PUT \
+                    --user "admin:${BASIC_AUTH_PASSWORD}" \
+                    --header "Content-Type: application/json" \
+                    --data "$body" \
+                    "https://accounts.${SYSTEM_DNS_ZONE_NAME}/documents/${file%.md}"
+
+                done
+                )
+
+  - name: deploy-paas-admin
+    serial: true
+    plan:
+      - get: paas-admin
+        trigger: true
+
+      - aggregate:
+        - get: paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: build
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 8-alpine
+          inputs:
+            - name: paas-admin
+          outputs:
+            - name: paas-admin-dist
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cd paas-admin
+                npm install
+                NODE_ENV=production npm run build
+
+                cp -Ra . ../paas-admin-dist
+
+      - task: render-manifest
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/spruce
+              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+          inputs:
+            - name: paas-cf
+            - name: paas-admin-dist
+            - name: cf-vars-store
+          outputs:
+            - name: paas-admin-manifest
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            NOTIFY_API_KEY: ((notify_api_key))
+            NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
+            AWS_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                cat <<EOF > paas-admin-env-and-routes.yml
+                applications:
+                - name: paas-admin
+                  routes:
+                  - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
+                  instances: 2
+                  services:
+                   - logit-syslog-drain
+                  env:
+                    OAUTH_CLIENT_ID: "paas-admin"
+                    OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
+                    API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
+                    BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
+                    ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
+                    ACCOUNTS_SECRET: "(( grab secrets_paas_accounts_admin_password ))"
+                    NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
+                    NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
+                    SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
+                    AWS_REGION: "$AWS_REGION"
+                EOF
+
+                spruce merge \
+                  paas-admin-dist/manifest.yml \
+                  paas-admin-env-and-routes.yml \
+                  cf-vars-store/cf-vars-store.yml \
+                  | spruce merge --cherry-pick applications \
+                    > paas-admin-manifest/manifest.yml
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: paas-admin-dist
+            - name: paas-admin-manifest
+            - name: config
+            - name: cf-vars-store
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                export CF_CLIENT_SECRET
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf target -o admin -s public
+
+                cd paas-admin-dist
+
+                cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
+
+      - do:
+        - task: create-temp-user
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: paas-admin-test-user
+            DISABLE_ADMIN_USER_CREATION: false
+
+        - task: acceptance-tests
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: node
+                tag: 8-alpine
+            params:
+              DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+              DEPLOY_ENV: ((deploy_env))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            inputs:
+              - name: paas-cf
+              - name: paas-admin
+              - name: admin-creds
+              - name: cf-vars-store
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  if [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
+                    echo 'Skipping because DISABLE_CUSTOM_ACCEPTANCE_TESTS is set'
+                    exit 0
+                  fi
+                  cd paas-admin
+                  npm install
+
+                  ADMIN_USERNAME="$(cat ../admin-creds/username)" \
+                  ADMIN_PASSWORD="$(cat ../admin-creds/password)" \
+                  PAAS_ADMIN_BASE_URL="https://admin.${SYSTEM_DNS_ZONE_NAME}" \
+                  CF_API_BASE_URL="https://api.${SYSTEM_DNS_ZONE_NAME}" \
+                  ACCOUNTS_API_BASE_URL="https://accounts.${SYSTEM_DNS_ZONE_NAME}" \
+                  ACCOUNTS_USERNAME="admin" \
+                  ACCOUNTS_PASSWORD="$(awk '/^secrets_paas_accounts_admin_password:/ { print $2 }' < ../cf-vars-store/cf-vars-store.yml)" \
+                    npm run test:acceptance
+
+        ensure:
+          task: remove-temp-user
+          file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: deploy-paas-billing
+    serial: true
+    plan:
+      - get: paas-billing
+        trigger: true
+
+      - aggregate:
+        - get: paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy-paas-billing
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            AWS_REGION: ((aws_region))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                BILLING_DB_PLAN="tiny-unencrypted-9.5"
+                if [ "${DEPLOY_ENV}" = "prod" ]; then
+                  BILLING_DB_PLAN="medium-9.5"
+                fi
+                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                  BILLING_DB_PLAN="medium-9.5"
+                fi
+
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service billing-db > /dev/null; then
+                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
+                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
+
+                cd paas-billing
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-billing',
+                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
+                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                  }
+
+                  api = YAML.load_file('manifest-api.yml')
+                  api['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = ['billing-db']
+                    app['routes'] = [
+                      { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                  }
+                  File.write('manifest-api.yml', api.to_yaml)
+
+                  collector = YAML.load_file('manifest-collector.yml')
+                  collector['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = ['billing-db']
+                  }
+                  File.write('manifest-collector.yml', collector.to_yaml)
+                "
+
+                cf zero-downtime-push \
+                  paas-billing-api \
+                  -f manifest-api.yml
+
+                cf push \
+                  paas-billing-collector \
+                  -f manifest-collector.yml
+
+  - name: deploy-paas-metrics
+    serial: true
+    plan:
+      - get: paas-cf
+        trigger: true
+        passed: ['post-deploy']
+
+      - aggregate:
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+        - get: cf-vars-store
+          passed: ['post-deploy']
+
+        - get: cf-tfstate
+          passed: ['post-deploy']
+
+        - get: logit-secrets
+          passed: ['post-deploy']
+
+      - task: retrieve-config
+        config: *post-deploy-config
+
+      - task: deploy
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            AWS_REGION: ((aws_region))
+            AIVEN_API_TOKEN: ((aiven_api_token))
+            AIVEN_PROJECT: paas-cf-((aws_account))
+          inputs:
+            - name: paas-cf
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
+
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                cd paas-cf/tools/metrics
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-metrics',
+                    'CF_CLIENT_SECRET' => '${METRICS_SECRET}',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                    'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
+                    'TLS_DOMAINS' => [
+                      'healthcheck.${APPS_DNS_ZONE_NAME}',
+                      'api.${SYSTEM_DNS_ZONE_NAME}',
+                      'uaa.${SYSTEM_DNS_ZONE_NAME}',
+                      '${APPS_DNS_ZONE_NAME}'
+                    ].join(','),
+                    'AWS_REGION' => '${AWS_REGION}',
+                    'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
+                    'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
+                    'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
+                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                    app['routes'] = [
+                      { 'route' => 'paas-metrics.${APPS_DNS_ZONE_NAME}' },
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf zero-downtime-push paas-metrics -f ./manifest.yml
 
   - name: performance-tests
     plan:
