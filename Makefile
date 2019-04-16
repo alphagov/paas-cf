@@ -108,7 +108,7 @@ list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 
 .PHONY: update_merge_keys
 update_merge_keys:
-	ruby concourse/scripts/generate-public-key-vars.rb
+	concourse/scripts/generate-public-key-vars.sh
 
 .PHONY: globals
 PASSWORD_STORE_DIR?=${HOME}/.paas-pass
