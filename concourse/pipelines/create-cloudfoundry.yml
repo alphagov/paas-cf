@@ -364,7 +364,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing
-      tag_filter: v0.52.0
+      tag_filter: v0.53.0
 
   - name: paas-accounts
     type: git
@@ -376,7 +376,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.57.0
+      tag_filter: v0.59.0
 
   - name: prometheus-vars-store
     type: s3-iam
