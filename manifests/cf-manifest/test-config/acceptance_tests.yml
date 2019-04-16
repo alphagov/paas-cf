@@ -25,3 +25,5 @@ artifacts_directory: "/tmp/artifacts"
 use_existing_user: false
 include_container_networking: true
 name_prefix: ((name_prefix))
+stacks:
+  - "cflinuxfs3"
