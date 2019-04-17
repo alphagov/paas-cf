@@ -53,8 +53,7 @@ compile_platform_tests:
 		platform/availability/api \
 		platform/availability/app \
 		platform/availability/helpers \
-		platform/availability/monitor \
-		platform/performance
+		platform/availability/monitor
 
 lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' | xargs yamllint -c yamllint.yml

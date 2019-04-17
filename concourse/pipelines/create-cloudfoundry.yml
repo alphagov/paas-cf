@@ -63,7 +63,6 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
-      - performance-tests
       - tag-release
       - pipeline-unlock
   - name: platform-core
@@ -82,7 +81,6 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
-      - performance-tests
       - tag-release
       - pipeline-unlock
   - name: platform-services
@@ -109,7 +107,6 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - bosh-tests
-      - performance-tests
   - name: health
     jobs:
       - continuous-smoke-tests
@@ -3035,63 +3032,14 @@ jobs:
 
                 cf zero-downtime-push paas-metrics -f ./manifest.yml
 
-  - name: performance-tests
-    plan:
-      - aggregate:
-          - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
-            trigger: true
-          - get: paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
-          - get: cf-manifest
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
-          - get: cf-vars-store
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests']
-
-      - do:
-        - task: create-temp-user
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: performance-tests-user
-
-        - task: generate-test-config
-          file: paas-cf/concourse/tasks/generate-test-config.yml
-          params:
-            TEST_PROPERTIES: acceptance_tests
-            APP_DOMAIN: ((apps_dns_zone_name))
-            SYSTEM_DOMAIN: ((system_dns_zone_name))
-            NAME_PREFIX: PERF
-
-        - task: run-tests
-          config:
-            platform: linux
-            image_resource: *cf-acceptance-tests-image-resource
-            inputs:
-              - name: paas-cf
-              - name: test-config
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  echo "Running tests"
-                  export CONFIG
-                  CONFIG="$(pwd)/test-config/config.json"
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/performance/
-
-        ensure:
-          task: remove-temp-user
-          file: paas-cf/concourse/tasks/delete_admin.yml
-
   - name: tag-release
     plan:
       - aggregate:
           - get: pipeline-trigger
-            passed: ['performance-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
             trigger: true
           - get: paas-cf
-            passed: ['performance-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'bosh-tests']
           - get: git-keys
 
       - put: release-version
