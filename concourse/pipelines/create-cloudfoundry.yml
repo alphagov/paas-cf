@@ -373,7 +373,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.59.0
+      tag_filter: v0.61.0
 
   - name: prometheus-vars-store
     type: s3-iam
