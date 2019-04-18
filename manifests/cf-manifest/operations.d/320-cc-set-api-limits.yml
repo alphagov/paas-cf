@@ -4,4 +4,4 @@
     enabled: true
     general_limit: ((cc_hourly_rate_limit))
     reset_interval_in_minutes: 60
-    unauthenticated_limit: 1800
+    unauthenticated_limit: 3700
