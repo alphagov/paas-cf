@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.1.2
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.2.tgz
-    sha1: 080e8fcdbfd0179088cdf66797294cc85ab13a47
+    version: 0.1.3
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.3.tgz
+    sha1: e0ff8f6486eec086576fd6c1cae2b822ab402260
 
 
 - type: replace
