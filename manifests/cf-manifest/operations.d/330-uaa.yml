@@ -272,3 +272,18 @@
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cf_smoke_tests/override?
   value: true
+
+- type: replace
+  path: /releases/-
+  value:
+    name: uaa-customized
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-customized-0.1.1.tgz
+    sha1: 103fca0cdeae86b82ca8aa6700d8bc9faba46987
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/-
+  value:
+    name: uaa-customized
+    release: uaa-customized
+    properties: {}
