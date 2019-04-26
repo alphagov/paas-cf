@@ -34,10 +34,6 @@
   path: /instance_groups/name=uaa/jobs/name=uaa/consumes
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/asset_base_url?
-  value: https://paas-uaa-assets.((system_domain))
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/branding?/company_name
   value: GOV.UK PaaS
 
