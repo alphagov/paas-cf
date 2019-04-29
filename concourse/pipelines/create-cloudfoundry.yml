@@ -2215,39 +2215,6 @@ jobs:
                 fi
                 cf enable-service-access redis
 
-      - task: deploy-paas-uaa-assets
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          inputs:
-            - name: paas-cf
-            - name: config
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s assets
-
-                cd paas-cf/tools/paas-uaa-assets
-
-                ruby -ryaml -e "
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each do |app|
-                    app['routes'] = [
-                      { 'route' => 'paas-uaa-assets.${SYSTEM_DNS_ZONE_NAME}' },
-                    ]
-                  end
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-
-                cf zero-downtime-push paas-uaa-assets -f ./manifest.yml
-
       - task: remove-unused-iam-access-keys
         config:
           platform: linux
