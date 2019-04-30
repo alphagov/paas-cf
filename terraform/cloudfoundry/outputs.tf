@@ -143,6 +143,10 @@ output "s3_broker_elb_dns_name" {
   value = "${aws_route53_record.s3_broker.fqdn}"
 }
 
+output "s3_broker_ip_restriction_policy_arn" {
+  value = "${aws_iam_policy.s3_broker_user_ip_restriction.arn}"
+}
+
 output "cdn_broker_elb_name" {
   value = "${aws_elb.cdn_broker.name}"
 }

@@ -39,6 +39,7 @@
             aws_region: "((terraform_outputs_region))"
             resource_prefix: "paas-s3-broker-((environment))-"
             iam_user_path: "/paas-s3-broker/"
+            iam_ip_restriction_policy_arn: "((terraform_outputs_s3_broker_ip_restriction_policy_arn))"
             deploy_environment: "((environment))"
             catalog:
               services:

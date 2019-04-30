@@ -39,3 +39,17 @@ resource "aws_lb_ssl_negotiation_policy" "s3_broker" {
     value = "${var.default_elb_security_policy}"
   }
 }
+
+data "template_file" "s3_broker_user_ip_restriction" {
+  template = "${file("${path.module}/policies/s3_broker_user_ip_restriction.json.tpl")}"
+
+  vars {
+    nat_gateway_public_ips = "${jsonencode(aws_nat_gateway.cf.*.public_ip)}"
+  }
+}
+
+resource "aws_iam_policy" "s3_broker_user_ip_restriction" {
+  policy      = "${data.template_file.s3_broker_user_ip_restriction.rendered}"
+  name        = "${var.env}S3BrokerUserIpRestriction"
+  description = "Restricts S3 API Access to just the NAT Gateway IPs"
+}
