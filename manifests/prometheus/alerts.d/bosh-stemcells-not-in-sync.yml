@@ -1,0 +1,16 @@
+# Source: bosh-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BoshStemcellsNotInSync
+    rules:
+      - alert: BoshStemcellsNotInSync
+        expr: "sum by (bosh_stemcell_version) (bosh_deployment_stemcell_info) != 3"
+        for: 12h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Bosh deployment stemcell versions are not in sync"
+          description: "The three bosh deployments should have the same stemcell version, if this alert fires either deploys are taking a long time or paas-bootstrap and paas-cf are not in sync"
