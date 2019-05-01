@@ -4,10 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.1.3
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.3.tgz
-    sha1: e0ff8f6486eec086576fd6c1cae2b822ab402260
-
+    version: 0.1.4
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.4.tgz
+    sha1: 56e8676687582fb1b145a93f57d87f2da13f8fa6
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -39,6 +38,7 @@
             aws_region: "((terraform_outputs_region))"
             resource_prefix: "paas-s3-broker-((environment))-"
             iam_user_path: "/paas-s3-broker/"
+            iam_ip_restriction_policy_arn: "((terraform_outputs_s3_broker_ip_restriction_policy_arn))"
             deploy_environment: "((environment))"
             catalog:
               services:
