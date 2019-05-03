@@ -5,6 +5,7 @@ gem 'activerecord'
 gem 'sqlite3'
 
 require 'active_record'
+require 'csv'
 require 'erb'
 require 'English'
 require 'date'
@@ -64,6 +65,9 @@ end
 
 begin
   db_file = "/tmp/db-#{rand(36**8).to_s(36)}.sqlite3"
+  abandoned_orgs_csv_file = "#{ENV.fetch 'HOME'}/Desktop/abandoned-orgs.csv"
+  expiring_orgs_csv_file = "#{ENV.fetch 'HOME'}/Desktop/expiring-orgs.csv"
+  org_usage_html_file = "#{ENV.fetch 'HOME'}/Desktop/org-usage.html"
 
   ActiveRecord::Base.establish_connection(adapter: :sqlite3, database: db_file)
   ActiveRecord::Schema.define(version: 0) do
@@ -210,7 +214,7 @@ begin
 
   expiry_cutoff = Date.today - 75
 
-  expired_orgs = Quota
+  expiring_orgs = Quota
     .find_by(name: 'default')
     .orgs.where('created_at < ?', expiry_cutoff)
     .order('created_at DESC')
@@ -220,7 +224,45 @@ begin
     .where('created_at < ?', expiry_cutoff)
     .order('created_at DESC')
 
-  table_template = ERB.new <<~TPL
+  CSV.open(expiring_orgs_csv_file, 'wb') do |csv|
+    csv << [
+      'email address', 'organisation', 'creation_date', 'guid', 'updated_at',
+      'managers', 'users', 'running_apps', 'stopped_apps', 'services',
+      'last_logon_time', 'quota'
+    ]
+    expiring_orgs.each do |org|
+      org.org_managers.each do |manager|
+        csv << [
+          manager.email, org.name, org.created_at.strftime('%Y-%m-%d'),
+          org.guid, org.updated_at.strftime('%Y-%m-%d'),
+          org.org_managers.length, org.num_users, org.num_running_apps,
+          org.num_stopped_apps, org.num_services,
+          manager.last_logon_time || '', org.quota.name
+        ]
+      end
+    end
+  end
+
+  CSV.open(abandoned_orgs_csv_file, 'wb') do |csv|
+    csv << [
+      'email address', 'organisation', 'creation_date', 'guid', 'updated_at',
+      'managers', 'users', 'running_apps', 'stopped_apps', 'services',
+      'last_logon_time', 'quota'
+    ]
+    abandoned_orgs.each do |org|
+      org.org_managers.each do |manager|
+        csv << [
+          manager.email, org.name, org.created_at.strftime('%Y-%m-%d'),
+          org.guid, org.updated_at.strftime('%Y-%m-%d'),
+          org.org_managers.length, org.num_users, org.num_running_apps,
+          org.num_stopped_apps, org.num_services,
+          manager.last_logon_time || '', org.quota.name
+        ]
+      end
+    end
+  end
+
+  html_table_template = ERB.new <<~TPL
     <table class="govuk-table">
       <thead class="govuk-table__head"><tr class="govuk-table__row">
         <th class="govuk-table__header">Org</th>
@@ -269,7 +311,7 @@ begin
   generation_time = Time.now.strftime('%Y-%m-%d %H-%M')
 
   File.write(
-    '/tmp/org-usage.html',
+    org_usage_html_file,
     <<~HTML
       <!DOCTYPE html>
       <html lang="en" class="govuk-template app-html-class">
@@ -300,10 +342,10 @@ begin
         <div class="govuk-width-container">
           <main class="govuk-main-wrapper app-main-class" id="main-content" role="main">
             <p class="govuk-body">Generated: #{generation_time}</p>
-            <h1 class="govuk-heading-l">Expired Orgs</h1>
-            #{table_template.result_with_hash(orgs: expired_orgs)}
+            <h1 class="govuk-heading-l">Expiring Orgs</h1>
+            #{html_table_template.result_with_hash(orgs: expiring_orgs)}
             <h1 class="govuk-heading-l">Abandoned Orgs</h1>
-            #{table_template.result_with_hash(orgs: abandoned_orgs)}
+            #{html_table_template.result_with_hash(orgs: abandoned_orgs)}
           </main>
         </div>
       </body>
@@ -311,7 +353,16 @@ begin
     HTML
   )
 
-  `open /tmp/org-usage.html`
+  `open #{abandoned_orgs_csv_file}`
+  `open #{expiring_orgs_csv_file}`
+  `open #{org_usage_html_file}`
+
+  STDERR.puts <<~INFO
+    The following files have been created:
+    - #{abandoned_orgs_csv_file}
+    - #{expiring_orgs_csv_file}
+    - #{org_usage_html_file}
+  INFO
 ensure
   File.delete(db_file)
 end
