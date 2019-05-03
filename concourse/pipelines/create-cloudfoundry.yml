@@ -1720,11 +1720,7 @@ jobs:
                   cf create-service-broker s3-broker s3-broker "${S3_BROKER_PASS}" "https://${S3_BROKER_SERVER}"
                 fi
 
-                # TODO: enable the service globally when we are happy to release this to the world
-                cf target -o admin -s public
-                if ! cf marketplace | grep -q "aws-s3-bucket"; then
-                  cf enable-service-access aws-s3-bucket -o admin
-                fi
+                cf enable-service-access aws-s3-bucket -p default
 
       - task: set-security-groups-from-manifest
         config:
