@@ -24,12 +24,12 @@ func (r *Report) String() string {
 	s := "\nReport:\n"
 	s += "==============\n"
 	s += fmt.Sprintf("Total task executions: %d\n", total)
-	s += fmt.Sprintf("Total successes: %d\n", r.SuccessCount)
-	s += fmt.Sprintf("Total failures: %d\n", r.FailureCount)
-	s += fmt.Sprintf("Total warnings: %d\n", r.WarningCount)
-	s += fmt.Sprintf("Total errors: %d\n", r.ErrorCount)
-	s += fmt.Sprintf("Elapsed time: %s\n", r.Elapsed.String())
-	s += fmt.Sprintf("Average rate: %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
+	s += fmt.Sprintf("Total successes:       %d\n", r.SuccessCount)
+	s += fmt.Sprintf("Total failures:        %d\n", r.FailureCount)
+	s += fmt.Sprintf("Total warnings:        %d\n", r.WarningCount)
+	s += fmt.Sprintf("Total errors:          %d\n", r.ErrorCount)
+	s += fmt.Sprintf("Elapsed time:          %s\n", r.Elapsed.String())
+	s += fmt.Sprintf("Average rate:          %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
 
 	if len(r.Errors) > 0 {
 		s += fmt.Sprintf("\nErrors:\n")
