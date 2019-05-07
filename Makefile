@@ -27,6 +27,8 @@ spec:
 		bundle exec rspec
 	cd tools/metrics &&\
 		go test -v ./...
+	cd tools/user_emails &&\
+		go test -v ./...
 	cd concourse/scripts &&\
 		go get -d -t . &&\
 		go test
@@ -313,3 +315,11 @@ logit-filters:
 		-w /mnt \
 		jruby:9.1-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
 	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
+
+.PHONY: show-tenant-comms-addresses
+show-tenant-comms-addresses:
+	$(eval export API_TOKEN=`cf oauth-token | cut -f 2 -d ' '`)
+	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
+	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ./user_emails
+
+
