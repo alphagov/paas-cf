@@ -28,16 +28,16 @@ case $TARGET_CONCOURSE in
     ;;
 esac
 
-CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER:-admin}
-if [ -z "${CONCOURSE_ATC_PASSWORD:-}" ]; then
-  CONCOURSE_ATC_PASSWORD=$(concourse/scripts/val_from_yaml.rb secrets.concourse_atc_password <(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" -))
+CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER:-admin}
+if [ -z "${CONCOURSE_WEB_PASSWORD:-}" ]; then
+  CONCOURSE_WEB_PASSWORD=$(concourse/scripts/val_from_yaml.rb secrets.concourse_web_password <(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" -))
 fi
 
 cat <<EOF
 export AWS_ACCOUNT=${AWS_ACCOUNT}
 export DEPLOY_ENV=${DEPLOY_ENV}
-export CONCOURSE_ATC_USER=${CONCOURSE_ATC_USER}
-export CONCOURSE_ATC_PASSWORD=${CONCOURSE_ATC_PASSWORD}
+export CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER}
+export CONCOURSE_WEB_PASSWORD=${CONCOURSE_WEB_PASSWORD}
 export CONCOURSE_URL=${CONCOURSE_URL}
 export FLY_CMD=${FLY_CMD}
 export FLY_TARGET=${FLY_TARGET}

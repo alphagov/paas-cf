@@ -683,10 +683,10 @@ jobs:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            CONCOURSE_ATC_USERNAME: admin
+            CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
-            CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
             path: sh
@@ -700,8 +700,8 @@ jobs:
                   exit 0
                 fi
 
-                export CONCOURSE_ATC_URL
-                CONCOURSE_ATC_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+                export CONCOURSE_WEB_URL
+                CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
@@ -762,10 +762,10 @@ jobs:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            CONCOURSE_ATC_USERNAME: admin
+            CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
             BRANCH: ((branch_name))
-            CONCOURSE_ATC_PASSWORD: ((concourse_atc_password))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
             AWS_DEFAULT_REGION: ((aws_region))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
           run:
@@ -780,7 +780,7 @@ jobs:
                   exit 0
                 fi
 
-                export CONCOURSE_ATC_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
+                export CONCOURSE_WEB_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
                 export CF_PASS
                 CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')

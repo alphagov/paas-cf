@@ -131,7 +131,7 @@ disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 aiven_api_token: ${aiven_api_token:-}
-concourse_atc_password: ${CONCOURSE_ATC_PASSWORD}
+concourse_web_password: ${CONCOURSE_WEB_PASSWORD}
 oauth_client_id: "${oauth_client_id:-}"
 oauth_client_secret: "${oauth_client_secret:-}"
 notify_api_key: ${notify_api_key:-}

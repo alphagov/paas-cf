@@ -183,7 +183,7 @@ need to run the pipeline from start in order to bring the changes forward.
 
 By default, the environment setup script retrieves the admin user password set
 in paas-bootstrap and stored in S3 in the `concourse-secrets.yml` file. If the
-`CONCOURSE_ATC_PASSWORD` environment variable is set, this will be used instead.
+`CONCOURSE_WEB_PASSWORD` environment variable is set, this will be used instead.
 These credentials are output by all of the pipeline deployment tasks.
 
 ## Overnight deletion of environments

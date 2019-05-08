@@ -50,11 +50,11 @@ func newConcourseClient() concourse.Client {
 	}
 
 	client := concourse.NewClient(
-		mustGetenv(2, "CONCOURSE_ATC_URL"),
+		mustGetenv(2, "CONCOURSE_WEB_URL"),
 		&http.Client{
 			Transport: basicAuthTransport{
-				username: mustGetenv(2, "CONCOURSE_ATC_USERNAME"),
-				password: mustGetenv(2, "CONCOURSE_ATC_PASSWORD"),
+				username: mustGetenv(2, "CONCOURSE_WEB_USERNAME"),
+				password: mustGetenv(2, "CONCOURSE_WEB_PASSWORD"),
 				base:     transport,
 			},
 		},
