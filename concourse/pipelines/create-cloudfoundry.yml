@@ -2890,6 +2890,35 @@ jobs:
                   paas-billing-collector \
                   -f manifest-collector.yml
 
+      - task: paas-billing-acceptance-tests
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          params:
+            AWS_REGION: ((aws_region))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing
+              path: src/github.com/alphagov/paas-billing
+            - name: config
+            - name: cf-vars-store
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                export GOPATH="${PWD}"
+                export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
+                cd src/github.com/alphagov/paas-billing
+                make acceptance
+
   - name: deploy-paas-metrics
     serial: true
     plan:
