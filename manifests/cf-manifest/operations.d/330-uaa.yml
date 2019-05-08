@@ -21,6 +21,10 @@
   value: cf_uaa_health_check
 
 - type: replace
+  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/health_check/script_path
+  value: /var/vcap/jobs/uaa-customized/bin/health_check
+
+- type: replace
   path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/port
   value: 8081
 
@@ -277,9 +281,9 @@
   path: /releases/-
   value:
     name: uaa-customized
-    version: 0.1.1
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-customized-0.1.1.tgz
-    sha1: 103fca0cdeae86b82ca8aa6700d8bc9faba46987
+    version: 0.1.3
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-customized-0.1.3.tgz
+    sha1: 54e4103f9682c2bdd67a0becff4eddf8841d17e1
 
 - type: replace
   path: /instance_groups/name=uaa/jobs/-

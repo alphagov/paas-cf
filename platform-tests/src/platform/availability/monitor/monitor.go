@@ -13,6 +13,7 @@ type Report struct {
 	SuccessCount int64
 	FailureCount int64
 	WarningCount int64
+	ErrorCount   int64
 	Errors       map[*Task]map[string]int // number of errors by error message by task
 	Warnings     map[*Task]map[string]int // number of warnings by error message by task
 	Elapsed      time.Duration
@@ -23,11 +24,12 @@ func (r *Report) String() string {
 	s := "\nReport:\n"
 	s += "==============\n"
 	s += fmt.Sprintf("Total task executions: %d\n", total)
-	s += fmt.Sprintf("Total successes: %d\n", r.SuccessCount)
-	s += fmt.Sprintf("Total failures: %d\n", r.FailureCount)
-	s += fmt.Sprintf("Total warnings: %d\n", r.WarningCount)
-	s += fmt.Sprintf("Elapsed time: %s\n", r.Elapsed.String())
-	s += fmt.Sprintf("Average rate: %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
+	s += fmt.Sprintf("Total successes:       %d\n", r.SuccessCount)
+	s += fmt.Sprintf("Total failures:        %d\n", r.FailureCount)
+	s += fmt.Sprintf("Total warnings:        %d\n", r.WarningCount)
+	s += fmt.Sprintf("Total errors:          %d\n", r.ErrorCount)
+	s += fmt.Sprintf("Elapsed time:          %s\n", r.Elapsed.String())
+	s += fmt.Sprintf("Average rate:          %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
 
 	if len(r.Errors) > 0 {
 		s += fmt.Sprintf("\nErrors:\n")
@@ -113,6 +115,7 @@ func (m *Monitor) statsCollector() {
 						report.Errors[result.task] = map[string]int{}
 					}
 					report.Errors[result.task][msg]++
+					report.ErrorCount++
 					report.FailureCount++
 				} else {
 					if report.Warnings[result.task] == nil {
