@@ -4,8 +4,8 @@ set -euo pipefail
 # Required env vars
 # shellcheck disable=SC2086
 : $CONCOURSE_URL \
-  $CONCOURSE_ATC_USER \
-  $CONCOURSE_ATC_PASSWORD \
+  $CONCOURSE_WEB_USER \
+  $CONCOURSE_WEB_PASSWORD \
   $FLY_CMD \
   $FLY_TARGET
 
@@ -28,7 +28,7 @@ fly_sync() {
 
 fly_login() {
   echo "Doing fly login .."
-  $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}" -u "${CONCOURSE_ATC_USER}" -p "${CONCOURSE_ATC_PASSWORD}"
+  $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}" -u "${CONCOURSE_WEB_USER}" -p "${CONCOURSE_WEB_PASSWORD}"
 }
 
 fly_is_runnable() {

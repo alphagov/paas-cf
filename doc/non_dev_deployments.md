@@ -67,7 +67,7 @@ way that makes it clear what the `DEPLOY_ENV` is for the deployment.
 In order to operate on an existing deployment that was created with a different
 AWS key to your own, it's necessary to export the concourse password:
 ```
-export CONCOURSE_ATC_PASSWORD=the_password
+export CONCOURSE_WEB_PASSWORD=the_password
 ```
 
 ## Destroying an existing environment
