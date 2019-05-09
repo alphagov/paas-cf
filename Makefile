@@ -138,6 +138,7 @@ dev: globals ## Set Environment to DEV
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export ENABLE_MORNING_DEPLOYMENT=true)
 	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
+	$(eval export PAAS_REGION_NAME=${DEPLOY_ENV})
 	@true
 
 .PHONY: stg-lon
@@ -156,6 +157,7 @@ stg-lon: globals ## Set Environment to stg-lon
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
+	$(eval export PAAS_REGION_NAME=${DEPLOY_ENV})
 	@true
 
 .PHONY: prod
@@ -174,6 +176,7 @@ prod: globals ## Set Environment to Production
 	$(eval export DEPLOY_ENV=prod)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
+	$(eval export PAAS_REGION_NAME=ireland)
 	@true
 
 .PHONY: prod-lon
@@ -192,6 +195,7 @@ prod-lon: globals ## Set Environment to prod-lon
 	$(eval export DEPLOY_ENV=prod-lon)
 	$(eval export AIVEN_PASSWORD_STORE_HIGH_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
+	$(eval export PAAS_REGION_NAME=ireland)
 	@true
 
 .PHONY: bosh-cli
@@ -321,5 +325,3 @@ show-tenant-comms-addresses:
 	$(eval export API_TOKEN=`cf oauth-token | cut -f 2 -d ' '`)
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
 	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ./user_emails
-
-

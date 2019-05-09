@@ -290,4 +290,5 @@
   value:
     name: uaa-customized
     release: uaa-customized
-    properties: {}
+    properties:
+        region: ((paas_region_name))
