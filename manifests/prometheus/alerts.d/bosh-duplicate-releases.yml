@@ -1,0 +1,19 @@
+# Source: bosh-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BoshDuplicateReleases
+    rules:
+      - alert: BoshDuplicateReleases_Warning
+        expr: |
+          count by (bosh_release_name) (
+            count by (bosh_release_name, bosh_release_version) (bosh_deployment_release_info{bosh_release_name!="bpm"})
+          ) > 1
+        labels:
+          severity: warning
+        for: 2h
+        annotations:
+          summary: "Duplicate bosh release of {{ $labels.bosh_release_name }}"
+          description: "There are {{ $value }} versions of {{ $labels.bosh_release_name }} and we should probably only have one"

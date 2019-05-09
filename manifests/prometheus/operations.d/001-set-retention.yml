@@ -1,8 +1,9 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties?/prometheus/storage/tsdb/retention
-  value: 450d
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties?/prometheus/storage/tsdb/retention?
+  value:
+    time: 450d
 
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties?/prometheus/storage/tsdb/max_block_duration
