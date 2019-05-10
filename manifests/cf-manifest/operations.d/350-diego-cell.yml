@@ -10,12 +10,8 @@
   path: /instance_groups/name=diego-cell/instances
   value: ((cell_instances))
 
-- type: replace
-  path: /instance_groups/name=diego-cell/jobs/name=cflinuxfs2-rootfs-setup/properties/cflinuxfs2-rootfs/trusted_certs
-  value:
-    - ((aws_rds_combined_ca_bundle))
-    - ((application_ca.certificate))((application_ca_old.certificate))
-    - ((uaa_ca.certificate))((uaa_ca_old.certificate))
+- type: remove
+  path: /instance_groups/name=diego-cell/jobs/name=cflinuxfs2-rootfs-setup
 
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs
@@ -36,6 +32,9 @@
 
 - type: remove
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers
+
+- type: remove
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/rep/preloaded_rootfses/0
 
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/executor/memory_capacity_mb
