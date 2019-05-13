@@ -10,6 +10,6 @@
   path: /releases/name=cflinuxfs3
   value:
     name: "cflinuxfs3"
-    version: "0.81.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs3-release?v=0.81.0"
-    sha1: "47f4eb966f21881bdb0a7db879fec47dc04b8b9a"
+    version: "0.1.1"
+    url: "https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cflinuxfs3-0.1.1.tgz"
+    sha1: "ebe456be2f4d3eb2ec91fa05b48b6fbf53759ed1"
