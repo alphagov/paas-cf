@@ -13,7 +13,7 @@ const readyStateCheckInterval = setInterval(() => {
     clearInterval(readyStateCheckInterval);
 
     console.log('Monitor mode is go');
-    const $legend = document.querySelector('.legend');
+    const $legend = document.querySelector('#legend');
     $legend.style.display = 'none';
 
     const $infoBox = document.querySelector('.lower-right-info');
@@ -22,12 +22,8 @@ const readyStateCheckInterval = setInterval(() => {
     const $topBar = document.querySelector('#top-bar-app');
     $topBar.style.display = 'none';
 
-    const $groupsBar = document.querySelector('.groups-bar');
+    const $groupsBar = document.querySelector('#groups-bar');
     $groupsBar.style.display = 'none';
-
-    const $bottom = document.querySelector('.bottom');
-    // Remove the padding because the top bar isn't there any more.
-    $bottom.style.paddingTop = '0';
 
     const hostname = window.location.hostname.replace('deployer.', '').replace('.cloudpipeline.digital', '');
     document.body.insertAdjacentHTML('beforeend', `<div style="bottom: 0; font-size: 24px; padding: 16px; position: absolute;">${hostname}</div>`);
