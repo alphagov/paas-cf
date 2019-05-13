@@ -471,6 +471,7 @@ jobs:
               claim: lock
 
       - task: self-update-pipeline
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
