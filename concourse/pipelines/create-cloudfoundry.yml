@@ -412,6 +412,7 @@ jobs:
           trigger: ((auto_deploy))
         - get: git-ssh-private-key
       - task: init-pipeline-pool
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *git-ssh-image-resource
@@ -444,6 +445,7 @@ jobs:
 
       - try:
           task: lock-the-pipeline
+          tags: [colocated-with-web]
           config:
             image_resource:
               type: docker-image
@@ -512,6 +514,7 @@ jobs:
           - get: cf-secrets
       - aggregate:
         - task: generate-ipsec-CA
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource:
@@ -546,6 +549,7 @@ jobs:
               file: generated-ipsec-CA/ipsec-CA.tar.gz
 
         - task: generate-cf-secrets
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *ruby-slim-image-resource
@@ -580,6 +584,7 @@ jobs:
             passed: ['generate-secrets']
           - get: cf-vars-store
       - task: wait-for-app-availability-tests
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -624,6 +629,7 @@ jobs:
                 echo "timeout waiting for app-availability-tests job to start"
                 exit 1
       - task: wait-for-api-availability-tests
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -673,6 +679,7 @@ jobs:
           - get: paas-cf
             passed: ['generate-secrets']
       - task: run-tests
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-acceptance-tests-image-resource
@@ -727,6 +734,7 @@ jobs:
             passed: ['generate-secrets']
 
       - task: upload-job-file
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *awscli-image-resource
@@ -751,6 +759,7 @@ jobs:
                 echo 'started' | aws s3 cp - "s3://((state_bucket))/$JOB_FILE"
 
       - task: run-tests
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-acceptance-tests-image-resource
@@ -800,6 +809,7 @@ jobs:
                 fi
         ensure:
           task: delete-job-file
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *awscli-image-resource
@@ -832,6 +842,7 @@ jobs:
             passed: ['generate-secrets']
 
       - task: extract-terraform-variables
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *ruby-slim-image-resource
@@ -856,6 +867,7 @@ jobs:
                 < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
 
       - task: generate-peer-tfvars
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *ruby-slim-image-resource
@@ -875,6 +887,7 @@ jobs:
                 cat vpc-peering-tfvars/vpc-peers.tfvars
 
       - task: terraform-apply
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *terraform-image-resource
@@ -915,6 +928,7 @@ jobs:
             file: updated-tfstate/cf.tfstate
 
       - task: extract-cf-terraform-outputs
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *ruby-slim-image-resource
@@ -935,6 +949,7 @@ jobs:
                 ls -l cf-terraform-outputs/cf.tfstate.sh
 
       - task: init-db
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -980,6 +995,7 @@ jobs:
 
       - aggregate:
         - task: extract-terraform-outputs
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *ruby-slim-image-resource
@@ -1006,6 +1022,7 @@ jobs:
                   done
 
         - task: generate-peer-opsfile
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *ruby-slim-image-resource
@@ -1026,6 +1043,7 @@ jobs:
 
       - do:
         - task: generate-cloud-config
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1048,6 +1066,7 @@ jobs:
               file: cloud-config/cloud-config.yml
 
         - task: generate-cf-manifest
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1127,6 +1146,7 @@ jobs:
 
       - aggregate:
         - task: get-and-upload-stemcell
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1169,6 +1189,7 @@ jobs:
                   done
 
         - task: update-cloud-config
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1196,6 +1217,7 @@ jobs:
                   bosh -n update-cloud-config cloud-config/cloud-config.yml
 
       - task: cf-deploy
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1241,6 +1263,7 @@ jobs:
           - get: pagerduty-secrets
 
       - task: extract-terraform-outputs
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *ruby-slim-image-resource
@@ -1260,6 +1283,7 @@ jobs:
                   > terraform-outputs/cf.yml
 
       - task: generate-prometheus-manifest
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1311,6 +1335,7 @@ jobs:
               file: prometheus-manifest-pre-vars/prometheus-manifest-pre-vars.yml
 
       - task: retrieve-config
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -1341,6 +1366,7 @@ jobs:
                 EOT
 
       - task: prometheus-deploy
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -1368,6 +1394,7 @@ jobs:
                 bosh -n deploy prometheus-manifest/prometheus-manifest.yml
 
       - task: deploy-cloudwatch-exporter
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1411,6 +1438,7 @@ jobs:
                 cf zero-downtime-push cloudwatch-exporter -f manifest.yml
 
       - task: upload-grafana-dashboards
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *curl-ssl-image-resource
@@ -1469,6 +1497,7 @@ jobs:
       - get: logit-secrets
 
     - task: retrieve-config
+      tags: [colocated-with-web]
       config: &post-deploy-config
         platform: linux
         inputs:
@@ -1519,6 +1548,7 @@ jobs:
 
     - aggregate:
       - task: upload-buildpacks
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1535,6 +1565,7 @@ jobs:
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
                 ./paas-cf/concourse/scripts/parse_buildpacks_and_run_uploader.rb paas-cf/config/buildpacks.yml
       - task: create-orgs
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1589,6 +1620,7 @@ jobs:
                 fi
 
       - task: register-rds-broker
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1673,6 +1705,7 @@ jobs:
 
 
       - task: register-cdn-broker
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1698,6 +1731,7 @@ jobs:
                 cf enable-service-access cdn-route
 
       - task: register-s3-broker
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1724,6 +1758,7 @@ jobs:
                 cf enable-service-access aws-s3-bucket -p default
 
       - task: set-security-groups-from-manifest
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -1745,6 +1780,7 @@ jobs:
                 ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
 
       - task: set-quotas-from-manifest
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -1767,6 +1803,7 @@ jobs:
                 ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
       - task: enable-diego_docker-feature-flag
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -1788,6 +1825,7 @@ jobs:
                 cf enable-feature-flag diego_docker
 
       - task: ensure-internal-apps-domain-created
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -1811,6 +1849,7 @@ jobs:
                 fi
 
       - task: set-uaa-idp-email-domains
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1834,6 +1873,7 @@ jobs:
 
     - aggregate:
       - task: block-create-account-endpoints
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1882,6 +1922,7 @@ jobs:
                 cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
 
       - task: deploy-simulated-load-application
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -1940,6 +1981,7 @@ jobs:
                 echo Done!
 
       - task: sync-admin-users
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -1972,6 +2014,7 @@ jobs:
                 bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))"
 
       - task: deploy-healthcheck
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -2035,6 +2078,7 @@ jobs:
 
       - do:
         - task: remove-paas-log-cache-adapter
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *cf-cli-image-resource
@@ -2059,6 +2103,7 @@ jobs:
 
       - do:
         - task: rotate-cc-db-encryption-keys
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -2085,6 +2130,7 @@ jobs:
                   bosh run-errand rotate-cc-database-key --when-changed
 
         - task: rotate-uaa-db-encryption-keys
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -2112,6 +2158,7 @@ jobs:
 
     - aggregate:
       - task: deploy-aiven-service-broker
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -2169,6 +2216,7 @@ jobs:
                 cf enable-service-access elasticsearch
 
       - task: register-elasticache-broker
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -2193,6 +2241,7 @@ jobs:
                 cf enable-service-access redis
 
       - task: remove-unused-iam-access-keys
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *awscli-image-resource
@@ -2254,11 +2303,13 @@ jobs:
 
       - do:
         - task: create-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: smoketest-user
 
         - task: smoke-tests-config
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: smoke_tests
@@ -2266,15 +2317,18 @@ jobs:
             SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: smoke-tests-run
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           ensure:
             task: upload-test-artifacts
+            tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
               TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           task: remove-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: acceptance-tests
@@ -2293,6 +2347,7 @@ jobs:
 
       - do:
         - task: create-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: acceptance-test-user
@@ -2300,12 +2355,14 @@ jobs:
 
         - do:
           - task: generate-test-config
+            tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/generate-test-config.yml
             params:
               TEST_PROPERTIES: acceptance_tests
               APP_DOMAIN: ((apps_dns_zone_name))
               SYSTEM_DOMAIN: ((system_dns_zone_name))
           - task: run-tests
+            tags: [colocated-with-web]
             config:
               platform: linux
               image_resource: *cf-acceptance-tests-image-resource
@@ -2323,11 +2380,13 @@ jobs:
                 path: ./paas-cf/platform-tests/upstream/run_acceptance_tests.sh
             ensure:
               task: upload-test-artifacts
+              tags: [colocated-with-web]
               file: paas-cf/concourse/tasks/upload-test-artifacts.yml
               params:
                 TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
           ensure:
             task: remove-temp-user
+            tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/delete_admin.yml
             params:
               DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
@@ -2348,12 +2407,14 @@ jobs:
 
       - do:
         - task: create-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: custom-acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
 
         - task: generate-test-config
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: acceptance_tests
@@ -2363,6 +2424,7 @@ jobs:
 
         - aggregate:
           - task: "Run custom acceptance tests"
+            tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
             params:
               DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
@@ -2372,11 +2434,13 @@ jobs:
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             ensure:
               task: upload-test-artifacts
+              tags: [colocated-with-web]
               file: paas-cf/concourse/tasks/upload-test-artifacts.yml
               params:
                 TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
           - task: ensure-buildpacks-exist
+            tags: [colocated-with-web]
             config:
               platform: linux
               image_resource: *cf-cli-image-resource
@@ -2443,6 +2507,7 @@ jobs:
 
         ensure:
           task: remove-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
@@ -2459,6 +2524,7 @@ jobs:
           - get: bosh-vars-store
           - get: bosh-CA-crt
       - task: test-bosh-vms
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -2517,9 +2583,11 @@ jobs:
           passed: ['post-deploy']
 
       - task: retrieve-config
+        tags: [colocated-with-web]
         config: *post-deploy-config
 
       - task: deploy-paas-accounts
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -2620,6 +2688,7 @@ jobs:
           passed: ['post-deploy']
 
       - task: build
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -2645,6 +2714,7 @@ jobs:
                 cp -Ra . ../paas-admin-dist
 
       - task: render-manifest
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -2698,9 +2768,11 @@ jobs:
                     > paas-admin-manifest/manifest.yml
 
       - task: retrieve-config
+        tags: [colocated-with-web]
         config: *post-deploy-config
 
       - task: deploy
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -2734,12 +2806,14 @@ jobs:
 
       - do:
         - task: create-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: paas-admin-test-user
             DISABLE_ADMIN_USER_CREATION: false
 
         - task: acceptance-tests
+          tags: [colocated-with-web]
           config:
             platform: linux
             image_resource:
@@ -2781,6 +2855,7 @@ jobs:
 
         ensure:
           task: remove-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: deploy-paas-billing
@@ -2807,9 +2882,11 @@ jobs:
           passed: ['post-deploy']
 
       - task: retrieve-config
+        tags: [colocated-with-web]
         config: *post-deploy-config
 
       - task: deploy-paas-billing
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -2892,6 +2969,7 @@ jobs:
                   -f manifest-collector.yml
 
       - task: paas-billing-acceptance-tests
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-acceptance-tests-image-resource
@@ -2941,9 +3019,11 @@ jobs:
           passed: ['post-deploy']
 
       - task: retrieve-config
+        tags: [colocated-with-web]
         config: *post-deploy-config
 
       - task: deploy
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
@@ -3019,6 +3099,7 @@ jobs:
         params: {bump: patch}
 
       - task: tag-release
+        tags: [colocated-with-web]
         config:
           image_resource: *git-ssh-image-resource
           platform: linux
@@ -3053,6 +3134,7 @@ jobs:
       - get: pipeline-pool
       - try:
           task: unlock-the-pipeline
+          tags: [colocated-with-web]
           config:
             image_resource:
               type: docker-image
@@ -3081,6 +3163,7 @@ jobs:
     plan:
       - get: pipeline-pool
       - task: print-pipeline-lock-state
+        tags: [colocated-with-web]
         config:
           image_resource: *git-ssh-image-resource
           platform: linux
@@ -3127,6 +3210,7 @@ jobs:
       - get: cf-vars-store
 
     - task: generate-cf-admin-password
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *gov-paas-bosh-cli-v2-image-resource
@@ -3151,6 +3235,7 @@ jobs:
               EOF
 
     - task: update-cf-admin-password
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource:
@@ -3197,6 +3282,7 @@ jobs:
       - get: cf-tfstate
 
     - task: rotate-credentials
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *ruby-slim-image-resource
@@ -3269,6 +3355,7 @@ jobs:
             file: modified-cf-vars-store/cf-vars-store.yml
 
     - task: forget-access-keys
+      tags: [colocated-with-web]
       file: paas-cf/concourse/tasks/forget-access-keys.yml
       params:
         AWS_DEFAULT_REGION: ((aws_region))
@@ -3286,6 +3373,7 @@ jobs:
       - get: cf-manifest-pre-vars
 
     - task: rotate-db-encryption-key
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *ruby-slim-image-resource
@@ -3324,6 +3412,7 @@ jobs:
       - get: prometheus-manifest-pre-vars
 
     - task: rotate-credentials
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *ruby-slim-image-resource
@@ -3361,6 +3450,7 @@ jobs:
       - get: expire-aws-keys-timer
         trigger: true
     - task: forget-access-keys
+      tags: [colocated-with-web]
       file: paas-cf/concourse/tasks/forget-access-keys.yml
       params:
         AWS_DEFAULT_REGION: ((aws_region))
@@ -3377,6 +3467,7 @@ jobs:
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
     - task: rotate-cf-certs
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *ruby-slim-image-resource
@@ -3409,6 +3500,7 @@ jobs:
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
     - task: rotate-cf-certs
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *ruby-slim-image-resource
@@ -3440,6 +3532,7 @@ jobs:
       - get: paas-cf
       - get: cf-vars-store
     - task: retrieve-config
+      tags: [colocated-with-web]
       config:
         image_resource: *ruby-slim-image-resource
         platform: linux
@@ -3467,6 +3560,7 @@ jobs:
               ls -l config/*
 
     - task: set-smoke-test-creds
+      tags: [colocated-with-web]
       file: paas-cf/concourse/tasks/set-smoke-test-creds.yml
       params:
         APP_DOMAIN: ((apps_dns_zone_name))
@@ -3483,6 +3577,7 @@ jobs:
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
     - task: rotate-cf-certs
+      tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *ruby-slim-image-resource
@@ -3510,6 +3605,7 @@ jobs:
   - name: generate-git-keys
     plan:
       - task: ssh-keygen
+        tags: [colocated-with-web]
         config:
           image_resource: *git-ssh-image-resource
           platform: linux
@@ -3549,6 +3645,7 @@ jobs:
       - get: release-version
 
       - task: show-release-version
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -3574,6 +3671,7 @@ jobs:
         - get: cf-vars-store
 
       - task: assert-should-run
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -3599,11 +3697,13 @@ jobs:
               fi
       - do:
         - task: create-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: cont-smoketest-user
 
         - task: smoke-tests-config
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/generate-test-config.yml
           params:
             TEST_PROPERTIES: smoke_tests
@@ -3611,6 +3711,7 @@ jobs:
             SYSTEM_DOMAIN: ((system_dns_zone_name))
 
         - task: smoke-tests-run
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/smoke-tests-run.yml
           params:
             AWS_DEFAULT_REGION: ((aws_region))
@@ -3620,12 +3721,14 @@ jobs:
             EMAIL_ON_SMOKE_TEST_FAILURE: ((ENABLE_ALERT_NOTIFICATIONS))
           ensure:
             task: upload-test-artifacts
+            tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
               TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
           task: remove-temp-user
+          tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
 
   - name: check-certificates
@@ -3641,6 +3744,7 @@ jobs:
         - get: ipsec-CA
 
       - task: check-certificates
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *ruby-slim-image-resource
@@ -3674,6 +3778,7 @@ jobs:
         - get: cf-vars-store
 
       - task: cleanup-deleted-cf-users
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource

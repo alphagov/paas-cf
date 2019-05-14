@@ -24,6 +24,7 @@ jobs:
         trigger: true
       - get: paas-cf
       - task: await-turn
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -48,6 +49,7 @@ jobs:
       - get: paas-cf
 
       - task: startup-rds-instances
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:

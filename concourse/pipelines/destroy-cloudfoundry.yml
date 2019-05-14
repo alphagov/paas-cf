@@ -138,9 +138,11 @@ jobs:
           - get: bosh-CA-crt
 
       - task: get-cf-cli-config
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
 
       - task: remove-healthcheck-db
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/remove-db.yml
         params:
           ORG: admin
@@ -149,6 +151,7 @@ jobs:
           BOUND_APPS: healthcheck
 
       - task: remove-billing-db
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/remove-db.yml
         params:
           ORG: admin
@@ -157,6 +160,7 @@ jobs:
           BOUND_APPS: paas-billing-api paas-billing-collector
 
       - task: remove-accounts-db
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/remove-db.yml
         params:
           ORG: admin
@@ -165,6 +169,7 @@ jobs:
           BOUND_APPS: paas-accounts
 
       - task: delete-deployments
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -217,6 +222,7 @@ jobs:
           - get: cf-secrets
 
       - task: extract-terraform-variables
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -252,6 +258,7 @@ jobs:
                 ls -l terraform-variables/cf-secrets.tfvars.sh
 
       - task: cf-terraform-destroy
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
