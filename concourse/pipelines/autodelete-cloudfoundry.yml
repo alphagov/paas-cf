@@ -77,9 +77,11 @@ jobs:
       - get: bosh-CA-crt
 
       - task: get-cf-cli-config
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
 
       - task: remove-healthcheck-db
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/remove-db.yml
         params:
           ORG: admin
@@ -88,6 +90,7 @@ jobs:
           BOUND_APPS: healthcheck
 
       - task: remove-billing-db
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/remove-db.yml
         params:
           ORG: admin
@@ -96,6 +99,7 @@ jobs:
           BOUND_APPS: paas-billing-api paas-billing-collector
 
       - task: remove-accounts-db
+        tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/remove-db.yml
         params:
           ORG: admin
@@ -104,6 +108,7 @@ jobs:
           BOUND_APPS: paas-accounts
 
       - task: await-turn
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -119,6 +124,7 @@ jobs:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
       - task: delete-deployments
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
@@ -159,6 +165,7 @@ jobs:
             file: deployed-healthcheck/healthcheck-deployed
 
       - task: shutdown-rds-instances
+        tags: [colocated-with-web]
         config:
           platform: linux
           inputs:

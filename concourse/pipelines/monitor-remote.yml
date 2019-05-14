@@ -79,6 +79,7 @@ jobs:
     - get: every-5m
       trigger: true
   - task: smoke-tests-run
+    tags: [colocated-with-web]
     file: paas-cf/concourse/tasks/smoke-tests-run.yml
     params:
       AWS_DEFAULT_REGION: ((aws_region))
@@ -90,6 +91,7 @@ jobs:
       MONITORED_DEPLOY_ENV: ((monitored_deploy_env))
     ensure:
       task: upload-test-artifacts
+      tags: [colocated-with-web]
       file: paas-cf/concourse/tasks/upload-test-artifacts.yml
       params:
         TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
