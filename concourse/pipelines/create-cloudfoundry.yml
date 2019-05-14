@@ -1101,7 +1101,6 @@ jobs:
                   environment: ((deploy_env))
                   deployment_name: ((deploy_env))
                   aws_account: ((aws_account))
-                  paas_region_name: ((paas_region_name))
                   oauth_client_id: ((oauth_client_id))
                   oauth_client_secret: ((oauth_client_secret))
                   EOF
