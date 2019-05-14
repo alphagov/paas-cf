@@ -41,6 +41,7 @@ jobs:
   - get: paas-cf
     trigger: true
   - task: self-update-pipeline
+    tags: [colocated-with-web]
     config:
       platform: linux
       image_resource:

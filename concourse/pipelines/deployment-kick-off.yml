@@ -66,6 +66,7 @@ jobs:
               - start
 
       - task: kick-off-create-cloudfoundry-pipeline
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
@@ -96,6 +97,7 @@ jobs:
         trigger: true
       - get: paas-cf
       - task: pause-kick-off
+        tags: [colocated-with-web]
         config:
           platform: linux
           image_resource:
