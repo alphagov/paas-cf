@@ -231,7 +231,7 @@ unpause-kick-off: check-env ## Unpause the morning kick-off of deployment.
 showenv: check-env ## Display environment information
 	$(eval export TARGET_CONCOURSE=deployer)
 	@concourse/scripts/environment.sh
-	@scripts/show-vars-store-secrets.sh cf-vars-store cf_admin_password
+	@scripts/show-vars-store-secrets.sh cf-vars-store cf_admin_password uaa_admin_client_secret
 	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
 		--filters "Name=tag:deploy_env,Values=${DEPLOY_ENV}" 'Name=tag:instance_group,Values=concourse' \
 		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
