@@ -10,6 +10,6 @@
   path: /releases/name=cflinuxfs3
   value:
     name: "cflinuxfs3"
-    version: "0.1.1"
-    url: "https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cflinuxfs3-0.1.1.tgz"
-    sha1: "ebe456be2f4d3eb2ec91fa05b48b6fbf53759ed1"
+    version: "0.1.2"
+    url: "https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cflinuxfs3-0.1.2.tgz"
+    sha1: "8649bbf088e7eb6fd7261c605ffefb38dc0a644e"
