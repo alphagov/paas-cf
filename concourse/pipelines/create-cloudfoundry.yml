@@ -2907,10 +2907,7 @@ jobs:
               - -c
               - |
                 BILLING_DB_PLAN="tiny-unencrypted-9.5"
-                if [ "${DEPLOY_ENV}" = "prod" ]; then
-                  BILLING_DB_PLAN="medium-9.5"
-                fi
-                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                if [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ] || [ "${DEPLOY_ENV}" = "stg-lon" ]; then
                   BILLING_DB_PLAN="medium-9.5"
                 fi
 
