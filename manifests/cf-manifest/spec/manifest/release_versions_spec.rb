@@ -28,7 +28,7 @@ RSpec.describe "release versions" do
 
     pinned_releases = {
       'cflinuxfs3' => {
-        local: "0.1.1",
+        local: "0.1.2",
         upstream: "0.73.0"
       }
     }
