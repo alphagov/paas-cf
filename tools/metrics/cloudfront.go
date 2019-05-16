@@ -6,6 +6,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface"
 )
 
+type CloudFrontServiceInterface interface {
+	CustomDomains() ([]CustomDomain, error)
+}
+
 type CloudFrontService struct {
 	Client cloudfrontiface.CloudFrontAPI
 }
@@ -34,6 +38,7 @@ func (cfs *CloudFrontService) listDistributions() ([]*cloudfront.DistributionSum
 type CustomDomain struct {
 	CloudFrontDomain string
 	AliasDomain      string
+	DistributionId   string
 }
 
 func (cfs *CloudFrontService) CustomDomains() ([]CustomDomain, error) {
@@ -47,6 +52,7 @@ func (cfs *CloudFrontService) CustomDomains() ([]CustomDomain, error) {
 			customDomains = append(customDomains, CustomDomain{
 				CloudFrontDomain: *ds.DomainName,
 				AliasDomain:      *item,
+				DistributionId:   *ds.Id,
 			})
 		}
 	}
