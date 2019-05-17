@@ -1181,7 +1181,7 @@ jobs:
                     STEMCELL_VERSION=$($VAL_FROM_YAML "stemcells.${stemcell_index}.version" cf-manifest/cf-manifest.yml)
                     STEMCELL_OS=$($VAL_FROM_YAML "stemcells.${stemcell_index}.os" cf-manifest/cf-manifest.yml)
 
-                    wget "https://s3.amazonaws.com/bosh-core-stemcells-candidate/aws/bosh-stemcell-${STEMCELL_VERSION}-aws-xen-hvm-${STEMCELL_OS}-go_agent.tgz" -O stemcell.tgz
+                    wget "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-${STEMCELL_OS}-go_agent?v=${STEMCELL_VERSION}" -O stemcell.tgz
 
                     bosh -n upload-stemcell stemcell.tgz
 
