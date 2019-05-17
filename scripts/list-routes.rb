@@ -5,9 +5,7 @@ require 'set'
 
 routes_by_domain_url = {}
 
-page = JSON.parse `cf curl '/v2/routes?results-per-page=100'`
-next_url = page["next_url"]
-
+next_url = '/v2/routes?results-per-page=100'
 while next_url
   page = JSON.parse `cf curl '#{next_url}'`
   page['resources'].map do |resource|
