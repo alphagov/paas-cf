@@ -40,6 +40,7 @@ var _ = Describe("TLS gauges", func() {
 			&cloudfront.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d1.cloudfront.aws"),
+				Id: aws.String("dist-1"),
 				Aliases: &cloudfront.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
@@ -50,6 +51,7 @@ var _ = Describe("TLS gauges", func() {
 			&cloudfront.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d2.cloudfront.aws"),
+				Id: aws.String("dist-2"),
 				Aliases: &cloudfront.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{

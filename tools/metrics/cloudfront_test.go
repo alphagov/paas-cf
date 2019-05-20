@@ -27,6 +27,7 @@ var _ = Describe("CloudFront", func() {
 			&cloudfront.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d1.cloudfront.aws"),
+				Id: aws.String("dist-1"),
 				Aliases: &cloudfront.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
@@ -37,6 +38,7 @@ var _ = Describe("CloudFront", func() {
 			&cloudfront.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d2.cloudfront.aws"),
+				Id: aws.String("dist-2"),
 				Aliases: &cloudfront.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
@@ -74,14 +76,17 @@ var _ = Describe("CloudFront", func() {
 			{
 				CloudFrontDomain: "d1.cloudfront.aws",
 				AliasDomain:      "s1.service.gov.uk",
+				DistributionId:   "dist-1",
 			},
 			{
 				CloudFrontDomain: "d2.cloudfront.aws",
 				AliasDomain:      "s2.service.gov.uk",
+				DistributionId:   "dist-2",
 			},
 			{
 				CloudFrontDomain: "d2.cloudfront.aws",
 				AliasDomain:      "s3.service.gov.uk",
+				DistributionId:   "dist-2",
 			},
 		}))
 	})

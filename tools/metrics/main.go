@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
 	"log"
 	"net/http"
 	"os"
@@ -102,6 +103,12 @@ func Main() error {
 	ecs := NewElasticacheService(sess)
 	s3 := NewS3Service(sess)
 
+	usEast1Sess, err := session.NewSession(&aws.Config{ Region: aws.String("us-east-1") })
+	if err != nil {
+		return errors.Wrap(err, "failed to connect to AWS API in US East 1")
+	}
+	cloudWatch := NewCloudWatchService(usEast1Sess, logger)
+
 	// Combine all metrics into single stream
 	gauges := []MetricReader{
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
@@ -119,6 +126,7 @@ func Main() error {
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
 		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
+		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))

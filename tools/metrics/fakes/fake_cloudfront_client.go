@@ -4,10 +4,10 @@ package fakes
 import (
 	"sync"
 
-	"github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/cloudfront"
+	"github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface"
 )
 
 type FakeCloudFrontAPI struct {
@@ -24,6 +24,19 @@ type FakeCloudFrontAPI struct {
 		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}
+	CreateCloudFrontOriginAccessIdentityRequestStub        func(*cloudfront.CreateCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.CreateCloudFrontOriginAccessIdentityOutput)
+	createCloudFrontOriginAccessIdentityRequestMutex       sync.RWMutex
+	createCloudFrontOriginAccessIdentityRequestArgsForCall []struct {
+		arg1 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
+	}
+	createCloudFrontOriginAccessIdentityRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
+	}
+	createCloudFrontOriginAccessIdentityRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
+	}
 	CreateCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.CreateCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.CreateCloudFrontOriginAccessIdentityOutput, error)
 	createCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
 	createCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
@@ -39,19 +52,6 @@ type FakeCloudFrontAPI struct {
 		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}
-	CreateCloudFrontOriginAccessIdentityRequestStub        func(*cloudfront.CreateCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.CreateCloudFrontOriginAccessIdentityOutput)
-	createCloudFrontOriginAccessIdentityRequestMutex       sync.RWMutex
-	createCloudFrontOriginAccessIdentityRequestArgsForCall []struct {
-		arg1 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
-	}
-	createCloudFrontOriginAccessIdentityRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
-	}
-	createCloudFrontOriginAccessIdentityRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
-	}
 	CreateDistributionStub        func(*cloudfront.CreateDistributionInput) (*cloudfront.CreateDistributionOutput, error)
 	createDistributionMutex       sync.RWMutex
 	createDistributionArgsForCall []struct {
@@ -62,21 +62,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	createDistributionReturnsOnCall map[int]struct {
-		result1 *cloudfront.CreateDistributionOutput
-		result2 error
-	}
-	CreateDistributionWithContextStub        func(aws.Context, *cloudfront.CreateDistributionInput, ...request.Option) (*cloudfront.CreateDistributionOutput, error)
-	createDistributionWithContextMutex       sync.RWMutex
-	createDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateDistributionInput
-		arg3 []request.Option
-	}
-	createDistributionWithContextReturns struct {
-		result1 *cloudfront.CreateDistributionOutput
-		result2 error
-	}
-	createDistributionWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.CreateDistributionOutput
 		result2 error
 	}
@@ -93,6 +78,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateDistributionOutput
 	}
+	CreateDistributionWithContextStub        func(aws.Context, *cloudfront.CreateDistributionInput, ...request.Option) (*cloudfront.CreateDistributionOutput, error)
+	createDistributionWithContextMutex       sync.RWMutex
+	createDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateDistributionInput
+		arg3 []request.Option
+	}
+	createDistributionWithContextReturns struct {
+		result1 *cloudfront.CreateDistributionOutput
+		result2 error
+	}
+	createDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.CreateDistributionOutput
+		result2 error
+	}
 	CreateDistributionWithTagsStub        func(*cloudfront.CreateDistributionWithTagsInput) (*cloudfront.CreateDistributionWithTagsOutput, error)
 	createDistributionWithTagsMutex       sync.RWMutex
 	createDistributionWithTagsArgsForCall []struct {
@@ -103,21 +103,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	createDistributionWithTagsReturnsOnCall map[int]struct {
-		result1 *cloudfront.CreateDistributionWithTagsOutput
-		result2 error
-	}
-	CreateDistributionWithTagsWithContextStub        func(aws.Context, *cloudfront.CreateDistributionWithTagsInput, ...request.Option) (*cloudfront.CreateDistributionWithTagsOutput, error)
-	createDistributionWithTagsWithContextMutex       sync.RWMutex
-	createDistributionWithTagsWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateDistributionWithTagsInput
-		arg3 []request.Option
-	}
-	createDistributionWithTagsWithContextReturns struct {
-		result1 *cloudfront.CreateDistributionWithTagsOutput
-		result2 error
-	}
-	createDistributionWithTagsWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.CreateDistributionWithTagsOutput
 		result2 error
 	}
@@ -134,6 +119,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateDistributionWithTagsOutput
 	}
+	CreateDistributionWithTagsWithContextStub        func(aws.Context, *cloudfront.CreateDistributionWithTagsInput, ...request.Option) (*cloudfront.CreateDistributionWithTagsOutput, error)
+	createDistributionWithTagsWithContextMutex       sync.RWMutex
+	createDistributionWithTagsWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateDistributionWithTagsInput
+		arg3 []request.Option
+	}
+	createDistributionWithTagsWithContextReturns struct {
+		result1 *cloudfront.CreateDistributionWithTagsOutput
+		result2 error
+	}
+	createDistributionWithTagsWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.CreateDistributionWithTagsOutput
+		result2 error
+	}
 	CreateInvalidationStub        func(*cloudfront.CreateInvalidationInput) (*cloudfront.CreateInvalidationOutput, error)
 	createInvalidationMutex       sync.RWMutex
 	createInvalidationArgsForCall []struct {
@@ -144,21 +144,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	createInvalidationReturnsOnCall map[int]struct {
-		result1 *cloudfront.CreateInvalidationOutput
-		result2 error
-	}
-	CreateInvalidationWithContextStub        func(aws.Context, *cloudfront.CreateInvalidationInput, ...request.Option) (*cloudfront.CreateInvalidationOutput, error)
-	createInvalidationWithContextMutex       sync.RWMutex
-	createInvalidationWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateInvalidationInput
-		arg3 []request.Option
-	}
-	createInvalidationWithContextReturns struct {
-		result1 *cloudfront.CreateInvalidationOutput
-		result2 error
-	}
-	createInvalidationWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.CreateInvalidationOutput
 		result2 error
 	}
@@ -175,6 +160,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateInvalidationOutput
 	}
+	CreateInvalidationWithContextStub        func(aws.Context, *cloudfront.CreateInvalidationInput, ...request.Option) (*cloudfront.CreateInvalidationOutput, error)
+	createInvalidationWithContextMutex       sync.RWMutex
+	createInvalidationWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateInvalidationInput
+		arg3 []request.Option
+	}
+	createInvalidationWithContextReturns struct {
+		result1 *cloudfront.CreateInvalidationOutput
+		result2 error
+	}
+	createInvalidationWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.CreateInvalidationOutput
+		result2 error
+	}
 	CreateStreamingDistributionStub        func(*cloudfront.CreateStreamingDistributionInput) (*cloudfront.CreateStreamingDistributionOutput, error)
 	createStreamingDistributionMutex       sync.RWMutex
 	createStreamingDistributionArgsForCall []struct {
@@ -185,21 +185,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	createStreamingDistributionReturnsOnCall map[int]struct {
-		result1 *cloudfront.CreateStreamingDistributionOutput
-		result2 error
-	}
-	CreateStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.CreateStreamingDistributionInput, ...request.Option) (*cloudfront.CreateStreamingDistributionOutput, error)
-	createStreamingDistributionWithContextMutex       sync.RWMutex
-	createStreamingDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateStreamingDistributionInput
-		arg3 []request.Option
-	}
-	createStreamingDistributionWithContextReturns struct {
-		result1 *cloudfront.CreateStreamingDistributionOutput
-		result2 error
-	}
-	createStreamingDistributionWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.CreateStreamingDistributionOutput
 		result2 error
 	}
@@ -216,6 +201,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateStreamingDistributionOutput
 	}
+	CreateStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.CreateStreamingDistributionInput, ...request.Option) (*cloudfront.CreateStreamingDistributionOutput, error)
+	createStreamingDistributionWithContextMutex       sync.RWMutex
+	createStreamingDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateStreamingDistributionInput
+		arg3 []request.Option
+	}
+	createStreamingDistributionWithContextReturns struct {
+		result1 *cloudfront.CreateStreamingDistributionOutput
+		result2 error
+	}
+	createStreamingDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.CreateStreamingDistributionOutput
+		result2 error
+	}
 	CreateStreamingDistributionWithTagsStub        func(*cloudfront.CreateStreamingDistributionWithTagsInput) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error)
 	createStreamingDistributionWithTagsMutex       sync.RWMutex
 	createStreamingDistributionWithTagsArgsForCall []struct {
@@ -226,21 +226,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	createStreamingDistributionWithTagsReturnsOnCall map[int]struct {
-		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
-		result2 error
-	}
-	CreateStreamingDistributionWithTagsWithContextStub        func(aws.Context, *cloudfront.CreateStreamingDistributionWithTagsInput, ...request.Option) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error)
-	createStreamingDistributionWithTagsWithContextMutex       sync.RWMutex
-	createStreamingDistributionWithTagsWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateStreamingDistributionWithTagsInput
-		arg3 []request.Option
-	}
-	createStreamingDistributionWithTagsWithContextReturns struct {
-		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
-		result2 error
-	}
-	createStreamingDistributionWithTagsWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
 		result2 error
 	}
@@ -257,6 +242,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateStreamingDistributionWithTagsOutput
 	}
+	CreateStreamingDistributionWithTagsWithContextStub        func(aws.Context, *cloudfront.CreateStreamingDistributionWithTagsInput, ...request.Option) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error)
+	createStreamingDistributionWithTagsWithContextMutex       sync.RWMutex
+	createStreamingDistributionWithTagsWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateStreamingDistributionWithTagsInput
+		arg3 []request.Option
+	}
+	createStreamingDistributionWithTagsWithContextReturns struct {
+		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
+		result2 error
+	}
+	createStreamingDistributionWithTagsWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
+		result2 error
+	}
 	DeleteCloudFrontOriginAccessIdentityStub        func(*cloudfront.DeleteCloudFrontOriginAccessIdentityInput) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error)
 	deleteCloudFrontOriginAccessIdentityMutex       sync.RWMutex
 	deleteCloudFrontOriginAccessIdentityArgsForCall []struct {
@@ -267,21 +267,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	deleteCloudFrontOriginAccessIdentityReturnsOnCall map[int]struct {
-		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}
-	DeleteCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error)
-	deleteCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
-	deleteCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}
-	deleteCloudFrontOriginAccessIdentityWithContextReturns struct {
-		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}
-	deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}
@@ -298,6 +283,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
 	}
+	DeleteCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error)
+	deleteCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
+	deleteCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}
+	deleteCloudFrontOriginAccessIdentityWithContextReturns struct {
+		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}
+	deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}
 	DeleteDistributionStub        func(*cloudfront.DeleteDistributionInput) (*cloudfront.DeleteDistributionOutput, error)
 	deleteDistributionMutex       sync.RWMutex
 	deleteDistributionArgsForCall []struct {
@@ -308,21 +308,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	deleteDistributionReturnsOnCall map[int]struct {
-		result1 *cloudfront.DeleteDistributionOutput
-		result2 error
-	}
-	DeleteDistributionWithContextStub        func(aws.Context, *cloudfront.DeleteDistributionInput, ...request.Option) (*cloudfront.DeleteDistributionOutput, error)
-	deleteDistributionWithContextMutex       sync.RWMutex
-	deleteDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteDistributionInput
-		arg3 []request.Option
-	}
-	deleteDistributionWithContextReturns struct {
-		result1 *cloudfront.DeleteDistributionOutput
-		result2 error
-	}
-	deleteDistributionWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.DeleteDistributionOutput
 		result2 error
 	}
@@ -339,6 +324,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteDistributionOutput
 	}
+	DeleteDistributionWithContextStub        func(aws.Context, *cloudfront.DeleteDistributionInput, ...request.Option) (*cloudfront.DeleteDistributionOutput, error)
+	deleteDistributionWithContextMutex       sync.RWMutex
+	deleteDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteDistributionInput
+		arg3 []request.Option
+	}
+	deleteDistributionWithContextReturns struct {
+		result1 *cloudfront.DeleteDistributionOutput
+		result2 error
+	}
+	deleteDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.DeleteDistributionOutput
+		result2 error
+	}
 	DeleteServiceLinkedRoleStub        func(*cloudfront.DeleteServiceLinkedRoleInput) (*cloudfront.DeleteServiceLinkedRoleOutput, error)
 	deleteServiceLinkedRoleMutex       sync.RWMutex
 	deleteServiceLinkedRoleArgsForCall []struct {
@@ -349,21 +349,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	deleteServiceLinkedRoleReturnsOnCall map[int]struct {
-		result1 *cloudfront.DeleteServiceLinkedRoleOutput
-		result2 error
-	}
-	DeleteServiceLinkedRoleWithContextStub        func(aws.Context, *cloudfront.DeleteServiceLinkedRoleInput, ...request.Option) (*cloudfront.DeleteServiceLinkedRoleOutput, error)
-	deleteServiceLinkedRoleWithContextMutex       sync.RWMutex
-	deleteServiceLinkedRoleWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteServiceLinkedRoleInput
-		arg3 []request.Option
-	}
-	deleteServiceLinkedRoleWithContextReturns struct {
-		result1 *cloudfront.DeleteServiceLinkedRoleOutput
-		result2 error
-	}
-	deleteServiceLinkedRoleWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.DeleteServiceLinkedRoleOutput
 		result2 error
 	}
@@ -380,6 +365,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteServiceLinkedRoleOutput
 	}
+	DeleteServiceLinkedRoleWithContextStub        func(aws.Context, *cloudfront.DeleteServiceLinkedRoleInput, ...request.Option) (*cloudfront.DeleteServiceLinkedRoleOutput, error)
+	deleteServiceLinkedRoleWithContextMutex       sync.RWMutex
+	deleteServiceLinkedRoleWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteServiceLinkedRoleInput
+		arg3 []request.Option
+	}
+	deleteServiceLinkedRoleWithContextReturns struct {
+		result1 *cloudfront.DeleteServiceLinkedRoleOutput
+		result2 error
+	}
+	deleteServiceLinkedRoleWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.DeleteServiceLinkedRoleOutput
+		result2 error
+	}
 	DeleteStreamingDistributionStub        func(*cloudfront.DeleteStreamingDistributionInput) (*cloudfront.DeleteStreamingDistributionOutput, error)
 	deleteStreamingDistributionMutex       sync.RWMutex
 	deleteStreamingDistributionArgsForCall []struct {
@@ -390,21 +390,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	deleteStreamingDistributionReturnsOnCall map[int]struct {
-		result1 *cloudfront.DeleteStreamingDistributionOutput
-		result2 error
-	}
-	DeleteStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.DeleteStreamingDistributionInput, ...request.Option) (*cloudfront.DeleteStreamingDistributionOutput, error)
-	deleteStreamingDistributionWithContextMutex       sync.RWMutex
-	deleteStreamingDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteStreamingDistributionInput
-		arg3 []request.Option
-	}
-	deleteStreamingDistributionWithContextReturns struct {
-		result1 *cloudfront.DeleteStreamingDistributionOutput
-		result2 error
-	}
-	deleteStreamingDistributionWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.DeleteStreamingDistributionOutput
 		result2 error
 	}
@@ -421,6 +406,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteStreamingDistributionOutput
 	}
+	DeleteStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.DeleteStreamingDistributionInput, ...request.Option) (*cloudfront.DeleteStreamingDistributionOutput, error)
+	deleteStreamingDistributionWithContextMutex       sync.RWMutex
+	deleteStreamingDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteStreamingDistributionInput
+		arg3 []request.Option
+	}
+	deleteStreamingDistributionWithContextReturns struct {
+		result1 *cloudfront.DeleteStreamingDistributionOutput
+		result2 error
+	}
+	deleteStreamingDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.DeleteStreamingDistributionOutput
+		result2 error
+	}
 	GetCloudFrontOriginAccessIdentityStub        func(*cloudfront.GetCloudFrontOriginAccessIdentityInput) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error)
 	getCloudFrontOriginAccessIdentityMutex       sync.RWMutex
 	getCloudFrontOriginAccessIdentityArgsForCall []struct {
@@ -434,34 +434,6 @@ type FakeCloudFrontAPI struct {
 		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}
-	GetCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error)
-	getCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
-	getCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}
-	getCloudFrontOriginAccessIdentityWithContextReturns struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}
-	getCloudFrontOriginAccessIdentityWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}
-	GetCloudFrontOriginAccessIdentityRequestStub        func(*cloudfront.GetCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.GetCloudFrontOriginAccessIdentityOutput)
-	getCloudFrontOriginAccessIdentityRequestMutex       sync.RWMutex
-	getCloudFrontOriginAccessIdentityRequestArgsForCall []struct {
-		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput
-	}
-	getCloudFrontOriginAccessIdentityRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-	}
-	getCloudFrontOriginAccessIdentityRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-	}
 	GetCloudFrontOriginAccessIdentityConfigStub        func(*cloudfront.GetCloudFrontOriginAccessIdentityConfigInput) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error)
 	getCloudFrontOriginAccessIdentityConfigMutex       sync.RWMutex
 	getCloudFrontOriginAccessIdentityConfigArgsForCall []struct {
@@ -472,21 +444,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	getCloudFrontOriginAccessIdentityConfigReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
-		result2 error
-	}
-	GetCloudFrontOriginAccessIdentityConfigWithContextStub        func(aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error)
-	getCloudFrontOriginAccessIdentityConfigWithContextMutex       sync.RWMutex
-	getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
-		arg3 []request.Option
-	}
-	getCloudFrontOriginAccessIdentityConfigWithContextReturns struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
-		result2 error
-	}
-	getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
 		result2 error
 	}
@@ -503,6 +460,49 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
 	}
+	GetCloudFrontOriginAccessIdentityConfigWithContextStub        func(aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error)
+	getCloudFrontOriginAccessIdentityConfigWithContextMutex       sync.RWMutex
+	getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
+		arg3 []request.Option
+	}
+	getCloudFrontOriginAccessIdentityConfigWithContextReturns struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
+		result2 error
+	}
+	getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
+		result2 error
+	}
+	GetCloudFrontOriginAccessIdentityRequestStub        func(*cloudfront.GetCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.GetCloudFrontOriginAccessIdentityOutput)
+	getCloudFrontOriginAccessIdentityRequestMutex       sync.RWMutex
+	getCloudFrontOriginAccessIdentityRequestArgsForCall []struct {
+		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput
+	}
+	getCloudFrontOriginAccessIdentityRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+	}
+	getCloudFrontOriginAccessIdentityRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+	}
+	GetCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error)
+	getCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
+	getCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}
+	getCloudFrontOriginAccessIdentityWithContextReturns struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}
+	getCloudFrontOriginAccessIdentityWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}
 	GetDistributionStub        func(*cloudfront.GetDistributionInput) (*cloudfront.GetDistributionOutput, error)
 	getDistributionMutex       sync.RWMutex
 	getDistributionArgsForCall []struct {
@@ -516,34 +516,6 @@ type FakeCloudFrontAPI struct {
 		result1 *cloudfront.GetDistributionOutput
 		result2 error
 	}
-	GetDistributionWithContextStub        func(aws.Context, *cloudfront.GetDistributionInput, ...request.Option) (*cloudfront.GetDistributionOutput, error)
-	getDistributionWithContextMutex       sync.RWMutex
-	getDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetDistributionInput
-		arg3 []request.Option
-	}
-	getDistributionWithContextReturns struct {
-		result1 *cloudfront.GetDistributionOutput
-		result2 error
-	}
-	getDistributionWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetDistributionOutput
-		result2 error
-	}
-	GetDistributionRequestStub        func(*cloudfront.GetDistributionInput) (*request.Request, *cloudfront.GetDistributionOutput)
-	getDistributionRequestMutex       sync.RWMutex
-	getDistributionRequestArgsForCall []struct {
-		arg1 *cloudfront.GetDistributionInput
-	}
-	getDistributionRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.GetDistributionOutput
-	}
-	getDistributionRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.GetDistributionOutput
-	}
 	GetDistributionConfigStub        func(*cloudfront.GetDistributionConfigInput) (*cloudfront.GetDistributionConfigOutput, error)
 	getDistributionConfigMutex       sync.RWMutex
 	getDistributionConfigArgsForCall []struct {
@@ -554,21 +526,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	getDistributionConfigReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetDistributionConfigOutput
-		result2 error
-	}
-	GetDistributionConfigWithContextStub        func(aws.Context, *cloudfront.GetDistributionConfigInput, ...request.Option) (*cloudfront.GetDistributionConfigOutput, error)
-	getDistributionConfigWithContextMutex       sync.RWMutex
-	getDistributionConfigWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetDistributionConfigInput
-		arg3 []request.Option
-	}
-	getDistributionConfigWithContextReturns struct {
-		result1 *cloudfront.GetDistributionConfigOutput
-		result2 error
-	}
-	getDistributionConfigWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.GetDistributionConfigOutput
 		result2 error
 	}
@@ -585,6 +542,49 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.GetDistributionConfigOutput
 	}
+	GetDistributionConfigWithContextStub        func(aws.Context, *cloudfront.GetDistributionConfigInput, ...request.Option) (*cloudfront.GetDistributionConfigOutput, error)
+	getDistributionConfigWithContextMutex       sync.RWMutex
+	getDistributionConfigWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetDistributionConfigInput
+		arg3 []request.Option
+	}
+	getDistributionConfigWithContextReturns struct {
+		result1 *cloudfront.GetDistributionConfigOutput
+		result2 error
+	}
+	getDistributionConfigWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetDistributionConfigOutput
+		result2 error
+	}
+	GetDistributionRequestStub        func(*cloudfront.GetDistributionInput) (*request.Request, *cloudfront.GetDistributionOutput)
+	getDistributionRequestMutex       sync.RWMutex
+	getDistributionRequestArgsForCall []struct {
+		arg1 *cloudfront.GetDistributionInput
+	}
+	getDistributionRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.GetDistributionOutput
+	}
+	getDistributionRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.GetDistributionOutput
+	}
+	GetDistributionWithContextStub        func(aws.Context, *cloudfront.GetDistributionInput, ...request.Option) (*cloudfront.GetDistributionOutput, error)
+	getDistributionWithContextMutex       sync.RWMutex
+	getDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetDistributionInput
+		arg3 []request.Option
+	}
+	getDistributionWithContextReturns struct {
+		result1 *cloudfront.GetDistributionOutput
+		result2 error
+	}
+	getDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetDistributionOutput
+		result2 error
+	}
 	GetInvalidationStub        func(*cloudfront.GetInvalidationInput) (*cloudfront.GetInvalidationOutput, error)
 	getInvalidationMutex       sync.RWMutex
 	getInvalidationArgsForCall []struct {
@@ -595,21 +595,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	getInvalidationReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetInvalidationOutput
-		result2 error
-	}
-	GetInvalidationWithContextStub        func(aws.Context, *cloudfront.GetInvalidationInput, ...request.Option) (*cloudfront.GetInvalidationOutput, error)
-	getInvalidationWithContextMutex       sync.RWMutex
-	getInvalidationWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetInvalidationInput
-		arg3 []request.Option
-	}
-	getInvalidationWithContextReturns struct {
-		result1 *cloudfront.GetInvalidationOutput
-		result2 error
-	}
-	getInvalidationWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.GetInvalidationOutput
 		result2 error
 	}
@@ -626,6 +611,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.GetInvalidationOutput
 	}
+	GetInvalidationWithContextStub        func(aws.Context, *cloudfront.GetInvalidationInput, ...request.Option) (*cloudfront.GetInvalidationOutput, error)
+	getInvalidationWithContextMutex       sync.RWMutex
+	getInvalidationWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetInvalidationInput
+		arg3 []request.Option
+	}
+	getInvalidationWithContextReturns struct {
+		result1 *cloudfront.GetInvalidationOutput
+		result2 error
+	}
+	getInvalidationWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetInvalidationOutput
+		result2 error
+	}
 	GetStreamingDistributionStub        func(*cloudfront.GetStreamingDistributionInput) (*cloudfront.GetStreamingDistributionOutput, error)
 	getStreamingDistributionMutex       sync.RWMutex
 	getStreamingDistributionArgsForCall []struct {
@@ -639,34 +639,6 @@ type FakeCloudFrontAPI struct {
 		result1 *cloudfront.GetStreamingDistributionOutput
 		result2 error
 	}
-	GetStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.GetStreamingDistributionInput, ...request.Option) (*cloudfront.GetStreamingDistributionOutput, error)
-	getStreamingDistributionWithContextMutex       sync.RWMutex
-	getStreamingDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetStreamingDistributionInput
-		arg3 []request.Option
-	}
-	getStreamingDistributionWithContextReturns struct {
-		result1 *cloudfront.GetStreamingDistributionOutput
-		result2 error
-	}
-	getStreamingDistributionWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetStreamingDistributionOutput
-		result2 error
-	}
-	GetStreamingDistributionRequestStub        func(*cloudfront.GetStreamingDistributionInput) (*request.Request, *cloudfront.GetStreamingDistributionOutput)
-	getStreamingDistributionRequestMutex       sync.RWMutex
-	getStreamingDistributionRequestArgsForCall []struct {
-		arg1 *cloudfront.GetStreamingDistributionInput
-	}
-	getStreamingDistributionRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.GetStreamingDistributionOutput
-	}
-	getStreamingDistributionRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.GetStreamingDistributionOutput
-	}
 	GetStreamingDistributionConfigStub        func(*cloudfront.GetStreamingDistributionConfigInput) (*cloudfront.GetStreamingDistributionConfigOutput, error)
 	getStreamingDistributionConfigMutex       sync.RWMutex
 	getStreamingDistributionConfigArgsForCall []struct {
@@ -677,21 +649,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	getStreamingDistributionConfigReturnsOnCall map[int]struct {
-		result1 *cloudfront.GetStreamingDistributionConfigOutput
-		result2 error
-	}
-	GetStreamingDistributionConfigWithContextStub        func(aws.Context, *cloudfront.GetStreamingDistributionConfigInput, ...request.Option) (*cloudfront.GetStreamingDistributionConfigOutput, error)
-	getStreamingDistributionConfigWithContextMutex       sync.RWMutex
-	getStreamingDistributionConfigWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetStreamingDistributionConfigInput
-		arg3 []request.Option
-	}
-	getStreamingDistributionConfigWithContextReturns struct {
-		result1 *cloudfront.GetStreamingDistributionConfigOutput
-		result2 error
-	}
-	getStreamingDistributionConfigWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.GetStreamingDistributionConfigOutput
 		result2 error
 	}
@@ -708,6 +665,49 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.GetStreamingDistributionConfigOutput
 	}
+	GetStreamingDistributionConfigWithContextStub        func(aws.Context, *cloudfront.GetStreamingDistributionConfigInput, ...request.Option) (*cloudfront.GetStreamingDistributionConfigOutput, error)
+	getStreamingDistributionConfigWithContextMutex       sync.RWMutex
+	getStreamingDistributionConfigWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetStreamingDistributionConfigInput
+		arg3 []request.Option
+	}
+	getStreamingDistributionConfigWithContextReturns struct {
+		result1 *cloudfront.GetStreamingDistributionConfigOutput
+		result2 error
+	}
+	getStreamingDistributionConfigWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetStreamingDistributionConfigOutput
+		result2 error
+	}
+	GetStreamingDistributionRequestStub        func(*cloudfront.GetStreamingDistributionInput) (*request.Request, *cloudfront.GetStreamingDistributionOutput)
+	getStreamingDistributionRequestMutex       sync.RWMutex
+	getStreamingDistributionRequestArgsForCall []struct {
+		arg1 *cloudfront.GetStreamingDistributionInput
+	}
+	getStreamingDistributionRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.GetStreamingDistributionOutput
+	}
+	getStreamingDistributionRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.GetStreamingDistributionOutput
+	}
+	GetStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.GetStreamingDistributionInput, ...request.Option) (*cloudfront.GetStreamingDistributionOutput, error)
+	getStreamingDistributionWithContextMutex       sync.RWMutex
+	getStreamingDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetStreamingDistributionInput
+		arg3 []request.Option
+	}
+	getStreamingDistributionWithContextReturns struct {
+		result1 *cloudfront.GetStreamingDistributionOutput
+		result2 error
+	}
+	getStreamingDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.GetStreamingDistributionOutput
+		result2 error
+	}
 	ListCloudFrontOriginAccessIdentitiesStub        func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error)
 	listCloudFrontOriginAccessIdentitiesMutex       sync.RWMutex
 	listCloudFrontOriginAccessIdentitiesArgsForCall []struct {
@@ -720,34 +720,6 @@ type FakeCloudFrontAPI struct {
 	listCloudFrontOriginAccessIdentitiesReturnsOnCall map[int]struct {
 		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
 		result2 error
-	}
-	ListCloudFrontOriginAccessIdentitiesWithContextStub        func(aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, ...request.Option) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error)
-	listCloudFrontOriginAccessIdentitiesWithContextMutex       sync.RWMutex
-	listCloudFrontOriginAccessIdentitiesWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
-		arg3 []request.Option
-	}
-	listCloudFrontOriginAccessIdentitiesWithContextReturns struct {
-		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-		result2 error
-	}
-	listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-		result2 error
-	}
-	ListCloudFrontOriginAccessIdentitiesRequestStub        func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*request.Request, *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput)
-	listCloudFrontOriginAccessIdentitiesRequestMutex       sync.RWMutex
-	listCloudFrontOriginAccessIdentitiesRequestArgsForCall []struct {
-		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
-	}
-	listCloudFrontOriginAccessIdentitiesRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-	}
-	listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
 	}
 	ListCloudFrontOriginAccessIdentitiesPagesStub        func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput, func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool) error
 	listCloudFrontOriginAccessIdentitiesPagesMutex       sync.RWMutex
@@ -775,6 +747,34 @@ type FakeCloudFrontAPI struct {
 	listCloudFrontOriginAccessIdentitiesPagesWithContextReturnsOnCall map[int]struct {
 		result1 error
 	}
+	ListCloudFrontOriginAccessIdentitiesRequestStub        func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*request.Request, *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput)
+	listCloudFrontOriginAccessIdentitiesRequestMutex       sync.RWMutex
+	listCloudFrontOriginAccessIdentitiesRequestArgsForCall []struct {
+		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
+	}
+	listCloudFrontOriginAccessIdentitiesRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+	}
+	listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+	}
+	ListCloudFrontOriginAccessIdentitiesWithContextStub        func(aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, ...request.Option) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error)
+	listCloudFrontOriginAccessIdentitiesWithContextMutex       sync.RWMutex
+	listCloudFrontOriginAccessIdentitiesWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
+		arg3 []request.Option
+	}
+	listCloudFrontOriginAccessIdentitiesWithContextReturns struct {
+		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+		result2 error
+	}
+	listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+		result2 error
+	}
 	ListDistributionsStub        func(*cloudfront.ListDistributionsInput) (*cloudfront.ListDistributionsOutput, error)
 	listDistributionsMutex       sync.RWMutex
 	listDistributionsArgsForCall []struct {
@@ -788,33 +788,46 @@ type FakeCloudFrontAPI struct {
 		result1 *cloudfront.ListDistributionsOutput
 		result2 error
 	}
-	ListDistributionsWithContextStub        func(aws.Context, *cloudfront.ListDistributionsInput, ...request.Option) (*cloudfront.ListDistributionsOutput, error)
-	listDistributionsWithContextMutex       sync.RWMutex
-	listDistributionsWithContextArgsForCall []struct {
+	ListDistributionsByWebACLIdStub        func(*cloudfront.ListDistributionsByWebACLIdInput) (*cloudfront.ListDistributionsByWebACLIdOutput, error)
+	listDistributionsByWebACLIdMutex       sync.RWMutex
+	listDistributionsByWebACLIdArgsForCall []struct {
+		arg1 *cloudfront.ListDistributionsByWebACLIdInput
+	}
+	listDistributionsByWebACLIdReturns struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+		result2 error
+	}
+	listDistributionsByWebACLIdReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+		result2 error
+	}
+	ListDistributionsByWebACLIdRequestStub        func(*cloudfront.ListDistributionsByWebACLIdInput) (*request.Request, *cloudfront.ListDistributionsByWebACLIdOutput)
+	listDistributionsByWebACLIdRequestMutex       sync.RWMutex
+	listDistributionsByWebACLIdRequestArgsForCall []struct {
+		arg1 *cloudfront.ListDistributionsByWebACLIdInput
+	}
+	listDistributionsByWebACLIdRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.ListDistributionsByWebACLIdOutput
+	}
+	listDistributionsByWebACLIdRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.ListDistributionsByWebACLIdOutput
+	}
+	ListDistributionsByWebACLIdWithContextStub        func(aws.Context, *cloudfront.ListDistributionsByWebACLIdInput, ...request.Option) (*cloudfront.ListDistributionsByWebACLIdOutput, error)
+	listDistributionsByWebACLIdWithContextMutex       sync.RWMutex
+	listDistributionsByWebACLIdWithContextArgsForCall []struct {
 		arg1 aws.Context
-		arg2 *cloudfront.ListDistributionsInput
+		arg2 *cloudfront.ListDistributionsByWebACLIdInput
 		arg3 []request.Option
 	}
-	listDistributionsWithContextReturns struct {
-		result1 *cloudfront.ListDistributionsOutput
+	listDistributionsByWebACLIdWithContextReturns struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
 		result2 error
 	}
-	listDistributionsWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListDistributionsOutput
+	listDistributionsByWebACLIdWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
 		result2 error
-	}
-	ListDistributionsRequestStub        func(*cloudfront.ListDistributionsInput) (*request.Request, *cloudfront.ListDistributionsOutput)
-	listDistributionsRequestMutex       sync.RWMutex
-	listDistributionsRequestArgsForCall []struct {
-		arg1 *cloudfront.ListDistributionsInput
-	}
-	listDistributionsRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.ListDistributionsOutput
-	}
-	listDistributionsRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.ListDistributionsOutput
 	}
 	ListDistributionsPagesStub        func(*cloudfront.ListDistributionsInput, func(*cloudfront.ListDistributionsOutput, bool) bool) error
 	listDistributionsPagesMutex       sync.RWMutex
@@ -842,46 +855,33 @@ type FakeCloudFrontAPI struct {
 	listDistributionsPagesWithContextReturnsOnCall map[int]struct {
 		result1 error
 	}
-	ListDistributionsByWebACLIdStub        func(*cloudfront.ListDistributionsByWebACLIdInput) (*cloudfront.ListDistributionsByWebACLIdOutput, error)
-	listDistributionsByWebACLIdMutex       sync.RWMutex
-	listDistributionsByWebACLIdArgsForCall []struct {
-		arg1 *cloudfront.ListDistributionsByWebACLIdInput
+	ListDistributionsRequestStub        func(*cloudfront.ListDistributionsInput) (*request.Request, *cloudfront.ListDistributionsOutput)
+	listDistributionsRequestMutex       sync.RWMutex
+	listDistributionsRequestArgsForCall []struct {
+		arg1 *cloudfront.ListDistributionsInput
 	}
-	listDistributionsByWebACLIdReturns struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
-		result2 error
+	listDistributionsRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.ListDistributionsOutput
 	}
-	listDistributionsByWebACLIdReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
-		result2 error
+	listDistributionsRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.ListDistributionsOutput
 	}
-	ListDistributionsByWebACLIdWithContextStub        func(aws.Context, *cloudfront.ListDistributionsByWebACLIdInput, ...request.Option) (*cloudfront.ListDistributionsByWebACLIdOutput, error)
-	listDistributionsByWebACLIdWithContextMutex       sync.RWMutex
-	listDistributionsByWebACLIdWithContextArgsForCall []struct {
+	ListDistributionsWithContextStub        func(aws.Context, *cloudfront.ListDistributionsInput, ...request.Option) (*cloudfront.ListDistributionsOutput, error)
+	listDistributionsWithContextMutex       sync.RWMutex
+	listDistributionsWithContextArgsForCall []struct {
 		arg1 aws.Context
-		arg2 *cloudfront.ListDistributionsByWebACLIdInput
+		arg2 *cloudfront.ListDistributionsInput
 		arg3 []request.Option
 	}
-	listDistributionsByWebACLIdWithContextReturns struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+	listDistributionsWithContextReturns struct {
+		result1 *cloudfront.ListDistributionsOutput
 		result2 error
 	}
-	listDistributionsByWebACLIdWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+	listDistributionsWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListDistributionsOutput
 		result2 error
-	}
-	ListDistributionsByWebACLIdRequestStub        func(*cloudfront.ListDistributionsByWebACLIdInput) (*request.Request, *cloudfront.ListDistributionsByWebACLIdOutput)
-	listDistributionsByWebACLIdRequestMutex       sync.RWMutex
-	listDistributionsByWebACLIdRequestArgsForCall []struct {
-		arg1 *cloudfront.ListDistributionsByWebACLIdInput
-	}
-	listDistributionsByWebACLIdRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.ListDistributionsByWebACLIdOutput
-	}
-	listDistributionsByWebACLIdRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.ListDistributionsByWebACLIdOutput
 	}
 	ListInvalidationsStub        func(*cloudfront.ListInvalidationsInput) (*cloudfront.ListInvalidationsOutput, error)
 	listInvalidationsMutex       sync.RWMutex
@@ -895,34 +895,6 @@ type FakeCloudFrontAPI struct {
 	listInvalidationsReturnsOnCall map[int]struct {
 		result1 *cloudfront.ListInvalidationsOutput
 		result2 error
-	}
-	ListInvalidationsWithContextStub        func(aws.Context, *cloudfront.ListInvalidationsInput, ...request.Option) (*cloudfront.ListInvalidationsOutput, error)
-	listInvalidationsWithContextMutex       sync.RWMutex
-	listInvalidationsWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListInvalidationsInput
-		arg3 []request.Option
-	}
-	listInvalidationsWithContextReturns struct {
-		result1 *cloudfront.ListInvalidationsOutput
-		result2 error
-	}
-	listInvalidationsWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListInvalidationsOutput
-		result2 error
-	}
-	ListInvalidationsRequestStub        func(*cloudfront.ListInvalidationsInput) (*request.Request, *cloudfront.ListInvalidationsOutput)
-	listInvalidationsRequestMutex       sync.RWMutex
-	listInvalidationsRequestArgsForCall []struct {
-		arg1 *cloudfront.ListInvalidationsInput
-	}
-	listInvalidationsRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.ListInvalidationsOutput
-	}
-	listInvalidationsRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.ListInvalidationsOutput
 	}
 	ListInvalidationsPagesStub        func(*cloudfront.ListInvalidationsInput, func(*cloudfront.ListInvalidationsOutput, bool) bool) error
 	listInvalidationsPagesMutex       sync.RWMutex
@@ -950,6 +922,34 @@ type FakeCloudFrontAPI struct {
 	listInvalidationsPagesWithContextReturnsOnCall map[int]struct {
 		result1 error
 	}
+	ListInvalidationsRequestStub        func(*cloudfront.ListInvalidationsInput) (*request.Request, *cloudfront.ListInvalidationsOutput)
+	listInvalidationsRequestMutex       sync.RWMutex
+	listInvalidationsRequestArgsForCall []struct {
+		arg1 *cloudfront.ListInvalidationsInput
+	}
+	listInvalidationsRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.ListInvalidationsOutput
+	}
+	listInvalidationsRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.ListInvalidationsOutput
+	}
+	ListInvalidationsWithContextStub        func(aws.Context, *cloudfront.ListInvalidationsInput, ...request.Option) (*cloudfront.ListInvalidationsOutput, error)
+	listInvalidationsWithContextMutex       sync.RWMutex
+	listInvalidationsWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListInvalidationsInput
+		arg3 []request.Option
+	}
+	listInvalidationsWithContextReturns struct {
+		result1 *cloudfront.ListInvalidationsOutput
+		result2 error
+	}
+	listInvalidationsWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListInvalidationsOutput
+		result2 error
+	}
 	ListStreamingDistributionsStub        func(*cloudfront.ListStreamingDistributionsInput) (*cloudfront.ListStreamingDistributionsOutput, error)
 	listStreamingDistributionsMutex       sync.RWMutex
 	listStreamingDistributionsArgsForCall []struct {
@@ -962,34 +962,6 @@ type FakeCloudFrontAPI struct {
 	listStreamingDistributionsReturnsOnCall map[int]struct {
 		result1 *cloudfront.ListStreamingDistributionsOutput
 		result2 error
-	}
-	ListStreamingDistributionsWithContextStub        func(aws.Context, *cloudfront.ListStreamingDistributionsInput, ...request.Option) (*cloudfront.ListStreamingDistributionsOutput, error)
-	listStreamingDistributionsWithContextMutex       sync.RWMutex
-	listStreamingDistributionsWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListStreamingDistributionsInput
-		arg3 []request.Option
-	}
-	listStreamingDistributionsWithContextReturns struct {
-		result1 *cloudfront.ListStreamingDistributionsOutput
-		result2 error
-	}
-	listStreamingDistributionsWithContextReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListStreamingDistributionsOutput
-		result2 error
-	}
-	ListStreamingDistributionsRequestStub        func(*cloudfront.ListStreamingDistributionsInput) (*request.Request, *cloudfront.ListStreamingDistributionsOutput)
-	listStreamingDistributionsRequestMutex       sync.RWMutex
-	listStreamingDistributionsRequestArgsForCall []struct {
-		arg1 *cloudfront.ListStreamingDistributionsInput
-	}
-	listStreamingDistributionsRequestReturns struct {
-		result1 *request.Request
-		result2 *cloudfront.ListStreamingDistributionsOutput
-	}
-	listStreamingDistributionsRequestReturnsOnCall map[int]struct {
-		result1 *request.Request
-		result2 *cloudfront.ListStreamingDistributionsOutput
 	}
 	ListStreamingDistributionsPagesStub        func(*cloudfront.ListStreamingDistributionsInput, func(*cloudfront.ListStreamingDistributionsOutput, bool) bool) error
 	listStreamingDistributionsPagesMutex       sync.RWMutex
@@ -1017,6 +989,34 @@ type FakeCloudFrontAPI struct {
 	listStreamingDistributionsPagesWithContextReturnsOnCall map[int]struct {
 		result1 error
 	}
+	ListStreamingDistributionsRequestStub        func(*cloudfront.ListStreamingDistributionsInput) (*request.Request, *cloudfront.ListStreamingDistributionsOutput)
+	listStreamingDistributionsRequestMutex       sync.RWMutex
+	listStreamingDistributionsRequestArgsForCall []struct {
+		arg1 *cloudfront.ListStreamingDistributionsInput
+	}
+	listStreamingDistributionsRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudfront.ListStreamingDistributionsOutput
+	}
+	listStreamingDistributionsRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudfront.ListStreamingDistributionsOutput
+	}
+	ListStreamingDistributionsWithContextStub        func(aws.Context, *cloudfront.ListStreamingDistributionsInput, ...request.Option) (*cloudfront.ListStreamingDistributionsOutput, error)
+	listStreamingDistributionsWithContextMutex       sync.RWMutex
+	listStreamingDistributionsWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListStreamingDistributionsInput
+		arg3 []request.Option
+	}
+	listStreamingDistributionsWithContextReturns struct {
+		result1 *cloudfront.ListStreamingDistributionsOutput
+		result2 error
+	}
+	listStreamingDistributionsWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListStreamingDistributionsOutput
+		result2 error
+	}
 	ListTagsForResourceStub        func(*cloudfront.ListTagsForResourceInput) (*cloudfront.ListTagsForResourceOutput, error)
 	listTagsForResourceMutex       sync.RWMutex
 	listTagsForResourceArgsForCall []struct {
@@ -1027,21 +1027,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	listTagsForResourceReturnsOnCall map[int]struct {
-		result1 *cloudfront.ListTagsForResourceOutput
-		result2 error
-	}
-	ListTagsForResourceWithContextStub        func(aws.Context, *cloudfront.ListTagsForResourceInput, ...request.Option) (*cloudfront.ListTagsForResourceOutput, error)
-	listTagsForResourceWithContextMutex       sync.RWMutex
-	listTagsForResourceWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListTagsForResourceInput
-		arg3 []request.Option
-	}
-	listTagsForResourceWithContextReturns struct {
-		result1 *cloudfront.ListTagsForResourceOutput
-		result2 error
-	}
-	listTagsForResourceWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.ListTagsForResourceOutput
 		result2 error
 	}
@@ -1058,6 +1043,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.ListTagsForResourceOutput
 	}
+	ListTagsForResourceWithContextStub        func(aws.Context, *cloudfront.ListTagsForResourceInput, ...request.Option) (*cloudfront.ListTagsForResourceOutput, error)
+	listTagsForResourceWithContextMutex       sync.RWMutex
+	listTagsForResourceWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListTagsForResourceInput
+		arg3 []request.Option
+	}
+	listTagsForResourceWithContextReturns struct {
+		result1 *cloudfront.ListTagsForResourceOutput
+		result2 error
+	}
+	listTagsForResourceWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.ListTagsForResourceOutput
+		result2 error
+	}
 	TagResourceStub        func(*cloudfront.TagResourceInput) (*cloudfront.TagResourceOutput, error)
 	tagResourceMutex       sync.RWMutex
 	tagResourceArgsForCall []struct {
@@ -1068,21 +1068,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	tagResourceReturnsOnCall map[int]struct {
-		result1 *cloudfront.TagResourceOutput
-		result2 error
-	}
-	TagResourceWithContextStub        func(aws.Context, *cloudfront.TagResourceInput, ...request.Option) (*cloudfront.TagResourceOutput, error)
-	tagResourceWithContextMutex       sync.RWMutex
-	tagResourceWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.TagResourceInput
-		arg3 []request.Option
-	}
-	tagResourceWithContextReturns struct {
-		result1 *cloudfront.TagResourceOutput
-		result2 error
-	}
-	tagResourceWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.TagResourceOutput
 		result2 error
 	}
@@ -1099,6 +1084,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.TagResourceOutput
 	}
+	TagResourceWithContextStub        func(aws.Context, *cloudfront.TagResourceInput, ...request.Option) (*cloudfront.TagResourceOutput, error)
+	tagResourceWithContextMutex       sync.RWMutex
+	tagResourceWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.TagResourceInput
+		arg3 []request.Option
+	}
+	tagResourceWithContextReturns struct {
+		result1 *cloudfront.TagResourceOutput
+		result2 error
+	}
+	tagResourceWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.TagResourceOutput
+		result2 error
+	}
 	UntagResourceStub        func(*cloudfront.UntagResourceInput) (*cloudfront.UntagResourceOutput, error)
 	untagResourceMutex       sync.RWMutex
 	untagResourceArgsForCall []struct {
@@ -1109,21 +1109,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	untagResourceReturnsOnCall map[int]struct {
-		result1 *cloudfront.UntagResourceOutput
-		result2 error
-	}
-	UntagResourceWithContextStub        func(aws.Context, *cloudfront.UntagResourceInput, ...request.Option) (*cloudfront.UntagResourceOutput, error)
-	untagResourceWithContextMutex       sync.RWMutex
-	untagResourceWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UntagResourceInput
-		arg3 []request.Option
-	}
-	untagResourceWithContextReturns struct {
-		result1 *cloudfront.UntagResourceOutput
-		result2 error
-	}
-	untagResourceWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.UntagResourceOutput
 		result2 error
 	}
@@ -1140,6 +1125,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.UntagResourceOutput
 	}
+	UntagResourceWithContextStub        func(aws.Context, *cloudfront.UntagResourceInput, ...request.Option) (*cloudfront.UntagResourceOutput, error)
+	untagResourceWithContextMutex       sync.RWMutex
+	untagResourceWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UntagResourceInput
+		arg3 []request.Option
+	}
+	untagResourceWithContextReturns struct {
+		result1 *cloudfront.UntagResourceOutput
+		result2 error
+	}
+	untagResourceWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.UntagResourceOutput
+		result2 error
+	}
 	UpdateCloudFrontOriginAccessIdentityStub        func(*cloudfront.UpdateCloudFrontOriginAccessIdentityInput) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error)
 	updateCloudFrontOriginAccessIdentityMutex       sync.RWMutex
 	updateCloudFrontOriginAccessIdentityArgsForCall []struct {
@@ -1150,21 +1150,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	updateCloudFrontOriginAccessIdentityReturnsOnCall map[int]struct {
-		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}
-	UpdateCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error)
-	updateCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
-	updateCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}
-	updateCloudFrontOriginAccessIdentityWithContextReturns struct {
-		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}
-	updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}
@@ -1181,6 +1166,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
 	}
+	UpdateCloudFrontOriginAccessIdentityWithContextStub        func(aws.Context, *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error)
+	updateCloudFrontOriginAccessIdentityWithContextMutex       sync.RWMutex
+	updateCloudFrontOriginAccessIdentityWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}
+	updateCloudFrontOriginAccessIdentityWithContextReturns struct {
+		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}
+	updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}
 	UpdateDistributionStub        func(*cloudfront.UpdateDistributionInput) (*cloudfront.UpdateDistributionOutput, error)
 	updateDistributionMutex       sync.RWMutex
 	updateDistributionArgsForCall []struct {
@@ -1191,21 +1191,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	updateDistributionReturnsOnCall map[int]struct {
-		result1 *cloudfront.UpdateDistributionOutput
-		result2 error
-	}
-	UpdateDistributionWithContextStub        func(aws.Context, *cloudfront.UpdateDistributionInput, ...request.Option) (*cloudfront.UpdateDistributionOutput, error)
-	updateDistributionWithContextMutex       sync.RWMutex
-	updateDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UpdateDistributionInput
-		arg3 []request.Option
-	}
-	updateDistributionWithContextReturns struct {
-		result1 *cloudfront.UpdateDistributionOutput
-		result2 error
-	}
-	updateDistributionWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.UpdateDistributionOutput
 		result2 error
 	}
@@ -1222,6 +1207,21 @@ type FakeCloudFrontAPI struct {
 		result1 *request.Request
 		result2 *cloudfront.UpdateDistributionOutput
 	}
+	UpdateDistributionWithContextStub        func(aws.Context, *cloudfront.UpdateDistributionInput, ...request.Option) (*cloudfront.UpdateDistributionOutput, error)
+	updateDistributionWithContextMutex       sync.RWMutex
+	updateDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UpdateDistributionInput
+		arg3 []request.Option
+	}
+	updateDistributionWithContextReturns struct {
+		result1 *cloudfront.UpdateDistributionOutput
+		result2 error
+	}
+	updateDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.UpdateDistributionOutput
+		result2 error
+	}
 	UpdateStreamingDistributionStub        func(*cloudfront.UpdateStreamingDistributionInput) (*cloudfront.UpdateStreamingDistributionOutput, error)
 	updateStreamingDistributionMutex       sync.RWMutex
 	updateStreamingDistributionArgsForCall []struct {
@@ -1232,21 +1232,6 @@ type FakeCloudFrontAPI struct {
 		result2 error
 	}
 	updateStreamingDistributionReturnsOnCall map[int]struct {
-		result1 *cloudfront.UpdateStreamingDistributionOutput
-		result2 error
-	}
-	UpdateStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.UpdateStreamingDistributionInput, ...request.Option) (*cloudfront.UpdateStreamingDistributionOutput, error)
-	updateStreamingDistributionWithContextMutex       sync.RWMutex
-	updateStreamingDistributionWithContextArgsForCall []struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UpdateStreamingDistributionInput
-		arg3 []request.Option
-	}
-	updateStreamingDistributionWithContextReturns struct {
-		result1 *cloudfront.UpdateStreamingDistributionOutput
-		result2 error
-	}
-	updateStreamingDistributionWithContextReturnsOnCall map[int]struct {
 		result1 *cloudfront.UpdateStreamingDistributionOutput
 		result2 error
 	}
@@ -1262,6 +1247,21 @@ type FakeCloudFrontAPI struct {
 	updateStreamingDistributionRequestReturnsOnCall map[int]struct {
 		result1 *request.Request
 		result2 *cloudfront.UpdateStreamingDistributionOutput
+	}
+	UpdateStreamingDistributionWithContextStub        func(aws.Context, *cloudfront.UpdateStreamingDistributionInput, ...request.Option) (*cloudfront.UpdateStreamingDistributionOutput, error)
+	updateStreamingDistributionWithContextMutex       sync.RWMutex
+	updateStreamingDistributionWithContextArgsForCall []struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UpdateStreamingDistributionInput
+		arg3 []request.Option
+	}
+	updateStreamingDistributionWithContextReturns struct {
+		result1 *cloudfront.UpdateStreamingDistributionOutput
+		result2 error
+	}
+	updateStreamingDistributionWithContextReturnsOnCall map[int]struct {
+		result1 *cloudfront.UpdateStreamingDistributionOutput
+		result2 error
 	}
 	WaitUntilDistributionDeployedStub        func(*cloudfront.GetDistributionInput) error
 	waitUntilDistributionDeployedMutex       sync.RWMutex
@@ -1353,7 +1353,8 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentity(arg1 *cloudf
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createCloudFrontOriginAccessIdentityReturns.result1, fake.createCloudFrontOriginAccessIdentityReturns.result2
+	fakeReturns := fake.createCloudFrontOriginAccessIdentityReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityCallCount() int {
@@ -1362,13 +1363,22 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityCallCount() i
 	return len(fake.createCloudFrontOriginAccessIdentityArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityCalls(stub func(*cloudfront.CreateCloudFrontOriginAccessIdentityInput) (*cloudfront.CreateCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.createCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityMutex.Unlock()
+	fake.CreateCloudFrontOriginAccessIdentityStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityArgsForCall(i int) *cloudfront.CreateCloudFrontOriginAccessIdentityInput {
 	fake.createCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.createCloudFrontOriginAccessIdentityMutex.RUnlock()
-	return fake.createCloudFrontOriginAccessIdentityArgsForCall[i].arg1
+	argsForCall := fake.createCloudFrontOriginAccessIdentityArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityReturns(result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.createCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.CreateCloudFrontOriginAccessIdentityStub = nil
 	fake.createCloudFrontOriginAccessIdentityReturns = struct {
 		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
@@ -1377,6 +1387,8 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityReturns(resul
 }
 
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityReturnsOnCall(i int, result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.createCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.CreateCloudFrontOriginAccessIdentityStub = nil
 	if fake.createCloudFrontOriginAccessIdentityReturnsOnCall == nil {
 		fake.createCloudFrontOriginAccessIdentityReturnsOnCall = make(map[int]struct {
@@ -1385,59 +1397,6 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityReturnsOnCall
 		})
 	}
 	fake.createCloudFrontOriginAccessIdentityReturnsOnCall[i] = struct {
-		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.CreateCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.CreateCloudFrontOriginAccessIdentityOutput, error) {
-	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Lock()
-	ret, specificReturn := fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall)]
-	fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("CreateCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
-	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.CreateCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.CreateCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.createCloudFrontOriginAccessIdentityWithContextReturns.result1, fake.createCloudFrontOriginAccessIdentityWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextCallCount() int {
-	fake.createCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return len(fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateCloudFrontOriginAccessIdentityInput, []request.Option) {
-	fake.createCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg1, fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg2, fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.CreateCloudFrontOriginAccessIdentityWithContextStub = nil
-	fake.createCloudFrontOriginAccessIdentityWithContextReturns = struct {
-		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.CreateCloudFrontOriginAccessIdentityWithContextStub = nil
-	if fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
-		fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
-			result2 error
-		})
-	}
-	fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}{result1, result2}
@@ -1457,7 +1416,8 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequest(arg1 
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createCloudFrontOriginAccessIdentityRequestReturns.result1, fake.createCloudFrontOriginAccessIdentityRequestReturns.result2
+	fakeReturns := fake.createCloudFrontOriginAccessIdentityRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestCallCount() int {
@@ -1466,13 +1426,22 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestCallCo
 	return len(fake.createCloudFrontOriginAccessIdentityRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestCalls(stub func(*cloudfront.CreateCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.CreateCloudFrontOriginAccessIdentityOutput)) {
+	fake.createCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	fake.CreateCloudFrontOriginAccessIdentityRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestArgsForCall(i int) *cloudfront.CreateCloudFrontOriginAccessIdentityInput {
 	fake.createCloudFrontOriginAccessIdentityRequestMutex.RLock()
 	defer fake.createCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
-	return fake.createCloudFrontOriginAccessIdentityRequestArgsForCall[i].arg1
+	argsForCall := fake.createCloudFrontOriginAccessIdentityRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestReturns(result1 *request.Request, result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput) {
+	fake.createCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityRequestMutex.Unlock()
 	fake.CreateCloudFrontOriginAccessIdentityRequestStub = nil
 	fake.createCloudFrontOriginAccessIdentityRequestReturns = struct {
 		result1 *request.Request
@@ -1481,6 +1450,8 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestReturn
 }
 
 func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput) {
+	fake.createCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityRequestMutex.Unlock()
 	fake.CreateCloudFrontOriginAccessIdentityRequestStub = nil
 	if fake.createCloudFrontOriginAccessIdentityRequestReturnsOnCall == nil {
 		fake.createCloudFrontOriginAccessIdentityRequestReturnsOnCall = make(map[int]struct {
@@ -1491,6 +1462,71 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequestReturn
 	fake.createCloudFrontOriginAccessIdentityRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.CreateCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.CreateCloudFrontOriginAccessIdentityOutput, error) {
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	ret, specificReturn := fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall)]
+	fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CreateCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	if fake.CreateCloudFrontOriginAccessIdentityWithContextStub != nil {
+		return fake.CreateCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createCloudFrontOriginAccessIdentityWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextCallCount() int {
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	return len(fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextCalls(stub func(aws.Context, *cloudfront.CreateCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.CreateCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.CreateCloudFrontOriginAccessIdentityWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateCloudFrontOriginAccessIdentityInput, []request.Option) {
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	argsForCall := fake.createCloudFrontOriginAccessIdentityWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.CreateCloudFrontOriginAccessIdentityWithContextStub = nil
+	fake.createCloudFrontOriginAccessIdentityWithContextReturns = struct {
+		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.CreateCloudFrontOriginAccessIdentityWithContextStub = nil
+	if fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
+		fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
+			result2 error
+		})
+	}
+	fake.createCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.CreateCloudFrontOriginAccessIdentityOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -1508,7 +1544,8 @@ func (fake *FakeCloudFrontAPI) CreateDistribution(arg1 *cloudfront.CreateDistrib
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createDistributionReturns.result1, fake.createDistributionReturns.result2
+	fakeReturns := fake.createDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionCallCount() int {
@@ -1517,13 +1554,22 @@ func (fake *FakeCloudFrontAPI) CreateDistributionCallCount() int {
 	return len(fake.createDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateDistributionCalls(stub func(*cloudfront.CreateDistributionInput) (*cloudfront.CreateDistributionOutput, error)) {
+	fake.createDistributionMutex.Lock()
+	defer fake.createDistributionMutex.Unlock()
+	fake.CreateDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateDistributionArgsForCall(i int) *cloudfront.CreateDistributionInput {
 	fake.createDistributionMutex.RLock()
 	defer fake.createDistributionMutex.RUnlock()
-	return fake.createDistributionArgsForCall[i].arg1
+	argsForCall := fake.createDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionReturns(result1 *cloudfront.CreateDistributionOutput, result2 error) {
+	fake.createDistributionMutex.Lock()
+	defer fake.createDistributionMutex.Unlock()
 	fake.CreateDistributionStub = nil
 	fake.createDistributionReturns = struct {
 		result1 *cloudfront.CreateDistributionOutput
@@ -1532,6 +1578,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionReturns(result1 *cloudfront.Cre
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionReturnsOnCall(i int, result1 *cloudfront.CreateDistributionOutput, result2 error) {
+	fake.createDistributionMutex.Lock()
+	defer fake.createDistributionMutex.Unlock()
 	fake.CreateDistributionStub = nil
 	if fake.createDistributionReturnsOnCall == nil {
 		fake.createDistributionReturnsOnCall = make(map[int]struct {
@@ -1540,59 +1588,6 @@ func (fake *FakeCloudFrontAPI) CreateDistributionReturnsOnCall(i int, result1 *c
 		})
 	}
 	fake.createDistributionReturnsOnCall[i] = struct {
-		result1 *cloudfront.CreateDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.CreateDistributionInput, arg3 ...request.Option) (*cloudfront.CreateDistributionOutput, error) {
-	fake.createDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.createDistributionWithContextReturnsOnCall[len(fake.createDistributionWithContextArgsForCall)]
-	fake.createDistributionWithContextArgsForCall = append(fake.createDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("CreateDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.createDistributionWithContextMutex.Unlock()
-	if fake.CreateDistributionWithContextStub != nil {
-		return fake.CreateDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.createDistributionWithContextReturns.result1, fake.createDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithContextCallCount() int {
-	fake.createDistributionWithContextMutex.RLock()
-	defer fake.createDistributionWithContextMutex.RUnlock()
-	return len(fake.createDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateDistributionInput, []request.Option) {
-	fake.createDistributionWithContextMutex.RLock()
-	defer fake.createDistributionWithContextMutex.RUnlock()
-	return fake.createDistributionWithContextArgsForCall[i].arg1, fake.createDistributionWithContextArgsForCall[i].arg2, fake.createDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithContextReturns(result1 *cloudfront.CreateDistributionOutput, result2 error) {
-	fake.CreateDistributionWithContextStub = nil
-	fake.createDistributionWithContextReturns = struct {
-		result1 *cloudfront.CreateDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.CreateDistributionOutput, result2 error) {
-	fake.CreateDistributionWithContextStub = nil
-	if fake.createDistributionWithContextReturnsOnCall == nil {
-		fake.createDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.CreateDistributionOutput
-			result2 error
-		})
-	}
-	fake.createDistributionWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.CreateDistributionOutput
 		result2 error
 	}{result1, result2}
@@ -1612,7 +1607,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionRequest(arg1 *cloudfront.Create
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createDistributionRequestReturns.result1, fake.createDistributionRequestReturns.result2
+	fakeReturns := fake.createDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionRequestCallCount() int {
@@ -1621,13 +1617,22 @@ func (fake *FakeCloudFrontAPI) CreateDistributionRequestCallCount() int {
 	return len(fake.createDistributionRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateDistributionRequestCalls(stub func(*cloudfront.CreateDistributionInput) (*request.Request, *cloudfront.CreateDistributionOutput)) {
+	fake.createDistributionRequestMutex.Lock()
+	defer fake.createDistributionRequestMutex.Unlock()
+	fake.CreateDistributionRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateDistributionRequestArgsForCall(i int) *cloudfront.CreateDistributionInput {
 	fake.createDistributionRequestMutex.RLock()
 	defer fake.createDistributionRequestMutex.RUnlock()
-	return fake.createDistributionRequestArgsForCall[i].arg1
+	argsForCall := fake.createDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.CreateDistributionOutput) {
+	fake.createDistributionRequestMutex.Lock()
+	defer fake.createDistributionRequestMutex.Unlock()
 	fake.CreateDistributionRequestStub = nil
 	fake.createDistributionRequestReturns = struct {
 		result1 *request.Request
@@ -1636,6 +1641,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionRequestReturns(result1 *request
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.CreateDistributionOutput) {
+	fake.createDistributionRequestMutex.Lock()
+	defer fake.createDistributionRequestMutex.Unlock()
 	fake.CreateDistributionRequestStub = nil
 	if fake.createDistributionRequestReturnsOnCall == nil {
 		fake.createDistributionRequestReturnsOnCall = make(map[int]struct {
@@ -1646,6 +1653,71 @@ func (fake *FakeCloudFrontAPI) CreateDistributionRequestReturnsOnCall(i int, res
 	fake.createDistributionRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.CreateDistributionInput, arg3 ...request.Option) (*cloudfront.CreateDistributionOutput, error) {
+	fake.createDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.createDistributionWithContextReturnsOnCall[len(fake.createDistributionWithContextArgsForCall)]
+	fake.createDistributionWithContextArgsForCall = append(fake.createDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CreateDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createDistributionWithContextMutex.Unlock()
+	if fake.CreateDistributionWithContextStub != nil {
+		return fake.CreateDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithContextCallCount() int {
+	fake.createDistributionWithContextMutex.RLock()
+	defer fake.createDistributionWithContextMutex.RUnlock()
+	return len(fake.createDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithContextCalls(stub func(aws.Context, *cloudfront.CreateDistributionInput, ...request.Option) (*cloudfront.CreateDistributionOutput, error)) {
+	fake.createDistributionWithContextMutex.Lock()
+	defer fake.createDistributionWithContextMutex.Unlock()
+	fake.CreateDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateDistributionInput, []request.Option) {
+	fake.createDistributionWithContextMutex.RLock()
+	defer fake.createDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.createDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithContextReturns(result1 *cloudfront.CreateDistributionOutput, result2 error) {
+	fake.createDistributionWithContextMutex.Lock()
+	defer fake.createDistributionWithContextMutex.Unlock()
+	fake.CreateDistributionWithContextStub = nil
+	fake.createDistributionWithContextReturns = struct {
+		result1 *cloudfront.CreateDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.CreateDistributionOutput, result2 error) {
+	fake.createDistributionWithContextMutex.Lock()
+	defer fake.createDistributionWithContextMutex.Unlock()
+	fake.CreateDistributionWithContextStub = nil
+	if fake.createDistributionWithContextReturnsOnCall == nil {
+		fake.createDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.CreateDistributionOutput
+			result2 error
+		})
+	}
+	fake.createDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.CreateDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -1663,7 +1735,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTags(arg1 *cloudfront.Creat
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createDistributionWithTagsReturns.result1, fake.createDistributionWithTagsReturns.result2
+	fakeReturns := fake.createDistributionWithTagsReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsCallCount() int {
@@ -1672,13 +1745,22 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsCallCount() int {
 	return len(fake.createDistributionWithTagsArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsCalls(stub func(*cloudfront.CreateDistributionWithTagsInput) (*cloudfront.CreateDistributionWithTagsOutput, error)) {
+	fake.createDistributionWithTagsMutex.Lock()
+	defer fake.createDistributionWithTagsMutex.Unlock()
+	fake.CreateDistributionWithTagsStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsArgsForCall(i int) *cloudfront.CreateDistributionWithTagsInput {
 	fake.createDistributionWithTagsMutex.RLock()
 	defer fake.createDistributionWithTagsMutex.RUnlock()
-	return fake.createDistributionWithTagsArgsForCall[i].arg1
+	argsForCall := fake.createDistributionWithTagsArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsReturns(result1 *cloudfront.CreateDistributionWithTagsOutput, result2 error) {
+	fake.createDistributionWithTagsMutex.Lock()
+	defer fake.createDistributionWithTagsMutex.Unlock()
 	fake.CreateDistributionWithTagsStub = nil
 	fake.createDistributionWithTagsReturns = struct {
 		result1 *cloudfront.CreateDistributionWithTagsOutput
@@ -1687,6 +1769,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsReturns(result1 *cloudf
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsReturnsOnCall(i int, result1 *cloudfront.CreateDistributionWithTagsOutput, result2 error) {
+	fake.createDistributionWithTagsMutex.Lock()
+	defer fake.createDistributionWithTagsMutex.Unlock()
 	fake.CreateDistributionWithTagsStub = nil
 	if fake.createDistributionWithTagsReturnsOnCall == nil {
 		fake.createDistributionWithTagsReturnsOnCall = make(map[int]struct {
@@ -1695,59 +1779,6 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsReturnsOnCall(i int, re
 		})
 	}
 	fake.createDistributionWithTagsReturnsOnCall[i] = struct {
-		result1 *cloudfront.CreateDistributionWithTagsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContext(arg1 aws.Context, arg2 *cloudfront.CreateDistributionWithTagsInput, arg3 ...request.Option) (*cloudfront.CreateDistributionWithTagsOutput, error) {
-	fake.createDistributionWithTagsWithContextMutex.Lock()
-	ret, specificReturn := fake.createDistributionWithTagsWithContextReturnsOnCall[len(fake.createDistributionWithTagsWithContextArgsForCall)]
-	fake.createDistributionWithTagsWithContextArgsForCall = append(fake.createDistributionWithTagsWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateDistributionWithTagsInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("CreateDistributionWithTagsWithContext", []interface{}{arg1, arg2, arg3})
-	fake.createDistributionWithTagsWithContextMutex.Unlock()
-	if fake.CreateDistributionWithTagsWithContextStub != nil {
-		return fake.CreateDistributionWithTagsWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.createDistributionWithTagsWithContextReturns.result1, fake.createDistributionWithTagsWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextCallCount() int {
-	fake.createDistributionWithTagsWithContextMutex.RLock()
-	defer fake.createDistributionWithTagsWithContextMutex.RUnlock()
-	return len(fake.createDistributionWithTagsWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateDistributionWithTagsInput, []request.Option) {
-	fake.createDistributionWithTagsWithContextMutex.RLock()
-	defer fake.createDistributionWithTagsWithContextMutex.RUnlock()
-	return fake.createDistributionWithTagsWithContextArgsForCall[i].arg1, fake.createDistributionWithTagsWithContextArgsForCall[i].arg2, fake.createDistributionWithTagsWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextReturns(result1 *cloudfront.CreateDistributionWithTagsOutput, result2 error) {
-	fake.CreateDistributionWithTagsWithContextStub = nil
-	fake.createDistributionWithTagsWithContextReturns = struct {
-		result1 *cloudfront.CreateDistributionWithTagsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextReturnsOnCall(i int, result1 *cloudfront.CreateDistributionWithTagsOutput, result2 error) {
-	fake.CreateDistributionWithTagsWithContextStub = nil
-	if fake.createDistributionWithTagsWithContextReturnsOnCall == nil {
-		fake.createDistributionWithTagsWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.CreateDistributionWithTagsOutput
-			result2 error
-		})
-	}
-	fake.createDistributionWithTagsWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.CreateDistributionWithTagsOutput
 		result2 error
 	}{result1, result2}
@@ -1767,7 +1798,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequest(arg1 *cloudfron
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createDistributionWithTagsRequestReturns.result1, fake.createDistributionWithTagsRequestReturns.result2
+	fakeReturns := fake.createDistributionWithTagsRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestCallCount() int {
@@ -1776,13 +1808,22 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestCallCount() int 
 	return len(fake.createDistributionWithTagsRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestCalls(stub func(*cloudfront.CreateDistributionWithTagsInput) (*request.Request, *cloudfront.CreateDistributionWithTagsOutput)) {
+	fake.createDistributionWithTagsRequestMutex.Lock()
+	defer fake.createDistributionWithTagsRequestMutex.Unlock()
+	fake.CreateDistributionWithTagsRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestArgsForCall(i int) *cloudfront.CreateDistributionWithTagsInput {
 	fake.createDistributionWithTagsRequestMutex.RLock()
 	defer fake.createDistributionWithTagsRequestMutex.RUnlock()
-	return fake.createDistributionWithTagsRequestArgsForCall[i].arg1
+	argsForCall := fake.createDistributionWithTagsRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestReturns(result1 *request.Request, result2 *cloudfront.CreateDistributionWithTagsOutput) {
+	fake.createDistributionWithTagsRequestMutex.Lock()
+	defer fake.createDistributionWithTagsRequestMutex.Unlock()
 	fake.CreateDistributionWithTagsRequestStub = nil
 	fake.createDistributionWithTagsRequestReturns = struct {
 		result1 *request.Request
@@ -1791,6 +1832,8 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestReturns(result1 
 }
 
 func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.CreateDistributionWithTagsOutput) {
+	fake.createDistributionWithTagsRequestMutex.Lock()
+	defer fake.createDistributionWithTagsRequestMutex.Unlock()
 	fake.CreateDistributionWithTagsRequestStub = nil
 	if fake.createDistributionWithTagsRequestReturnsOnCall == nil {
 		fake.createDistributionWithTagsRequestReturnsOnCall = make(map[int]struct {
@@ -1801,6 +1844,71 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequestReturnsOnCall(i 
 	fake.createDistributionWithTagsRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateDistributionWithTagsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContext(arg1 aws.Context, arg2 *cloudfront.CreateDistributionWithTagsInput, arg3 ...request.Option) (*cloudfront.CreateDistributionWithTagsOutput, error) {
+	fake.createDistributionWithTagsWithContextMutex.Lock()
+	ret, specificReturn := fake.createDistributionWithTagsWithContextReturnsOnCall[len(fake.createDistributionWithTagsWithContextArgsForCall)]
+	fake.createDistributionWithTagsWithContextArgsForCall = append(fake.createDistributionWithTagsWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateDistributionWithTagsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CreateDistributionWithTagsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createDistributionWithTagsWithContextMutex.Unlock()
+	if fake.CreateDistributionWithTagsWithContextStub != nil {
+		return fake.CreateDistributionWithTagsWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createDistributionWithTagsWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextCallCount() int {
+	fake.createDistributionWithTagsWithContextMutex.RLock()
+	defer fake.createDistributionWithTagsWithContextMutex.RUnlock()
+	return len(fake.createDistributionWithTagsWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextCalls(stub func(aws.Context, *cloudfront.CreateDistributionWithTagsInput, ...request.Option) (*cloudfront.CreateDistributionWithTagsOutput, error)) {
+	fake.createDistributionWithTagsWithContextMutex.Lock()
+	defer fake.createDistributionWithTagsWithContextMutex.Unlock()
+	fake.CreateDistributionWithTagsWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateDistributionWithTagsInput, []request.Option) {
+	fake.createDistributionWithTagsWithContextMutex.RLock()
+	defer fake.createDistributionWithTagsWithContextMutex.RUnlock()
+	argsForCall := fake.createDistributionWithTagsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextReturns(result1 *cloudfront.CreateDistributionWithTagsOutput, result2 error) {
+	fake.createDistributionWithTagsWithContextMutex.Lock()
+	defer fake.createDistributionWithTagsWithContextMutex.Unlock()
+	fake.CreateDistributionWithTagsWithContextStub = nil
+	fake.createDistributionWithTagsWithContextReturns = struct {
+		result1 *cloudfront.CreateDistributionWithTagsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContextReturnsOnCall(i int, result1 *cloudfront.CreateDistributionWithTagsOutput, result2 error) {
+	fake.createDistributionWithTagsWithContextMutex.Lock()
+	defer fake.createDistributionWithTagsWithContextMutex.Unlock()
+	fake.CreateDistributionWithTagsWithContextStub = nil
+	if fake.createDistributionWithTagsWithContextReturnsOnCall == nil {
+		fake.createDistributionWithTagsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.CreateDistributionWithTagsOutput
+			result2 error
+		})
+	}
+	fake.createDistributionWithTagsWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.CreateDistributionWithTagsOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -1818,7 +1926,8 @@ func (fake *FakeCloudFrontAPI) CreateInvalidation(arg1 *cloudfront.CreateInvalid
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createInvalidationReturns.result1, fake.createInvalidationReturns.result2
+	fakeReturns := fake.createInvalidationReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateInvalidationCallCount() int {
@@ -1827,13 +1936,22 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationCallCount() int {
 	return len(fake.createInvalidationArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateInvalidationCalls(stub func(*cloudfront.CreateInvalidationInput) (*cloudfront.CreateInvalidationOutput, error)) {
+	fake.createInvalidationMutex.Lock()
+	defer fake.createInvalidationMutex.Unlock()
+	fake.CreateInvalidationStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateInvalidationArgsForCall(i int) *cloudfront.CreateInvalidationInput {
 	fake.createInvalidationMutex.RLock()
 	defer fake.createInvalidationMutex.RUnlock()
-	return fake.createInvalidationArgsForCall[i].arg1
+	argsForCall := fake.createInvalidationArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateInvalidationReturns(result1 *cloudfront.CreateInvalidationOutput, result2 error) {
+	fake.createInvalidationMutex.Lock()
+	defer fake.createInvalidationMutex.Unlock()
 	fake.CreateInvalidationStub = nil
 	fake.createInvalidationReturns = struct {
 		result1 *cloudfront.CreateInvalidationOutput
@@ -1842,6 +1960,8 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationReturns(result1 *cloudfront.Cre
 }
 
 func (fake *FakeCloudFrontAPI) CreateInvalidationReturnsOnCall(i int, result1 *cloudfront.CreateInvalidationOutput, result2 error) {
+	fake.createInvalidationMutex.Lock()
+	defer fake.createInvalidationMutex.Unlock()
 	fake.CreateInvalidationStub = nil
 	if fake.createInvalidationReturnsOnCall == nil {
 		fake.createInvalidationReturnsOnCall = make(map[int]struct {
@@ -1850,59 +1970,6 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationReturnsOnCall(i int, result1 *c
 		})
 	}
 	fake.createInvalidationReturnsOnCall[i] = struct {
-		result1 *cloudfront.CreateInvalidationOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateInvalidationWithContext(arg1 aws.Context, arg2 *cloudfront.CreateInvalidationInput, arg3 ...request.Option) (*cloudfront.CreateInvalidationOutput, error) {
-	fake.createInvalidationWithContextMutex.Lock()
-	ret, specificReturn := fake.createInvalidationWithContextReturnsOnCall[len(fake.createInvalidationWithContextArgsForCall)]
-	fake.createInvalidationWithContextArgsForCall = append(fake.createInvalidationWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateInvalidationInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("CreateInvalidationWithContext", []interface{}{arg1, arg2, arg3})
-	fake.createInvalidationWithContextMutex.Unlock()
-	if fake.CreateInvalidationWithContextStub != nil {
-		return fake.CreateInvalidationWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.createInvalidationWithContextReturns.result1, fake.createInvalidationWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextCallCount() int {
-	fake.createInvalidationWithContextMutex.RLock()
-	defer fake.createInvalidationWithContextMutex.RUnlock()
-	return len(fake.createInvalidationWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateInvalidationInput, []request.Option) {
-	fake.createInvalidationWithContextMutex.RLock()
-	defer fake.createInvalidationWithContextMutex.RUnlock()
-	return fake.createInvalidationWithContextArgsForCall[i].arg1, fake.createInvalidationWithContextArgsForCall[i].arg2, fake.createInvalidationWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextReturns(result1 *cloudfront.CreateInvalidationOutput, result2 error) {
-	fake.CreateInvalidationWithContextStub = nil
-	fake.createInvalidationWithContextReturns = struct {
-		result1 *cloudfront.CreateInvalidationOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextReturnsOnCall(i int, result1 *cloudfront.CreateInvalidationOutput, result2 error) {
-	fake.CreateInvalidationWithContextStub = nil
-	if fake.createInvalidationWithContextReturnsOnCall == nil {
-		fake.createInvalidationWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.CreateInvalidationOutput
-			result2 error
-		})
-	}
-	fake.createInvalidationWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.CreateInvalidationOutput
 		result2 error
 	}{result1, result2}
@@ -1922,7 +1989,8 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationRequest(arg1 *cloudfront.Create
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createInvalidationRequestReturns.result1, fake.createInvalidationRequestReturns.result2
+	fakeReturns := fake.createInvalidationRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateInvalidationRequestCallCount() int {
@@ -1931,13 +1999,22 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationRequestCallCount() int {
 	return len(fake.createInvalidationRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateInvalidationRequestCalls(stub func(*cloudfront.CreateInvalidationInput) (*request.Request, *cloudfront.CreateInvalidationOutput)) {
+	fake.createInvalidationRequestMutex.Lock()
+	defer fake.createInvalidationRequestMutex.Unlock()
+	fake.CreateInvalidationRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateInvalidationRequestArgsForCall(i int) *cloudfront.CreateInvalidationInput {
 	fake.createInvalidationRequestMutex.RLock()
 	defer fake.createInvalidationRequestMutex.RUnlock()
-	return fake.createInvalidationRequestArgsForCall[i].arg1
+	argsForCall := fake.createInvalidationRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateInvalidationRequestReturns(result1 *request.Request, result2 *cloudfront.CreateInvalidationOutput) {
+	fake.createInvalidationRequestMutex.Lock()
+	defer fake.createInvalidationRequestMutex.Unlock()
 	fake.CreateInvalidationRequestStub = nil
 	fake.createInvalidationRequestReturns = struct {
 		result1 *request.Request
@@ -1946,6 +2023,8 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationRequestReturns(result1 *request
 }
 
 func (fake *FakeCloudFrontAPI) CreateInvalidationRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.CreateInvalidationOutput) {
+	fake.createInvalidationRequestMutex.Lock()
+	defer fake.createInvalidationRequestMutex.Unlock()
 	fake.CreateInvalidationRequestStub = nil
 	if fake.createInvalidationRequestReturnsOnCall == nil {
 		fake.createInvalidationRequestReturnsOnCall = make(map[int]struct {
@@ -1956,6 +2035,71 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationRequestReturnsOnCall(i int, res
 	fake.createInvalidationRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateInvalidationOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateInvalidationWithContext(arg1 aws.Context, arg2 *cloudfront.CreateInvalidationInput, arg3 ...request.Option) (*cloudfront.CreateInvalidationOutput, error) {
+	fake.createInvalidationWithContextMutex.Lock()
+	ret, specificReturn := fake.createInvalidationWithContextReturnsOnCall[len(fake.createInvalidationWithContextArgsForCall)]
+	fake.createInvalidationWithContextArgsForCall = append(fake.createInvalidationWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateInvalidationInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CreateInvalidationWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createInvalidationWithContextMutex.Unlock()
+	if fake.CreateInvalidationWithContextStub != nil {
+		return fake.CreateInvalidationWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createInvalidationWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextCallCount() int {
+	fake.createInvalidationWithContextMutex.RLock()
+	defer fake.createInvalidationWithContextMutex.RUnlock()
+	return len(fake.createInvalidationWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextCalls(stub func(aws.Context, *cloudfront.CreateInvalidationInput, ...request.Option) (*cloudfront.CreateInvalidationOutput, error)) {
+	fake.createInvalidationWithContextMutex.Lock()
+	defer fake.createInvalidationWithContextMutex.Unlock()
+	fake.CreateInvalidationWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateInvalidationInput, []request.Option) {
+	fake.createInvalidationWithContextMutex.RLock()
+	defer fake.createInvalidationWithContextMutex.RUnlock()
+	argsForCall := fake.createInvalidationWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextReturns(result1 *cloudfront.CreateInvalidationOutput, result2 error) {
+	fake.createInvalidationWithContextMutex.Lock()
+	defer fake.createInvalidationWithContextMutex.Unlock()
+	fake.CreateInvalidationWithContextStub = nil
+	fake.createInvalidationWithContextReturns = struct {
+		result1 *cloudfront.CreateInvalidationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateInvalidationWithContextReturnsOnCall(i int, result1 *cloudfront.CreateInvalidationOutput, result2 error) {
+	fake.createInvalidationWithContextMutex.Lock()
+	defer fake.createInvalidationWithContextMutex.Unlock()
+	fake.CreateInvalidationWithContextStub = nil
+	if fake.createInvalidationWithContextReturnsOnCall == nil {
+		fake.createInvalidationWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.CreateInvalidationOutput
+			result2 error
+		})
+	}
+	fake.createInvalidationWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.CreateInvalidationOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -1973,7 +2117,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistribution(arg1 *cloudfront.Crea
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createStreamingDistributionReturns.result1, fake.createStreamingDistributionReturns.result2
+	fakeReturns := fake.createStreamingDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionCallCount() int {
@@ -1982,13 +2127,22 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionCallCount() int {
 	return len(fake.createStreamingDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionCalls(stub func(*cloudfront.CreateStreamingDistributionInput) (*cloudfront.CreateStreamingDistributionOutput, error)) {
+	fake.createStreamingDistributionMutex.Lock()
+	defer fake.createStreamingDistributionMutex.Unlock()
+	fake.CreateStreamingDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionArgsForCall(i int) *cloudfront.CreateStreamingDistributionInput {
 	fake.createStreamingDistributionMutex.RLock()
 	defer fake.createStreamingDistributionMutex.RUnlock()
-	return fake.createStreamingDistributionArgsForCall[i].arg1
+	argsForCall := fake.createStreamingDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionReturns(result1 *cloudfront.CreateStreamingDistributionOutput, result2 error) {
+	fake.createStreamingDistributionMutex.Lock()
+	defer fake.createStreamingDistributionMutex.Unlock()
 	fake.CreateStreamingDistributionStub = nil
 	fake.createStreamingDistributionReturns = struct {
 		result1 *cloudfront.CreateStreamingDistributionOutput
@@ -1997,6 +2151,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionReturns(result1 *cloud
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionReturnsOnCall(i int, result1 *cloudfront.CreateStreamingDistributionOutput, result2 error) {
+	fake.createStreamingDistributionMutex.Lock()
+	defer fake.createStreamingDistributionMutex.Unlock()
 	fake.CreateStreamingDistributionStub = nil
 	if fake.createStreamingDistributionReturnsOnCall == nil {
 		fake.createStreamingDistributionReturnsOnCall = make(map[int]struct {
@@ -2005,59 +2161,6 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionReturnsOnCall(i int, r
 		})
 	}
 	fake.createStreamingDistributionReturnsOnCall[i] = struct {
-		result1 *cloudfront.CreateStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.CreateStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.CreateStreamingDistributionOutput, error) {
-	fake.createStreamingDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.createStreamingDistributionWithContextReturnsOnCall[len(fake.createStreamingDistributionWithContextArgsForCall)]
-	fake.createStreamingDistributionWithContextArgsForCall = append(fake.createStreamingDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateStreamingDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("CreateStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.createStreamingDistributionWithContextMutex.Unlock()
-	if fake.CreateStreamingDistributionWithContextStub != nil {
-		return fake.CreateStreamingDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.createStreamingDistributionWithContextReturns.result1, fake.createStreamingDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextCallCount() int {
-	fake.createStreamingDistributionWithContextMutex.RLock()
-	defer fake.createStreamingDistributionWithContextMutex.RUnlock()
-	return len(fake.createStreamingDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateStreamingDistributionInput, []request.Option) {
-	fake.createStreamingDistributionWithContextMutex.RLock()
-	defer fake.createStreamingDistributionWithContextMutex.RUnlock()
-	return fake.createStreamingDistributionWithContextArgsForCall[i].arg1, fake.createStreamingDistributionWithContextArgsForCall[i].arg2, fake.createStreamingDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextReturns(result1 *cloudfront.CreateStreamingDistributionOutput, result2 error) {
-	fake.CreateStreamingDistributionWithContextStub = nil
-	fake.createStreamingDistributionWithContextReturns = struct {
-		result1 *cloudfront.CreateStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.CreateStreamingDistributionOutput, result2 error) {
-	fake.CreateStreamingDistributionWithContextStub = nil
-	if fake.createStreamingDistributionWithContextReturnsOnCall == nil {
-		fake.createStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.CreateStreamingDistributionOutput
-			result2 error
-		})
-	}
-	fake.createStreamingDistributionWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.CreateStreamingDistributionOutput
 		result2 error
 	}{result1, result2}
@@ -2077,7 +2180,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequest(arg1 *cloudfro
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createStreamingDistributionRequestReturns.result1, fake.createStreamingDistributionRequestReturns.result2
+	fakeReturns := fake.createStreamingDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestCallCount() int {
@@ -2086,13 +2190,22 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestCallCount() int
 	return len(fake.createStreamingDistributionRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestCalls(stub func(*cloudfront.CreateStreamingDistributionInput) (*request.Request, *cloudfront.CreateStreamingDistributionOutput)) {
+	fake.createStreamingDistributionRequestMutex.Lock()
+	defer fake.createStreamingDistributionRequestMutex.Unlock()
+	fake.CreateStreamingDistributionRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestArgsForCall(i int) *cloudfront.CreateStreamingDistributionInput {
 	fake.createStreamingDistributionRequestMutex.RLock()
 	defer fake.createStreamingDistributionRequestMutex.RUnlock()
-	return fake.createStreamingDistributionRequestArgsForCall[i].arg1
+	argsForCall := fake.createStreamingDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.CreateStreamingDistributionOutput) {
+	fake.createStreamingDistributionRequestMutex.Lock()
+	defer fake.createStreamingDistributionRequestMutex.Unlock()
 	fake.CreateStreamingDistributionRequestStub = nil
 	fake.createStreamingDistributionRequestReturns = struct {
 		result1 *request.Request
@@ -2101,6 +2214,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestReturns(result1
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.CreateStreamingDistributionOutput) {
+	fake.createStreamingDistributionRequestMutex.Lock()
+	defer fake.createStreamingDistributionRequestMutex.Unlock()
 	fake.CreateStreamingDistributionRequestStub = nil
 	if fake.createStreamingDistributionRequestReturnsOnCall == nil {
 		fake.createStreamingDistributionRequestReturnsOnCall = make(map[int]struct {
@@ -2111,6 +2226,71 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequestReturnsOnCall(i
 	fake.createStreamingDistributionRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateStreamingDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.CreateStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.CreateStreamingDistributionOutput, error) {
+	fake.createStreamingDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.createStreamingDistributionWithContextReturnsOnCall[len(fake.createStreamingDistributionWithContextArgsForCall)]
+	fake.createStreamingDistributionWithContextArgsForCall = append(fake.createStreamingDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateStreamingDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CreateStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createStreamingDistributionWithContextMutex.Unlock()
+	if fake.CreateStreamingDistributionWithContextStub != nil {
+		return fake.CreateStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createStreamingDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextCallCount() int {
+	fake.createStreamingDistributionWithContextMutex.RLock()
+	defer fake.createStreamingDistributionWithContextMutex.RUnlock()
+	return len(fake.createStreamingDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextCalls(stub func(aws.Context, *cloudfront.CreateStreamingDistributionInput, ...request.Option) (*cloudfront.CreateStreamingDistributionOutput, error)) {
+	fake.createStreamingDistributionWithContextMutex.Lock()
+	defer fake.createStreamingDistributionWithContextMutex.Unlock()
+	fake.CreateStreamingDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateStreamingDistributionInput, []request.Option) {
+	fake.createStreamingDistributionWithContextMutex.RLock()
+	defer fake.createStreamingDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.createStreamingDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextReturns(result1 *cloudfront.CreateStreamingDistributionOutput, result2 error) {
+	fake.createStreamingDistributionWithContextMutex.Lock()
+	defer fake.createStreamingDistributionWithContextMutex.Unlock()
+	fake.CreateStreamingDistributionWithContextStub = nil
+	fake.createStreamingDistributionWithContextReturns = struct {
+		result1 *cloudfront.CreateStreamingDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.CreateStreamingDistributionOutput, result2 error) {
+	fake.createStreamingDistributionWithContextMutex.Lock()
+	defer fake.createStreamingDistributionWithContextMutex.Unlock()
+	fake.CreateStreamingDistributionWithContextStub = nil
+	if fake.createStreamingDistributionWithContextReturnsOnCall == nil {
+		fake.createStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.CreateStreamingDistributionOutput
+			result2 error
+		})
+	}
+	fake.createStreamingDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.CreateStreamingDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -2128,7 +2308,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTags(arg1 *cloudfr
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createStreamingDistributionWithTagsReturns.result1, fake.createStreamingDistributionWithTagsReturns.result2
+	fakeReturns := fake.createStreamingDistributionWithTagsReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsCallCount() int {
@@ -2137,13 +2318,22 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsCallCount() in
 	return len(fake.createStreamingDistributionWithTagsArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsCalls(stub func(*cloudfront.CreateStreamingDistributionWithTagsInput) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error)) {
+	fake.createStreamingDistributionWithTagsMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsMutex.Unlock()
+	fake.CreateStreamingDistributionWithTagsStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsArgsForCall(i int) *cloudfront.CreateStreamingDistributionWithTagsInput {
 	fake.createStreamingDistributionWithTagsMutex.RLock()
 	defer fake.createStreamingDistributionWithTagsMutex.RUnlock()
-	return fake.createStreamingDistributionWithTagsArgsForCall[i].arg1
+	argsForCall := fake.createStreamingDistributionWithTagsArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsReturns(result1 *cloudfront.CreateStreamingDistributionWithTagsOutput, result2 error) {
+	fake.createStreamingDistributionWithTagsMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsMutex.Unlock()
 	fake.CreateStreamingDistributionWithTagsStub = nil
 	fake.createStreamingDistributionWithTagsReturns = struct {
 		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
@@ -2152,6 +2342,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsReturns(result
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsReturnsOnCall(i int, result1 *cloudfront.CreateStreamingDistributionWithTagsOutput, result2 error) {
+	fake.createStreamingDistributionWithTagsMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsMutex.Unlock()
 	fake.CreateStreamingDistributionWithTagsStub = nil
 	if fake.createStreamingDistributionWithTagsReturnsOnCall == nil {
 		fake.createStreamingDistributionWithTagsReturnsOnCall = make(map[int]struct {
@@ -2160,59 +2352,6 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsReturnsOnCall(
 		})
 	}
 	fake.createStreamingDistributionWithTagsReturnsOnCall[i] = struct {
-		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContext(arg1 aws.Context, arg2 *cloudfront.CreateStreamingDistributionWithTagsInput, arg3 ...request.Option) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error) {
-	fake.createStreamingDistributionWithTagsWithContextMutex.Lock()
-	ret, specificReturn := fake.createStreamingDistributionWithTagsWithContextReturnsOnCall[len(fake.createStreamingDistributionWithTagsWithContextArgsForCall)]
-	fake.createStreamingDistributionWithTagsWithContextArgsForCall = append(fake.createStreamingDistributionWithTagsWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.CreateStreamingDistributionWithTagsInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("CreateStreamingDistributionWithTagsWithContext", []interface{}{arg1, arg2, arg3})
-	fake.createStreamingDistributionWithTagsWithContextMutex.Unlock()
-	if fake.CreateStreamingDistributionWithTagsWithContextStub != nil {
-		return fake.CreateStreamingDistributionWithTagsWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.createStreamingDistributionWithTagsWithContextReturns.result1, fake.createStreamingDistributionWithTagsWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextCallCount() int {
-	fake.createStreamingDistributionWithTagsWithContextMutex.RLock()
-	defer fake.createStreamingDistributionWithTagsWithContextMutex.RUnlock()
-	return len(fake.createStreamingDistributionWithTagsWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateStreamingDistributionWithTagsInput, []request.Option) {
-	fake.createStreamingDistributionWithTagsWithContextMutex.RLock()
-	defer fake.createStreamingDistributionWithTagsWithContextMutex.RUnlock()
-	return fake.createStreamingDistributionWithTagsWithContextArgsForCall[i].arg1, fake.createStreamingDistributionWithTagsWithContextArgsForCall[i].arg2, fake.createStreamingDistributionWithTagsWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextReturns(result1 *cloudfront.CreateStreamingDistributionWithTagsOutput, result2 error) {
-	fake.CreateStreamingDistributionWithTagsWithContextStub = nil
-	fake.createStreamingDistributionWithTagsWithContextReturns = struct {
-		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextReturnsOnCall(i int, result1 *cloudfront.CreateStreamingDistributionWithTagsOutput, result2 error) {
-	fake.CreateStreamingDistributionWithTagsWithContextStub = nil
-	if fake.createStreamingDistributionWithTagsWithContextReturnsOnCall == nil {
-		fake.createStreamingDistributionWithTagsWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
-			result2 error
-		})
-	}
-	fake.createStreamingDistributionWithTagsWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
 		result2 error
 	}{result1, result2}
@@ -2232,7 +2371,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequest(arg1 *
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.createStreamingDistributionWithTagsRequestReturns.result1, fake.createStreamingDistributionWithTagsRequestReturns.result2
+	fakeReturns := fake.createStreamingDistributionWithTagsRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestCallCount() int {
@@ -2241,13 +2381,22 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestCallCou
 	return len(fake.createStreamingDistributionWithTagsRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestCalls(stub func(*cloudfront.CreateStreamingDistributionWithTagsInput) (*request.Request, *cloudfront.CreateStreamingDistributionWithTagsOutput)) {
+	fake.createStreamingDistributionWithTagsRequestMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsRequestMutex.Unlock()
+	fake.CreateStreamingDistributionWithTagsRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestArgsForCall(i int) *cloudfront.CreateStreamingDistributionWithTagsInput {
 	fake.createStreamingDistributionWithTagsRequestMutex.RLock()
 	defer fake.createStreamingDistributionWithTagsRequestMutex.RUnlock()
-	return fake.createStreamingDistributionWithTagsRequestArgsForCall[i].arg1
+	argsForCall := fake.createStreamingDistributionWithTagsRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestReturns(result1 *request.Request, result2 *cloudfront.CreateStreamingDistributionWithTagsOutput) {
+	fake.createStreamingDistributionWithTagsRequestMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsRequestMutex.Unlock()
 	fake.CreateStreamingDistributionWithTagsRequestStub = nil
 	fake.createStreamingDistributionWithTagsRequestReturns = struct {
 		result1 *request.Request
@@ -2256,6 +2405,8 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestReturns
 }
 
 func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.CreateStreamingDistributionWithTagsOutput) {
+	fake.createStreamingDistributionWithTagsRequestMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsRequestMutex.Unlock()
 	fake.CreateStreamingDistributionWithTagsRequestStub = nil
 	if fake.createStreamingDistributionWithTagsRequestReturnsOnCall == nil {
 		fake.createStreamingDistributionWithTagsRequestReturnsOnCall = make(map[int]struct {
@@ -2266,6 +2417,71 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequestReturns
 	fake.createStreamingDistributionWithTagsRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.CreateStreamingDistributionWithTagsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContext(arg1 aws.Context, arg2 *cloudfront.CreateStreamingDistributionWithTagsInput, arg3 ...request.Option) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error) {
+	fake.createStreamingDistributionWithTagsWithContextMutex.Lock()
+	ret, specificReturn := fake.createStreamingDistributionWithTagsWithContextReturnsOnCall[len(fake.createStreamingDistributionWithTagsWithContextArgsForCall)]
+	fake.createStreamingDistributionWithTagsWithContextArgsForCall = append(fake.createStreamingDistributionWithTagsWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.CreateStreamingDistributionWithTagsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CreateStreamingDistributionWithTagsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createStreamingDistributionWithTagsWithContextMutex.Unlock()
+	if fake.CreateStreamingDistributionWithTagsWithContextStub != nil {
+		return fake.CreateStreamingDistributionWithTagsWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.createStreamingDistributionWithTagsWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextCallCount() int {
+	fake.createStreamingDistributionWithTagsWithContextMutex.RLock()
+	defer fake.createStreamingDistributionWithTagsWithContextMutex.RUnlock()
+	return len(fake.createStreamingDistributionWithTagsWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextCalls(stub func(aws.Context, *cloudfront.CreateStreamingDistributionWithTagsInput, ...request.Option) (*cloudfront.CreateStreamingDistributionWithTagsOutput, error)) {
+	fake.createStreamingDistributionWithTagsWithContextMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsWithContextMutex.Unlock()
+	fake.CreateStreamingDistributionWithTagsWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextArgsForCall(i int) (aws.Context, *cloudfront.CreateStreamingDistributionWithTagsInput, []request.Option) {
+	fake.createStreamingDistributionWithTagsWithContextMutex.RLock()
+	defer fake.createStreamingDistributionWithTagsWithContextMutex.RUnlock()
+	argsForCall := fake.createStreamingDistributionWithTagsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextReturns(result1 *cloudfront.CreateStreamingDistributionWithTagsOutput, result2 error) {
+	fake.createStreamingDistributionWithTagsWithContextMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsWithContextMutex.Unlock()
+	fake.CreateStreamingDistributionWithTagsWithContextStub = nil
+	fake.createStreamingDistributionWithTagsWithContextReturns = struct {
+		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContextReturnsOnCall(i int, result1 *cloudfront.CreateStreamingDistributionWithTagsOutput, result2 error) {
+	fake.createStreamingDistributionWithTagsWithContextMutex.Lock()
+	defer fake.createStreamingDistributionWithTagsWithContextMutex.Unlock()
+	fake.CreateStreamingDistributionWithTagsWithContextStub = nil
+	if fake.createStreamingDistributionWithTagsWithContextReturnsOnCall == nil {
+		fake.createStreamingDistributionWithTagsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
+			result2 error
+		})
+	}
+	fake.createStreamingDistributionWithTagsWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.CreateStreamingDistributionWithTagsOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -2283,7 +2499,8 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentity(arg1 *cloudf
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteCloudFrontOriginAccessIdentityReturns.result1, fake.deleteCloudFrontOriginAccessIdentityReturns.result2
+	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityCallCount() int {
@@ -2292,13 +2509,22 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityCallCount() i
 	return len(fake.deleteCloudFrontOriginAccessIdentityArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityCalls(stub func(*cloudfront.DeleteCloudFrontOriginAccessIdentityInput) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.deleteCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityMutex.Unlock()
+	fake.DeleteCloudFrontOriginAccessIdentityStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityArgsForCall(i int) *cloudfront.DeleteCloudFrontOriginAccessIdentityInput {
 	fake.deleteCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.deleteCloudFrontOriginAccessIdentityMutex.RUnlock()
-	return fake.deleteCloudFrontOriginAccessIdentityArgsForCall[i].arg1
+	argsForCall := fake.deleteCloudFrontOriginAccessIdentityArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityReturns(result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.deleteCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.DeleteCloudFrontOriginAccessIdentityStub = nil
 	fake.deleteCloudFrontOriginAccessIdentityReturns = struct {
 		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
@@ -2307,6 +2533,8 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityReturns(resul
 }
 
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityReturnsOnCall(i int, result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.deleteCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.DeleteCloudFrontOriginAccessIdentityStub = nil
 	if fake.deleteCloudFrontOriginAccessIdentityReturnsOnCall == nil {
 		fake.deleteCloudFrontOriginAccessIdentityReturnsOnCall = make(map[int]struct {
@@ -2315,59 +2543,6 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityReturnsOnCall
 		})
 	}
 	fake.deleteCloudFrontOriginAccessIdentityReturnsOnCall[i] = struct {
-		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error) {
-	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Lock()
-	ret, specificReturn := fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall)]
-	fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("DeleteCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
-	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.DeleteCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.DeleteCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.deleteCloudFrontOriginAccessIdentityWithContextReturns.result1, fake.deleteCloudFrontOriginAccessIdentityWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextCallCount() int {
-	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return len(fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, []request.Option) {
-	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg1, fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg2, fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.DeleteCloudFrontOriginAccessIdentityWithContextStub = nil
-	fake.deleteCloudFrontOriginAccessIdentityWithContextReturns = struct {
-		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.DeleteCloudFrontOriginAccessIdentityWithContextStub = nil
-	if fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
-		fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
-			result2 error
-		})
-	}
-	fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}{result1, result2}
@@ -2387,7 +2562,8 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequest(arg1 
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteCloudFrontOriginAccessIdentityRequestReturns.result1, fake.deleteCloudFrontOriginAccessIdentityRequestReturns.result2
+	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestCallCount() int {
@@ -2396,13 +2572,22 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestCallCo
 	return len(fake.deleteCloudFrontOriginAccessIdentityRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestCalls(stub func(*cloudfront.DeleteCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput)) {
+	fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	fake.DeleteCloudFrontOriginAccessIdentityRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestArgsForCall(i int) *cloudfront.DeleteCloudFrontOriginAccessIdentityInput {
 	fake.deleteCloudFrontOriginAccessIdentityRequestMutex.RLock()
 	defer fake.deleteCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
-	return fake.deleteCloudFrontOriginAccessIdentityRequestArgsForCall[i].arg1
+	argsForCall := fake.deleteCloudFrontOriginAccessIdentityRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestReturns(result1 *request.Request, result2 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput) {
+	fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Unlock()
 	fake.DeleteCloudFrontOriginAccessIdentityRequestStub = nil
 	fake.deleteCloudFrontOriginAccessIdentityRequestReturns = struct {
 		result1 *request.Request
@@ -2411,6 +2596,8 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestReturn
 }
 
 func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput) {
+	fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Unlock()
 	fake.DeleteCloudFrontOriginAccessIdentityRequestStub = nil
 	if fake.deleteCloudFrontOriginAccessIdentityRequestReturnsOnCall == nil {
 		fake.deleteCloudFrontOriginAccessIdentityRequestReturnsOnCall = make(map[int]struct {
@@ -2421,6 +2608,71 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequestReturn
 	fake.deleteCloudFrontOriginAccessIdentityRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error) {
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	ret, specificReturn := fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall)]
+	fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DeleteCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	if fake.DeleteCloudFrontOriginAccessIdentityWithContextStub != nil {
+		return fake.DeleteCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextCallCount() int {
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	return len(fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextCalls(stub func(aws.Context, *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.DeleteCloudFrontOriginAccessIdentityWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteCloudFrontOriginAccessIdentityInput, []request.Option) {
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	argsForCall := fake.deleteCloudFrontOriginAccessIdentityWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.DeleteCloudFrontOriginAccessIdentityWithContextStub = nil
+	fake.deleteCloudFrontOriginAccessIdentityWithContextReturns = struct {
+		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.DeleteCloudFrontOriginAccessIdentityWithContextStub = nil
+	if fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
+		fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
+			result2 error
+		})
+	}
+	fake.deleteCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.DeleteCloudFrontOriginAccessIdentityOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -2438,7 +2690,8 @@ func (fake *FakeCloudFrontAPI) DeleteDistribution(arg1 *cloudfront.DeleteDistrib
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteDistributionReturns.result1, fake.deleteDistributionReturns.result2
+	fakeReturns := fake.deleteDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteDistributionCallCount() int {
@@ -2447,13 +2700,22 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionCallCount() int {
 	return len(fake.deleteDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteDistributionCalls(stub func(*cloudfront.DeleteDistributionInput) (*cloudfront.DeleteDistributionOutput, error)) {
+	fake.deleteDistributionMutex.Lock()
+	defer fake.deleteDistributionMutex.Unlock()
+	fake.DeleteDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteDistributionArgsForCall(i int) *cloudfront.DeleteDistributionInput {
 	fake.deleteDistributionMutex.RLock()
 	defer fake.deleteDistributionMutex.RUnlock()
-	return fake.deleteDistributionArgsForCall[i].arg1
+	argsForCall := fake.deleteDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteDistributionReturns(result1 *cloudfront.DeleteDistributionOutput, result2 error) {
+	fake.deleteDistributionMutex.Lock()
+	defer fake.deleteDistributionMutex.Unlock()
 	fake.DeleteDistributionStub = nil
 	fake.deleteDistributionReturns = struct {
 		result1 *cloudfront.DeleteDistributionOutput
@@ -2462,6 +2724,8 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionReturns(result1 *cloudfront.Del
 }
 
 func (fake *FakeCloudFrontAPI) DeleteDistributionReturnsOnCall(i int, result1 *cloudfront.DeleteDistributionOutput, result2 error) {
+	fake.deleteDistributionMutex.Lock()
+	defer fake.deleteDistributionMutex.Unlock()
 	fake.DeleteDistributionStub = nil
 	if fake.deleteDistributionReturnsOnCall == nil {
 		fake.deleteDistributionReturnsOnCall = make(map[int]struct {
@@ -2470,59 +2734,6 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionReturnsOnCall(i int, result1 *c
 		})
 	}
 	fake.deleteDistributionReturnsOnCall[i] = struct {
-		result1 *cloudfront.DeleteDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteDistributionInput, arg3 ...request.Option) (*cloudfront.DeleteDistributionOutput, error) {
-	fake.deleteDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.deleteDistributionWithContextReturnsOnCall[len(fake.deleteDistributionWithContextArgsForCall)]
-	fake.deleteDistributionWithContextArgsForCall = append(fake.deleteDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("DeleteDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.deleteDistributionWithContextMutex.Unlock()
-	if fake.DeleteDistributionWithContextStub != nil {
-		return fake.DeleteDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.deleteDistributionWithContextReturns.result1, fake.deleteDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextCallCount() int {
-	fake.deleteDistributionWithContextMutex.RLock()
-	defer fake.deleteDistributionWithContextMutex.RUnlock()
-	return len(fake.deleteDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteDistributionInput, []request.Option) {
-	fake.deleteDistributionWithContextMutex.RLock()
-	defer fake.deleteDistributionWithContextMutex.RUnlock()
-	return fake.deleteDistributionWithContextArgsForCall[i].arg1, fake.deleteDistributionWithContextArgsForCall[i].arg2, fake.deleteDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextReturns(result1 *cloudfront.DeleteDistributionOutput, result2 error) {
-	fake.DeleteDistributionWithContextStub = nil
-	fake.deleteDistributionWithContextReturns = struct {
-		result1 *cloudfront.DeleteDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteDistributionOutput, result2 error) {
-	fake.DeleteDistributionWithContextStub = nil
-	if fake.deleteDistributionWithContextReturnsOnCall == nil {
-		fake.deleteDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.DeleteDistributionOutput
-			result2 error
-		})
-	}
-	fake.deleteDistributionWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.DeleteDistributionOutput
 		result2 error
 	}{result1, result2}
@@ -2542,7 +2753,8 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionRequest(arg1 *cloudfront.Delete
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteDistributionRequestReturns.result1, fake.deleteDistributionRequestReturns.result2
+	fakeReturns := fake.deleteDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteDistributionRequestCallCount() int {
@@ -2551,13 +2763,22 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionRequestCallCount() int {
 	return len(fake.deleteDistributionRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteDistributionRequestCalls(stub func(*cloudfront.DeleteDistributionInput) (*request.Request, *cloudfront.DeleteDistributionOutput)) {
+	fake.deleteDistributionRequestMutex.Lock()
+	defer fake.deleteDistributionRequestMutex.Unlock()
+	fake.DeleteDistributionRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteDistributionRequestArgsForCall(i int) *cloudfront.DeleteDistributionInput {
 	fake.deleteDistributionRequestMutex.RLock()
 	defer fake.deleteDistributionRequestMutex.RUnlock()
-	return fake.deleteDistributionRequestArgsForCall[i].arg1
+	argsForCall := fake.deleteDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.DeleteDistributionOutput) {
+	fake.deleteDistributionRequestMutex.Lock()
+	defer fake.deleteDistributionRequestMutex.Unlock()
 	fake.DeleteDistributionRequestStub = nil
 	fake.deleteDistributionRequestReturns = struct {
 		result1 *request.Request
@@ -2566,6 +2787,8 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionRequestReturns(result1 *request
 }
 
 func (fake *FakeCloudFrontAPI) DeleteDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.DeleteDistributionOutput) {
+	fake.deleteDistributionRequestMutex.Lock()
+	defer fake.deleteDistributionRequestMutex.Unlock()
 	fake.DeleteDistributionRequestStub = nil
 	if fake.deleteDistributionRequestReturnsOnCall == nil {
 		fake.deleteDistributionRequestReturnsOnCall = make(map[int]struct {
@@ -2576,6 +2799,71 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionRequestReturnsOnCall(i int, res
 	fake.deleteDistributionRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteDistributionInput, arg3 ...request.Option) (*cloudfront.DeleteDistributionOutput, error) {
+	fake.deleteDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.deleteDistributionWithContextReturnsOnCall[len(fake.deleteDistributionWithContextArgsForCall)]
+	fake.deleteDistributionWithContextArgsForCall = append(fake.deleteDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DeleteDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.deleteDistributionWithContextMutex.Unlock()
+	if fake.DeleteDistributionWithContextStub != nil {
+		return fake.DeleteDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.deleteDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextCallCount() int {
+	fake.deleteDistributionWithContextMutex.RLock()
+	defer fake.deleteDistributionWithContextMutex.RUnlock()
+	return len(fake.deleteDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextCalls(stub func(aws.Context, *cloudfront.DeleteDistributionInput, ...request.Option) (*cloudfront.DeleteDistributionOutput, error)) {
+	fake.deleteDistributionWithContextMutex.Lock()
+	defer fake.deleteDistributionWithContextMutex.Unlock()
+	fake.DeleteDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteDistributionInput, []request.Option) {
+	fake.deleteDistributionWithContextMutex.RLock()
+	defer fake.deleteDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.deleteDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextReturns(result1 *cloudfront.DeleteDistributionOutput, result2 error) {
+	fake.deleteDistributionWithContextMutex.Lock()
+	defer fake.deleteDistributionWithContextMutex.Unlock()
+	fake.DeleteDistributionWithContextStub = nil
+	fake.deleteDistributionWithContextReturns = struct {
+		result1 *cloudfront.DeleteDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteDistributionOutput, result2 error) {
+	fake.deleteDistributionWithContextMutex.Lock()
+	defer fake.deleteDistributionWithContextMutex.Unlock()
+	fake.DeleteDistributionWithContextStub = nil
+	if fake.deleteDistributionWithContextReturnsOnCall == nil {
+		fake.deleteDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.DeleteDistributionOutput
+			result2 error
+		})
+	}
+	fake.deleteDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.DeleteDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -2593,7 +2881,8 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRole(arg1 *cloudfront.DeleteSe
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteServiceLinkedRoleReturns.result1, fake.deleteServiceLinkedRoleReturns.result2
+	fakeReturns := fake.deleteServiceLinkedRoleReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleCallCount() int {
@@ -2602,13 +2891,22 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleCallCount() int {
 	return len(fake.deleteServiceLinkedRoleArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleCalls(stub func(*cloudfront.DeleteServiceLinkedRoleInput) (*cloudfront.DeleteServiceLinkedRoleOutput, error)) {
+	fake.deleteServiceLinkedRoleMutex.Lock()
+	defer fake.deleteServiceLinkedRoleMutex.Unlock()
+	fake.DeleteServiceLinkedRoleStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleArgsForCall(i int) *cloudfront.DeleteServiceLinkedRoleInput {
 	fake.deleteServiceLinkedRoleMutex.RLock()
 	defer fake.deleteServiceLinkedRoleMutex.RUnlock()
-	return fake.deleteServiceLinkedRoleArgsForCall[i].arg1
+	argsForCall := fake.deleteServiceLinkedRoleArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleReturns(result1 *cloudfront.DeleteServiceLinkedRoleOutput, result2 error) {
+	fake.deleteServiceLinkedRoleMutex.Lock()
+	defer fake.deleteServiceLinkedRoleMutex.Unlock()
 	fake.DeleteServiceLinkedRoleStub = nil
 	fake.deleteServiceLinkedRoleReturns = struct {
 		result1 *cloudfront.DeleteServiceLinkedRoleOutput
@@ -2617,6 +2915,8 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleReturns(result1 *cloudfron
 }
 
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleReturnsOnCall(i int, result1 *cloudfront.DeleteServiceLinkedRoleOutput, result2 error) {
+	fake.deleteServiceLinkedRoleMutex.Lock()
+	defer fake.deleteServiceLinkedRoleMutex.Unlock()
 	fake.DeleteServiceLinkedRoleStub = nil
 	if fake.deleteServiceLinkedRoleReturnsOnCall == nil {
 		fake.deleteServiceLinkedRoleReturnsOnCall = make(map[int]struct {
@@ -2625,59 +2925,6 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleReturnsOnCall(i int, resul
 		})
 	}
 	fake.deleteServiceLinkedRoleReturnsOnCall[i] = struct {
-		result1 *cloudfront.DeleteServiceLinkedRoleOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteServiceLinkedRoleInput, arg3 ...request.Option) (*cloudfront.DeleteServiceLinkedRoleOutput, error) {
-	fake.deleteServiceLinkedRoleWithContextMutex.Lock()
-	ret, specificReturn := fake.deleteServiceLinkedRoleWithContextReturnsOnCall[len(fake.deleteServiceLinkedRoleWithContextArgsForCall)]
-	fake.deleteServiceLinkedRoleWithContextArgsForCall = append(fake.deleteServiceLinkedRoleWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteServiceLinkedRoleInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("DeleteServiceLinkedRoleWithContext", []interface{}{arg1, arg2, arg3})
-	fake.deleteServiceLinkedRoleWithContextMutex.Unlock()
-	if fake.DeleteServiceLinkedRoleWithContextStub != nil {
-		return fake.DeleteServiceLinkedRoleWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.deleteServiceLinkedRoleWithContextReturns.result1, fake.deleteServiceLinkedRoleWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextCallCount() int {
-	fake.deleteServiceLinkedRoleWithContextMutex.RLock()
-	defer fake.deleteServiceLinkedRoleWithContextMutex.RUnlock()
-	return len(fake.deleteServiceLinkedRoleWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteServiceLinkedRoleInput, []request.Option) {
-	fake.deleteServiceLinkedRoleWithContextMutex.RLock()
-	defer fake.deleteServiceLinkedRoleWithContextMutex.RUnlock()
-	return fake.deleteServiceLinkedRoleWithContextArgsForCall[i].arg1, fake.deleteServiceLinkedRoleWithContextArgsForCall[i].arg2, fake.deleteServiceLinkedRoleWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextReturns(result1 *cloudfront.DeleteServiceLinkedRoleOutput, result2 error) {
-	fake.DeleteServiceLinkedRoleWithContextStub = nil
-	fake.deleteServiceLinkedRoleWithContextReturns = struct {
-		result1 *cloudfront.DeleteServiceLinkedRoleOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteServiceLinkedRoleOutput, result2 error) {
-	fake.DeleteServiceLinkedRoleWithContextStub = nil
-	if fake.deleteServiceLinkedRoleWithContextReturnsOnCall == nil {
-		fake.deleteServiceLinkedRoleWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.DeleteServiceLinkedRoleOutput
-			result2 error
-		})
-	}
-	fake.deleteServiceLinkedRoleWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.DeleteServiceLinkedRoleOutput
 		result2 error
 	}{result1, result2}
@@ -2697,7 +2944,8 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequest(arg1 *cloudfront.D
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteServiceLinkedRoleRequestReturns.result1, fake.deleteServiceLinkedRoleRequestReturns.result2
+	fakeReturns := fake.deleteServiceLinkedRoleRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestCallCount() int {
@@ -2706,13 +2954,22 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestCallCount() int {
 	return len(fake.deleteServiceLinkedRoleRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestCalls(stub func(*cloudfront.DeleteServiceLinkedRoleInput) (*request.Request, *cloudfront.DeleteServiceLinkedRoleOutput)) {
+	fake.deleteServiceLinkedRoleRequestMutex.Lock()
+	defer fake.deleteServiceLinkedRoleRequestMutex.Unlock()
+	fake.DeleteServiceLinkedRoleRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestArgsForCall(i int) *cloudfront.DeleteServiceLinkedRoleInput {
 	fake.deleteServiceLinkedRoleRequestMutex.RLock()
 	defer fake.deleteServiceLinkedRoleRequestMutex.RUnlock()
-	return fake.deleteServiceLinkedRoleRequestArgsForCall[i].arg1
+	argsForCall := fake.deleteServiceLinkedRoleRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestReturns(result1 *request.Request, result2 *cloudfront.DeleteServiceLinkedRoleOutput) {
+	fake.deleteServiceLinkedRoleRequestMutex.Lock()
+	defer fake.deleteServiceLinkedRoleRequestMutex.Unlock()
 	fake.DeleteServiceLinkedRoleRequestStub = nil
 	fake.deleteServiceLinkedRoleRequestReturns = struct {
 		result1 *request.Request
@@ -2721,6 +2978,8 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestReturns(result1 *re
 }
 
 func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.DeleteServiceLinkedRoleOutput) {
+	fake.deleteServiceLinkedRoleRequestMutex.Lock()
+	defer fake.deleteServiceLinkedRoleRequestMutex.Unlock()
 	fake.DeleteServiceLinkedRoleRequestStub = nil
 	if fake.deleteServiceLinkedRoleRequestReturnsOnCall == nil {
 		fake.deleteServiceLinkedRoleRequestReturnsOnCall = make(map[int]struct {
@@ -2731,6 +2990,71 @@ func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleRequestReturnsOnCall(i int
 	fake.deleteServiceLinkedRoleRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteServiceLinkedRoleOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteServiceLinkedRoleInput, arg3 ...request.Option) (*cloudfront.DeleteServiceLinkedRoleOutput, error) {
+	fake.deleteServiceLinkedRoleWithContextMutex.Lock()
+	ret, specificReturn := fake.deleteServiceLinkedRoleWithContextReturnsOnCall[len(fake.deleteServiceLinkedRoleWithContextArgsForCall)]
+	fake.deleteServiceLinkedRoleWithContextArgsForCall = append(fake.deleteServiceLinkedRoleWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteServiceLinkedRoleInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DeleteServiceLinkedRoleWithContext", []interface{}{arg1, arg2, arg3})
+	fake.deleteServiceLinkedRoleWithContextMutex.Unlock()
+	if fake.DeleteServiceLinkedRoleWithContextStub != nil {
+		return fake.DeleteServiceLinkedRoleWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.deleteServiceLinkedRoleWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextCallCount() int {
+	fake.deleteServiceLinkedRoleWithContextMutex.RLock()
+	defer fake.deleteServiceLinkedRoleWithContextMutex.RUnlock()
+	return len(fake.deleteServiceLinkedRoleWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextCalls(stub func(aws.Context, *cloudfront.DeleteServiceLinkedRoleInput, ...request.Option) (*cloudfront.DeleteServiceLinkedRoleOutput, error)) {
+	fake.deleteServiceLinkedRoleWithContextMutex.Lock()
+	defer fake.deleteServiceLinkedRoleWithContextMutex.Unlock()
+	fake.DeleteServiceLinkedRoleWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteServiceLinkedRoleInput, []request.Option) {
+	fake.deleteServiceLinkedRoleWithContextMutex.RLock()
+	defer fake.deleteServiceLinkedRoleWithContextMutex.RUnlock()
+	argsForCall := fake.deleteServiceLinkedRoleWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextReturns(result1 *cloudfront.DeleteServiceLinkedRoleOutput, result2 error) {
+	fake.deleteServiceLinkedRoleWithContextMutex.Lock()
+	defer fake.deleteServiceLinkedRoleWithContextMutex.Unlock()
+	fake.DeleteServiceLinkedRoleWithContextStub = nil
+	fake.deleteServiceLinkedRoleWithContextReturns = struct {
+		result1 *cloudfront.DeleteServiceLinkedRoleOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteServiceLinkedRoleWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteServiceLinkedRoleOutput, result2 error) {
+	fake.deleteServiceLinkedRoleWithContextMutex.Lock()
+	defer fake.deleteServiceLinkedRoleWithContextMutex.Unlock()
+	fake.DeleteServiceLinkedRoleWithContextStub = nil
+	if fake.deleteServiceLinkedRoleWithContextReturnsOnCall == nil {
+		fake.deleteServiceLinkedRoleWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.DeleteServiceLinkedRoleOutput
+			result2 error
+		})
+	}
+	fake.deleteServiceLinkedRoleWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.DeleteServiceLinkedRoleOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -2748,7 +3072,8 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistribution(arg1 *cloudfront.Dele
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteStreamingDistributionReturns.result1, fake.deleteStreamingDistributionReturns.result2
+	fakeReturns := fake.deleteStreamingDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionCallCount() int {
@@ -2757,13 +3082,22 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionCallCount() int {
 	return len(fake.deleteStreamingDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionCalls(stub func(*cloudfront.DeleteStreamingDistributionInput) (*cloudfront.DeleteStreamingDistributionOutput, error)) {
+	fake.deleteStreamingDistributionMutex.Lock()
+	defer fake.deleteStreamingDistributionMutex.Unlock()
+	fake.DeleteStreamingDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionArgsForCall(i int) *cloudfront.DeleteStreamingDistributionInput {
 	fake.deleteStreamingDistributionMutex.RLock()
 	defer fake.deleteStreamingDistributionMutex.RUnlock()
-	return fake.deleteStreamingDistributionArgsForCall[i].arg1
+	argsForCall := fake.deleteStreamingDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionReturns(result1 *cloudfront.DeleteStreamingDistributionOutput, result2 error) {
+	fake.deleteStreamingDistributionMutex.Lock()
+	defer fake.deleteStreamingDistributionMutex.Unlock()
 	fake.DeleteStreamingDistributionStub = nil
 	fake.deleteStreamingDistributionReturns = struct {
 		result1 *cloudfront.DeleteStreamingDistributionOutput
@@ -2772,6 +3106,8 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionReturns(result1 *cloud
 }
 
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionReturnsOnCall(i int, result1 *cloudfront.DeleteStreamingDistributionOutput, result2 error) {
+	fake.deleteStreamingDistributionMutex.Lock()
+	defer fake.deleteStreamingDistributionMutex.Unlock()
 	fake.DeleteStreamingDistributionStub = nil
 	if fake.deleteStreamingDistributionReturnsOnCall == nil {
 		fake.deleteStreamingDistributionReturnsOnCall = make(map[int]struct {
@@ -2780,59 +3116,6 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionReturnsOnCall(i int, r
 		})
 	}
 	fake.deleteStreamingDistributionReturnsOnCall[i] = struct {
-		result1 *cloudfront.DeleteStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.DeleteStreamingDistributionOutput, error) {
-	fake.deleteStreamingDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.deleteStreamingDistributionWithContextReturnsOnCall[len(fake.deleteStreamingDistributionWithContextArgsForCall)]
-	fake.deleteStreamingDistributionWithContextArgsForCall = append(fake.deleteStreamingDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.DeleteStreamingDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("DeleteStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.deleteStreamingDistributionWithContextMutex.Unlock()
-	if fake.DeleteStreamingDistributionWithContextStub != nil {
-		return fake.DeleteStreamingDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.deleteStreamingDistributionWithContextReturns.result1, fake.deleteStreamingDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextCallCount() int {
-	fake.deleteStreamingDistributionWithContextMutex.RLock()
-	defer fake.deleteStreamingDistributionWithContextMutex.RUnlock()
-	return len(fake.deleteStreamingDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteStreamingDistributionInput, []request.Option) {
-	fake.deleteStreamingDistributionWithContextMutex.RLock()
-	defer fake.deleteStreamingDistributionWithContextMutex.RUnlock()
-	return fake.deleteStreamingDistributionWithContextArgsForCall[i].arg1, fake.deleteStreamingDistributionWithContextArgsForCall[i].arg2, fake.deleteStreamingDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextReturns(result1 *cloudfront.DeleteStreamingDistributionOutput, result2 error) {
-	fake.DeleteStreamingDistributionWithContextStub = nil
-	fake.deleteStreamingDistributionWithContextReturns = struct {
-		result1 *cloudfront.DeleteStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteStreamingDistributionOutput, result2 error) {
-	fake.DeleteStreamingDistributionWithContextStub = nil
-	if fake.deleteStreamingDistributionWithContextReturnsOnCall == nil {
-		fake.deleteStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.DeleteStreamingDistributionOutput
-			result2 error
-		})
-	}
-	fake.deleteStreamingDistributionWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.DeleteStreamingDistributionOutput
 		result2 error
 	}{result1, result2}
@@ -2852,7 +3135,8 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequest(arg1 *cloudfro
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.deleteStreamingDistributionRequestReturns.result1, fake.deleteStreamingDistributionRequestReturns.result2
+	fakeReturns := fake.deleteStreamingDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestCallCount() int {
@@ -2861,13 +3145,22 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestCallCount() int
 	return len(fake.deleteStreamingDistributionRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestCalls(stub func(*cloudfront.DeleteStreamingDistributionInput) (*request.Request, *cloudfront.DeleteStreamingDistributionOutput)) {
+	fake.deleteStreamingDistributionRequestMutex.Lock()
+	defer fake.deleteStreamingDistributionRequestMutex.Unlock()
+	fake.DeleteStreamingDistributionRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestArgsForCall(i int) *cloudfront.DeleteStreamingDistributionInput {
 	fake.deleteStreamingDistributionRequestMutex.RLock()
 	defer fake.deleteStreamingDistributionRequestMutex.RUnlock()
-	return fake.deleteStreamingDistributionRequestArgsForCall[i].arg1
+	argsForCall := fake.deleteStreamingDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.DeleteStreamingDistributionOutput) {
+	fake.deleteStreamingDistributionRequestMutex.Lock()
+	defer fake.deleteStreamingDistributionRequestMutex.Unlock()
 	fake.DeleteStreamingDistributionRequestStub = nil
 	fake.deleteStreamingDistributionRequestReturns = struct {
 		result1 *request.Request
@@ -2876,6 +3169,8 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestReturns(result1
 }
 
 func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.DeleteStreamingDistributionOutput) {
+	fake.deleteStreamingDistributionRequestMutex.Lock()
+	defer fake.deleteStreamingDistributionRequestMutex.Unlock()
 	fake.DeleteStreamingDistributionRequestStub = nil
 	if fake.deleteStreamingDistributionRequestReturnsOnCall == nil {
 		fake.deleteStreamingDistributionRequestReturnsOnCall = make(map[int]struct {
@@ -2886,6 +3181,71 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequestReturnsOnCall(i
 	fake.deleteStreamingDistributionRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.DeleteStreamingDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.DeleteStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.DeleteStreamingDistributionOutput, error) {
+	fake.deleteStreamingDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.deleteStreamingDistributionWithContextReturnsOnCall[len(fake.deleteStreamingDistributionWithContextArgsForCall)]
+	fake.deleteStreamingDistributionWithContextArgsForCall = append(fake.deleteStreamingDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.DeleteStreamingDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DeleteStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.deleteStreamingDistributionWithContextMutex.Unlock()
+	if fake.DeleteStreamingDistributionWithContextStub != nil {
+		return fake.DeleteStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.deleteStreamingDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextCallCount() int {
+	fake.deleteStreamingDistributionWithContextMutex.RLock()
+	defer fake.deleteStreamingDistributionWithContextMutex.RUnlock()
+	return len(fake.deleteStreamingDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextCalls(stub func(aws.Context, *cloudfront.DeleteStreamingDistributionInput, ...request.Option) (*cloudfront.DeleteStreamingDistributionOutput, error)) {
+	fake.deleteStreamingDistributionWithContextMutex.Lock()
+	defer fake.deleteStreamingDistributionWithContextMutex.Unlock()
+	fake.DeleteStreamingDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.DeleteStreamingDistributionInput, []request.Option) {
+	fake.deleteStreamingDistributionWithContextMutex.RLock()
+	defer fake.deleteStreamingDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.deleteStreamingDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextReturns(result1 *cloudfront.DeleteStreamingDistributionOutput, result2 error) {
+	fake.deleteStreamingDistributionWithContextMutex.Lock()
+	defer fake.deleteStreamingDistributionWithContextMutex.Unlock()
+	fake.DeleteStreamingDistributionWithContextStub = nil
+	fake.deleteStreamingDistributionWithContextReturns = struct {
+		result1 *cloudfront.DeleteStreamingDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.DeleteStreamingDistributionOutput, result2 error) {
+	fake.deleteStreamingDistributionWithContextMutex.Lock()
+	defer fake.deleteStreamingDistributionWithContextMutex.Unlock()
+	fake.DeleteStreamingDistributionWithContextStub = nil
+	if fake.deleteStreamingDistributionWithContextReturnsOnCall == nil {
+		fake.deleteStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.DeleteStreamingDistributionOutput
+			result2 error
+		})
+	}
+	fake.deleteStreamingDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.DeleteStreamingDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -2903,7 +3263,8 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentity(arg1 *cloudfron
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getCloudFrontOriginAccessIdentityReturns.result1, fake.getCloudFrontOriginAccessIdentityReturns.result2
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityCallCount() int {
@@ -2912,13 +3273,22 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityCallCount() int 
 	return len(fake.getCloudFrontOriginAccessIdentityArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityCalls(stub func(*cloudfront.GetCloudFrontOriginAccessIdentityInput) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.getCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityArgsForCall(i int) *cloudfront.GetCloudFrontOriginAccessIdentityInput {
 	fake.getCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.getCloudFrontOriginAccessIdentityMutex.RUnlock()
-	return fake.getCloudFrontOriginAccessIdentityArgsForCall[i].arg1
+	argsForCall := fake.getCloudFrontOriginAccessIdentityArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityReturns(result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.GetCloudFrontOriginAccessIdentityStub = nil
 	fake.getCloudFrontOriginAccessIdentityReturns = struct {
 		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
@@ -2927,6 +3297,8 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityReturns(result1 
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityReturnsOnCall(i int, result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.GetCloudFrontOriginAccessIdentityStub = nil
 	if fake.getCloudFrontOriginAccessIdentityReturnsOnCall == nil {
 		fake.getCloudFrontOriginAccessIdentityReturnsOnCall = make(map[int]struct {
@@ -2937,110 +3309,6 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityReturnsOnCall(i 
 	fake.getCloudFrontOriginAccessIdentityReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error) {
-	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Lock()
-	ret, specificReturn := fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall)]
-	fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getCloudFrontOriginAccessIdentityWithContextReturns.result1, fake.getCloudFrontOriginAccessIdentityWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextCallCount() int {
-	fake.getCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return len(fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityInput, []request.Option) {
-	fake.getCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg1, fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg2, fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.GetCloudFrontOriginAccessIdentityWithContextStub = nil
-	fake.getCloudFrontOriginAccessIdentityWithContextReturns = struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.GetCloudFrontOriginAccessIdentityWithContextStub = nil
-	if fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
-		fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-			result2 error
-		})
-	}
-	fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequest(arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.GetCloudFrontOriginAccessIdentityOutput) {
-	fake.getCloudFrontOriginAccessIdentityRequestMutex.Lock()
-	ret, specificReturn := fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall[len(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall)]
-	fake.getCloudFrontOriginAccessIdentityRequestArgsForCall = append(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall, struct {
-		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput
-	}{arg1})
-	fake.recordInvocation("GetCloudFrontOriginAccessIdentityRequest", []interface{}{arg1})
-	fake.getCloudFrontOriginAccessIdentityRequestMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityRequestStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getCloudFrontOriginAccessIdentityRequestReturns.result1, fake.getCloudFrontOriginAccessIdentityRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestCallCount() int {
-	fake.getCloudFrontOriginAccessIdentityRequestMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
-	return len(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestArgsForCall(i int) *cloudfront.GetCloudFrontOriginAccessIdentityInput {
-	fake.getCloudFrontOriginAccessIdentityRequestMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
-	return fake.getCloudFrontOriginAccessIdentityRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestReturns(result1 *request.Request, result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput) {
-	fake.GetCloudFrontOriginAccessIdentityRequestStub = nil
-	fake.getCloudFrontOriginAccessIdentityRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput) {
-	fake.GetCloudFrontOriginAccessIdentityRequestStub = nil
-	if fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall == nil {
-		fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
-		})
-	}
-	fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
 	}{result1, result2}
 }
 
@@ -3058,7 +3326,8 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfig(arg1 *clo
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getCloudFrontOriginAccessIdentityConfigReturns.result1, fake.getCloudFrontOriginAccessIdentityConfigReturns.result2
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigCallCount() int {
@@ -3067,13 +3336,22 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigCallCount(
 	return len(fake.getCloudFrontOriginAccessIdentityConfigArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigCalls(stub func(*cloudfront.GetCloudFrontOriginAccessIdentityConfigInput) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error)) {
+	fake.getCloudFrontOriginAccessIdentityConfigMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityConfigStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigArgsForCall(i int) *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput {
 	fake.getCloudFrontOriginAccessIdentityConfigMutex.RLock()
 	defer fake.getCloudFrontOriginAccessIdentityConfigMutex.RUnlock()
-	return fake.getCloudFrontOriginAccessIdentityConfigArgsForCall[i].arg1
+	argsForCall := fake.getCloudFrontOriginAccessIdentityConfigArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigReturns(result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityConfigMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigMutex.Unlock()
 	fake.GetCloudFrontOriginAccessIdentityConfigStub = nil
 	fake.getCloudFrontOriginAccessIdentityConfigReturns = struct {
 		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
@@ -3082,6 +3360,8 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigReturns(re
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigReturnsOnCall(i int, result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityConfigMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigMutex.Unlock()
 	fake.GetCloudFrontOriginAccessIdentityConfigStub = nil
 	if fake.getCloudFrontOriginAccessIdentityConfigReturnsOnCall == nil {
 		fake.getCloudFrontOriginAccessIdentityConfigReturnsOnCall = make(map[int]struct {
@@ -3090,59 +3370,6 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigReturnsOnC
 		})
 	}
 	fake.getCloudFrontOriginAccessIdentityConfigReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContext(arg1 aws.Context, arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, arg3 ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error) {
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Lock()
-	ret, specificReturn := fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall[len(fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall)]
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall = append(fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetCloudFrontOriginAccessIdentityConfigWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns.result1, fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextCallCount() int {
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RUnlock()
-	return len(fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, []request.Option) {
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RUnlock()
-	return fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall[i].arg1, fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall[i].arg2, fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextReturns(result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, result2 error) {
-	fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub = nil
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns = struct {
-		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall(i int, result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, result2 error) {
-	fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub = nil
-	if fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall == nil {
-		fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
-			result2 error
-		})
-	}
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
 		result2 error
 	}{result1, result2}
@@ -3162,7 +3389,8 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequest(ar
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getCloudFrontOriginAccessIdentityConfigRequestReturns.result1, fake.getCloudFrontOriginAccessIdentityConfigRequestReturns.result2
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestCallCount() int {
@@ -3171,13 +3399,22 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestCal
 	return len(fake.getCloudFrontOriginAccessIdentityConfigRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestCalls(stub func(*cloudfront.GetCloudFrontOriginAccessIdentityConfigInput) (*request.Request, *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput)) {
+	fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityConfigRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestArgsForCall(i int) *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput {
 	fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.RLock()
 	defer fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.RUnlock()
-	return fake.getCloudFrontOriginAccessIdentityConfigRequestArgsForCall[i].arg1
+	argsForCall := fake.getCloudFrontOriginAccessIdentityConfigRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestReturns(result1 *request.Request, result2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput) {
+	fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Unlock()
 	fake.GetCloudFrontOriginAccessIdentityConfigRequestStub = nil
 	fake.getCloudFrontOriginAccessIdentityConfigRequestReturns = struct {
 		result1 *request.Request
@@ -3186,6 +3423,8 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestRet
 }
 
 func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput) {
+	fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Unlock()
 	fake.GetCloudFrontOriginAccessIdentityConfigRequestStub = nil
 	if fake.getCloudFrontOriginAccessIdentityConfigRequestReturnsOnCall == nil {
 		fake.getCloudFrontOriginAccessIdentityConfigRequestReturnsOnCall = make(map[int]struct {
@@ -3196,6 +3435,199 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequestRet
 	fake.getCloudFrontOriginAccessIdentityConfigRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContext(arg1 aws.Context, arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, arg3 ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error) {
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Lock()
+	ret, specificReturn := fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall[len(fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall)]
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall = append(fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetCloudFrontOriginAccessIdentityConfigWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Unlock()
+	if fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub != nil {
+		return fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextCallCount() int {
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RUnlock()
+	return len(fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextCalls(stub func(aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, error)) {
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput, []request.Option) {
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RUnlock()
+	argsForCall := fake.getCloudFrontOriginAccessIdentityConfigWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextReturns(result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub = nil
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns = struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall(i int, result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub = nil
+	if fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall == nil {
+		fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
+			result2 error
+		})
+	}
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequest(arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.GetCloudFrontOriginAccessIdentityOutput) {
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	ret, specificReturn := fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall[len(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall)]
+	fake.getCloudFrontOriginAccessIdentityRequestArgsForCall = append(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall, struct {
+		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput
+	}{arg1})
+	fake.recordInvocation("GetCloudFrontOriginAccessIdentityRequest", []interface{}{arg1})
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	if fake.GetCloudFrontOriginAccessIdentityRequestStub != nil {
+		return fake.GetCloudFrontOriginAccessIdentityRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestCallCount() int {
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
+	return len(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestCalls(stub func(*cloudfront.GetCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.GetCloudFrontOriginAccessIdentityOutput)) {
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityRequestStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestArgsForCall(i int) *cloudfront.GetCloudFrontOriginAccessIdentityInput {
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
+	argsForCall := fake.getCloudFrontOriginAccessIdentityRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestReturns(result1 *request.Request, result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput) {
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityRequestStub = nil
+	fake.getCloudFrontOriginAccessIdentityRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput) {
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityRequestStub = nil
+	if fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall == nil {
+		fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+		})
+	}
+	fake.getCloudFrontOriginAccessIdentityRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error) {
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	ret, specificReturn := fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall)]
+	fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	if fake.GetCloudFrontOriginAccessIdentityWithContextStub != nil {
+		return fake.GetCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextCallCount() int {
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	return len(fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextCalls(stub func(aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.GetCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetCloudFrontOriginAccessIdentityInput, []request.Option) {
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	argsForCall := fake.getCloudFrontOriginAccessIdentityWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityWithContextStub = nil
+	fake.getCloudFrontOriginAccessIdentityWithContextReturns = struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.GetCloudFrontOriginAccessIdentityWithContextStub = nil
+	if fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
+		fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+			result2 error
+		})
+	}
+	fake.getCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetCloudFrontOriginAccessIdentityOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -3213,7 +3645,8 @@ func (fake *FakeCloudFrontAPI) GetDistribution(arg1 *cloudfront.GetDistributionI
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getDistributionReturns.result1, fake.getDistributionReturns.result2
+	fakeReturns := fake.getDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionCallCount() int {
@@ -3222,13 +3655,22 @@ func (fake *FakeCloudFrontAPI) GetDistributionCallCount() int {
 	return len(fake.getDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetDistributionCalls(stub func(*cloudfront.GetDistributionInput) (*cloudfront.GetDistributionOutput, error)) {
+	fake.getDistributionMutex.Lock()
+	defer fake.getDistributionMutex.Unlock()
+	fake.GetDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetDistributionArgsForCall(i int) *cloudfront.GetDistributionInput {
 	fake.getDistributionMutex.RLock()
 	defer fake.getDistributionMutex.RUnlock()
-	return fake.getDistributionArgsForCall[i].arg1
+	argsForCall := fake.getDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionReturns(result1 *cloudfront.GetDistributionOutput, result2 error) {
+	fake.getDistributionMutex.Lock()
+	defer fake.getDistributionMutex.Unlock()
 	fake.GetDistributionStub = nil
 	fake.getDistributionReturns = struct {
 		result1 *cloudfront.GetDistributionOutput
@@ -3237,6 +3679,8 @@ func (fake *FakeCloudFrontAPI) GetDistributionReturns(result1 *cloudfront.GetDis
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionReturnsOnCall(i int, result1 *cloudfront.GetDistributionOutput, result2 error) {
+	fake.getDistributionMutex.Lock()
+	defer fake.getDistributionMutex.Unlock()
 	fake.GetDistributionStub = nil
 	if fake.getDistributionReturnsOnCall == nil {
 		fake.getDistributionReturnsOnCall = make(map[int]struct {
@@ -3247,110 +3691,6 @@ func (fake *FakeCloudFrontAPI) GetDistributionReturnsOnCall(i int, result1 *clou
 	fake.getDistributionReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetDistributionOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.GetDistributionInput, arg3 ...request.Option) (*cloudfront.GetDistributionOutput, error) {
-	fake.getDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.getDistributionWithContextReturnsOnCall[len(fake.getDistributionWithContextArgsForCall)]
-	fake.getDistributionWithContextArgsForCall = append(fake.getDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getDistributionWithContextMutex.Unlock()
-	if fake.GetDistributionWithContextStub != nil {
-		return fake.GetDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getDistributionWithContextReturns.result1, fake.getDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionWithContextCallCount() int {
-	fake.getDistributionWithContextMutex.RLock()
-	defer fake.getDistributionWithContextMutex.RUnlock()
-	return len(fake.getDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetDistributionInput, []request.Option) {
-	fake.getDistributionWithContextMutex.RLock()
-	defer fake.getDistributionWithContextMutex.RUnlock()
-	return fake.getDistributionWithContextArgsForCall[i].arg1, fake.getDistributionWithContextArgsForCall[i].arg2, fake.getDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionWithContextReturns(result1 *cloudfront.GetDistributionOutput, result2 error) {
-	fake.GetDistributionWithContextStub = nil
-	fake.getDistributionWithContextReturns = struct {
-		result1 *cloudfront.GetDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.GetDistributionOutput, result2 error) {
-	fake.GetDistributionWithContextStub = nil
-	if fake.getDistributionWithContextReturnsOnCall == nil {
-		fake.getDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetDistributionOutput
-			result2 error
-		})
-	}
-	fake.getDistributionWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionRequest(arg1 *cloudfront.GetDistributionInput) (*request.Request, *cloudfront.GetDistributionOutput) {
-	fake.getDistributionRequestMutex.Lock()
-	ret, specificReturn := fake.getDistributionRequestReturnsOnCall[len(fake.getDistributionRequestArgsForCall)]
-	fake.getDistributionRequestArgsForCall = append(fake.getDistributionRequestArgsForCall, struct {
-		arg1 *cloudfront.GetDistributionInput
-	}{arg1})
-	fake.recordInvocation("GetDistributionRequest", []interface{}{arg1})
-	fake.getDistributionRequestMutex.Unlock()
-	if fake.GetDistributionRequestStub != nil {
-		return fake.GetDistributionRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getDistributionRequestReturns.result1, fake.getDistributionRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionRequestCallCount() int {
-	fake.getDistributionRequestMutex.RLock()
-	defer fake.getDistributionRequestMutex.RUnlock()
-	return len(fake.getDistributionRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionRequestArgsForCall(i int) *cloudfront.GetDistributionInput {
-	fake.getDistributionRequestMutex.RLock()
-	defer fake.getDistributionRequestMutex.RUnlock()
-	return fake.getDistributionRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.GetDistributionOutput) {
-	fake.GetDistributionRequestStub = nil
-	fake.getDistributionRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.GetDistributionOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetDistributionOutput) {
-	fake.GetDistributionRequestStub = nil
-	if fake.getDistributionRequestReturnsOnCall == nil {
-		fake.getDistributionRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.GetDistributionOutput
-		})
-	}
-	fake.getDistributionRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.GetDistributionOutput
 	}{result1, result2}
 }
 
@@ -3368,7 +3708,8 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfig(arg1 *cloudfront.GetDistrib
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getDistributionConfigReturns.result1, fake.getDistributionConfigReturns.result2
+	fakeReturns := fake.getDistributionConfigReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionConfigCallCount() int {
@@ -3377,13 +3718,22 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigCallCount() int {
 	return len(fake.getDistributionConfigArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetDistributionConfigCalls(stub func(*cloudfront.GetDistributionConfigInput) (*cloudfront.GetDistributionConfigOutput, error)) {
+	fake.getDistributionConfigMutex.Lock()
+	defer fake.getDistributionConfigMutex.Unlock()
+	fake.GetDistributionConfigStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetDistributionConfigArgsForCall(i int) *cloudfront.GetDistributionConfigInput {
 	fake.getDistributionConfigMutex.RLock()
 	defer fake.getDistributionConfigMutex.RUnlock()
-	return fake.getDistributionConfigArgsForCall[i].arg1
+	argsForCall := fake.getDistributionConfigArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionConfigReturns(result1 *cloudfront.GetDistributionConfigOutput, result2 error) {
+	fake.getDistributionConfigMutex.Lock()
+	defer fake.getDistributionConfigMutex.Unlock()
 	fake.GetDistributionConfigStub = nil
 	fake.getDistributionConfigReturns = struct {
 		result1 *cloudfront.GetDistributionConfigOutput
@@ -3392,6 +3742,8 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigReturns(result1 *cloudfront.
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionConfigReturnsOnCall(i int, result1 *cloudfront.GetDistributionConfigOutput, result2 error) {
+	fake.getDistributionConfigMutex.Lock()
+	defer fake.getDistributionConfigMutex.Unlock()
 	fake.GetDistributionConfigStub = nil
 	if fake.getDistributionConfigReturnsOnCall == nil {
 		fake.getDistributionConfigReturnsOnCall = make(map[int]struct {
@@ -3400,59 +3752,6 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigReturnsOnCall(i int, result1
 		})
 	}
 	fake.getDistributionConfigReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetDistributionConfigOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContext(arg1 aws.Context, arg2 *cloudfront.GetDistributionConfigInput, arg3 ...request.Option) (*cloudfront.GetDistributionConfigOutput, error) {
-	fake.getDistributionConfigWithContextMutex.Lock()
-	ret, specificReturn := fake.getDistributionConfigWithContextReturnsOnCall[len(fake.getDistributionConfigWithContextArgsForCall)]
-	fake.getDistributionConfigWithContextArgsForCall = append(fake.getDistributionConfigWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetDistributionConfigInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetDistributionConfigWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getDistributionConfigWithContextMutex.Unlock()
-	if fake.GetDistributionConfigWithContextStub != nil {
-		return fake.GetDistributionConfigWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getDistributionConfigWithContextReturns.result1, fake.getDistributionConfigWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextCallCount() int {
-	fake.getDistributionConfigWithContextMutex.RLock()
-	defer fake.getDistributionConfigWithContextMutex.RUnlock()
-	return len(fake.getDistributionConfigWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetDistributionConfigInput, []request.Option) {
-	fake.getDistributionConfigWithContextMutex.RLock()
-	defer fake.getDistributionConfigWithContextMutex.RUnlock()
-	return fake.getDistributionConfigWithContextArgsForCall[i].arg1, fake.getDistributionConfigWithContextArgsForCall[i].arg2, fake.getDistributionConfigWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextReturns(result1 *cloudfront.GetDistributionConfigOutput, result2 error) {
-	fake.GetDistributionConfigWithContextStub = nil
-	fake.getDistributionConfigWithContextReturns = struct {
-		result1 *cloudfront.GetDistributionConfigOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextReturnsOnCall(i int, result1 *cloudfront.GetDistributionConfigOutput, result2 error) {
-	fake.GetDistributionConfigWithContextStub = nil
-	if fake.getDistributionConfigWithContextReturnsOnCall == nil {
-		fake.getDistributionConfigWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetDistributionConfigOutput
-			result2 error
-		})
-	}
-	fake.getDistributionConfigWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetDistributionConfigOutput
 		result2 error
 	}{result1, result2}
@@ -3472,7 +3771,8 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigRequest(arg1 *cloudfront.Get
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getDistributionConfigRequestReturns.result1, fake.getDistributionConfigRequestReturns.result2
+	fakeReturns := fake.getDistributionConfigRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestCallCount() int {
@@ -3481,13 +3781,22 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestCallCount() int {
 	return len(fake.getDistributionConfigRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestCalls(stub func(*cloudfront.GetDistributionConfigInput) (*request.Request, *cloudfront.GetDistributionConfigOutput)) {
+	fake.getDistributionConfigRequestMutex.Lock()
+	defer fake.getDistributionConfigRequestMutex.Unlock()
+	fake.GetDistributionConfigRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestArgsForCall(i int) *cloudfront.GetDistributionConfigInput {
 	fake.getDistributionConfigRequestMutex.RLock()
 	defer fake.getDistributionConfigRequestMutex.RUnlock()
-	return fake.getDistributionConfigRequestArgsForCall[i].arg1
+	argsForCall := fake.getDistributionConfigRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestReturns(result1 *request.Request, result2 *cloudfront.GetDistributionConfigOutput) {
+	fake.getDistributionConfigRequestMutex.Lock()
+	defer fake.getDistributionConfigRequestMutex.Unlock()
 	fake.GetDistributionConfigRequestStub = nil
 	fake.getDistributionConfigRequestReturns = struct {
 		result1 *request.Request
@@ -3496,6 +3805,8 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestReturns(result1 *requ
 }
 
 func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetDistributionConfigOutput) {
+	fake.getDistributionConfigRequestMutex.Lock()
+	defer fake.getDistributionConfigRequestMutex.Unlock()
 	fake.GetDistributionConfigRequestStub = nil
 	if fake.getDistributionConfigRequestReturnsOnCall == nil {
 		fake.getDistributionConfigRequestReturnsOnCall = make(map[int]struct {
@@ -3506,6 +3817,199 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigRequestReturnsOnCall(i int, 
 	fake.getDistributionConfigRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.GetDistributionConfigOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContext(arg1 aws.Context, arg2 *cloudfront.GetDistributionConfigInput, arg3 ...request.Option) (*cloudfront.GetDistributionConfigOutput, error) {
+	fake.getDistributionConfigWithContextMutex.Lock()
+	ret, specificReturn := fake.getDistributionConfigWithContextReturnsOnCall[len(fake.getDistributionConfigWithContextArgsForCall)]
+	fake.getDistributionConfigWithContextArgsForCall = append(fake.getDistributionConfigWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetDistributionConfigInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetDistributionConfigWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getDistributionConfigWithContextMutex.Unlock()
+	if fake.GetDistributionConfigWithContextStub != nil {
+		return fake.GetDistributionConfigWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getDistributionConfigWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextCallCount() int {
+	fake.getDistributionConfigWithContextMutex.RLock()
+	defer fake.getDistributionConfigWithContextMutex.RUnlock()
+	return len(fake.getDistributionConfigWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextCalls(stub func(aws.Context, *cloudfront.GetDistributionConfigInput, ...request.Option) (*cloudfront.GetDistributionConfigOutput, error)) {
+	fake.getDistributionConfigWithContextMutex.Lock()
+	defer fake.getDistributionConfigWithContextMutex.Unlock()
+	fake.GetDistributionConfigWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetDistributionConfigInput, []request.Option) {
+	fake.getDistributionConfigWithContextMutex.RLock()
+	defer fake.getDistributionConfigWithContextMutex.RUnlock()
+	argsForCall := fake.getDistributionConfigWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextReturns(result1 *cloudfront.GetDistributionConfigOutput, result2 error) {
+	fake.getDistributionConfigWithContextMutex.Lock()
+	defer fake.getDistributionConfigWithContextMutex.Unlock()
+	fake.GetDistributionConfigWithContextStub = nil
+	fake.getDistributionConfigWithContextReturns = struct {
+		result1 *cloudfront.GetDistributionConfigOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContextReturnsOnCall(i int, result1 *cloudfront.GetDistributionConfigOutput, result2 error) {
+	fake.getDistributionConfigWithContextMutex.Lock()
+	defer fake.getDistributionConfigWithContextMutex.Unlock()
+	fake.GetDistributionConfigWithContextStub = nil
+	if fake.getDistributionConfigWithContextReturnsOnCall == nil {
+		fake.getDistributionConfigWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetDistributionConfigOutput
+			result2 error
+		})
+	}
+	fake.getDistributionConfigWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetDistributionConfigOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionRequest(arg1 *cloudfront.GetDistributionInput) (*request.Request, *cloudfront.GetDistributionOutput) {
+	fake.getDistributionRequestMutex.Lock()
+	ret, specificReturn := fake.getDistributionRequestReturnsOnCall[len(fake.getDistributionRequestArgsForCall)]
+	fake.getDistributionRequestArgsForCall = append(fake.getDistributionRequestArgsForCall, struct {
+		arg1 *cloudfront.GetDistributionInput
+	}{arg1})
+	fake.recordInvocation("GetDistributionRequest", []interface{}{arg1})
+	fake.getDistributionRequestMutex.Unlock()
+	if fake.GetDistributionRequestStub != nil {
+		return fake.GetDistributionRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionRequestCallCount() int {
+	fake.getDistributionRequestMutex.RLock()
+	defer fake.getDistributionRequestMutex.RUnlock()
+	return len(fake.getDistributionRequestArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionRequestCalls(stub func(*cloudfront.GetDistributionInput) (*request.Request, *cloudfront.GetDistributionOutput)) {
+	fake.getDistributionRequestMutex.Lock()
+	defer fake.getDistributionRequestMutex.Unlock()
+	fake.GetDistributionRequestStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionRequestArgsForCall(i int) *cloudfront.GetDistributionInput {
+	fake.getDistributionRequestMutex.RLock()
+	defer fake.getDistributionRequestMutex.RUnlock()
+	argsForCall := fake.getDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.GetDistributionOutput) {
+	fake.getDistributionRequestMutex.Lock()
+	defer fake.getDistributionRequestMutex.Unlock()
+	fake.GetDistributionRequestStub = nil
+	fake.getDistributionRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.GetDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetDistributionOutput) {
+	fake.getDistributionRequestMutex.Lock()
+	defer fake.getDistributionRequestMutex.Unlock()
+	fake.GetDistributionRequestStub = nil
+	if fake.getDistributionRequestReturnsOnCall == nil {
+		fake.getDistributionRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.GetDistributionOutput
+		})
+	}
+	fake.getDistributionRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.GetDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.GetDistributionInput, arg3 ...request.Option) (*cloudfront.GetDistributionOutput, error) {
+	fake.getDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.getDistributionWithContextReturnsOnCall[len(fake.getDistributionWithContextArgsForCall)]
+	fake.getDistributionWithContextArgsForCall = append(fake.getDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getDistributionWithContextMutex.Unlock()
+	if fake.GetDistributionWithContextStub != nil {
+		return fake.GetDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionWithContextCallCount() int {
+	fake.getDistributionWithContextMutex.RLock()
+	defer fake.getDistributionWithContextMutex.RUnlock()
+	return len(fake.getDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionWithContextCalls(stub func(aws.Context, *cloudfront.GetDistributionInput, ...request.Option) (*cloudfront.GetDistributionOutput, error)) {
+	fake.getDistributionWithContextMutex.Lock()
+	defer fake.getDistributionWithContextMutex.Unlock()
+	fake.GetDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetDistributionInput, []request.Option) {
+	fake.getDistributionWithContextMutex.RLock()
+	defer fake.getDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.getDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionWithContextReturns(result1 *cloudfront.GetDistributionOutput, result2 error) {
+	fake.getDistributionWithContextMutex.Lock()
+	defer fake.getDistributionWithContextMutex.Unlock()
+	fake.GetDistributionWithContextStub = nil
+	fake.getDistributionWithContextReturns = struct {
+		result1 *cloudfront.GetDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.GetDistributionOutput, result2 error) {
+	fake.getDistributionWithContextMutex.Lock()
+	defer fake.getDistributionWithContextMutex.Unlock()
+	fake.GetDistributionWithContextStub = nil
+	if fake.getDistributionWithContextReturnsOnCall == nil {
+		fake.getDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetDistributionOutput
+			result2 error
+		})
+	}
+	fake.getDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -3523,7 +4027,8 @@ func (fake *FakeCloudFrontAPI) GetInvalidation(arg1 *cloudfront.GetInvalidationI
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getInvalidationReturns.result1, fake.getInvalidationReturns.result2
+	fakeReturns := fake.getInvalidationReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetInvalidationCallCount() int {
@@ -3532,13 +4037,22 @@ func (fake *FakeCloudFrontAPI) GetInvalidationCallCount() int {
 	return len(fake.getInvalidationArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetInvalidationCalls(stub func(*cloudfront.GetInvalidationInput) (*cloudfront.GetInvalidationOutput, error)) {
+	fake.getInvalidationMutex.Lock()
+	defer fake.getInvalidationMutex.Unlock()
+	fake.GetInvalidationStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetInvalidationArgsForCall(i int) *cloudfront.GetInvalidationInput {
 	fake.getInvalidationMutex.RLock()
 	defer fake.getInvalidationMutex.RUnlock()
-	return fake.getInvalidationArgsForCall[i].arg1
+	argsForCall := fake.getInvalidationArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetInvalidationReturns(result1 *cloudfront.GetInvalidationOutput, result2 error) {
+	fake.getInvalidationMutex.Lock()
+	defer fake.getInvalidationMutex.Unlock()
 	fake.GetInvalidationStub = nil
 	fake.getInvalidationReturns = struct {
 		result1 *cloudfront.GetInvalidationOutput
@@ -3547,6 +4061,8 @@ func (fake *FakeCloudFrontAPI) GetInvalidationReturns(result1 *cloudfront.GetInv
 }
 
 func (fake *FakeCloudFrontAPI) GetInvalidationReturnsOnCall(i int, result1 *cloudfront.GetInvalidationOutput, result2 error) {
+	fake.getInvalidationMutex.Lock()
+	defer fake.getInvalidationMutex.Unlock()
 	fake.GetInvalidationStub = nil
 	if fake.getInvalidationReturnsOnCall == nil {
 		fake.getInvalidationReturnsOnCall = make(map[int]struct {
@@ -3555,59 +4071,6 @@ func (fake *FakeCloudFrontAPI) GetInvalidationReturnsOnCall(i int, result1 *clou
 		})
 	}
 	fake.getInvalidationReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetInvalidationOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetInvalidationWithContext(arg1 aws.Context, arg2 *cloudfront.GetInvalidationInput, arg3 ...request.Option) (*cloudfront.GetInvalidationOutput, error) {
-	fake.getInvalidationWithContextMutex.Lock()
-	ret, specificReturn := fake.getInvalidationWithContextReturnsOnCall[len(fake.getInvalidationWithContextArgsForCall)]
-	fake.getInvalidationWithContextArgsForCall = append(fake.getInvalidationWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetInvalidationInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetInvalidationWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getInvalidationWithContextMutex.Unlock()
-	if fake.GetInvalidationWithContextStub != nil {
-		return fake.GetInvalidationWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getInvalidationWithContextReturns.result1, fake.getInvalidationWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetInvalidationWithContextCallCount() int {
-	fake.getInvalidationWithContextMutex.RLock()
-	defer fake.getInvalidationWithContextMutex.RUnlock()
-	return len(fake.getInvalidationWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetInvalidationWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetInvalidationInput, []request.Option) {
-	fake.getInvalidationWithContextMutex.RLock()
-	defer fake.getInvalidationWithContextMutex.RUnlock()
-	return fake.getInvalidationWithContextArgsForCall[i].arg1, fake.getInvalidationWithContextArgsForCall[i].arg2, fake.getInvalidationWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetInvalidationWithContextReturns(result1 *cloudfront.GetInvalidationOutput, result2 error) {
-	fake.GetInvalidationWithContextStub = nil
-	fake.getInvalidationWithContextReturns = struct {
-		result1 *cloudfront.GetInvalidationOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetInvalidationWithContextReturnsOnCall(i int, result1 *cloudfront.GetInvalidationOutput, result2 error) {
-	fake.GetInvalidationWithContextStub = nil
-	if fake.getInvalidationWithContextReturnsOnCall == nil {
-		fake.getInvalidationWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetInvalidationOutput
-			result2 error
-		})
-	}
-	fake.getInvalidationWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetInvalidationOutput
 		result2 error
 	}{result1, result2}
@@ -3627,7 +4090,8 @@ func (fake *FakeCloudFrontAPI) GetInvalidationRequest(arg1 *cloudfront.GetInvali
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getInvalidationRequestReturns.result1, fake.getInvalidationRequestReturns.result2
+	fakeReturns := fake.getInvalidationRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetInvalidationRequestCallCount() int {
@@ -3636,13 +4100,22 @@ func (fake *FakeCloudFrontAPI) GetInvalidationRequestCallCount() int {
 	return len(fake.getInvalidationRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetInvalidationRequestCalls(stub func(*cloudfront.GetInvalidationInput) (*request.Request, *cloudfront.GetInvalidationOutput)) {
+	fake.getInvalidationRequestMutex.Lock()
+	defer fake.getInvalidationRequestMutex.Unlock()
+	fake.GetInvalidationRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetInvalidationRequestArgsForCall(i int) *cloudfront.GetInvalidationInput {
 	fake.getInvalidationRequestMutex.RLock()
 	defer fake.getInvalidationRequestMutex.RUnlock()
-	return fake.getInvalidationRequestArgsForCall[i].arg1
+	argsForCall := fake.getInvalidationRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetInvalidationRequestReturns(result1 *request.Request, result2 *cloudfront.GetInvalidationOutput) {
+	fake.getInvalidationRequestMutex.Lock()
+	defer fake.getInvalidationRequestMutex.Unlock()
 	fake.GetInvalidationRequestStub = nil
 	fake.getInvalidationRequestReturns = struct {
 		result1 *request.Request
@@ -3651,6 +4124,8 @@ func (fake *FakeCloudFrontAPI) GetInvalidationRequestReturns(result1 *request.Re
 }
 
 func (fake *FakeCloudFrontAPI) GetInvalidationRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetInvalidationOutput) {
+	fake.getInvalidationRequestMutex.Lock()
+	defer fake.getInvalidationRequestMutex.Unlock()
 	fake.GetInvalidationRequestStub = nil
 	if fake.getInvalidationRequestReturnsOnCall == nil {
 		fake.getInvalidationRequestReturnsOnCall = make(map[int]struct {
@@ -3661,6 +4136,71 @@ func (fake *FakeCloudFrontAPI) GetInvalidationRequestReturnsOnCall(i int, result
 	fake.getInvalidationRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.GetInvalidationOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetInvalidationWithContext(arg1 aws.Context, arg2 *cloudfront.GetInvalidationInput, arg3 ...request.Option) (*cloudfront.GetInvalidationOutput, error) {
+	fake.getInvalidationWithContextMutex.Lock()
+	ret, specificReturn := fake.getInvalidationWithContextReturnsOnCall[len(fake.getInvalidationWithContextArgsForCall)]
+	fake.getInvalidationWithContextArgsForCall = append(fake.getInvalidationWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetInvalidationInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetInvalidationWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getInvalidationWithContextMutex.Unlock()
+	if fake.GetInvalidationWithContextStub != nil {
+		return fake.GetInvalidationWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getInvalidationWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetInvalidationWithContextCallCount() int {
+	fake.getInvalidationWithContextMutex.RLock()
+	defer fake.getInvalidationWithContextMutex.RUnlock()
+	return len(fake.getInvalidationWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetInvalidationWithContextCalls(stub func(aws.Context, *cloudfront.GetInvalidationInput, ...request.Option) (*cloudfront.GetInvalidationOutput, error)) {
+	fake.getInvalidationWithContextMutex.Lock()
+	defer fake.getInvalidationWithContextMutex.Unlock()
+	fake.GetInvalidationWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetInvalidationWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetInvalidationInput, []request.Option) {
+	fake.getInvalidationWithContextMutex.RLock()
+	defer fake.getInvalidationWithContextMutex.RUnlock()
+	argsForCall := fake.getInvalidationWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetInvalidationWithContextReturns(result1 *cloudfront.GetInvalidationOutput, result2 error) {
+	fake.getInvalidationWithContextMutex.Lock()
+	defer fake.getInvalidationWithContextMutex.Unlock()
+	fake.GetInvalidationWithContextStub = nil
+	fake.getInvalidationWithContextReturns = struct {
+		result1 *cloudfront.GetInvalidationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetInvalidationWithContextReturnsOnCall(i int, result1 *cloudfront.GetInvalidationOutput, result2 error) {
+	fake.getInvalidationWithContextMutex.Lock()
+	defer fake.getInvalidationWithContextMutex.Unlock()
+	fake.GetInvalidationWithContextStub = nil
+	if fake.getInvalidationWithContextReturnsOnCall == nil {
+		fake.getInvalidationWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetInvalidationOutput
+			result2 error
+		})
+	}
+	fake.getInvalidationWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetInvalidationOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -3678,7 +4218,8 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistribution(arg1 *cloudfront.GetStre
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getStreamingDistributionReturns.result1, fake.getStreamingDistributionReturns.result2
+	fakeReturns := fake.getStreamingDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionCallCount() int {
@@ -3687,13 +4228,22 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionCallCount() int {
 	return len(fake.getStreamingDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionCalls(stub func(*cloudfront.GetStreamingDistributionInput) (*cloudfront.GetStreamingDistributionOutput, error)) {
+	fake.getStreamingDistributionMutex.Lock()
+	defer fake.getStreamingDistributionMutex.Unlock()
+	fake.GetStreamingDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionArgsForCall(i int) *cloudfront.GetStreamingDistributionInput {
 	fake.getStreamingDistributionMutex.RLock()
 	defer fake.getStreamingDistributionMutex.RUnlock()
-	return fake.getStreamingDistributionArgsForCall[i].arg1
+	argsForCall := fake.getStreamingDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionReturns(result1 *cloudfront.GetStreamingDistributionOutput, result2 error) {
+	fake.getStreamingDistributionMutex.Lock()
+	defer fake.getStreamingDistributionMutex.Unlock()
 	fake.GetStreamingDistributionStub = nil
 	fake.getStreamingDistributionReturns = struct {
 		result1 *cloudfront.GetStreamingDistributionOutput
@@ -3702,6 +4252,8 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionReturns(result1 *cloudfro
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionReturnsOnCall(i int, result1 *cloudfront.GetStreamingDistributionOutput, result2 error) {
+	fake.getStreamingDistributionMutex.Lock()
+	defer fake.getStreamingDistributionMutex.Unlock()
 	fake.GetStreamingDistributionStub = nil
 	if fake.getStreamingDistributionReturnsOnCall == nil {
 		fake.getStreamingDistributionReturnsOnCall = make(map[int]struct {
@@ -3712,110 +4264,6 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionReturnsOnCall(i int, resu
 	fake.getStreamingDistributionReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetStreamingDistributionOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.GetStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.GetStreamingDistributionOutput, error) {
-	fake.getStreamingDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.getStreamingDistributionWithContextReturnsOnCall[len(fake.getStreamingDistributionWithContextArgsForCall)]
-	fake.getStreamingDistributionWithContextArgsForCall = append(fake.getStreamingDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetStreamingDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getStreamingDistributionWithContextMutex.Unlock()
-	if fake.GetStreamingDistributionWithContextStub != nil {
-		return fake.GetStreamingDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getStreamingDistributionWithContextReturns.result1, fake.getStreamingDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextCallCount() int {
-	fake.getStreamingDistributionWithContextMutex.RLock()
-	defer fake.getStreamingDistributionWithContextMutex.RUnlock()
-	return len(fake.getStreamingDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetStreamingDistributionInput, []request.Option) {
-	fake.getStreamingDistributionWithContextMutex.RLock()
-	defer fake.getStreamingDistributionWithContextMutex.RUnlock()
-	return fake.getStreamingDistributionWithContextArgsForCall[i].arg1, fake.getStreamingDistributionWithContextArgsForCall[i].arg2, fake.getStreamingDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextReturns(result1 *cloudfront.GetStreamingDistributionOutput, result2 error) {
-	fake.GetStreamingDistributionWithContextStub = nil
-	fake.getStreamingDistributionWithContextReturns = struct {
-		result1 *cloudfront.GetStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.GetStreamingDistributionOutput, result2 error) {
-	fake.GetStreamingDistributionWithContextStub = nil
-	if fake.getStreamingDistributionWithContextReturnsOnCall == nil {
-		fake.getStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetStreamingDistributionOutput
-			result2 error
-		})
-	}
-	fake.getStreamingDistributionWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequest(arg1 *cloudfront.GetStreamingDistributionInput) (*request.Request, *cloudfront.GetStreamingDistributionOutput) {
-	fake.getStreamingDistributionRequestMutex.Lock()
-	ret, specificReturn := fake.getStreamingDistributionRequestReturnsOnCall[len(fake.getStreamingDistributionRequestArgsForCall)]
-	fake.getStreamingDistributionRequestArgsForCall = append(fake.getStreamingDistributionRequestArgsForCall, struct {
-		arg1 *cloudfront.GetStreamingDistributionInput
-	}{arg1})
-	fake.recordInvocation("GetStreamingDistributionRequest", []interface{}{arg1})
-	fake.getStreamingDistributionRequestMutex.Unlock()
-	if fake.GetStreamingDistributionRequestStub != nil {
-		return fake.GetStreamingDistributionRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getStreamingDistributionRequestReturns.result1, fake.getStreamingDistributionRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestCallCount() int {
-	fake.getStreamingDistributionRequestMutex.RLock()
-	defer fake.getStreamingDistributionRequestMutex.RUnlock()
-	return len(fake.getStreamingDistributionRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestArgsForCall(i int) *cloudfront.GetStreamingDistributionInput {
-	fake.getStreamingDistributionRequestMutex.RLock()
-	defer fake.getStreamingDistributionRequestMutex.RUnlock()
-	return fake.getStreamingDistributionRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.GetStreamingDistributionOutput) {
-	fake.GetStreamingDistributionRequestStub = nil
-	fake.getStreamingDistributionRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.GetStreamingDistributionOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetStreamingDistributionOutput) {
-	fake.GetStreamingDistributionRequestStub = nil
-	if fake.getStreamingDistributionRequestReturnsOnCall == nil {
-		fake.getStreamingDistributionRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.GetStreamingDistributionOutput
-		})
-	}
-	fake.getStreamingDistributionRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.GetStreamingDistributionOutput
 	}{result1, result2}
 }
 
@@ -3833,7 +4281,8 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfig(arg1 *cloudfront.G
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getStreamingDistributionConfigReturns.result1, fake.getStreamingDistributionConfigReturns.result2
+	fakeReturns := fake.getStreamingDistributionConfigReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigCallCount() int {
@@ -3842,13 +4291,22 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigCallCount() int {
 	return len(fake.getStreamingDistributionConfigArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigCalls(stub func(*cloudfront.GetStreamingDistributionConfigInput) (*cloudfront.GetStreamingDistributionConfigOutput, error)) {
+	fake.getStreamingDistributionConfigMutex.Lock()
+	defer fake.getStreamingDistributionConfigMutex.Unlock()
+	fake.GetStreamingDistributionConfigStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigArgsForCall(i int) *cloudfront.GetStreamingDistributionConfigInput {
 	fake.getStreamingDistributionConfigMutex.RLock()
 	defer fake.getStreamingDistributionConfigMutex.RUnlock()
-	return fake.getStreamingDistributionConfigArgsForCall[i].arg1
+	argsForCall := fake.getStreamingDistributionConfigArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigReturns(result1 *cloudfront.GetStreamingDistributionConfigOutput, result2 error) {
+	fake.getStreamingDistributionConfigMutex.Lock()
+	defer fake.getStreamingDistributionConfigMutex.Unlock()
 	fake.GetStreamingDistributionConfigStub = nil
 	fake.getStreamingDistributionConfigReturns = struct {
 		result1 *cloudfront.GetStreamingDistributionConfigOutput
@@ -3857,6 +4315,8 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigReturns(result1 *cl
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigReturnsOnCall(i int, result1 *cloudfront.GetStreamingDistributionConfigOutput, result2 error) {
+	fake.getStreamingDistributionConfigMutex.Lock()
+	defer fake.getStreamingDistributionConfigMutex.Unlock()
 	fake.GetStreamingDistributionConfigStub = nil
 	if fake.getStreamingDistributionConfigReturnsOnCall == nil {
 		fake.getStreamingDistributionConfigReturnsOnCall = make(map[int]struct {
@@ -3865,59 +4325,6 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigReturnsOnCall(i int
 		})
 	}
 	fake.getStreamingDistributionConfigReturnsOnCall[i] = struct {
-		result1 *cloudfront.GetStreamingDistributionConfigOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContext(arg1 aws.Context, arg2 *cloudfront.GetStreamingDistributionConfigInput, arg3 ...request.Option) (*cloudfront.GetStreamingDistributionConfigOutput, error) {
-	fake.getStreamingDistributionConfigWithContextMutex.Lock()
-	ret, specificReturn := fake.getStreamingDistributionConfigWithContextReturnsOnCall[len(fake.getStreamingDistributionConfigWithContextArgsForCall)]
-	fake.getStreamingDistributionConfigWithContextArgsForCall = append(fake.getStreamingDistributionConfigWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.GetStreamingDistributionConfigInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("GetStreamingDistributionConfigWithContext", []interface{}{arg1, arg2, arg3})
-	fake.getStreamingDistributionConfigWithContextMutex.Unlock()
-	if fake.GetStreamingDistributionConfigWithContextStub != nil {
-		return fake.GetStreamingDistributionConfigWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.getStreamingDistributionConfigWithContextReturns.result1, fake.getStreamingDistributionConfigWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextCallCount() int {
-	fake.getStreamingDistributionConfigWithContextMutex.RLock()
-	defer fake.getStreamingDistributionConfigWithContextMutex.RUnlock()
-	return len(fake.getStreamingDistributionConfigWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetStreamingDistributionConfigInput, []request.Option) {
-	fake.getStreamingDistributionConfigWithContextMutex.RLock()
-	defer fake.getStreamingDistributionConfigWithContextMutex.RUnlock()
-	return fake.getStreamingDistributionConfigWithContextArgsForCall[i].arg1, fake.getStreamingDistributionConfigWithContextArgsForCall[i].arg2, fake.getStreamingDistributionConfigWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextReturns(result1 *cloudfront.GetStreamingDistributionConfigOutput, result2 error) {
-	fake.GetStreamingDistributionConfigWithContextStub = nil
-	fake.getStreamingDistributionConfigWithContextReturns = struct {
-		result1 *cloudfront.GetStreamingDistributionConfigOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextReturnsOnCall(i int, result1 *cloudfront.GetStreamingDistributionConfigOutput, result2 error) {
-	fake.GetStreamingDistributionConfigWithContextStub = nil
-	if fake.getStreamingDistributionConfigWithContextReturnsOnCall == nil {
-		fake.getStreamingDistributionConfigWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.GetStreamingDistributionConfigOutput
-			result2 error
-		})
-	}
-	fake.getStreamingDistributionConfigWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.GetStreamingDistributionConfigOutput
 		result2 error
 	}{result1, result2}
@@ -3937,7 +4344,8 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequest(arg1 *cloud
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.getStreamingDistributionConfigRequestReturns.result1, fake.getStreamingDistributionConfigRequestReturns.result2
+	fakeReturns := fake.getStreamingDistributionConfigRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestCallCount() int {
@@ -3946,13 +4354,22 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestCallCount() 
 	return len(fake.getStreamingDistributionConfigRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestCalls(stub func(*cloudfront.GetStreamingDistributionConfigInput) (*request.Request, *cloudfront.GetStreamingDistributionConfigOutput)) {
+	fake.getStreamingDistributionConfigRequestMutex.Lock()
+	defer fake.getStreamingDistributionConfigRequestMutex.Unlock()
+	fake.GetStreamingDistributionConfigRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestArgsForCall(i int) *cloudfront.GetStreamingDistributionConfigInput {
 	fake.getStreamingDistributionConfigRequestMutex.RLock()
 	defer fake.getStreamingDistributionConfigRequestMutex.RUnlock()
-	return fake.getStreamingDistributionConfigRequestArgsForCall[i].arg1
+	argsForCall := fake.getStreamingDistributionConfigRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestReturns(result1 *request.Request, result2 *cloudfront.GetStreamingDistributionConfigOutput) {
+	fake.getStreamingDistributionConfigRequestMutex.Lock()
+	defer fake.getStreamingDistributionConfigRequestMutex.Unlock()
 	fake.GetStreamingDistributionConfigRequestStub = nil
 	fake.getStreamingDistributionConfigRequestReturns = struct {
 		result1 *request.Request
@@ -3961,6 +4378,8 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestReturns(resu
 }
 
 func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetStreamingDistributionConfigOutput) {
+	fake.getStreamingDistributionConfigRequestMutex.Lock()
+	defer fake.getStreamingDistributionConfigRequestMutex.Unlock()
 	fake.GetStreamingDistributionConfigRequestStub = nil
 	if fake.getStreamingDistributionConfigRequestReturnsOnCall == nil {
 		fake.getStreamingDistributionConfigRequestReturnsOnCall = make(map[int]struct {
@@ -3971,6 +4390,199 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequestReturnsOnCal
 	fake.getStreamingDistributionConfigRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.GetStreamingDistributionConfigOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContext(arg1 aws.Context, arg2 *cloudfront.GetStreamingDistributionConfigInput, arg3 ...request.Option) (*cloudfront.GetStreamingDistributionConfigOutput, error) {
+	fake.getStreamingDistributionConfigWithContextMutex.Lock()
+	ret, specificReturn := fake.getStreamingDistributionConfigWithContextReturnsOnCall[len(fake.getStreamingDistributionConfigWithContextArgsForCall)]
+	fake.getStreamingDistributionConfigWithContextArgsForCall = append(fake.getStreamingDistributionConfigWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetStreamingDistributionConfigInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetStreamingDistributionConfigWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getStreamingDistributionConfigWithContextMutex.Unlock()
+	if fake.GetStreamingDistributionConfigWithContextStub != nil {
+		return fake.GetStreamingDistributionConfigWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getStreamingDistributionConfigWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextCallCount() int {
+	fake.getStreamingDistributionConfigWithContextMutex.RLock()
+	defer fake.getStreamingDistributionConfigWithContextMutex.RUnlock()
+	return len(fake.getStreamingDistributionConfigWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextCalls(stub func(aws.Context, *cloudfront.GetStreamingDistributionConfigInput, ...request.Option) (*cloudfront.GetStreamingDistributionConfigOutput, error)) {
+	fake.getStreamingDistributionConfigWithContextMutex.Lock()
+	defer fake.getStreamingDistributionConfigWithContextMutex.Unlock()
+	fake.GetStreamingDistributionConfigWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetStreamingDistributionConfigInput, []request.Option) {
+	fake.getStreamingDistributionConfigWithContextMutex.RLock()
+	defer fake.getStreamingDistributionConfigWithContextMutex.RUnlock()
+	argsForCall := fake.getStreamingDistributionConfigWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextReturns(result1 *cloudfront.GetStreamingDistributionConfigOutput, result2 error) {
+	fake.getStreamingDistributionConfigWithContextMutex.Lock()
+	defer fake.getStreamingDistributionConfigWithContextMutex.Unlock()
+	fake.GetStreamingDistributionConfigWithContextStub = nil
+	fake.getStreamingDistributionConfigWithContextReturns = struct {
+		result1 *cloudfront.GetStreamingDistributionConfigOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContextReturnsOnCall(i int, result1 *cloudfront.GetStreamingDistributionConfigOutput, result2 error) {
+	fake.getStreamingDistributionConfigWithContextMutex.Lock()
+	defer fake.getStreamingDistributionConfigWithContextMutex.Unlock()
+	fake.GetStreamingDistributionConfigWithContextStub = nil
+	if fake.getStreamingDistributionConfigWithContextReturnsOnCall == nil {
+		fake.getStreamingDistributionConfigWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetStreamingDistributionConfigOutput
+			result2 error
+		})
+	}
+	fake.getStreamingDistributionConfigWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetStreamingDistributionConfigOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequest(arg1 *cloudfront.GetStreamingDistributionInput) (*request.Request, *cloudfront.GetStreamingDistributionOutput) {
+	fake.getStreamingDistributionRequestMutex.Lock()
+	ret, specificReturn := fake.getStreamingDistributionRequestReturnsOnCall[len(fake.getStreamingDistributionRequestArgsForCall)]
+	fake.getStreamingDistributionRequestArgsForCall = append(fake.getStreamingDistributionRequestArgsForCall, struct {
+		arg1 *cloudfront.GetStreamingDistributionInput
+	}{arg1})
+	fake.recordInvocation("GetStreamingDistributionRequest", []interface{}{arg1})
+	fake.getStreamingDistributionRequestMutex.Unlock()
+	if fake.GetStreamingDistributionRequestStub != nil {
+		return fake.GetStreamingDistributionRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getStreamingDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestCallCount() int {
+	fake.getStreamingDistributionRequestMutex.RLock()
+	defer fake.getStreamingDistributionRequestMutex.RUnlock()
+	return len(fake.getStreamingDistributionRequestArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestCalls(stub func(*cloudfront.GetStreamingDistributionInput) (*request.Request, *cloudfront.GetStreamingDistributionOutput)) {
+	fake.getStreamingDistributionRequestMutex.Lock()
+	defer fake.getStreamingDistributionRequestMutex.Unlock()
+	fake.GetStreamingDistributionRequestStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestArgsForCall(i int) *cloudfront.GetStreamingDistributionInput {
+	fake.getStreamingDistributionRequestMutex.RLock()
+	defer fake.getStreamingDistributionRequestMutex.RUnlock()
+	argsForCall := fake.getStreamingDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.GetStreamingDistributionOutput) {
+	fake.getStreamingDistributionRequestMutex.Lock()
+	defer fake.getStreamingDistributionRequestMutex.Unlock()
+	fake.GetStreamingDistributionRequestStub = nil
+	fake.getStreamingDistributionRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.GetStreamingDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.GetStreamingDistributionOutput) {
+	fake.getStreamingDistributionRequestMutex.Lock()
+	defer fake.getStreamingDistributionRequestMutex.Unlock()
+	fake.GetStreamingDistributionRequestStub = nil
+	if fake.getStreamingDistributionRequestReturnsOnCall == nil {
+		fake.getStreamingDistributionRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.GetStreamingDistributionOutput
+		})
+	}
+	fake.getStreamingDistributionRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.GetStreamingDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.GetStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.GetStreamingDistributionOutput, error) {
+	fake.getStreamingDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.getStreamingDistributionWithContextReturnsOnCall[len(fake.getStreamingDistributionWithContextArgsForCall)]
+	fake.getStreamingDistributionWithContextArgsForCall = append(fake.getStreamingDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.GetStreamingDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("GetStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.getStreamingDistributionWithContextMutex.Unlock()
+	if fake.GetStreamingDistributionWithContextStub != nil {
+		return fake.GetStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getStreamingDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextCallCount() int {
+	fake.getStreamingDistributionWithContextMutex.RLock()
+	defer fake.getStreamingDistributionWithContextMutex.RUnlock()
+	return len(fake.getStreamingDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextCalls(stub func(aws.Context, *cloudfront.GetStreamingDistributionInput, ...request.Option) (*cloudfront.GetStreamingDistributionOutput, error)) {
+	fake.getStreamingDistributionWithContextMutex.Lock()
+	defer fake.getStreamingDistributionWithContextMutex.Unlock()
+	fake.GetStreamingDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetStreamingDistributionInput, []request.Option) {
+	fake.getStreamingDistributionWithContextMutex.RLock()
+	defer fake.getStreamingDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.getStreamingDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextReturns(result1 *cloudfront.GetStreamingDistributionOutput, result2 error) {
+	fake.getStreamingDistributionWithContextMutex.Lock()
+	defer fake.getStreamingDistributionWithContextMutex.Unlock()
+	fake.GetStreamingDistributionWithContextStub = nil
+	fake.getStreamingDistributionWithContextReturns = struct {
+		result1 *cloudfront.GetStreamingDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.GetStreamingDistributionOutput, result2 error) {
+	fake.getStreamingDistributionWithContextMutex.Lock()
+	defer fake.getStreamingDistributionWithContextMutex.Unlock()
+	fake.GetStreamingDistributionWithContextStub = nil
+	if fake.getStreamingDistributionWithContextReturnsOnCall == nil {
+		fake.getStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.GetStreamingDistributionOutput
+			result2 error
+		})
+	}
+	fake.getStreamingDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.GetStreamingDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -3988,7 +4600,8 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentities(arg1 *cloudf
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listCloudFrontOriginAccessIdentitiesReturns.result1, fake.listCloudFrontOriginAccessIdentitiesReturns.result2
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesCallCount() int {
@@ -3997,13 +4610,22 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesCallCount() i
 	return len(fake.listCloudFrontOriginAccessIdentitiesArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesCalls(stub func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error)) {
+	fake.listCloudFrontOriginAccessIdentitiesMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesArgsForCall(i int) *cloudfront.ListCloudFrontOriginAccessIdentitiesInput {
 	fake.listCloudFrontOriginAccessIdentitiesMutex.RLock()
 	defer fake.listCloudFrontOriginAccessIdentitiesMutex.RUnlock()
-	return fake.listCloudFrontOriginAccessIdentitiesArgsForCall[i].arg1
+	argsForCall := fake.listCloudFrontOriginAccessIdentitiesArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesReturns(result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, result2 error) {
+	fake.listCloudFrontOriginAccessIdentitiesMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesMutex.Unlock()
 	fake.ListCloudFrontOriginAccessIdentitiesStub = nil
 	fake.listCloudFrontOriginAccessIdentitiesReturns = struct {
 		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
@@ -4012,6 +4634,8 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesReturns(resul
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesReturnsOnCall(i int, result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, result2 error) {
+	fake.listCloudFrontOriginAccessIdentitiesMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesMutex.Unlock()
 	fake.ListCloudFrontOriginAccessIdentitiesStub = nil
 	if fake.listCloudFrontOriginAccessIdentitiesReturnsOnCall == nil {
 		fake.listCloudFrontOriginAccessIdentitiesReturnsOnCall = make(map[int]struct {
@@ -4022,110 +4646,6 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesReturnsOnCall
 	fake.listCloudFrontOriginAccessIdentitiesReturnsOnCall[i] = struct {
 		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContext(arg1 aws.Context, arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, arg3 ...request.Option) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error) {
-	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Lock()
-	ret, specificReturn := fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall[len(fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall)]
-	fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall = append(fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesWithContext", []interface{}{arg1, arg2, arg3})
-	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesWithContextStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listCloudFrontOriginAccessIdentitiesWithContextReturns.result1, fake.listCloudFrontOriginAccessIdentitiesWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextCallCount() int {
-	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RLock()
-	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RUnlock()
-	return len(fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, []request.Option) {
-	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RLock()
-	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RUnlock()
-	return fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall[i].arg1, fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall[i].arg2, fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextReturns(result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, result2 error) {
-	fake.ListCloudFrontOriginAccessIdentitiesWithContextStub = nil
-	fake.listCloudFrontOriginAccessIdentitiesWithContextReturns = struct {
-		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall(i int, result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, result2 error) {
-	fake.ListCloudFrontOriginAccessIdentitiesWithContextStub = nil
-	if fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall == nil {
-		fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-			result2 error
-		})
-	}
-	fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequest(arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*request.Request, *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput) {
-	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Lock()
-	ret, specificReturn := fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall[len(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall)]
-	fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall = append(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall, struct {
-		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
-	}{arg1})
-	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesRequest", []interface{}{arg1})
-	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesRequestStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listCloudFrontOriginAccessIdentitiesRequestReturns.result1, fake.listCloudFrontOriginAccessIdentitiesRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestCallCount() int {
-	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RLock()
-	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RUnlock()
-	return len(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestArgsForCall(i int) *cloudfront.ListCloudFrontOriginAccessIdentitiesInput {
-	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RLock()
-	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RUnlock()
-	return fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestReturns(result1 *request.Request, result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput) {
-	fake.ListCloudFrontOriginAccessIdentitiesRequestStub = nil
-	fake.listCloudFrontOriginAccessIdentitiesRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput) {
-	fake.ListCloudFrontOriginAccessIdentitiesRequestStub = nil
-	if fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall == nil {
-		fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
-		})
-	}
-	fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
 	}{result1, result2}
 }
 
@@ -4144,7 +4664,8 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPages(arg1 *c
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listCloudFrontOriginAccessIdentitiesPagesReturns.result1
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesPagesReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesCallCount() int {
@@ -4153,13 +4674,22 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesCallCoun
 	return len(fake.listCloudFrontOriginAccessIdentitiesPagesArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesCalls(stub func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput, func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool) error) {
+	fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesPagesStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesArgsForCall(i int) (*cloudfront.ListCloudFrontOriginAccessIdentitiesInput, func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool) {
 	fake.listCloudFrontOriginAccessIdentitiesPagesMutex.RLock()
 	defer fake.listCloudFrontOriginAccessIdentitiesPagesMutex.RUnlock()
-	return fake.listCloudFrontOriginAccessIdentitiesPagesArgsForCall[i].arg1, fake.listCloudFrontOriginAccessIdentitiesPagesArgsForCall[i].arg2
+	argsForCall := fake.listCloudFrontOriginAccessIdentitiesPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesReturns(result1 error) {
+	fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Unlock()
 	fake.ListCloudFrontOriginAccessIdentitiesPagesStub = nil
 	fake.listCloudFrontOriginAccessIdentitiesPagesReturns = struct {
 		result1 error
@@ -4167,6 +4697,8 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesReturns(
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesReturnsOnCall(i int, result1 error) {
+	fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Unlock()
 	fake.ListCloudFrontOriginAccessIdentitiesPagesStub = nil
 	if fake.listCloudFrontOriginAccessIdentitiesPagesReturnsOnCall == nil {
 		fake.listCloudFrontOriginAccessIdentitiesPagesReturnsOnCall = make(map[int]struct {
@@ -4195,7 +4727,8 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithCont
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturns.result1
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithContextCallCount() int {
@@ -4204,13 +4737,22 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithCont
 	return len(fake.listCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithContextCalls(stub func(aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool, ...request.Option) error) {
+	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesPagesWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool, []request.Option) {
 	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.RLock()
 	defer fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.RUnlock()
-	return fake.listCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall[i].arg1, fake.listCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall[i].arg2, fake.listCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall[i].arg3, fake.listCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall[i].arg4
+	argsForCall := fake.listCloudFrontOriginAccessIdentitiesPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithContextReturns(result1 error) {
+	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Unlock()
 	fake.ListCloudFrontOriginAccessIdentitiesPagesWithContextStub = nil
 	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturns = struct {
 		result1 error
@@ -4218,6 +4760,8 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithCont
 }
 
 func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Unlock()
 	fake.ListCloudFrontOriginAccessIdentitiesPagesWithContextStub = nil
 	if fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturnsOnCall == nil {
 		fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturnsOnCall = make(map[int]struct {
@@ -4227,6 +4771,134 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithCont
 	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequest(arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*request.Request, *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput) {
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Lock()
+	ret, specificReturn := fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall[len(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall)]
+	fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall = append(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall, struct {
+		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
+	}{arg1})
+	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesRequest", []interface{}{arg1})
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Unlock()
+	if fake.ListCloudFrontOriginAccessIdentitiesRequestStub != nil {
+		return fake.ListCloudFrontOriginAccessIdentitiesRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestCallCount() int {
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RLock()
+	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RUnlock()
+	return len(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestCalls(stub func(*cloudfront.ListCloudFrontOriginAccessIdentitiesInput) (*request.Request, *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput)) {
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesRequestStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestArgsForCall(i int) *cloudfront.ListCloudFrontOriginAccessIdentitiesInput {
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RLock()
+	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RUnlock()
+	argsForCall := fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestReturns(result1 *request.Request, result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput) {
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesRequestStub = nil
+	fake.listCloudFrontOriginAccessIdentitiesRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput) {
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesRequestStub = nil
+	if fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall == nil {
+		fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+		})
+	}
+	fake.listCloudFrontOriginAccessIdentitiesRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContext(arg1 aws.Context, arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, arg3 ...request.Option) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error) {
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Lock()
+	ret, specificReturn := fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall[len(fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall)]
+	fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall = append(fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesWithContext", []interface{}{arg1, arg2, arg3})
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Unlock()
+	if fake.ListCloudFrontOriginAccessIdentitiesWithContextStub != nil {
+		return fake.ListCloudFrontOriginAccessIdentitiesWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextCallCount() int {
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RLock()
+	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RUnlock()
+	return len(fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextCalls(stub func(aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, ...request.Option) (*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, error)) {
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListCloudFrontOriginAccessIdentitiesInput, []request.Option) {
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RLock()
+	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RUnlock()
+	argsForCall := fake.listCloudFrontOriginAccessIdentitiesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextReturns(result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, result2 error) {
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesWithContextStub = nil
+	fake.listCloudFrontOriginAccessIdentitiesWithContextReturns = struct {
+		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall(i int, result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, result2 error) {
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Lock()
+	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Unlock()
+	fake.ListCloudFrontOriginAccessIdentitiesWithContextStub = nil
+	if fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall == nil {
+		fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+			result2 error
+		})
+	}
+	fake.listCloudFrontOriginAccessIdentitiesWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListCloudFrontOriginAccessIdentitiesOutput
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributions(arg1 *cloudfront.ListDistributionsInput) (*cloudfront.ListDistributionsOutput, error) {
@@ -4243,7 +4915,8 @@ func (fake *FakeCloudFrontAPI) ListDistributions(arg1 *cloudfront.ListDistributi
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listDistributionsReturns.result1, fake.listDistributionsReturns.result2
+	fakeReturns := fake.listDistributionsReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsCallCount() int {
@@ -4252,13 +4925,22 @@ func (fake *FakeCloudFrontAPI) ListDistributionsCallCount() int {
 	return len(fake.listDistributionsArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListDistributionsCalls(stub func(*cloudfront.ListDistributionsInput) (*cloudfront.ListDistributionsOutput, error)) {
+	fake.listDistributionsMutex.Lock()
+	defer fake.listDistributionsMutex.Unlock()
+	fake.ListDistributionsStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListDistributionsArgsForCall(i int) *cloudfront.ListDistributionsInput {
 	fake.listDistributionsMutex.RLock()
 	defer fake.listDistributionsMutex.RUnlock()
-	return fake.listDistributionsArgsForCall[i].arg1
+	argsForCall := fake.listDistributionsArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsReturns(result1 *cloudfront.ListDistributionsOutput, result2 error) {
+	fake.listDistributionsMutex.Lock()
+	defer fake.listDistributionsMutex.Unlock()
 	fake.ListDistributionsStub = nil
 	fake.listDistributionsReturns = struct {
 		result1 *cloudfront.ListDistributionsOutput
@@ -4267,6 +4949,8 @@ func (fake *FakeCloudFrontAPI) ListDistributionsReturns(result1 *cloudfront.List
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsReturnsOnCall(i int, result1 *cloudfront.ListDistributionsOutput, result2 error) {
+	fake.listDistributionsMutex.Lock()
+	defer fake.listDistributionsMutex.Unlock()
 	fake.ListDistributionsStub = nil
 	if fake.listDistributionsReturnsOnCall == nil {
 		fake.listDistributionsReturnsOnCall = make(map[int]struct {
@@ -4280,107 +4964,194 @@ func (fake *FakeCloudFrontAPI) ListDistributionsReturnsOnCall(i int, result1 *cl
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsWithContext(arg1 aws.Context, arg2 *cloudfront.ListDistributionsInput, arg3 ...request.Option) (*cloudfront.ListDistributionsOutput, error) {
-	fake.listDistributionsWithContextMutex.Lock()
-	ret, specificReturn := fake.listDistributionsWithContextReturnsOnCall[len(fake.listDistributionsWithContextArgsForCall)]
-	fake.listDistributionsWithContextArgsForCall = append(fake.listDistributionsWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListDistributionsInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("ListDistributionsWithContext", []interface{}{arg1, arg2, arg3})
-	fake.listDistributionsWithContextMutex.Unlock()
-	if fake.ListDistributionsWithContextStub != nil {
-		return fake.ListDistributionsWithContextStub(arg1, arg2, arg3...)
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLId(arg1 *cloudfront.ListDistributionsByWebACLIdInput) (*cloudfront.ListDistributionsByWebACLIdOutput, error) {
+	fake.listDistributionsByWebACLIdMutex.Lock()
+	ret, specificReturn := fake.listDistributionsByWebACLIdReturnsOnCall[len(fake.listDistributionsByWebACLIdArgsForCall)]
+	fake.listDistributionsByWebACLIdArgsForCall = append(fake.listDistributionsByWebACLIdArgsForCall, struct {
+		arg1 *cloudfront.ListDistributionsByWebACLIdInput
+	}{arg1})
+	fake.recordInvocation("ListDistributionsByWebACLId", []interface{}{arg1})
+	fake.listDistributionsByWebACLIdMutex.Unlock()
+	if fake.ListDistributionsByWebACLIdStub != nil {
+		return fake.ListDistributionsByWebACLIdStub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listDistributionsWithContextReturns.result1, fake.listDistributionsWithContextReturns.result2
+	fakeReturns := fake.listDistributionsByWebACLIdReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsWithContextCallCount() int {
-	fake.listDistributionsWithContextMutex.RLock()
-	defer fake.listDistributionsWithContextMutex.RUnlock()
-	return len(fake.listDistributionsWithContextArgsForCall)
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdCallCount() int {
+	fake.listDistributionsByWebACLIdMutex.RLock()
+	defer fake.listDistributionsByWebACLIdMutex.RUnlock()
+	return len(fake.listDistributionsByWebACLIdArgsForCall)
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListDistributionsInput, []request.Option) {
-	fake.listDistributionsWithContextMutex.RLock()
-	defer fake.listDistributionsWithContextMutex.RUnlock()
-	return fake.listDistributionsWithContextArgsForCall[i].arg1, fake.listDistributionsWithContextArgsForCall[i].arg2, fake.listDistributionsWithContextArgsForCall[i].arg3
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdCalls(stub func(*cloudfront.ListDistributionsByWebACLIdInput) (*cloudfront.ListDistributionsByWebACLIdOutput, error)) {
+	fake.listDistributionsByWebACLIdMutex.Lock()
+	defer fake.listDistributionsByWebACLIdMutex.Unlock()
+	fake.ListDistributionsByWebACLIdStub = stub
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsWithContextReturns(result1 *cloudfront.ListDistributionsOutput, result2 error) {
-	fake.ListDistributionsWithContextStub = nil
-	fake.listDistributionsWithContextReturns = struct {
-		result1 *cloudfront.ListDistributionsOutput
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdArgsForCall(i int) *cloudfront.ListDistributionsByWebACLIdInput {
+	fake.listDistributionsByWebACLIdMutex.RLock()
+	defer fake.listDistributionsByWebACLIdMutex.RUnlock()
+	argsForCall := fake.listDistributionsByWebACLIdArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdReturns(result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
+	fake.listDistributionsByWebACLIdMutex.Lock()
+	defer fake.listDistributionsByWebACLIdMutex.Unlock()
+	fake.ListDistributionsByWebACLIdStub = nil
+	fake.listDistributionsByWebACLIdReturns = struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsWithContextReturnsOnCall(i int, result1 *cloudfront.ListDistributionsOutput, result2 error) {
-	fake.ListDistributionsWithContextStub = nil
-	if fake.listDistributionsWithContextReturnsOnCall == nil {
-		fake.listDistributionsWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListDistributionsOutput
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdReturnsOnCall(i int, result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
+	fake.listDistributionsByWebACLIdMutex.Lock()
+	defer fake.listDistributionsByWebACLIdMutex.Unlock()
+	fake.ListDistributionsByWebACLIdStub = nil
+	if fake.listDistributionsByWebACLIdReturnsOnCall == nil {
+		fake.listDistributionsByWebACLIdReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListDistributionsByWebACLIdOutput
 			result2 error
 		})
 	}
-	fake.listDistributionsWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListDistributionsOutput
+	fake.listDistributionsByWebACLIdReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsRequest(arg1 *cloudfront.ListDistributionsInput) (*request.Request, *cloudfront.ListDistributionsOutput) {
-	fake.listDistributionsRequestMutex.Lock()
-	ret, specificReturn := fake.listDistributionsRequestReturnsOnCall[len(fake.listDistributionsRequestArgsForCall)]
-	fake.listDistributionsRequestArgsForCall = append(fake.listDistributionsRequestArgsForCall, struct {
-		arg1 *cloudfront.ListDistributionsInput
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequest(arg1 *cloudfront.ListDistributionsByWebACLIdInput) (*request.Request, *cloudfront.ListDistributionsByWebACLIdOutput) {
+	fake.listDistributionsByWebACLIdRequestMutex.Lock()
+	ret, specificReturn := fake.listDistributionsByWebACLIdRequestReturnsOnCall[len(fake.listDistributionsByWebACLIdRequestArgsForCall)]
+	fake.listDistributionsByWebACLIdRequestArgsForCall = append(fake.listDistributionsByWebACLIdRequestArgsForCall, struct {
+		arg1 *cloudfront.ListDistributionsByWebACLIdInput
 	}{arg1})
-	fake.recordInvocation("ListDistributionsRequest", []interface{}{arg1})
-	fake.listDistributionsRequestMutex.Unlock()
-	if fake.ListDistributionsRequestStub != nil {
-		return fake.ListDistributionsRequestStub(arg1)
+	fake.recordInvocation("ListDistributionsByWebACLIdRequest", []interface{}{arg1})
+	fake.listDistributionsByWebACLIdRequestMutex.Unlock()
+	if fake.ListDistributionsByWebACLIdRequestStub != nil {
+		return fake.ListDistributionsByWebACLIdRequestStub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listDistributionsRequestReturns.result1, fake.listDistributionsRequestReturns.result2
+	fakeReturns := fake.listDistributionsByWebACLIdRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsRequestCallCount() int {
-	fake.listDistributionsRequestMutex.RLock()
-	defer fake.listDistributionsRequestMutex.RUnlock()
-	return len(fake.listDistributionsRequestArgsForCall)
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestCallCount() int {
+	fake.listDistributionsByWebACLIdRequestMutex.RLock()
+	defer fake.listDistributionsByWebACLIdRequestMutex.RUnlock()
+	return len(fake.listDistributionsByWebACLIdRequestArgsForCall)
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsRequestArgsForCall(i int) *cloudfront.ListDistributionsInput {
-	fake.listDistributionsRequestMutex.RLock()
-	defer fake.listDistributionsRequestMutex.RUnlock()
-	return fake.listDistributionsRequestArgsForCall[i].arg1
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestCalls(stub func(*cloudfront.ListDistributionsByWebACLIdInput) (*request.Request, *cloudfront.ListDistributionsByWebACLIdOutput)) {
+	fake.listDistributionsByWebACLIdRequestMutex.Lock()
+	defer fake.listDistributionsByWebACLIdRequestMutex.Unlock()
+	fake.ListDistributionsByWebACLIdRequestStub = stub
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsRequestReturns(result1 *request.Request, result2 *cloudfront.ListDistributionsOutput) {
-	fake.ListDistributionsRequestStub = nil
-	fake.listDistributionsRequestReturns = struct {
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestArgsForCall(i int) *cloudfront.ListDistributionsByWebACLIdInput {
+	fake.listDistributionsByWebACLIdRequestMutex.RLock()
+	defer fake.listDistributionsByWebACLIdRequestMutex.RUnlock()
+	argsForCall := fake.listDistributionsByWebACLIdRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestReturns(result1 *request.Request, result2 *cloudfront.ListDistributionsByWebACLIdOutput) {
+	fake.listDistributionsByWebACLIdRequestMutex.Lock()
+	defer fake.listDistributionsByWebACLIdRequestMutex.Unlock()
+	fake.ListDistributionsByWebACLIdRequestStub = nil
+	fake.listDistributionsByWebACLIdRequestReturns = struct {
 		result1 *request.Request
-		result2 *cloudfront.ListDistributionsOutput
+		result2 *cloudfront.ListDistributionsByWebACLIdOutput
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListDistributionsOutput) {
-	fake.ListDistributionsRequestStub = nil
-	if fake.listDistributionsRequestReturnsOnCall == nil {
-		fake.listDistributionsRequestReturnsOnCall = make(map[int]struct {
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListDistributionsByWebACLIdOutput) {
+	fake.listDistributionsByWebACLIdRequestMutex.Lock()
+	defer fake.listDistributionsByWebACLIdRequestMutex.Unlock()
+	fake.ListDistributionsByWebACLIdRequestStub = nil
+	if fake.listDistributionsByWebACLIdRequestReturnsOnCall == nil {
+		fake.listDistributionsByWebACLIdRequestReturnsOnCall = make(map[int]struct {
 			result1 *request.Request
-			result2 *cloudfront.ListDistributionsOutput
+			result2 *cloudfront.ListDistributionsByWebACLIdOutput
 		})
 	}
-	fake.listDistributionsRequestReturnsOnCall[i] = struct {
+	fake.listDistributionsByWebACLIdRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
-		result2 *cloudfront.ListDistributionsOutput
+		result2 *cloudfront.ListDistributionsByWebACLIdOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContext(arg1 aws.Context, arg2 *cloudfront.ListDistributionsByWebACLIdInput, arg3 ...request.Option) (*cloudfront.ListDistributionsByWebACLIdOutput, error) {
+	fake.listDistributionsByWebACLIdWithContextMutex.Lock()
+	ret, specificReturn := fake.listDistributionsByWebACLIdWithContextReturnsOnCall[len(fake.listDistributionsByWebACLIdWithContextArgsForCall)]
+	fake.listDistributionsByWebACLIdWithContextArgsForCall = append(fake.listDistributionsByWebACLIdWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListDistributionsByWebACLIdInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("ListDistributionsByWebACLIdWithContext", []interface{}{arg1, arg2, arg3})
+	fake.listDistributionsByWebACLIdWithContextMutex.Unlock()
+	if fake.ListDistributionsByWebACLIdWithContextStub != nil {
+		return fake.ListDistributionsByWebACLIdWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listDistributionsByWebACLIdWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextCallCount() int {
+	fake.listDistributionsByWebACLIdWithContextMutex.RLock()
+	defer fake.listDistributionsByWebACLIdWithContextMutex.RUnlock()
+	return len(fake.listDistributionsByWebACLIdWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextCalls(stub func(aws.Context, *cloudfront.ListDistributionsByWebACLIdInput, ...request.Option) (*cloudfront.ListDistributionsByWebACLIdOutput, error)) {
+	fake.listDistributionsByWebACLIdWithContextMutex.Lock()
+	defer fake.listDistributionsByWebACLIdWithContextMutex.Unlock()
+	fake.ListDistributionsByWebACLIdWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListDistributionsByWebACLIdInput, []request.Option) {
+	fake.listDistributionsByWebACLIdWithContextMutex.RLock()
+	defer fake.listDistributionsByWebACLIdWithContextMutex.RUnlock()
+	argsForCall := fake.listDistributionsByWebACLIdWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextReturns(result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
+	fake.listDistributionsByWebACLIdWithContextMutex.Lock()
+	defer fake.listDistributionsByWebACLIdWithContextMutex.Unlock()
+	fake.ListDistributionsByWebACLIdWithContextStub = nil
+	fake.listDistributionsByWebACLIdWithContextReturns = struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextReturnsOnCall(i int, result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
+	fake.listDistributionsByWebACLIdWithContextMutex.Lock()
+	defer fake.listDistributionsByWebACLIdWithContextMutex.Unlock()
+	fake.ListDistributionsByWebACLIdWithContextStub = nil
+	if fake.listDistributionsByWebACLIdWithContextReturnsOnCall == nil {
+		fake.listDistributionsByWebACLIdWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListDistributionsByWebACLIdOutput
+			result2 error
+		})
+	}
+	fake.listDistributionsByWebACLIdWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -4399,7 +5170,8 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPages(arg1 *cloudfront.ListDistr
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listDistributionsPagesReturns.result1
+	fakeReturns := fake.listDistributionsPagesReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesCallCount() int {
@@ -4408,13 +5180,22 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesCallCount() int {
 	return len(fake.listDistributionsPagesArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListDistributionsPagesCalls(stub func(*cloudfront.ListDistributionsInput, func(*cloudfront.ListDistributionsOutput, bool) bool) error) {
+	fake.listDistributionsPagesMutex.Lock()
+	defer fake.listDistributionsPagesMutex.Unlock()
+	fake.ListDistributionsPagesStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesArgsForCall(i int) (*cloudfront.ListDistributionsInput, func(*cloudfront.ListDistributionsOutput, bool) bool) {
 	fake.listDistributionsPagesMutex.RLock()
 	defer fake.listDistributionsPagesMutex.RUnlock()
-	return fake.listDistributionsPagesArgsForCall[i].arg1, fake.listDistributionsPagesArgsForCall[i].arg2
+	argsForCall := fake.listDistributionsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesReturns(result1 error) {
+	fake.listDistributionsPagesMutex.Lock()
+	defer fake.listDistributionsPagesMutex.Unlock()
 	fake.ListDistributionsPagesStub = nil
 	fake.listDistributionsPagesReturns = struct {
 		result1 error
@@ -4422,6 +5203,8 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesReturns(result1 error) {
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesReturnsOnCall(i int, result1 error) {
+	fake.listDistributionsPagesMutex.Lock()
+	defer fake.listDistributionsPagesMutex.Unlock()
 	fake.ListDistributionsPagesStub = nil
 	if fake.listDistributionsPagesReturnsOnCall == nil {
 		fake.listDistributionsPagesReturnsOnCall = make(map[int]struct {
@@ -4450,7 +5233,8 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContext(arg1 aws.Contex
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listDistributionsPagesWithContextReturns.result1
+	fakeReturns := fake.listDistributionsPagesWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextCallCount() int {
@@ -4459,13 +5243,22 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextCallCount() int 
 	return len(fake.listDistributionsPagesWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextCalls(stub func(aws.Context, *cloudfront.ListDistributionsInput, func(*cloudfront.ListDistributionsOutput, bool) bool, ...request.Option) error) {
+	fake.listDistributionsPagesWithContextMutex.Lock()
+	defer fake.listDistributionsPagesWithContextMutex.Unlock()
+	fake.ListDistributionsPagesWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListDistributionsInput, func(*cloudfront.ListDistributionsOutput, bool) bool, []request.Option) {
 	fake.listDistributionsPagesWithContextMutex.RLock()
 	defer fake.listDistributionsPagesWithContextMutex.RUnlock()
-	return fake.listDistributionsPagesWithContextArgsForCall[i].arg1, fake.listDistributionsPagesWithContextArgsForCall[i].arg2, fake.listDistributionsPagesWithContextArgsForCall[i].arg3, fake.listDistributionsPagesWithContextArgsForCall[i].arg4
+	argsForCall := fake.listDistributionsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextReturns(result1 error) {
+	fake.listDistributionsPagesWithContextMutex.Lock()
+	defer fake.listDistributionsPagesWithContextMutex.Unlock()
 	fake.ListDistributionsPagesWithContextStub = nil
 	fake.listDistributionsPagesWithContextReturns = struct {
 		result1 error
@@ -4473,6 +5266,8 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextReturns(result1 
 }
 
 func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.listDistributionsPagesWithContextMutex.Lock()
+	defer fake.listDistributionsPagesWithContextMutex.Unlock()
 	fake.ListDistributionsPagesWithContextStub = nil
 	if fake.listDistributionsPagesWithContextReturnsOnCall == nil {
 		fake.listDistributionsPagesWithContextReturnsOnCall = make(map[int]struct {
@@ -4484,158 +5279,131 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContextReturnsOnCall(i 
 	}{result1}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLId(arg1 *cloudfront.ListDistributionsByWebACLIdInput) (*cloudfront.ListDistributionsByWebACLIdOutput, error) {
-	fake.listDistributionsByWebACLIdMutex.Lock()
-	ret, specificReturn := fake.listDistributionsByWebACLIdReturnsOnCall[len(fake.listDistributionsByWebACLIdArgsForCall)]
-	fake.listDistributionsByWebACLIdArgsForCall = append(fake.listDistributionsByWebACLIdArgsForCall, struct {
-		arg1 *cloudfront.ListDistributionsByWebACLIdInput
+func (fake *FakeCloudFrontAPI) ListDistributionsRequest(arg1 *cloudfront.ListDistributionsInput) (*request.Request, *cloudfront.ListDistributionsOutput) {
+	fake.listDistributionsRequestMutex.Lock()
+	ret, specificReturn := fake.listDistributionsRequestReturnsOnCall[len(fake.listDistributionsRequestArgsForCall)]
+	fake.listDistributionsRequestArgsForCall = append(fake.listDistributionsRequestArgsForCall, struct {
+		arg1 *cloudfront.ListDistributionsInput
 	}{arg1})
-	fake.recordInvocation("ListDistributionsByWebACLId", []interface{}{arg1})
-	fake.listDistributionsByWebACLIdMutex.Unlock()
-	if fake.ListDistributionsByWebACLIdStub != nil {
-		return fake.ListDistributionsByWebACLIdStub(arg1)
+	fake.recordInvocation("ListDistributionsRequest", []interface{}{arg1})
+	fake.listDistributionsRequestMutex.Unlock()
+	if fake.ListDistributionsRequestStub != nil {
+		return fake.ListDistributionsRequestStub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listDistributionsByWebACLIdReturns.result1, fake.listDistributionsByWebACLIdReturns.result2
+	fakeReturns := fake.listDistributionsRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdCallCount() int {
-	fake.listDistributionsByWebACLIdMutex.RLock()
-	defer fake.listDistributionsByWebACLIdMutex.RUnlock()
-	return len(fake.listDistributionsByWebACLIdArgsForCall)
+func (fake *FakeCloudFrontAPI) ListDistributionsRequestCallCount() int {
+	fake.listDistributionsRequestMutex.RLock()
+	defer fake.listDistributionsRequestMutex.RUnlock()
+	return len(fake.listDistributionsRequestArgsForCall)
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdArgsForCall(i int) *cloudfront.ListDistributionsByWebACLIdInput {
-	fake.listDistributionsByWebACLIdMutex.RLock()
-	defer fake.listDistributionsByWebACLIdMutex.RUnlock()
-	return fake.listDistributionsByWebACLIdArgsForCall[i].arg1
+func (fake *FakeCloudFrontAPI) ListDistributionsRequestCalls(stub func(*cloudfront.ListDistributionsInput) (*request.Request, *cloudfront.ListDistributionsOutput)) {
+	fake.listDistributionsRequestMutex.Lock()
+	defer fake.listDistributionsRequestMutex.Unlock()
+	fake.ListDistributionsRequestStub = stub
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdReturns(result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
-	fake.ListDistributionsByWebACLIdStub = nil
-	fake.listDistributionsByWebACLIdReturns = struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
-		result2 error
+func (fake *FakeCloudFrontAPI) ListDistributionsRequestArgsForCall(i int) *cloudfront.ListDistributionsInput {
+	fake.listDistributionsRequestMutex.RLock()
+	defer fake.listDistributionsRequestMutex.RUnlock()
+	argsForCall := fake.listDistributionsRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsRequestReturns(result1 *request.Request, result2 *cloudfront.ListDistributionsOutput) {
+	fake.listDistributionsRequestMutex.Lock()
+	defer fake.listDistributionsRequestMutex.Unlock()
+	fake.ListDistributionsRequestStub = nil
+	fake.listDistributionsRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListDistributionsOutput
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdReturnsOnCall(i int, result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
-	fake.ListDistributionsByWebACLIdStub = nil
-	if fake.listDistributionsByWebACLIdReturnsOnCall == nil {
-		fake.listDistributionsByWebACLIdReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListDistributionsByWebACLIdOutput
-			result2 error
+func (fake *FakeCloudFrontAPI) ListDistributionsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListDistributionsOutput) {
+	fake.listDistributionsRequestMutex.Lock()
+	defer fake.listDistributionsRequestMutex.Unlock()
+	fake.ListDistributionsRequestStub = nil
+	if fake.listDistributionsRequestReturnsOnCall == nil {
+		fake.listDistributionsRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.ListDistributionsOutput
 		})
 	}
-	fake.listDistributionsByWebACLIdReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
-		result2 error
+	fake.listDistributionsRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListDistributionsOutput
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContext(arg1 aws.Context, arg2 *cloudfront.ListDistributionsByWebACLIdInput, arg3 ...request.Option) (*cloudfront.ListDistributionsByWebACLIdOutput, error) {
-	fake.listDistributionsByWebACLIdWithContextMutex.Lock()
-	ret, specificReturn := fake.listDistributionsByWebACLIdWithContextReturnsOnCall[len(fake.listDistributionsByWebACLIdWithContextArgsForCall)]
-	fake.listDistributionsByWebACLIdWithContextArgsForCall = append(fake.listDistributionsByWebACLIdWithContextArgsForCall, struct {
+func (fake *FakeCloudFrontAPI) ListDistributionsWithContext(arg1 aws.Context, arg2 *cloudfront.ListDistributionsInput, arg3 ...request.Option) (*cloudfront.ListDistributionsOutput, error) {
+	fake.listDistributionsWithContextMutex.Lock()
+	ret, specificReturn := fake.listDistributionsWithContextReturnsOnCall[len(fake.listDistributionsWithContextArgsForCall)]
+	fake.listDistributionsWithContextArgsForCall = append(fake.listDistributionsWithContextArgsForCall, struct {
 		arg1 aws.Context
-		arg2 *cloudfront.ListDistributionsByWebACLIdInput
+		arg2 *cloudfront.ListDistributionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
-	fake.recordInvocation("ListDistributionsByWebACLIdWithContext", []interface{}{arg1, arg2, arg3})
-	fake.listDistributionsByWebACLIdWithContextMutex.Unlock()
-	if fake.ListDistributionsByWebACLIdWithContextStub != nil {
-		return fake.ListDistributionsByWebACLIdWithContextStub(arg1, arg2, arg3...)
+	fake.recordInvocation("ListDistributionsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.listDistributionsWithContextMutex.Unlock()
+	if fake.ListDistributionsWithContextStub != nil {
+		return fake.ListDistributionsWithContextStub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listDistributionsByWebACLIdWithContextReturns.result1, fake.listDistributionsByWebACLIdWithContextReturns.result2
+	fakeReturns := fake.listDistributionsWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextCallCount() int {
-	fake.listDistributionsByWebACLIdWithContextMutex.RLock()
-	defer fake.listDistributionsByWebACLIdWithContextMutex.RUnlock()
-	return len(fake.listDistributionsByWebACLIdWithContextArgsForCall)
+func (fake *FakeCloudFrontAPI) ListDistributionsWithContextCallCount() int {
+	fake.listDistributionsWithContextMutex.RLock()
+	defer fake.listDistributionsWithContextMutex.RUnlock()
+	return len(fake.listDistributionsWithContextArgsForCall)
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListDistributionsByWebACLIdInput, []request.Option) {
-	fake.listDistributionsByWebACLIdWithContextMutex.RLock()
-	defer fake.listDistributionsByWebACLIdWithContextMutex.RUnlock()
-	return fake.listDistributionsByWebACLIdWithContextArgsForCall[i].arg1, fake.listDistributionsByWebACLIdWithContextArgsForCall[i].arg2, fake.listDistributionsByWebACLIdWithContextArgsForCall[i].arg3
+func (fake *FakeCloudFrontAPI) ListDistributionsWithContextCalls(stub func(aws.Context, *cloudfront.ListDistributionsInput, ...request.Option) (*cloudfront.ListDistributionsOutput, error)) {
+	fake.listDistributionsWithContextMutex.Lock()
+	defer fake.listDistributionsWithContextMutex.Unlock()
+	fake.ListDistributionsWithContextStub = stub
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextReturns(result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
-	fake.ListDistributionsByWebACLIdWithContextStub = nil
-	fake.listDistributionsByWebACLIdWithContextReturns = struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+func (fake *FakeCloudFrontAPI) ListDistributionsWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListDistributionsInput, []request.Option) {
+	fake.listDistributionsWithContextMutex.RLock()
+	defer fake.listDistributionsWithContextMutex.RUnlock()
+	argsForCall := fake.listDistributionsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) ListDistributionsWithContextReturns(result1 *cloudfront.ListDistributionsOutput, result2 error) {
+	fake.listDistributionsWithContextMutex.Lock()
+	defer fake.listDistributionsWithContextMutex.Unlock()
+	fake.ListDistributionsWithContextStub = nil
+	fake.listDistributionsWithContextReturns = struct {
+		result1 *cloudfront.ListDistributionsOutput
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContextReturnsOnCall(i int, result1 *cloudfront.ListDistributionsByWebACLIdOutput, result2 error) {
-	fake.ListDistributionsByWebACLIdWithContextStub = nil
-	if fake.listDistributionsByWebACLIdWithContextReturnsOnCall == nil {
-		fake.listDistributionsByWebACLIdWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListDistributionsByWebACLIdOutput
+func (fake *FakeCloudFrontAPI) ListDistributionsWithContextReturnsOnCall(i int, result1 *cloudfront.ListDistributionsOutput, result2 error) {
+	fake.listDistributionsWithContextMutex.Lock()
+	defer fake.listDistributionsWithContextMutex.Unlock()
+	fake.ListDistributionsWithContextStub = nil
+	if fake.listDistributionsWithContextReturnsOnCall == nil {
+		fake.listDistributionsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListDistributionsOutput
 			result2 error
 		})
 	}
-	fake.listDistributionsByWebACLIdWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListDistributionsByWebACLIdOutput
+	fake.listDistributionsWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListDistributionsOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequest(arg1 *cloudfront.ListDistributionsByWebACLIdInput) (*request.Request, *cloudfront.ListDistributionsByWebACLIdOutput) {
-	fake.listDistributionsByWebACLIdRequestMutex.Lock()
-	ret, specificReturn := fake.listDistributionsByWebACLIdRequestReturnsOnCall[len(fake.listDistributionsByWebACLIdRequestArgsForCall)]
-	fake.listDistributionsByWebACLIdRequestArgsForCall = append(fake.listDistributionsByWebACLIdRequestArgsForCall, struct {
-		arg1 *cloudfront.ListDistributionsByWebACLIdInput
-	}{arg1})
-	fake.recordInvocation("ListDistributionsByWebACLIdRequest", []interface{}{arg1})
-	fake.listDistributionsByWebACLIdRequestMutex.Unlock()
-	if fake.ListDistributionsByWebACLIdRequestStub != nil {
-		return fake.ListDistributionsByWebACLIdRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listDistributionsByWebACLIdRequestReturns.result1, fake.listDistributionsByWebACLIdRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestCallCount() int {
-	fake.listDistributionsByWebACLIdRequestMutex.RLock()
-	defer fake.listDistributionsByWebACLIdRequestMutex.RUnlock()
-	return len(fake.listDistributionsByWebACLIdRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestArgsForCall(i int) *cloudfront.ListDistributionsByWebACLIdInput {
-	fake.listDistributionsByWebACLIdRequestMutex.RLock()
-	defer fake.listDistributionsByWebACLIdRequestMutex.RUnlock()
-	return fake.listDistributionsByWebACLIdRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestReturns(result1 *request.Request, result2 *cloudfront.ListDistributionsByWebACLIdOutput) {
-	fake.ListDistributionsByWebACLIdRequestStub = nil
-	fake.listDistributionsByWebACLIdRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListDistributionsByWebACLIdOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListDistributionsByWebACLIdOutput) {
-	fake.ListDistributionsByWebACLIdRequestStub = nil
-	if fake.listDistributionsByWebACLIdRequestReturnsOnCall == nil {
-		fake.listDistributionsByWebACLIdRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.ListDistributionsByWebACLIdOutput
-		})
-	}
-	fake.listDistributionsByWebACLIdRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListDistributionsByWebACLIdOutput
 	}{result1, result2}
 }
 
@@ -4653,7 +5421,8 @@ func (fake *FakeCloudFrontAPI) ListInvalidations(arg1 *cloudfront.ListInvalidati
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listInvalidationsReturns.result1, fake.listInvalidationsReturns.result2
+	fakeReturns := fake.listInvalidationsReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsCallCount() int {
@@ -4662,13 +5431,22 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsCallCount() int {
 	return len(fake.listInvalidationsArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListInvalidationsCalls(stub func(*cloudfront.ListInvalidationsInput) (*cloudfront.ListInvalidationsOutput, error)) {
+	fake.listInvalidationsMutex.Lock()
+	defer fake.listInvalidationsMutex.Unlock()
+	fake.ListInvalidationsStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListInvalidationsArgsForCall(i int) *cloudfront.ListInvalidationsInput {
 	fake.listInvalidationsMutex.RLock()
 	defer fake.listInvalidationsMutex.RUnlock()
-	return fake.listInvalidationsArgsForCall[i].arg1
+	argsForCall := fake.listInvalidationsArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsReturns(result1 *cloudfront.ListInvalidationsOutput, result2 error) {
+	fake.listInvalidationsMutex.Lock()
+	defer fake.listInvalidationsMutex.Unlock()
 	fake.ListInvalidationsStub = nil
 	fake.listInvalidationsReturns = struct {
 		result1 *cloudfront.ListInvalidationsOutput
@@ -4677,6 +5455,8 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsReturns(result1 *cloudfront.List
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsReturnsOnCall(i int, result1 *cloudfront.ListInvalidationsOutput, result2 error) {
+	fake.listInvalidationsMutex.Lock()
+	defer fake.listInvalidationsMutex.Unlock()
 	fake.ListInvalidationsStub = nil
 	if fake.listInvalidationsReturnsOnCall == nil {
 		fake.listInvalidationsReturnsOnCall = make(map[int]struct {
@@ -4687,110 +5467,6 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsReturnsOnCall(i int, result1 *cl
 	fake.listInvalidationsReturnsOnCall[i] = struct {
 		result1 *cloudfront.ListInvalidationsOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsWithContext(arg1 aws.Context, arg2 *cloudfront.ListInvalidationsInput, arg3 ...request.Option) (*cloudfront.ListInvalidationsOutput, error) {
-	fake.listInvalidationsWithContextMutex.Lock()
-	ret, specificReturn := fake.listInvalidationsWithContextReturnsOnCall[len(fake.listInvalidationsWithContextArgsForCall)]
-	fake.listInvalidationsWithContextArgsForCall = append(fake.listInvalidationsWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListInvalidationsInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("ListInvalidationsWithContext", []interface{}{arg1, arg2, arg3})
-	fake.listInvalidationsWithContextMutex.Unlock()
-	if fake.ListInvalidationsWithContextStub != nil {
-		return fake.ListInvalidationsWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listInvalidationsWithContextReturns.result1, fake.listInvalidationsWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextCallCount() int {
-	fake.listInvalidationsWithContextMutex.RLock()
-	defer fake.listInvalidationsWithContextMutex.RUnlock()
-	return len(fake.listInvalidationsWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListInvalidationsInput, []request.Option) {
-	fake.listInvalidationsWithContextMutex.RLock()
-	defer fake.listInvalidationsWithContextMutex.RUnlock()
-	return fake.listInvalidationsWithContextArgsForCall[i].arg1, fake.listInvalidationsWithContextArgsForCall[i].arg2, fake.listInvalidationsWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextReturns(result1 *cloudfront.ListInvalidationsOutput, result2 error) {
-	fake.ListInvalidationsWithContextStub = nil
-	fake.listInvalidationsWithContextReturns = struct {
-		result1 *cloudfront.ListInvalidationsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextReturnsOnCall(i int, result1 *cloudfront.ListInvalidationsOutput, result2 error) {
-	fake.ListInvalidationsWithContextStub = nil
-	if fake.listInvalidationsWithContextReturnsOnCall == nil {
-		fake.listInvalidationsWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListInvalidationsOutput
-			result2 error
-		})
-	}
-	fake.listInvalidationsWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListInvalidationsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsRequest(arg1 *cloudfront.ListInvalidationsInput) (*request.Request, *cloudfront.ListInvalidationsOutput) {
-	fake.listInvalidationsRequestMutex.Lock()
-	ret, specificReturn := fake.listInvalidationsRequestReturnsOnCall[len(fake.listInvalidationsRequestArgsForCall)]
-	fake.listInvalidationsRequestArgsForCall = append(fake.listInvalidationsRequestArgsForCall, struct {
-		arg1 *cloudfront.ListInvalidationsInput
-	}{arg1})
-	fake.recordInvocation("ListInvalidationsRequest", []interface{}{arg1})
-	fake.listInvalidationsRequestMutex.Unlock()
-	if fake.ListInvalidationsRequestStub != nil {
-		return fake.ListInvalidationsRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listInvalidationsRequestReturns.result1, fake.listInvalidationsRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsRequestCallCount() int {
-	fake.listInvalidationsRequestMutex.RLock()
-	defer fake.listInvalidationsRequestMutex.RUnlock()
-	return len(fake.listInvalidationsRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsRequestArgsForCall(i int) *cloudfront.ListInvalidationsInput {
-	fake.listInvalidationsRequestMutex.RLock()
-	defer fake.listInvalidationsRequestMutex.RUnlock()
-	return fake.listInvalidationsRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsRequestReturns(result1 *request.Request, result2 *cloudfront.ListInvalidationsOutput) {
-	fake.ListInvalidationsRequestStub = nil
-	fake.listInvalidationsRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListInvalidationsOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListInvalidationsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListInvalidationsOutput) {
-	fake.ListInvalidationsRequestStub = nil
-	if fake.listInvalidationsRequestReturnsOnCall == nil {
-		fake.listInvalidationsRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.ListInvalidationsOutput
-		})
-	}
-	fake.listInvalidationsRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListInvalidationsOutput
 	}{result1, result2}
 }
 
@@ -4809,7 +5485,8 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPages(arg1 *cloudfront.ListInval
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listInvalidationsPagesReturns.result1
+	fakeReturns := fake.listInvalidationsPagesReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesCallCount() int {
@@ -4818,13 +5495,22 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesCallCount() int {
 	return len(fake.listInvalidationsPagesArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListInvalidationsPagesCalls(stub func(*cloudfront.ListInvalidationsInput, func(*cloudfront.ListInvalidationsOutput, bool) bool) error) {
+	fake.listInvalidationsPagesMutex.Lock()
+	defer fake.listInvalidationsPagesMutex.Unlock()
+	fake.ListInvalidationsPagesStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesArgsForCall(i int) (*cloudfront.ListInvalidationsInput, func(*cloudfront.ListInvalidationsOutput, bool) bool) {
 	fake.listInvalidationsPagesMutex.RLock()
 	defer fake.listInvalidationsPagesMutex.RUnlock()
-	return fake.listInvalidationsPagesArgsForCall[i].arg1, fake.listInvalidationsPagesArgsForCall[i].arg2
+	argsForCall := fake.listInvalidationsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesReturns(result1 error) {
+	fake.listInvalidationsPagesMutex.Lock()
+	defer fake.listInvalidationsPagesMutex.Unlock()
 	fake.ListInvalidationsPagesStub = nil
 	fake.listInvalidationsPagesReturns = struct {
 		result1 error
@@ -4832,6 +5518,8 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesReturns(result1 error) {
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesReturnsOnCall(i int, result1 error) {
+	fake.listInvalidationsPagesMutex.Lock()
+	defer fake.listInvalidationsPagesMutex.Unlock()
 	fake.ListInvalidationsPagesStub = nil
 	if fake.listInvalidationsPagesReturnsOnCall == nil {
 		fake.listInvalidationsPagesReturnsOnCall = make(map[int]struct {
@@ -4860,7 +5548,8 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContext(arg1 aws.Contex
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listInvalidationsPagesWithContextReturns.result1
+	fakeReturns := fake.listInvalidationsPagesWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextCallCount() int {
@@ -4869,13 +5558,22 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextCallCount() int 
 	return len(fake.listInvalidationsPagesWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextCalls(stub func(aws.Context, *cloudfront.ListInvalidationsInput, func(*cloudfront.ListInvalidationsOutput, bool) bool, ...request.Option) error) {
+	fake.listInvalidationsPagesWithContextMutex.Lock()
+	defer fake.listInvalidationsPagesWithContextMutex.Unlock()
+	fake.ListInvalidationsPagesWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListInvalidationsInput, func(*cloudfront.ListInvalidationsOutput, bool) bool, []request.Option) {
 	fake.listInvalidationsPagesWithContextMutex.RLock()
 	defer fake.listInvalidationsPagesWithContextMutex.RUnlock()
-	return fake.listInvalidationsPagesWithContextArgsForCall[i].arg1, fake.listInvalidationsPagesWithContextArgsForCall[i].arg2, fake.listInvalidationsPagesWithContextArgsForCall[i].arg3, fake.listInvalidationsPagesWithContextArgsForCall[i].arg4
+	argsForCall := fake.listInvalidationsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextReturns(result1 error) {
+	fake.listInvalidationsPagesWithContextMutex.Lock()
+	defer fake.listInvalidationsPagesWithContextMutex.Unlock()
 	fake.ListInvalidationsPagesWithContextStub = nil
 	fake.listInvalidationsPagesWithContextReturns = struct {
 		result1 error
@@ -4883,6 +5581,8 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextReturns(result1 
 }
 
 func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.listInvalidationsPagesWithContextMutex.Lock()
+	defer fake.listInvalidationsPagesWithContextMutex.Unlock()
 	fake.ListInvalidationsPagesWithContextStub = nil
 	if fake.listInvalidationsPagesWithContextReturnsOnCall == nil {
 		fake.listInvalidationsPagesWithContextReturnsOnCall = make(map[int]struct {
@@ -4892,6 +5592,134 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContextReturnsOnCall(i 
 	fake.listInvalidationsPagesWithContextReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsRequest(arg1 *cloudfront.ListInvalidationsInput) (*request.Request, *cloudfront.ListInvalidationsOutput) {
+	fake.listInvalidationsRequestMutex.Lock()
+	ret, specificReturn := fake.listInvalidationsRequestReturnsOnCall[len(fake.listInvalidationsRequestArgsForCall)]
+	fake.listInvalidationsRequestArgsForCall = append(fake.listInvalidationsRequestArgsForCall, struct {
+		arg1 *cloudfront.ListInvalidationsInput
+	}{arg1})
+	fake.recordInvocation("ListInvalidationsRequest", []interface{}{arg1})
+	fake.listInvalidationsRequestMutex.Unlock()
+	if fake.ListInvalidationsRequestStub != nil {
+		return fake.ListInvalidationsRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listInvalidationsRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsRequestCallCount() int {
+	fake.listInvalidationsRequestMutex.RLock()
+	defer fake.listInvalidationsRequestMutex.RUnlock()
+	return len(fake.listInvalidationsRequestArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsRequestCalls(stub func(*cloudfront.ListInvalidationsInput) (*request.Request, *cloudfront.ListInvalidationsOutput)) {
+	fake.listInvalidationsRequestMutex.Lock()
+	defer fake.listInvalidationsRequestMutex.Unlock()
+	fake.ListInvalidationsRequestStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsRequestArgsForCall(i int) *cloudfront.ListInvalidationsInput {
+	fake.listInvalidationsRequestMutex.RLock()
+	defer fake.listInvalidationsRequestMutex.RUnlock()
+	argsForCall := fake.listInvalidationsRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsRequestReturns(result1 *request.Request, result2 *cloudfront.ListInvalidationsOutput) {
+	fake.listInvalidationsRequestMutex.Lock()
+	defer fake.listInvalidationsRequestMutex.Unlock()
+	fake.ListInvalidationsRequestStub = nil
+	fake.listInvalidationsRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListInvalidationsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListInvalidationsOutput) {
+	fake.listInvalidationsRequestMutex.Lock()
+	defer fake.listInvalidationsRequestMutex.Unlock()
+	fake.ListInvalidationsRequestStub = nil
+	if fake.listInvalidationsRequestReturnsOnCall == nil {
+		fake.listInvalidationsRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.ListInvalidationsOutput
+		})
+	}
+	fake.listInvalidationsRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListInvalidationsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsWithContext(arg1 aws.Context, arg2 *cloudfront.ListInvalidationsInput, arg3 ...request.Option) (*cloudfront.ListInvalidationsOutput, error) {
+	fake.listInvalidationsWithContextMutex.Lock()
+	ret, specificReturn := fake.listInvalidationsWithContextReturnsOnCall[len(fake.listInvalidationsWithContextArgsForCall)]
+	fake.listInvalidationsWithContextArgsForCall = append(fake.listInvalidationsWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListInvalidationsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("ListInvalidationsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.listInvalidationsWithContextMutex.Unlock()
+	if fake.ListInvalidationsWithContextStub != nil {
+		return fake.ListInvalidationsWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listInvalidationsWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextCallCount() int {
+	fake.listInvalidationsWithContextMutex.RLock()
+	defer fake.listInvalidationsWithContextMutex.RUnlock()
+	return len(fake.listInvalidationsWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextCalls(stub func(aws.Context, *cloudfront.ListInvalidationsInput, ...request.Option) (*cloudfront.ListInvalidationsOutput, error)) {
+	fake.listInvalidationsWithContextMutex.Lock()
+	defer fake.listInvalidationsWithContextMutex.Unlock()
+	fake.ListInvalidationsWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListInvalidationsInput, []request.Option) {
+	fake.listInvalidationsWithContextMutex.RLock()
+	defer fake.listInvalidationsWithContextMutex.RUnlock()
+	argsForCall := fake.listInvalidationsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextReturns(result1 *cloudfront.ListInvalidationsOutput, result2 error) {
+	fake.listInvalidationsWithContextMutex.Lock()
+	defer fake.listInvalidationsWithContextMutex.Unlock()
+	fake.ListInvalidationsWithContextStub = nil
+	fake.listInvalidationsWithContextReturns = struct {
+		result1 *cloudfront.ListInvalidationsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListInvalidationsWithContextReturnsOnCall(i int, result1 *cloudfront.ListInvalidationsOutput, result2 error) {
+	fake.listInvalidationsWithContextMutex.Lock()
+	defer fake.listInvalidationsWithContextMutex.Unlock()
+	fake.ListInvalidationsWithContextStub = nil
+	if fake.listInvalidationsWithContextReturnsOnCall == nil {
+		fake.listInvalidationsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListInvalidationsOutput
+			result2 error
+		})
+	}
+	fake.listInvalidationsWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListInvalidationsOutput
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributions(arg1 *cloudfront.ListStreamingDistributionsInput) (*cloudfront.ListStreamingDistributionsOutput, error) {
@@ -4908,7 +5736,8 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributions(arg1 *cloudfront.ListS
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listStreamingDistributionsReturns.result1, fake.listStreamingDistributionsReturns.result2
+	fakeReturns := fake.listStreamingDistributionsReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsCallCount() int {
@@ -4917,13 +5746,22 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsCallCount() int {
 	return len(fake.listStreamingDistributionsArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsCalls(stub func(*cloudfront.ListStreamingDistributionsInput) (*cloudfront.ListStreamingDistributionsOutput, error)) {
+	fake.listStreamingDistributionsMutex.Lock()
+	defer fake.listStreamingDistributionsMutex.Unlock()
+	fake.ListStreamingDistributionsStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsArgsForCall(i int) *cloudfront.ListStreamingDistributionsInput {
 	fake.listStreamingDistributionsMutex.RLock()
 	defer fake.listStreamingDistributionsMutex.RUnlock()
-	return fake.listStreamingDistributionsArgsForCall[i].arg1
+	argsForCall := fake.listStreamingDistributionsArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsReturns(result1 *cloudfront.ListStreamingDistributionsOutput, result2 error) {
+	fake.listStreamingDistributionsMutex.Lock()
+	defer fake.listStreamingDistributionsMutex.Unlock()
 	fake.ListStreamingDistributionsStub = nil
 	fake.listStreamingDistributionsReturns = struct {
 		result1 *cloudfront.ListStreamingDistributionsOutput
@@ -4932,6 +5770,8 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsReturns(result1 *cloudf
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsReturnsOnCall(i int, result1 *cloudfront.ListStreamingDistributionsOutput, result2 error) {
+	fake.listStreamingDistributionsMutex.Lock()
+	defer fake.listStreamingDistributionsMutex.Unlock()
 	fake.ListStreamingDistributionsStub = nil
 	if fake.listStreamingDistributionsReturnsOnCall == nil {
 		fake.listStreamingDistributionsReturnsOnCall = make(map[int]struct {
@@ -4942,110 +5782,6 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsReturnsOnCall(i int, re
 	fake.listStreamingDistributionsReturnsOnCall[i] = struct {
 		result1 *cloudfront.ListStreamingDistributionsOutput
 		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContext(arg1 aws.Context, arg2 *cloudfront.ListStreamingDistributionsInput, arg3 ...request.Option) (*cloudfront.ListStreamingDistributionsOutput, error) {
-	fake.listStreamingDistributionsWithContextMutex.Lock()
-	ret, specificReturn := fake.listStreamingDistributionsWithContextReturnsOnCall[len(fake.listStreamingDistributionsWithContextArgsForCall)]
-	fake.listStreamingDistributionsWithContextArgsForCall = append(fake.listStreamingDistributionsWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListStreamingDistributionsInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("ListStreamingDistributionsWithContext", []interface{}{arg1, arg2, arg3})
-	fake.listStreamingDistributionsWithContextMutex.Unlock()
-	if fake.ListStreamingDistributionsWithContextStub != nil {
-		return fake.ListStreamingDistributionsWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listStreamingDistributionsWithContextReturns.result1, fake.listStreamingDistributionsWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextCallCount() int {
-	fake.listStreamingDistributionsWithContextMutex.RLock()
-	defer fake.listStreamingDistributionsWithContextMutex.RUnlock()
-	return len(fake.listStreamingDistributionsWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListStreamingDistributionsInput, []request.Option) {
-	fake.listStreamingDistributionsWithContextMutex.RLock()
-	defer fake.listStreamingDistributionsWithContextMutex.RUnlock()
-	return fake.listStreamingDistributionsWithContextArgsForCall[i].arg1, fake.listStreamingDistributionsWithContextArgsForCall[i].arg2, fake.listStreamingDistributionsWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextReturns(result1 *cloudfront.ListStreamingDistributionsOutput, result2 error) {
-	fake.ListStreamingDistributionsWithContextStub = nil
-	fake.listStreamingDistributionsWithContextReturns = struct {
-		result1 *cloudfront.ListStreamingDistributionsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextReturnsOnCall(i int, result1 *cloudfront.ListStreamingDistributionsOutput, result2 error) {
-	fake.ListStreamingDistributionsWithContextStub = nil
-	if fake.listStreamingDistributionsWithContextReturnsOnCall == nil {
-		fake.listStreamingDistributionsWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListStreamingDistributionsOutput
-			result2 error
-		})
-	}
-	fake.listStreamingDistributionsWithContextReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListStreamingDistributionsOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequest(arg1 *cloudfront.ListStreamingDistributionsInput) (*request.Request, *cloudfront.ListStreamingDistributionsOutput) {
-	fake.listStreamingDistributionsRequestMutex.Lock()
-	ret, specificReturn := fake.listStreamingDistributionsRequestReturnsOnCall[len(fake.listStreamingDistributionsRequestArgsForCall)]
-	fake.listStreamingDistributionsRequestArgsForCall = append(fake.listStreamingDistributionsRequestArgsForCall, struct {
-		arg1 *cloudfront.ListStreamingDistributionsInput
-	}{arg1})
-	fake.recordInvocation("ListStreamingDistributionsRequest", []interface{}{arg1})
-	fake.listStreamingDistributionsRequestMutex.Unlock()
-	if fake.ListStreamingDistributionsRequestStub != nil {
-		return fake.ListStreamingDistributionsRequestStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listStreamingDistributionsRequestReturns.result1, fake.listStreamingDistributionsRequestReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestCallCount() int {
-	fake.listStreamingDistributionsRequestMutex.RLock()
-	defer fake.listStreamingDistributionsRequestMutex.RUnlock()
-	return len(fake.listStreamingDistributionsRequestArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestArgsForCall(i int) *cloudfront.ListStreamingDistributionsInput {
-	fake.listStreamingDistributionsRequestMutex.RLock()
-	defer fake.listStreamingDistributionsRequestMutex.RUnlock()
-	return fake.listStreamingDistributionsRequestArgsForCall[i].arg1
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestReturns(result1 *request.Request, result2 *cloudfront.ListStreamingDistributionsOutput) {
-	fake.ListStreamingDistributionsRequestStub = nil
-	fake.listStreamingDistributionsRequestReturns = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListStreamingDistributionsOutput
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListStreamingDistributionsOutput) {
-	fake.ListStreamingDistributionsRequestStub = nil
-	if fake.listStreamingDistributionsRequestReturnsOnCall == nil {
-		fake.listStreamingDistributionsRequestReturnsOnCall = make(map[int]struct {
-			result1 *request.Request
-			result2 *cloudfront.ListStreamingDistributionsOutput
-		})
-	}
-	fake.listStreamingDistributionsRequestReturnsOnCall[i] = struct {
-		result1 *request.Request
-		result2 *cloudfront.ListStreamingDistributionsOutput
 	}{result1, result2}
 }
 
@@ -5064,7 +5800,8 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPages(arg1 *cloudfront.
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listStreamingDistributionsPagesReturns.result1
+	fakeReturns := fake.listStreamingDistributionsPagesReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesCallCount() int {
@@ -5073,13 +5810,22 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesCallCount() int {
 	return len(fake.listStreamingDistributionsPagesArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesCalls(stub func(*cloudfront.ListStreamingDistributionsInput, func(*cloudfront.ListStreamingDistributionsOutput, bool) bool) error) {
+	fake.listStreamingDistributionsPagesMutex.Lock()
+	defer fake.listStreamingDistributionsPagesMutex.Unlock()
+	fake.ListStreamingDistributionsPagesStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesArgsForCall(i int) (*cloudfront.ListStreamingDistributionsInput, func(*cloudfront.ListStreamingDistributionsOutput, bool) bool) {
 	fake.listStreamingDistributionsPagesMutex.RLock()
 	defer fake.listStreamingDistributionsPagesMutex.RUnlock()
-	return fake.listStreamingDistributionsPagesArgsForCall[i].arg1, fake.listStreamingDistributionsPagesArgsForCall[i].arg2
+	argsForCall := fake.listStreamingDistributionsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesReturns(result1 error) {
+	fake.listStreamingDistributionsPagesMutex.Lock()
+	defer fake.listStreamingDistributionsPagesMutex.Unlock()
 	fake.ListStreamingDistributionsPagesStub = nil
 	fake.listStreamingDistributionsPagesReturns = struct {
 		result1 error
@@ -5087,6 +5833,8 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesReturns(result1 er
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesReturnsOnCall(i int, result1 error) {
+	fake.listStreamingDistributionsPagesMutex.Lock()
+	defer fake.listStreamingDistributionsPagesMutex.Unlock()
 	fake.ListStreamingDistributionsPagesStub = nil
 	if fake.listStreamingDistributionsPagesReturnsOnCall == nil {
 		fake.listStreamingDistributionsPagesReturnsOnCall = make(map[int]struct {
@@ -5115,7 +5863,8 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContext(arg1 a
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.listStreamingDistributionsPagesWithContextReturns.result1
+	fakeReturns := fake.listStreamingDistributionsPagesWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextCallCount() int {
@@ -5124,13 +5873,22 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextCallCou
 	return len(fake.listStreamingDistributionsPagesWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextCalls(stub func(aws.Context, *cloudfront.ListStreamingDistributionsInput, func(*cloudfront.ListStreamingDistributionsOutput, bool) bool, ...request.Option) error) {
+	fake.listStreamingDistributionsPagesWithContextMutex.Lock()
+	defer fake.listStreamingDistributionsPagesWithContextMutex.Unlock()
+	fake.ListStreamingDistributionsPagesWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListStreamingDistributionsInput, func(*cloudfront.ListStreamingDistributionsOutput, bool) bool, []request.Option) {
 	fake.listStreamingDistributionsPagesWithContextMutex.RLock()
 	defer fake.listStreamingDistributionsPagesWithContextMutex.RUnlock()
-	return fake.listStreamingDistributionsPagesWithContextArgsForCall[i].arg1, fake.listStreamingDistributionsPagesWithContextArgsForCall[i].arg2, fake.listStreamingDistributionsPagesWithContextArgsForCall[i].arg3, fake.listStreamingDistributionsPagesWithContextArgsForCall[i].arg4
+	argsForCall := fake.listStreamingDistributionsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextReturns(result1 error) {
+	fake.listStreamingDistributionsPagesWithContextMutex.Lock()
+	defer fake.listStreamingDistributionsPagesWithContextMutex.Unlock()
 	fake.ListStreamingDistributionsPagesWithContextStub = nil
 	fake.listStreamingDistributionsPagesWithContextReturns = struct {
 		result1 error
@@ -5138,6 +5896,8 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextReturns
 }
 
 func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.listStreamingDistributionsPagesWithContextMutex.Lock()
+	defer fake.listStreamingDistributionsPagesWithContextMutex.Unlock()
 	fake.ListStreamingDistributionsPagesWithContextStub = nil
 	if fake.listStreamingDistributionsPagesWithContextReturnsOnCall == nil {
 		fake.listStreamingDistributionsPagesWithContextReturnsOnCall = make(map[int]struct {
@@ -5147,6 +5907,134 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContextReturns
 	fake.listStreamingDistributionsPagesWithContextReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequest(arg1 *cloudfront.ListStreamingDistributionsInput) (*request.Request, *cloudfront.ListStreamingDistributionsOutput) {
+	fake.listStreamingDistributionsRequestMutex.Lock()
+	ret, specificReturn := fake.listStreamingDistributionsRequestReturnsOnCall[len(fake.listStreamingDistributionsRequestArgsForCall)]
+	fake.listStreamingDistributionsRequestArgsForCall = append(fake.listStreamingDistributionsRequestArgsForCall, struct {
+		arg1 *cloudfront.ListStreamingDistributionsInput
+	}{arg1})
+	fake.recordInvocation("ListStreamingDistributionsRequest", []interface{}{arg1})
+	fake.listStreamingDistributionsRequestMutex.Unlock()
+	if fake.ListStreamingDistributionsRequestStub != nil {
+		return fake.ListStreamingDistributionsRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listStreamingDistributionsRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestCallCount() int {
+	fake.listStreamingDistributionsRequestMutex.RLock()
+	defer fake.listStreamingDistributionsRequestMutex.RUnlock()
+	return len(fake.listStreamingDistributionsRequestArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestCalls(stub func(*cloudfront.ListStreamingDistributionsInput) (*request.Request, *cloudfront.ListStreamingDistributionsOutput)) {
+	fake.listStreamingDistributionsRequestMutex.Lock()
+	defer fake.listStreamingDistributionsRequestMutex.Unlock()
+	fake.ListStreamingDistributionsRequestStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestArgsForCall(i int) *cloudfront.ListStreamingDistributionsInput {
+	fake.listStreamingDistributionsRequestMutex.RLock()
+	defer fake.listStreamingDistributionsRequestMutex.RUnlock()
+	argsForCall := fake.listStreamingDistributionsRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestReturns(result1 *request.Request, result2 *cloudfront.ListStreamingDistributionsOutput) {
+	fake.listStreamingDistributionsRequestMutex.Lock()
+	defer fake.listStreamingDistributionsRequestMutex.Unlock()
+	fake.ListStreamingDistributionsRequestStub = nil
+	fake.listStreamingDistributionsRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListStreamingDistributionsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListStreamingDistributionsOutput) {
+	fake.listStreamingDistributionsRequestMutex.Lock()
+	defer fake.listStreamingDistributionsRequestMutex.Unlock()
+	fake.ListStreamingDistributionsRequestStub = nil
+	if fake.listStreamingDistributionsRequestReturnsOnCall == nil {
+		fake.listStreamingDistributionsRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudfront.ListStreamingDistributionsOutput
+		})
+	}
+	fake.listStreamingDistributionsRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudfront.ListStreamingDistributionsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContext(arg1 aws.Context, arg2 *cloudfront.ListStreamingDistributionsInput, arg3 ...request.Option) (*cloudfront.ListStreamingDistributionsOutput, error) {
+	fake.listStreamingDistributionsWithContextMutex.Lock()
+	ret, specificReturn := fake.listStreamingDistributionsWithContextReturnsOnCall[len(fake.listStreamingDistributionsWithContextArgsForCall)]
+	fake.listStreamingDistributionsWithContextArgsForCall = append(fake.listStreamingDistributionsWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListStreamingDistributionsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("ListStreamingDistributionsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.listStreamingDistributionsWithContextMutex.Unlock()
+	if fake.ListStreamingDistributionsWithContextStub != nil {
+		return fake.ListStreamingDistributionsWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listStreamingDistributionsWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextCallCount() int {
+	fake.listStreamingDistributionsWithContextMutex.RLock()
+	defer fake.listStreamingDistributionsWithContextMutex.RUnlock()
+	return len(fake.listStreamingDistributionsWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextCalls(stub func(aws.Context, *cloudfront.ListStreamingDistributionsInput, ...request.Option) (*cloudfront.ListStreamingDistributionsOutput, error)) {
+	fake.listStreamingDistributionsWithContextMutex.Lock()
+	defer fake.listStreamingDistributionsWithContextMutex.Unlock()
+	fake.ListStreamingDistributionsWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListStreamingDistributionsInput, []request.Option) {
+	fake.listStreamingDistributionsWithContextMutex.RLock()
+	defer fake.listStreamingDistributionsWithContextMutex.RUnlock()
+	argsForCall := fake.listStreamingDistributionsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextReturns(result1 *cloudfront.ListStreamingDistributionsOutput, result2 error) {
+	fake.listStreamingDistributionsWithContextMutex.Lock()
+	defer fake.listStreamingDistributionsWithContextMutex.Unlock()
+	fake.ListStreamingDistributionsWithContextStub = nil
+	fake.listStreamingDistributionsWithContextReturns = struct {
+		result1 *cloudfront.ListStreamingDistributionsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContextReturnsOnCall(i int, result1 *cloudfront.ListStreamingDistributionsOutput, result2 error) {
+	fake.listStreamingDistributionsWithContextMutex.Lock()
+	defer fake.listStreamingDistributionsWithContextMutex.Unlock()
+	fake.ListStreamingDistributionsWithContextStub = nil
+	if fake.listStreamingDistributionsWithContextReturnsOnCall == nil {
+		fake.listStreamingDistributionsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListStreamingDistributionsOutput
+			result2 error
+		})
+	}
+	fake.listStreamingDistributionsWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListStreamingDistributionsOutput
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResource(arg1 *cloudfront.ListTagsForResourceInput) (*cloudfront.ListTagsForResourceOutput, error) {
@@ -5163,7 +6051,8 @@ func (fake *FakeCloudFrontAPI) ListTagsForResource(arg1 *cloudfront.ListTagsForR
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listTagsForResourceReturns.result1, fake.listTagsForResourceReturns.result2
+	fakeReturns := fake.listTagsForResourceReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResourceCallCount() int {
@@ -5172,13 +6061,22 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceCallCount() int {
 	return len(fake.listTagsForResourceArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListTagsForResourceCalls(stub func(*cloudfront.ListTagsForResourceInput) (*cloudfront.ListTagsForResourceOutput, error)) {
+	fake.listTagsForResourceMutex.Lock()
+	defer fake.listTagsForResourceMutex.Unlock()
+	fake.ListTagsForResourceStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListTagsForResourceArgsForCall(i int) *cloudfront.ListTagsForResourceInput {
 	fake.listTagsForResourceMutex.RLock()
 	defer fake.listTagsForResourceMutex.RUnlock()
-	return fake.listTagsForResourceArgsForCall[i].arg1
+	argsForCall := fake.listTagsForResourceArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResourceReturns(result1 *cloudfront.ListTagsForResourceOutput, result2 error) {
+	fake.listTagsForResourceMutex.Lock()
+	defer fake.listTagsForResourceMutex.Unlock()
 	fake.ListTagsForResourceStub = nil
 	fake.listTagsForResourceReturns = struct {
 		result1 *cloudfront.ListTagsForResourceOutput
@@ -5187,6 +6085,8 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceReturns(result1 *cloudfront.Li
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResourceReturnsOnCall(i int, result1 *cloudfront.ListTagsForResourceOutput, result2 error) {
+	fake.listTagsForResourceMutex.Lock()
+	defer fake.listTagsForResourceMutex.Unlock()
 	fake.ListTagsForResourceStub = nil
 	if fake.listTagsForResourceReturnsOnCall == nil {
 		fake.listTagsForResourceReturnsOnCall = make(map[int]struct {
@@ -5195,59 +6095,6 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceReturnsOnCall(i int, result1 *
 		})
 	}
 	fake.listTagsForResourceReturnsOnCall[i] = struct {
-		result1 *cloudfront.ListTagsForResourceOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContext(arg1 aws.Context, arg2 *cloudfront.ListTagsForResourceInput, arg3 ...request.Option) (*cloudfront.ListTagsForResourceOutput, error) {
-	fake.listTagsForResourceWithContextMutex.Lock()
-	ret, specificReturn := fake.listTagsForResourceWithContextReturnsOnCall[len(fake.listTagsForResourceWithContextArgsForCall)]
-	fake.listTagsForResourceWithContextArgsForCall = append(fake.listTagsForResourceWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.ListTagsForResourceInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("ListTagsForResourceWithContext", []interface{}{arg1, arg2, arg3})
-	fake.listTagsForResourceWithContextMutex.Unlock()
-	if fake.ListTagsForResourceWithContextStub != nil {
-		return fake.ListTagsForResourceWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.listTagsForResourceWithContextReturns.result1, fake.listTagsForResourceWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextCallCount() int {
-	fake.listTagsForResourceWithContextMutex.RLock()
-	defer fake.listTagsForResourceWithContextMutex.RUnlock()
-	return len(fake.listTagsForResourceWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListTagsForResourceInput, []request.Option) {
-	fake.listTagsForResourceWithContextMutex.RLock()
-	defer fake.listTagsForResourceWithContextMutex.RUnlock()
-	return fake.listTagsForResourceWithContextArgsForCall[i].arg1, fake.listTagsForResourceWithContextArgsForCall[i].arg2, fake.listTagsForResourceWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextReturns(result1 *cloudfront.ListTagsForResourceOutput, result2 error) {
-	fake.ListTagsForResourceWithContextStub = nil
-	fake.listTagsForResourceWithContextReturns = struct {
-		result1 *cloudfront.ListTagsForResourceOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextReturnsOnCall(i int, result1 *cloudfront.ListTagsForResourceOutput, result2 error) {
-	fake.ListTagsForResourceWithContextStub = nil
-	if fake.listTagsForResourceWithContextReturnsOnCall == nil {
-		fake.listTagsForResourceWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.ListTagsForResourceOutput
-			result2 error
-		})
-	}
-	fake.listTagsForResourceWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.ListTagsForResourceOutput
 		result2 error
 	}{result1, result2}
@@ -5267,7 +6114,8 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceRequest(arg1 *cloudfront.ListT
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.listTagsForResourceRequestReturns.result1, fake.listTagsForResourceRequestReturns.result2
+	fakeReturns := fake.listTagsForResourceRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestCallCount() int {
@@ -5276,13 +6124,22 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestCallCount() int {
 	return len(fake.listTagsForResourceRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestCalls(stub func(*cloudfront.ListTagsForResourceInput) (*request.Request, *cloudfront.ListTagsForResourceOutput)) {
+	fake.listTagsForResourceRequestMutex.Lock()
+	defer fake.listTagsForResourceRequestMutex.Unlock()
+	fake.ListTagsForResourceRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestArgsForCall(i int) *cloudfront.ListTagsForResourceInput {
 	fake.listTagsForResourceRequestMutex.RLock()
 	defer fake.listTagsForResourceRequestMutex.RUnlock()
-	return fake.listTagsForResourceRequestArgsForCall[i].arg1
+	argsForCall := fake.listTagsForResourceRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestReturns(result1 *request.Request, result2 *cloudfront.ListTagsForResourceOutput) {
+	fake.listTagsForResourceRequestMutex.Lock()
+	defer fake.listTagsForResourceRequestMutex.Unlock()
 	fake.ListTagsForResourceRequestStub = nil
 	fake.listTagsForResourceRequestReturns = struct {
 		result1 *request.Request
@@ -5291,6 +6148,8 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestReturns(result1 *reques
 }
 
 func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.ListTagsForResourceOutput) {
+	fake.listTagsForResourceRequestMutex.Lock()
+	defer fake.listTagsForResourceRequestMutex.Unlock()
 	fake.ListTagsForResourceRequestStub = nil
 	if fake.listTagsForResourceRequestReturnsOnCall == nil {
 		fake.listTagsForResourceRequestReturnsOnCall = make(map[int]struct {
@@ -5301,6 +6160,71 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceRequestReturnsOnCall(i int, re
 	fake.listTagsForResourceRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.ListTagsForResourceOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContext(arg1 aws.Context, arg2 *cloudfront.ListTagsForResourceInput, arg3 ...request.Option) (*cloudfront.ListTagsForResourceOutput, error) {
+	fake.listTagsForResourceWithContextMutex.Lock()
+	ret, specificReturn := fake.listTagsForResourceWithContextReturnsOnCall[len(fake.listTagsForResourceWithContextArgsForCall)]
+	fake.listTagsForResourceWithContextArgsForCall = append(fake.listTagsForResourceWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.ListTagsForResourceInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("ListTagsForResourceWithContext", []interface{}{arg1, arg2, arg3})
+	fake.listTagsForResourceWithContextMutex.Unlock()
+	if fake.ListTagsForResourceWithContextStub != nil {
+		return fake.ListTagsForResourceWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listTagsForResourceWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextCallCount() int {
+	fake.listTagsForResourceWithContextMutex.RLock()
+	defer fake.listTagsForResourceWithContextMutex.RUnlock()
+	return len(fake.listTagsForResourceWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextCalls(stub func(aws.Context, *cloudfront.ListTagsForResourceInput, ...request.Option) (*cloudfront.ListTagsForResourceOutput, error)) {
+	fake.listTagsForResourceWithContextMutex.Lock()
+	defer fake.listTagsForResourceWithContextMutex.Unlock()
+	fake.ListTagsForResourceWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextArgsForCall(i int) (aws.Context, *cloudfront.ListTagsForResourceInput, []request.Option) {
+	fake.listTagsForResourceWithContextMutex.RLock()
+	defer fake.listTagsForResourceWithContextMutex.RUnlock()
+	argsForCall := fake.listTagsForResourceWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextReturns(result1 *cloudfront.ListTagsForResourceOutput, result2 error) {
+	fake.listTagsForResourceWithContextMutex.Lock()
+	defer fake.listTagsForResourceWithContextMutex.Unlock()
+	fake.ListTagsForResourceWithContextStub = nil
+	fake.listTagsForResourceWithContextReturns = struct {
+		result1 *cloudfront.ListTagsForResourceOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContextReturnsOnCall(i int, result1 *cloudfront.ListTagsForResourceOutput, result2 error) {
+	fake.listTagsForResourceWithContextMutex.Lock()
+	defer fake.listTagsForResourceWithContextMutex.Unlock()
+	fake.ListTagsForResourceWithContextStub = nil
+	if fake.listTagsForResourceWithContextReturnsOnCall == nil {
+		fake.listTagsForResourceWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.ListTagsForResourceOutput
+			result2 error
+		})
+	}
+	fake.listTagsForResourceWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.ListTagsForResourceOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -5318,7 +6242,8 @@ func (fake *FakeCloudFrontAPI) TagResource(arg1 *cloudfront.TagResourceInput) (*
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.tagResourceReturns.result1, fake.tagResourceReturns.result2
+	fakeReturns := fake.tagResourceReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) TagResourceCallCount() int {
@@ -5327,13 +6252,22 @@ func (fake *FakeCloudFrontAPI) TagResourceCallCount() int {
 	return len(fake.tagResourceArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) TagResourceCalls(stub func(*cloudfront.TagResourceInput) (*cloudfront.TagResourceOutput, error)) {
+	fake.tagResourceMutex.Lock()
+	defer fake.tagResourceMutex.Unlock()
+	fake.TagResourceStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) TagResourceArgsForCall(i int) *cloudfront.TagResourceInput {
 	fake.tagResourceMutex.RLock()
 	defer fake.tagResourceMutex.RUnlock()
-	return fake.tagResourceArgsForCall[i].arg1
+	argsForCall := fake.tagResourceArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) TagResourceReturns(result1 *cloudfront.TagResourceOutput, result2 error) {
+	fake.tagResourceMutex.Lock()
+	defer fake.tagResourceMutex.Unlock()
 	fake.TagResourceStub = nil
 	fake.tagResourceReturns = struct {
 		result1 *cloudfront.TagResourceOutput
@@ -5342,6 +6276,8 @@ func (fake *FakeCloudFrontAPI) TagResourceReturns(result1 *cloudfront.TagResourc
 }
 
 func (fake *FakeCloudFrontAPI) TagResourceReturnsOnCall(i int, result1 *cloudfront.TagResourceOutput, result2 error) {
+	fake.tagResourceMutex.Lock()
+	defer fake.tagResourceMutex.Unlock()
 	fake.TagResourceStub = nil
 	if fake.tagResourceReturnsOnCall == nil {
 		fake.tagResourceReturnsOnCall = make(map[int]struct {
@@ -5350,59 +6286,6 @@ func (fake *FakeCloudFrontAPI) TagResourceReturnsOnCall(i int, result1 *cloudfro
 		})
 	}
 	fake.tagResourceReturnsOnCall[i] = struct {
-		result1 *cloudfront.TagResourceOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) TagResourceWithContext(arg1 aws.Context, arg2 *cloudfront.TagResourceInput, arg3 ...request.Option) (*cloudfront.TagResourceOutput, error) {
-	fake.tagResourceWithContextMutex.Lock()
-	ret, specificReturn := fake.tagResourceWithContextReturnsOnCall[len(fake.tagResourceWithContextArgsForCall)]
-	fake.tagResourceWithContextArgsForCall = append(fake.tagResourceWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.TagResourceInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("TagResourceWithContext", []interface{}{arg1, arg2, arg3})
-	fake.tagResourceWithContextMutex.Unlock()
-	if fake.TagResourceWithContextStub != nil {
-		return fake.TagResourceWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.tagResourceWithContextReturns.result1, fake.tagResourceWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) TagResourceWithContextCallCount() int {
-	fake.tagResourceWithContextMutex.RLock()
-	defer fake.tagResourceWithContextMutex.RUnlock()
-	return len(fake.tagResourceWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) TagResourceWithContextArgsForCall(i int) (aws.Context, *cloudfront.TagResourceInput, []request.Option) {
-	fake.tagResourceWithContextMutex.RLock()
-	defer fake.tagResourceWithContextMutex.RUnlock()
-	return fake.tagResourceWithContextArgsForCall[i].arg1, fake.tagResourceWithContextArgsForCall[i].arg2, fake.tagResourceWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) TagResourceWithContextReturns(result1 *cloudfront.TagResourceOutput, result2 error) {
-	fake.TagResourceWithContextStub = nil
-	fake.tagResourceWithContextReturns = struct {
-		result1 *cloudfront.TagResourceOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) TagResourceWithContextReturnsOnCall(i int, result1 *cloudfront.TagResourceOutput, result2 error) {
-	fake.TagResourceWithContextStub = nil
-	if fake.tagResourceWithContextReturnsOnCall == nil {
-		fake.tagResourceWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.TagResourceOutput
-			result2 error
-		})
-	}
-	fake.tagResourceWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.TagResourceOutput
 		result2 error
 	}{result1, result2}
@@ -5422,7 +6305,8 @@ func (fake *FakeCloudFrontAPI) TagResourceRequest(arg1 *cloudfront.TagResourceIn
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.tagResourceRequestReturns.result1, fake.tagResourceRequestReturns.result2
+	fakeReturns := fake.tagResourceRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) TagResourceRequestCallCount() int {
@@ -5431,13 +6315,22 @@ func (fake *FakeCloudFrontAPI) TagResourceRequestCallCount() int {
 	return len(fake.tagResourceRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) TagResourceRequestCalls(stub func(*cloudfront.TagResourceInput) (*request.Request, *cloudfront.TagResourceOutput)) {
+	fake.tagResourceRequestMutex.Lock()
+	defer fake.tagResourceRequestMutex.Unlock()
+	fake.TagResourceRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) TagResourceRequestArgsForCall(i int) *cloudfront.TagResourceInput {
 	fake.tagResourceRequestMutex.RLock()
 	defer fake.tagResourceRequestMutex.RUnlock()
-	return fake.tagResourceRequestArgsForCall[i].arg1
+	argsForCall := fake.tagResourceRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) TagResourceRequestReturns(result1 *request.Request, result2 *cloudfront.TagResourceOutput) {
+	fake.tagResourceRequestMutex.Lock()
+	defer fake.tagResourceRequestMutex.Unlock()
 	fake.TagResourceRequestStub = nil
 	fake.tagResourceRequestReturns = struct {
 		result1 *request.Request
@@ -5446,6 +6339,8 @@ func (fake *FakeCloudFrontAPI) TagResourceRequestReturns(result1 *request.Reques
 }
 
 func (fake *FakeCloudFrontAPI) TagResourceRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.TagResourceOutput) {
+	fake.tagResourceRequestMutex.Lock()
+	defer fake.tagResourceRequestMutex.Unlock()
 	fake.TagResourceRequestStub = nil
 	if fake.tagResourceRequestReturnsOnCall == nil {
 		fake.tagResourceRequestReturnsOnCall = make(map[int]struct {
@@ -5456,6 +6351,71 @@ func (fake *FakeCloudFrontAPI) TagResourceRequestReturnsOnCall(i int, result1 *r
 	fake.tagResourceRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.TagResourceOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) TagResourceWithContext(arg1 aws.Context, arg2 *cloudfront.TagResourceInput, arg3 ...request.Option) (*cloudfront.TagResourceOutput, error) {
+	fake.tagResourceWithContextMutex.Lock()
+	ret, specificReturn := fake.tagResourceWithContextReturnsOnCall[len(fake.tagResourceWithContextArgsForCall)]
+	fake.tagResourceWithContextArgsForCall = append(fake.tagResourceWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.TagResourceInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("TagResourceWithContext", []interface{}{arg1, arg2, arg3})
+	fake.tagResourceWithContextMutex.Unlock()
+	if fake.TagResourceWithContextStub != nil {
+		return fake.TagResourceWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.tagResourceWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) TagResourceWithContextCallCount() int {
+	fake.tagResourceWithContextMutex.RLock()
+	defer fake.tagResourceWithContextMutex.RUnlock()
+	return len(fake.tagResourceWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) TagResourceWithContextCalls(stub func(aws.Context, *cloudfront.TagResourceInput, ...request.Option) (*cloudfront.TagResourceOutput, error)) {
+	fake.tagResourceWithContextMutex.Lock()
+	defer fake.tagResourceWithContextMutex.Unlock()
+	fake.TagResourceWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) TagResourceWithContextArgsForCall(i int) (aws.Context, *cloudfront.TagResourceInput, []request.Option) {
+	fake.tagResourceWithContextMutex.RLock()
+	defer fake.tagResourceWithContextMutex.RUnlock()
+	argsForCall := fake.tagResourceWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) TagResourceWithContextReturns(result1 *cloudfront.TagResourceOutput, result2 error) {
+	fake.tagResourceWithContextMutex.Lock()
+	defer fake.tagResourceWithContextMutex.Unlock()
+	fake.TagResourceWithContextStub = nil
+	fake.tagResourceWithContextReturns = struct {
+		result1 *cloudfront.TagResourceOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) TagResourceWithContextReturnsOnCall(i int, result1 *cloudfront.TagResourceOutput, result2 error) {
+	fake.tagResourceWithContextMutex.Lock()
+	defer fake.tagResourceWithContextMutex.Unlock()
+	fake.TagResourceWithContextStub = nil
+	if fake.tagResourceWithContextReturnsOnCall == nil {
+		fake.tagResourceWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.TagResourceOutput
+			result2 error
+		})
+	}
+	fake.tagResourceWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.TagResourceOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -5473,7 +6433,8 @@ func (fake *FakeCloudFrontAPI) UntagResource(arg1 *cloudfront.UntagResourceInput
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.untagResourceReturns.result1, fake.untagResourceReturns.result2
+	fakeReturns := fake.untagResourceReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UntagResourceCallCount() int {
@@ -5482,13 +6443,22 @@ func (fake *FakeCloudFrontAPI) UntagResourceCallCount() int {
 	return len(fake.untagResourceArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UntagResourceCalls(stub func(*cloudfront.UntagResourceInput) (*cloudfront.UntagResourceOutput, error)) {
+	fake.untagResourceMutex.Lock()
+	defer fake.untagResourceMutex.Unlock()
+	fake.UntagResourceStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UntagResourceArgsForCall(i int) *cloudfront.UntagResourceInput {
 	fake.untagResourceMutex.RLock()
 	defer fake.untagResourceMutex.RUnlock()
-	return fake.untagResourceArgsForCall[i].arg1
+	argsForCall := fake.untagResourceArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UntagResourceReturns(result1 *cloudfront.UntagResourceOutput, result2 error) {
+	fake.untagResourceMutex.Lock()
+	defer fake.untagResourceMutex.Unlock()
 	fake.UntagResourceStub = nil
 	fake.untagResourceReturns = struct {
 		result1 *cloudfront.UntagResourceOutput
@@ -5497,6 +6467,8 @@ func (fake *FakeCloudFrontAPI) UntagResourceReturns(result1 *cloudfront.UntagRes
 }
 
 func (fake *FakeCloudFrontAPI) UntagResourceReturnsOnCall(i int, result1 *cloudfront.UntagResourceOutput, result2 error) {
+	fake.untagResourceMutex.Lock()
+	defer fake.untagResourceMutex.Unlock()
 	fake.UntagResourceStub = nil
 	if fake.untagResourceReturnsOnCall == nil {
 		fake.untagResourceReturnsOnCall = make(map[int]struct {
@@ -5505,59 +6477,6 @@ func (fake *FakeCloudFrontAPI) UntagResourceReturnsOnCall(i int, result1 *cloudf
 		})
 	}
 	fake.untagResourceReturnsOnCall[i] = struct {
-		result1 *cloudfront.UntagResourceOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UntagResourceWithContext(arg1 aws.Context, arg2 *cloudfront.UntagResourceInput, arg3 ...request.Option) (*cloudfront.UntagResourceOutput, error) {
-	fake.untagResourceWithContextMutex.Lock()
-	ret, specificReturn := fake.untagResourceWithContextReturnsOnCall[len(fake.untagResourceWithContextArgsForCall)]
-	fake.untagResourceWithContextArgsForCall = append(fake.untagResourceWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UntagResourceInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("UntagResourceWithContext", []interface{}{arg1, arg2, arg3})
-	fake.untagResourceWithContextMutex.Unlock()
-	if fake.UntagResourceWithContextStub != nil {
-		return fake.UntagResourceWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.untagResourceWithContextReturns.result1, fake.untagResourceWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) UntagResourceWithContextCallCount() int {
-	fake.untagResourceWithContextMutex.RLock()
-	defer fake.untagResourceWithContextMutex.RUnlock()
-	return len(fake.untagResourceWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) UntagResourceWithContextArgsForCall(i int) (aws.Context, *cloudfront.UntagResourceInput, []request.Option) {
-	fake.untagResourceWithContextMutex.RLock()
-	defer fake.untagResourceWithContextMutex.RUnlock()
-	return fake.untagResourceWithContextArgsForCall[i].arg1, fake.untagResourceWithContextArgsForCall[i].arg2, fake.untagResourceWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) UntagResourceWithContextReturns(result1 *cloudfront.UntagResourceOutput, result2 error) {
-	fake.UntagResourceWithContextStub = nil
-	fake.untagResourceWithContextReturns = struct {
-		result1 *cloudfront.UntagResourceOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UntagResourceWithContextReturnsOnCall(i int, result1 *cloudfront.UntagResourceOutput, result2 error) {
-	fake.UntagResourceWithContextStub = nil
-	if fake.untagResourceWithContextReturnsOnCall == nil {
-		fake.untagResourceWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.UntagResourceOutput
-			result2 error
-		})
-	}
-	fake.untagResourceWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.UntagResourceOutput
 		result2 error
 	}{result1, result2}
@@ -5577,7 +6496,8 @@ func (fake *FakeCloudFrontAPI) UntagResourceRequest(arg1 *cloudfront.UntagResour
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.untagResourceRequestReturns.result1, fake.untagResourceRequestReturns.result2
+	fakeReturns := fake.untagResourceRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UntagResourceRequestCallCount() int {
@@ -5586,13 +6506,22 @@ func (fake *FakeCloudFrontAPI) UntagResourceRequestCallCount() int {
 	return len(fake.untagResourceRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UntagResourceRequestCalls(stub func(*cloudfront.UntagResourceInput) (*request.Request, *cloudfront.UntagResourceOutput)) {
+	fake.untagResourceRequestMutex.Lock()
+	defer fake.untagResourceRequestMutex.Unlock()
+	fake.UntagResourceRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UntagResourceRequestArgsForCall(i int) *cloudfront.UntagResourceInput {
 	fake.untagResourceRequestMutex.RLock()
 	defer fake.untagResourceRequestMutex.RUnlock()
-	return fake.untagResourceRequestArgsForCall[i].arg1
+	argsForCall := fake.untagResourceRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UntagResourceRequestReturns(result1 *request.Request, result2 *cloudfront.UntagResourceOutput) {
+	fake.untagResourceRequestMutex.Lock()
+	defer fake.untagResourceRequestMutex.Unlock()
 	fake.UntagResourceRequestStub = nil
 	fake.untagResourceRequestReturns = struct {
 		result1 *request.Request
@@ -5601,6 +6530,8 @@ func (fake *FakeCloudFrontAPI) UntagResourceRequestReturns(result1 *request.Requ
 }
 
 func (fake *FakeCloudFrontAPI) UntagResourceRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.UntagResourceOutput) {
+	fake.untagResourceRequestMutex.Lock()
+	defer fake.untagResourceRequestMutex.Unlock()
 	fake.UntagResourceRequestStub = nil
 	if fake.untagResourceRequestReturnsOnCall == nil {
 		fake.untagResourceRequestReturnsOnCall = make(map[int]struct {
@@ -5611,6 +6542,71 @@ func (fake *FakeCloudFrontAPI) UntagResourceRequestReturnsOnCall(i int, result1 
 	fake.untagResourceRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.UntagResourceOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UntagResourceWithContext(arg1 aws.Context, arg2 *cloudfront.UntagResourceInput, arg3 ...request.Option) (*cloudfront.UntagResourceOutput, error) {
+	fake.untagResourceWithContextMutex.Lock()
+	ret, specificReturn := fake.untagResourceWithContextReturnsOnCall[len(fake.untagResourceWithContextArgsForCall)]
+	fake.untagResourceWithContextArgsForCall = append(fake.untagResourceWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UntagResourceInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("UntagResourceWithContext", []interface{}{arg1, arg2, arg3})
+	fake.untagResourceWithContextMutex.Unlock()
+	if fake.UntagResourceWithContextStub != nil {
+		return fake.UntagResourceWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.untagResourceWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) UntagResourceWithContextCallCount() int {
+	fake.untagResourceWithContextMutex.RLock()
+	defer fake.untagResourceWithContextMutex.RUnlock()
+	return len(fake.untagResourceWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) UntagResourceWithContextCalls(stub func(aws.Context, *cloudfront.UntagResourceInput, ...request.Option) (*cloudfront.UntagResourceOutput, error)) {
+	fake.untagResourceWithContextMutex.Lock()
+	defer fake.untagResourceWithContextMutex.Unlock()
+	fake.UntagResourceWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) UntagResourceWithContextArgsForCall(i int) (aws.Context, *cloudfront.UntagResourceInput, []request.Option) {
+	fake.untagResourceWithContextMutex.RLock()
+	defer fake.untagResourceWithContextMutex.RUnlock()
+	argsForCall := fake.untagResourceWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) UntagResourceWithContextReturns(result1 *cloudfront.UntagResourceOutput, result2 error) {
+	fake.untagResourceWithContextMutex.Lock()
+	defer fake.untagResourceWithContextMutex.Unlock()
+	fake.UntagResourceWithContextStub = nil
+	fake.untagResourceWithContextReturns = struct {
+		result1 *cloudfront.UntagResourceOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UntagResourceWithContextReturnsOnCall(i int, result1 *cloudfront.UntagResourceOutput, result2 error) {
+	fake.untagResourceWithContextMutex.Lock()
+	defer fake.untagResourceWithContextMutex.Unlock()
+	fake.UntagResourceWithContextStub = nil
+	if fake.untagResourceWithContextReturnsOnCall == nil {
+		fake.untagResourceWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.UntagResourceOutput
+			result2 error
+		})
+	}
+	fake.untagResourceWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.UntagResourceOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -5628,7 +6624,8 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentity(arg1 *cloudf
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.updateCloudFrontOriginAccessIdentityReturns.result1, fake.updateCloudFrontOriginAccessIdentityReturns.result2
+	fakeReturns := fake.updateCloudFrontOriginAccessIdentityReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityCallCount() int {
@@ -5637,13 +6634,22 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityCallCount() i
 	return len(fake.updateCloudFrontOriginAccessIdentityArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityCalls(stub func(*cloudfront.UpdateCloudFrontOriginAccessIdentityInput) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.updateCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityMutex.Unlock()
+	fake.UpdateCloudFrontOriginAccessIdentityStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityArgsForCall(i int) *cloudfront.UpdateCloudFrontOriginAccessIdentityInput {
 	fake.updateCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.updateCloudFrontOriginAccessIdentityMutex.RUnlock()
-	return fake.updateCloudFrontOriginAccessIdentityArgsForCall[i].arg1
+	argsForCall := fake.updateCloudFrontOriginAccessIdentityArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityReturns(result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.updateCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.UpdateCloudFrontOriginAccessIdentityStub = nil
 	fake.updateCloudFrontOriginAccessIdentityReturns = struct {
 		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
@@ -5652,6 +6658,8 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityReturns(resul
 }
 
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityReturnsOnCall(i int, result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.updateCloudFrontOriginAccessIdentityMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityMutex.Unlock()
 	fake.UpdateCloudFrontOriginAccessIdentityStub = nil
 	if fake.updateCloudFrontOriginAccessIdentityReturnsOnCall == nil {
 		fake.updateCloudFrontOriginAccessIdentityReturnsOnCall = make(map[int]struct {
@@ -5660,59 +6668,6 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityReturnsOnCall
 		})
 	}
 	fake.updateCloudFrontOriginAccessIdentityReturnsOnCall[i] = struct {
-		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error) {
-	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Lock()
-	ret, specificReturn := fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall)]
-	fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("UpdateCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
-	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.UpdateCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.UpdateCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.updateCloudFrontOriginAccessIdentityWithContextReturns.result1, fake.updateCloudFrontOriginAccessIdentityWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextCallCount() int {
-	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return len(fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, []request.Option) {
-	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	return fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg1, fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg2, fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.UpdateCloudFrontOriginAccessIdentityWithContextStub = nil
-	fake.updateCloudFrontOriginAccessIdentityWithContextReturns = struct {
-		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, result2 error) {
-	fake.UpdateCloudFrontOriginAccessIdentityWithContextStub = nil
-	if fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
-		fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
-			result2 error
-		})
-	}
-	fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
 		result2 error
 	}{result1, result2}
@@ -5732,7 +6687,8 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequest(arg1 
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.updateCloudFrontOriginAccessIdentityRequestReturns.result1, fake.updateCloudFrontOriginAccessIdentityRequestReturns.result2
+	fakeReturns := fake.updateCloudFrontOriginAccessIdentityRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestCallCount() int {
@@ -5741,13 +6697,22 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestCallCo
 	return len(fake.updateCloudFrontOriginAccessIdentityRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestCalls(stub func(*cloudfront.UpdateCloudFrontOriginAccessIdentityInput) (*request.Request, *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput)) {
+	fake.updateCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityRequestMutex.Unlock()
+	fake.UpdateCloudFrontOriginAccessIdentityRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestArgsForCall(i int) *cloudfront.UpdateCloudFrontOriginAccessIdentityInput {
 	fake.updateCloudFrontOriginAccessIdentityRequestMutex.RLock()
 	defer fake.updateCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
-	return fake.updateCloudFrontOriginAccessIdentityRequestArgsForCall[i].arg1
+	argsForCall := fake.updateCloudFrontOriginAccessIdentityRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestReturns(result1 *request.Request, result2 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput) {
+	fake.updateCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityRequestMutex.Unlock()
 	fake.UpdateCloudFrontOriginAccessIdentityRequestStub = nil
 	fake.updateCloudFrontOriginAccessIdentityRequestReturns = struct {
 		result1 *request.Request
@@ -5756,6 +6721,8 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestReturn
 }
 
 func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput) {
+	fake.updateCloudFrontOriginAccessIdentityRequestMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityRequestMutex.Unlock()
 	fake.UpdateCloudFrontOriginAccessIdentityRequestStub = nil
 	if fake.updateCloudFrontOriginAccessIdentityRequestReturnsOnCall == nil {
 		fake.updateCloudFrontOriginAccessIdentityRequestReturnsOnCall = make(map[int]struct {
@@ -5766,6 +6733,71 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequestReturn
 	fake.updateCloudFrontOriginAccessIdentityRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContext(arg1 aws.Context, arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, arg3 ...request.Option) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error) {
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	ret, specificReturn := fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall[len(fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall)]
+	fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall = append(fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("UpdateCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	if fake.UpdateCloudFrontOriginAccessIdentityWithContextStub != nil {
+		return fake.UpdateCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.updateCloudFrontOriginAccessIdentityWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextCallCount() int {
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	return len(fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextCalls(stub func(aws.Context, *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, ...request.Option) (*cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, error)) {
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.UpdateCloudFrontOriginAccessIdentityWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextArgsForCall(i int) (aws.Context, *cloudfront.UpdateCloudFrontOriginAccessIdentityInput, []request.Option) {
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
+	argsForCall := fake.updateCloudFrontOriginAccessIdentityWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextReturns(result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.UpdateCloudFrontOriginAccessIdentityWithContextStub = nil
+	fake.updateCloudFrontOriginAccessIdentityWithContextReturns = struct {
+		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContextReturnsOnCall(i int, result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput, result2 error) {
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Lock()
+	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
+	fake.UpdateCloudFrontOriginAccessIdentityWithContextStub = nil
+	if fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall == nil {
+		fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
+			result2 error
+		})
+	}
+	fake.updateCloudFrontOriginAccessIdentityWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.UpdateCloudFrontOriginAccessIdentityOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -5783,7 +6815,8 @@ func (fake *FakeCloudFrontAPI) UpdateDistribution(arg1 *cloudfront.UpdateDistrib
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.updateDistributionReturns.result1, fake.updateDistributionReturns.result2
+	fakeReturns := fake.updateDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UpdateDistributionCallCount() int {
@@ -5792,13 +6825,22 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionCallCount() int {
 	return len(fake.updateDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UpdateDistributionCalls(stub func(*cloudfront.UpdateDistributionInput) (*cloudfront.UpdateDistributionOutput, error)) {
+	fake.updateDistributionMutex.Lock()
+	defer fake.updateDistributionMutex.Unlock()
+	fake.UpdateDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UpdateDistributionArgsForCall(i int) *cloudfront.UpdateDistributionInput {
 	fake.updateDistributionMutex.RLock()
 	defer fake.updateDistributionMutex.RUnlock()
-	return fake.updateDistributionArgsForCall[i].arg1
+	argsForCall := fake.updateDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateDistributionReturns(result1 *cloudfront.UpdateDistributionOutput, result2 error) {
+	fake.updateDistributionMutex.Lock()
+	defer fake.updateDistributionMutex.Unlock()
 	fake.UpdateDistributionStub = nil
 	fake.updateDistributionReturns = struct {
 		result1 *cloudfront.UpdateDistributionOutput
@@ -5807,6 +6849,8 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionReturns(result1 *cloudfront.Upd
 }
 
 func (fake *FakeCloudFrontAPI) UpdateDistributionReturnsOnCall(i int, result1 *cloudfront.UpdateDistributionOutput, result2 error) {
+	fake.updateDistributionMutex.Lock()
+	defer fake.updateDistributionMutex.Unlock()
 	fake.UpdateDistributionStub = nil
 	if fake.updateDistributionReturnsOnCall == nil {
 		fake.updateDistributionReturnsOnCall = make(map[int]struct {
@@ -5815,59 +6859,6 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionReturnsOnCall(i int, result1 *c
 		})
 	}
 	fake.updateDistributionReturnsOnCall[i] = struct {
-		result1 *cloudfront.UpdateDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UpdateDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.UpdateDistributionInput, arg3 ...request.Option) (*cloudfront.UpdateDistributionOutput, error) {
-	fake.updateDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.updateDistributionWithContextReturnsOnCall[len(fake.updateDistributionWithContextArgsForCall)]
-	fake.updateDistributionWithContextArgsForCall = append(fake.updateDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UpdateDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("UpdateDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.updateDistributionWithContextMutex.Unlock()
-	if fake.UpdateDistributionWithContextStub != nil {
-		return fake.UpdateDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.updateDistributionWithContextReturns.result1, fake.updateDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextCallCount() int {
-	fake.updateDistributionWithContextMutex.RLock()
-	defer fake.updateDistributionWithContextMutex.RUnlock()
-	return len(fake.updateDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.UpdateDistributionInput, []request.Option) {
-	fake.updateDistributionWithContextMutex.RLock()
-	defer fake.updateDistributionWithContextMutex.RUnlock()
-	return fake.updateDistributionWithContextArgsForCall[i].arg1, fake.updateDistributionWithContextArgsForCall[i].arg2, fake.updateDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextReturns(result1 *cloudfront.UpdateDistributionOutput, result2 error) {
-	fake.UpdateDistributionWithContextStub = nil
-	fake.updateDistributionWithContextReturns = struct {
-		result1 *cloudfront.UpdateDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.UpdateDistributionOutput, result2 error) {
-	fake.UpdateDistributionWithContextStub = nil
-	if fake.updateDistributionWithContextReturnsOnCall == nil {
-		fake.updateDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.UpdateDistributionOutput
-			result2 error
-		})
-	}
-	fake.updateDistributionWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.UpdateDistributionOutput
 		result2 error
 	}{result1, result2}
@@ -5887,7 +6878,8 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionRequest(arg1 *cloudfront.Update
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.updateDistributionRequestReturns.result1, fake.updateDistributionRequestReturns.result2
+	fakeReturns := fake.updateDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UpdateDistributionRequestCallCount() int {
@@ -5896,13 +6888,22 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionRequestCallCount() int {
 	return len(fake.updateDistributionRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UpdateDistributionRequestCalls(stub func(*cloudfront.UpdateDistributionInput) (*request.Request, *cloudfront.UpdateDistributionOutput)) {
+	fake.updateDistributionRequestMutex.Lock()
+	defer fake.updateDistributionRequestMutex.Unlock()
+	fake.UpdateDistributionRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UpdateDistributionRequestArgsForCall(i int) *cloudfront.UpdateDistributionInput {
 	fake.updateDistributionRequestMutex.RLock()
 	defer fake.updateDistributionRequestMutex.RUnlock()
-	return fake.updateDistributionRequestArgsForCall[i].arg1
+	argsForCall := fake.updateDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.UpdateDistributionOutput) {
+	fake.updateDistributionRequestMutex.Lock()
+	defer fake.updateDistributionRequestMutex.Unlock()
 	fake.UpdateDistributionRequestStub = nil
 	fake.updateDistributionRequestReturns = struct {
 		result1 *request.Request
@@ -5911,6 +6912,8 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionRequestReturns(result1 *request
 }
 
 func (fake *FakeCloudFrontAPI) UpdateDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.UpdateDistributionOutput) {
+	fake.updateDistributionRequestMutex.Lock()
+	defer fake.updateDistributionRequestMutex.Unlock()
 	fake.UpdateDistributionRequestStub = nil
 	if fake.updateDistributionRequestReturnsOnCall == nil {
 		fake.updateDistributionRequestReturnsOnCall = make(map[int]struct {
@@ -5921,6 +6924,71 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionRequestReturnsOnCall(i int, res
 	fake.updateDistributionRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.UpdateDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UpdateDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.UpdateDistributionInput, arg3 ...request.Option) (*cloudfront.UpdateDistributionOutput, error) {
+	fake.updateDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.updateDistributionWithContextReturnsOnCall[len(fake.updateDistributionWithContextArgsForCall)]
+	fake.updateDistributionWithContextArgsForCall = append(fake.updateDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UpdateDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("UpdateDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.updateDistributionWithContextMutex.Unlock()
+	if fake.UpdateDistributionWithContextStub != nil {
+		return fake.UpdateDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.updateDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextCallCount() int {
+	fake.updateDistributionWithContextMutex.RLock()
+	defer fake.updateDistributionWithContextMutex.RUnlock()
+	return len(fake.updateDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextCalls(stub func(aws.Context, *cloudfront.UpdateDistributionInput, ...request.Option) (*cloudfront.UpdateDistributionOutput, error)) {
+	fake.updateDistributionWithContextMutex.Lock()
+	defer fake.updateDistributionWithContextMutex.Unlock()
+	fake.UpdateDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.UpdateDistributionInput, []request.Option) {
+	fake.updateDistributionWithContextMutex.RLock()
+	defer fake.updateDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.updateDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextReturns(result1 *cloudfront.UpdateDistributionOutput, result2 error) {
+	fake.updateDistributionWithContextMutex.Lock()
+	defer fake.updateDistributionWithContextMutex.Unlock()
+	fake.UpdateDistributionWithContextStub = nil
+	fake.updateDistributionWithContextReturns = struct {
+		result1 *cloudfront.UpdateDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UpdateDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.UpdateDistributionOutput, result2 error) {
+	fake.updateDistributionWithContextMutex.Lock()
+	defer fake.updateDistributionWithContextMutex.Unlock()
+	fake.UpdateDistributionWithContextStub = nil
+	if fake.updateDistributionWithContextReturnsOnCall == nil {
+		fake.updateDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.UpdateDistributionOutput
+			result2 error
+		})
+	}
+	fake.updateDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.UpdateDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -5938,7 +7006,8 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistribution(arg1 *cloudfront.Upda
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.updateStreamingDistributionReturns.result1, fake.updateStreamingDistributionReturns.result2
+	fakeReturns := fake.updateStreamingDistributionReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionCallCount() int {
@@ -5947,13 +7016,22 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionCallCount() int {
 	return len(fake.updateStreamingDistributionArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionCalls(stub func(*cloudfront.UpdateStreamingDistributionInput) (*cloudfront.UpdateStreamingDistributionOutput, error)) {
+	fake.updateStreamingDistributionMutex.Lock()
+	defer fake.updateStreamingDistributionMutex.Unlock()
+	fake.UpdateStreamingDistributionStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionArgsForCall(i int) *cloudfront.UpdateStreamingDistributionInput {
 	fake.updateStreamingDistributionMutex.RLock()
 	defer fake.updateStreamingDistributionMutex.RUnlock()
-	return fake.updateStreamingDistributionArgsForCall[i].arg1
+	argsForCall := fake.updateStreamingDistributionArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionReturns(result1 *cloudfront.UpdateStreamingDistributionOutput, result2 error) {
+	fake.updateStreamingDistributionMutex.Lock()
+	defer fake.updateStreamingDistributionMutex.Unlock()
 	fake.UpdateStreamingDistributionStub = nil
 	fake.updateStreamingDistributionReturns = struct {
 		result1 *cloudfront.UpdateStreamingDistributionOutput
@@ -5962,6 +7040,8 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionReturns(result1 *cloud
 }
 
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionReturnsOnCall(i int, result1 *cloudfront.UpdateStreamingDistributionOutput, result2 error) {
+	fake.updateStreamingDistributionMutex.Lock()
+	defer fake.updateStreamingDistributionMutex.Unlock()
 	fake.UpdateStreamingDistributionStub = nil
 	if fake.updateStreamingDistributionReturnsOnCall == nil {
 		fake.updateStreamingDistributionReturnsOnCall = make(map[int]struct {
@@ -5970,59 +7050,6 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionReturnsOnCall(i int, r
 		})
 	}
 	fake.updateStreamingDistributionReturnsOnCall[i] = struct {
-		result1 *cloudfront.UpdateStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.UpdateStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.UpdateStreamingDistributionOutput, error) {
-	fake.updateStreamingDistributionWithContextMutex.Lock()
-	ret, specificReturn := fake.updateStreamingDistributionWithContextReturnsOnCall[len(fake.updateStreamingDistributionWithContextArgsForCall)]
-	fake.updateStreamingDistributionWithContextArgsForCall = append(fake.updateStreamingDistributionWithContextArgsForCall, struct {
-		arg1 aws.Context
-		arg2 *cloudfront.UpdateStreamingDistributionInput
-		arg3 []request.Option
-	}{arg1, arg2, arg3})
-	fake.recordInvocation("UpdateStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
-	fake.updateStreamingDistributionWithContextMutex.Unlock()
-	if fake.UpdateStreamingDistributionWithContextStub != nil {
-		return fake.UpdateStreamingDistributionWithContextStub(arg1, arg2, arg3...)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	return fake.updateStreamingDistributionWithContextReturns.result1, fake.updateStreamingDistributionWithContextReturns.result2
-}
-
-func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextCallCount() int {
-	fake.updateStreamingDistributionWithContextMutex.RLock()
-	defer fake.updateStreamingDistributionWithContextMutex.RUnlock()
-	return len(fake.updateStreamingDistributionWithContextArgsForCall)
-}
-
-func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.UpdateStreamingDistributionInput, []request.Option) {
-	fake.updateStreamingDistributionWithContextMutex.RLock()
-	defer fake.updateStreamingDistributionWithContextMutex.RUnlock()
-	return fake.updateStreamingDistributionWithContextArgsForCall[i].arg1, fake.updateStreamingDistributionWithContextArgsForCall[i].arg2, fake.updateStreamingDistributionWithContextArgsForCall[i].arg3
-}
-
-func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextReturns(result1 *cloudfront.UpdateStreamingDistributionOutput, result2 error) {
-	fake.UpdateStreamingDistributionWithContextStub = nil
-	fake.updateStreamingDistributionWithContextReturns = struct {
-		result1 *cloudfront.UpdateStreamingDistributionOutput
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.UpdateStreamingDistributionOutput, result2 error) {
-	fake.UpdateStreamingDistributionWithContextStub = nil
-	if fake.updateStreamingDistributionWithContextReturnsOnCall == nil {
-		fake.updateStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
-			result1 *cloudfront.UpdateStreamingDistributionOutput
-			result2 error
-		})
-	}
-	fake.updateStreamingDistributionWithContextReturnsOnCall[i] = struct {
 		result1 *cloudfront.UpdateStreamingDistributionOutput
 		result2 error
 	}{result1, result2}
@@ -6042,7 +7069,8 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequest(arg1 *cloudfro
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.updateStreamingDistributionRequestReturns.result1, fake.updateStreamingDistributionRequestReturns.result2
+	fakeReturns := fake.updateStreamingDistributionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestCallCount() int {
@@ -6051,13 +7079,22 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestCallCount() int
 	return len(fake.updateStreamingDistributionRequestArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestCalls(stub func(*cloudfront.UpdateStreamingDistributionInput) (*request.Request, *cloudfront.UpdateStreamingDistributionOutput)) {
+	fake.updateStreamingDistributionRequestMutex.Lock()
+	defer fake.updateStreamingDistributionRequestMutex.Unlock()
+	fake.UpdateStreamingDistributionRequestStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestArgsForCall(i int) *cloudfront.UpdateStreamingDistributionInput {
 	fake.updateStreamingDistributionRequestMutex.RLock()
 	defer fake.updateStreamingDistributionRequestMutex.RUnlock()
-	return fake.updateStreamingDistributionRequestArgsForCall[i].arg1
+	argsForCall := fake.updateStreamingDistributionRequestArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestReturns(result1 *request.Request, result2 *cloudfront.UpdateStreamingDistributionOutput) {
+	fake.updateStreamingDistributionRequestMutex.Lock()
+	defer fake.updateStreamingDistributionRequestMutex.Unlock()
 	fake.UpdateStreamingDistributionRequestStub = nil
 	fake.updateStreamingDistributionRequestReturns = struct {
 		result1 *request.Request
@@ -6066,6 +7103,8 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestReturns(result1
 }
 
 func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudfront.UpdateStreamingDistributionOutput) {
+	fake.updateStreamingDistributionRequestMutex.Lock()
+	defer fake.updateStreamingDistributionRequestMutex.Unlock()
 	fake.UpdateStreamingDistributionRequestStub = nil
 	if fake.updateStreamingDistributionRequestReturnsOnCall == nil {
 		fake.updateStreamingDistributionRequestReturnsOnCall = make(map[int]struct {
@@ -6076,6 +7115,71 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequestReturnsOnCall(i
 	fake.updateStreamingDistributionRequestReturnsOnCall[i] = struct {
 		result1 *request.Request
 		result2 *cloudfront.UpdateStreamingDistributionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContext(arg1 aws.Context, arg2 *cloudfront.UpdateStreamingDistributionInput, arg3 ...request.Option) (*cloudfront.UpdateStreamingDistributionOutput, error) {
+	fake.updateStreamingDistributionWithContextMutex.Lock()
+	ret, specificReturn := fake.updateStreamingDistributionWithContextReturnsOnCall[len(fake.updateStreamingDistributionWithContextArgsForCall)]
+	fake.updateStreamingDistributionWithContextArgsForCall = append(fake.updateStreamingDistributionWithContextArgsForCall, struct {
+		arg1 aws.Context
+		arg2 *cloudfront.UpdateStreamingDistributionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("UpdateStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.updateStreamingDistributionWithContextMutex.Unlock()
+	if fake.UpdateStreamingDistributionWithContextStub != nil {
+		return fake.UpdateStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.updateStreamingDistributionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextCallCount() int {
+	fake.updateStreamingDistributionWithContextMutex.RLock()
+	defer fake.updateStreamingDistributionWithContextMutex.RUnlock()
+	return len(fake.updateStreamingDistributionWithContextArgsForCall)
+}
+
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextCalls(stub func(aws.Context, *cloudfront.UpdateStreamingDistributionInput, ...request.Option) (*cloudfront.UpdateStreamingDistributionOutput, error)) {
+	fake.updateStreamingDistributionWithContextMutex.Lock()
+	defer fake.updateStreamingDistributionWithContextMutex.Unlock()
+	fake.UpdateStreamingDistributionWithContextStub = stub
+}
+
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextArgsForCall(i int) (aws.Context, *cloudfront.UpdateStreamingDistributionInput, []request.Option) {
+	fake.updateStreamingDistributionWithContextMutex.RLock()
+	defer fake.updateStreamingDistributionWithContextMutex.RUnlock()
+	argsForCall := fake.updateStreamingDistributionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextReturns(result1 *cloudfront.UpdateStreamingDistributionOutput, result2 error) {
+	fake.updateStreamingDistributionWithContextMutex.Lock()
+	defer fake.updateStreamingDistributionWithContextMutex.Unlock()
+	fake.UpdateStreamingDistributionWithContextStub = nil
+	fake.updateStreamingDistributionWithContextReturns = struct {
+		result1 *cloudfront.UpdateStreamingDistributionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContextReturnsOnCall(i int, result1 *cloudfront.UpdateStreamingDistributionOutput, result2 error) {
+	fake.updateStreamingDistributionWithContextMutex.Lock()
+	defer fake.updateStreamingDistributionWithContextMutex.Unlock()
+	fake.UpdateStreamingDistributionWithContextStub = nil
+	if fake.updateStreamingDistributionWithContextReturnsOnCall == nil {
+		fake.updateStreamingDistributionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudfront.UpdateStreamingDistributionOutput
+			result2 error
+		})
+	}
+	fake.updateStreamingDistributionWithContextReturnsOnCall[i] = struct {
+		result1 *cloudfront.UpdateStreamingDistributionOutput
+		result2 error
 	}{result1, result2}
 }
 
@@ -6093,7 +7197,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployed(arg1 *cloudfront.Ge
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.waitUntilDistributionDeployedReturns.result1
+	fakeReturns := fake.waitUntilDistributionDeployedReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedCallCount() int {
@@ -6102,13 +7207,22 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedCallCount() int {
 	return len(fake.waitUntilDistributionDeployedArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedCalls(stub func(*cloudfront.GetDistributionInput) error) {
+	fake.waitUntilDistributionDeployedMutex.Lock()
+	defer fake.waitUntilDistributionDeployedMutex.Unlock()
+	fake.WaitUntilDistributionDeployedStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedArgsForCall(i int) *cloudfront.GetDistributionInput {
 	fake.waitUntilDistributionDeployedMutex.RLock()
 	defer fake.waitUntilDistributionDeployedMutex.RUnlock()
-	return fake.waitUntilDistributionDeployedArgsForCall[i].arg1
+	argsForCall := fake.waitUntilDistributionDeployedArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedReturns(result1 error) {
+	fake.waitUntilDistributionDeployedMutex.Lock()
+	defer fake.waitUntilDistributionDeployedMutex.Unlock()
 	fake.WaitUntilDistributionDeployedStub = nil
 	fake.waitUntilDistributionDeployedReturns = struct {
 		result1 error
@@ -6116,6 +7230,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedReturns(result1 erro
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedReturnsOnCall(i int, result1 error) {
+	fake.waitUntilDistributionDeployedMutex.Lock()
+	defer fake.waitUntilDistributionDeployedMutex.Unlock()
 	fake.WaitUntilDistributionDeployedStub = nil
 	if fake.waitUntilDistributionDeployedReturnsOnCall == nil {
 		fake.waitUntilDistributionDeployedReturnsOnCall = make(map[int]struct {
@@ -6143,7 +7259,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContext(arg1 aws
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.waitUntilDistributionDeployedWithContextReturns.result1
+	fakeReturns := fake.waitUntilDistributionDeployedWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextCallCount() int {
@@ -6152,13 +7269,22 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextCallCount
 	return len(fake.waitUntilDistributionDeployedWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextCalls(stub func(aws.Context, *cloudfront.GetDistributionInput, ...request.WaiterOption) error) {
+	fake.waitUntilDistributionDeployedWithContextMutex.Lock()
+	defer fake.waitUntilDistributionDeployedWithContextMutex.Unlock()
+	fake.WaitUntilDistributionDeployedWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetDistributionInput, []request.WaiterOption) {
 	fake.waitUntilDistributionDeployedWithContextMutex.RLock()
 	defer fake.waitUntilDistributionDeployedWithContextMutex.RUnlock()
-	return fake.waitUntilDistributionDeployedWithContextArgsForCall[i].arg1, fake.waitUntilDistributionDeployedWithContextArgsForCall[i].arg2, fake.waitUntilDistributionDeployedWithContextArgsForCall[i].arg3
+	argsForCall := fake.waitUntilDistributionDeployedWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextReturns(result1 error) {
+	fake.waitUntilDistributionDeployedWithContextMutex.Lock()
+	defer fake.waitUntilDistributionDeployedWithContextMutex.Unlock()
 	fake.WaitUntilDistributionDeployedWithContextStub = nil
 	fake.waitUntilDistributionDeployedWithContextReturns = struct {
 		result1 error
@@ -6166,6 +7292,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextReturns(r
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContextReturnsOnCall(i int, result1 error) {
+	fake.waitUntilDistributionDeployedWithContextMutex.Lock()
+	defer fake.waitUntilDistributionDeployedWithContextMutex.Unlock()
 	fake.WaitUntilDistributionDeployedWithContextStub = nil
 	if fake.waitUntilDistributionDeployedWithContextReturnsOnCall == nil {
 		fake.waitUntilDistributionDeployedWithContextReturnsOnCall = make(map[int]struct {
@@ -6191,7 +7319,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompleted(arg1 *cloudfront.G
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.waitUntilInvalidationCompletedReturns.result1
+	fakeReturns := fake.waitUntilInvalidationCompletedReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedCallCount() int {
@@ -6200,13 +7329,22 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedCallCount() int {
 	return len(fake.waitUntilInvalidationCompletedArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedCalls(stub func(*cloudfront.GetInvalidationInput) error) {
+	fake.waitUntilInvalidationCompletedMutex.Lock()
+	defer fake.waitUntilInvalidationCompletedMutex.Unlock()
+	fake.WaitUntilInvalidationCompletedStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedArgsForCall(i int) *cloudfront.GetInvalidationInput {
 	fake.waitUntilInvalidationCompletedMutex.RLock()
 	defer fake.waitUntilInvalidationCompletedMutex.RUnlock()
-	return fake.waitUntilInvalidationCompletedArgsForCall[i].arg1
+	argsForCall := fake.waitUntilInvalidationCompletedArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedReturns(result1 error) {
+	fake.waitUntilInvalidationCompletedMutex.Lock()
+	defer fake.waitUntilInvalidationCompletedMutex.Unlock()
 	fake.WaitUntilInvalidationCompletedStub = nil
 	fake.waitUntilInvalidationCompletedReturns = struct {
 		result1 error
@@ -6214,6 +7352,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedReturns(result1 err
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedReturnsOnCall(i int, result1 error) {
+	fake.waitUntilInvalidationCompletedMutex.Lock()
+	defer fake.waitUntilInvalidationCompletedMutex.Unlock()
 	fake.WaitUntilInvalidationCompletedStub = nil
 	if fake.waitUntilInvalidationCompletedReturnsOnCall == nil {
 		fake.waitUntilInvalidationCompletedReturnsOnCall = make(map[int]struct {
@@ -6241,7 +7381,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContext(arg1 aw
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.waitUntilInvalidationCompletedWithContextReturns.result1
+	fakeReturns := fake.waitUntilInvalidationCompletedWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextCallCount() int {
@@ -6250,13 +7391,22 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextCallCoun
 	return len(fake.waitUntilInvalidationCompletedWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextCalls(stub func(aws.Context, *cloudfront.GetInvalidationInput, ...request.WaiterOption) error) {
+	fake.waitUntilInvalidationCompletedWithContextMutex.Lock()
+	defer fake.waitUntilInvalidationCompletedWithContextMutex.Unlock()
+	fake.WaitUntilInvalidationCompletedWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetInvalidationInput, []request.WaiterOption) {
 	fake.waitUntilInvalidationCompletedWithContextMutex.RLock()
 	defer fake.waitUntilInvalidationCompletedWithContextMutex.RUnlock()
-	return fake.waitUntilInvalidationCompletedWithContextArgsForCall[i].arg1, fake.waitUntilInvalidationCompletedWithContextArgsForCall[i].arg2, fake.waitUntilInvalidationCompletedWithContextArgsForCall[i].arg3
+	argsForCall := fake.waitUntilInvalidationCompletedWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextReturns(result1 error) {
+	fake.waitUntilInvalidationCompletedWithContextMutex.Lock()
+	defer fake.waitUntilInvalidationCompletedWithContextMutex.Unlock()
 	fake.WaitUntilInvalidationCompletedWithContextStub = nil
 	fake.waitUntilInvalidationCompletedWithContextReturns = struct {
 		result1 error
@@ -6264,6 +7414,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextReturns(
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContextReturnsOnCall(i int, result1 error) {
+	fake.waitUntilInvalidationCompletedWithContextMutex.Lock()
+	defer fake.waitUntilInvalidationCompletedWithContextMutex.Unlock()
 	fake.WaitUntilInvalidationCompletedWithContextStub = nil
 	if fake.waitUntilInvalidationCompletedWithContextReturnsOnCall == nil {
 		fake.waitUntilInvalidationCompletedWithContextReturnsOnCall = make(map[int]struct {
@@ -6289,7 +7441,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployed(arg1 *clou
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.waitUntilStreamingDistributionDeployedReturns.result1
+	fakeReturns := fake.waitUntilStreamingDistributionDeployedReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedCallCount() int {
@@ -6298,13 +7451,22 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedCallCount()
 	return len(fake.waitUntilStreamingDistributionDeployedArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedCalls(stub func(*cloudfront.GetStreamingDistributionInput) error) {
+	fake.waitUntilStreamingDistributionDeployedMutex.Lock()
+	defer fake.waitUntilStreamingDistributionDeployedMutex.Unlock()
+	fake.WaitUntilStreamingDistributionDeployedStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedArgsForCall(i int) *cloudfront.GetStreamingDistributionInput {
 	fake.waitUntilStreamingDistributionDeployedMutex.RLock()
 	defer fake.waitUntilStreamingDistributionDeployedMutex.RUnlock()
-	return fake.waitUntilStreamingDistributionDeployedArgsForCall[i].arg1
+	argsForCall := fake.waitUntilStreamingDistributionDeployedArgsForCall[i]
+	return argsForCall.arg1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedReturns(result1 error) {
+	fake.waitUntilStreamingDistributionDeployedMutex.Lock()
+	defer fake.waitUntilStreamingDistributionDeployedMutex.Unlock()
 	fake.WaitUntilStreamingDistributionDeployedStub = nil
 	fake.waitUntilStreamingDistributionDeployedReturns = struct {
 		result1 error
@@ -6312,6 +7474,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedReturns(res
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedReturnsOnCall(i int, result1 error) {
+	fake.waitUntilStreamingDistributionDeployedMutex.Lock()
+	defer fake.waitUntilStreamingDistributionDeployedMutex.Unlock()
 	fake.WaitUntilStreamingDistributionDeployedStub = nil
 	if fake.waitUntilStreamingDistributionDeployedReturnsOnCall == nil {
 		fake.waitUntilStreamingDistributionDeployedReturnsOnCall = make(map[int]struct {
@@ -6339,7 +7503,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContext
 	if specificReturn {
 		return ret.result1
 	}
-	return fake.waitUntilStreamingDistributionDeployedWithContextReturns.result1
+	fakeReturns := fake.waitUntilStreamingDistributionDeployedWithContextReturns
+	return fakeReturns.result1
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContextCallCount() int {
@@ -6348,13 +7513,22 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContext
 	return len(fake.waitUntilStreamingDistributionDeployedWithContextArgsForCall)
 }
 
+func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContextCalls(stub func(aws.Context, *cloudfront.GetStreamingDistributionInput, ...request.WaiterOption) error) {
+	fake.waitUntilStreamingDistributionDeployedWithContextMutex.Lock()
+	defer fake.waitUntilStreamingDistributionDeployedWithContextMutex.Unlock()
+	fake.WaitUntilStreamingDistributionDeployedWithContextStub = stub
+}
+
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContextArgsForCall(i int) (aws.Context, *cloudfront.GetStreamingDistributionInput, []request.WaiterOption) {
 	fake.waitUntilStreamingDistributionDeployedWithContextMutex.RLock()
 	defer fake.waitUntilStreamingDistributionDeployedWithContextMutex.RUnlock()
-	return fake.waitUntilStreamingDistributionDeployedWithContextArgsForCall[i].arg1, fake.waitUntilStreamingDistributionDeployedWithContextArgsForCall[i].arg2, fake.waitUntilStreamingDistributionDeployedWithContextArgsForCall[i].arg3
+	argsForCall := fake.waitUntilStreamingDistributionDeployedWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContextReturns(result1 error) {
+	fake.waitUntilStreamingDistributionDeployedWithContextMutex.Lock()
+	defer fake.waitUntilStreamingDistributionDeployedWithContextMutex.Unlock()
 	fake.WaitUntilStreamingDistributionDeployedWithContextStub = nil
 	fake.waitUntilStreamingDistributionDeployedWithContextReturns = struct {
 		result1 error
@@ -6362,6 +7536,8 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContext
 }
 
 func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContextReturnsOnCall(i int, result1 error) {
+	fake.waitUntilStreamingDistributionDeployedWithContextMutex.Lock()
+	defer fake.waitUntilStreamingDistributionDeployedWithContextMutex.Unlock()
 	fake.WaitUntilStreamingDistributionDeployedWithContextStub = nil
 	if fake.waitUntilStreamingDistributionDeployedWithContextReturnsOnCall == nil {
 		fake.waitUntilStreamingDistributionDeployedWithContextReturnsOnCall = make(map[int]struct {
@@ -6378,188 +7554,188 @@ func (fake *FakeCloudFrontAPI) Invocations() map[string][][]interface{} {
 	defer fake.invocationsMutex.RUnlock()
 	fake.createCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.createCloudFrontOriginAccessIdentityMutex.RUnlock()
-	fake.createCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.createCloudFrontOriginAccessIdentityRequestMutex.RLock()
 	defer fake.createCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
+	fake.createCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.createCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.createDistributionMutex.RLock()
 	defer fake.createDistributionMutex.RUnlock()
-	fake.createDistributionWithContextMutex.RLock()
-	defer fake.createDistributionWithContextMutex.RUnlock()
 	fake.createDistributionRequestMutex.RLock()
 	defer fake.createDistributionRequestMutex.RUnlock()
+	fake.createDistributionWithContextMutex.RLock()
+	defer fake.createDistributionWithContextMutex.RUnlock()
 	fake.createDistributionWithTagsMutex.RLock()
 	defer fake.createDistributionWithTagsMutex.RUnlock()
-	fake.createDistributionWithTagsWithContextMutex.RLock()
-	defer fake.createDistributionWithTagsWithContextMutex.RUnlock()
 	fake.createDistributionWithTagsRequestMutex.RLock()
 	defer fake.createDistributionWithTagsRequestMutex.RUnlock()
+	fake.createDistributionWithTagsWithContextMutex.RLock()
+	defer fake.createDistributionWithTagsWithContextMutex.RUnlock()
 	fake.createInvalidationMutex.RLock()
 	defer fake.createInvalidationMutex.RUnlock()
-	fake.createInvalidationWithContextMutex.RLock()
-	defer fake.createInvalidationWithContextMutex.RUnlock()
 	fake.createInvalidationRequestMutex.RLock()
 	defer fake.createInvalidationRequestMutex.RUnlock()
+	fake.createInvalidationWithContextMutex.RLock()
+	defer fake.createInvalidationWithContextMutex.RUnlock()
 	fake.createStreamingDistributionMutex.RLock()
 	defer fake.createStreamingDistributionMutex.RUnlock()
-	fake.createStreamingDistributionWithContextMutex.RLock()
-	defer fake.createStreamingDistributionWithContextMutex.RUnlock()
 	fake.createStreamingDistributionRequestMutex.RLock()
 	defer fake.createStreamingDistributionRequestMutex.RUnlock()
+	fake.createStreamingDistributionWithContextMutex.RLock()
+	defer fake.createStreamingDistributionWithContextMutex.RUnlock()
 	fake.createStreamingDistributionWithTagsMutex.RLock()
 	defer fake.createStreamingDistributionWithTagsMutex.RUnlock()
-	fake.createStreamingDistributionWithTagsWithContextMutex.RLock()
-	defer fake.createStreamingDistributionWithTagsWithContextMutex.RUnlock()
 	fake.createStreamingDistributionWithTagsRequestMutex.RLock()
 	defer fake.createStreamingDistributionWithTagsRequestMutex.RUnlock()
+	fake.createStreamingDistributionWithTagsWithContextMutex.RLock()
+	defer fake.createStreamingDistributionWithTagsWithContextMutex.RUnlock()
 	fake.deleteCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.deleteCloudFrontOriginAccessIdentityMutex.RUnlock()
-	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.deleteCloudFrontOriginAccessIdentityRequestMutex.RLock()
 	defer fake.deleteCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
+	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.deleteDistributionMutex.RLock()
 	defer fake.deleteDistributionMutex.RUnlock()
-	fake.deleteDistributionWithContextMutex.RLock()
-	defer fake.deleteDistributionWithContextMutex.RUnlock()
 	fake.deleteDistributionRequestMutex.RLock()
 	defer fake.deleteDistributionRequestMutex.RUnlock()
+	fake.deleteDistributionWithContextMutex.RLock()
+	defer fake.deleteDistributionWithContextMutex.RUnlock()
 	fake.deleteServiceLinkedRoleMutex.RLock()
 	defer fake.deleteServiceLinkedRoleMutex.RUnlock()
-	fake.deleteServiceLinkedRoleWithContextMutex.RLock()
-	defer fake.deleteServiceLinkedRoleWithContextMutex.RUnlock()
 	fake.deleteServiceLinkedRoleRequestMutex.RLock()
 	defer fake.deleteServiceLinkedRoleRequestMutex.RUnlock()
+	fake.deleteServiceLinkedRoleWithContextMutex.RLock()
+	defer fake.deleteServiceLinkedRoleWithContextMutex.RUnlock()
 	fake.deleteStreamingDistributionMutex.RLock()
 	defer fake.deleteStreamingDistributionMutex.RUnlock()
-	fake.deleteStreamingDistributionWithContextMutex.RLock()
-	defer fake.deleteStreamingDistributionWithContextMutex.RUnlock()
 	fake.deleteStreamingDistributionRequestMutex.RLock()
 	defer fake.deleteStreamingDistributionRequestMutex.RUnlock()
+	fake.deleteStreamingDistributionWithContextMutex.RLock()
+	defer fake.deleteStreamingDistributionWithContextMutex.RUnlock()
 	fake.getCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.getCloudFrontOriginAccessIdentityMutex.RUnlock()
-	fake.getCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
-	fake.getCloudFrontOriginAccessIdentityRequestMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
 	fake.getCloudFrontOriginAccessIdentityConfigMutex.RLock()
 	defer fake.getCloudFrontOriginAccessIdentityConfigMutex.RUnlock()
-	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RLock()
-	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RUnlock()
 	fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.RLock()
 	defer fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.RUnlock()
+	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.RUnlock()
+	fake.getCloudFrontOriginAccessIdentityRequestMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
+	fake.getCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.getCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.getDistributionMutex.RLock()
 	defer fake.getDistributionMutex.RUnlock()
-	fake.getDistributionWithContextMutex.RLock()
-	defer fake.getDistributionWithContextMutex.RUnlock()
-	fake.getDistributionRequestMutex.RLock()
-	defer fake.getDistributionRequestMutex.RUnlock()
 	fake.getDistributionConfigMutex.RLock()
 	defer fake.getDistributionConfigMutex.RUnlock()
-	fake.getDistributionConfigWithContextMutex.RLock()
-	defer fake.getDistributionConfigWithContextMutex.RUnlock()
 	fake.getDistributionConfigRequestMutex.RLock()
 	defer fake.getDistributionConfigRequestMutex.RUnlock()
+	fake.getDistributionConfigWithContextMutex.RLock()
+	defer fake.getDistributionConfigWithContextMutex.RUnlock()
+	fake.getDistributionRequestMutex.RLock()
+	defer fake.getDistributionRequestMutex.RUnlock()
+	fake.getDistributionWithContextMutex.RLock()
+	defer fake.getDistributionWithContextMutex.RUnlock()
 	fake.getInvalidationMutex.RLock()
 	defer fake.getInvalidationMutex.RUnlock()
-	fake.getInvalidationWithContextMutex.RLock()
-	defer fake.getInvalidationWithContextMutex.RUnlock()
 	fake.getInvalidationRequestMutex.RLock()
 	defer fake.getInvalidationRequestMutex.RUnlock()
+	fake.getInvalidationWithContextMutex.RLock()
+	defer fake.getInvalidationWithContextMutex.RUnlock()
 	fake.getStreamingDistributionMutex.RLock()
 	defer fake.getStreamingDistributionMutex.RUnlock()
-	fake.getStreamingDistributionWithContextMutex.RLock()
-	defer fake.getStreamingDistributionWithContextMutex.RUnlock()
-	fake.getStreamingDistributionRequestMutex.RLock()
-	defer fake.getStreamingDistributionRequestMutex.RUnlock()
 	fake.getStreamingDistributionConfigMutex.RLock()
 	defer fake.getStreamingDistributionConfigMutex.RUnlock()
-	fake.getStreamingDistributionConfigWithContextMutex.RLock()
-	defer fake.getStreamingDistributionConfigWithContextMutex.RUnlock()
 	fake.getStreamingDistributionConfigRequestMutex.RLock()
 	defer fake.getStreamingDistributionConfigRequestMutex.RUnlock()
+	fake.getStreamingDistributionConfigWithContextMutex.RLock()
+	defer fake.getStreamingDistributionConfigWithContextMutex.RUnlock()
+	fake.getStreamingDistributionRequestMutex.RLock()
+	defer fake.getStreamingDistributionRequestMutex.RUnlock()
+	fake.getStreamingDistributionWithContextMutex.RLock()
+	defer fake.getStreamingDistributionWithContextMutex.RUnlock()
 	fake.listCloudFrontOriginAccessIdentitiesMutex.RLock()
 	defer fake.listCloudFrontOriginAccessIdentitiesMutex.RUnlock()
-	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RLock()
-	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RUnlock()
-	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RLock()
-	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RUnlock()
 	fake.listCloudFrontOriginAccessIdentitiesPagesMutex.RLock()
 	defer fake.listCloudFrontOriginAccessIdentitiesPagesMutex.RUnlock()
 	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.RLock()
 	defer fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.RUnlock()
+	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RLock()
+	defer fake.listCloudFrontOriginAccessIdentitiesRequestMutex.RUnlock()
+	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RLock()
+	defer fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.RUnlock()
 	fake.listDistributionsMutex.RLock()
 	defer fake.listDistributionsMutex.RUnlock()
-	fake.listDistributionsWithContextMutex.RLock()
-	defer fake.listDistributionsWithContextMutex.RUnlock()
-	fake.listDistributionsRequestMutex.RLock()
-	defer fake.listDistributionsRequestMutex.RUnlock()
+	fake.listDistributionsByWebACLIdMutex.RLock()
+	defer fake.listDistributionsByWebACLIdMutex.RUnlock()
+	fake.listDistributionsByWebACLIdRequestMutex.RLock()
+	defer fake.listDistributionsByWebACLIdRequestMutex.RUnlock()
+	fake.listDistributionsByWebACLIdWithContextMutex.RLock()
+	defer fake.listDistributionsByWebACLIdWithContextMutex.RUnlock()
 	fake.listDistributionsPagesMutex.RLock()
 	defer fake.listDistributionsPagesMutex.RUnlock()
 	fake.listDistributionsPagesWithContextMutex.RLock()
 	defer fake.listDistributionsPagesWithContextMutex.RUnlock()
-	fake.listDistributionsByWebACLIdMutex.RLock()
-	defer fake.listDistributionsByWebACLIdMutex.RUnlock()
-	fake.listDistributionsByWebACLIdWithContextMutex.RLock()
-	defer fake.listDistributionsByWebACLIdWithContextMutex.RUnlock()
-	fake.listDistributionsByWebACLIdRequestMutex.RLock()
-	defer fake.listDistributionsByWebACLIdRequestMutex.RUnlock()
+	fake.listDistributionsRequestMutex.RLock()
+	defer fake.listDistributionsRequestMutex.RUnlock()
+	fake.listDistributionsWithContextMutex.RLock()
+	defer fake.listDistributionsWithContextMutex.RUnlock()
 	fake.listInvalidationsMutex.RLock()
 	defer fake.listInvalidationsMutex.RUnlock()
-	fake.listInvalidationsWithContextMutex.RLock()
-	defer fake.listInvalidationsWithContextMutex.RUnlock()
-	fake.listInvalidationsRequestMutex.RLock()
-	defer fake.listInvalidationsRequestMutex.RUnlock()
 	fake.listInvalidationsPagesMutex.RLock()
 	defer fake.listInvalidationsPagesMutex.RUnlock()
 	fake.listInvalidationsPagesWithContextMutex.RLock()
 	defer fake.listInvalidationsPagesWithContextMutex.RUnlock()
+	fake.listInvalidationsRequestMutex.RLock()
+	defer fake.listInvalidationsRequestMutex.RUnlock()
+	fake.listInvalidationsWithContextMutex.RLock()
+	defer fake.listInvalidationsWithContextMutex.RUnlock()
 	fake.listStreamingDistributionsMutex.RLock()
 	defer fake.listStreamingDistributionsMutex.RUnlock()
-	fake.listStreamingDistributionsWithContextMutex.RLock()
-	defer fake.listStreamingDistributionsWithContextMutex.RUnlock()
-	fake.listStreamingDistributionsRequestMutex.RLock()
-	defer fake.listStreamingDistributionsRequestMutex.RUnlock()
 	fake.listStreamingDistributionsPagesMutex.RLock()
 	defer fake.listStreamingDistributionsPagesMutex.RUnlock()
 	fake.listStreamingDistributionsPagesWithContextMutex.RLock()
 	defer fake.listStreamingDistributionsPagesWithContextMutex.RUnlock()
+	fake.listStreamingDistributionsRequestMutex.RLock()
+	defer fake.listStreamingDistributionsRequestMutex.RUnlock()
+	fake.listStreamingDistributionsWithContextMutex.RLock()
+	defer fake.listStreamingDistributionsWithContextMutex.RUnlock()
 	fake.listTagsForResourceMutex.RLock()
 	defer fake.listTagsForResourceMutex.RUnlock()
-	fake.listTagsForResourceWithContextMutex.RLock()
-	defer fake.listTagsForResourceWithContextMutex.RUnlock()
 	fake.listTagsForResourceRequestMutex.RLock()
 	defer fake.listTagsForResourceRequestMutex.RUnlock()
+	fake.listTagsForResourceWithContextMutex.RLock()
+	defer fake.listTagsForResourceWithContextMutex.RUnlock()
 	fake.tagResourceMutex.RLock()
 	defer fake.tagResourceMutex.RUnlock()
-	fake.tagResourceWithContextMutex.RLock()
-	defer fake.tagResourceWithContextMutex.RUnlock()
 	fake.tagResourceRequestMutex.RLock()
 	defer fake.tagResourceRequestMutex.RUnlock()
+	fake.tagResourceWithContextMutex.RLock()
+	defer fake.tagResourceWithContextMutex.RUnlock()
 	fake.untagResourceMutex.RLock()
 	defer fake.untagResourceMutex.RUnlock()
-	fake.untagResourceWithContextMutex.RLock()
-	defer fake.untagResourceWithContextMutex.RUnlock()
 	fake.untagResourceRequestMutex.RLock()
 	defer fake.untagResourceRequestMutex.RUnlock()
+	fake.untagResourceWithContextMutex.RLock()
+	defer fake.untagResourceWithContextMutex.RUnlock()
 	fake.updateCloudFrontOriginAccessIdentityMutex.RLock()
 	defer fake.updateCloudFrontOriginAccessIdentityMutex.RUnlock()
-	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RLock()
-	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.updateCloudFrontOriginAccessIdentityRequestMutex.RLock()
 	defer fake.updateCloudFrontOriginAccessIdentityRequestMutex.RUnlock()
+	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RLock()
+	defer fake.updateCloudFrontOriginAccessIdentityWithContextMutex.RUnlock()
 	fake.updateDistributionMutex.RLock()
 	defer fake.updateDistributionMutex.RUnlock()
-	fake.updateDistributionWithContextMutex.RLock()
-	defer fake.updateDistributionWithContextMutex.RUnlock()
 	fake.updateDistributionRequestMutex.RLock()
 	defer fake.updateDistributionRequestMutex.RUnlock()
+	fake.updateDistributionWithContextMutex.RLock()
+	defer fake.updateDistributionWithContextMutex.RUnlock()
 	fake.updateStreamingDistributionMutex.RLock()
 	defer fake.updateStreamingDistributionMutex.RUnlock()
-	fake.updateStreamingDistributionWithContextMutex.RLock()
-	defer fake.updateStreamingDistributionWithContextMutex.RUnlock()
 	fake.updateStreamingDistributionRequestMutex.RLock()
 	defer fake.updateStreamingDistributionRequestMutex.RUnlock()
+	fake.updateStreamingDistributionWithContextMutex.RLock()
+	defer fake.updateStreamingDistributionWithContextMutex.RUnlock()
 	fake.waitUntilDistributionDeployedMutex.RLock()
 	defer fake.waitUntilDistributionDeployedMutex.RUnlock()
 	fake.waitUntilDistributionDeployedWithContextMutex.RLock()

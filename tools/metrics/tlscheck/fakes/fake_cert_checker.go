@@ -42,7 +42,8 @@ func (fake *FakeCertChecker) DaysUntilExpiry(arg1 string, arg2 *tls.Config) (flo
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	return fake.daysUntilExpiryReturns.result1, fake.daysUntilExpiryReturns.result2
+	fakeReturns := fake.daysUntilExpiryReturns
+	return fakeReturns.result1, fakeReturns.result2
 }
 
 func (fake *FakeCertChecker) DaysUntilExpiryCallCount() int {
@@ -51,13 +52,22 @@ func (fake *FakeCertChecker) DaysUntilExpiryCallCount() int {
 	return len(fake.daysUntilExpiryArgsForCall)
 }
 
+func (fake *FakeCertChecker) DaysUntilExpiryCalls(stub func(string, *tls.Config) (float64, error)) {
+	fake.daysUntilExpiryMutex.Lock()
+	defer fake.daysUntilExpiryMutex.Unlock()
+	fake.DaysUntilExpiryStub = stub
+}
+
 func (fake *FakeCertChecker) DaysUntilExpiryArgsForCall(i int) (string, *tls.Config) {
 	fake.daysUntilExpiryMutex.RLock()
 	defer fake.daysUntilExpiryMutex.RUnlock()
-	return fake.daysUntilExpiryArgsForCall[i].arg1, fake.daysUntilExpiryArgsForCall[i].arg2
+	argsForCall := fake.daysUntilExpiryArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeCertChecker) DaysUntilExpiryReturns(result1 float64, result2 error) {
+	fake.daysUntilExpiryMutex.Lock()
+	defer fake.daysUntilExpiryMutex.Unlock()
 	fake.DaysUntilExpiryStub = nil
 	fake.daysUntilExpiryReturns = struct {
 		result1 float64
@@ -66,6 +76,8 @@ func (fake *FakeCertChecker) DaysUntilExpiryReturns(result1 float64, result2 err
 }
 
 func (fake *FakeCertChecker) DaysUntilExpiryReturnsOnCall(i int, result1 float64, result2 error) {
+	fake.daysUntilExpiryMutex.Lock()
+	defer fake.daysUntilExpiryMutex.Unlock()
 	fake.DaysUntilExpiryStub = nil
 	if fake.daysUntilExpiryReturnsOnCall == nil {
 		fake.daysUntilExpiryReturnsOnCall = make(map[int]struct {
