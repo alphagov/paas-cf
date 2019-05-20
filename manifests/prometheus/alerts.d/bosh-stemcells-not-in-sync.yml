@@ -13,4 +13,4 @@
           severity: warning
         annotations:
           summary: "Bosh deployment stemcell versions are not in sync"
-          description: "The three bosh deployments should have the same stemcell version, if this alert fires either deploys are taking a long time or paas-bootstrap and paas-cf are not in sync"
+          description: "The three bosh deployments should have the same stemcell version. If this alert fires then either deploys are taking a long time or the most recent deploys of paas-bootstrap and paas-cf specified different stemcell versions"
