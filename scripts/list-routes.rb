@@ -23,7 +23,7 @@ end
 routes_by_domain_url.each do |url, hosts|
   domain = JSON.parse(`cf curl '#{url}'`).dig('entity', 'name')
   hosts.each do |host|
-    fqdn = host.empty? ? "#{domain}" : "#{host}.#{domain}"
+    fqdn = host.empty? ? domain : "#{host}.#{domain}"
     puts "https://#{fqdn}"
   end
 end
