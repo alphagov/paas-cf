@@ -22,9 +22,10 @@ func ExpectMetric(metric Metric, name string, value int, host string) {
 	Expect(metric.Name).To(Equal(name))
 	Expect(metric.Value).To(Equal(float64(value)))
 	Expect(metric.Kind).To(Equal(Gauge))
-	Expect(metric.Tags).To(Equal([]string{
-		fmt.Sprintf("hostname:" + host),
-	}))
+
+
+	expectedTag := MetricTag { Label: "hostname", Value: host }
+	Expect(metric.Tags).To(ContainElement(expectedTag))
 }
 
 var _ = Describe("TLS gauges", func() {
@@ -161,9 +162,9 @@ var _ = Describe("TLS gauges", func() {
 					return err
 				}, 3*time.Second).ShouldNot(HaveOccurred())
 				Expect(metric.Value).To(Equal(float64(123)))
-				Expect(metric.Tags).To(Equal([]string{
-					fmt.Sprintf("hostname:somedomain.com"),
-				}))
+
+				expectedTag := MetricTag{ Label: "hostname", Value: "somedomain.com"}
+				Expect(metric.Tags).To(ContainElement(expectedTag))
 			})
 		})
 

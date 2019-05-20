@@ -125,9 +125,9 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 	return metrics, nil
 }
 
-func metricLabels(id string) []string {
-	return []string{
-		fmt.Sprintf("distribution_id:%s", id),
+func metricLabels(id string) MetricTags {
+	return MetricTags{
+		{ Label: "distribution_id", Value: id },
 	}
 }
 

@@ -2,7 +2,6 @@ package main_test
 
 import (
 	"code.cloudfoundry.org/lager"
-	"fmt"
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
@@ -198,7 +197,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				return len(metrics)
 			}, 3*time.Second).Should(BeNumerically(">=", 6))
 
-			expected := fmt.Sprintf("distribution_id:%s", "dist-1")
+			expected := MetricTag{ Label: "distribution_id", Value: "dist-1"}
 			Expect(metrics[0].Tags).To(ContainElement(expected))
 			Expect(metrics[1].Tags).To(ContainElement(expected))
 			Expect(metrics[2].Tags).To(ContainElement(expected))

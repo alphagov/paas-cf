@@ -72,7 +72,10 @@ var _ = Describe("PrometheusReporter", func() {
 					Value: 12.34,
 					Time:  time.Now(),
 					Unit:  "count",
-					Tags:  []string{"foo:bar", "bar:baz"},
+					Tags: MetricTags{
+						{Label: "foo", Value: "bar"},
+						{Label: "bar", Value: "baz"},
+					},
 				},
 			}
 		})
@@ -104,7 +107,10 @@ var _ = Describe("PrometheusReporter", func() {
 					Value: 12.34,
 					Time:  time.Now(),
 					Unit:  "count",
-					Tags:  []string{"foo:bar", "bar:baz"},
+					Tags: MetricTags{
+						{Label: "foo", Value: "bar"},
+						{Label: "bar", Value: "baz"},
+					},
 				},
 			}
 		})

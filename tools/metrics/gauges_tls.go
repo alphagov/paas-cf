@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/tls"
-	"fmt"
 	"net"
 	"strings"
 	"time"
@@ -35,8 +34,8 @@ func TLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, add
 			Time:  time.Now(),
 			Name:  "tls.certificates.validity",
 			Value: daysUntilExpiry,
-			Tags: []string{
-				fmt.Sprintf("hostname:%s", host),
+			Tags: MetricTags{
+				{ Label: "hostname", Value: host },
 			},
 			Unit: "days",
 		}
@@ -73,8 +72,8 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 					Time:  time.Now(),
 					Name:  "cdn.tls.certificates.expiry",
 					Value: daysUntilExpiry,
-					Tags: []string{
-						fmt.Sprintf("hostname:%s", customDomain.AliasDomain),
+					Tags: MetricTags{
+						{ Label:"hostname", Value: customDomain.AliasDomain },
 					},
 					Unit: "days",
 				})
@@ -85,8 +84,8 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 				Time:  time.Now(),
 				Name:  "cdn.tls.certificates.validity",
 				Value: float64(validity),
-				Tags: []string{
-					fmt.Sprintf("hostname:%s", customDomain.AliasDomain),
+				Tags: MetricTags{
+					{ Label: "hostname", Value: customDomain.AliasDomain },
 				},
 				Unit: "",
 			})
