@@ -1,6 +1,7 @@
 package main
 
 import (
+	"code.cloudfoundry.org/lager"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
@@ -11,6 +12,7 @@ import (
 
 type CloudWatchService struct {
 	Client cloudwatchiface.CloudWatchAPI
+	Logger lager.Logger
 }
 
 type metricMapping struct {
@@ -18,9 +20,10 @@ type metricMapping struct {
 	Statistic string
 }
 
-func NewCloudWatchService(sess *session.Session) CloudWatchService {
+func NewCloudWatchService(sess *session.Session, logger lager.Logger) CloudWatchService {
 	return CloudWatchService{
 		Client: cloudwatch.New(sess),
+		Logger: logger.Session("cloudwatch-service"),
 	}
 }
 
@@ -40,6 +43,18 @@ func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string)
 	period := calculatePeriod(startTime, endTime)
 
 	for _, mapping := range metricNames {
+
+		cw.Logger.Info(
+			"getting-metric-from-cloudwatch",
+			lager.Data{
+				"distribution-id": distributionId,
+				"metric-name":     mapping.Name,
+				"statistic":       mapping.Statistic,
+				"start-time":      startTime.String(),
+				"end-time":        endTime.String(),
+				"period":          period,
+			},
+		)
 
 		unit := aws.String("None")
 		if mapping.Statistic == "Average" {
@@ -69,6 +84,7 @@ func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string)
 		output, err := cw.Client.GetMetricStatistics(&input)
 
 		if err != nil {
+			cw.Logger.Error("getting-metric-from-cloudwatch", err)
 			return nil, err
 		}
 

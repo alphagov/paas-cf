@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"code.cloudfoundry.org/lager"
 	"fmt"
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/aws/aws-sdk-go/aws"
@@ -22,10 +23,13 @@ func (cf *CloudFrontServiceStub) CustomDomains() ([]CustomDomain, error) {
 
 var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 
+	var logger lager.Logger
 	var cloudwatchFake fakes.FakeCloudWatchAPI
 	var cloudwatchService CloudWatchService
 
 	BeforeEach(func() {
+		logger = lager.NewLogger("gauges_custom_domain_cdn_metrics_test")
+		logger.RegisterSink(lager.NewWriterSink(GinkgoWriter, lager.DEBUG))
 		cloudwatchFake.GetMetricStatisticsCalls(
 			func(input *cloudwatch.GetMetricStatisticsInput) (*cloudwatch.GetMetricStatisticsOutput, error) {
 				output := cloudwatch.GetMetricStatisticsOutput{
@@ -127,6 +131,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 
 		cloudwatchService = CloudWatchService{
 			Client: &cloudwatchFake,
+			Logger: logger,
 		}
 	})
 
@@ -143,7 +148,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				},
 			}
 
-			reader := CustomDomainCDNMetricsCollector(&cloudFrontStub, cloudwatchService, 15*time.Second)
+			reader := CustomDomainCDNMetricsCollector(logger, &cloudFrontStub, cloudwatchService, 15*time.Second)
 			defer reader.Close()
 
 			var metrics []Metric
@@ -181,7 +186,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				},
 			}
 
-			reader := CustomDomainCDNMetricsCollector(&cloudFrontStub, cloudwatchService, 15*time.Second)
+			reader := CustomDomainCDNMetricsCollector(logger, &cloudFrontStub, cloudwatchService, 15*time.Second)
 			defer reader.Close()
 
 			var metrics []Metric
@@ -221,7 +226,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				},
 			}
 
-			reader := CustomDomainCDNMetricsCollector(&cloudFrontStub, cloudwatchService, 15*time.Second)
+			reader := CustomDomainCDNMetricsCollector(logger, &cloudFrontStub, cloudwatchService, 15*time.Second)
 			defer reader.Close()
 
 			var metrics []Metric
