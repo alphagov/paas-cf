@@ -10,21 +10,32 @@ The following metrics are currently collected:
 
 | Name | Kind | Description | Tags |
 | --- | --- | --- | --- |
-|`aws.elb.unhealthy_node_count` | Gauge | Number of unhealthy ELB nodes | |
-|`aws.elb.healthy_node_count` | Gauge | Number of healthy ELB nodes | |
+|`aiven.estimated.cost` | Gauge | Estimated cost of Aiven in the current month | |
 |`aws.elasticache.node.count` | Gauge | Number of Elasticache nodes | |
 |`aws.elasticache.cache_parameter_group.count` | Gauge | Number of Elasticache cache parameter groups | |
-|`op.apps.count` | Gauge | Number of applications | `state` |
-|`op.services.provisioned` | Gauge | Number of provisioned services | `type` |
-|`op.orgs.count` | Gauge | Number of organisations | `quota` |
-|`op.spaces.count` | Gauge | Number of spaces | |
-|`op.users.count` | Gauge | Number of users<sup>[1](#f1)</sup> | |
-|`op.quotas.memory.reserved` | Gauge | Total amount of memory promised to orgs | |
-|`op.quotas.memory.allocated` | Gauge | Total amount of memory promised to apps | |
-|`op.quotas.services.reserved` | Gauge | Total number of services promised to orgs | |
-|`op.quotas.services.allocated` | Gauge | Total number of services assigned | |
-|`tls.certificates.validity` | Gauge | Number of days cert is valid for | `hostname` |
+|`aws.elb.healthy_node_count` | Gauge | Number of healthy ELB nodes | |
+|`aws.elb.unhealthy_node_count` | Gauge | Number of unhealthy ELB nodes | |
+|`aws.cloudfront.4xxerrorrate` | Gauge | The rate of 4xx in a CloudFront distribution | `distribution_id` |
+|`aws.cloudfront.5xxerrorrate` | Gauge | The rate of 5xx errors in a CloudFront distribution | `distribution_id` |
+|`aws.cloudfront.bytes_downloaded` | Counter | Total number of bytes downloaded from a CloudFront distribution | `distribution_id` |
+|`aws.cloudfront.bytes_uploaded` | Counter | Total number of bytes uploaded to a CloudFront distribution | `distribution_id` |
+|`aws.cloudfront.requests` | Counter | Total number of requests made to a CloudFront distribution | `distribution_id` |
+|`aws.cloudfront.totalerrorrate` | Gauge | The total rate of 4xx and 5xx errors in a CloudFront distribution | `distribution_id` |
+|`aws.s3.buckets.count` | Gauge | The total number of buckets in the AWS account | |
+|`cdn.tls.certificates.expiry` | Gauge | Number of days until a CloudFront cert expires | `hostname` |
 |`cdn.tls.certificates.validity` | Gauge | Number of days CloudFront cert is valid for | `hostname` |
+|`op.apps.count` | Gauge | Number of applications | `state`, `trial_org` |
+|`op.orgs.count` | Gauge | Number of organisations | `quota` |
+|`op.events.app.crash` | Gauge | Total times an app crash event has happened | |
+|`op.services.provisioned` | Gauge | Number of provisioned services | `type`, `trial_org`, `free_service` |
+|`op.spaces.count` | Gauge | Number of spaces | |
+|`op.quota.memory.reserved` | Gauge | Total amount of memory promised to orgs | |
+|`op.quota.memory.allocated` | Gauge | Total amount of memory promised to apps | |
+|`op.quota.routes.resrved` | Gauge | Total number of routes reserved | |
+|`op.quota.services.reserved` | Gauge | Total number of services promised to orgs | |
+|`op.quota.services.allocated` | Gauge | Total number of services assigned | |
+|`op.users.count` | Gauge | Number of users<sup>[1](#f1)</sup> | |
+|`tls.certificates.validity` | Gauge | Number of days cert is valid for | `hostname` |
 
 ### Deploying as a Cloud Foundry app
 
