@@ -37,6 +37,16 @@ def parse_args
 end
 
 def rotate_secret(vars, vars_store, type, is_ca = false)
+  puts "########################################################"
+  puts "ROTATING VARS STORE SECRETS"
+  puts "ONLY VARS OF TYPE '#{type}'"
+  if is_ca
+    puts "ONLY VARS WHICH ARE CERTIFICATE AUTHORITIES"
+  else
+    puts "ONLY VARS WHICH ARE NOT CERTIFICATE AUTHORITIES"
+  end
+  puts ""
+
   vars_store = vars_store.clone
   var_names = vars.map { |v| v["name"] }
   vars.each do |var|
@@ -47,28 +57,40 @@ def rotate_secret(vars, vars_store, type, is_ca = false)
     next unless vars_store.is_a?(Hash) && vars_store.has_key?(name)
 
     if var_names.include? "#{name}_old"
-      vars_store["#{name}_old"] = vars_store.delete(name)
+      new_name = "#{name}_old"
+      puts "Moved '#{name}' to '#{new_name}'"
+      vars_store[new_name] = vars_store.delete(name)
     else
+      puts "Deleted '#{name}'"
       vars_store.delete(name)
     end
   end
 
+  puts "########################################################"
   vars_store
 end
 
 def delete_old(vars, vars_store)
+  puts "########################################################"
+  puts "DELETING OLD VARS STORE SECRETS"
+  puts "ONLY VARS WHOSE NAMES END WITH '_old'"
+  puts ""
+
   vars_store = vars_store.clone
   vars.each do |var|
     name = var.fetch("name")
     next unless name.end_with?("_old")
 
     if var["type"] == "certificate"
+      puts "Replaced '#{name}' with a blank certificate"
       vars_store[name] = BLANK_CERT
     else
+      puts "Deleted '#{name}'"
       vars_store.delete(name)
     end
   end
 
+  puts "########################################################"
   vars_store
 end
 
