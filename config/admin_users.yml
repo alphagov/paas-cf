@@ -1,19 +1,36 @@
 ---
 - email: "chris.farmiloe@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
 - email: "lee.porte@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'leeporte']
+
 - email: "michael.mokrysz@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'miki']
+
 - email: "rafal.proszowski@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
 - email: "richard.towers@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
+
 - email: "russell.howe@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
 - email: "sam.crang@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
 - email: "tom.whitwell@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tnw']
+
 - email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tlwr']

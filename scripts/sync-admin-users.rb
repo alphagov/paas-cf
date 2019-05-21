@@ -4,9 +4,11 @@ require 'yaml'
 require File.expand_path("../lib/mail_credentials_helper", __FILE__)
 require File.expand_path("../lib/uaa_sync_admin_users", __FILE__)
 
-def load_admin_user_list(filename)
+def load_admin_user_list(filename, deploy_env)
   users = YAML.load_file(filename)
-  users.each_with_index.map { |u, i|
+  users
+    .select { |u| u.fetch('deploy_envs', []).include? deploy_env }
+    .each_with_index.map { |u, i|
     {
       username: u.fetch("username", u.fetch("email")),
       email: u["email"] || raise("User #{i} defined in file #{filename} is missing email"),
@@ -18,13 +20,14 @@ end
 cf_api_url = ARGV[0] || raise("You must pass API endpoint as first argument")
 users_filename = ARGV[1] || raise("You must pass a file of users as second argument")
 source_address = ARGV[2] || raise("You must pass an SES-validated address as third argument")
+deploy_env     = ARGV[3] || raise("You must pass the deploy env as fourth argument")
 
 cf_admin_username = 'admin'
 cf_admin_password = ENV['CF_ADMIN_PASSWORD'] || raise("Must set $CF_ADMIN_PASSWORD env var")
 
 puts "Syncing Admin users in #{cf_api_url}..."
 
-users = load_admin_user_list(users_filename)
+users = load_admin_user_list(users_filename, deploy_env)
 
 options = {}
 options[:skip_ssl_validation] = true if ENV['SKIP_SSL_VERIFICATION'].to_s.casecmp("true").zero?
