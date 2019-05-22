@@ -16,7 +16,8 @@
         "graphTooltip": 0,
         "id": null,
         "links": [],
-        "panels": [{
+        "panels": [
+            {
                 "aliasColors": {},
                 "bars": false,
                 "dashLength": 10,
