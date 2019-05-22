@@ -412,7 +412,7 @@
                 "fill": 0,
                 "gridPos": {
                     "h": 8,
-                    "w": 12,
+                    "w": 6,
                     "x": 0,
                     "y": 16
                 },
@@ -499,6 +499,97 @@
                     "alignLevel": null
                 },
                 "timeRegions": []
+            },
+            {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "description": "",
+                "fill": 1,
+                "gridPos": {
+                    "h": 8,
+                    "w": 6,
+                    "x": 6,
+                    "y": 16
+                },
+                "id": 16,
+                "legend": {
+                    "alignAsTable": false,
+                    "avg": false,
+                    "current": false,
+                    "hideEmpty": false,
+                    "hideZero": false,
+                    "max": false,
+                    "min": false,
+                    "rightSide": false,
+                    "show": false,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": 1,
+                "links": [],
+                "nullPointMode": "null",
+                "percentage": false,
+                "pointradius": 2,
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {
+                        "expr": "avg_over_time(dns_resolution_probe_duration_seconds[10m])",
+                        "format": "time_series",
+                        "instant": false,
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "{{address}}",
+                        "refId": "A"
+                    }
+                ],
+                "thresholds": [],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "title": "DNS Resolution performance (seconds)",
+                "tooltip": {
+                    "shared": true,
+                    "sort": 2,
+                    "value_type": "individual"
+                },
+                "type": "graph",
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                        "format": "short",
+                        "label": null,
+                        "logBase": 1,
+                        "max": null,
+                        "min": null,
+                        "show": true
+                    },
+                    {
+                        "format": "short",
+                        "label": null,
+                        "logBase": 1,
+                        "max": null,
+                        "min": null,
+                        "show": false
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
             },
             {
                 "aliasColors": {},
@@ -735,7 +826,7 @@
             }
         ],
         "refresh": "5s",
-        "schemaVersion": 16,
+        "schemaVersion": 18,
         "style": "dark",
         "tags": [],
         "templating": {
