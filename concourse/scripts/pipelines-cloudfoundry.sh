@@ -137,7 +137,6 @@ oauth_client_secret: "${oauth_client_secret:-}"
 notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
-disable_user_creation: $([ "${NEW_ACCOUNT_EMAIL_ADDRESS:-}" ] && echo "false" || echo "true")
 slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
 monitored_state_bucket: ${MONITORED_STATE_BUCKET:-}
 monitored_aws_region: ${MONITORED_AWS_REGION:-}

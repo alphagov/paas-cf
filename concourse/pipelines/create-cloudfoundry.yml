@@ -1085,7 +1085,6 @@ jobs:
               - name: cf-vars-store-updated
             params:
               ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
-              DISABLE_USER_CREATION: ((disable_user_creation))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             run:
               path: sh
@@ -1995,7 +1994,6 @@ jobs:
             - name: cf-vars-store
             - name: cf-manifest
           params:
-            DISABLE_USER_CREATION: ((disable_user_creation))
             DEPLOY_ENV: ((deploy_env))
           run:
             path: sh
@@ -2003,8 +2001,6 @@ jobs:
               - -e
               - -c
               - |
-                ${DISABLE_USER_CREATION} && echo "WARNING: Admin user creation disabled in this environment!" && exit 0
-
                 . ./config/config.sh
 
                 VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
