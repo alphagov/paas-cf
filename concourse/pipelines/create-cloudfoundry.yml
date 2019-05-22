@@ -1108,6 +1108,30 @@ jobs:
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
 
+                  # FIXME: This remove the old certs that are no longer in use.
+                  # These were overlooked in previous commits.
+                  # These keys should be removed after the first deployment
+                  # of this code.
+                  ruby -ryaml -e '
+
+                  list_secrets_to_remove = %w{
+                   consul_agent
+                   consul_agent_ca
+                   consul_agent_ca_old
+                   consul_server
+                   consul_encrypt_key
+                   log_cache_tls_cc_auth_proxy
+                   loggregator_tls_metron
+                  }
+
+                  existing_vars = YAML.load_file("cf-vars-store/cf-vars-store.yml")
+
+                  existing_vars = existing_vars.delete_if { |k, | list_secrets_to_remove.include? k } if existing_vars
+                  puts existing_vars.to_yaml
+                  File.write("cf-vars-store-updated/cf-vars-store.yml", existing_vars.to_yaml)
+                  '
+                  sed -i '/---/d' cf-vars-store-updated/cf-vars-store.yml
+
                   VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
                     ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
                       > cf-manifest/cf-manifest.yml
