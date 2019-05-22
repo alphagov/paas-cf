@@ -29,12 +29,6 @@ module ManifestHelpers
     )
   end
 
-  def manifest_with_enable_user_creation
-    render_manifest_with_vars_store(
-      environment: "default",
-    )
-  end
-
   def manifest_for_env(deploy_env)
     Cache.instance["manifest_for_env_#{deploy_env}"] ||= render_manifest(
       environment: deploy_env,
