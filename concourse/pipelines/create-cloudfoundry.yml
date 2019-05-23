@@ -1120,8 +1120,8 @@ jobs:
                    consul_agent_ca_old
                    consul_server
                    consul_encrypt_key
-                   log_cache_tls_cc_auth_proxy
                    loggregator_tls_metron
+                   log_cache_tls_cc_auth_proxy
                   }
 
                   existing_vars = YAML.load_file("cf-vars-store/cf-vars-store.yml")
@@ -1130,7 +1130,6 @@ jobs:
                   puts existing_vars.to_yaml
                   File.write("cf-vars-store-updated/cf-vars-store.yml", existing_vars.to_yaml)
                   '
-                  sed -i '/---/d' cf-vars-store-updated/cf-vars-store.yml
 
                   VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
                     ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
