@@ -1,7 +1,7 @@
 ---
 - email: "andy.hunt@digital.cabinet-office.gov.uk"
   origin: "google"
-  deploy_envs: ['andyhunt']
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
 
 - email: "chris.farmiloe@digital.cabinet-office.gov.uk"
   origin: "google"
@@ -28,10 +28,6 @@
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
 
 - email: "russell.howe@digital.cabinet-office.gov.uk"
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
-
-- email: "sam.crang@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
 
