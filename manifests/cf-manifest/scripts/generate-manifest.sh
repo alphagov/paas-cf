@@ -16,10 +16,6 @@ for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
   opsfile_args="$opsfile_args -o $i"
 done
 
-if [ "${DISABLE_USER_CREATION}" = "false" ] ; then
-  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml"
-fi
-
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/scale-down-dev.yml"
 fi
@@ -44,6 +40,7 @@ bosh interpolate \
   --vars-file="${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   --vars-file="${WORKDIR}/environment-variables.yml" \
   ${opsfile_args} \
+  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml" \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   ${vars_store_args} \
   "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"

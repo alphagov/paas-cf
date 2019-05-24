@@ -12,7 +12,6 @@ module ManifestHelpers
     Cache.instance[:manifest_without_vars_store] ||= \
       render_manifest(
         environment: "default",
-        disable_user_creation: "true",
       )
   end
 
@@ -20,29 +19,19 @@ module ManifestHelpers
     Cache.instance[:manifest_with_defaults] ||= \
       render_manifest_with_vars_store(
         environment: "default",
-        disable_user_creation: "true",
       )
   end
 
   def manifest_with_custom_vars_store(vars_store_content)
     render_manifest_with_vars_store(
       environment: "default",
-      disable_user_creation: "true",
       custom_vars_store_content: vars_store_content,
-    )
-  end
-
-  def manifest_with_enable_user_creation
-    render_manifest_with_vars_store(
-      environment: "default",
-      disable_user_creation: "false",
     )
   end
 
   def manifest_for_env(deploy_env)
     Cache.instance["manifest_for_env_#{deploy_env}"] ||= render_manifest(
       environment: deploy_env,
-      disable_user_creation: "true",
       vars_store_file: nil,
       env_specific_bosh_vars_file: "#{deploy_env}.yml",
     )
@@ -51,7 +40,6 @@ module ManifestHelpers
   def manifest_for_dev
     render_manifest(
       environment: "dev",
-      disable_user_creation: "true",
     )
   end
 
@@ -94,7 +82,6 @@ private
 
   def render_manifest(
     environment:,
-    disable_user_creation:,
     vars_store_file: nil,
     env_specific_bosh_vars_file: "default.yml"
   )
@@ -111,8 +98,7 @@ private
     env = {
       'PAAS_CF_DIR' => root.to_s,
       'WORKDIR' => workdir,
-      'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s,
-      'DISABLE_USER_CREATION' => disable_user_creation
+      'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s
     }
 
     if vars_store_file
@@ -130,7 +116,6 @@ private
 
   def render_manifest_with_vars_store(
     environment:,
-    disable_user_creation:,
     custom_vars_store_content: nil,
     env_specific_bosh_vars_file: "default.yml"
   )
@@ -140,7 +125,6 @@ private
 
       output = render_manifest(
         environment: environment,
-        disable_user_creation: disable_user_creation,
         vars_store_file: vars_store_tempfile.path,
         env_specific_bosh_vars_file: env_specific_bosh_vars_file,
       )
