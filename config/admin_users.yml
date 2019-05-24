@@ -31,10 +31,6 @@
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
 
-- email: "sam.crang@digital.cabinet-office.gov.uk"
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
-
 - email: "tom.whitwell@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tnw']
