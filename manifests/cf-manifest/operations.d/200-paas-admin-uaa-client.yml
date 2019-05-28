@@ -6,7 +6,7 @@
     autoapprove: true
     secret: "((uaa_clients_paas_admin_secret))"
     scope: cloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.write,scim.me,openid,profile,uaa.user,cloud_controller.admincloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.write,scim.me,openid,profile,uaa.user,cloud_controller.admin
-    authorities: scim.userids,scim.invite,scim.read
+    authorities: scim.userids,scim.invite,scim.read,scim.write
     redirect-uri: "https://admin.((system_domain))/auth/login/callback"
 
 - type: replace
