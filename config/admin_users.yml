@@ -1,4 +1,8 @@
 ---
+
+# -----------------------------------------------------------------------------
+# Google
+
 - email: "andy.hunt@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
@@ -37,4 +41,42 @@
 
 - email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
   origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tlwr']
+
+# -----------------------------------------------------------------------------
+# Microsoft
+
+- username: "andy.hunt@digital.cabinet-office.gov.uk"
+  email: "andy.hunt@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
+
+- username: "lee.porte@digital.cabinet-office.gov.uk"
+  email: "lee.porte@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'leeporte']
+
+- username: "michael.mokrysz@digital.cabinet-office.gov.uk"
+  email: "michael.mokrysz@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'miki']
+
+- username: "mohamed.deerow@digital.cabinet-office.gov.uk"
+  email: "mohamed.deerow@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
+  deploy_envs: ['modeerow']
+
+- username: "richard.towers@digital.cabinet-office.gov.uk"
+  email: "richard.towers@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
+
+- username: "tom.whitwell@digital.cabinet-office.gov.uk"
+  email: "tom.whitwell@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tnw']
+
+- username: "9b6bf8ea-2279-427b-9849-d61cebc36bfa"
+  email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
+  origin: "microsoft"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tlwr']

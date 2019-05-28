@@ -4,5 +4,8 @@ app_domain: unit-test.dev-apps.paas.example.com
 environment: unit-test
 deployment_name: unit-test
 aws_account: dev
-oauth_client_id: abcd1234
-oauth_client_secret: abcd1234
+google_oauth_client_id: abcd1234
+google_oauth_client_secret: abcd1234
+microsoft_oauth_tenant_id: abcd1234
+microsoft_oauth_client_id: abcd1234
+microsoft_oauth_client_secret: abcd1234

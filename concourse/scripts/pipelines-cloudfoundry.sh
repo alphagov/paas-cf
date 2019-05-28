@@ -13,6 +13,9 @@ $("${SCRIPT_DIR}/environment.sh" "$@")
 . "${SCRIPT_DIR}/lib/google-oauth.sh"
 
 # shellcheck disable=SC1090
+. "${SCRIPT_DIR}/lib/microsoft-oauth.sh"
+
+# shellcheck disable=SC1090
 . "${SCRIPT_DIR}/lib/notify.sh"
 
 # shellcheck disable=SC1090
@@ -57,6 +60,7 @@ prepare_environment() {
   get_git_concourse_pool_clone_full_url_ssh
   get_aiven_secrets
   get_google_oauth_secrets
+  get_microsoft_oauth_secrets
   get_notify_secrets
   get_logit_ca_cert
   get_pagerduty_secrets
@@ -132,8 +136,11 @@ disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 aiven_api_token: ${aiven_api_token:-}
 concourse_web_password: ${CONCOURSE_WEB_PASSWORD}
-oauth_client_id: "${oauth_client_id:-}"
-oauth_client_secret: "${oauth_client_secret:-}"
+google_oauth_client_id: "${google_oauth_client_id:-}"
+google_oauth_client_secret: "${google_oauth_client_secret:-}"
+microsoft_oauth_tenant_id: "${microsoft_oauth_tenant_id:-}"
+microsoft_oauth_client_id: "${microsoft_oauth_client_id:-}"
+microsoft_oauth_client_secret: "${microsoft_oauth_client_secret:-}"
 notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
