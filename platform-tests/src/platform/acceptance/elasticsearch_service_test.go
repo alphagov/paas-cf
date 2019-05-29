@@ -26,7 +26,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 	})
 
 	It("has the expected plans available", func() {
-		expectedPlans := []string{"tiny-5.x", "tiny-6.x", "small-ha-5.x", "small-ha-6.x"}
+		expectedPlans := []string{"tiny-6.x", "small-ha-6.x", "medium-ha-6.x", "large-ha-6.x"}
 
 		actualPlans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(actualPlans).To(Exit(0))
