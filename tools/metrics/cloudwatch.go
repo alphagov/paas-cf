@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
 	"github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface"
-	"math"
 	"time"
 )
 
@@ -38,9 +37,9 @@ func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string)
 	}
 
 	var outputs []*cloudwatch.GetMetricStatisticsOutput
+	period := time.Minute * 10
 	endTime := time.Now()
-	startTime := time.Date(2012, 1, 1, 0, 0, 0, 0, time.UTC)
-	period := calculatePeriod(startTime, endTime)
+	startTime := endTime.Add(-period)
 
 	for _, mapping := range metricNames {
 
@@ -52,7 +51,7 @@ func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string)
 				"statistic":       mapping.Statistic,
 				"start-time":      startTime.String(),
 				"end-time":        endTime.String(),
-				"period":          period,
+				"period":          period.Seconds(),
 			},
 		)
 
@@ -75,7 +74,7 @@ func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string)
 			EndTime:    aws.Time(endTime),
 			MetricName: aws.String(mapping.Name),
 			Namespace:  aws.String("AWS/CloudFront"),
-			Period:     aws.Int64(period),
+			Period:     aws.Int64(int64(period.Seconds())),
 			StartTime:  aws.Time(startTime),
 			Statistics: []*string{aws.String(mapping.Statistic)},
 			Unit:       unit,
@@ -92,14 +91,4 @@ func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string)
 	}
 
 	return outputs, nil
-}
-
-// calculates the number hours between the two times, in seconds
-func calculatePeriod(startTime time.Time, endTime time.Time) int64 {
-	numSeconds := endTime.Sub(startTime).Seconds()
-	return int64(
-		math.Round(
-			numSeconds + (60 - math.Mod(numSeconds, 60)),
-		),
-	)
 }
