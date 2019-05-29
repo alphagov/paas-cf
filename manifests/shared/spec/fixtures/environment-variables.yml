@@ -6,3 +6,6 @@ deployment_name: unit-test
 aws_account: dev
 google_oauth_client_id: abcd1234
 google_oauth_client_secret: abcd1234
+microsoft_oauth_tenant_id: abcd1234
+microsoft_oauth_client_id: abcd1234
+microsoft_oauth_client_secret: abcd1234

@@ -41,6 +41,7 @@ bosh interpolate \
   --vars-file="${WORKDIR}/environment-variables.yml" \
   ${opsfile_args} \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml" \
+  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-microsoft-oauth.yml" \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   ${vars_store_args} \
   "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"

@@ -239,7 +239,7 @@ showenv: check-env ## Display environment information
 	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password grafana_mon_password prometheus_password
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-google-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
+upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
@@ -248,6 +248,14 @@ upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Consol
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
 	@scripts/upload-google-oauth-secrets.sh
+
+.PHONY: upload-microsoft-oauth-secrets
+upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identity credentials to S3
+	$(eval export OAUTH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
+	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
+	@scripts/upload-microsoft-oauth-secrets.sh
 
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3

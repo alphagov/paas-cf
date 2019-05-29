@@ -1102,6 +1102,9 @@ jobs:
                   aws_account: ((aws_account))
                   google_oauth_client_id: ((google_oauth_client_id))
                   google_oauth_client_secret: ((google_oauth_client_secret))
+                  microsoft_oauth_tenant_id: ((microsoft_oauth_tenant_id))
+                  microsoft_oauth_client_id: ((microsoft_oauth_client_id))
+                  microsoft_oauth_client_secret: ((microsoft_oauth_client_secret))
                   EOF
 
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
