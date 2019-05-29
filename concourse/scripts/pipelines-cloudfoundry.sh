@@ -132,8 +132,8 @@ disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 aiven_api_token: ${aiven_api_token:-}
 concourse_web_password: ${CONCOURSE_WEB_PASSWORD}
-oauth_client_id: "${oauth_client_id:-}"
-oauth_client_secret: "${oauth_client_secret:-}"
+google_oauth_client_id: "${google_oauth_client_id:-}"
+google_oauth_client_secret: "${google_oauth_client_secret:-}"
 notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}

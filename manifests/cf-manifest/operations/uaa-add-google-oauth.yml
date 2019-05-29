@@ -15,8 +15,8 @@
     linkText: GOV.UK PaaS internal account login
     showLinkText: true
     addShadowUserOnLogin: false
-    relyingPartyId: ((oauth_client_id))
-    relyingPartySecret: ((oauth_client_secret))
+    relyingPartyId: ((google_oauth_client_id))
+    relyingPartySecret: ((google_oauth_client_secret))
     skipSslValidation: false
     attributeMappings:
       user_name: email

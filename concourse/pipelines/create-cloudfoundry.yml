@@ -1100,8 +1100,8 @@ jobs:
                   environment: ((deploy_env))
                   deployment_name: ((deploy_env))
                   aws_account: ((aws_account))
-                  oauth_client_id: ((oauth_client_id))
-                  oauth_client_secret: ((oauth_client_secret))
+                  google_oauth_client_id: ((google_oauth_client_id))
+                  google_oauth_client_secret: ((google_oauth_client_secret))
                   EOF
 
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
