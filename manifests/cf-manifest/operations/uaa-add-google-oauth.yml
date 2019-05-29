@@ -12,7 +12,7 @@
     scopes:
       - openid
       - email
-    linkText: GOV.UK PaaS internal account login
+    linkText: Google
     showLinkText: true
     addShadowUserOnLogin: false
     relyingPartyId: ((google_oauth_client_id))
