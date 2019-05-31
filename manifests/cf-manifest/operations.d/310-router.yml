@@ -47,12 +47,6 @@
   path: /instance_groups/name=router/jobs/name=gorouter/properties/router/enable_ssl
   value: false
 
-  # As of routing release 0.188.0 this causes hairpinning for router services
-  # unless this is set to true, the default is false
-- type: replace
-  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/route_services_internal_lookup?
-  value: true
-
 - type: replace
   path: /instance_groups/name=router/jobs/name=gorouter/properties/router/status/user
   value: router_user
