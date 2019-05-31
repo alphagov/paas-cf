@@ -287,9 +287,6 @@
   path: /instance_groups/name=doppler/jobs/name=log-cache-expvar-forwarder/properties/loggregator_agent/tls/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
-# /instance_groups/name=diego-cell/jobs/name=cflinuxfs2-rootfs-setup/properties/cflinuxfs2-rootfs/trusted_certs
-# /instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs
-
 - type: replace
   path: /variables/-
   value:

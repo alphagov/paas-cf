@@ -1,11 +1,4 @@
 ---
-
-- type: remove
-  path: /releases/name=cflinuxfs2
-
-- type: remove
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/stacks/name=cflinuxfs2
-
 - type: replace
   path: /releases/name=cflinuxfs3
   value:

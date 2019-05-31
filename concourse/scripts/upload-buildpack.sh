@@ -1,12 +1,4 @@
 #!/bin/bash
-#
-# ./concourse/scripts/upload-buildpack.sh \\
-#   1 staticfile_buildpack cflinuxfs2 \
-#   staticfile-buildpack-cflinuxfs2-v1.4.33.zip \
-#   https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.33/staticfile-buildpack-cflinuxfs2-v1.4.33.zip  \
-#   ff367a29f0eb25d26038784773dd28cac52069176b28e43b45795a178d5ea94c
-#
-
 set -eu -o pipefail
 
 if [ "$#" -lt 5 ]; then
@@ -16,9 +8,9 @@ Check and setup the given buildpack
 Example:
 
 $0 \\
-   staticfile_buildpack cflinuxfs2 \\
-   staticfile-buildpack-cflinuxfs2-v1.4.33.zip \\
-   https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.33/staticfile-buildpack-cflinuxfs2-v1.4.33.zip \\
+   staticfile_buildpack cflinuxfs3 \\
+   staticfile-buildpack-cflinuxfs3-v1.4.33.zip \\
+   https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.33/staticfile-buildpack-cflinuxfs3-v1.4.33.zip \\
    ff367a29f0eb25d26038784773dd28cac52069176b28e43b45795a178d5ea94c
 EOF
 fi
