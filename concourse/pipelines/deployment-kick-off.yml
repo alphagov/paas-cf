@@ -4,7 +4,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: master
+      branch: ((branch_name))
       tag_filter: ((paas_cf_tag_filter))
       commit_verification_keys: ((gpg_public_keys))
 
