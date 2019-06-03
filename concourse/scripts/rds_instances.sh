@@ -29,7 +29,8 @@ get_instance_ids_with_status() {
     --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` \
              && DBInstanceStatus == \`${1}\` \
              && MultiAZ == \`false\` \
-             && DBInstanceIdentifier != \`${DEPLOY_ENV}-bosh\`].DBInstanceIdentifier" \
+             && DBInstanceIdentifier != \`${DEPLOY_ENV}-bosh\` \
+             && DBInstanceIdentifier != \`${DEPLOY_ENV}-concourse\`].DBInstanceIdentifier" \
     --output text | tr '\t' '\n' | sort
 }
 
@@ -55,8 +56,8 @@ all_instance_ids=$(
   aws rds describe-db-instances \
     --query "DBInstances[?DBSubnetGroup.VpcId == \`${vpc_ids}\` \
              && MultiAZ == \`false\` \
-             && ReadReplicaDBInstanceIdentifiers == \`[]\` \
-             && DBInstanceIdentifier != \`${DEPLOY_ENV}-bosh\`].DBInstanceIdentifier" \
+             && DBInstanceIdentifier != \`${DEPLOY_ENV}-bosh\` \
+             && DBInstanceIdentifier != \`${DEPLOY_ENV}-concourse\`].DBInstanceIdentifier" \
     --output text | tr '\t' '\n' | sort
 )
 
