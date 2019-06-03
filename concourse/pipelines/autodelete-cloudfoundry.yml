@@ -4,13 +4,13 @@ resource_types:
   type: docker-image
   source:
     repository: governmentpaas/s3-resource
-    tag: fda60bf4c5f85e96c16f704e128e5ead9e84d30d
+    tag: 97e441efbfb06ac7fb09786fd74c64b05f9cc907
 
 - name: semver-iam
   type: docker-image
   source:
     repository: governmentpaas/semver-resource
-    tag: ecbdd201e122b44de99a40ac9f24407c1a43b9a2
+    tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
 resources:
   - name: paas-cf

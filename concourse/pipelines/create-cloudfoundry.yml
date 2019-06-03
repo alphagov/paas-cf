@@ -5,27 +5,27 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: b2495d6ed07f680125d19aa7d1701da7efabb289
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 4012d25ceb903b46908a830b8e05773ced1c8f86
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: a4abdc079caf1eccb11a6bd2c486469cd9d0362a
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: b77e27029dfcb85f6c58f0a59298d05cc5eeb903
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 465642da06051a55630d39c899697b678f66a7f7
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -35,12 +35,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 6efea7a479f9336019155cc039ad33d2c8845cb0
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 6efea7a479f9336019155cc039ad33d2c8845cb0
+        tag: f3875548cbc723e9f0ea487aaba5f38302279f72
 
 groups:
   - name: deploy
@@ -127,13 +127,13 @@ resource_types:
   type: docker-image
   source:
     repository: governmentpaas/s3-resource
-    tag: fda60bf4c5f85e96c16f704e128e5ead9e84d30d
+    tag: 97e441efbfb06ac7fb09786fd74c64b05f9cc907
 
 - name: semver-iam
   type: docker-image
   source:
     repository: governmentpaas/semver-resource
-    tag: ecbdd201e122b44de99a40ac9f24407c1a43b9a2
+    tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
 resources:
   - name: pipeline-trigger
@@ -451,7 +451,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: 3.7
+                tag: 3.9
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -480,7 +480,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+              tag: f3875548cbc723e9f0ea487aaba5f38302279f72
           inputs:
             - name: paas-cf
           params:
@@ -521,7 +521,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 465642da06051a55630d39c899697b678f66a7f7
+                tag: f3875548cbc723e9f0ea487aaba5f38302279f72
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -956,7 +956,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 465642da06051a55630d39c899697b678f66a7f7
+              tag: f3875548cbc723e9f0ea487aaba5f38302279f72
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -2721,7 +2721,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: c735581beb174ecc95ca1a7b57eff444af3bf099
+              tag: f3875548cbc723e9f0ea487aaba5f38302279f72
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3137,7 +3137,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: 3.7
+                tag: 3.9
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -3239,7 +3239,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 0eff5b6a9c092f865a2b19cc4e75a3b539b82fa2
+            tag: f3875548cbc723e9f0ea487aaba5f38302279f72
         inputs:
           - name: paas-cf
           - name: rotated-cf-vars-store
@@ -3675,7 +3675,7 @@ jobs:
             type: docker-image
             source:
               repository: alpine
-              tag: 3.7
+              tag: 3.9
           inputs:
             - name: deployed-healthcheck
           params:
