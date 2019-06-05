@@ -64,7 +64,7 @@ resource "aws_elb" "cf_doppler" {
   }
 
   health_check {
-    target              = "TCP:8081"
+    target              = "SSL:8081"
     interval            = "${var.health_check_interval}"
     timeout             = "${var.health_check_timeout}"
     healthy_threshold   = "${var.health_check_healthy}"
@@ -73,7 +73,7 @@ resource "aws_elb" "cf_doppler" {
 
   listener {
     instance_port      = 8081
-    instance_protocol  = "tcp"
+    instance_protocol  = "ssl"
     lb_port            = 443
     lb_protocol        = "ssl"
     ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
