@@ -1,3 +1,11 @@
+resource "random_pet" "elb_cipher" {
+  length = 1
+
+  keepers = {
+    default_elb_security_policy = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_elb" "cf_router_system_domain" {
   name                        = "${var.env}-cf-router-system-domain"
   subnets                     = ["${split(",", var.infra_subnet_ids)}"]
@@ -32,13 +40,13 @@ resource "aws_elb" "cf_router_system_domain" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_router_system_domain" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}-${random_pet.elb_cipher.id}"
   load_balancer = "${aws_elb.cf_router_system_domain.id}"
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${var.default_elb_security_policy}"
+    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   }
 }
 
@@ -81,13 +89,13 @@ resource "aws_elb" "cf_doppler" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_doppler" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   load_balancer = "${aws_elb.cf_doppler.id}"
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${var.default_elb_security_policy}"
+    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   }
 }
 
@@ -130,13 +138,13 @@ resource "aws_elb" "cf_router" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_router" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   load_balancer = "${aws_elb.cf_router.id}"
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${var.default_elb_security_policy}"
+    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   }
 }
 
