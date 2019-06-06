@@ -17,12 +17,16 @@
         "id": null,
         "links": [],
         "panels": [{
-                "aliasColors": {},
+                "aliasColors": {
+                    "4xx Responses": "orange",
+                    "5xx Responses": "red",
+                    "All Responses": "green"
+                },
                 "bars": false,
                 "dashLength": 10,
                 "dashes": false,
                 "datasource": "prometheus",
-                "fill": 1,
+                "fill": 2,
                 "gridPos": {
                     "h": 8,
                     "w": 12,
@@ -49,7 +53,13 @@
                 "pointradius": 5,
                 "points": false,
                 "renderer": "flot",
-                "seriesOverrides": [],
+                "seriesOverrides": [{
+                    "alias": "All Responses",
+                    "fill": 3,
+                    "linewidth": 0,
+                    "yaxis": 2,
+                    "zindex": -3
+                }],
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
@@ -102,12 +112,12 @@
                         "show": true
                     },
                     {
-                        "format": "short",
+                        "format": "reqps",
                         "label": null,
                         "logBase": 1,
                         "max": null,
-                        "min": null,
-                        "show": false
+                        "min": "0",
+                        "show": true
                     }
                 ],
                 "yaxis": {
@@ -116,12 +126,16 @@
                 }
             },
             {
-                "aliasColors": {},
+                "aliasColors": {
+                    "4xx Responses": "orange",
+                    "5xx Responses": "red",
+                    "All Responses": "green"
+                },
                 "bars": false,
                 "dashLength": 10,
                 "dashes": false,
                 "datasource": "prometheus",
-                "fill": 1,
+                "fill": 2,
                 "gridPos": {
                     "h": 8,
                     "w": 12,
@@ -148,7 +162,13 @@
                 "pointradius": 5,
                 "points": false,
                 "renderer": "flot",
-                "seriesOverrides": [],
+                "seriesOverrides": [{
+                    "alias": "2xx Responses",
+                    "fill": 3,
+                    "linewidth": 0,
+                    "yaxis": 2,
+                    "zindex": -3
+                }],
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
@@ -201,12 +221,12 @@
                         "show": true
                     },
                     {
-                        "format": "short",
+                        "format": "reqps",
                         "label": null,
                         "logBase": 1,
                         "max": null,
-                        "min": null,
-                        "show": false
+                        "min": "0",
+                        "show": true
                     }
                 ],
                 "yaxis": {
@@ -306,12 +326,16 @@
                 }
             },
             {
-                "aliasColors": {},
+                "aliasColors": {
+                    "4xx Responses": "orange",
+                    "5xx Responses": "red",
+                    "2xx Responses": "green"
+                },
                 "bars": false,
                 "dashLength": 10,
                 "dashes": false,
                 "datasource": "prometheus",
-                "fill": 1,
+                "fill": 2,
                 "gridPos": {
                     "h": 8,
                     "w": 12,
@@ -325,6 +349,7 @@
                     "current": true,
                     "max": true,
                     "min": true,
+                    "rightSide": false,
                     "show": true,
                     "total": false,
                     "values": true
@@ -337,7 +362,13 @@
                 "pointradius": 5,
                 "points": false,
                 "renderer": "flot",
-                "seriesOverrides": [],
+                "seriesOverrides": [{
+                    "alias": "2xx Responses",
+                    "fill": 3,
+                    "linewidth": 0,
+                    "yaxis": 2,
+                    "zindex": -3
+                }],
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
@@ -389,12 +420,12 @@
                         "show": true
                     },
                     {
-                        "format": "short",
+                        "format": "reqps",
                         "label": null,
                         "logBase": 1,
                         "max": null,
                         "min": "0",
-                        "show": false
+                        "show": true
                     }
                 ],
                 "yaxis": {
@@ -734,7 +765,7 @@
             }
         ],
         "refresh": "5s",
-        "schemaVersion": 16,
+        "schemaVersion": 17,
         "style": "dark",
         "tags": [],
         "templating": {
