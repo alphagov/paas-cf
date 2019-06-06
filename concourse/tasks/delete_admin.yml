@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/cf-cli
-    tag: 51c4648c56a18e28a295e73963b65fdbfe76e52f
+    tag: 18467d265f52e4d552d52a35ca25bc8659a83796
 inputs:
   - name: paas-cf
   - name: cf-manifest
