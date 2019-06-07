@@ -1,3 +1,4 @@
+{"dashboard":
 {
   "annotations": {
     "list": [
@@ -250,4 +251,5 @@
   "title": "Service Level Indicators",
   "uid": "service-level-indicators",
   "version": 22
+}
 }
