@@ -98,3 +98,11 @@ end
 Dir[File.expand_path("../../shared/spec/support/**/*.rb", __dir__)].each { |f| require f }
 Dir[File.expand_path("../../cloud-config/spec/support/**/*.rb", __dir__)].each { |f| require f }
 Dir[File.expand_path("support/**/*.rb", __dir__)].each { |f| require f }
+
+def grafana_dashboards
+  Dir.glob(
+    File.expand_path(
+      File.join(__dir__, '..', 'dashboards.d', '*.json')
+    )
+  ).map { |filepath| [File.basename(filepath), File.read(filepath)] }
+end

@@ -249,7 +249,8 @@
     },
     "timezone": "",
     "title": "Service Level Indicators",
-    "uid": "service-level-indicators",
-    "version": 22
-  }
+    "uid": "service-level-indicators"
+  },
+  "overwrite": true,
+  "folderId": 0
 }
