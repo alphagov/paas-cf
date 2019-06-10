@@ -13,6 +13,11 @@ var Cf = func(args ...string) *gexec.Session {
 	return internal.Cf(cmdStarter, args...)
 }
 
+func CfSilent(args ...string) *gexec.Session {
+	cmdStarter := silentcommandstarter.NewCommandStarter()
+	return internal.Cf(cmdStarter, args...)
+}
+
 var CfRedact = func(stringToRedact string, args ...string) *gexec.Session {
 	var (
 		redactor          internal.Redactor

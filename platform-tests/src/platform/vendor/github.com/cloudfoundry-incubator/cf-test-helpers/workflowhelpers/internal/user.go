@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/internal"
 	"github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 )
 
 type TestUser struct {
@@ -22,19 +22,34 @@ type TestUser struct {
 	shouldKeepUser bool
 }
 
-type userConfig interface {
+type UserConfig interface {
 	GetUseExistingUser() bool
 	GetExistingUser() string
 	GetExistingUserPassword() string
-	GetConfigurableTestPassword() string
-	GetScaledTimeout(time.Duration) time.Duration
 	GetShouldKeepUser() bool
+	GetConfigurableTestPassword() string
+}
+
+type userConfig interface {
+	UserConfig
+
+	GetScaledTimeout(time.Duration) time.Duration
 	GetNamePrefix() string
 }
 
-type adminuserConfig interface {
+type AdminUserConfig interface {
 	GetAdminUser() string
 	GetAdminPassword() string
+}
+
+type ClientConfig interface {
+	GetExistingClient() string
+	GetExistingClientSecret() string
+}
+
+type AdminClientConfig interface {
+	GetAdminClient() string
+	GetAdminClientSecret() string
 }
 
 func NewTestUser(config userConfig, cmdStarter internal.Starter) *TestUser {
@@ -61,10 +76,26 @@ func NewTestUser(config userConfig, cmdStarter internal.Starter) *TestUser {
 	}
 }
 
-func NewAdminUser(config adminuserConfig, cmdStarter internal.Starter) *TestUser {
+func NewAdminUser(config AdminUserConfig, cmdStarter internal.Starter) *TestUser {
 	return &TestUser{
 		username:   config.GetAdminUser(),
 		password:   config.GetAdminPassword(),
+		cmdStarter: cmdStarter,
+	}
+}
+
+func NewAdminClient(config AdminClientConfig, cmdStarter internal.Starter) *TestUser {
+	return &TestUser{
+		username:   config.GetAdminClient(),
+		password:   config.GetAdminClientSecret(),
+		cmdStarter: cmdStarter,
+	}
+}
+
+func NewTestClient(config ClientConfig, cmdStarter internal.Starter) *TestUser {
+	return &TestUser{
+		username:   config.GetExistingClient(),
+		password:   config.GetExistingClientSecret(),
 		cmdStarter: cmdStarter,
 	}
 }
@@ -74,16 +105,16 @@ func (user *TestUser) Create() {
 	redactingReporter := internal.NewRedactingReporter(ginkgo.GinkgoWriter, redactor)
 
 	session := internal.CfWithCustomReporter(user.cmdStarter, redactingReporter, "create-user", user.username, user.password)
-	EventuallyWithOffset(1, session, user.timeout).Should(Exit())
+	EventuallyWithOffset(1, session, user.timeout).Should(Exit(), "Failed to create user")
 
 	if session.ExitCode() != 0 {
-		ExpectWithOffset(1, combineOutputAndRedact(session, redactor)).Should(Say("scim_resource_already_exists"))
+		ExpectWithOffset(1, combineOutputAndRedact(session, redactor)).Should(Say("scim_resource_already_exists"), "Failed to create user")
 	}
 }
 
 func (user *TestUser) Destroy() {
 	session := internal.Cf(user.cmdStarter, "delete-user", "-f", user.username)
-	EventuallyWithOffset(1, session, user.timeout).Should(Exit(0))
+	EventuallyWithOffset(1, session, user.timeout).Should(Exit(0), "Failed to delete user")
 }
 
 func (user *TestUser) Username() string {

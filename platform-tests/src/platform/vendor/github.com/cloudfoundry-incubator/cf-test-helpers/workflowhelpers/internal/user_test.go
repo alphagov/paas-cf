@@ -125,7 +125,7 @@ var _ = Describe("User", func() {
 				})
 
 				Expect(failures).To(HaveLen(1))
-				Expect(failures[0]).To(MatchRegexp("scim_resource_already_exists"))
+				Expect(failures[0]).To(MatchRegexp("(?s)Failed to create user.*scim_resource_already_exists"))
 			})
 
 			Context("and the output mentions that the user already exists", func() {
@@ -181,7 +181,7 @@ var _ = Describe("User", func() {
 				})
 
 				Expect(len(failures)).To(BeNumerically(">", 0))
-				Expect(failures[0]).To(MatchRegexp("Timed out after 2.*"))
+				Expect(failures[0]).To(MatchRegexp("(?s)Timed out after 2.*Failed to create user"))
 			})
 		})
 	})
@@ -221,7 +221,7 @@ var _ = Describe("User", func() {
 				})
 
 				Expect(failures).To(HaveLen(1))
-				Expect(failures[0]).To(MatchRegexp("to match exit code:\n.*0"))
+				Expect(failures[0]).To(MatchRegexp("(?s)Failed to delete user.*to match exit code:.*0"))
 			})
 		})
 
@@ -237,7 +237,7 @@ var _ = Describe("User", func() {
 				})
 
 				Expect(failures).To(HaveLen(1))
-				Expect(failures[0]).To(MatchRegexp("Timed out after 2.*"))
+				Expect(failures[0]).To(MatchRegexp("(?s)Timed out after 2.*Failed to delete user"))
 			})
 		})
 	})

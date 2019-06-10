@@ -57,7 +57,7 @@ var _ = Describe("ApiRequest", func() {
 			failures := InterceptGomegaFailures(func() {
 				ApiRequest(starter, "GET", "/v2/info", nil, timeout)
 			})
-			Expect(failures).To(ContainElement(MatchRegexp("something went wrong\n.*not to have occurred")))
+			Expect(failures).To(ContainElement(MatchRegexp("something went wrong\n.*occurred")))
 		})
 	})
 

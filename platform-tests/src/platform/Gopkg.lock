@@ -10,22 +10,6 @@
   version = "v1.4.2"
 
 [[projects]]
-  digest = "1:32fa3ff538ddd0b8312f56bcb15ef3340eee00891cd9c76464746b7cebcac210"
-  name = "github.com/PuerkitoBio/goquery"
-  packages = ["."]
-  pruneopts = ""
-  revision = "e1271ee34c6a305e38566ecd27ae374944907ee9"
-  version = "v1.1.0"
-
-[[projects]]
-  branch = "master"
-  digest = "1:8012998ddb3eed9cc0a3b2512d1f37d0947fd604868049cc698d9dc6ea1bd46c"
-  name = "github.com/andybalholm/cascadia"
-  packages = ["."]
-  pruneopts = ""
-  revision = "349dd0209470eabd9514242c688c403c0926d266"
-
-[[projects]]
   digest = "1:01842c027feebee8960f834fa057496492d764e0cf085fd6dc93319681b809ac"
   name = "github.com/aws/aws-sdk-go"
   packages = [
@@ -74,13 +58,12 @@
   revision = "149e140bbeec150b461d9257942bd7777b6ad513"
 
 [[projects]]
-  digest = "1:cbe7adb2668414d5e996fa1404b87e38b8f7ed08e80d9a8fcd9c2afeefdebee4"
+  digest = "1:361f5a84c08b8e12d8bd1569ff585e516bfc196882c5724126f8b96b7269b36f"
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
   packages = [
     "cf",
     "commandreporter",
     "commandstarter",
-    "config",
     "generator",
     "helpers",
     "helpers/internal",
@@ -90,17 +73,17 @@
     "workflowhelpers/internal",
   ]
   pruneopts = ""
-  revision = "dc453294914947b630c176d5a38923854d62bf83"
+  revision = "ff434af77d370917e8129d00a34a6381e135a653"
 
 [[projects]]
-  digest = "1:28c8da34b529691ca33b1dd18bba29ed2fb9f738e8bed7f086672df57ff91268"
+  digest = "1:ad603f73f356f3bfd6a104c1ec19ec3099af462a7eecffc23449b020e05c4f96"
   name = "github.com/cloudfoundry/cf-acceptance-tests"
   packages = [
     "helpers/config",
     "helpers/validationerrors",
   ]
   pruneopts = "UT"
-  revision = "d2cb3b538b87c96266e030004c43a59ea3b96a5a"
+  revision = "0dd6680ea3676c0ab6ec7336aa391251f5a75552"
 
 [[projects]]
   branch = "master"
@@ -388,13 +371,11 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/PuerkitoBio/goquery",
     "github.com/aws/aws-sdk-go/aws",
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/s3",
     "github.com/cloudfoundry-community/go-cfclient",
     "github.com/cloudfoundry-incubator/cf-test-helpers/cf",
-    "github.com/cloudfoundry-incubator/cf-test-helpers/config",
     "github.com/cloudfoundry-incubator/cf-test-helpers/generator",
     "github.com/cloudfoundry-incubator/cf-test-helpers/helpers",
     "github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers",

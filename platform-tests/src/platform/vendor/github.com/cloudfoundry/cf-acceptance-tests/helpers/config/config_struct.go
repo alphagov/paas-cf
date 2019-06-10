@@ -62,6 +62,11 @@ type config struct {
 	RubyBuildpackName       *string `json:"ruby_buildpack_name"`
 	StaticFileBuildpackName *string `json:"staticfile_buildpack_name"`
 
+	VolumeServiceName         *string `json:"volume_service_name"`
+	VolumeServicePlanName     *string `json:"volume_service_plan_name"`
+	VolumeServiceCreateConfig *string `json:"volume_service_create_config"`
+	VolumeServiceBindConfig   *string `json:"volume_service_bind_config"`
+
 	IncludeApps                     *bool `json:"include_apps"`
 	IncludeBackendCompatiblity      *bool `json:"include_backend_compatibility"`
 	IncludeCapiExperimental         *bool `json:"include_capi_experimental"`
@@ -70,6 +75,7 @@ type config struct {
 	IncludeDetect                   *bool `json:"include_detect"`
 	IncludeDocker                   *bool `json:"include_docker"`
 	IncludeInternetDependent        *bool `json:"include_internet_dependent"`
+	IncludeInternetless             *bool `json:"include_internetless"`
 	IncludePrivateDockerRegistry    *bool `json:"include_private_docker_registry"`
 	IncludeRouteServices            *bool `json:"include_route_services"`
 	IncludeRouting                  *bool `json:"include_routing"`
@@ -82,9 +88,12 @@ type config struct {
 	IncludeTasks                    *bool `json:"include_tasks"`
 	IncludeTCPRouting               *bool `json:"include_tcp_routing"`
 	IncludeV3                       *bool `json:"include_v3"`
+	IncludeDeployments              *bool `json:"include_deployments"`
 	IncludeZipkin                   *bool `json:"include_zipkin"`
 	IncludeIsolationSegments        *bool `json:"include_isolation_segments"`
 	IncludeRoutingIsolationSegments *bool `json:"include_routing_isolation_segments"`
+	IncludeLoggingIsolationSegments *bool `json:"include_logging_isolation_segments"`
+	IncludeVolumeServices           *bool `json:"include_volume_services"`
 
 	UseLogCache *bool `json:"use_log_cache"`
 
@@ -92,6 +101,8 @@ type config struct {
 	CredhubLocation     *string `json:"credhub_location"`
 	CredhubClientName   *string `json:"credhub_client"`
 	CredhubClientSecret *string `json:"credhub_secret"`
+
+	Stacks *[]string `json:"stacks,omitempty"`
 
 	IncludeWindows        *bool   `json:"include_windows"`
 	UseWindowsTestTask    *bool   `json:"use_windows_test_task"`
@@ -104,6 +115,7 @@ type config struct {
 	PublicDockerAppImage          *string `json:"public_docker_app_image"`
 
 	UnallocatedIPForSecurityGroup *string `json:"unallocated_ip_for_security_group"`
+	RequireProxiedAppTraffic      *bool   `json:"require_proxied_app_traffic"`
 
 	NamePrefix *string `json:"name_prefix"`
 
@@ -152,6 +164,7 @@ func getDefaults() config {
 	defaults.IncludeDetect = ptrToBool(true)
 	defaults.IncludeRouting = ptrToBool(true)
 	defaults.IncludeV3 = ptrToBool(true)
+	defaults.IncludeDeployments = ptrToBool(false)
 
 	defaults.IncludeBackendCompatiblity = ptrToBool(false)
 	defaults.IncludeCapiExperimental = ptrToBool(false)
@@ -159,14 +172,16 @@ func getDefaults() config {
 	defaults.IncludeContainerNetworking = ptrToBool(false)
 	defaults.CredhubMode = ptrToString("")
 	defaults.CredhubLocation = ptrToString("https://credhub.service.cf.internal:8844")
-	defaults.CredhubClientName = ptrToString("cc_service_key_client")
+	defaults.CredhubClientName = ptrToString("credhub_admin_client")
 	defaults.CredhubClientSecret = ptrToString("")
 	defaults.IncludeDocker = ptrToBool(false)
 	defaults.IncludeInternetDependent = ptrToBool(false)
+	defaults.IncludeInternetless = ptrToBool(false)
 	defaults.IncludeIsolationSegments = ptrToBool(false)
+	defaults.IncludeRoutingIsolationSegments = ptrToBool(false)
+	defaults.IncludeLoggingIsolationSegments = ptrToBool(false)
 	defaults.IncludePrivateDockerRegistry = ptrToBool(false)
 	defaults.IncludeRouteServices = ptrToBool(false)
-	defaults.IncludeRoutingIsolationSegments = ptrToBool(false)
 	defaults.IncludeSSO = ptrToBool(false)
 	defaults.IncludeSecurityGroups = ptrToBool(false)
 	defaults.IncludeServiceDiscovery = ptrToBool(false)
@@ -176,14 +191,19 @@ func getDefaults() config {
 	defaults.IncludeZipkin = ptrToBool(false)
 	defaults.IncludeServiceInstanceSharing = ptrToBool(false)
 	defaults.IncludeTCPRouting = ptrToBool(false)
+	defaults.IncludeVolumeServices = ptrToBool(false)
 
-	defaults.UseLogCache = ptrToBool(false)
+	defaults.UseLogCache = ptrToBool(true)
 
 	defaults.IncludeWindows = ptrToBool(false)
 	defaults.UseWindowsContextPath = ptrToBool(false)
 	defaults.WindowsStack = ptrToString("windows2012R2")
 	defaults.UseWindowsTestTask = ptrToBool(false)
 
+	defaults.VolumeServiceName = ptrToString("")
+	defaults.VolumeServicePlanName = ptrToString("")
+	defaults.VolumeServiceCreateConfig = ptrToString("")
+	defaults.VolumeServiceBindConfig = ptrToString("")
 
 	defaults.ReporterConfig = &reporterConfig{}
 
@@ -214,8 +234,11 @@ func getDefaults() config {
 	defaults.PublicDockerAppImage = ptrToString("cloudfoundry/diego-docker-app-custom:latest")
 
 	defaults.UnallocatedIPForSecurityGroup = ptrToString("10.0.244.255")
+	defaults.RequireProxiedAppTraffic = ptrToBool(false)
 
 	defaults.NamePrefix = ptrToString("CATS")
+
+	defaults.Stacks = &[]string{"cflinuxfs3"}
 	return defaults
 }
 
@@ -273,12 +296,27 @@ func validateConfig(config *config) Errors {
 		errs.Add(err)
 	}
 
+	err = validateLoggingIsolationSegments(config)
+	if err != nil {
+		errs.Add(err)
+	}
+
 	err = validateCredHubSettings(config)
 	if err != nil {
 		errs.Add(err)
 	}
 
 	err = validateWindows(config)
+	if err != nil {
+		errs.Add(err)
+	}
+
+	err = validateStacks(config)
+	if err != nil {
+		errs.Add(err)
+	}
+
+	err = validateVolumeServices(config)
 	if err != nil {
 		errs.Add(err)
 	}
@@ -384,6 +422,9 @@ func validateConfig(config *config) Errors {
 	}
 	if config.IncludeInternetDependent == nil {
 		errs.Add(fmt.Errorf("* 'include_internet_dependent' must not be null"))
+	}
+	if config.IncludeInternetless == nil {
+		errs.Add(fmt.Errorf("* 'include_internetless' must not be null"))
 	}
 	if config.IncludePrivateDockerRegistry == nil {
 		errs.Add(fmt.Errorf("* 'include_private_docker_registry' must not be null"))
@@ -601,6 +642,26 @@ func validateRoutingIsolationSegments(config *config) error {
 	return nil
 }
 
+func validateLoggingIsolationSegments(config *config) error {
+	if config.IncludeRoutingIsolationSegments == nil {
+		return fmt.Errorf("* 'include_logging_isolation_segments' must not be null")
+	}
+
+	if !config.GetIncludeLoggingIsolationSegments() {
+		return nil
+	}
+
+	if config.GetIncludeRoutingIsolationSegments() {
+		return fmt.Errorf("* Invalid configuration: 'include_routing_isolation_segments' and 'include_logging_isolation_segments' cannot be both set to true. These tests are currently not compatible and can't be run together.")
+	}
+
+	if config.GetIsolationSegmentName() == "" {
+		return fmt.Errorf("* Invalid configuration: 'isolation_segment_name' must be provided if 'include_logging_isolation_segments' is true")
+	}
+
+	return nil
+}
+
 func validateCredHubSettings(config *config) error {
 	if config.CredhubMode == nil {
 		return fmt.Errorf("* 'credhub_mode' must not be null")
@@ -610,6 +671,27 @@ func validateCredHubSettings(config *config) error {
 		if config.GetCredHubBrokerClientSecret() == "" || config.GetCredHubBrokerClientSecret() == "" {
 			return fmt.Errorf("* 'credhub_client' and 'credhub_secret' must not be null")
 		}
+	}
+
+	return nil
+}
+
+func validateVolumeServices(config *config) error {
+	if !config.GetIncludeVolumeServices() {
+		return nil
+	}
+
+	if config.GetVolumeServiceName() == "" {
+		return fmt.Errorf("* Invalid configuration: 'volume_service_name' must be provided if 'include_volume_services' is true")
+	}
+	if config.GetVolumeServicePlanName() == "" {
+		return fmt.Errorf("* Invalid configuration: 'volume_service_plan_name' must be provided if 'include_volume_services' is true")
+	}
+	if config.GetVolumeServiceCreateConfig() == "" {
+		return fmt.Errorf("* Invalid configuration: 'volume_service_create_config' must be provided if 'include_volume_services' is true")
+	}
+	if config.GetVolumeServiceBindConfig() == "" {
+		return fmt.Errorf("* Invalid configuration: 'volume_service_bind_config' must be provided if 'include_volume_services' is true")
 	}
 
 	return nil
@@ -625,9 +707,23 @@ func validateWindows(config *config) error {
 	}
 
 	switch config.GetWindowsStack() {
-	case "windows2012R2", "windows2016":
+	case "windows2012R2", "windows2016", "windows":
 	default:
 		return fmt.Errorf("* Invalid configuration: unknown Windows stack %s", config.GetWindowsStack())
+	}
+
+	return nil
+}
+
+func validateStacks(config *config) error {
+	if config.Stacks == nil {
+		return fmt.Errorf("* 'stacks' must not be null")
+	}
+
+	for _, stack := range config.GetStacks() {
+		if stack != "cflinuxfs3" {
+			return fmt.Errorf("* Invalid configuration: unknown stack '%s'. Only 'cflinuxfs3' is supported for the 'stacks' property", stack)
+		}
 	}
 
 	return nil
@@ -764,6 +860,10 @@ func (c *config) GetShouldKeepUser() bool {
 	return *c.ShouldKeepUser
 }
 
+func (c *config) GetAddExistingUserToExistingSpace() bool {
+	return false
+}
+
 func (c *config) GetAdminUser() string {
 	return *c.AdminUser
 }
@@ -802,6 +902,10 @@ func (c *config) GetIncludeDocker() bool {
 
 func (c *config) GetIncludeInternetDependent() bool {
 	return *c.IncludeInternetDependent
+}
+
+func (c *config) GetIncludeInternetless() bool {
+	return *c.IncludeInternetless
 }
 
 func (c *config) GetIncludeRouteServices() bool {
@@ -844,12 +948,20 @@ func (c *config) GetIncludeV3() bool {
 	return *c.IncludeV3
 }
 
+func (c *config) GetIncludeDeployments() bool {
+	return *c.IncludeDeployments
+}
+
 func (c *config) GetIncludeIsolationSegments() bool {
 	return *c.IncludeIsolationSegments
 }
 
 func (c *config) GetIncludeRoutingIsolationSegments() bool {
 	return *c.IncludeRoutingIsolationSegments
+}
+
+func (c *config) GetIncludeLoggingIsolationSegments() bool {
+	return *c.IncludeLoggingIsolationSegments
 }
 
 func (c *config) GetIncludeCapiExperimental() bool {
@@ -890,6 +1002,10 @@ func (c *config) GetIncludeWindows() bool {
 
 func (c *config) GetIncludeServiceDiscovery() bool {
 	return *c.IncludeServiceDiscovery
+}
+
+func (c *config) GetIncludeVolumeServices() bool {
+	return *c.IncludeVolumeServices
 }
 
 func (c *config) GetUseLogCache() bool {
@@ -944,6 +1060,14 @@ func (c *config) GetUnallocatedIPForSecurityGroup() string {
 	return *c.UnallocatedIPForSecurityGroup
 }
 
+func (c *config) GetRequireProxiedAppTraffic() bool {
+	return *c.RequireProxiedAppTraffic
+}
+
+func (c *config) GetStacks() []string {
+	return *c.Stacks
+}
+
 func (c *config) GetUseWindowsTestTask() bool {
 	return *c.UseWindowsTestTask
 }
@@ -954,6 +1078,38 @@ func (c *config) GetUseWindowsContextPath() bool {
 
 func (c *config) GetWindowsStack() string {
 	return *c.WindowsStack
+}
+
+func (c *config) GetVolumeServiceName() string {
+	return *c.VolumeServiceName
+}
+
+func (c *config) GetVolumeServicePlanName() string {
+	return *c.VolumeServicePlanName
+}
+
+func (c *config) GetVolumeServiceCreateConfig() string {
+	return *c.VolumeServiceCreateConfig
+}
+
+func (c *config) GetVolumeServiceBindConfig() string {
+	return *c.VolumeServiceBindConfig
+}
+
+func (c *config) GetAdminClient() string {
+	return ""
+}
+
+func (c *config) GetAdminClientSecret() string {
+	return ""
+}
+
+func (c *config) GetExistingClient() string {
+	return ""
+}
+
+func (c *config) GetExistingClientSecret() string {
+	return ""
 }
 
 func (c *config) GetReporterConfig() reporterConfig {

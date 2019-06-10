@@ -15,6 +15,7 @@ type CatsConfig interface {
 	GetIncludeDetect() bool
 	GetIncludeDocker() bool
 	GetIncludeInternetDependent() bool
+	GetIncludeInternetless() bool
 	GetIncludePrivateDockerRegistry() bool
 	GetIncludeRouteServices() bool
 	GetIncludeRouting() bool
@@ -26,18 +27,24 @@ type CatsConfig interface {
 	GetIncludeSsh() bool
 	GetIncludeTasks() bool
 	GetIncludeV3() bool
+	GetIncludeDeployments() bool
 	GetIncludeIsolationSegments() bool
 	GetIncludeRoutingIsolationSegments() bool
+	GetIncludeLoggingIsolationSegments() bool
 	GetIncludeServiceInstanceSharing() bool
 	GetIncludeTCPRouting() bool
 	GetIncludeWindows() bool
+	GetIncludeVolumeServices() bool
 	GetUseLogCache() bool
 	GetShouldKeepUser() bool
 	GetSkipSSLValidation() bool
 	GetUseExistingUser() bool
 
+	GetAddExistingUserToExistingSpace() bool
 	GetAdminPassword() string
 	GetAdminUser() string
+	GetAdminClient() string
+	GetAdminClientSecret() string
 	GetApiEndpoint() string
 	GetAppsDomain() string
 	GetArtifactsDirectory() string
@@ -53,6 +60,8 @@ type CatsConfig interface {
 	GetUseExistingSpace() bool
 	GetExistingUser() string
 	GetExistingUserPassword() string
+	GetExistingClient() string
+	GetExistingClientSecret() string
 	GetGoBuildpackName() string
 	GetHwcBuildpackName() string
 	GetIsolationSegmentName() string
@@ -65,11 +74,19 @@ type CatsConfig interface {
 	GetPrivateDockerRegistryPassword() string
 	GetRubyBuildpackName() string
 	GetUnallocatedIPForSecurityGroup() string
+	GetRequireProxiedAppTraffic() bool
 	Protocol() string
+
+	GetStacks() []string
 
 	GetUseWindowsTestTask() bool
 	GetUseWindowsContextPath() bool
 	GetWindowsStack() string
+
+	GetVolumeServiceName() string
+	GetVolumeServicePlanName() string
+	GetVolumeServiceCreateConfig() string
+	GetVolumeServiceBindConfig() string
 
 	GetReporterConfig() reporterConfig
 
