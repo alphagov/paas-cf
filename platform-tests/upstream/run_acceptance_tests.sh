@@ -31,7 +31,8 @@ cd src/github.com/cloudfoundry/cf-acceptance-tests
 ./bin/test \
   -keepGoing \
   -progress \
-  -timeout=1h30m \
+  -timeout=1h15m \
+  -flakeAttempts=3 \
   -randomizeAllSpecs \
   -skipPackage=helpers \
   -skip="${SKIP_REGEX}" \
