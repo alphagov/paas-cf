@@ -2,9 +2,9 @@
 
 set -eu
 
-nodes=16
+nodes=8
 if [ "${SLIM_DEV_DEPLOYMENT:-}" = "true" ]; then
-  nodes=8
+  nodes=4
 fi
 
 if [ -n "${GINKGO_FOCUS:-}" ]; then
