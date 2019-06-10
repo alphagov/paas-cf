@@ -30,10 +30,10 @@ func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
 		labels := prometheus.Labels{}
 		labelNames := make([]string, len(event.Tags))
 		for i, tag := range event.Tags {
-			tagParts := strings.SplitN(tag, ":", 2)
-			labelNames[i] = tagParts[0]
-			labels[tagParts[0]] = tagParts[1]
+			labelNames[i] = tag.Label
+			labels[tag.Label] = tag.Value
 		}
+
 
 		metricName := strings.Replace(event.Name, ".", "_", -1)
 

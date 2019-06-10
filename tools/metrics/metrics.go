@@ -37,13 +37,32 @@ type MetricReadCloser interface {
 	MetricCloser
 }
 
+type MetricTags []MetricTag
+type MetricTag struct {
+	Label string
+	Value string
+}
+
+func (t MetricTag) String() string {
+	return fmt.Sprintf("%s:%s", t.Label, t.Value)
+}
+
+func (ts MetricTags) String() string {
+	var strs []string
+	for _, t := range ts {
+		strs = append(strs, t.String())
+	}
+
+	return strings.Join(strs, ",")
+}
+
 type Metric struct {
 	ID    string
 	Kind  eventKind
 	Name  string
 	Time  time.Time
 	Value float64
-	Tags  []string
+	Tags  MetricTags
 	Unit  string
 }
 
@@ -56,7 +75,7 @@ func (m Metric) String() string {
 		m.Name,
 		m.Value,
 		m.Unit,
-		strings.Join(m.Tags, ","),
+		m.Tags.String(),
 	)
 }
 

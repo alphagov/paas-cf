@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
-	cfclient "github.com/cloudfoundry-community/go-cfclient"
+	"github.com/cloudfoundry-community/go-cfclient"
 )
 
 func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
@@ -178,9 +178,9 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 					Time:  time.Now(),
 					Name:  "op.apps.count",
 					Value: float64(count),
-					Tags: []string{
-						"state:" + state,
-						fmt.Sprintf("trial_org:%t", orgIsTrial),
+					Tags: MetricTags{
+						{Label: "state", Value: state},
+						{Label: "trial_org", Value: strconv.FormatBool(orgIsTrial)},
 					},
 					Unit: "count",
 				})
@@ -276,10 +276,10 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 						Time:  time.Now(),
 						Name:  "op.services.provisioned",
 						Value: float64(count),
-						Tags: []string{
-							"type:" + serviceLabel,
-							fmt.Sprintf("trial_org:%t", orgIsTrial),
-							fmt.Sprintf("free_service:%t", servicePlanIsFree),
+						Tags: MetricTags{
+							{Label: "type", Value: serviceLabel},
+							{Label: "trial_org", Value: strconv.FormatBool(orgIsTrial)},
+							{Label: "free_service", Value: strconv.FormatBool(servicePlanIsFree)},
 						},
 						Unit: "count",
 					})
@@ -315,7 +315,7 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 				Time:  time.Now(),
 				Name:  "op.orgs.count",
 				Value: float64(count),
-				Tags:  []string{"quota:" + name},
+				Tags:  MetricTags{{Label: "quota", Value: name}},
 				Unit:  "count",
 			})
 		}
