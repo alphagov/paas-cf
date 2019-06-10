@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/cf-acceptance-tests
-    tag: cd404e5f6e7b96082c586e80921189769131f593
+    tag: go-1.12.5
 inputs:
   - name: paas-cf
   - name: cf-smoke-tests-release
