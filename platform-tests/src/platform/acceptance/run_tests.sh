@@ -8,7 +8,14 @@ if [ "${SLIM_DEV_DEPLOYMENT:-}" = "true" ]; then
 fi
 
 if [ -n "${GINKGO_FOCUS:-}" ]; then
-  ginkgo -p -nodes="${nodes}" -focus="${GINKGO_FOCUS}"
+  ginkgo -p \
+    -nodes="${nodes}" \
+    -progress \
+    -timeout=1h30m \
+    -focus="${GINKGO_FOCUS}"
 else
-  ginkgo -p -nodes="${nodes}"
+  ginkgo -p \
+    -nodes="${nodes}" \
+    -progress \
+    -timeout=1h30m
 fi
