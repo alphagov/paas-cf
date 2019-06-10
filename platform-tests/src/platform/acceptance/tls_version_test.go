@@ -41,7 +41,10 @@ var _ = Describe("Checking the TLS version", func() {
 					defer conn.Close()
 				}
 				Expect(err).To(HaveOccurred())
-				Expect(err).To(MatchError("EOF"))
+				Expect(err).To(SatisfyAny(
+					MatchError("tls: no supported versions satisfy MinVersion and MaxVersion"),
+					MatchError("EOF"),
+				))
 			})
 			It("should not allow TLS 1.0", func() {
 				tlsConfig := &tls.Config{
@@ -54,7 +57,10 @@ var _ = Describe("Checking the TLS version", func() {
 					defer conn.Close()
 				}
 				Expect(err).To(HaveOccurred())
-				Expect(err).To(MatchError("EOF"))
+				Expect(err).To(SatisfyAny(
+					MatchError("tls: no supported versions satisfy MinVersion and MaxVersion"),
+					MatchError("EOF"),
+				))
 			})
 			It("should not allow TLS 1.1", func() {
 				tlsConfig := &tls.Config{
@@ -67,7 +73,10 @@ var _ = Describe("Checking the TLS version", func() {
 					defer conn.Close()
 				}
 				Expect(err).To(HaveOccurred())
-				Expect(err).To(MatchError("EOF"))
+				Expect(err).To(SatisfyAny(
+					MatchError("tls: no supported versions satisfy MinVersion and MaxVersion"),
+					MatchError("EOF"),
+				))
 			})
 
 			It("should allow TLS 1.2", func() {
