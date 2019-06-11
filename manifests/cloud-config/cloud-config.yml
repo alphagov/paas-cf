@@ -234,6 +234,11 @@ vm_extensions:
     elbs:
     - ((terraform_outputs_cf_doppler_elb_name))
 
+- name: cf_loggregator_rlp_target_groups
+  cloud_properties:
+    lb_target_groups:
+    - ((terraform_outputs_cf_loggregator_rlp_target_group_name))
+
 - name: ssh_proxy_elb
   cloud_properties:
     elbs:
