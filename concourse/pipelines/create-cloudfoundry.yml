@@ -367,7 +367,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts
-      tag_filter: v0.5.0
+      tag_filter: v0.7.0
 
   - name: paas-admin
     type: git
