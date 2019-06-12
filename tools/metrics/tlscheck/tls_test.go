@@ -41,7 +41,10 @@ var _ = Describe("TLSCheck", func() {
 		})
 
 		It("returns error for certificate with self-signed CA", func() {
-			_, err := checker.DaysUntilExpiry("self-signed.badssl.com:443", &tls.Config{})
+			_, err := checker.DaysUntilExpiry(
+				"self-signed.badssl.com:443",
+				&tls.Config{InsecureSkipVerify: true}, // we don't care if expired
+			)
 			Expect(err).To(HaveOccurred())
 		})
 
