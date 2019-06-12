@@ -29,6 +29,8 @@ spec:
 		go test -v ./...
 	cd tools/user_emails &&\
 		go test -v ./...
+	cd concourse &&\
+		bundle exec rspec
 	cd concourse/scripts &&\
 		go get -d -t . &&\
 		go test
