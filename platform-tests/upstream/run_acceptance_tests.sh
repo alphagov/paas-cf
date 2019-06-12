@@ -30,7 +30,6 @@ echo "Starting acceptace tests"
 cd src/github.com/cloudfoundry/cf-acceptance-tests
 ./bin/test \
   -keepGoing \
-  -progress \
   -timeout=1h15m \
   -flakeAttempts=3 \
   -randomizeAllSpecs \
