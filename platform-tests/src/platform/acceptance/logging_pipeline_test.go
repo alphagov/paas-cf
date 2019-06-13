@@ -45,7 +45,7 @@ var _ = Describe("Logging pipeline", func() {
 				appLogs := cf.Cf("logs", "--recent", appName)
 				Expect(appLogs.Wait("30s")).To(Exit(0))
 				return appLogs
-			}, "2m", "10s").Should(gbytes.Say("APP[/]PROC[/]WEB[/]0"))
+			}, "2m", "10s").Should(gbytes.Say("APP[/]PROC[/]WEB[/]"))
 		})
 	})
 
@@ -55,7 +55,7 @@ var _ = Describe("Logging pipeline", func() {
 				appLogs := cf.Cf("logs", "--recent", appName)
 				Expect(appLogs.Wait("30s")).To(Exit(0))
 				return appLogs
-			}, "2m", "10s").Should(gbytes.Say("RTR[/]0"))
+			}, "2m", "10s").Should(gbytes.Say("RTR[/]"))
 		})
 	})
 })
