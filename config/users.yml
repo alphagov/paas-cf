@@ -2,39 +2,61 @@
 - email: "andy.hunt@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
+  cf_admin: true
 
 - email: "chris.farmiloe@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+  cf_admin: true
 
 - email: "lee.porte@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'leeporte']
+  cf_admin: true
 
 - email: "michael.mokrysz@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'miki']
+  cf_admin: true
 
 - email: "mohamed.deerow@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['modeerow']
+  cf_admin: true
 
 - email: "rafal.proszowski@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+  cf_admin: true
 
 - email: "richard.towers@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
+  cf_admin: true
 
 - email: "russell.howe@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+  cf_admin: true
 
 - email: "tom.whitwell@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tnw']
+  cf_admin: true
 
 - email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tlwr']
+  cf_admin: true
+
+- email: "venus.bailey@digital.cabinet-office.gov.uk"
+  origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
+- email: "luke.malcher@digital.cabinet-office.gov.uk"
+  origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
+- email: "paul.dougan@digital.cabinet-office.gov.uk"
+  origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']

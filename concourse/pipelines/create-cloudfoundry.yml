@@ -2015,7 +2015,7 @@ jobs:
                 CF_ADMIN_PASSWORD=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
                 cd paas-cf/scripts
                 bundle
-                bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/admin_users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))" "${DEPLOY_ENV}"
+                bundle exec sync-admin-users.rb "${API_ENDPOINT}" ../config/users.yml "((NEW_ACCOUNT_EMAIL_ADDRESS))" "${DEPLOY_ENV}"
 
       - task: deploy-healthcheck
         tags: [colocated-with-web]
