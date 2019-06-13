@@ -26,6 +26,8 @@ private
     env['DEPLOY_ENV'] = 'test'
     env['BOSH_URL'] = 'https://bosh.example.com:25555'
     env['ENV_SPECIFIC_BOSH_VARS_FILE'] = 'default.yml'
+    env['GRAFANA_AUTH_GOOGLE_CLIENT_ID'] = 'google-client-id'
+    env['GRAFANA_AUTH_GOOGLE_CLIENT_SECRET'] = 'google-client-secret'
     env
   end
 

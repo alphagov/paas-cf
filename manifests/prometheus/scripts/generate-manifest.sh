@@ -51,6 +51,8 @@ traffic_controller_external_port: 443
 uaa_clients_cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
 uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
 aws_account: $AWS_ACCOUNT
+grafana_auth_google_client_id: $GRAFANA_AUTH_GOOGLE_CLIENT_ID
+grafana_auth_google_client_secret: $GRAFANA_AUTH_GOOGLE_CLIENT_SECRET
 EOF
 
 # shellcheck disable=SC2086

@@ -1314,6 +1314,8 @@ jobs:
             ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             ENV_SPECIFIC_BOSH_VARS_FILE: ((env_specific_bosh_vars_file))
+            GRAFANA_AUTH_GOOGLE_CLIENT_ID: ((grafana_auth_google_client_id))
+            GRAFANA_AUTH_GOOGLE_CLIENT_SECRET: ((grafana_auth_google_client_secret))
           run:
             path: sh
             args:
