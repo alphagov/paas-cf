@@ -51,7 +51,7 @@
 
 [[constraint]]
   name = "github.com/cloudfoundry-incubator/cf-test-helpers"
-  revision = "dc453294914947b630c176d5a38923854d62bf83"
+  revision = "ff434af77d370917e8129d00a34a6381e135a653"
 
 [[constraint]]
   name = "github.com/aws/aws-sdk-go"
@@ -59,7 +59,7 @@
 
 [[constraint]]
   name = "github.com/cloudfoundry/cf-acceptance-tests"
-  revision = "d2cb3b538b87c96266e030004c43a59ea3b96a5a"
+  revision = "0dd6680ea3676c0ab6ec7336aa391251f5a75552"
 
 [[prune.project]]
   name = "github.com/cloudfoundry/cf-acceptance-tests"

@@ -83,36 +83,17 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 		})
 	})
 
-	Describe("NewTestSuiteSetup", func() {
+	Describe("NewTestContextSuiteSetup", func() {
 		var cfg config.Config
 		var existingUserCfg config.Config
-		var useExistingUser bool
-		var existingUser, existingUserPassword string
-		var configurableTestPassword string
-		var apiEndpoint string
-		var skipSSLValidation bool
 
 		BeforeEach(func() {
-			useExistingUser = false
-			existingUser = ""
-			existingUserPassword = ""
-			configurableTestPassword = ""
-			apiEndpoint = "api.my-cf.com"
-			skipSSLValidation = false
-		})
-
-		JustBeforeEach(func() {
 			cfg = config.Config{
-				TimeoutScale:             2.0,
-				NamePrefix:               "UNIT-TESTS",
-				UseExistingUser:          useExistingUser,
-				ExistingUser:             existingUser,
-				ExistingUserPassword:     existingUserPassword,
-				ConfigurableTestPassword: configurableTestPassword,
-				SkipSSLValidation:        skipSSLValidation,
-				ApiEndpoint:              apiEndpoint,
-				AdminUser:                "admin",
-				AdminPassword:            "admin-password",
+				TimeoutScale:  2.0,
+				NamePrefix:    "UNIT-TESTS",
+				ApiEndpoint:   "api.my-cf.com",
+				AdminUser:     "admin",
+				AdminPassword: "admin-password",
 			}
 
 			existingUserCfg = config.Config{
@@ -122,7 +103,7 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 			}
 		})
 
-		Describe("its RegularUserContext", func() {
+		Describe("regular user", func() {
 			It("has a regular TestSpace", func() {
 				setup := NewTestSuiteSetup(&cfg)
 				testSpace, ok := setup.TestSpace.(*internal.TestSpace)
@@ -136,12 +117,13 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 				setup := NewTestSuiteSetup(&cfg)
 				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-[0-9]+-USER-.*"))
 				Expect(len(setup.RegularUserContext().TestUser.Password())).To(Equal(20))
+				Expect(setup.RegularUserContext().UseClientCredentials).To(BeFalse())
 			})
 
 			It("uses the api endpoint and SkipSSLValidation from the config", func() {
 				setup := NewTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal(apiEndpoint))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(Equal(skipSSLValidation))
+				Expect(setup.RegularUserContext().ApiUrl).To(Equal("api.my-cf.com"))
+				Expect(setup.RegularUserContext().SkipSSLValidation).To(Equal(false))
 
 				cfg.ApiEndpoint = "api.other-cf.com"
 				cfg.SkipSSLValidation = true
@@ -156,15 +138,18 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 			})
 		})
 
-		It("creates an AdminUserContext from the config", func() {
-			setup := NewTestSuiteSetup(&cfg)
-			adminUserContext := setup.AdminUserContext()
-			Expect(adminUserContext.ApiUrl).To(Equal(cfg.ApiEndpoint))
-			Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
-			Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
-			Expect(adminUserContext.TestSpace).To(BeNil())
-			Expect(adminUserContext.SkipSSLValidation).To(Equal(cfg.SkipSSLValidation))
-			Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
+		Context("admin user", func() {
+			It("creates an AdminUserContext from the config", func() {
+				setup := NewTestSuiteSetup(&cfg)
+				adminUserContext := setup.AdminUserContext()
+				Expect(adminUserContext.ApiUrl).To(Equal(cfg.ApiEndpoint))
+				Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
+				Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
+				Expect(adminUserContext.TestSpace).To(BeNil())
+				Expect(adminUserContext.SkipSSLValidation).To(Equal(cfg.SkipSSLValidation))
+				Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
+				Expect(adminUserContext.UseClientCredentials).To(BeFalse())
+			})
 		})
 
 		It("uses the existing user", func() {
@@ -174,157 +159,118 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 			Expect(regularUserContext.TestUser.Username()).To(Equal(existingUserCfg.ExistingUser))
 			Expect(regularUserContext.TestUser.Password()).To(Equal(existingUserCfg.ExistingUserPassword))
 		})
-	})
 
-	Describe("NewSmokeTestSuiteSetup", func() {
-		var cfg config.Config
-		var apiEndpoint string
-		var skipSSLValidation bool
-
-		BeforeEach(func() {
-			apiEndpoint = "api-endpoint.com"
-			skipSSLValidation = false
-		})
-
-		JustBeforeEach(func() {
-			cfg = config.Config{
-				TimeoutScale:      2.0,
-				NamePrefix:        "UNIT-TESTS",
-				ApiEndpoint:       apiEndpoint,
-				SkipSSLValidation: skipSSLValidation,
-				AdminUser:         "smoke-user",
-				AdminPassword:     "smoke-user-password",
-			}
-		})
-
-		Describe("its RegularUserContext", func() {
-			It("has a regular TestSpace", func() {
-				setup := NewSmokeTestSuiteSetup(&cfg)
-				testSpace, ok := setup.TestSpace.(*internal.TestSpace)
-				Expect(ok).To(BeTrue())
-
-				Expect(testSpace.OrganizationName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-ORG-.*"))
-				Expect(testSpace.SpaceName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-SPACE-.*"))
+		Context("Admin Client", func() {
+			BeforeEach(func() {
+				cfg = config.Config{
+					AdminClient:       "admin-client",
+					AdminClientSecret: "admin-client-secret",
+				}
 			})
 
-			It("has a regular TestUser", func() {
-				setup := NewSmokeTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-[0-9]+-USER-.*"))
-				Expect(len(setup.RegularUserContext().TestUser.Password())).To(Equal(20))
+			It("can create admin user context given client credentials", func() {
+				setup := NewTestSuiteSetup(&cfg)
+
+				adminUserContext := setup.AdminUserContext()
+				Expect(adminUserContext.Username).To(Equal(cfg.AdminClient))
+				Expect(adminUserContext.Password).To(Equal(cfg.AdminClientSecret))
+				Expect(adminUserContext.UseClientCredentials).To(BeTrue())
 			})
 
-			It("configures a smoke test setup", func() {
-				setup := NewSmokeTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal(apiEndpoint))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(Equal(skipSSLValidation))
+			Context("when admin user is provided", func() {
+				BeforeEach(func() {
+					cfg.AdminUser = "should-not-be-used"
+					cfg.AdminPassword = "should-not-be-used-password"
+				})
 
-				cfg.ApiEndpoint = "api.other-cf.com"
-				cfg.SkipSSLValidation = true
-				setup = NewSmokeTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal("api.other-cf.com"))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(BeTrue())
+				It("doesn't create admin user context with client credentials if only client name is provided", func() {
+					cfg.AdminClientSecret = ""
+
+					setup := NewTestSuiteSetup(&cfg)
+					adminUserContext := setup.AdminUserContext()
+					Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
+					Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
+				})
+
+				It("doesn't create admin user context with client credentials if only client secret is provided", func() {
+					cfg.AdminClient = ""
+
+					setup := NewTestSuiteSetup(&cfg)
+					adminUserContext := setup.AdminUserContext()
+					Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
+					Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
+				})
+
+				It("prefers client credentials when both are provided", func() {
+					setup := NewTestSuiteSetup(&cfg)
+					adminUserContext := setup.AdminUserContext()
+					Expect(adminUserContext.Username).To(Equal(cfg.AdminClient))
+					Expect(adminUserContext.Password).To(Equal(cfg.AdminClientSecret))
+				})
+			})
+		})
+
+		Context("Existing (regular) Client", func() {
+			BeforeEach(func() {
+				cfg = config.Config{
+					NamePrefix:           "CF_SMOKE_TESTS",
+					ExistingClient:       "client",
+					ExistingClientSecret: "client-secret",
+				}
+			})
+
+			It("can create regular user context given client credentials", func() {
+				setup := NewTestSuiteSetup(&cfg)
+
+				regularUserContext := setup.RegularUserContext()
+				Expect(regularUserContext.Username).To(Equal(cfg.ExistingClient))
+				Expect(regularUserContext.Password).To(Equal(cfg.ExistingClientSecret))
+				Expect(regularUserContext.UseClientCredentials).To(BeTrue())
 				Expect(setup.SkipUserCreation).To(BeTrue())
 			})
 
-			It("uses the short timeout", func() {
-				setup := NewSmokeTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().Timeout).To(Equal(setup.ShortTimeout()))
-			})
-		})
+			It("doesn't create regular user context with client credentials if only client name is provided", func() {
+				cfg.ExistingClientSecret = ""
 
-		It("creates an AdminUserContext from the config", func() {
-			setup := NewSmokeTestSuiteSetup(&cfg)
-			adminUserContext := setup.AdminUserContext()
-			Expect(adminUserContext.ApiUrl).To(Equal(cfg.ApiEndpoint))
-			Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
-			Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
-			Expect(adminUserContext.TestSpace).To(BeNil())
-			Expect(adminUserContext.SkipSSLValidation).To(Equal(cfg.SkipSSLValidation))
-			Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
+				setup := NewTestSuiteSetup(&cfg)
+
+				regularUserContext := setup.RegularUserContext()
+				Expect(regularUserContext.Username).To(ContainSubstring(cfg.NamePrefix))
+			})
+
+			It("doesn't create regular user context with client credentials if only client secret is provided", func() {
+				cfg.ExistingClient = ""
+
+				setup := NewTestSuiteSetup(&cfg)
+
+				regularUserContext := setup.RegularUserContext()
+				Expect(regularUserContext.Username).To(ContainSubstring(cfg.NamePrefix))
+			})
+
+			It("prefers client credentials when both are provided", func() {
+				cfg.UseExistingUser = true
+				cfg.ExistingUser = "user"
+				cfg.ExistingUserPassword = "password"
+
+				setup := NewTestSuiteSetup(&cfg)
+
+				regularUserContext := setup.RegularUserContext()
+				Expect(regularUserContext.Username).To(Equal(cfg.ExistingClient))
+				Expect(regularUserContext.Password).To(Equal(cfg.ExistingClientSecret))
+				Expect(setup.SkipUserCreation).To(BeTrue())
+			})
 		})
 	})
 
-	Describe("NewRunawayAppTestSetup", func() {
-		var cfg config.Config
-		var existingUserCfg config.Config
-		var apiEndpoint string
-		var skipSSLValidation bool
-
-		BeforeEach(func() {
-			apiEndpoint = "api-endpoint.com"
-			skipSSLValidation = false
-		})
-
-		JustBeforeEach(func() {
-			cfg = config.Config{
-				TimeoutScale:      2.0,
-				NamePrefix:        "UNIT-TESTS",
-				ApiEndpoint:       apiEndpoint,
-				SkipSSLValidation: skipSSLValidation,
-				AdminUser:         "admin",
-				AdminPassword:     "admin-password",
+	Describe("NewSmokeTestSuiteSetup", func() {
+		It("always skips user creation", func() {
+			cfg := config.Config{
+				UseExistingUser: false,
 			}
 
-			existingUserCfg = config.Config{
-				UseExistingUser:      true,
-				ExistingUser:         "existing-user",
-				ExistingUserPassword: "existing-user-password",
-			}
-		})
+			setup := NewSmokeTestSuiteSetup(&cfg)
 
-		Describe("its RegularUserContext", func() {
-			It("has a RunawayAppTestSpace", func() {
-				setup := NewRunawayAppTestSuiteSetup(&cfg)
-				testSpace := setup.TestSpace.(*internal.TestSpace)
-
-				Expect(testSpace.QuotaDefinitionTotalMemoryLimit).To(Equal(RUNAWAY_QUOTA_MEM_LIMIT))
-
-				Expect(testSpace.QuotaDefinitionName).To(MatchRegexp("UNIT-TESTS-[0-9]+-QUOTA-.*"))
-				Expect(testSpace.OrganizationName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-ORG-.*"))
-				Expect(testSpace.SpaceName()).To(MatchRegexp("UNIT-TESTS-[0-9]+-SPACE-.*"))
-			})
-
-			It("has a regular TestUser", func() {
-				setup := NewRunawayAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().TestUser.Username()).To(MatchRegexp("UNIT-TESTS-[0-9]+-USER-.*"))
-				Expect(len(setup.RegularUserContext().TestUser.Password())).To(Equal(20))
-			})
-
-			It("uses the api endpoint and SkipSSLValidation from the config", func() {
-				setup := NewRunawayAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal(apiEndpoint))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(Equal(skipSSLValidation))
-
-				cfg.ApiEndpoint = "api.other-cf.com"
-				cfg.SkipSSLValidation = true
-				setup = NewRunawayAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().ApiUrl).To(Equal("api.other-cf.com"))
-				Expect(setup.RegularUserContext().SkipSSLValidation).To(BeTrue())
-			})
-
-			It("uses the short timeout", func() {
-				setup := NewRunawayAppTestSuiteSetup(&cfg)
-				Expect(setup.RegularUserContext().Timeout).To(Equal(setup.ShortTimeout()))
-			})
-		})
-
-		It("creates an AdminUserContext from the config", func() {
-			setup := NewRunawayAppTestSuiteSetup(&cfg)
-			adminUserContext := setup.AdminUserContext()
-			Expect(adminUserContext.ApiUrl).To(Equal(cfg.ApiEndpoint))
-			Expect(adminUserContext.Username).To(Equal(cfg.AdminUser))
-			Expect(adminUserContext.Password).To(Equal(cfg.AdminPassword))
-			Expect(adminUserContext.TestSpace).To(BeNil())
-			Expect(adminUserContext.SkipSSLValidation).To(Equal(cfg.SkipSSLValidation))
-			Expect(adminUserContext.Timeout).To(Equal(cfg.GetScaledTimeout(1 * time.Minute)))
-		})
-
-		It("uses the existing user", func() {
-			setup := NewRunawayAppTestSuiteSetup(&existingUserCfg)
-			regularUserContext := setup.RegularUserContext()
-			Expect(setup.SkipUserCreation).To(Equal(existingUserCfg.UseExistingUser))
-			Expect(regularUserContext.TestUser.Username()).To(Equal(existingUserCfg.ExistingUser))
-			Expect(regularUserContext.TestUser.Password()).To(Equal(existingUserCfg.ExistingUserPassword))
+			Expect(setup.SkipUserCreation).To(BeTrue())
 		})
 	})
 
@@ -365,7 +311,9 @@ var _ = Describe("ReproducibleTestSuiteSetup", func() {
 				TestUser:       fakeAdminUserValues,
 				Timeout:        2 * time.Second,
 			}
-			cfg = config.Config{}
+			cfg = config.Config{
+				AddExistingUserToExistingSpace: true,
+			}
 		})
 
 		JustBeforeEach(func() {

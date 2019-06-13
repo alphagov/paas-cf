@@ -14,21 +14,17 @@ type remoteResource interface {
 }
 
 type testSuiteConfig interface {
+	internal.AdminUserConfig
+	internal.SpaceAndOrgConfig
+	internal.UserConfig
+	internal.AdminClientConfig
+	internal.ClientConfig
+
 	GetApiEndpoint() string
-	GetConfigurableTestPassword() string
-	GetScaledTimeout(time.Duration) time.Duration
-	GetAdminPassword() string
-	GetExistingUser() string
-	GetExistingUserPassword() string
-	GetShouldKeepUser() bool
-	GetUseExistingUser() bool
-	GetAdminUser() string
-	GetUseExistingOrganization() bool
-	GetUseExistingSpace() bool
-	GetExistingOrganization() string
-	GetExistingSpace() string
 	GetSkipSSLValidation() bool
+
 	GetNamePrefix() string
+	GetScaledTimeout(time.Duration) time.Duration
 }
 
 type ReproducibleTestSuiteSetup struct {
@@ -46,7 +42,8 @@ type ReproducibleTestSuiteSetup struct {
 
 	SkipSSLValidation bool
 
-	SkipUserCreation bool
+	SkipUserCreation      bool
+	SkipSpaceRoleCreation bool
 
 	originalCfHomeDir string
 	currentCfHomeDir  string
@@ -55,47 +52,48 @@ type ReproducibleTestSuiteSetup struct {
 const RUNAWAY_QUOTA_MEM_LIMIT = "99999G"
 
 func NewTestSuiteSetup(config testSuiteConfig) *ReproducibleTestSuiteSetup {
-	var testSpace *internal.TestSpace
-	var testUser *internal.TestUser
-	var adminUser *internal.TestUser
+	testSpace := internal.NewRegularTestSpace(config, "10G")
 
-	testSpace = internal.NewRegularTestSpace(config, "10G")
-	testUser = internal.NewTestUser(config, commandstarter.NewCommandStarter())
-	adminUser = internal.NewAdminUser(config, commandstarter.NewCommandStarter())
-
-	shortTimeout := config.GetScaledTimeout(1 * time.Minute)
-	regularUserContext := NewUserContext(config.GetApiEndpoint(), testUser, testSpace, config.GetSkipSSLValidation(), shortTimeout)
-	adminUserContext := NewUserContext(config.GetApiEndpoint(), adminUser, nil, config.GetSkipSSLValidation(), shortTimeout)
-	skipUserCreation := config.GetUseExistingUser()
-
-	return NewBaseTestSuiteSetup(config, testSpace, testUser, regularUserContext, adminUserContext, skipUserCreation)
+	return NewTestContextSuiteSetup(config, testSpace, config.GetUseExistingUser())
 }
 
 func NewSmokeTestSuiteSetup(config testSuiteConfig) *ReproducibleTestSuiteSetup {
-	var testSpace *internal.TestSpace
-	var testUser *internal.TestUser
-	var adminUser *internal.TestUser
+	testSpace := internal.NewRegularTestSpace(config, "10G")
 
-	testSpace = internal.NewRegularTestSpace(config, "10G")
-	testUser = internal.NewTestUser(config, commandstarter.NewCommandStarter())
-	adminUser = internal.NewAdminUser(config, commandstarter.NewCommandStarter())
-
-	shortTimeout := config.GetScaledTimeout(1 * time.Minute)
-	regularUserContext := NewUserContext(config.GetApiEndpoint(), testUser, testSpace, config.GetSkipSSLValidation(), shortTimeout)
-	adminUserContext := NewUserContext(config.GetApiEndpoint(), adminUser, nil, config.GetSkipSSLValidation(), shortTimeout)
-
-	return NewBaseTestSuiteSetup(config, testSpace, testUser, regularUserContext, adminUserContext, true)
+	return NewTestContextSuiteSetup(config, testSpace, true)
 }
 
 func NewRunawayAppTestSuiteSetup(config testSuiteConfig) *ReproducibleTestSuiteSetup {
 	testSpace := internal.NewRegularTestSpace(config, RUNAWAY_QUOTA_MEM_LIMIT)
-	testUser := internal.NewTestUser(config, commandstarter.NewCommandStarter())
-	adminUser := internal.NewAdminUser(config, commandstarter.NewCommandStarter())
+
+	return NewTestContextSuiteSetup(config, testSpace, config.GetUseExistingUser())
+}
+
+func NewTestContextSuiteSetup(config testSuiteConfig, testSpace internal.Space, skipUserCreation bool) *ReproducibleTestSuiteSetup {
+	var testUser *internal.TestUser
+	useTestClient := false
+	if config.GetExistingClient() != "" && config.GetExistingClientSecret() != "" {
+		testUser = internal.NewTestClient(config, commandstarter.NewCommandStarter())
+		skipUserCreation = true
+		useTestClient = true
+	} else {
+		testUser = internal.NewTestUser(config, commandstarter.NewCommandStarter())
+	}
+
+	var adminUser *internal.TestUser
+	useAdminClient := false
+	if config.GetAdminClient() != "" && config.GetAdminClientSecret() != "" {
+		adminUser = internal.NewAdminClient(config, commandstarter.NewCommandStarter())
+		useAdminClient = true
+	} else {
+		adminUser = internal.NewAdminUser(config, commandstarter.NewCommandStarter())
+	}
 
 	shortTimeout := config.GetScaledTimeout(1 * time.Minute)
 	regularUserContext := NewUserContext(config.GetApiEndpoint(), testUser, testSpace, config.GetSkipSSLValidation(), shortTimeout)
 	adminUserContext := NewUserContext(config.GetApiEndpoint(), adminUser, nil, config.GetSkipSSLValidation(), shortTimeout)
-	skipUserCreation := config.GetUseExistingUser()
+	regularUserContext.UseClientCredentials = useTestClient
+	adminUserContext.UseClientCredentials = useAdminClient
 
 	return NewBaseTestSuiteSetup(config, testSpace, testUser, regularUserContext, adminUserContext, skipUserCreation)
 }
@@ -110,9 +108,10 @@ func NewBaseTestSuiteSetup(config testSuiteConfig, testSpace internal.Space, tes
 		regularUserContext: regularUserContext,
 		adminUserContext:   adminUserContext,
 
-		SkipUserCreation: skipUserCreation,
-		TestSpace:        testSpace,
-		TestUser:         testUser,
+		SkipUserCreation:      skipUserCreation,
+		SkipSpaceRoleCreation: !config.GetAddExistingUserToExistingSpace() && skipUserCreation,
+		TestSpace:             testSpace,
+		TestUser:              testUser,
 	}
 }
 
@@ -134,7 +133,9 @@ func (testSetup *ReproducibleTestSuiteSetup) Setup() {
 		if !testSetup.SkipUserCreation {
 			testSetup.TestUser.Create()
 		}
-		testSetup.regularUserContext.AddUserToSpace()
+		if !testSetup.SkipSpaceRoleCreation && !testSetup.RegularUserContext().UseClientCredentials {
+			testSetup.regularUserContext.AddUserToSpace()
+		}
 	})
 	testSetup.originalCfHomeDir, testSetup.currentCfHomeDir = testSetup.regularUserContext.SetCfHomeDir()
 	testSetup.regularUserContext.Login()

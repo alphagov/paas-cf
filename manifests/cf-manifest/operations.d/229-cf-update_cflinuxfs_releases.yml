@@ -1,15 +1,8 @@
 ---
-
-- type: remove
-  path: /releases/name=cflinuxfs2
-
-- type: remove
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/stacks/name=cflinuxfs2
-
 - type: replace
   path: /releases/name=cflinuxfs3
   value:
     name: "cflinuxfs3"
-    version: "0.1.2"
-    url: "https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cflinuxfs3-0.1.2.tgz"
-    sha1: "8649bbf088e7eb6fd7261c605ffefb38dc0a644e"
+    version: "0.94.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs3-release?v=0.94.0"
+    sha1: "c005fa270834b50eb1a5fb689cad8e6442f3cfbd"

@@ -8,7 +8,7 @@ if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
 fi
 
 SLEEPTIME=90
-NODES=5
+NODES=3
 SLOW_SPEC_THRESHOLD=120
 
 # Build Skip regex to ignore tests
@@ -30,6 +30,8 @@ echo "Starting acceptace tests"
 cd src/github.com/cloudfoundry/cf-acceptance-tests
 ./bin/test \
   -keepGoing \
+  -timeout=1h15m \
+  -flakeAttempts=3 \
   -randomizeAllSpecs \
   -skipPackage=helpers \
   -skip="${SKIP_REGEX}" \

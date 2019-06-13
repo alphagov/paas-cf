@@ -1,0 +1,12 @@
+---
+applications:
+ - name: logging-pipeline
+   memory: 64M
+   disk_quota: 256M
+   instances: 2
+   command: "./bin/logging-pipeline"
+   buildpack: go_buildpack
+   stack: cflinuxfs3
+   env:
+     GOVERSION: go1.12
+     GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/logging-pipeline

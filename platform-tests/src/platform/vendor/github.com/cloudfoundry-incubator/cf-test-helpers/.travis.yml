@@ -1,8 +1,0 @@
-language: go
-
-install: echo "don't go get stuff"
-
-go:
-  - 1.9.x
-
-script: scripts/test

@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-cflinuxfs2_uuid=$(cf stack cflinuxfs2 --guid)
 cflinuxfs3_uuid=$(cf stack cflinuxfs3 --guid)
 all_orgs_next_url="/v2/organizations?order-by=name"
 echo "org,space,appname,stack,"
@@ -42,9 +41,6 @@ do
                         if [ ! -z "${app_docker_image}" ]
                         then
                             stack="docker"
-                        elif [ "${app_stack_guid}" == "${cflinuxfs2_uuid}" ]
-                        then
-                            stack="cflinuxfs2"
                         elif [ "${app_stack_guid}" == "${cflinuxfs3_uuid}" ]
                         then
                             stack="cflinuxfs3"

@@ -1,3 +1,19 @@
+resource "aws_route53_record" "cf_loggregator_rlp_log_api" {
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "log-api.${var.system_dns_zone_name}."
+  type    = "CNAME"
+  ttl     = "60"
+  records = ["${aws_lb.cf_loggregator.dns_name}"]
+}
+
+resource "aws_route53_record" "cf_loggregator_rlp_log_stream" {
+  zone_id = "${var.system_dns_zone_id}"
+  name    = "log-stream.${var.system_dns_zone_name}."
+  type    = "CNAME"
+  ttl     = "60"
+  records = ["${aws_lb.cf_loggregator.dns_name}"]
+}
+
 resource "aws_route53_record" "cf_doppler" {
   zone_id = "${var.system_dns_zone_id}"
   name    = "doppler.${var.system_dns_zone_name}."

@@ -1,3 +1,11 @@
+resource "random_pet" "elb_cipher" {
+  length = 1
+
+  keepers = {
+    default_elb_security_policy = "${var.default_elb_security_policy}"
+  }
+}
+
 resource "aws_elb" "cf_router_system_domain" {
   name                        = "${var.env}-cf-router-system-domain"
   subnets                     = ["${split(",", var.infra_subnet_ids)}"]
@@ -32,13 +40,13 @@ resource "aws_elb" "cf_router_system_domain" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_router_system_domain" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}-${random_pet.elb_cipher.id}"
   load_balancer = "${aws_elb.cf_router_system_domain.id}"
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${var.default_elb_security_policy}"
+    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   }
 }
 
@@ -64,7 +72,7 @@ resource "aws_elb" "cf_doppler" {
   }
 
   health_check {
-    target              = "TCP:8081"
+    target              = "SSL:8081"
     interval            = "${var.health_check_interval}"
     timeout             = "${var.health_check_timeout}"
     healthy_threshold   = "${var.health_check_healthy}"
@@ -73,7 +81,7 @@ resource "aws_elb" "cf_doppler" {
 
   listener {
     instance_port      = 8081
-    instance_protocol  = "tcp"
+    instance_protocol  = "ssl"
     lb_port            = 443
     lb_protocol        = "ssl"
     ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
@@ -81,13 +89,13 @@ resource "aws_elb" "cf_doppler" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_doppler" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   load_balancer = "${aws_elb.cf_doppler.id}"
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${var.default_elb_security_policy}"
+    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   }
 }
 
@@ -130,13 +138,13 @@ resource "aws_elb" "cf_router" {
 }
 
 resource "aws_lb_ssl_negotiation_policy" "cf_router" {
-  name          = "paas-${var.default_elb_security_policy}"
+  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   load_balancer = "${aws_elb.cf_router.id}"
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${var.default_elb_security_policy}"
+    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
   }
 }
 
@@ -168,5 +176,80 @@ resource "aws_elb" "ssh_proxy" {
     instance_protocol = "tcp"
     lb_port           = 2222
     lb_protocol       = "tcp"
+  }
+}
+
+resource "aws_lb" "cf_loggregator" {
+  name               = "${var.env}-cf-loggregator"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = ["${aws_security_group.cf_api_elb.id}"]
+  subnets            = ["${split(",", var.infra_subnet_ids)}"]
+}
+
+resource "aws_lb_target_group" "cf_loggregator_rlp" {
+  name     = "${var.env}-cf-loggregator-rlp"
+  port     = 8088
+  protocol = "HTTPS"
+  vpc_id   = "${var.vpc_id}"
+
+  health_check {
+    matcher = "200-499"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "cf_loggregator_rlp_target_group_name" {
+  value = "${aws_lb_target_group.cf_loggregator_rlp.name}"
+}
+
+resource "aws_lb_listener" "cf_loggregator" {
+  load_balancer_arn = "${aws_lb.cf_loggregator.arn}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "${var.default_elb_security_policy}"
+  certificate_arn   = "${data.aws_acm_certificate.system.arn}"
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Hostname not known"
+      status_code  = "404"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "cf_loggregator_rlp_log_api" {
+  listener_arn = "${aws_lb_listener.cf_loggregator.arn}"
+  priority     = "111"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.cf_loggregator_rlp.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["log-api.*"]
+  }
+}
+
+resource "aws_lb_listener_rule" "cf_loggregator_rlp_log_stream" {
+  listener_arn = "${aws_lb_listener.cf_loggregator.arn}"
+  priority     = "112"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.cf_loggregator_rlp.arn}"
+  }
+
+  condition {
+    field  = "host-header"
+    values = ["log-stream.*"]
   }
 }

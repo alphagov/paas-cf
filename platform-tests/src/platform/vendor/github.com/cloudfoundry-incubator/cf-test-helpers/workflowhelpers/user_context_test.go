@@ -59,7 +59,7 @@ var _ = Describe("UserContext", func() {
 	})
 
 	Describe("Login", func() {
-		var target, username, password, org, space string
+		var target string
 		var skipSslValidation bool
 		var timeout time.Duration
 		var fakeStarter *fakes.FakeCmdStarter
@@ -70,10 +70,6 @@ var _ = Describe("UserContext", func() {
 
 		BeforeEach(func() {
 			target = "http://FAKE_API.example.com"
-			username = "FAKE_USERNAME"
-			password = "FAKE_PASSWORD"
-			org = "FAKE_ORG"
-			space = "FAKE_SPACE"
 			skipSslValidation = false
 			timeout = 1 * time.Second
 
@@ -88,7 +84,8 @@ var _ = Describe("UserContext", func() {
 			userContext.CommandStarter = fakeStarter
 		})
 
-		It("logs in the user", func() {
+		It("logs in the user for user-password flow", func() {
+			userContext.UseClientCredentials = false
 			userContext.Login()
 
 			Expect(fakeStarter.CalledWith).To(HaveLen(2))
@@ -115,6 +112,18 @@ var _ = Describe("UserContext", func() {
 			})
 		})
 
+		Context("when UseClientCredentials is true", func() {
+			It("uses client credentials auth method", func() {
+				userContext.UseClientCredentials = true
+				userContext.Login()
+
+				Expect(fakeStarter.CalledWith).To(HaveLen(2))
+
+				Expect(fakeStarter.CalledWith[1].Executable).To(Equal("cf"))
+				Expect(fakeStarter.CalledWith[1].Args).To(Equal([]string{"auth", testUser.Username(), testUser.Password(), "--client-credentials"}))
+			})
+		})
+
 		Context("when the 'cf api' call fails", func() {
 			BeforeEach(func() {
 				fakeStarter.ToReturn[0].ExitCode = 1
@@ -134,38 +143,6 @@ var _ = Describe("UserContext", func() {
 			BeforeEach(func() {
 				timeout = 2 * time.Second
 				fakeStarter.ToReturn[0].SleepTime = 3
-			})
-
-			It("fails with a ginkgo error", func() {
-				failures := InterceptGomegaFailures(func() {
-					userContext.Login()
-				})
-
-				Expect(failures).To(HaveLen(1))
-				Expect(failures[0]).To(MatchRegexp("Timed out after 2.*"))
-			})
-
-		})
-
-		Context("when the 'cf auth' call fails", func() {
-			BeforeEach(func() {
-				fakeStarter.ToReturn[1].ExitCode = 1
-			})
-
-			It("fails with a ginkgo error", func() {
-				failures := InterceptGomegaFailures(func() {
-					userContext.Login()
-				})
-
-				Expect(failures).To(HaveLen(1))
-				Expect(failures[0]).To(MatchRegexp("to match exit code:\n.*0"))
-			})
-		})
-
-		Context("when the 'cf auth' times out", func() {
-			BeforeEach(func() {
-				timeout = 2 * time.Second
-				fakeStarter.ToReturn[1].SleepTime = 3
 			})
 
 			It("fails with a ginkgo error", func() {

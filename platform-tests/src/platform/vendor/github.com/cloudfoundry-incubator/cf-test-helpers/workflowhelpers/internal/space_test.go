@@ -195,7 +195,7 @@ var _ = Describe("TestSpace", func() {
 		})
 
 		Describe("failure cases", func() {
-			testFailureCase := func(callIndex int) func() {
+			testFailureCase := func(callIndex int, errorMsg string) func() {
 				return func() {
 					BeforeEach(func() {
 						fakeStarter.ToReturn[callIndex].ExitCode = 1
@@ -206,15 +206,15 @@ var _ = Describe("TestSpace", func() {
 							testSpace.Create()
 						})
 						Expect(failures).To(HaveLen(1))
-						Expect(failures[0]).To(MatchRegexp("to match exit code:\n.*0"))
+						Expect(failures[0]).To(MatchRegexp("(?s)%s.*to match exit code:.*0", errorMsg))
 					})
 				}
 			}
 
-			Context("when 'cf create-quota' fails", testFailureCase(0))
-			Context("when 'cf create-org' fails", testFailureCase(1))
-			Context("when 'cf set-quota' fails", testFailureCase(2))
-			Context("when 'cf create-space' fails", testFailureCase(3))
+			Context("when 'cf create-quota' fails", testFailureCase(0, "Failed to create quota"))
+			Context("when 'cf create-org' fails", testFailureCase(1, "Failed to create org"))
+			Context("when 'cf set-quota' fails", testFailureCase(2, "Failed to set org quota"))
+			Context("when 'cf create-space' fails", testFailureCase(3, "Failed to create space"))
 		})
 
 		Describe("timing out", func() {
@@ -222,7 +222,7 @@ var _ = Describe("TestSpace", func() {
 				timeout = 2 * time.Second
 			})
 
-			testTimeoutCase := func(callIndex int) func() {
+			testTimeoutCase := func(callIndex int, errorMsg string) func() {
 				return func() {
 					BeforeEach(func() {
 						fakeStarter.ToReturn[callIndex].SleepTime = 5
@@ -234,15 +234,15 @@ var _ = Describe("TestSpace", func() {
 						})
 
 						Expect(failures).To(HaveLen(1))
-						Expect(failures[0]).To(MatchRegexp("Timed out after 2.*"))
+						Expect(failures[0]).To(MatchRegexp("(?s)Timed out after 2.*%s", errorMsg))
 					})
 				}
 			}
 
-			Context("when 'cf create-quota' times out", testTimeoutCase(0))
-			Context("when 'cf create-org' times out", testTimeoutCase(1))
-			Context("when 'cf set-quota' times out", testTimeoutCase(2))
-			Context("when 'cf create-space' times out", testTimeoutCase(3))
+			Context("when 'cf create-quota' times out", testTimeoutCase(0, "Failed to create quota"))
+			Context("when 'cf create-org' times out", testTimeoutCase(1, "Failed to create org"))
+			Context("when 'cf set-quota' times out", testTimeoutCase(2, "Failed to set org quota"))
+			Context("when 'cf create-space' times out", testTimeoutCase(3, "Failed to create space"))
 		})
 	})
 
@@ -319,7 +319,7 @@ var _ = Describe("TestSpace", func() {
 		})
 
 		Describe("failure cases", func() {
-			testFailureCase := func(callIndex int) func() {
+			testFailureCase := func(callIndex int, errorMsg string) func() {
 				return func() {
 					BeforeEach(func() {
 						fakeStarter.ToReturn[callIndex].ExitCode = 1
@@ -330,13 +330,21 @@ var _ = Describe("TestSpace", func() {
 							testSpace.Destroy()
 						})
 						Expect(failures).To(HaveLen(1))
-						Expect(failures[0]).To(MatchRegexp("to match exit code:\n.*0"))
+						Expect(failures[0]).To(MatchRegexp("(?s)%s.*to match exit code:.*0", errorMsg))
 					})
 				}
 			}
 
-			Context("when 'delete-org' fails", testFailureCase(0))
-			Context("when 'delete-quota' fails", testFailureCase(1))
+			Context("when 'delete-org' fails", testFailureCase(0, "Failed to delete org"))
+			Context("when 'delete-quota' fails", testFailureCase(1, "Failed to delete quota"))
+
+			Context("when the config specifies that an existing organization should be used", func() {
+				BeforeEach(func() {
+					isExistingOrganization = true
+				})
+
+				Context("when 'delete-space' fails", testFailureCase(0, "Failed to delete space"))
+			})
 		})
 
 		Describe("timing out", func() {
@@ -344,7 +352,7 @@ var _ = Describe("TestSpace", func() {
 				timeout = 2 * time.Second
 			})
 
-			testTimeoutCase := func(callIndex int) func() {
+			testTimeoutCase := func(callIndex int, errorMsg string) func() {
 				return func() {
 					BeforeEach(func() {
 						fakeStarter.ToReturn[callIndex].SleepTime = 5
@@ -356,13 +364,21 @@ var _ = Describe("TestSpace", func() {
 						})
 
 						Expect(failures).To(HaveLen(1))
-						Expect(failures[0]).To(MatchRegexp("Timed out after 2.*"))
+						Expect(failures[0]).To(MatchRegexp("(?s)Timed out after 2.*%s", errorMsg))
 					})
 				}
 			}
 
-			Context("when 'cf delete-org' times out", testTimeoutCase(0))
-			Context("when 'cf delete-quota' times out", testTimeoutCase(1))
+			Context("when 'cf delete-org' times out", testTimeoutCase(0, "Failed to delete org"))
+			Context("when 'cf delete-quota' times out", testTimeoutCase(1, "Failed to delete quota"))
+
+			Context("when the config specifies that an existing organization should be used", func() {
+				BeforeEach(func() {
+					isExistingOrganization = true
+				})
+
+				Context("when 'delete-space' times out", testTimeoutCase(0, "Failed to delete space"))
+			})
 		})
 	})
 

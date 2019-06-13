@@ -13,11 +13,12 @@ import (
 )
 
 type fakeUserContext struct {
-	NumLoginCalls          int
-	NumSetCfHomeDirCalls   int
-	NumLogoutCalls         int
-	NumUnsetCfHomeDirCalls int
-	NumTargetSpaceCalls    int
+	NumLoginCalls                      int
+	NumSetCfHomeDirCalls               int
+	NumLogoutCalls                     int
+	NumUnsetCfHomeDirCalls             int
+	NumTargetSpaceCalls                int
+	NumUnsetCfHomeDirCallsBeforeLogout int
 }
 
 func (f *fakeUserContext) SetCfHomeDir() (string, string) {
@@ -30,6 +31,10 @@ func (f *fakeUserContext) Login() {
 }
 
 func (f *fakeUserContext) Logout() {
+	if f.NumUnsetCfHomeDirCalls > 0 {
+		f.NumUnsetCfHomeDirCallsBeforeLogout = f.NumUnsetCfHomeDirCalls
+	}
+
 	f.NumLogoutCalls += 1
 }
 
@@ -78,16 +83,24 @@ var _ = Describe("AsUser", func() {
 		Expect(user.NumTargetSpaceCalls).To(Equal(1))
 	})
 
-	It("calls cf logout", func() {
-		workflowhelpers.AsUser(user, timeout, FakeThingsToRunAsUser)
-		Expect(user.NumLogoutCalls).To(Equal(1))
-	})
+	Context("logout", func() {
+		It("calls cf logout", func() {
+			workflowhelpers.AsUser(user, timeout, FakeThingsToRunAsUser)
+			Expect(user.NumLogoutCalls).To(Equal(1))
+		})
 
-	It("logs out even if actions contain a failing expectation", func() {
-		RegisterFailHandler(func(message string, callerSkip ...int) {})
-		workflowhelpers.AsUser(user, timeout, func() { Expect(1).To(Equal(2)) })
-		RegisterFailHandler(Fail)
-		Expect(user.NumLogoutCalls).To(Equal(1))
+		It("logs out even if actions contain a failing expectation", func() {
+			RegisterFailHandler(func(message string, callerSkip ...int) {})
+			workflowhelpers.AsUser(user, timeout, func() { Expect(1).To(Equal(2)) })
+			RegisterFailHandler(Fail)
+			Expect(user.NumLogoutCalls).To(Equal(1))
+		})
+
+		It("unsets home directory after logout", func() {
+			workflowhelpers.AsUser(user, timeout, FakeThingsToRunAsUser)
+			Expect(user.NumUnsetCfHomeDirCalls).To(Equal(1))
+			Expect(user.NumUnsetCfHomeDirCallsBeforeLogout).To(Equal(0))
+		})
 	})
 
 	It("calls the passed function", func() {
