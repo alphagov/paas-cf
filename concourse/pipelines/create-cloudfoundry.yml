@@ -1398,87 +1398,88 @@ jobs:
 
                 bosh -n deploy prometheus-manifest/prometheus-manifest.yml
 
-      - task: deploy-cloudwatch-exporter
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            AWS_REGION: ((aws_region))
-          inputs:
-            - name: paas-cf
-            - name: config
-            - name: paas-yet-another-cloudwatch-exporter
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+      - aggregate:
+        - task: deploy-cloudwatch-exporter
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-cli-image-resource
+            params:
+              DEPLOY_ENV: ((deploy_env))
+              AWS_REGION: ((aws_region))
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: paas-yet-another-cloudwatch-exporter
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  . ./config/config.sh
+                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
-                spruce merge paas-cf/config/cloudwatch-exporter/config.yml > paas-yet-another-cloudwatch-exporter/src/config.yml
+                  spruce merge paas-cf/config/cloudwatch-exporter/config.yml > paas-yet-another-cloudwatch-exporter/src/config.yml
 
-                cd paas-yet-another-cloudwatch-exporter/src
+                  cd paas-yet-another-cloudwatch-exporter/src
 
-                cat << EOF > manifest.yml
-                ---
-                applications:
-                  - name: cloudwatch-exporter
-                    memory: 128M
-                    disk_quota: 100M
-                    instances: 1
-                    buildpack: go_buildpack
-                    health-check-type: http
-                    stack: cflinuxfs3
-                    env:
-                      GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
-                      AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
-                      AWS_SECRET_ACCESS_KEY: "${YACE_AWS_SECRET_ACCESS_KEY}"
-                    command: "src -listen-address=0.0.0.0:\$PORT"
-                EOF
+                  cat << EOF > manifest.yml
+                  ---
+                  applications:
+                    - name: cloudwatch-exporter
+                      memory: 128M
+                      disk_quota: 100M
+                      instances: 1
+                      buildpack: go_buildpack
+                      health-check-type: http
+                      stack: cflinuxfs3
+                      env:
+                        GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
+                        AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
+                        AWS_SECRET_ACCESS_KEY: "${YACE_AWS_SECRET_ACCESS_KEY}"
+                      command: "src -listen-address=0.0.0.0:\$PORT"
+                  EOF
 
-                cf zero-downtime-push cloudwatch-exporter -f manifest.yml
+                  cf zero-downtime-push cloudwatch-exporter -f manifest.yml
 
-      - task: upload-grafana-dashboards
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *curl-ssl-image-resource
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-          inputs:
-            - name: paas-cf
-            - name: config
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                . ./config/config.sh
-                AZ_COUNT=2
-                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                  AZ_COUNT=1
-                fi
+        - task: upload-grafana-dashboards
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *curl-ssl-image-resource
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            inputs:
+              - name: paas-cf
+              - name: config
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  . ./config/config.sh
+                  AZ_COUNT=2
+                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                    AZ_COUNT=1
+                  fi
 
-                for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
-                  for az in $(seq 1 $AZ_COUNT); do
-                    sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
-                    | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
-                    | curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
-                      --user "admin:$GRAFANA_PASS" \
-                      --header 'Content-Type: application/json' \
-                      --data "@-" \
-                      --fail \
-                      --include
-                  done;
-                done
+                  for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
+                    for az in $(seq 1 $AZ_COUNT); do
+                      sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
+                      | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
+                      | curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
+                        --user "admin:$GRAFANA_PASS" \
+                        --header 'Content-Type: application/json' \
+                        --data "@-" \
+                        --fail \
+                        --include
+                    done;
+                  done
 
   - name: post-deploy
     serial: true
