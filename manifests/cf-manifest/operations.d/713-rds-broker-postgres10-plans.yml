@@ -21,21 +21,21 @@
       allowed_extensions: ["uuid-ossp", "postgis", "citext", "pg_stat_statements"]
 
     tiny_plan_rds_properties: &tiny_plan_rds_properties
-      db_instance_class: "db.t2.micro"
+      db_instance_class: "db.t3.micro"
       allocated_storage: 5
       backup_retention_period: 0
       skip_final_snapshot: true
     small_plan_rds_properties: &small_plan_rds_properties
-      db_instance_class: "db.t2.small"
+      db_instance_class: "db.t3.small"
       allocated_storage: 20
     medium_plan_rds_properties: &medium_plan_rds_properties
-      db_instance_class: "db.m4.large"
+      db_instance_class: "db.m5.large"
       allocated_storage: 100
     large_plan_rds_properties: &large_plan_rds_properties
-      db_instance_class: "db.m4.2xlarge"
+      db_instance_class: "db.m5.2xlarge"
       allocated_storage: 512
     xlarge_plan_rds_properties: &xlarge_plan_rds_properties
-      db_instance_class: "db.m4.4xlarge"
+      db_instance_class: "db.m5.4xlarge"
       allocated_storage: 2048
 
 - type: replace
