@@ -1483,6 +1483,164 @@ jobs:
                     done;
                   done
 
+        - task: create-grafana-users
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *ruby-slim-image-resource
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            inputs:
+              - name: paas-cf
+              - name: config
+            run:
+              path: ruby
+              args:
+                - -e
+                - |
+                  require 'json'
+                  require 'net/http'
+                  require 'openssl'
+                  require 'securerandom'
+                  require 'uri'
+                  require 'yaml'
+
+                  conf          = File.read("#{Dir.pwd}/config/config.sh")
+                  system_domain = ENV.fetch('SYSTEM_DNS_ZONE_NAME')
+                  deploy_env    = ENV.fetch('DEPLOY_ENV')
+                  slim          = ENV.fetch('SLIM_DEV_DEPLOYMENT')
+                  azs           = (slim == 'true') ? 1 : 2
+                  grafana_pass  = conf[/GRAFANA_PASS=(.*)$/, 1]
+
+                  users_that_should_exist = YAML.load_file(
+                    "#{Dir.pwd}/paas-cf/config/users.yml"
+                  ).select do |u|
+                    u.dig('deploy_envs').include? deploy_env
+                  end.reject do |u|
+                    u.dig('email').nil?
+                  end.map do |u|
+                    u.fetch('email')
+                  end
+
+                  puts 'Users that should exist:'
+                  pp users_that_should_exist
+
+                  azs.times do |az|
+                    base_url  = "https://grafana-#{az + 1}.#{system_domain}/"
+                    puts "Configuring #{base_url}"
+
+                    uri = URI("#{base_url}/api/users")
+                    grafana_users  = JSON
+                      .parse(
+                        Net::HTTP.start(
+                          uri.host, uri.port, use_ssl: true
+                        ) do |http|
+                          req = Net::HTTP::Get.new(uri)
+                          req.basic_auth 'admin', grafana_pass
+                          http.request(req).body
+                        end
+                      )
+                      .reject { |u| %w[admin mon].include? u.dig('login') }
+
+                    puts 'Existing grafana_users:'
+                    pp grafana_users
+
+                    users_to_create = users_that_should_exist.reject do |email|
+                      grafana_users.any? { |u| u.dig('email') == email }
+                    end
+
+                    users_to_delete = grafana_users.reject do |user|
+                      users_that_should_exist.include? user.dig('email')
+                    end
+
+                    puts 'Users to create:'
+                    pp users_to_create
+
+                    puts 'Users to delete:'
+                    pp users_to_delete
+
+                    users_to_create.each do |email|
+                      puts "Creating user #{email}"
+
+                      uri = URI("#{base_url}/api/admin/users")
+                      resp = Net::HTTP.start(
+                        uri.host, uri.port, use_ssl: true
+                      ) do |http|
+                        req = Net::HTTP::Post.new(uri)
+                        req.basic_auth 'admin', grafana_pass
+                        req['Content-Type'] = 'application/json'
+                        req.body = {
+                          name:     email.split('@').first,
+                          login:    email,
+                          email:    email,
+                          password: SecureRandom.hex(32)
+                        }.to_json
+                        http.request(req)
+                      end
+                      abort "Error #{resp.body}" unless resp.code == '200'
+                      puts resp.body
+
+                      puts "Created user #{email}"
+                    end
+
+                    users_to_delete.each do |user|
+                      user_id = user.fetch('id')
+
+                      puts "Deleting user #{user_id} / #{user.dig('email')}"
+
+                      uri = URI("#{base_url}/api/admin/users/#{user_id}")
+                      resp = Net::HTTP.start(
+                        uri.host, uri.port, use_ssl: true
+                      ) do |http|
+                        req = Net::HTTP::Delete.new(uri)
+                        req.basic_auth 'admin', grafana_pass
+                        http.request(req)
+                      end
+                      abort "Error #{resp.body}" unless resp.code == '200'
+                      puts resp.body
+
+                      puts "Deleted user #{user_id} / #{user.dig('email')}"
+                    end
+
+                    uri = URI("#{base_url}/api/users")
+                    grafana_users = Net::HTTP.start(
+                        uri.host, uri.port, use_ssl: true
+                      ) do |http|
+                        req = Net::HTTP::Get.new(uri)
+                        req.basic_auth 'admin', grafana_pass
+                        http.request(req)
+                      end
+                    unless grafana_users.code == '200'
+                      abort "Error #{grafana_users}"
+                    end
+
+                    JSON
+                      .parse(grafana_users.body)
+                      .reject { |u| %w[admin mon].include? u.dig('login') }
+                      .each do |user|
+
+                      user_id = user.fetch('id')
+                      puts "Elevating #{user_id} / #{user.dig('email')}"
+
+                      uri = URI("#{base_url}/api/admin/users/#{user_id}/permissions")
+                      resp = Net::HTTP.start(
+                        uri.host, uri.port, use_ssl: true
+                      ) do |http|
+                        req = Net::HTTP::Put.new(uri)
+                        req.basic_auth 'admin', grafana_pass
+                        req['Content-Type'] = 'application/json'
+                        req.body = { 'isGrafanaAdmin' => true }.to_json
+                        http.request(req)
+                      end
+                      abort "Error #{resp.body}" unless resp.code == '200'
+                      puts resp.body
+
+                      puts "Elevated user #{user_id} / #{user.dig('email')}"
+                    end
+                  end
+
   - name: post-deploy
     serial: true
     plan:
