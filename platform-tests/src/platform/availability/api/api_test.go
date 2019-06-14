@@ -18,9 +18,9 @@ import (
 
 const (
 	maxConcourseConnectionFailures = 5
-	maxWarnings                    = 5
 	numWorkers                     = 4
 	taskRatePerSecond              = 2
+	targetReliability              = 99.95
 )
 
 func lg(things ...interface{}) {
@@ -46,7 +46,14 @@ var _ = Describe("API Availability Monitoring", func() {
 				},
 			},
 		}
-		monitor := monitor.NewMonitor(cfConfig, os.Stdout, numWorkers, warningMatchers, taskRatePerSecond)
+		monitor := monitor.NewMonitor(
+			cfConfig,
+			os.Stdout,
+			numWorkers,
+			warningMatchers,
+			taskRatePerSecond,
+			targetReliability,
+		)
 		deployment := helpers.ConcourseDeployment()
 
 		monitor.Add("Listing all apps in a space", func(cfg *cfclient.Config) error {
@@ -135,10 +142,27 @@ var _ = Describe("API Availability Monitoring", func() {
 		}(maxConcourseConnectionFailures)
 
 		report := monitor.Run()
+
+		lg(
+			"Finished after duration",
+			fmt.Sprintf("%2f seconds", report.Elapsed.Seconds()),
+		)
+
+		if len(report.Errors) > 0 {
+			lg("Encountered errors")
+			fmt.Fprintf(os.Stdout, "%+v\n", report.Errors)
+		}
+
 		lg(report.String())
-		Expect(report.Errors).To(BeEmpty(), "expected no errors")
-		Expect(report.SuccessCount).To(BeNumerically(">", int64(0)), "expected at least one success")
-		Expect(report.FailureCount).To(Equal(int64(0)), "expected 0 failures")
-		Expect(report.WarningCount).To(BeNumerically("<=", int64(maxWarnings)), "expected at most %d warnings", maxWarnings)
+
+		Expect(report.SuccessCount).To(
+			BeNumerically(">", int64(0)),
+			"expected at least one success",
+		)
+
+		Expect(monitor.HaveTestsPassed(*report)).To(
+			Equal(true),
+			"expected the tests to pass the reliability threshold",
+		)
 	})
 })

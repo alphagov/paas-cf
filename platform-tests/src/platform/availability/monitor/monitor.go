@@ -9,47 +9,6 @@ import (
 	"github.com/cloudfoundry-community/go-cfclient"
 )
 
-type Report struct {
-	SuccessCount int64
-	FailureCount int64
-	WarningCount int64
-	Errors       map[*Task]map[string]int // number of errors by error message by task
-	Warnings     map[*Task]map[string]int // number of warnings by error message by task
-	Elapsed      time.Duration
-}
-
-func (r *Report) String() string {
-	total := r.SuccessCount + r.FailureCount + r.WarningCount
-	s := "\nReport:\n"
-	s += "==============\n"
-	s += fmt.Sprintf("Total task executions: %d\n", total)
-	s += fmt.Sprintf("Total successes:       %d\n", r.SuccessCount)
-	s += fmt.Sprintf("Total failures:        %d\n", r.FailureCount)
-	s += fmt.Sprintf("Total warnings:        %d\n", r.WarningCount)
-	s += fmt.Sprintf("Elapsed time:          %s\n", r.Elapsed.String())
-	s += fmt.Sprintf("Average rate:          %.2f tasks/sec\n", float64(total)/r.Elapsed.Seconds())
-
-	if len(r.Errors) > 0 {
-		s += fmt.Sprintf("\nErrors:\n")
-		for task, errCounts := range r.Errors {
-			s += fmt.Sprintf("\n    %s:\n", task.name)
-			for err, count := range errCounts {
-				s += fmt.Sprintf("        %s (%d failures)\n", err, count)
-			}
-		}
-	}
-	if len(r.Warnings) > 0 {
-		s += fmt.Sprintf("\nWarnings:\n")
-		for task, warningCounts := range r.Warnings {
-			s += fmt.Sprintf("\n    %s:\n", task.name)
-			for warning, count := range warningCounts {
-				s += fmt.Sprintf("        %s (%d warnings)\n", warning, count)
-			}
-		}
-	}
-	return s
-}
-
 type TaskFunc func(cfg *cfclient.Config) error
 
 type Task struct {
@@ -78,6 +37,7 @@ type Monitor struct {
 	logger            io.Writer
 	numWorkers        int
 	warningMatchers   []*regexp.Regexp
+	targetReliability float64
 }
 
 func (m *Monitor) Add(name string, fn TaskFunc) {
@@ -203,12 +163,25 @@ func (m *Monitor) taskRateToDuration() time.Duration {
 	return time.Second / time.Duration(m.taskRatePerSecond)
 }
 
+func (m *Monitor) HaveTestsPassed(r Report) bool {
+	if m.targetReliability == 0.0 {
+		return false // targetReliability has not been set, always fail
+	}
+
+	if r.TotalExecutions() == 0 {
+		return false // tests should fail if they don't execute anything
+	}
+
+	return m.targetReliability <= r.PercentageGoodExecutions()
+}
+
 func NewMonitor(
 	clientCfg *cfclient.Config,
 	logger io.Writer,
 	numWorkers int,
 	warningMatchers []*regexp.Regexp,
 	taskRatePerSecond int64,
+	targetReliability float64,
 ) *Monitor {
 	m := &Monitor{
 		reporter:          make(chan *Report),
@@ -218,6 +191,7 @@ func NewMonitor(
 		warningMatchers:   warningMatchers,
 		logger:            logger,
 		taskRatePerSecond: taskRatePerSecond,
+		targetReliability: targetReliability,
 	}
 	return m
 }
