@@ -1,8 +1,7 @@
-package monitor_test
+package monitor
 
 import (
 	"errors"
-	. "platform/availability/monitor"
 	"regexp"
 	"time"
 

@@ -1,4 +1,4 @@
-package monitor_test
+package monitor
 
 import (
 	. "github.com/onsi/ginkgo"
