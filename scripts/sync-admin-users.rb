@@ -8,6 +8,7 @@ def load_admin_user_list(filename, deploy_env)
   users = YAML.load_file(filename)
   users
     .select { |u| u.fetch('deploy_envs', []).include? deploy_env }
+    .select { |u| u.fetch('cf_admin', false) }
     .each_with_index.map { |u, i|
     {
       username: u.fetch("username", u.fetch("email")),

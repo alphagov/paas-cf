@@ -148,6 +148,8 @@ slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
 monitored_state_bucket: ${MONITORED_STATE_BUCKET:-}
 monitored_aws_region: ${MONITORED_AWS_REGION:-}
 monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}
+grafana_auth_google_client_id: "${grafana_auth_google_client_id:-}"
+grafana_auth_google_client_secret: "${grafana_auth_google_client_secret:-}"
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }

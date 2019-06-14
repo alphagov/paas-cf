@@ -1,0 +1,24 @@
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/server?/root_url?
+  value: https://grafana-1.((system_domain))
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/allow_sign_up
+  value: false
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/enabled
+  value: true
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/client_id
+  value: ((grafana_auth_google_client_id))
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/client_secret
+  value: ((grafana_auth_google_client_secret))
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/allowed_domains
+  value:
+    - digital.cabinet-office.gov.uk
