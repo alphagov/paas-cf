@@ -2,18 +2,18 @@ buildpacks:
 - name: binary_buildpack
   repo_name: binary-buildpack
   stack: cflinuxfs3
-  version: v1.0.31
-  sha: 5a869d5c256932f5288c42755b8e65d7e9731f0ff2226c244cb3cd13bebd34a1
-  filename: binary-buildpack-cflinuxfs3-v1.0.31.zip
-  url: https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.31/binary-buildpack-cflinuxfs3-v1.0.31.zip
+  version: v1.0.32
+  sha: 13710732ee67afcbd7c11b35c636dee39209d8048fcee1a8c33c111637082fab
+  filename: binary-buildpack-cflinuxfs3-v1.0.32.zip
+  url: https://github.com/cloudfoundry/binary-buildpack/releases/download/v1.0.32/binary-buildpack-cflinuxfs3-v1.0.32.zip
   dependencies: []
 - name: dotnet_core_buildpack
   repo_name: dotnet-core-buildpack
   stack: cflinuxfs3
-  version: v2.2.8
-  sha: 9d4d330060ae1afb4c96ba0d1c567f5940f706854c7d22fe4a689f2a75859100
-  filename: dotnet-core-buildpack-cflinuxfs3-v2.2.8.zip
-  url: https://github.com/cloudfoundry/dotnet-core-buildpack/releases/download/v2.2.8/dotnet-core-buildpack-cflinuxfs3-v2.2.8.zip
+  version: v2.2.12
+  sha: a6e849acce7a9c13e668be900b70b83ff7623919873ac4ae6f55a73b4843b978
+  filename: dotnet-core-buildpack-cflinuxfs3-v2.2.12.zip
+  url: https://github.com/cloudfoundry/dotnet-core-buildpack/releases/download/v2.2.12/dotnet-core-buildpack-cflinuxfs3-v2.2.12.zip
   dependencies:
   - name: bower
     version: 1.8.8
@@ -21,61 +21,49 @@ buildpacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 2.1.7
+    version: 2.1.5
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-aspnetcore
-    version: 2.1.7
+    version: 2.1.5
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 2.1.8
+    version: 2.1.10
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-aspnetcore
-    version: 2.1.8
+    version: 2.1.10
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 2.1.9
+    version: 2.1.11
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-aspnetcore
-    version: 2.1.9
+    version: 2.1.11
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 2.2.2
+    version: 2.2.4
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-aspnetcore
-    version: 2.2.2
+    version: 2.2.4
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 2.2.3
+    version: 2.2.5
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-aspnetcore
-    version: 2.2.3
+    version: 2.2.5
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 1.0.11
+    version: 1.0.15
     cf_stacks:
     - cflinuxfs2
-  - name: dotnet-runtime
-    version: 1.0.12
-    cf_stacks:
-    - cflinuxfs2
-  - name: dotnet-runtime
-    version: 1.1.11
-    cf_stacks:
-    - cflinuxfs2
-  - name: dotnet-runtime
-    version: 1.1.11
-    cf_stacks:
-    - cflinuxfs3
   - name: dotnet-runtime
     version: 1.1.12
     cf_stacks:
@@ -85,67 +73,51 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 2.1.7
+    version: 1.1.13
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-runtime
-    version: 2.1.7
+    version: 1.1.13
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 2.1.8
+    version: 2.1.5
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-runtime
-    version: 2.1.8
+    version: 2.1.5
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 2.1.9
+    version: 2.1.10
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-runtime
-    version: 2.1.9
+    version: 2.1.10
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 2.2.1
+    version: 2.1.11
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-runtime
-    version: 2.2.1
+    version: 2.1.11
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 2.2.2
+    version: 2.2.4
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-runtime
-    version: 2.2.2
+    version: 2.2.4
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 2.2.3
+    version: 2.2.5
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-runtime
-    version: 2.2.3
-    cf_stacks:
-    - cflinuxfs3
-  - name: dotnet-sdk
-    version: 1.1.11
-    cf_stacks:
-    - cflinuxfs2
-  - name: dotnet-sdk
-    version: 1.1.11
-    cf_stacks:
-    - cflinuxfs3
-  - name: dotnet-sdk
-    version: 1.1.12
-    cf_stacks:
-    - cflinuxfs2
-  - name: dotnet-sdk
-    version: 1.1.12
+    version: 2.2.5
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-sdk
@@ -157,6 +129,14 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-sdk
+    version: 1.1.14
+    cf_stacks:
+    - cflinuxfs2
+  - name: dotnet-sdk
+    version: 1.1.14
+    cf_stacks:
+    - cflinuxfs3
+  - name: dotnet-sdk
     version: 2.1.403
     cf_stacks:
     - cflinuxfs2
@@ -165,19 +145,27 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-sdk
-    version: 2.1.505
+    version: 2.1.507
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-sdk
-    version: 2.1.505
+    version: 2.1.507
     cf_stacks:
     - cflinuxfs3
   - name: dotnet-sdk
-    version: 2.2.105
+    version: 2.2.107
     cf_stacks:
     - cflinuxfs2
   - name: dotnet-sdk
-    version: 2.2.105
+    version: 2.2.107
+    cf_stacks:
+    - cflinuxfs3
+  - name: dotnet-sdk
+    version: 2.2.203
+    cf_stacks:
+    - cflinuxfs3
+  - name: dotnet-sdk
+    version: 2.2.204
     cf_stacks:
     - cflinuxfs3
   - name: libgdiplus
@@ -197,27 +185,27 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 6.17.0
+    version: 10.15.0
     cf_stacks:
     - cflinuxfs2
   - name: node
-    version: 6.17.0
+    version: 10.15.2
     cf_stacks:
     - cflinuxfs3
 - name: go_buildpack
   repo_name: go-buildpack
   stack: cflinuxfs3
-  version: v1.8.36
-  sha: 3e22f3a3274c0dc1e8ecff4bb01922e370435214d1b04440efba720f5ae12576
-  filename: go-buildpack-cflinuxfs3-v1.8.36.zip
-  url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.36/go-buildpack-cflinuxfs3-v1.8.36.zip
+  version: v1.8.40
+  sha: 63dce948c2cfeb0b0f23a388d22c390d12da9aa2b8100ba3c230b0f2102394da
+  filename: go-buildpack-cflinuxfs3-v1.8.40.zip
+  url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.8.40/go-buildpack-cflinuxfs3-v1.8.40.zip
   dependencies:
   - name: dep
-    version: 0.5.1
+    version: 0.5.3
     cf_stacks:
     - cflinuxfs2
   - name: dep
-    version: 0.5.1
+    version: 0.5.3
     cf_stacks:
     - cflinuxfs3
   - name: glide
@@ -245,35 +233,35 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: go
-    version: 1.11.5
+    version: 1.11.9
     cf_stacks:
     - cflinuxfs2
   - name: go
-    version: 1.11.5
+    version: 1.11.9
     cf_stacks:
     - cflinuxfs3
   - name: go
-    version: 1.11.6
+    version: 1.11.10
     cf_stacks:
     - cflinuxfs2
   - name: go
-    version: 1.11.6
+    version: 1.11.10
     cf_stacks:
     - cflinuxfs3
   - name: go
-    version: "1.12"
+    version: 1.12.4
     cf_stacks:
     - cflinuxfs2
   - name: go
-    version: "1.12"
+    version: 1.12.4
     cf_stacks:
     - cflinuxfs3
   - name: go
-    version: 1.12.1
+    version: 1.12.5
     cf_stacks:
     - cflinuxfs2
   - name: go
-    version: 1.12.1
+    version: 1.12.5
     cf_stacks:
     - cflinuxfs3
   - name: godep
@@ -287,49 +275,33 @@ buildpacks:
 - name: java_buildpack
   repo_name: java-buildpack
   stack: cflinuxfs3
-  version: v4.18
-  sha: 61bbd5792d0629d604aeff4aa409c44b85716ac69fa8fc4263b934b75fdd249b
-  filename: java-buildpack-v4.18.zip
-  url: https://github.com/cloudfoundry/java-buildpack/releases/download/v4.18/java-buildpack-v4.18.zip
+  version: v4.19.1
+  sha: b5e6260c220a37cd247ea6989962ca752ff11dd67e2d559e2bdaa09e0d8bcb07
+  filename: java-buildpack-v4.19.1.zip
+  url: https://github.com/cloudfoundry/java-buildpack/releases/download/v4.19.1/java-buildpack-v4.19.1.zip
   dependencies: []
 - name: nodejs_buildpack
   repo_name: nodejs-buildpack
   stack: cflinuxfs3
-  version: v1.6.46
-  sha: 7d7826abc5a52c16a3f85aa1e789d2b2a5dfb1fa26b3a95ebfba9c5f6e7a3362
-  filename: nodejs-buildpack-cflinuxfs3-v1.6.46.zip
-  url: https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.6.46/nodejs-buildpack-cflinuxfs3-v1.6.46.zip
+  version: v1.6.50
+  sha: cd13fd76adfe19808cb6fc3b9eee8af1d52cc0df311b659bff8116239367dbad
+  filename: nodejs-buildpack-cflinuxfs3-v1.6.50.zip
+  url: https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.6.50/nodejs-buildpack-cflinuxfs3-v1.6.50.zip
   dependencies:
   - name: node
-    version: 6.16.0
-    cf_stacks:
-    - cflinuxfs2
-  - name: node
-    version: 6.16.0
-    cf_stacks:
-    - cflinuxfs3
-  - name: node
-    version: 6.17.0
-    cf_stacks:
-    - cflinuxfs2
-  - name: node
-    version: 6.17.0
-    cf_stacks:
-    - cflinuxfs3
-  - name: node
-    version: 8.15.0
-    cf_stacks:
-    - cflinuxfs2
-  - name: node
-    version: 8.15.0
-    cf_stacks:
-    - cflinuxfs3
-  - name: node
     version: 8.15.1
     cf_stacks:
     - cflinuxfs2
   - name: node
     version: 8.15.1
+    cf_stacks:
+    - cflinuxfs3
+  - name: node
+    version: 8.16.0
+    cf_stacks:
+    - cflinuxfs2
+  - name: node
+    version: 8.16.0
     cf_stacks:
     - cflinuxfs3
   - name: node
@@ -349,11 +321,15 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 11.10.1
+    version: 11.14.0
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 11.12.0
+    version: 11.15.0
+    cf_stacks:
+    - cflinuxfs3
+  - name: node
+    version: 12.1.0
     cf_stacks:
     - cflinuxfs3
   - name: yarn
@@ -364,10 +340,10 @@ buildpacks:
 - name: php_buildpack
   repo_name: php-buildpack
   stack: cflinuxfs3
-  version: v4.3.72
-  sha: d21bfbdbcd992c7a19270ca4ea559db4491bc7f6db7b8efa21c1c9583cc36e11
-  filename: php-buildpack-cflinuxfs3-v4.3.72.zip
-  url: https://github.com/cloudfoundry/php-buildpack/releases/download/v4.3.72/php-buildpack-cflinuxfs3-v4.3.72.zip
+  version: v4.3.77
+  sha: e03990c9a16835b4956c2dd1309ca3c84f55f8e155d5b743003880fce468e1f2
+  filename: php-buildpack-cflinuxfs3-v4.3.77.zip
+  url: https://github.com/cloudfoundry/php-buildpack/releases/download/v4.3.77/php-buildpack-cflinuxfs3-v4.3.77.zip
   dependencies:
   - name: CAAPM
     version: 10.7.0
@@ -375,21 +351,21 @@ buildpacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: appdynamics
-    version: 4.5.7.2661
+    version: 4.5.9.2753
     cf_stacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: composer
-    version: 1.8.4
+    version: 1.8.5
     cf_stacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: httpd
-    version: 2.4.38
+    version: 2.4.39
     cf_stacks:
     - cflinuxfs2
   - name: httpd
-    version: 2.4.38
+    version: 2.4.39
     cf_stacks:
     - cflinuxfs3
   - name: newrelic
@@ -406,60 +382,64 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: nginx
-    version: 1.15.9
+    version: 1.15.12
     cf_stacks:
     - cflinuxfs2
   - name: nginx
-    version: 1.15.9
+    version: 1.15.12
+    cf_stacks:
+    - cflinuxfs3
+  - name: nginx
+    version: 1.16.0
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.1.26
+    version: 7.1.28
     cf_stacks:
     - cflinuxfs2
   - name: php
-    version: 7.1.26
+    version: 7.1.28
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.1.27
+    version: 7.1.29
     cf_stacks:
     - cflinuxfs2
   - name: php
-    version: 7.1.27
+    version: 7.1.29
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.2.15
+    version: 7.2.17
     cf_stacks:
     - cflinuxfs2
   - name: php
-    version: 7.2.15
+    version: 7.2.17
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.2.16
+    version: 7.2.18
     cf_stacks:
     - cflinuxfs2
   - name: php
-    version: 7.2.16
+    version: 7.2.18
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.3.2
+    version: 7.3.4
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.3.3
+    version: 7.3.5
     cf_stacks:
     - cflinuxfs3
 - name: python_buildpack
   repo_name: python-buildpack
   stack: cflinuxfs3
-  version: v1.6.29
-  sha: 704a7e137bb66c45e50e74b0a39dd7ae92bb9cd813668d03d838f5c762919fc6
-  filename: python-buildpack-cflinuxfs3-v1.6.29.zip
-  url: https://github.com/cloudfoundry/python-buildpack/releases/download/v1.6.29/python-buildpack-cflinuxfs3-v1.6.29.zip
+  version: v1.6.34
+  sha: d40a82ee90ebc1b0dd9821f3823c3f1418b7301e860f4c7639d0ab560010e1f6
+  filename: python-buildpack-cflinuxfs3-v1.6.34.zip
+  url: https://github.com/cloudfoundry/python-buildpack/releases/download/v1.6.34/python-buildpack-cflinuxfs3-v1.6.34.zip
   dependencies:
   - name: libffi
     version: 3.2.1
@@ -472,17 +452,12 @@ buildpacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: miniconda2
-    version: 4.5.12
+    version: 4.6.14
     cf_stacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: miniconda3
-    version: 4.5.12
-    cf_stacks:
-    - cflinuxfs2
-    - cflinuxfs3
-  - name: pip
-    version: 9.0.3
+    version: 4.6.14
     cf_stacks:
     - cflinuxfs2
     - cflinuxfs3
@@ -516,14 +491,6 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: python
-    version: 3.4.8
-    cf_stacks:
-    - cflinuxfs2
-  - name: python
-    version: 3.4.8
-    cf_stacks:
-    - cflinuxfs3
-  - name: python
     version: 3.4.9
     cf_stacks:
     - cflinuxfs2
@@ -532,11 +499,11 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: python
-    version: 3.5.5
+    version: 3.4.10
     cf_stacks:
     - cflinuxfs2
   - name: python
-    version: 3.5.5
+    version: 3.4.10
     cf_stacks:
     - cflinuxfs3
   - name: python
@@ -545,6 +512,14 @@ buildpacks:
     - cflinuxfs2
   - name: python
     version: 3.5.6
+    cf_stacks:
+    - cflinuxfs3
+  - name: python
+    version: 3.5.7
+    cf_stacks:
+    - cflinuxfs2
+  - name: python
+    version: 3.5.7
     cf_stacks:
     - cflinuxfs3
   - name: python
@@ -561,28 +536,28 @@ buildpacks:
     - cflinuxfs2
   - name: python
     version: 3.6.8
-    cf_stacks:
-    - cflinuxfs3
-  - name: python
-    version: 3.7.1
     cf_stacks:
     - cflinuxfs3
   - name: python
     version: 3.7.2
     cf_stacks:
     - cflinuxfs3
+  - name: python
+    version: 3.7.3
+    cf_stacks:
+    - cflinuxfs3
   - name: setuptools
-    version: 40.8.0
+    version: 41.0.1
     cf_stacks:
     - cflinuxfs2
     - cflinuxfs3
 - name: ruby_buildpack
   repo_name: ruby-buildpack
   stack: cflinuxfs3
-  version: v1.7.35
-  sha: aa82ee8192989150ec2a85482f649b9ae34361d6e76e76c9000ed02a2f77a84f
-  filename: ruby-buildpack-cflinuxfs3-v1.7.35.zip
-  url: https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.35/ruby-buildpack-cflinuxfs3-v1.7.35.zip
+  version: v1.7.39
+  sha: b4f7608c457ef2a5f8d12b51a050105b27fcfa97502101f989c79dda753593bd
+  filename: ruby-buildpack-cflinuxfs3-v1.7.39.zip
+  url: https://github.com/cloudfoundry/ruby-buildpack/releases/download/v1.7.39/ruby-buildpack-cflinuxfs3-v1.7.39.zip
   dependencies:
   - name: bundler
     version: 1.17.3
@@ -603,19 +578,19 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: jruby
-    version: 9.2.6.0
+    version: 9.2.7.0
     cf_stacks:
     - cflinuxfs2
   - name: jruby
-    version: 9.2.6.0
+    version: 9.2.7.0
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 6.17.0
+    version: 10.15.0
     cf_stacks:
     - cflinuxfs2
   - name: node
-    version: 6.17.0
+    version: 10.15.3
     cf_stacks:
     - cflinuxfs3
   - name: openjdk1.8-latest
@@ -652,19 +627,19 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: ruby
-    version: 2.4.4
+    version: 2.4.5
     cf_stacks:
     - cflinuxfs2
   - name: ruby
-    version: 2.4.4
+    version: 2.4.5
     cf_stacks:
     - cflinuxfs3
   - name: ruby
-    version: 2.4.5
+    version: 2.4.6
     cf_stacks:
     - cflinuxfs2
   - name: ruby
-    version: 2.4.5
+    version: 2.4.6
     cf_stacks:
     - cflinuxfs3
   - name: ruby
@@ -684,19 +659,19 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: ruby
-    version: 2.6.1
+    version: 2.6.2
     cf_stacks:
     - cflinuxfs2
   - name: ruby
-    version: 2.6.1
+    version: 2.6.2
     cf_stacks:
     - cflinuxfs3
   - name: ruby
-    version: 2.6.2
+    version: 2.6.3
     cf_stacks:
     - cflinuxfs2
   - name: ruby
-    version: 2.6.2
+    version: 2.6.3
     cf_stacks:
     - cflinuxfs3
   - name: rubygems
@@ -705,56 +680,73 @@ buildpacks:
     - cflinuxfs2
     - cflinuxfs3
   - name: yarn
-    version: 1.15.2
+    version: 1.16.0
     cf_stacks:
     - cflinuxfs2
     - cflinuxfs3
 - name: staticfile_buildpack
   repo_name: staticfile-buildpack
   stack: cflinuxfs3
-  version: v1.4.40
-  sha: 1a2e160fbb596be0b539c0c0eb92d0ed9ef6494c9875e45855f019c4c7d19270
-  filename: staticfile-buildpack-cflinuxfs3-v1.4.40.zip
-  url: https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.40/staticfile-buildpack-cflinuxfs3-v1.4.40.zip
+  version: v1.4.42
+  sha: d46452d55a3d39d64f3efb7f266debcc276dc4ab90f6d0f0e591a39389bc0914
+  filename: staticfile-buildpack-cflinuxfs3-v1.4.42.zip
+  url: https://github.com/cloudfoundry/staticfile-buildpack/releases/download/v1.4.42/staticfile-buildpack-cflinuxfs3-v1.4.42.zip
   dependencies:
   - name: nginx
-    version: 1.15.9
+    version: 1.15.12
     cf_stacks:
     - cflinuxfs2
   - name: nginx
-    version: 1.15.9
+    version: 1.15.12
     cf_stacks:
     - cflinuxfs3
 - name: nginx_buildpack
   repo_name: nginx-buildpack
   stack: cflinuxfs3
-  version: v1.0.8
-  sha: 18b5f7ee6b63b7c6463ef97b5706f4db0c260bc7efc7024f1508930b7be69bf9
-  filename: nginx-buildpack-cflinuxfs3-v1.0.8.zip
-  url: https://github.com/cloudfoundry/nginx-buildpack/releases/download/v1.0.8/nginx-buildpack-cflinuxfs3-v1.0.8.zip
+  version: v1.0.12
+  sha: 4d6e812020aa2665466b2a717d991d0981d4f82c37fc078e09d00d00011d7ae3
+  filename: nginx-buildpack-cflinuxfs3-v1.0.12.zip
+  url: https://github.com/cloudfoundry/nginx-buildpack/releases/download/v1.0.12/nginx-buildpack-cflinuxfs3-v1.0.12.zip
   dependencies:
   - name: nginx
     version: 1.14.2
     cf_stacks:
     - cflinuxfs2
+  - name: nginx
+    version: 1.14.2
+    cf_stacks:
     - cflinuxfs3
   - name: nginx
-    version: 1.15.8
+    version: 1.15.12
     cf_stacks:
     - cflinuxfs2
+  - name: nginx
+    version: 1.15.12
+    cf_stacks:
+    - cflinuxfs3
+  - name: nginx
+    version: 1.16.0
+    cf_stacks:
+    - cflinuxfs2
+  - name: nginx
+    version: 1.16.0
+    cf_stacks:
     - cflinuxfs3
   - name: openresty
     version: 1.13.6.2
     cf_stacks:
     - cflinuxfs2
+  - name: openresty
+    version: 1.13.6.2
+    cf_stacks:
     - cflinuxfs3
 - name: r_buildpack
   repo_name: r-buildpack
   stack: cflinuxfs3
-  version: v1.0.8
-  sha: e1717a96610edec81e5d3fdddf08e1404697333cbc8e9aee439c6bb4a3b45403
-  filename: r-buildpack-cflinuxfs3-v1.0.8.zip
-  url: https://github.com/cloudfoundry/r-buildpack/releases/download/v1.0.8/r-buildpack-cflinuxfs3-v1.0.8.zip
+  version: v1.0.10
+  sha: 9375a2394f7f4fed1e8946fc1717fe7cdb71efd151cb963232520fce7020d66b
+  filename: r-buildpack-cflinuxfs3-v1.0.10.zip
+  url: https://github.com/cloudfoundry/r-buildpack/releases/download/v1.0.10/r-buildpack-cflinuxfs3-v1.0.10.zip
   dependencies:
   - name: r
     version: 3.4.3
@@ -764,14 +756,27 @@ buildpacks:
     version: 3.4.4
     cf_stacks:
     - cflinuxfs2
+  - name: r
+    version: 3.4.4
+    cf_stacks:
     - cflinuxfs3
   - name: r
     version: 3.5.2
     cf_stacks:
     - cflinuxfs2
+  - name: r
+    version: 3.5.2
+    cf_stacks:
     - cflinuxfs3
   - name: r
     version: 3.5.3
     cf_stacks:
     - cflinuxfs2
+  - name: r
+    version: 3.5.3
+    cf_stacks:
+    - cflinuxfs3
+  - name: r
+    version: 3.6.0
+    cf_stacks:
     - cflinuxfs3
