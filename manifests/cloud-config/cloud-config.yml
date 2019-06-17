@@ -139,28 +139,28 @@ vm_types:
 - name: compilation
   cloud_properties:
     iam_instance_profile: compilation-vm
-    instance_type: c4.large
+    instance_type: ((compilation_vm_instance_type))
     ephemeral_disk:
       size: 20480
       type: gp2
 
 - name: nano
   cloud_properties:
-    instance_type: t2.nano
+    instance_type: ((nano_vm_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2
 
 - name: small
   cloud_properties:
-    instance_type: t2.small
+    instance_type: ((small_vm_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2
 
 - name: errand
   cloud_properties:
-    instance_type: t2.small
+    instance_type: ((small_vm_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2
@@ -168,21 +168,21 @@ vm_types:
 
 - name: medium
   cloud_properties:
-    instance_type: t2.medium
+    instance_type: ((medium_vm_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2
 
 - name: large
   cloud_properties:
-    instance_type: m4.large
+    instance_type: ((large_vm_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2
 
 - name: router
   cloud_properties:
-    instance_type: c4.large
+    instance_type: ((router_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2

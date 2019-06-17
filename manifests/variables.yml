@@ -1,4 +1,10 @@
 ---
+compilation_vm_instance_type: c4.large
+nano_vm_instance_type: t2.nano
+small_vm_instance_type: t2.small
+medium_vm_instance_type: t2.medium
+large_vm_instance_type: m4.large
+router_instance_type: c4.large
 cell_instance_type: r5.xlarge
 
 # Advertised memory capacity of the cells.
