@@ -151,13 +151,6 @@ vm_types:
       size: 10240
       type: gp2
 
-- name: nano_previous_generation
-  cloud_properties:
-    instance_type: ((nano_vm_previous_generation_instance_type))
-    ephemeral_disk:
-      size: 10240
-      type: gp2
-
 - name: small
   cloud_properties:
     instance_type: ((small_vm_instance_type))
@@ -176,13 +169,6 @@ vm_types:
 - name: medium
   cloud_properties:
     instance_type: ((medium_vm_instance_type))
-    ephemeral_disk:
-      size: 10240
-      type: gp2
-
-- name: medium_previous_generation
-  cloud_properties:
-    instance_type: ((medium_vm_previous_generation_instance_type))
     ephemeral_disk:
       size: 10240
       type: gp2

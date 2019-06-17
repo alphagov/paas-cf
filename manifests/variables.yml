@@ -1,10 +1,8 @@
 ---
 compilation_vm_instance_type: c5.large
 nano_vm_instance_type: t3.nano
-nano_vm_previous_generation_instance_type: t2.nano
 small_vm_instance_type: t3.small
 medium_vm_instance_type: t3.medium
-medium_vm_previous_generation_instance_type: t2.medium
 large_vm_instance_type: m5.large
 router_instance_type: c5.large
 cell_instance_type: r5.xlarge
