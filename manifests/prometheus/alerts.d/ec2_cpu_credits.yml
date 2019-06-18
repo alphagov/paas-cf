@@ -7,10 +7,11 @@
     name: EC2CPUCreditsLow
     rules:
       - alert: EC2CPUCreditsLow
-        expr: avg_over_time(aws_ec2_cpucredit_balance_minimum[30m]) <= 20
+        expr: avg_over_time(aws_ec2_cpucredit_balance_minimum[30m]) <= 6
+        for: 2h
         labels:
           severity: warning
         annotations:
-          summary: "EC2 CPU credits are low on {{ $labels.tag_Name }}"
-          description: "Instance {{ $labels.tag_Name }} has only {{ $value | printf \"%.0f\" }} CPU credits left and may perform badly."
+          summary: "EC2 CPU credits are low or they have not been accruing on {{ $labels.tag_Name }}"
           url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#cpu-credits"
+          description: "Instance {{ $labels.tag_Name }} has only {{ $value | printf \"%.0f\" }} CPU credits left and may perform badly.  T3 instances do not have launch credits, therefore they have 0 credits at launch. If they have not earned any credits after 2 hours (i.e. 6 or fewer credits) then there may be a problem."
