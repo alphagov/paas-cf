@@ -1,9 +1,9 @@
 - type: replace
   path: /instance_groups/name=alertmanager/vm_type
-  value: nano
+  value: nano_previous_generation
 - type: replace
   path: /instance_groups/name=grafana/vm_type
-  value: nano
+  value: nano_previous_generation
 - type: replace
   path: /instance_groups/name=prometheus2/vm_type
-  value: medium
+  value: medium_previous_generation
