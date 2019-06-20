@@ -370,13 +370,13 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts
-      tag_filter: v0.7.0
+      tag_filter: v0.10.0
 
   - name: paas-admin
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin
-      tag_filter: v0.151.0
+      tag_filter: v0.153.0
 
   - name: prometheus-vars-store
     type: s3-iam
@@ -2714,6 +2714,34 @@ jobs:
                 )
 
                 (
+                echo "Adding username for admin user"
+
+                USER_UUID=$(curl --silent --fail --header "Authorization: $(cf oauth-token)" "https://login.${SYSTEM_DNS_ZONE_NAME}/userinfo" | jq '.user_id' --raw-output)
+                USERNAME=$(curl --silent --fail --header "Authorization: $(cf oauth-token)" "https://login.${SYSTEM_DNS_ZONE_NAME}/userinfo" | jq '.email' --raw-output)
+
+                res=$(curl --silent --fail --include \
+                  --request GET \
+                  --user "admin:${BASIC_AUTH_PASSWORD}" \
+                  "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users/${USER_UUID}" || echo "no user")
+
+                if [ "${res}" = "no user" ]; then
+                  echo "Admin user not found"
+                  curl --silent --fail --include \
+                    --request POST \
+                    --user "admin:${BASIC_AUTH_PASSWORD}" \
+                    --header "Content-Type: application/json" \
+                    --data "{\"user_uuid\":\"${USER_UUID}\",\"user_email\":null,\"username\":\"${USERNAME}\"}" \
+                     "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users"
+                else
+                  echo "Updating admin user's username"
+                  curl --silent --fail --include \
+                    --request PATCH \
+                    --user "admin:${BASIC_AUTH_PASSWORD}" \
+                    --header "Content-Type: application/json" \
+                    --data "{\"user_uuid\":\"${USER_UUID}\",\"user_email\":null,\"username\":\"${USERNAME}\"}" \
+                     "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users/${USER_UUID}"
+                fi
+
                 echo "Uploading documents"
                 cd paas-cf/config/accounts/documents
 
