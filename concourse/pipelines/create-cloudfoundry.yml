@@ -2837,6 +2837,10 @@ jobs:
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
                     SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
                     AWS_REGION: "$AWS_REGION"
+                    MS_CLIENT_ID: ((microsoft_adminoidc_client_id))
+                    MS_CLIENT_SECRET: ((microsoft_adminoidc_client_secret))
+                    MS_TENANT_ID: ((microsoft_adminoidc_tenant_id))
+                    DOMAIN_NAME: "https://admin.${SYSTEM_DNS_ZONE_NAME}"
                 EOF
 
                 spruce merge \

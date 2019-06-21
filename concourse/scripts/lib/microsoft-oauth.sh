@@ -8,6 +8,9 @@ get_microsoft_oauth_secrets() {
   export microsoft_oauth_tenant_id
   export microsoft_oauth_client_id
   export microsoft_oauth_client_secret
+  export microsoft_adminoidc_tenant_id
+  export microsoft_adminoidc_client_id
+  export microsoft_adminoidc_client_secret
   secrets_size=$(aws s3 ls "${secrets_uri}" | awk '{print $3}')
   if [ "${secrets_size}" != 0 ] && [ -n "${secrets_size}" ]  ; then
     secrets_file=$(mktemp -t microsoft-oauth-secrets.XXXXXX)
@@ -16,6 +19,10 @@ get_microsoft_oauth_secrets() {
     microsoft_oauth_tenant_id=$("${SCRIPT_DIR}"/val_from_yaml.rb secrets.microsoft_oauth_tenant_id "${secrets_file}")
     microsoft_oauth_client_id=$("${SCRIPT_DIR}"/val_from_yaml.rb secrets.microsoft_oauth_client_id "${secrets_file}")
     microsoft_oauth_client_secret=$("${SCRIPT_DIR}"/val_from_yaml.rb secrets.microsoft_oauth_client_secret "${secrets_file}")
+
+		microsoft_adminoidc_tenant_id=$("${SCRIPT_DIR}"/val_from_yaml.rb secrets.microsoft_adminoidc_tenant_id "${secrets_file}")
+		microsoft_adminoidc_client_id=$("${SCRIPT_DIR}"/val_from_yaml.rb secrets.microsoft_adminoidc_client_id "${secrets_file}")
+		microsoft_adminoidc_client_secret=$("${SCRIPT_DIR}"/val_from_yaml.rb secrets.microsoft_adminoidc_client_secret "${secrets_file}")
 
     rm -f "${secrets_file}"
   fi
