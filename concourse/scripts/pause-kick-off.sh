@@ -10,16 +10,16 @@ set -e
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 case "${1:-}" in
-  pause)
+  pin)
     echo "Pausing pipeline kick-off."
-    action=pause
+    action=pin
     ;;
-  unpause)
+  unpin)
     echo "Unpausing pipeline kick-off."
-    action=unpause
+    action=unpin
     ;;
   *)
-    echo "Usage $0 <pause|unpause>"
+    echo "Usage $0 <pin|unpin>"
     exit 1
     ;;
 esac
