@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: awslogs
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/awslogs-0.1.1.tgz
+    sha1: dd307700e55c6c45376a5d76583243601e7559e6
