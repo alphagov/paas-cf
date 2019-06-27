@@ -9,3 +9,7 @@ google_oauth_client_secret: abcd1234
 microsoft_oauth_tenant_id: abcd1234
 microsoft_oauth_client_id: abcd1234
 microsoft_oauth_client_secret: abcd1234
+microsoft_oauth_auth_url: abcd1234
+microsoft_oauth_token_key_url: abcd1234
+microsoft_oauth_token_url: abcd1234
+microsoft_oauth_issuer: https://login.microsoft.com

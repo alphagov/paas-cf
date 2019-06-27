@@ -4,10 +4,11 @@
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/oauth?/providers/microsoft
   value:
     type: oidc1.0
-    authUrl: https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize
-    tokenUrl: https://login.microsoftonline.com/organizations/oauth2/v2.0/token
-    tokenKeyUrl: https://login.microsoftonline.com/organizations/discovery/v2.0/keys
-    issuer: https://login.microsoftonline.com/((microsoft_oauth_tenant_id))/v2.0
+    authUrl: ((microsoft_oauth_auth_url))
+    tokenUrl: ((microsoft_oauth_token_url))
+    tokenKeyUrl: ((microsoft_oauth_token_key_url))
+    issuer: ((microsoft_oauth_issuer))
+    issuerValidationMode: domain_only
     redirectUrl: https://login.((system_domain))/uaa
     scopes:
       - openid
