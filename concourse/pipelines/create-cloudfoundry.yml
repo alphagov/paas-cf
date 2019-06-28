@@ -1072,7 +1072,6 @@ jobs:
                 - -c
                 - |
                   DISCOVERY_DOC=$(curl https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration)
-                  export DISCOVERY_DOC
 
                   echo "$DISCOVERY_DOC" | jq '.authorization_endpoint' --raw-output \
                     > ms-oauth-endpoints/authorization_endpoint
