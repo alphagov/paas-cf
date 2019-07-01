@@ -34,6 +34,12 @@
     - "uaa.((system_domain))"
     - "login.((system_domain))"
 
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/ca_certs?
+  value:
+    - ((aws_rds_combined_ca_bundle))
+    - ((uaa_ca.certificate))((uaa_ca_old.certificate))
+
 - type: remove
   path: /instance_groups/name=uaa/jobs/name=uaa/consumes
 
