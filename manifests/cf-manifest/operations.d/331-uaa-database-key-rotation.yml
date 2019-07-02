@@ -1,23 +1,5 @@
 ---
 - type: replace
-  path: /instance_groups/-
-  value:
-    name: rotate-uaa-database-key
-    instances: 1
-    azs: [z1]
-    lifecycle: errand
-    vm_type: errand
-    stemcell: default
-    networks:
-    - name: ((network_name))
-    vm_extensions:
-    - cf_rds_client_sg
-    jobs:
-    - name: uaa_key_rotator
-      release: uaa
-      properties: {}
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/encryption
   value:
     active_key_label: ((uaa_default_encryption_passphrase_id))
