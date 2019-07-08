@@ -101,6 +101,13 @@ prepare_environment() {
   export EXPOSE_PIPELINE=1
 }
 
+deploy_env_tag_prefix="*" # this matches all tags and is the default
+if [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ] ; then
+  deploy_env_tag_prefix="stg-lon-*" # this matches all tags created by stg-lon
+elif [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+  deploy_env_tag_prefix="v[0-9]*" # this matches all tags created by release ci
+fi
+
 generate_vars_file() {
   cat <<EOF
 ---
@@ -150,6 +157,7 @@ monitored_aws_region: ${MONITORED_AWS_REGION:-}
 monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}
 grafana_auth_google_client_id: "${grafana_auth_google_client_id:-}"
 grafana_auth_google_client_secret: "${grafana_auth_google_client_secret:-}"
+deploy_env_tag_prefix: "${deploy_env_tag_prefix}"
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }

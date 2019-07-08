@@ -379,7 +379,8 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-admin.git
       branch: master
-      tag_filter: v0.158.0
+      tag_filter: ((deploy_env_tag_prefix))
+      commit_verification_keys: ((gpg_public_keys))
 
   - name: prometheus-vars-store
     type: s3-iam
@@ -2930,6 +2931,67 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+
+      - get: git-keys
+
+      - task: tag-app-repo
+        tags: [colocated-with-web]
+        config: &tag-app-repo-config
+          platform: linux
+          image_resource: *git-ssh-image-resource
+          inputs:
+            - name: git-keys
+
+            - name: paas-admin
+              path: repo
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            REPO: paas-admin
+            GIT_REPO_SSH: git@github.com:alphagov/paas-admin.git
+            GIT_EMAIL: the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk
+            GIT_USER: gov-paas-((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                new_tag="${DEPLOY_ENV}-$(date +%Y-%m-%d-%H-%M-%S)"
+
+                num_git_keys="$(tar -tzf git-keys/git-keys.tar.gz | wc -l)"
+                echo "Found ${num_git_keys} files in git-keys"
+
+                echo "Extracting ${num_git_keys} into .ssh"
+                tar xzf git-keys/git-keys.tar.gz
+                mkdir -p ~/.ssh
+
+                echo 'Configuring .ssh/config'
+                cat <<EOF > ~/.ssh/config
+                Host github.com
+                  StrictHostKeyChecking no
+                  IdentityFile $(pwd)/git-key
+                EOF
+
+                cd repo
+
+                if [ "$DEPLOY_ENV" = "stg-lon" ]; then
+                  echo 'Going to tag repo'
+                else
+                  echo 'Skipping: create-cloudfoundry only tags in staging'
+                  exit 0
+                fi
+
+                echo 'Configuring git'
+                git config --global user.email "${GIT_EMAIL}"
+                git config --global user.name "${GIT_USER}"
+                git remote add tag_origin "${GIT_REPO_SSH}"
+
+                echo "New tag for ${REPO} is ${new_tag}"
+                git tag "${new_tag}"
+
+                echo "Pushing tag refs/tags/${new_tag} to ${REPO}"
+                git push tag_origin "refs/tags/${new_tag}"
 
   - name: deploy-paas-billing
     serial: true
