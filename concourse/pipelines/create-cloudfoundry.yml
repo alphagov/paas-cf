@@ -323,6 +323,16 @@ resources:
       # This is an empty tar.gz file base64 encoded
       initial_content_binary: "H4sICMtSp1YAA2NvbmNvdXJzZS1jZXJ0cy50YXIA7cEBDQAAAMKg909tDjegAAAAAAAAAAAAgDcDmt4dJwAoAAA="
 
+  - name: paas-admin-git-keys
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: paas-admin-git-keys.tar.gz
+      initial_version: "-"
+      # This is an empty tar.gz file base64 encoded
+      initial_content_binary: "H4sICMtSp1YAA2NvbmNvdXJzZS1jZXJ0cy50YXIA7cEBDQAAAMKg909tDjegAAAAAAAAAAAAgDcDmt4dJwAoAAA="
+
   - name: release-version
     type: semver-iam
     source:
@@ -2932,7 +2942,7 @@ jobs:
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
 
-      - get: git-keys
+      - get: paas-admin-git-keys
 
       - task: tag-app-repo
         tags: [colocated-with-web]
@@ -2940,7 +2950,7 @@ jobs:
           platform: linux
           image_resource: *git-ssh-image-resource
           inputs:
-            - name: git-keys
+            - name: paas-admin-git-keys
 
             - name: paas-admin
               path: repo
@@ -2950,6 +2960,7 @@ jobs:
             GIT_REPO_SSH: git@github.com:alphagov/paas-admin.git
             GIT_EMAIL: the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk
             GIT_USER: gov-paas-((deploy_env))
+            GIT_KEYS: paas-admin-git-keys
           run:
             path: sh
             args:
@@ -2959,18 +2970,18 @@ jobs:
               - |
                 new_tag="${DEPLOY_ENV}-$(date +%Y-%m-%d-%H-%M-%S)"
 
-                num_git_keys="$(tar -tzf git-keys/git-keys.tar.gz | wc -l)"
+                num_git_keys="$(tar -tzf "${GIT_KEYS}/${GIT_KEYS}.tar.gz" | wc -l)"
                 echo "Found ${num_git_keys} files in git-keys"
 
                 echo "Extracting ${num_git_keys} into .ssh"
-                tar xzf git-keys/git-keys.tar.gz
+                tar xzf "${GIT_KEYS}/${GIT_KEYS}.tar.gz"
                 mkdir -p ~/.ssh
 
                 echo 'Configuring .ssh/config'
                 cat <<EOF > ~/.ssh/config
                 Host github.com
                   StrictHostKeyChecking no
-                  IdentityFile $(pwd)/git-key
+                  IdentityFile $(pwd)/private-key
                 EOF
 
                 cd repo
