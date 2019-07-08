@@ -357,19 +357,19 @@ resources:
   - name: paas-aiven-broker
     type: git
     source:
-      uri: https://github.com/alphagov/paas-aiven-broker
+      uri: https://github.com/alphagov/paas-aiven-broker.git
       tag_filter: v0.15.0
 
   - name: paas-billing
     type: git
     source:
-      uri: https://github.com/alphagov/paas-billing
+      uri: https://github.com/alphagov/paas-billing.git
       tag_filter: v0.61.0
 
   - name: paas-accounts
     type: git
     source:
-      uri: https://github.com/alphagov/paas-accounts
+      uri: https://github.com/alphagov/paas-accounts.git
       tag_filter: v0.10.0
 
   - name: paas-admin
@@ -396,7 +396,7 @@ resources:
   - name: paas-yet-another-cloudwatch-exporter
     type: git
     source:
-      uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter
+      uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_master
 
   - name: pagerduty-secrets
