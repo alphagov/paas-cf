@@ -224,11 +224,11 @@ trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
 
 .PHONY: pause-kick-off
 pause-kick-off: check-env ## Pause the morning kick-off of deployment.
-	concourse/scripts/pause-kick-off.sh pause
+	concourse/scripts/pause-kick-off.sh pin
 
 .PHONY: unpause-kick-off
 unpause-kick-off: check-env ## Unpause the morning kick-off of deployment.
-	concourse/scripts/pause-kick-off.sh unpause
+	concourse/scripts/pause-kick-off.sh unpin
 
 .PHONY: showenv
 showenv: check-env ## Display environment information
