@@ -1,0 +1,16 @@
+---
+- type: replace
+  path: /instance_groups/name=uaa/jobs?/-
+  value:
+    name: awslogs-xenial
+    release: awslogs
+    properties:
+      awslogs-xenial:
+        region: ((terraform_outputs_region))
+        awslogs_files_config:
+          - name: /var/vcap/sys/log/uaa/uaa_events.log
+            file: /var/vcap/sys/log/uaa/uaa_events.log
+            log_group_name: uaa_audit_events_((deployment_name))
+            log_stream_name: "{{instance_id}}"
+            initial_position: start_of_file
+            datetime_format: "%Y-%m-%d %H:%M:%S"
