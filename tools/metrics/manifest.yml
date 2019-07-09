@@ -7,6 +7,6 @@ applications:
    buildpack: go_buildpack
    stack: cflinuxfs3
    env:
-     GOVERSION: 1.11
+     GOVERSION: 1.12
      GOPACKAGENAME: github.com/alphagov/paas-cf/tools/metrics
    command: ./bin/metrics
