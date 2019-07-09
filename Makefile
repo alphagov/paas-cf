@@ -26,7 +26,7 @@ spec:
 	cd scripts &&\
 		bundle exec rspec
 	cd tools/metrics &&\
-		go test -v ./...
+		go test -v $(go list ./... | grep -v acceptance)
 	cd tools/user_emails &&\
 		go test -v ./...
 	cd concourse &&\
