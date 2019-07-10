@@ -7,6 +7,8 @@ large_vm_instance_type: m5.large
 router_instance_type: c5.large
 cell_instance_type: r5.xlarge
 
+slim_router_instance_type: t3.medium
+
 # Advertised memory capacity of the cells.
 #
 # We are currently doing over-provisioning of our cells.

@@ -1,37 +1,128 @@
 ---
+# We want to run everything in multi-AZ mode
 
-# This contains changes to downscale dev environments in addition to the
-# upstream scale-to-one-az.yml opsfile.
+# Ensure there are 2 of everything that is availability tested
 
 - type: replace
-  path: /instance_groups/name=doppler/instances
-  value: 1
+  path: /instance_groups/name=nats/instances
+  value: 2
+
 - type: replace
-  path: /instance_groups/name=router/instances
-  value: 1
+  path: /instance_groups/name=diego-api/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=uaa/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=scheduler/instances
+  value: 2
 
 - type: replace
   path: /instance_groups/name=diego-cell/instances
   value: 2
+
 - type: replace
-  path: /instance_groups/name=diego-cell/azs
-  value:
-    - z1
-    - z2
-    - z3
+  path: /instance_groups/name=router/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=api/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=cc-worker/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=adapter/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=doppler/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=log-api/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=doppler/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=router/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=diego-cell/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=api/instances
+  value: 2
+
+# Ensure there is 1 of everything that is not availability tested
 
 - type: replace
   path: /instance_groups/name=rds_broker/instances
   value: 1
+
 - type: replace
   path: /instance_groups/name=cdn_broker/instances
   value: 1
+
 - type: replace
   path: /instance_groups/name=elasticache_broker/instances
   value: 1
+
 - type: replace
   path: /instance_groups/name=s3_broker/instances
   value: 1
+
+# Make everything really small
+#
+# large  => medium
+# medium => small
+# small  => nano
+
 - type: replace
-  path: /instance_groups/name=api/instances
-  value: 1
+  path: /instance_groups/name=adapter/vm_type
+  value: nano
+
+- type: replace
+  path: /instance_groups/name=api/vm_type
+  value: medium
+
+- type: replace
+  path: /instance_groups/name=cc-worker/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=diego-api/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=doppler/vm_type
+  value: medium
+
+- type: replace
+  path: /instance_groups/name=log-api/vm_type
+  value: medium
+
+- type: replace
+  path: /instance_groups/name=nats/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=scheduler/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=uaa/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=router/vm_type
+  value: slim_router
