@@ -16,9 +16,10 @@ import (
 )
 
 const (
-	// We serve 26 metrics, but we expect or more 20
-	// The 6 optional metrics are aws.cloudfront.* which are traffic dependent
-	numExpectedMetricFamilies = 20
+	// We usually serve 26 metrics, but we expect 18 or more
+	// 6 optional metrics are aws.cloudfront.* which are traffic dependent
+	// 2 optional metrics are cdn.tls.* which depend on a cdn routed app
+	numExpectedMetricFamilies = 18
 )
 
 func TestAcceptanceTests(t *testing.T) {
