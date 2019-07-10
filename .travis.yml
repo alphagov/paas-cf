@@ -60,7 +60,7 @@ before_install:
        '*promtool'
     set +e
   - pip install --user yamllint
-  - GIMME_OUTPUT=$(gimme 1.11 | tee -a $HOME/.bashrc) && eval "$GIMME_OUTPUT"
+  - GIMME_OUTPUT=$(gimme 1.12 | tee -a $HOME/.bashrc) && eval "$GIMME_OUTPUT"
   - export GOPATH=$HOME/gopath
   - export PATH=$HOME/gopath/bin:$PATH
   - mkdir -p $HOME/gopath/src/github.com/alphagov/paas-cf

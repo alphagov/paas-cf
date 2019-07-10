@@ -31,6 +31,11 @@ meta:
       source:
         repository: ruby
         tag: 2.5-slim
+    golang: &golang-image-resource
+      type: docker-image
+      source:
+        repository: golang
+        tag: '1.12'
     terraform: &terraform-image-resource
       type: docker-image
       source:
@@ -3227,6 +3232,26 @@ jobs:
                 "
 
                 cf zero-downtime-push paas-metrics -f ./manifest.yml
+
+      - task: acceptance-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *golang-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            PAAS_METRICS_URL: https://paas-metrics.((apps_dns_zone_name))/metrics
+          run:
+            path: sh
+            args:
+              - -u
+              - -e
+              - -c
+              - |
+                cd paas-cf/tools/metrics/acceptance
+                go install github.com/onsi/ginkgo/ginkgo
+                ginkgo
 
   - name: tag-release
     plan:
