@@ -69,7 +69,7 @@ resource "pingdom_check" "cf_api_healthcheck" {
 
 resource "pingdom_check" "paas_admin_healthcheck" {
   type                     = "http"
-  name                     = "PaaS CF API - ${var.env}"
+  name                     = "PaaS Admin - ${var.env}"
   host                     = "admin.${var.system_dns_zone_name}"
   url                      = "/calculator"
   shouldcontain            = "costs"
