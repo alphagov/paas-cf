@@ -66,3 +66,18 @@ resource "pingdom_check" "cf_api_healthcheck" {
   notifywhenbackup         = true
   contactids               = ["${var.pingdom_contact_ids}"]
 }
+
+resource "pingdom_check" "paas_admin_healthcheck" {
+  type                     = "http"
+  name                     = "PaaS CF API - ${var.env}"
+  host                     = "admin.${var.system_dns_zone_name}"
+  url                      = "/calculator"
+  shouldcontain            = "costs"
+  encryption               = true
+  resolution               = 1
+  uselegacynotifications   = true
+  sendtoemail              = true
+  sendnotificationwhendown = 2
+  notifywhenbackup         = true
+  contactids               = ["${var.pingdom_contact_ids}"]
+}
