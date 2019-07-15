@@ -20,7 +20,8 @@ const (
 	maxConcourseConnectionFailures = 5
 	numWorkers                     = 4
 	taskRatePerSecond              = 2
-	targetReliability              = 99.95
+	defaultTargetReliability       = 99.95
+	devTargetReliability           = 99.0
 )
 
 func lg(things ...interface{}) {
@@ -33,8 +34,21 @@ var warningMatchers = []*regexp.Regexp{
 }
 
 var _ = Describe("API Availability Monitoring", func() {
-
 	It("should have uninterupted access to cloudfoundry api during deploy", func() {
+		var targetReliability float64
+
+		if os.Getenv("SLIM_DEV_DEPLOYMENT") == "true" {
+			targetReliability = devTargetReliability
+		} else {
+			targetReliability = defaultTargetReliability
+		}
+
+		Expect(targetReliability).To(
+			BeNumerically(">=", 99.0), "Target reliability must be sensible",
+		)
+
+		lg(fmt.Sprintf("Target reliability is set to %.2f%%", targetReliability))
+
 		cfConfig := &cfclient.Config{
 			ApiAddress:        fmt.Sprintf("https://api.%s", helpers.MustGetenv("SYSTEM_DNS_ZONE_NAME")),
 			Username:          helpers.MustGetenv("CF_USER"),

@@ -8,10 +8,6 @@ WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
 
-if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
-  opsfile_args="$opsfile_args -o ${CF_DEPLOYMENT_DIR}/operations/scale-to-one-az.yml"
-fi
-
 for i in "${PAAS_CF_DIR}"/manifests/cf-manifest/operations.d/*.yml; do
   opsfile_args="$opsfile_args -o $i"
 done

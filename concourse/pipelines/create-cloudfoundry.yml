@@ -735,13 +735,8 @@ jobs:
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                  echo "Running app-availability-tests but ignoring failures"
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app || true
-                else
-                  echo "Running app-availability-tests"
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
-                fi
+                echo "Running app-availability-tests"
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
 
   - name: api-availability-tests
     serial: true
@@ -822,13 +817,8 @@ jobs:
 
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
 
-                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                  echo "Running api-availability-tests but ignoring failures"
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api || true
-                else
-                  echo "Running api-availability-tests"
-                  ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
-                fi
+                echo "Running api-availability-tests"
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
         ensure:
           task: delete-job-file
           tags: [colocated-with-web]
