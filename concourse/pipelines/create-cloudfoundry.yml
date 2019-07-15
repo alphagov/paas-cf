@@ -1063,6 +1063,33 @@ jobs:
 
                   cat vpc-peering-opsfile/vpc-peers.yml
 
+        - task: generate-microsoft-oauth-endpoints
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-cli-image-resource
+            outputs:
+              - name: ms-oauth-endpoints
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  DISCOVERY_DOC=$(curl https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration)
+
+                  echo "$DISCOVERY_DOC" | jq '.authorization_endpoint' --raw-output \
+                    > ms-oauth-endpoints/authorization_endpoint
+
+                  echo "$DISCOVERY_DOC" | jq '.token_endpoint' --raw-output \
+                    > ms-oauth-endpoints/token_endpoint
+
+                  echo "$DISCOVERY_DOC" | jq '.jwks_uri' --raw-output \
+                    > ms-oauth-endpoints/token_key_endpoint
+
+                  echo "$DISCOVERY_DOC" | jq '.issuer' --raw-output \
+                    > ms-oauth-endpoints/issuer
+
       - do:
         - task: generate-cloud-config
           tags: [colocated-with-web]
@@ -1101,6 +1128,7 @@ jobs:
               - name: cf-secrets
               - name: vpc-peering-opsfile
               - name: logit-secrets
+              - name: ms-oauth-endpoints
             outputs:
               - name: cf-manifest
               - name: cf-manifest-pre-vars
@@ -1127,6 +1155,10 @@ jobs:
                   microsoft_oauth_tenant_id: ((microsoft_oauth_tenant_id))
                   microsoft_oauth_client_id: ((microsoft_oauth_client_id))
                   microsoft_oauth_client_secret: ((microsoft_oauth_client_secret))
+                  microsoft_oauth_auth_url: $(cat ms-oauth-endpoints/authorization_endpoint)
+                  microsoft_oauth_token_url: $(cat ms-oauth-endpoints/token_endpoint)
+                  microsoft_oauth_token_key_url: $(cat ms-oauth-endpoints/token_key_endpoint)
+                  microsoft_oauth_issuer: $(cat ms-oauth-endpoints/issuer)
                   EOF
 
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
@@ -2847,6 +2879,10 @@ jobs:
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
                     SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
                     AWS_REGION: "$AWS_REGION"
+                    MS_CLIENT_ID: ((microsoft_adminoidc_client_id))
+                    MS_CLIENT_SECRET: ((microsoft_adminoidc_client_secret))
+                    MS_TENANT_ID: ((microsoft_adminoidc_tenant_id))
+                    DOMAIN_NAME: "https://admin.${SYSTEM_DNS_ZONE_NAME}"
                 EOF
 
                 spruce merge \
