@@ -148,6 +148,9 @@ google_oauth_client_secret: "${google_oauth_client_secret:-}"
 microsoft_oauth_tenant_id: "${microsoft_oauth_tenant_id:-}"
 microsoft_oauth_client_id: "${microsoft_oauth_client_id:-}"
 microsoft_oauth_client_secret: "${microsoft_oauth_client_secret:-}"
+microsoft_adminoidc_tenant_id: "${microsoft_adminoidc_tenant_id:-}"
+microsoft_adminoidc_client_id: "${microsoft_adminoidc_client_id:-}"
+microsoft_adminoidc_client_secret: "${microsoft_adminoidc_client_secret:-}"
 notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
