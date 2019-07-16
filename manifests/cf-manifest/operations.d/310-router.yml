@@ -23,6 +23,7 @@
         enable_healthcheck_frontend: true
         ssl_pem: "((router_ssl.certificate))((router_ssl.private_key))"
         enable_http_redirect_frontend: true
+        enable_proxy_frontend: true
 
 - type: remove
   path: /instance_groups/name=router/jobs/name=gorouter/properties/routing_api
