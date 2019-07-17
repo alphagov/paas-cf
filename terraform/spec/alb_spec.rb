@@ -41,4 +41,12 @@ describe 'alb' do
 
     expect(access_logs).not_to include(nil)
   end
+
+  it 'should not have deletion protection enabled' do
+    deletion_protection = terraform
+      .dig('resource', 'aws_lb').values
+      .map { |r| r.dig('enable_deletion_protection') }
+
+    expect(deletion_protection).to all(be(nil))
+  end
 end

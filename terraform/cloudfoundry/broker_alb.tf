@@ -5,8 +5,6 @@ resource "aws_lb" "cf_brokers" {
   security_groups    = ["${aws_security_group.service_brokers.id}"]
   subnets            = ["${split(",", var.infra_subnet_ids)}"]
 
-  enable_deletion_protection = true
-
   access_logs {
     bucket  = "${aws_s3_bucket.elb_access_log.id}"
     prefix  = "cf-brokers"
