@@ -36,6 +36,7 @@ bosh interpolate \
   --vars-file="${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   --vars-file="${WORKDIR}/environment-variables.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-internal-lookup-for-route-services.yml" \
+  --ops-file="${CF_DEPLOYMENT_DIR}/operations/experimental/add-metric-store.yml" \
   ${opsfile_args} \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml" \
   --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-microsoft-oauth.yml" \

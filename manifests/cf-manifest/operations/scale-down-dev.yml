@@ -66,6 +66,10 @@
 # Ensure there is 1 of everything that is not availability tested
 
 - type: replace
+  path: /instance_groups/name=metric-store/instances
+  value: 1
+
+- type: replace
   path: /instance_groups/name=rds_broker/instances
   value: 1
 
@@ -126,3 +130,7 @@
 - type: replace
   path: /instance_groups/name=router/vm_type
   value: slim_router
+
+- type: replace
+  path: /instance_groups/name=metric-store/vm_type
+  value: small

@@ -1,0 +1,27 @@
+- type: replace
+  path: /instance_groups/name=api/azs
+  value: [z1, z2, z3]
+
+- type: replace
+  path: /instance_groups/name=metric-store/networks/0/name
+  value: cf
+
+  # As this is experimental for now, only 2 instances is fine
+- type: replace
+  path: /instance_groups/name=metric-store/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=metric-store/persistent_disk_type
+  value: 100GB
+
+  # The default exclude for prom_scraper is job=smoke_tests
+  # We do not run smoke tests on bosh vms, so it is okay to override this
+  # We must override this fully, rather than add a criterion to it because
+  # criteria within an exclude/include statement are treated as AND rather than
+  # OR (except for values within lists)
+- type: replace
+  path: /addons/name=prom_scraper/exclude
+  value:
+    instance_groups:
+      - metric-store

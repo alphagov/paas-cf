@@ -259,6 +259,32 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 
+# INSTANCE GROUPS / METRIC STORE
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=prom_scraper/properties/loggregator_agent?/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=metric-store/properties/tls/ca_cert
+  value: ((metric_store_ca.certificate))((metric_store_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=metric-store-nozzle/properties/logs_provider/tls/ca_cert
+  value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=metric-store-cf-auth-proxy/properties/cc/ca_cert
+  value: ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=metric-store-cf-auth-proxy/properties/proxy_ca_cert
+  value: ((metric_store_ca.certificate))((metric_store_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=metric-store-cf-auth-proxy/properties/uaa/ca_cert
+  value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
+
 # INSTANCE GROUPS / SCHEDULER
 
 - type: replace
@@ -453,5 +479,14 @@
     options:
       ca: application_ca
       common_name: instanceIdentityCA
+      is_ca: true
+    type: certificate
+
+- type: replace
+  path: /variables/-
+  value:
+    name: metric_store_ca_old
+    options:
+      common_name: metric-store
       is_ca: true
     type: certificate
