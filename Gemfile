@@ -9,3 +9,4 @@ gem 'json-minify', '~> 0.0.2'
 gem 'mail', '~> 2.6.4'
 gem 'rspec', '~> 3.3'
 gem 'webmock', "~> 1.24"
+gem 'hcl-checker', '~>1.1.1'

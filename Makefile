@@ -61,6 +61,8 @@ terraform_spec:
 	cd terraform/scripts &&\
 		go get -d -t . &&\
 		go test
+	cd terraform &&\
+		bundle exec rspec
 
 platform_tests_spec:
 	cd platform-tests &&\

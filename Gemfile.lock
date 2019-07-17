@@ -40,6 +40,7 @@ GEM
       rubocop-rspec (~> 1.19.0)
       scss_lint
     hashdiff (0.3.0)
+    hcl-checker (1.1.1)
     highline (1.7.10)
     http_parser.rb (0.6.0)
     httpclient (2.8.3)
@@ -113,10 +114,11 @@ DEPENDENCIES
   cf-uaac (~> 4.1.0)
   github_merge_sign (= 1.0.0)
   govuk-lint (~> 3.8.0)
+  hcl-checker (~> 1.1.1)
   json-minify (~> 0.0.2)
   mail (~> 2.6.4)
   rspec (~> 3.3)
   webmock (~> 1.24)
 
 BUNDLED WITH
-   1.16.2
+   1.17.1
