@@ -4,6 +4,12 @@ resource "aws_lb" "prometheus" {
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.prometheus-lb.id}"]
   subnets            = ["${split(",", var.infra_subnet_ids)}"]
+
+  access_logs {
+    bucket  = "${aws_s3_bucket.elb_access_log.id}"
+    prefix  = "prometheus"
+    enabled = true
+  }
 }
 
 resource "aws_security_group" "prometheus-lb" {
