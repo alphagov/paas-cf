@@ -50,3 +50,7 @@
 - email: "paul.dougan@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
+- email: "emma.pearce@digital.cabinet-office.gov.uk"
+  origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
