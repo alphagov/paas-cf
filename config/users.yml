@@ -16,7 +16,7 @@
 
 - email: "mohamed.deerow@digital.cabinet-office.gov.uk"
   origin: "google"
-  deploy_envs: ['modeerow']
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'momo']
   cf_admin: true
 
 - email: "richard.towers@digital.cabinet-office.gov.uk"
