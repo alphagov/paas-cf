@@ -4,6 +4,14 @@ resource "aws_lb" "cf_loggregator" {
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.cf_api_elb.id}"]
   subnets            = ["${split(",", var.infra_subnet_ids)}"]
+
+  enable_deletion_protection = true
+
+  access_logs {
+    bucket  = "${aws_s3_bucket.elb_access_log.id}"
+    prefix  = "cf-loggregator"
+    enabled = true
+  }
 }
 
 resource "aws_lb_target_group" "cf_loggregator_rlp" {
