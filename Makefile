@@ -19,16 +19,20 @@ check-env:
 
 test: spec compile_platform_tests lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines lint_symlinks ## Run linting tests
 
-spec:
+scripts_spec:
 	cd scripts &&\
 		go get -d -t . &&\
 		go test
 	cd scripts &&\
 		bundle exec rspec
+
+tools_spec:
 	cd tools/metrics &&\
 		go test -v $(go list ./... | grep -v acceptance)
 	cd tools/user_emails &&\
 		go test -v ./...
+
+concourse_spec:
 	cd concourse &&\
 		bundle exec rspec
 	cd concourse/scripts &&\
@@ -36,19 +40,33 @@ spec:
 		go test
 	cd concourse/scripts &&\
 		bundle exec rspec
+
+shared_manifests_spec:
 	cd manifests/shared &&\
 		bundle exec rspec
 	cd manifests/cloud-config &&\
 		bundle exec rspec
+
+cf_manifest_spec:
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
+
+prometheus_manifest_spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
+
+manifests_spec: shared_manifests_spec cf_manifest_spec prometheus_manifest_spec
+
+terraform_spec:
 	cd terraform/scripts &&\
 		go get -d -t . &&\
 		go test
+
+platform_tests_spec:
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
+
+spec: scripts_spec tools_spec concourse_spec manifests_spec terraform_spec platform_tests_spec
 
 compile_platform_tests:
 	GOPATH="$$(pwd)/platform-tests" \
