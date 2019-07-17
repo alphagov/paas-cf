@@ -4,11 +4,6 @@
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
   cf_admin: true
 
-- email: "chris.farmiloe@digital.cabinet-office.gov.uk"
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
-  cf_admin: true
-
 - email: "lee.porte@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'leeporte']
@@ -22,11 +17,6 @@
 - email: "mohamed.deerow@digital.cabinet-office.gov.uk"
   origin: "google"
   deploy_envs: ['modeerow']
-  cf_admin: true
-
-- email: "rafal.proszowski@digital.cabinet-office.gov.uk"
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
   cf_admin: true
 
 - email: "richard.towers@digital.cabinet-office.gov.uk"
