@@ -289,7 +289,7 @@ output "cf_doppler_target_group_name" {
 }
 
 resource "aws_lb" "cf_router_app_domain" {
-  name               = "${var.env}-cf-router-app-domain-alb"
+  name               = "${var.env}-cf-rtr-apps"
   internal           = false
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.web.id}"]
@@ -299,7 +299,7 @@ resource "aws_lb" "cf_router_app_domain" {
 
   access_logs {
     bucket  = "${aws_s3_bucket.elb_access_log.id}"
-    prefix  = "cf-router"
+    prefix  = "cf-rtr-apps"
     enabled = true
   }
 }
@@ -374,7 +374,7 @@ resource "aws_lb_target_group" "cf_router_app_domain_http" {
 }
 
 resource "aws_lb" "cf_router_system_domain" {
-  name               = "${var.env}-cf-router-system-domain-alb"
+  name               = "${var.env}-cf-rtr-sys"
   internal           = false
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.cf_api_elb.id}"]
@@ -384,7 +384,7 @@ resource "aws_lb" "cf_router_system_domain" {
 
   access_logs {
     bucket  = "${aws_s3_bucket.elb_access_log.id}"
-    prefix  = "cf-router-system-domain"
+    prefix  = "cf-rtr-sys"
     enabled = true
   }
 }
