@@ -19,4 +19,4 @@
     relyingPartySecret: ((google_oauth_client_secret))
     skipSslValidation: false
     attributeMappings:
-      user_name: email
+      user_name: sub
