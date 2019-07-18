@@ -11,3 +11,5 @@
       - ((terraform_outputs_default_security_group))
       elbs:
       - ((terraform_outputs_rds_broker_elb_name))
+      lb_target_groups:
+      - ((terraform_outputs_cf_rds_broker_target_group_name))

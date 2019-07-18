@@ -17,9 +17,9 @@ chmod +x "${WORKING_DIR}"/terraform-provider-pingdom
 cd "${WORKING_DIR}"
 
 for dir in "${PAAS_CF_DIR}"/terraform/*/ ; do
-  if [[ ${dir} == *"terraform/providers"* ]] || [[ ${dir} == *"terraform/scripts"* ]]; then
-    continue
-  fi
+  [[ ${dir} == *"terraform/providers"* ]] && continue
+  [[ ${dir} == *"terraform/scripts"* ]] && continue
+  [[ ${dir} == *"terraform/spec"* ]] && continue
 
   terraform init -backend=false "${dir}" >/dev/null
   terraform validate -check-variables=false "${dir}"
