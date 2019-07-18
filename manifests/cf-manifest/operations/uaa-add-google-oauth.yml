@@ -11,6 +11,7 @@
     redirectUrl: https://login.((system_domain))/uaa
     scopes:
       - openid
+      - profile
       - email
     linkText: Google
     showLinkText: true
