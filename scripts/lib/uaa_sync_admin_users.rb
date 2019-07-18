@@ -158,6 +158,18 @@ class UaaSyncAdminUsers
     [created_users, deleted_users]
   end
 
+  def get_user_by_username(username)
+    query(:user, %(username eq "#{username}"))
+  end
+
+  def update_user(user)
+    cf_api_update_user(user)
+  end
+
+  def get_all_users
+    uaa.all_pages(:user)
+  end
+
 private
 
   attr_accessor :uaa
@@ -193,6 +205,10 @@ private
     nil
   end
 
+  def cf_api_update_user(user)
+    uaa.put(:user, user)
+  end
+
   def cf_api_request(method, path, headers = {})
     uri = URI.parse(@cf_api_url) + path
     http = Net::HTTP.new(uri.host, uri.port)
@@ -212,10 +228,6 @@ private
 
   def auth_header
     "#{token.fetch('token_type')} #{token.fetch('access_token')}"
-  end
-
-  def get_user_by_username(username)
-    query(:user, %(username eq "#{username}"))
   end
 
   def get_user_by_id(id)
