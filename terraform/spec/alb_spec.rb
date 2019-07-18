@@ -1,3 +1,26 @@
+def get_lbs(tf)
+  tf.dig('resource', 'aws_lb').values
+end
+
+describe 'alb helpers' do
+  it 'should get lbs correctly' do
+    terraform = {
+      'resource' => {
+        'aws_lb' => {
+          'my_alb_resource' => { 'name' => 'my-application-load-balancer' },
+          'my_nlb_resource' => { 'name' => 'my-network-load-balancer' },
+        }
+      }
+    }
+
+    lbs = get_lbs(terraform)
+
+    expect(lbs.length).to be(2)
+    expect(lbs.first.dig('name')).to eq('my-application-load-balancer')
+    expect(lbs.last.dig('name')).to eq('my-network-load-balancer')
+  end
+end
+
 describe 'alb' do
   terraform_files = TERRAFORM_FILES
     .reject { |f| File.read(f).lines.grep(/resource\s+"aws_lb"/).empty? }
@@ -24,8 +47,7 @@ describe 'alb' do
   end
 
   it 'should have names less than 32 characters' do
-    lb_names = terraform
-      .dig('resource', 'aws_lb').values
+    lb_names = get_lbs(terraform)
       .map { |r| r.dig('name') }
       .map { |val| val.gsub('${var.env}', 'prod-lon') }
 
@@ -35,16 +57,14 @@ describe 'alb' do
   end
 
   it 'should have access_logs configured' do
-    access_logs = terraform
-      .dig('resource', 'aws_lb').values
+    access_logs = get_lbs(terraform)
       .map { |r| r.dig('access_logs') }
 
     expect(access_logs).not_to include(nil)
   end
 
   it 'should not have deletion protection enabled' do
-    deletion_protection = terraform
-      .dig('resource', 'aws_lb').values
+    deletion_protection = get_lbs(terraform)
       .map { |r| r.dig('enable_deletion_protection') }
 
     expect(deletion_protection).to all(be(nil))
