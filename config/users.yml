@@ -1,56 +1,68 @@
 ---
 - email: "andy.hunt@digital.cabinet-office.gov.uk"
+  google_id: 105669475429351042864
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
   cf_admin: true
 
 - email: "lee.porte@digital.cabinet-office.gov.uk"
+  google_id: 117637881083888816781
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'leeporte']
   cf_admin: true
 
 - email: "michael.mokrysz@digital.cabinet-office.gov.uk"
+  google_id: 107383114280997116147
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'miki']
   cf_admin: true
 
 - email: "mohamed.deerow@digital.cabinet-office.gov.uk"
+  google_id: 113581158670217946218
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'momo']
   cf_admin: true
 
 - email: "richard.towers@digital.cabinet-office.gov.uk"
+  google_id: 110880982070595988507
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
   cf_admin: true
 
 - email: "russell.howe@digital.cabinet-office.gov.uk"
+  google_id: 109846986393208462188
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
   cf_admin: true
 
 - email: "tom.whitwell@digital.cabinet-office.gov.uk"
+  google_id: 106988454860052458239
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tnw']
   cf_admin: true
 
 - email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
+  google_id: 115270948065632839284
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tlwr']
   cf_admin: true
 
 - email: "venus.bailey@digital.cabinet-office.gov.uk"
+  google_id: 1080011890811609622192
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
 
 - email: "luke.malcher@digital.cabinet-office.gov.uk"
+  google_id: 110778878978931011243
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
 
 - email: "paul.dougan@digital.cabinet-office.gov.uk"
+  google_id: 1042068992463395715702
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
 
 - email: "emma.pearce@digital.cabinet-office.gov.uk"
+  google_id: 116361542740992904571
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
