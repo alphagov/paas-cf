@@ -27,9 +27,6 @@
 - type: remove
   path: /instance_groups/name=diego-cell/jobs/name=garden/properties/garden/destroy_containers_on_start
 
-- type: remove
-  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers
-
 - type: replace
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego?/executor/memory_capacity_mb
   value: ((cell_memory_capacity_mb))
