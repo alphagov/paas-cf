@@ -24,7 +24,7 @@
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
-  path: /addons/name=loggregator_agent/jobs/name=loggr-expvar-forwarder/properties/log_agent/ca_cert
+  path: /addons/name=prom_scraper/jobs/name=prom_scraper/properties/loggregator_agent?/ca_cert
   value: ((loggregator_ca.certificate))((loggregator_ca_old.certificate))
 
 - type: replace
