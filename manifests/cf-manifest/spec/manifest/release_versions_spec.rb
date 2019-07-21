@@ -29,7 +29,7 @@ RSpec.describe "release versions" do
     pinned_releases = {
       'uaa' => {
         local: '0.1.9',
-        upstream: '72.0',
+        upstream: '73.4.0',
       }
     }
 
