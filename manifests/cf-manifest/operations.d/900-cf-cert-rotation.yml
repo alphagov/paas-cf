@@ -212,6 +212,10 @@
   path: /instance_groups/name=doppler/jobs/name=log-cache-cf-auth-proxy/properties/uaa/ca_cert
   value: ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
+- type: replace
+  path: /instance_groups/name=doppler/jobs/name=log-cache-cf-auth-proxy/properties/proxy_ca_cert
+  value: ((log_cache_ca.certificate))((log_cache_ca_old.certificate))
+
 
 # INSTANCE GROUPS / LOG API
 
