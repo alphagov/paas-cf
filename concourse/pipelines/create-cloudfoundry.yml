@@ -301,7 +301,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf9.2
+      branch: cf10.0
 
   - name: cf-smoke-tests-release
     type: git
