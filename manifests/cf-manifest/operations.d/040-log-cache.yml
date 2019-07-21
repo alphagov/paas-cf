@@ -1,8 +1,0 @@
----
-- type: replace
-  path: /releases/name=log-cache
-  value:
-    name: log-cache
-    version: 2.2.2
-    url: "https://bosh.io/d/github.com/cloudfoundry/log-cache-release?v=2.2.2"
-    sha1: 634dd3e134d0dac00f3f86beb00c06653579af4b
