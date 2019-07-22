@@ -1,0 +1,15 @@
+# Source: concourse
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ConcourseBillingSmoketestsErrors
+    rules:
+      - alert: ConcourseSmoketestsErrors
+        expr: increase(concourse_builds_finished{exported_job="continuous-billing-smoke-tests",pipeline="create-cloudfoundry",status="errored"}[30m]) >= 3
+        labels:
+          severity: warning
+        annotations:
+          summary: Concourse continuous-billing-smoke-tests errors
+          description: The continuous-billing-smoke-tests Concourse job has an increased error rate
