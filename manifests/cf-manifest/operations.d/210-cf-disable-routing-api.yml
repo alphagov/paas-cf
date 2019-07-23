@@ -10,3 +10,9 @@
   path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/routing_api
 - type: remove
   path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/routing_api
+- type: remove
+  path: /variables/name=routing_api_ca
+- type: remove
+  path: /variables/name=routing_api_tls
+- type: remove
+  path: /variables/name=routing_api_tls_client

@@ -25,10 +25,6 @@
   value: /var/vcap/jobs/uaa-customized/bin/health_check
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/port
-  value: 8081
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/uris
   value:
     - "uaa.((system_domain))"
