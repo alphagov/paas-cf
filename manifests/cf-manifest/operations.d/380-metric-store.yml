@@ -25,3 +25,99 @@
   value:
     instance_groups:
       - metric-store
+
+- type: replace
+  path: /releases/-
+  value:
+    name: "grafana"
+    version: "13.2.2"
+    url: "https://bosh.io/d/github.com/vito/grafana-boshrelease?v=13.2.2"
+    sha1: "685b38e91db9e66369183799eb74069604dbb4b2"
+
+- type: replace
+  path: /variables/-
+  value:
+    name: observe_grafana_password
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: observe_grafana_uaa_client_secret
+    type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: observe_grafana_tls
+    type: certificate
+    options:
+      ca: service_cf_internal_ca
+      common_name: observe.service.cf.internal
+
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/observe-grafana?
+  value:
+    authorities: ''
+    scope: openid,uaa.resource,doppler.firehose,logs.admin,cloud_controller.read
+    authorized-grant-types: authorization_code,refresh_token
+    override: true
+    secret: ((observe_grafana_uaa_client_secret))
+    redirect-uri: https://observe.((system_domain))/login/generic_oauth
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/-
+  value:
+    name: grafana
+    release: grafana
+    properties:
+      grafana:
+        root_url: https://observe.((system_domain))
+        admin_username: observe
+        admin_password: ((observe_grafana_password))
+        ssl:
+          cert: ((observe_grafana_tls.certificate))
+          key: ((observe_grafana_tls.private_key))
+        users:
+          auto_assign_organization_role: Editor
+        auth:
+          generic_oauth:
+            name: GOV.UK PaaS
+            enabled: true
+            allow_sign_up: true
+            client_id: observe-grafana
+            client_secret: ((observe_grafana_uaa_client_secret))
+
+            scopes:
+              - openid
+              - uaa.resource
+              - doppler.firehose
+              - logs.admin
+              - cloud_controller.read
+
+            auth_url: https://login.((system_domain))/oauth/authorize
+            token_url: https://login.((system_domain))/oauth/token
+            api_url: https://login.((system_domain))/userinfo
+        datasources:
+          - name: Prometheus
+            url: https://metric-store.((app_domain))
+            type: prometheus
+            editable: false
+            orgId: 1
+            jsonData: '{"httpMethod":"GET","keepCookies":[],"oauthPassThru":true}'
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=route_registrar/properties/route_registrar/routes/-
+  value:
+    name: observe-grafana
+    port: 3000
+    registration_interval: 20s
+    server_cert_domain_san: observe.service.cf.internal
+    tls_port: 3000
+    uris:
+      - observe.((system_domain))
+      - observe.((app_domain))
+
+- type: replace
+  path: /instance_groups/name=metric-store/jobs/name=route_registrar/properties/route_registrar/routes/name=metric-store-reverse-proxy/uris/-
+  value: metric-store.((app_domain))
