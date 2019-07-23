@@ -298,15 +298,6 @@ resources:
       initial_version: "-"
       initial_content_text: "no"
 
-  - name: deployed-billing
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: billing-deployed
-      initial_version: "-"
-      initial_content_text: "no"
-
   - name: cf-acceptance-tests
     type: git
     source:
@@ -3176,8 +3167,6 @@ jobs:
               path: src/github.com/alphagov/paas-billing
             - name: config
             - name: cf-vars-store
-          outputs:
-            - name: deployed-billing
           run:
             path: sh
             args:
@@ -3188,27 +3177,10 @@ jobs:
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
-                BUILD_ROOT=$(pwd)
                 export GOPATH="${PWD}"
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
                 make acceptance
-                PASSED=$?
-                cd "${BUILD_ROOT}"
-                if [ "$PASSED" -ne 0 ]; then
-                  echo "no" > deployed-billing/billing-deployed
-                  exit 1
-                else
-                  echo "yes" > deployed-billing/billing-deployed
-                fi
-        on_success:
-          put: deployed-billing
-          params:
-            file: deployed-billing/billing-deployed
-        on_failure:
-          put: deployed-billing
-          params:
-            file: deployed-billing/billing-deployed
 
   - name: deploy-paas-metrics
     serial: true
@@ -3972,36 +3944,12 @@ jobs:
           trigger: true
         - get: paas-billing
           passed: ['deploy-paas-billing']
-        - get: deployed-billing
         - get: paas-cf
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
         - get: cf-vars-store
 
-      - task: assert-should-run
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: alpine
-              tag: 3.9
-          inputs:
-            - name: deployed-billing
-          run:
-            path: sh
-            args:
-            - -e
-            - -c
-            - |
-              BILLING_DEPLOYED=$(cat deployed-billing/billing-deployed)
-              if [ "$BILLING_DEPLOYED" = "no" ]; then
-                echo "Billing is not deployed"
-                echo "Skipping smoke tests"
-                exit 1
-              fi
       - do:
         - task: create-temp-user
           tags: [colocated-with-web]
