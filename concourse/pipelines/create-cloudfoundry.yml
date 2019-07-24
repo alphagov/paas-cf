@@ -118,6 +118,7 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
+      - continuous-billing-smoke-tests
       - check-certificates
   - name: credentials
     jobs:
@@ -358,6 +359,15 @@ resources:
     type: time
     source:
       interval: 5m
+
+  - name: billing-smoke-tests-timer
+    type: time
+    source:
+      interval: 5m
+      location: Europe/London
+      start: 9:00 AM
+      stop: 5:00 PM
+      days: [Monday, Tuesday, Wednesday, Thursday, Friday]
 
   - name: check-certificates-timer
     type: time
@@ -3919,6 +3929,61 @@ jobs:
             file: paas-cf/concourse/tasks/upload-test-artifacts.yml
             params:
               TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+        ensure:
+          task: remove-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/delete_admin.yml
+
+  - name: continuous-billing-smoke-tests
+    serial_groups: [smoke-tests]
+    build_logs_to_retain: 10000
+    plan:
+      - aggregate:
+        - get: billing-smoke-tests-timer
+          trigger: true
+        - get: paas-billing
+          passed: ['deploy-paas-billing']
+        - get: paas-cf
+          passed: ['pipeline-lock']
+        - get: cf-manifest
+          passed: ['post-deploy']
+        - get: cf-vars-store
+
+      - do:
+        - task: create-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: cont-billing-smoketest-user
+
+        - task: run-billing-smoke-tests
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-acceptance-tests-image-resource
+            params:
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+            inputs:
+              - name: paas-cf
+              - name: paas-billing
+                path: src/github.com/alphagov/paas-billing
+              - name: admin-creds
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  echo | cf login -a "https://api.${SYSTEM_DNS_ZONE_NAME}" -u "$(cat admin-creds/username)" -p "$(cat admin-creds/password)" -o admin -s billing
+
+                  export GOPATH="${PWD}"
+                  export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
+                  cd src/github.com/alphagov/paas-billing
+                  make acceptance
 
         ensure:
           task: remove-temp-user
