@@ -49,7 +49,6 @@ email_to_id_map = {}
 csv_lines.each { |line|
   email_to_id_map[line[0]] = line[1]
 }
-id_to_email_map = email_to_id_map.invert
 
 puts "===> Considering the following email addresses"
 puts email_to_id_map.keys
@@ -82,14 +81,14 @@ puts "==> Verifying all Google SSO users have been migrated"
 all_users = uaa_sync_admin_users.get_all_users
 google_users = all_users.select { |u| u["origin"] == "google" }
 google_usernames = google_users.map { |u| u["username"] }
-non_numeric_google_usernames = google_usernames.reject {|username| username.match("[^0-9]").nil? }
+non_numeric_google_usernames = google_usernames.reject { |username| username.match("[^0-9]").nil? }
 
-if non_numeric_google_usernames.length > 0
+if non_numeric_google_usernames.length.empty?
+  puts "SUCCESS: All Google users have numeric usernames"
+else
   puts "FAILURE: This does not seem to have transitioned all Google users to using numeric usernames."
   puts "The following usernames are not entirely numeric:"
   non_numeric_google_usernames.each do |username|
     puts "  #{username}"
   end
-else
-  puts "SUCCESS: All Google users have numeric usernames"
 end
