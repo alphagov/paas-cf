@@ -189,6 +189,21 @@
   path: /instance_groups/name=diego-cell/jobs/name=rep/properties/diego/executor/instance_identity_ca_cert
   value: ((diego_instance_identity_ca.certificate))((diego_instance_identity_ca_old.certificate))
 
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers/proxy/trusted_ca_certificates
+  value:
+    # this should be the ca which gorouter_backend_tls uses
+    - ((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))
+
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers/trusted_ca_certificates
+  value:
+    # this should include the diego_instance_identity_ca pair
+    - ((diego_instance_identity_ca.certificate))((diego_instance_identity_ca_old.certificate))
+    # and this should include the ca pair used by diego_instance_identity_ca
+    - ((application_ca.certificate))((application_ca_old.certificate))
+    # and this should include the uaa ca pair
+    - ((uaa_ca.certificate))((uaa_ca_old.certificate))
 
 # INSTANCE GROUPS / DOPPLER
 
