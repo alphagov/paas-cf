@@ -11,7 +11,7 @@ def load_admin_user_list(filename, deploy_env)
     .select { |u| u.fetch('cf_admin', false) }
     .each_with_index.map { |u, i|
     {
-      username: u.fetch("username", u.fetch("email")),
+      username: u.fetch("google_id") || raise("User #{i} defined in file #{filename} is missing google_id"),
       email: u["email"] || raise("User #{i} defined in file #{filename} is missing email"),
       origin: u.fetch("origin", "uaa"),
     }

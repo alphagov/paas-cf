@@ -22,4 +22,13 @@
     skipSslValidation: false
     storeCustomAttributes: false
     attributeMappings:
+      # UAA will attempt to find an existing user with a username matching the
+      # attribute from Google named below (e.g., `oid`.) If that fails it will
+      # attempt to find an existing UAA user whose email matches the email
+      # attribute from Google.
+      #
+      # We believe this is secure for Microsoft, but the reasoning is complex.
+      # Microsoft's `email` claim does not necessarily return a verified
+      # email address. But the domain in it must have been verified, which
+      # still proves some ownership/administration ability.
       user_name: oid

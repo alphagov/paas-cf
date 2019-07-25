@@ -2882,6 +2882,8 @@ jobs:
                     MS_CLIENT_ID: ((microsoft_adminoidc_client_id))
                     MS_CLIENT_SECRET: ((microsoft_adminoidc_client_secret))
                     MS_TENANT_ID: ((microsoft_adminoidc_tenant_id))
+                    GOOGLE_CLIENT_ID: ((google_paas_admin_client_id))
+                    GOOGLE_CLIENT_SECRET: ((google_paas_admin_client_secret))
                     DOMAIN_NAME: "https://admin.${SYSTEM_DNS_ZONE_NAME}"
                 EOF
 

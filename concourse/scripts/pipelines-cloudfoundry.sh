@@ -145,6 +145,8 @@ aiven_api_token: ${aiven_api_token:-}
 concourse_web_password: ${CONCOURSE_WEB_PASSWORD}
 google_oauth_client_id: "${google_oauth_client_id:-}"
 google_oauth_client_secret: "${google_oauth_client_secret:-}"
+google_paas_admin_client_id: "${google_paas_admin_client_id:-}"
+google_paas_admin_client_secret: "${google_paas_admin_client_secret:-}"
 microsoft_oauth_tenant_id: "${microsoft_oauth_tenant_id:-}"
 microsoft_oauth_client_id: "${microsoft_oauth_client_id:-}"
 microsoft_oauth_client_secret: "${microsoft_oauth_client_secret:-}"

@@ -11,6 +11,7 @@
     redirectUrl: https://login.((system_domain))/uaa
     scopes:
       - openid
+      - profile
       - email
     linkText: Google
     showLinkText: true
@@ -19,4 +20,11 @@
     relyingPartySecret: ((google_oauth_client_secret))
     skipSslValidation: false
     attributeMappings:
-      user_name: email
+      # UAA will attempt to find an existing user with a username matching the
+      # attribute from Google named below (e.g., `sub`.) If that fails it will
+      # attempt to find an existing UAA user whose email matches the email
+      # attribute from Google.
+      #
+      # This is secure because Google verifies email addresses and appears to
+      # forbid multiple accounts from having the same email address.
+      user_name: sub
