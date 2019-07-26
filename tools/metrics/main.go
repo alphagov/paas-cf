@@ -109,7 +109,7 @@ func Main() error {
 	ecs := NewElasticacheService(sess)
 	s3 := NewS3Service(sess)
 
-	usEast1Sess, err := session.NewSession(&aws.Config{ Region: aws.String("us-east-1") })
+	usEast1Sess, err := session.NewSession(&aws.Config{Region: aws.String("us-east-1")})
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to AWS API in US East 1")
 	}
