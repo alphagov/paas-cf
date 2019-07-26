@@ -84,6 +84,12 @@ func Main() error {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
 
+	uaaCfg := UAAClientConfig{
+		Endpoint:     os.Getenv("UAA_ENDPOINT"),
+		ClientID:     os.Getenv("CF_CLIENT_ID"),
+		ClientSecret: os.Getenv("CF_CLIENT_SECRET"),
+	}
+
 	a, err := NewAivenClient(
 		os.Getenv("AIVEN_PROJECT"),
 		os.Getenv("AIVEN_API_TOKEN"),
@@ -127,6 +133,7 @@ func Main() error {
 		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
+		UAAGauges(logger, &uaaCfg, 5*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))
