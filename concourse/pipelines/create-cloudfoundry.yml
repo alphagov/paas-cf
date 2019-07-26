@@ -3124,6 +3124,7 @@ jobs:
                     'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
                     'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
                   }
 
                   api = YAML.load_file('manifest-api.yml')
