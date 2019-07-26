@@ -3289,6 +3289,8 @@ jobs:
               - |
                 cd paas-cf/tools/metrics/acceptance
                 go install github.com/onsi/ginkgo/ginkgo
+                echo 'Waiting 2 minutes before running the acceptance tests'
+                sleep 120
                 ginkgo
 
   - name: tag-release
