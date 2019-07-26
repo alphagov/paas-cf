@@ -133,7 +133,7 @@
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-metrics?
   value:
     access-token-validity: 1209600
-    authorities: oauth.login,cloud_controller.global_auditor
+    authorities: oauth.login,cloud_controller.global_auditor,scim.read
     authorized-grant-types: client_credentials,refresh_token
     override: true
     redirect-uri: https://login.((system_domain))
