@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"code.cloudfoundry.org/lager"
@@ -58,6 +59,8 @@ func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]Metric, error) {
 
 	lsession.Info("Computing UAA users by origin")
 	metrics = append(metrics, UAAUsersByOriginGauges(users)...)
+
+	lsession.Info(fmt.Sprintf("Found %d metrics", len(metrics)))
 
 	lsession.Info("Finished UAA metrics")
 	return metrics, nil
