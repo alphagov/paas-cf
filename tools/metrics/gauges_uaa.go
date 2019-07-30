@@ -60,6 +60,9 @@ func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]Metric, error) {
 	lsession.Info("Computing UAA users by origin")
 	metrics = append(metrics, UAAUsersByOriginGauges(users)...)
 
+	lsession.Info("Computing active UAA users by origin")
+	metrics = append(metrics, UAAActiveUsersByOriginGauges(users)...)
+
 	lsession.Info(fmt.Sprintf("Found %d metrics", len(metrics)))
 
 	lsession.Info("Finished UAA metrics")
@@ -78,6 +81,45 @@ func UAAUsersByOriginGauges(users []uaaclient.User) []Metric {
 			Kind:  Gauge,
 			Time:  time.Now(),
 			Name:  "uaa.users",
+			Value: float64(usersCount),
+			Tags:  MetricTags{MetricTag{Label: "origin", Value: origin}},
+			Unit:  "count",
+		})
+	}
+
+	return metrics
+}
+
+func UAAActiveUsers(users []uaaclient.User) []uaaclient.User {
+	activeUsers := make([]uaaclient.User, 0)
+
+	thirtyDaysAgo := time.Now().Truncate(24 * time.Hour).Add(-1 * 30 * 24 * time.Hour)
+	thirtyDaysAgoTimestamp := thirtyDaysAgo.Unix()
+
+	for _, user := range users {
+		lastLogonTimestamp := int64(user.LastLogonTime / 1000)
+
+		if lastLogonTimestamp >= thirtyDaysAgoTimestamp {
+			activeUsers = append(activeUsers, user)
+		}
+	}
+
+	return activeUsers
+}
+
+func UAAActiveUsersByOriginGauges(users []uaaclient.User) []Metric {
+	usersByOriginCount := make(map[string]int, 0)
+
+	for _, user := range UAAActiveUsers(users) {
+		usersByOriginCount[user.Origin] += 1
+	}
+
+	metrics := make([]Metric, 0)
+	for origin, usersCount := range usersByOriginCount {
+		metrics = append(metrics, Metric{
+			Kind:  Gauge,
+			Time:  time.Now(),
+			Name:  "uaa.active.users",
 			Value: float64(usersCount),
 			Tags:  MetricTags{MetricTag{Label: "origin", Value: origin}},
 			Unit:  "count",
