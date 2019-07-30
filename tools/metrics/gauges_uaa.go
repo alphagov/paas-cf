@@ -47,7 +47,7 @@ func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]Metric, error) {
 	}
 	lsession.Info("Validated UAA client")
 
-	users, err := uaa.ListAllUsers("", "", "origin", "")
+	users, err := uaa.ListAllUsers("", "", "origin,lastLogonTime", "")
 	if err != nil {
 		lsession.Error("Failed to list all UAA users", err)
 		return []Metric{}, err
