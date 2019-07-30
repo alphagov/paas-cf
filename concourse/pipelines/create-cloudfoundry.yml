@@ -390,7 +390,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-billing.git
       branch: master
-      tag_filter: v0.61.0
+      tag_filter: v0.64.0 
 
   - name: paas-accounts
     type: git
@@ -3109,9 +3109,15 @@ jobs:
                 if ! cf service billing-db > /dev/null; then
                   cf create-service postgres "${BILLING_DB_PLAN}" billing-db
                   while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of service to complete..."
+                    echo "Waiting for creation of billing-db service to complete..."
                     sleep 30
                   done
+                fi
+
+                if ! cf service billing-logit-ssl-drain > /dev/null; then
+                  cf create-user-provided-service \
+                    billing-logit-ssl-drain \
+                    -l "${LOGIT_ADDRESS}"
                 fi
 
                 cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
@@ -3124,13 +3130,17 @@ jobs:
                     'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
                     'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
                   }
 
                   api = YAML.load_file('manifest-api.yml')
                   api['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
-                    app['services'] = ['billing-db']
+                    app['services'] = [
+                      'billing-db',
+                      'billing-logit-ssl-drain'
+                    ]
                     app['routes'] = [
                       { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
                     ]
@@ -3141,7 +3151,10 @@ jobs:
                   collector['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
-                    app['services'] = ['billing-db']
+                    app['services'] = [
+                      'billing-db',
+                      'billing-logit-ssl-drain'
+                    ]
                   }
                   File.write('manifest-collector.yml', collector.to_yaml)
                 "
@@ -3153,6 +3166,11 @@ jobs:
                 cf push \
                   paas-billing-collector \
                   -f manifest-collector.yml
+
+                while ! cf service billing-logit-ssl-drain | grep -c 'create succeeded' | grep 2 > /dev/null; do
+                  echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
+                  sleep 10
+                done
 
       - task: paas-billing-acceptance-tests
         tags: [colocated-with-web]
