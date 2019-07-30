@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
@@ -9,7 +11,7 @@ import (
 )
 
 var _ = Describe("UAA", func() {
-	Context("Aggregation", func() {
+	Context("Users Aggregation", func() {
 		It("Should aggregate users correctly for no users", func() {
 			gauges := UAAUsersByOriginGauges([]uaaclient.User{})
 
@@ -77,6 +79,163 @@ var _ = Describe("UAA", func() {
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("microsoft"),
+					})),
+				}),
+			))
+		})
+	})
+
+	Context("Active Users", func() {
+		It("Should select active users", func() {
+			activeUsers := []uaaclient.User{{
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour).Unix() * 1000),
+			}}
+
+			Expect(UAAActiveUsers(activeUsers)).To(HaveLen(1))
+		})
+
+		It("Should reject inactive users", func() {
+			inactiveUsers := []uaaclient.User{{
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*31).Unix() * 1000),
+			}}
+
+			Expect(UAAActiveUsers(inactiveUsers)).To(HaveLen(0))
+		})
+
+		It("Should select active and reject inactive users", func() {
+			users := []uaaclient.User{{
+				Origin:        "google",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour).Unix() * 1000),
+			}, {
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*31).Unix() * 1000),
+			}}
+
+			activeUsers := UAAActiveUsers(users)
+
+			Expect(activeUsers).To(HaveLen(1))
+			Expect(activeUsers[0].Origin).To(Equal("google"))
+		})
+	})
+
+	Context("Active Users Aggregation", func() {
+		It("Should select active users as gauges", func() {
+			users := []uaaclient.User{{
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour).Unix() * 1000),
+			}}
+
+			gauges := UAAActiveUsersByOriginGauges(users)
+
+			Expect(gauges).To(HaveLen(1))
+			Expect(gauges).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Name":  Equal("uaa.active.users"),
+					"Unit":  Equal("count"),
+					"Kind":  Equal(Gauge),
+					"Value": BeNumerically("==", 1),
+					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+						"Label": Equal("origin"), "Value": Equal("uaa"),
+					})),
+				}),
+			))
+		})
+
+		It("Should reject inactive users as gauges", func() {
+			users := []uaaclient.User{{
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*31).Unix() * 1000),
+			}}
+
+			gauges := UAAActiveUsersByOriginGauges(users)
+
+			Expect(gauges).To(HaveLen(0))
+		})
+
+		It("Should select active and reject inactive users as gauges", func() {
+			users := []uaaclient.User{{
+				Origin:        "google",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour).Unix() * 1000),
+			}, {
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*31).Unix() * 1000),
+			}}
+
+			gauges := UAAActiveUsersByOriginGauges(users)
+
+			Expect(gauges).To(HaveLen(1))
+			Expect(gauges).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Name":  Equal("uaa.active.users"),
+					"Unit":  Equal("count"),
+					"Kind":  Equal(Gauge),
+					"Value": BeNumerically("==", 1),
+					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+						"Label": Equal("origin"), "Value": Equal("google"),
+					})),
+				}),
+			))
+		})
+
+		It("Should select active and reject inactive users as gauges for many users", func() {
+			users := []uaaclient.User{{
+				Origin:        "google",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour).Unix() * 1000),
+			}, {
+				Origin:        "google",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*60).Unix() * 1000),
+			}, {
+				Origin:        "microsoft",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*2).Unix() * 1000),
+			}, {
+				Origin:        "microsoft",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*91).Unix() * 1000),
+			}, {
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*2).Unix() * 1000),
+			}, {
+				Origin:        "uaa",
+				LastLogonTime: int(time.Now().Add(-1*24*time.Hour*31).Unix() * 1000),
+			}}
+
+			gauges := UAAActiveUsersByOriginGauges(users)
+
+			Expect(gauges).To(HaveLen(3))
+
+			Expect(gauges).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Name":  Equal("uaa.active.users"),
+					"Unit":  Equal("count"),
+					"Kind":  Equal(Gauge),
+					"Value": BeNumerically("==", 1),
+					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+						"Label": Equal("origin"), "Value": Equal("google"),
+					})),
+				}),
+			))
+
+			Expect(gauges).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Name":  Equal("uaa.active.users"),
+					"Unit":  Equal("count"),
+					"Kind":  Equal(Gauge),
+					"Value": BeNumerically("==", 1),
+					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+						"Label": Equal("origin"), "Value": Equal("microsoft"),
+					})),
+				}),
+			))
+
+			Expect(gauges).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Name":  Equal("uaa.active.users"),
+					"Unit":  Equal("count"),
+					"Kind":  Equal(Gauge),
+					"Value": BeNumerically("==", 1),
+					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+						"Label": Equal("origin"), "Value": Equal("uaa"),
 					})),
 				}),
 			))
