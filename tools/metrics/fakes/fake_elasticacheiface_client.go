@@ -2,9 +2,9 @@
 package fakes
 
 import (
+	"context"
 	"sync"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/elasticache"
 	"github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface"
@@ -37,10 +37,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.TagListMessage
 	}
-	AddTagsToResourceWithContextStub        func(aws.Context, *elasticache.AddTagsToResourceInput, ...request.Option) (*elasticache.TagListMessage, error)
+	AddTagsToResourceWithContextStub        func(context.Context, *elasticache.AddTagsToResourceInput, ...request.Option) (*elasticache.TagListMessage, error)
 	addTagsToResourceWithContextMutex       sync.RWMutex
 	addTagsToResourceWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.AddTagsToResourceInput
 		arg3 []request.Option
 	}
@@ -78,10 +78,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.AuthorizeCacheSecurityGroupIngressOutput
 	}
-	AuthorizeCacheSecurityGroupIngressWithContextStub        func(aws.Context, *elasticache.AuthorizeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.AuthorizeCacheSecurityGroupIngressOutput, error)
+	AuthorizeCacheSecurityGroupIngressWithContextStub        func(context.Context, *elasticache.AuthorizeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.AuthorizeCacheSecurityGroupIngressOutput, error)
 	authorizeCacheSecurityGroupIngressWithContextMutex       sync.RWMutex
 	authorizeCacheSecurityGroupIngressWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.AuthorizeCacheSecurityGroupIngressInput
 		arg3 []request.Option
 	}
@@ -91,6 +91,88 @@ type FakeElastiCacheAPI struct {
 	}
 	authorizeCacheSecurityGroupIngressWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.AuthorizeCacheSecurityGroupIngressOutput
+		result2 error
+	}
+	BatchApplyUpdateActionStub        func(*elasticache.BatchApplyUpdateActionInput) (*elasticache.BatchApplyUpdateActionOutput, error)
+	batchApplyUpdateActionMutex       sync.RWMutex
+	batchApplyUpdateActionArgsForCall []struct {
+		arg1 *elasticache.BatchApplyUpdateActionInput
+	}
+	batchApplyUpdateActionReturns struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}
+	batchApplyUpdateActionReturnsOnCall map[int]struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}
+	BatchApplyUpdateActionRequestStub        func(*elasticache.BatchApplyUpdateActionInput) (*request.Request, *elasticache.BatchApplyUpdateActionOutput)
+	batchApplyUpdateActionRequestMutex       sync.RWMutex
+	batchApplyUpdateActionRequestArgsForCall []struct {
+		arg1 *elasticache.BatchApplyUpdateActionInput
+	}
+	batchApplyUpdateActionRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.BatchApplyUpdateActionOutput
+	}
+	batchApplyUpdateActionRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.BatchApplyUpdateActionOutput
+	}
+	BatchApplyUpdateActionWithContextStub        func(context.Context, *elasticache.BatchApplyUpdateActionInput, ...request.Option) (*elasticache.BatchApplyUpdateActionOutput, error)
+	batchApplyUpdateActionWithContextMutex       sync.RWMutex
+	batchApplyUpdateActionWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.BatchApplyUpdateActionInput
+		arg3 []request.Option
+	}
+	batchApplyUpdateActionWithContextReturns struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}
+	batchApplyUpdateActionWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}
+	BatchStopUpdateActionStub        func(*elasticache.BatchStopUpdateActionInput) (*elasticache.BatchStopUpdateActionOutput, error)
+	batchStopUpdateActionMutex       sync.RWMutex
+	batchStopUpdateActionArgsForCall []struct {
+		arg1 *elasticache.BatchStopUpdateActionInput
+	}
+	batchStopUpdateActionReturns struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}
+	batchStopUpdateActionReturnsOnCall map[int]struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}
+	BatchStopUpdateActionRequestStub        func(*elasticache.BatchStopUpdateActionInput) (*request.Request, *elasticache.BatchStopUpdateActionOutput)
+	batchStopUpdateActionRequestMutex       sync.RWMutex
+	batchStopUpdateActionRequestArgsForCall []struct {
+		arg1 *elasticache.BatchStopUpdateActionInput
+	}
+	batchStopUpdateActionRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.BatchStopUpdateActionOutput
+	}
+	batchStopUpdateActionRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.BatchStopUpdateActionOutput
+	}
+	BatchStopUpdateActionWithContextStub        func(context.Context, *elasticache.BatchStopUpdateActionInput, ...request.Option) (*elasticache.BatchStopUpdateActionOutput, error)
+	batchStopUpdateActionWithContextMutex       sync.RWMutex
+	batchStopUpdateActionWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.BatchStopUpdateActionInput
+		arg3 []request.Option
+	}
+	batchStopUpdateActionWithContextReturns struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}
+	batchStopUpdateActionWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
 		result2 error
 	}
 	CopySnapshotStub        func(*elasticache.CopySnapshotInput) (*elasticache.CopySnapshotOutput, error)
@@ -119,10 +201,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CopySnapshotOutput
 	}
-	CopySnapshotWithContextStub        func(aws.Context, *elasticache.CopySnapshotInput, ...request.Option) (*elasticache.CopySnapshotOutput, error)
+	CopySnapshotWithContextStub        func(context.Context, *elasticache.CopySnapshotInput, ...request.Option) (*elasticache.CopySnapshotOutput, error)
 	copySnapshotWithContextMutex       sync.RWMutex
 	copySnapshotWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CopySnapshotInput
 		arg3 []request.Option
 	}
@@ -160,10 +242,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CreateCacheClusterOutput
 	}
-	CreateCacheClusterWithContextStub        func(aws.Context, *elasticache.CreateCacheClusterInput, ...request.Option) (*elasticache.CreateCacheClusterOutput, error)
+	CreateCacheClusterWithContextStub        func(context.Context, *elasticache.CreateCacheClusterInput, ...request.Option) (*elasticache.CreateCacheClusterOutput, error)
 	createCacheClusterWithContextMutex       sync.RWMutex
 	createCacheClusterWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheClusterInput
 		arg3 []request.Option
 	}
@@ -201,10 +283,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CreateCacheParameterGroupOutput
 	}
-	CreateCacheParameterGroupWithContextStub        func(aws.Context, *elasticache.CreateCacheParameterGroupInput, ...request.Option) (*elasticache.CreateCacheParameterGroupOutput, error)
+	CreateCacheParameterGroupWithContextStub        func(context.Context, *elasticache.CreateCacheParameterGroupInput, ...request.Option) (*elasticache.CreateCacheParameterGroupOutput, error)
 	createCacheParameterGroupWithContextMutex       sync.RWMutex
 	createCacheParameterGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheParameterGroupInput
 		arg3 []request.Option
 	}
@@ -242,10 +324,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CreateCacheSecurityGroupOutput
 	}
-	CreateCacheSecurityGroupWithContextStub        func(aws.Context, *elasticache.CreateCacheSecurityGroupInput, ...request.Option) (*elasticache.CreateCacheSecurityGroupOutput, error)
+	CreateCacheSecurityGroupWithContextStub        func(context.Context, *elasticache.CreateCacheSecurityGroupInput, ...request.Option) (*elasticache.CreateCacheSecurityGroupOutput, error)
 	createCacheSecurityGroupWithContextMutex       sync.RWMutex
 	createCacheSecurityGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheSecurityGroupInput
 		arg3 []request.Option
 	}
@@ -283,10 +365,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CreateCacheSubnetGroupOutput
 	}
-	CreateCacheSubnetGroupWithContextStub        func(aws.Context, *elasticache.CreateCacheSubnetGroupInput, ...request.Option) (*elasticache.CreateCacheSubnetGroupOutput, error)
+	CreateCacheSubnetGroupWithContextStub        func(context.Context, *elasticache.CreateCacheSubnetGroupInput, ...request.Option) (*elasticache.CreateCacheSubnetGroupOutput, error)
 	createCacheSubnetGroupWithContextMutex       sync.RWMutex
 	createCacheSubnetGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheSubnetGroupInput
 		arg3 []request.Option
 	}
@@ -324,10 +406,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CreateReplicationGroupOutput
 	}
-	CreateReplicationGroupWithContextStub        func(aws.Context, *elasticache.CreateReplicationGroupInput, ...request.Option) (*elasticache.CreateReplicationGroupOutput, error)
+	CreateReplicationGroupWithContextStub        func(context.Context, *elasticache.CreateReplicationGroupInput, ...request.Option) (*elasticache.CreateReplicationGroupOutput, error)
 	createReplicationGroupWithContextMutex       sync.RWMutex
 	createReplicationGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateReplicationGroupInput
 		arg3 []request.Option
 	}
@@ -365,10 +447,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CreateSnapshotOutput
 	}
-	CreateSnapshotWithContextStub        func(aws.Context, *elasticache.CreateSnapshotInput, ...request.Option) (*elasticache.CreateSnapshotOutput, error)
+	CreateSnapshotWithContextStub        func(context.Context, *elasticache.CreateSnapshotInput, ...request.Option) (*elasticache.CreateSnapshotOutput, error)
 	createSnapshotWithContextMutex       sync.RWMutex
 	createSnapshotWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateSnapshotInput
 		arg3 []request.Option
 	}
@@ -378,6 +460,47 @@ type FakeElastiCacheAPI struct {
 	}
 	createSnapshotWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.CreateSnapshotOutput
+		result2 error
+	}
+	DecreaseReplicaCountStub        func(*elasticache.DecreaseReplicaCountInput) (*elasticache.DecreaseReplicaCountOutput, error)
+	decreaseReplicaCountMutex       sync.RWMutex
+	decreaseReplicaCountArgsForCall []struct {
+		arg1 *elasticache.DecreaseReplicaCountInput
+	}
+	decreaseReplicaCountReturns struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
+		result2 error
+	}
+	decreaseReplicaCountReturnsOnCall map[int]struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
+		result2 error
+	}
+	DecreaseReplicaCountRequestStub        func(*elasticache.DecreaseReplicaCountInput) (*request.Request, *elasticache.DecreaseReplicaCountOutput)
+	decreaseReplicaCountRequestMutex       sync.RWMutex
+	decreaseReplicaCountRequestArgsForCall []struct {
+		arg1 *elasticache.DecreaseReplicaCountInput
+	}
+	decreaseReplicaCountRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseReplicaCountOutput
+	}
+	decreaseReplicaCountRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseReplicaCountOutput
+	}
+	DecreaseReplicaCountWithContextStub        func(context.Context, *elasticache.DecreaseReplicaCountInput, ...request.Option) (*elasticache.DecreaseReplicaCountOutput, error)
+	decreaseReplicaCountWithContextMutex       sync.RWMutex
+	decreaseReplicaCountWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DecreaseReplicaCountInput
+		arg3 []request.Option
+	}
+	decreaseReplicaCountWithContextReturns struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
+		result2 error
+	}
+	decreaseReplicaCountWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
 		result2 error
 	}
 	DeleteCacheClusterStub        func(*elasticache.DeleteCacheClusterInput) (*elasticache.DeleteCacheClusterOutput, error)
@@ -406,10 +529,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DeleteCacheClusterOutput
 	}
-	DeleteCacheClusterWithContextStub        func(aws.Context, *elasticache.DeleteCacheClusterInput, ...request.Option) (*elasticache.DeleteCacheClusterOutput, error)
+	DeleteCacheClusterWithContextStub        func(context.Context, *elasticache.DeleteCacheClusterInput, ...request.Option) (*elasticache.DeleteCacheClusterOutput, error)
 	deleteCacheClusterWithContextMutex       sync.RWMutex
 	deleteCacheClusterWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheClusterInput
 		arg3 []request.Option
 	}
@@ -447,10 +570,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DeleteCacheParameterGroupOutput
 	}
-	DeleteCacheParameterGroupWithContextStub        func(aws.Context, *elasticache.DeleteCacheParameterGroupInput, ...request.Option) (*elasticache.DeleteCacheParameterGroupOutput, error)
+	DeleteCacheParameterGroupWithContextStub        func(context.Context, *elasticache.DeleteCacheParameterGroupInput, ...request.Option) (*elasticache.DeleteCacheParameterGroupOutput, error)
 	deleteCacheParameterGroupWithContextMutex       sync.RWMutex
 	deleteCacheParameterGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheParameterGroupInput
 		arg3 []request.Option
 	}
@@ -488,10 +611,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DeleteCacheSecurityGroupOutput
 	}
-	DeleteCacheSecurityGroupWithContextStub        func(aws.Context, *elasticache.DeleteCacheSecurityGroupInput, ...request.Option) (*elasticache.DeleteCacheSecurityGroupOutput, error)
+	DeleteCacheSecurityGroupWithContextStub        func(context.Context, *elasticache.DeleteCacheSecurityGroupInput, ...request.Option) (*elasticache.DeleteCacheSecurityGroupOutput, error)
 	deleteCacheSecurityGroupWithContextMutex       sync.RWMutex
 	deleteCacheSecurityGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheSecurityGroupInput
 		arg3 []request.Option
 	}
@@ -529,10 +652,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DeleteCacheSubnetGroupOutput
 	}
-	DeleteCacheSubnetGroupWithContextStub        func(aws.Context, *elasticache.DeleteCacheSubnetGroupInput, ...request.Option) (*elasticache.DeleteCacheSubnetGroupOutput, error)
+	DeleteCacheSubnetGroupWithContextStub        func(context.Context, *elasticache.DeleteCacheSubnetGroupInput, ...request.Option) (*elasticache.DeleteCacheSubnetGroupOutput, error)
 	deleteCacheSubnetGroupWithContextMutex       sync.RWMutex
 	deleteCacheSubnetGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheSubnetGroupInput
 		arg3 []request.Option
 	}
@@ -570,10 +693,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DeleteReplicationGroupOutput
 	}
-	DeleteReplicationGroupWithContextStub        func(aws.Context, *elasticache.DeleteReplicationGroupInput, ...request.Option) (*elasticache.DeleteReplicationGroupOutput, error)
+	DeleteReplicationGroupWithContextStub        func(context.Context, *elasticache.DeleteReplicationGroupInput, ...request.Option) (*elasticache.DeleteReplicationGroupOutput, error)
 	deleteReplicationGroupWithContextMutex       sync.RWMutex
 	deleteReplicationGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteReplicationGroupInput
 		arg3 []request.Option
 	}
@@ -611,10 +734,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DeleteSnapshotOutput
 	}
-	DeleteSnapshotWithContextStub        func(aws.Context, *elasticache.DeleteSnapshotInput, ...request.Option) (*elasticache.DeleteSnapshotOutput, error)
+	DeleteSnapshotWithContextStub        func(context.Context, *elasticache.DeleteSnapshotInput, ...request.Option) (*elasticache.DeleteSnapshotOutput, error)
 	deleteSnapshotWithContextMutex       sync.RWMutex
 	deleteSnapshotWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteSnapshotInput
 		arg3 []request.Option
 	}
@@ -651,10 +774,10 @@ type FakeElastiCacheAPI struct {
 	describeCacheClustersPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeCacheClustersPagesWithContextStub        func(aws.Context, *elasticache.DescribeCacheClustersInput, func(*elasticache.DescribeCacheClustersOutput, bool) bool, ...request.Option) error
+	DescribeCacheClustersPagesWithContextStub        func(context.Context, *elasticache.DescribeCacheClustersInput, func(*elasticache.DescribeCacheClustersOutput, bool) bool, ...request.Option) error
 	describeCacheClustersPagesWithContextMutex       sync.RWMutex
 	describeCacheClustersPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 func(*elasticache.DescribeCacheClustersOutput, bool) bool
 		arg4 []request.Option
@@ -678,10 +801,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeCacheClustersOutput
 	}
-	DescribeCacheClustersWithContextStub        func(aws.Context, *elasticache.DescribeCacheClustersInput, ...request.Option) (*elasticache.DescribeCacheClustersOutput, error)
+	DescribeCacheClustersWithContextStub        func(context.Context, *elasticache.DescribeCacheClustersInput, ...request.Option) (*elasticache.DescribeCacheClustersOutput, error)
 	describeCacheClustersWithContextMutex       sync.RWMutex
 	describeCacheClustersWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 []request.Option
 	}
@@ -718,10 +841,10 @@ type FakeElastiCacheAPI struct {
 	describeCacheEngineVersionsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeCacheEngineVersionsPagesWithContextStub        func(aws.Context, *elasticache.DescribeCacheEngineVersionsInput, func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, ...request.Option) error
+	DescribeCacheEngineVersionsPagesWithContextStub        func(context.Context, *elasticache.DescribeCacheEngineVersionsInput, func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, ...request.Option) error
 	describeCacheEngineVersionsPagesWithContextMutex       sync.RWMutex
 	describeCacheEngineVersionsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheEngineVersionsInput
 		arg3 func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool
 		arg4 []request.Option
@@ -745,10 +868,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeCacheEngineVersionsOutput
 	}
-	DescribeCacheEngineVersionsWithContextStub        func(aws.Context, *elasticache.DescribeCacheEngineVersionsInput, ...request.Option) (*elasticache.DescribeCacheEngineVersionsOutput, error)
+	DescribeCacheEngineVersionsWithContextStub        func(context.Context, *elasticache.DescribeCacheEngineVersionsInput, ...request.Option) (*elasticache.DescribeCacheEngineVersionsOutput, error)
 	describeCacheEngineVersionsWithContextMutex       sync.RWMutex
 	describeCacheEngineVersionsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheEngineVersionsInput
 		arg3 []request.Option
 	}
@@ -785,10 +908,10 @@ type FakeElastiCacheAPI struct {
 	describeCacheParameterGroupsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeCacheParameterGroupsPagesWithContextStub        func(aws.Context, *elasticache.DescribeCacheParameterGroupsInput, func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, ...request.Option) error
+	DescribeCacheParameterGroupsPagesWithContextStub        func(context.Context, *elasticache.DescribeCacheParameterGroupsInput, func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, ...request.Option) error
 	describeCacheParameterGroupsPagesWithContextMutex       sync.RWMutex
 	describeCacheParameterGroupsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParameterGroupsInput
 		arg3 func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -812,10 +935,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeCacheParameterGroupsOutput
 	}
-	DescribeCacheParameterGroupsWithContextStub        func(aws.Context, *elasticache.DescribeCacheParameterGroupsInput, ...request.Option) (*elasticache.DescribeCacheParameterGroupsOutput, error)
+	DescribeCacheParameterGroupsWithContextStub        func(context.Context, *elasticache.DescribeCacheParameterGroupsInput, ...request.Option) (*elasticache.DescribeCacheParameterGroupsOutput, error)
 	describeCacheParameterGroupsWithContextMutex       sync.RWMutex
 	describeCacheParameterGroupsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParameterGroupsInput
 		arg3 []request.Option
 	}
@@ -852,10 +975,10 @@ type FakeElastiCacheAPI struct {
 	describeCacheParametersPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeCacheParametersPagesWithContextStub        func(aws.Context, *elasticache.DescribeCacheParametersInput, func(*elasticache.DescribeCacheParametersOutput, bool) bool, ...request.Option) error
+	DescribeCacheParametersPagesWithContextStub        func(context.Context, *elasticache.DescribeCacheParametersInput, func(*elasticache.DescribeCacheParametersOutput, bool) bool, ...request.Option) error
 	describeCacheParametersPagesWithContextMutex       sync.RWMutex
 	describeCacheParametersPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParametersInput
 		arg3 func(*elasticache.DescribeCacheParametersOutput, bool) bool
 		arg4 []request.Option
@@ -879,10 +1002,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeCacheParametersOutput
 	}
-	DescribeCacheParametersWithContextStub        func(aws.Context, *elasticache.DescribeCacheParametersInput, ...request.Option) (*elasticache.DescribeCacheParametersOutput, error)
+	DescribeCacheParametersWithContextStub        func(context.Context, *elasticache.DescribeCacheParametersInput, ...request.Option) (*elasticache.DescribeCacheParametersOutput, error)
 	describeCacheParametersWithContextMutex       sync.RWMutex
 	describeCacheParametersWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParametersInput
 		arg3 []request.Option
 	}
@@ -919,10 +1042,10 @@ type FakeElastiCacheAPI struct {
 	describeCacheSecurityGroupsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeCacheSecurityGroupsPagesWithContextStub        func(aws.Context, *elasticache.DescribeCacheSecurityGroupsInput, func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, ...request.Option) error
+	DescribeCacheSecurityGroupsPagesWithContextStub        func(context.Context, *elasticache.DescribeCacheSecurityGroupsInput, func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, ...request.Option) error
 	describeCacheSecurityGroupsPagesWithContextMutex       sync.RWMutex
 	describeCacheSecurityGroupsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSecurityGroupsInput
 		arg3 func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -946,10 +1069,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeCacheSecurityGroupsOutput
 	}
-	DescribeCacheSecurityGroupsWithContextStub        func(aws.Context, *elasticache.DescribeCacheSecurityGroupsInput, ...request.Option) (*elasticache.DescribeCacheSecurityGroupsOutput, error)
+	DescribeCacheSecurityGroupsWithContextStub        func(context.Context, *elasticache.DescribeCacheSecurityGroupsInput, ...request.Option) (*elasticache.DescribeCacheSecurityGroupsOutput, error)
 	describeCacheSecurityGroupsWithContextMutex       sync.RWMutex
 	describeCacheSecurityGroupsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSecurityGroupsInput
 		arg3 []request.Option
 	}
@@ -986,10 +1109,10 @@ type FakeElastiCacheAPI struct {
 	describeCacheSubnetGroupsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeCacheSubnetGroupsPagesWithContextStub        func(aws.Context, *elasticache.DescribeCacheSubnetGroupsInput, func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, ...request.Option) error
+	DescribeCacheSubnetGroupsPagesWithContextStub        func(context.Context, *elasticache.DescribeCacheSubnetGroupsInput, func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, ...request.Option) error
 	describeCacheSubnetGroupsPagesWithContextMutex       sync.RWMutex
 	describeCacheSubnetGroupsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSubnetGroupsInput
 		arg3 func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -1013,10 +1136,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeCacheSubnetGroupsOutput
 	}
-	DescribeCacheSubnetGroupsWithContextStub        func(aws.Context, *elasticache.DescribeCacheSubnetGroupsInput, ...request.Option) (*elasticache.DescribeCacheSubnetGroupsOutput, error)
+	DescribeCacheSubnetGroupsWithContextStub        func(context.Context, *elasticache.DescribeCacheSubnetGroupsInput, ...request.Option) (*elasticache.DescribeCacheSubnetGroupsOutput, error)
 	describeCacheSubnetGroupsWithContextMutex       sync.RWMutex
 	describeCacheSubnetGroupsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSubnetGroupsInput
 		arg3 []request.Option
 	}
@@ -1053,10 +1176,10 @@ type FakeElastiCacheAPI struct {
 	describeEngineDefaultParametersPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeEngineDefaultParametersPagesWithContextStub        func(aws.Context, *elasticache.DescribeEngineDefaultParametersInput, func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, ...request.Option) error
+	DescribeEngineDefaultParametersPagesWithContextStub        func(context.Context, *elasticache.DescribeEngineDefaultParametersInput, func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, ...request.Option) error
 	describeEngineDefaultParametersPagesWithContextMutex       sync.RWMutex
 	describeEngineDefaultParametersPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEngineDefaultParametersInput
 		arg3 func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool
 		arg4 []request.Option
@@ -1080,10 +1203,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeEngineDefaultParametersOutput
 	}
-	DescribeEngineDefaultParametersWithContextStub        func(aws.Context, *elasticache.DescribeEngineDefaultParametersInput, ...request.Option) (*elasticache.DescribeEngineDefaultParametersOutput, error)
+	DescribeEngineDefaultParametersWithContextStub        func(context.Context, *elasticache.DescribeEngineDefaultParametersInput, ...request.Option) (*elasticache.DescribeEngineDefaultParametersOutput, error)
 	describeEngineDefaultParametersWithContextMutex       sync.RWMutex
 	describeEngineDefaultParametersWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEngineDefaultParametersInput
 		arg3 []request.Option
 	}
@@ -1120,10 +1243,10 @@ type FakeElastiCacheAPI struct {
 	describeEventsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeEventsPagesWithContextStub        func(aws.Context, *elasticache.DescribeEventsInput, func(*elasticache.DescribeEventsOutput, bool) bool, ...request.Option) error
+	DescribeEventsPagesWithContextStub        func(context.Context, *elasticache.DescribeEventsInput, func(*elasticache.DescribeEventsOutput, bool) bool, ...request.Option) error
 	describeEventsPagesWithContextMutex       sync.RWMutex
 	describeEventsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEventsInput
 		arg3 func(*elasticache.DescribeEventsOutput, bool) bool
 		arg4 []request.Option
@@ -1147,10 +1270,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeEventsOutput
 	}
-	DescribeEventsWithContextStub        func(aws.Context, *elasticache.DescribeEventsInput, ...request.Option) (*elasticache.DescribeEventsOutput, error)
+	DescribeEventsWithContextStub        func(context.Context, *elasticache.DescribeEventsInput, ...request.Option) (*elasticache.DescribeEventsOutput, error)
 	describeEventsWithContextMutex       sync.RWMutex
 	describeEventsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEventsInput
 		arg3 []request.Option
 	}
@@ -1187,10 +1310,10 @@ type FakeElastiCacheAPI struct {
 	describeReplicationGroupsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeReplicationGroupsPagesWithContextStub        func(aws.Context, *elasticache.DescribeReplicationGroupsInput, func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, ...request.Option) error
+	DescribeReplicationGroupsPagesWithContextStub        func(context.Context, *elasticache.DescribeReplicationGroupsInput, func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, ...request.Option) error
 	describeReplicationGroupsPagesWithContextMutex       sync.RWMutex
 	describeReplicationGroupsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 func(*elasticache.DescribeReplicationGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -1214,10 +1337,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeReplicationGroupsOutput
 	}
-	DescribeReplicationGroupsWithContextStub        func(aws.Context, *elasticache.DescribeReplicationGroupsInput, ...request.Option) (*elasticache.DescribeReplicationGroupsOutput, error)
+	DescribeReplicationGroupsWithContextStub        func(context.Context, *elasticache.DescribeReplicationGroupsInput, ...request.Option) (*elasticache.DescribeReplicationGroupsOutput, error)
 	describeReplicationGroupsWithContextMutex       sync.RWMutex
 	describeReplicationGroupsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 []request.Option
 	}
@@ -1267,10 +1390,10 @@ type FakeElastiCacheAPI struct {
 	describeReservedCacheNodesOfferingsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeReservedCacheNodesOfferingsPagesWithContextStub        func(aws.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, ...request.Option) error
+	DescribeReservedCacheNodesOfferingsPagesWithContextStub        func(context.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, ...request.Option) error
 	describeReservedCacheNodesOfferingsPagesWithContextMutex       sync.RWMutex
 	describeReservedCacheNodesOfferingsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput
 		arg3 func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool
 		arg4 []request.Option
@@ -1294,10 +1417,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeReservedCacheNodesOfferingsOutput
 	}
-	DescribeReservedCacheNodesOfferingsWithContextStub        func(aws.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOfferingsOutput, error)
+	DescribeReservedCacheNodesOfferingsWithContextStub        func(context.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOfferingsOutput, error)
 	describeReservedCacheNodesOfferingsWithContextMutex       sync.RWMutex
 	describeReservedCacheNodesOfferingsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput
 		arg3 []request.Option
 	}
@@ -1321,10 +1444,10 @@ type FakeElastiCacheAPI struct {
 	describeReservedCacheNodesPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeReservedCacheNodesPagesWithContextStub        func(aws.Context, *elasticache.DescribeReservedCacheNodesInput, func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, ...request.Option) error
+	DescribeReservedCacheNodesPagesWithContextStub        func(context.Context, *elasticache.DescribeReservedCacheNodesInput, func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, ...request.Option) error
 	describeReservedCacheNodesPagesWithContextMutex       sync.RWMutex
 	describeReservedCacheNodesPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesInput
 		arg3 func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool
 		arg4 []request.Option
@@ -1348,10 +1471,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeReservedCacheNodesOutput
 	}
-	DescribeReservedCacheNodesWithContextStub        func(aws.Context, *elasticache.DescribeReservedCacheNodesInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOutput, error)
+	DescribeReservedCacheNodesWithContextStub        func(context.Context, *elasticache.DescribeReservedCacheNodesInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOutput, error)
 	describeReservedCacheNodesWithContextMutex       sync.RWMutex
 	describeReservedCacheNodesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesInput
 		arg3 []request.Option
 	}
@@ -1361,6 +1484,73 @@ type FakeElastiCacheAPI struct {
 	}
 	describeReservedCacheNodesWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.DescribeReservedCacheNodesOutput
+		result2 error
+	}
+	DescribeServiceUpdatesStub        func(*elasticache.DescribeServiceUpdatesInput) (*elasticache.DescribeServiceUpdatesOutput, error)
+	describeServiceUpdatesMutex       sync.RWMutex
+	describeServiceUpdatesArgsForCall []struct {
+		arg1 *elasticache.DescribeServiceUpdatesInput
+	}
+	describeServiceUpdatesReturns struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
+		result2 error
+	}
+	describeServiceUpdatesReturnsOnCall map[int]struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
+		result2 error
+	}
+	DescribeServiceUpdatesPagesStub        func(*elasticache.DescribeServiceUpdatesInput, func(*elasticache.DescribeServiceUpdatesOutput, bool) bool) error
+	describeServiceUpdatesPagesMutex       sync.RWMutex
+	describeServiceUpdatesPagesArgsForCall []struct {
+		arg1 *elasticache.DescribeServiceUpdatesInput
+		arg2 func(*elasticache.DescribeServiceUpdatesOutput, bool) bool
+	}
+	describeServiceUpdatesPagesReturns struct {
+		result1 error
+	}
+	describeServiceUpdatesPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeServiceUpdatesPagesWithContextStub        func(context.Context, *elasticache.DescribeServiceUpdatesInput, func(*elasticache.DescribeServiceUpdatesOutput, bool) bool, ...request.Option) error
+	describeServiceUpdatesPagesWithContextMutex       sync.RWMutex
+	describeServiceUpdatesPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeServiceUpdatesInput
+		arg3 func(*elasticache.DescribeServiceUpdatesOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeServiceUpdatesPagesWithContextReturns struct {
+		result1 error
+	}
+	describeServiceUpdatesPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeServiceUpdatesRequestStub        func(*elasticache.DescribeServiceUpdatesInput) (*request.Request, *elasticache.DescribeServiceUpdatesOutput)
+	describeServiceUpdatesRequestMutex       sync.RWMutex
+	describeServiceUpdatesRequestArgsForCall []struct {
+		arg1 *elasticache.DescribeServiceUpdatesInput
+	}
+	describeServiceUpdatesRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeServiceUpdatesOutput
+	}
+	describeServiceUpdatesRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeServiceUpdatesOutput
+	}
+	DescribeServiceUpdatesWithContextStub        func(context.Context, *elasticache.DescribeServiceUpdatesInput, ...request.Option) (*elasticache.DescribeServiceUpdatesOutput, error)
+	describeServiceUpdatesWithContextMutex       sync.RWMutex
+	describeServiceUpdatesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeServiceUpdatesInput
+		arg3 []request.Option
+	}
+	describeServiceUpdatesWithContextReturns struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
+		result2 error
+	}
+	describeServiceUpdatesWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
 		result2 error
 	}
 	DescribeSnapshotsStub        func(*elasticache.DescribeSnapshotsInput) (*elasticache.DescribeSnapshotsOutput, error)
@@ -1388,10 +1578,10 @@ type FakeElastiCacheAPI struct {
 	describeSnapshotsPagesReturnsOnCall map[int]struct {
 		result1 error
 	}
-	DescribeSnapshotsPagesWithContextStub        func(aws.Context, *elasticache.DescribeSnapshotsInput, func(*elasticache.DescribeSnapshotsOutput, bool) bool, ...request.Option) error
+	DescribeSnapshotsPagesWithContextStub        func(context.Context, *elasticache.DescribeSnapshotsInput, func(*elasticache.DescribeSnapshotsOutput, bool) bool, ...request.Option) error
 	describeSnapshotsPagesWithContextMutex       sync.RWMutex
 	describeSnapshotsPagesWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeSnapshotsInput
 		arg3 func(*elasticache.DescribeSnapshotsOutput, bool) bool
 		arg4 []request.Option
@@ -1415,10 +1605,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.DescribeSnapshotsOutput
 	}
-	DescribeSnapshotsWithContextStub        func(aws.Context, *elasticache.DescribeSnapshotsInput, ...request.Option) (*elasticache.DescribeSnapshotsOutput, error)
+	DescribeSnapshotsWithContextStub        func(context.Context, *elasticache.DescribeSnapshotsInput, ...request.Option) (*elasticache.DescribeSnapshotsOutput, error)
 	describeSnapshotsWithContextMutex       sync.RWMutex
 	describeSnapshotsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeSnapshotsInput
 		arg3 []request.Option
 	}
@@ -1428,6 +1618,114 @@ type FakeElastiCacheAPI struct {
 	}
 	describeSnapshotsWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.DescribeSnapshotsOutput
+		result2 error
+	}
+	DescribeUpdateActionsStub        func(*elasticache.DescribeUpdateActionsInput) (*elasticache.DescribeUpdateActionsOutput, error)
+	describeUpdateActionsMutex       sync.RWMutex
+	describeUpdateActionsArgsForCall []struct {
+		arg1 *elasticache.DescribeUpdateActionsInput
+	}
+	describeUpdateActionsReturns struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}
+	describeUpdateActionsReturnsOnCall map[int]struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}
+	DescribeUpdateActionsPagesStub        func(*elasticache.DescribeUpdateActionsInput, func(*elasticache.DescribeUpdateActionsOutput, bool) bool) error
+	describeUpdateActionsPagesMutex       sync.RWMutex
+	describeUpdateActionsPagesArgsForCall []struct {
+		arg1 *elasticache.DescribeUpdateActionsInput
+		arg2 func(*elasticache.DescribeUpdateActionsOutput, bool) bool
+	}
+	describeUpdateActionsPagesReturns struct {
+		result1 error
+	}
+	describeUpdateActionsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeUpdateActionsPagesWithContextStub        func(context.Context, *elasticache.DescribeUpdateActionsInput, func(*elasticache.DescribeUpdateActionsOutput, bool) bool, ...request.Option) error
+	describeUpdateActionsPagesWithContextMutex       sync.RWMutex
+	describeUpdateActionsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeUpdateActionsInput
+		arg3 func(*elasticache.DescribeUpdateActionsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeUpdateActionsPagesWithContextReturns struct {
+		result1 error
+	}
+	describeUpdateActionsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeUpdateActionsRequestStub        func(*elasticache.DescribeUpdateActionsInput) (*request.Request, *elasticache.DescribeUpdateActionsOutput)
+	describeUpdateActionsRequestMutex       sync.RWMutex
+	describeUpdateActionsRequestArgsForCall []struct {
+		arg1 *elasticache.DescribeUpdateActionsInput
+	}
+	describeUpdateActionsRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeUpdateActionsOutput
+	}
+	describeUpdateActionsRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeUpdateActionsOutput
+	}
+	DescribeUpdateActionsWithContextStub        func(context.Context, *elasticache.DescribeUpdateActionsInput, ...request.Option) (*elasticache.DescribeUpdateActionsOutput, error)
+	describeUpdateActionsWithContextMutex       sync.RWMutex
+	describeUpdateActionsWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeUpdateActionsInput
+		arg3 []request.Option
+	}
+	describeUpdateActionsWithContextReturns struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}
+	describeUpdateActionsWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}
+	IncreaseReplicaCountStub        func(*elasticache.IncreaseReplicaCountInput) (*elasticache.IncreaseReplicaCountOutput, error)
+	increaseReplicaCountMutex       sync.RWMutex
+	increaseReplicaCountArgsForCall []struct {
+		arg1 *elasticache.IncreaseReplicaCountInput
+	}
+	increaseReplicaCountReturns struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
+		result2 error
+	}
+	increaseReplicaCountReturnsOnCall map[int]struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
+		result2 error
+	}
+	IncreaseReplicaCountRequestStub        func(*elasticache.IncreaseReplicaCountInput) (*request.Request, *elasticache.IncreaseReplicaCountOutput)
+	increaseReplicaCountRequestMutex       sync.RWMutex
+	increaseReplicaCountRequestArgsForCall []struct {
+		arg1 *elasticache.IncreaseReplicaCountInput
+	}
+	increaseReplicaCountRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseReplicaCountOutput
+	}
+	increaseReplicaCountRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseReplicaCountOutput
+	}
+	IncreaseReplicaCountWithContextStub        func(context.Context, *elasticache.IncreaseReplicaCountInput, ...request.Option) (*elasticache.IncreaseReplicaCountOutput, error)
+	increaseReplicaCountWithContextMutex       sync.RWMutex
+	increaseReplicaCountWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.IncreaseReplicaCountInput
+		arg3 []request.Option
+	}
+	increaseReplicaCountWithContextReturns struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
+		result2 error
+	}
+	increaseReplicaCountWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
 		result2 error
 	}
 	ListAllowedNodeTypeModificationsStub        func(*elasticache.ListAllowedNodeTypeModificationsInput) (*elasticache.ListAllowedNodeTypeModificationsOutput, error)
@@ -1456,10 +1754,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.ListAllowedNodeTypeModificationsOutput
 	}
-	ListAllowedNodeTypeModificationsWithContextStub        func(aws.Context, *elasticache.ListAllowedNodeTypeModificationsInput, ...request.Option) (*elasticache.ListAllowedNodeTypeModificationsOutput, error)
+	ListAllowedNodeTypeModificationsWithContextStub        func(context.Context, *elasticache.ListAllowedNodeTypeModificationsInput, ...request.Option) (*elasticache.ListAllowedNodeTypeModificationsOutput, error)
 	listAllowedNodeTypeModificationsWithContextMutex       sync.RWMutex
 	listAllowedNodeTypeModificationsWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ListAllowedNodeTypeModificationsInput
 		arg3 []request.Option
 	}
@@ -1497,10 +1795,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.TagListMessage
 	}
-	ListTagsForResourceWithContextStub        func(aws.Context, *elasticache.ListTagsForResourceInput, ...request.Option) (*elasticache.TagListMessage, error)
+	ListTagsForResourceWithContextStub        func(context.Context, *elasticache.ListTagsForResourceInput, ...request.Option) (*elasticache.TagListMessage, error)
 	listTagsForResourceWithContextMutex       sync.RWMutex
 	listTagsForResourceWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ListTagsForResourceInput
 		arg3 []request.Option
 	}
@@ -1538,10 +1836,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.ModifyCacheClusterOutput
 	}
-	ModifyCacheClusterWithContextStub        func(aws.Context, *elasticache.ModifyCacheClusterInput, ...request.Option) (*elasticache.ModifyCacheClusterOutput, error)
+	ModifyCacheClusterWithContextStub        func(context.Context, *elasticache.ModifyCacheClusterInput, ...request.Option) (*elasticache.ModifyCacheClusterOutput, error)
 	modifyCacheClusterWithContextMutex       sync.RWMutex
 	modifyCacheClusterWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyCacheClusterInput
 		arg3 []request.Option
 	}
@@ -1579,10 +1877,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CacheParameterGroupNameMessage
 	}
-	ModifyCacheParameterGroupWithContextStub        func(aws.Context, *elasticache.ModifyCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)
+	ModifyCacheParameterGroupWithContextStub        func(context.Context, *elasticache.ModifyCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)
 	modifyCacheParameterGroupWithContextMutex       sync.RWMutex
 	modifyCacheParameterGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyCacheParameterGroupInput
 		arg3 []request.Option
 	}
@@ -1620,10 +1918,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.ModifyCacheSubnetGroupOutput
 	}
-	ModifyCacheSubnetGroupWithContextStub        func(aws.Context, *elasticache.ModifyCacheSubnetGroupInput, ...request.Option) (*elasticache.ModifyCacheSubnetGroupOutput, error)
+	ModifyCacheSubnetGroupWithContextStub        func(context.Context, *elasticache.ModifyCacheSubnetGroupInput, ...request.Option) (*elasticache.ModifyCacheSubnetGroupOutput, error)
 	modifyCacheSubnetGroupWithContextMutex       sync.RWMutex
 	modifyCacheSubnetGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyCacheSubnetGroupInput
 		arg3 []request.Option
 	}
@@ -1687,10 +1985,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.ModifyReplicationGroupShardConfigurationOutput
 	}
-	ModifyReplicationGroupShardConfigurationWithContextStub        func(aws.Context, *elasticache.ModifyReplicationGroupShardConfigurationInput, ...request.Option) (*elasticache.ModifyReplicationGroupShardConfigurationOutput, error)
+	ModifyReplicationGroupShardConfigurationWithContextStub        func(context.Context, *elasticache.ModifyReplicationGroupShardConfigurationInput, ...request.Option) (*elasticache.ModifyReplicationGroupShardConfigurationOutput, error)
 	modifyReplicationGroupShardConfigurationWithContextMutex       sync.RWMutex
 	modifyReplicationGroupShardConfigurationWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyReplicationGroupShardConfigurationInput
 		arg3 []request.Option
 	}
@@ -1702,10 +2000,10 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.ModifyReplicationGroupShardConfigurationOutput
 		result2 error
 	}
-	ModifyReplicationGroupWithContextStub        func(aws.Context, *elasticache.ModifyReplicationGroupInput, ...request.Option) (*elasticache.ModifyReplicationGroupOutput, error)
+	ModifyReplicationGroupWithContextStub        func(context.Context, *elasticache.ModifyReplicationGroupInput, ...request.Option) (*elasticache.ModifyReplicationGroupOutput, error)
 	modifyReplicationGroupWithContextMutex       sync.RWMutex
 	modifyReplicationGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyReplicationGroupInput
 		arg3 []request.Option
 	}
@@ -1743,10 +2041,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.PurchaseReservedCacheNodesOfferingOutput
 	}
-	PurchaseReservedCacheNodesOfferingWithContextStub        func(aws.Context, *elasticache.PurchaseReservedCacheNodesOfferingInput, ...request.Option) (*elasticache.PurchaseReservedCacheNodesOfferingOutput, error)
+	PurchaseReservedCacheNodesOfferingWithContextStub        func(context.Context, *elasticache.PurchaseReservedCacheNodesOfferingInput, ...request.Option) (*elasticache.PurchaseReservedCacheNodesOfferingOutput, error)
 	purchaseReservedCacheNodesOfferingWithContextMutex       sync.RWMutex
 	purchaseReservedCacheNodesOfferingWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.PurchaseReservedCacheNodesOfferingInput
 		arg3 []request.Option
 	}
@@ -1784,10 +2082,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.RebootCacheClusterOutput
 	}
-	RebootCacheClusterWithContextStub        func(aws.Context, *elasticache.RebootCacheClusterInput, ...request.Option) (*elasticache.RebootCacheClusterOutput, error)
+	RebootCacheClusterWithContextStub        func(context.Context, *elasticache.RebootCacheClusterInput, ...request.Option) (*elasticache.RebootCacheClusterOutput, error)
 	rebootCacheClusterWithContextMutex       sync.RWMutex
 	rebootCacheClusterWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.RebootCacheClusterInput
 		arg3 []request.Option
 	}
@@ -1825,10 +2123,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.TagListMessage
 	}
-	RemoveTagsFromResourceWithContextStub        func(aws.Context, *elasticache.RemoveTagsFromResourceInput, ...request.Option) (*elasticache.TagListMessage, error)
+	RemoveTagsFromResourceWithContextStub        func(context.Context, *elasticache.RemoveTagsFromResourceInput, ...request.Option) (*elasticache.TagListMessage, error)
 	removeTagsFromResourceWithContextMutex       sync.RWMutex
 	removeTagsFromResourceWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.RemoveTagsFromResourceInput
 		arg3 []request.Option
 	}
@@ -1866,10 +2164,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.CacheParameterGroupNameMessage
 	}
-	ResetCacheParameterGroupWithContextStub        func(aws.Context, *elasticache.ResetCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)
+	ResetCacheParameterGroupWithContextStub        func(context.Context, *elasticache.ResetCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)
 	resetCacheParameterGroupWithContextMutex       sync.RWMutex
 	resetCacheParameterGroupWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ResetCacheParameterGroupInput
 		arg3 []request.Option
 	}
@@ -1907,10 +2205,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.RevokeCacheSecurityGroupIngressOutput
 	}
-	RevokeCacheSecurityGroupIngressWithContextStub        func(aws.Context, *elasticache.RevokeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.RevokeCacheSecurityGroupIngressOutput, error)
+	RevokeCacheSecurityGroupIngressWithContextStub        func(context.Context, *elasticache.RevokeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.RevokeCacheSecurityGroupIngressOutput, error)
 	revokeCacheSecurityGroupIngressWithContextMutex       sync.RWMutex
 	revokeCacheSecurityGroupIngressWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.RevokeCacheSecurityGroupIngressInput
 		arg3 []request.Option
 	}
@@ -1948,10 +2246,10 @@ type FakeElastiCacheAPI struct {
 		result1 *request.Request
 		result2 *elasticache.TestFailoverOutput
 	}
-	TestFailoverWithContextStub        func(aws.Context, *elasticache.TestFailoverInput, ...request.Option) (*elasticache.TestFailoverOutput, error)
+	TestFailoverWithContextStub        func(context.Context, *elasticache.TestFailoverInput, ...request.Option) (*elasticache.TestFailoverOutput, error)
 	testFailoverWithContextMutex       sync.RWMutex
 	testFailoverWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.TestFailoverInput
 		arg3 []request.Option
 	}
@@ -1974,10 +2272,10 @@ type FakeElastiCacheAPI struct {
 	waitUntilCacheClusterAvailableReturnsOnCall map[int]struct {
 		result1 error
 	}
-	WaitUntilCacheClusterAvailableWithContextStub        func(aws.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error
+	WaitUntilCacheClusterAvailableWithContextStub        func(context.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error
 	waitUntilCacheClusterAvailableWithContextMutex       sync.RWMutex
 	waitUntilCacheClusterAvailableWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 []request.WaiterOption
 	}
@@ -1998,10 +2296,10 @@ type FakeElastiCacheAPI struct {
 	waitUntilCacheClusterDeletedReturnsOnCall map[int]struct {
 		result1 error
 	}
-	WaitUntilCacheClusterDeletedWithContextStub        func(aws.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error
+	WaitUntilCacheClusterDeletedWithContextStub        func(context.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error
 	waitUntilCacheClusterDeletedWithContextMutex       sync.RWMutex
 	waitUntilCacheClusterDeletedWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 []request.WaiterOption
 	}
@@ -2022,10 +2320,10 @@ type FakeElastiCacheAPI struct {
 	waitUntilReplicationGroupAvailableReturnsOnCall map[int]struct {
 		result1 error
 	}
-	WaitUntilReplicationGroupAvailableWithContextStub        func(aws.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error
+	WaitUntilReplicationGroupAvailableWithContextStub        func(context.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error
 	waitUntilReplicationGroupAvailableWithContextMutex       sync.RWMutex
 	waitUntilReplicationGroupAvailableWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 []request.WaiterOption
 	}
@@ -2046,10 +2344,10 @@ type FakeElastiCacheAPI struct {
 	waitUntilReplicationGroupDeletedReturnsOnCall map[int]struct {
 		result1 error
 	}
-	WaitUntilReplicationGroupDeletedWithContextStub        func(aws.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error
+	WaitUntilReplicationGroupDeletedWithContextStub        func(context.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error
 	waitUntilReplicationGroupDeletedWithContextMutex       sync.RWMutex
 	waitUntilReplicationGroupDeletedWithContextArgsForCall []struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 []request.WaiterOption
 	}
@@ -2189,11 +2487,11 @@ func (fake *FakeElastiCacheAPI) AddTagsToResourceRequestReturnsOnCall(i int, res
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContext(arg1 aws.Context, arg2 *elasticache.AddTagsToResourceInput, arg3 ...request.Option) (*elasticache.TagListMessage, error) {
+func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContext(arg1 context.Context, arg2 *elasticache.AddTagsToResourceInput, arg3 ...request.Option) (*elasticache.TagListMessage, error) {
 	fake.addTagsToResourceWithContextMutex.Lock()
 	ret, specificReturn := fake.addTagsToResourceWithContextReturnsOnCall[len(fake.addTagsToResourceWithContextArgsForCall)]
 	fake.addTagsToResourceWithContextArgsForCall = append(fake.addTagsToResourceWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.AddTagsToResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -2215,13 +2513,13 @@ func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContextCallCount() int {
 	return len(fake.addTagsToResourceWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContextCalls(stub func(aws.Context, *elasticache.AddTagsToResourceInput, ...request.Option) (*elasticache.TagListMessage, error)) {
+func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContextCalls(stub func(context.Context, *elasticache.AddTagsToResourceInput, ...request.Option) (*elasticache.TagListMessage, error)) {
 	fake.addTagsToResourceWithContextMutex.Lock()
 	defer fake.addTagsToResourceWithContextMutex.Unlock()
 	fake.AddTagsToResourceWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContextArgsForCall(i int) (aws.Context, *elasticache.AddTagsToResourceInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) AddTagsToResourceWithContextArgsForCall(i int) (context.Context, *elasticache.AddTagsToResourceInput, []request.Option) {
 	fake.addTagsToResourceWithContextMutex.RLock()
 	defer fake.addTagsToResourceWithContextMutex.RUnlock()
 	argsForCall := fake.addTagsToResourceWithContextArgsForCall[i]
@@ -2380,11 +2678,11 @@ func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressRequestReturns
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContext(arg1 aws.Context, arg2 *elasticache.AuthorizeCacheSecurityGroupIngressInput, arg3 ...request.Option) (*elasticache.AuthorizeCacheSecurityGroupIngressOutput, error) {
+func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContext(arg1 context.Context, arg2 *elasticache.AuthorizeCacheSecurityGroupIngressInput, arg3 ...request.Option) (*elasticache.AuthorizeCacheSecurityGroupIngressOutput, error) {
 	fake.authorizeCacheSecurityGroupIngressWithContextMutex.Lock()
 	ret, specificReturn := fake.authorizeCacheSecurityGroupIngressWithContextReturnsOnCall[len(fake.authorizeCacheSecurityGroupIngressWithContextArgsForCall)]
 	fake.authorizeCacheSecurityGroupIngressWithContextArgsForCall = append(fake.authorizeCacheSecurityGroupIngressWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.AuthorizeCacheSecurityGroupIngressInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -2406,13 +2704,13 @@ func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContextCal
 	return len(fake.authorizeCacheSecurityGroupIngressWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContextCalls(stub func(aws.Context, *elasticache.AuthorizeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.AuthorizeCacheSecurityGroupIngressOutput, error)) {
+func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContextCalls(stub func(context.Context, *elasticache.AuthorizeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.AuthorizeCacheSecurityGroupIngressOutput, error)) {
 	fake.authorizeCacheSecurityGroupIngressWithContextMutex.Lock()
 	defer fake.authorizeCacheSecurityGroupIngressWithContextMutex.Unlock()
 	fake.AuthorizeCacheSecurityGroupIngressWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContextArgsForCall(i int) (aws.Context, *elasticache.AuthorizeCacheSecurityGroupIngressInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContextArgsForCall(i int) (context.Context, *elasticache.AuthorizeCacheSecurityGroupIngressInput, []request.Option) {
 	fake.authorizeCacheSecurityGroupIngressWithContextMutex.RLock()
 	defer fake.authorizeCacheSecurityGroupIngressWithContextMutex.RUnlock()
 	argsForCall := fake.authorizeCacheSecurityGroupIngressWithContextArgsForCall[i]
@@ -2441,6 +2739,388 @@ func (fake *FakeElastiCacheAPI) AuthorizeCacheSecurityGroupIngressWithContextRet
 	}
 	fake.authorizeCacheSecurityGroupIngressWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.AuthorizeCacheSecurityGroupIngressOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateAction(arg1 *elasticache.BatchApplyUpdateActionInput) (*elasticache.BatchApplyUpdateActionOutput, error) {
+	fake.batchApplyUpdateActionMutex.Lock()
+	ret, specificReturn := fake.batchApplyUpdateActionReturnsOnCall[len(fake.batchApplyUpdateActionArgsForCall)]
+	fake.batchApplyUpdateActionArgsForCall = append(fake.batchApplyUpdateActionArgsForCall, struct {
+		arg1 *elasticache.BatchApplyUpdateActionInput
+	}{arg1})
+	fake.recordInvocation("BatchApplyUpdateAction", []interface{}{arg1})
+	fake.batchApplyUpdateActionMutex.Unlock()
+	if fake.BatchApplyUpdateActionStub != nil {
+		return fake.BatchApplyUpdateActionStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.batchApplyUpdateActionReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionCallCount() int {
+	fake.batchApplyUpdateActionMutex.RLock()
+	defer fake.batchApplyUpdateActionMutex.RUnlock()
+	return len(fake.batchApplyUpdateActionArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionCalls(stub func(*elasticache.BatchApplyUpdateActionInput) (*elasticache.BatchApplyUpdateActionOutput, error)) {
+	fake.batchApplyUpdateActionMutex.Lock()
+	defer fake.batchApplyUpdateActionMutex.Unlock()
+	fake.BatchApplyUpdateActionStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionArgsForCall(i int) *elasticache.BatchApplyUpdateActionInput {
+	fake.batchApplyUpdateActionMutex.RLock()
+	defer fake.batchApplyUpdateActionMutex.RUnlock()
+	argsForCall := fake.batchApplyUpdateActionArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionReturns(result1 *elasticache.BatchApplyUpdateActionOutput, result2 error) {
+	fake.batchApplyUpdateActionMutex.Lock()
+	defer fake.batchApplyUpdateActionMutex.Unlock()
+	fake.BatchApplyUpdateActionStub = nil
+	fake.batchApplyUpdateActionReturns = struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionReturnsOnCall(i int, result1 *elasticache.BatchApplyUpdateActionOutput, result2 error) {
+	fake.batchApplyUpdateActionMutex.Lock()
+	defer fake.batchApplyUpdateActionMutex.Unlock()
+	fake.BatchApplyUpdateActionStub = nil
+	if fake.batchApplyUpdateActionReturnsOnCall == nil {
+		fake.batchApplyUpdateActionReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.BatchApplyUpdateActionOutput
+			result2 error
+		})
+	}
+	fake.batchApplyUpdateActionReturnsOnCall[i] = struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionRequest(arg1 *elasticache.BatchApplyUpdateActionInput) (*request.Request, *elasticache.BatchApplyUpdateActionOutput) {
+	fake.batchApplyUpdateActionRequestMutex.Lock()
+	ret, specificReturn := fake.batchApplyUpdateActionRequestReturnsOnCall[len(fake.batchApplyUpdateActionRequestArgsForCall)]
+	fake.batchApplyUpdateActionRequestArgsForCall = append(fake.batchApplyUpdateActionRequestArgsForCall, struct {
+		arg1 *elasticache.BatchApplyUpdateActionInput
+	}{arg1})
+	fake.recordInvocation("BatchApplyUpdateActionRequest", []interface{}{arg1})
+	fake.batchApplyUpdateActionRequestMutex.Unlock()
+	if fake.BatchApplyUpdateActionRequestStub != nil {
+		return fake.BatchApplyUpdateActionRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.batchApplyUpdateActionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionRequestCallCount() int {
+	fake.batchApplyUpdateActionRequestMutex.RLock()
+	defer fake.batchApplyUpdateActionRequestMutex.RUnlock()
+	return len(fake.batchApplyUpdateActionRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionRequestCalls(stub func(*elasticache.BatchApplyUpdateActionInput) (*request.Request, *elasticache.BatchApplyUpdateActionOutput)) {
+	fake.batchApplyUpdateActionRequestMutex.Lock()
+	defer fake.batchApplyUpdateActionRequestMutex.Unlock()
+	fake.BatchApplyUpdateActionRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionRequestArgsForCall(i int) *elasticache.BatchApplyUpdateActionInput {
+	fake.batchApplyUpdateActionRequestMutex.RLock()
+	defer fake.batchApplyUpdateActionRequestMutex.RUnlock()
+	argsForCall := fake.batchApplyUpdateActionRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionRequestReturns(result1 *request.Request, result2 *elasticache.BatchApplyUpdateActionOutput) {
+	fake.batchApplyUpdateActionRequestMutex.Lock()
+	defer fake.batchApplyUpdateActionRequestMutex.Unlock()
+	fake.BatchApplyUpdateActionRequestStub = nil
+	fake.batchApplyUpdateActionRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.BatchApplyUpdateActionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.BatchApplyUpdateActionOutput) {
+	fake.batchApplyUpdateActionRequestMutex.Lock()
+	defer fake.batchApplyUpdateActionRequestMutex.Unlock()
+	fake.BatchApplyUpdateActionRequestStub = nil
+	if fake.batchApplyUpdateActionRequestReturnsOnCall == nil {
+		fake.batchApplyUpdateActionRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.BatchApplyUpdateActionOutput
+		})
+	}
+	fake.batchApplyUpdateActionRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.BatchApplyUpdateActionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionWithContext(arg1 context.Context, arg2 *elasticache.BatchApplyUpdateActionInput, arg3 ...request.Option) (*elasticache.BatchApplyUpdateActionOutput, error) {
+	fake.batchApplyUpdateActionWithContextMutex.Lock()
+	ret, specificReturn := fake.batchApplyUpdateActionWithContextReturnsOnCall[len(fake.batchApplyUpdateActionWithContextArgsForCall)]
+	fake.batchApplyUpdateActionWithContextArgsForCall = append(fake.batchApplyUpdateActionWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.BatchApplyUpdateActionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("BatchApplyUpdateActionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.batchApplyUpdateActionWithContextMutex.Unlock()
+	if fake.BatchApplyUpdateActionWithContextStub != nil {
+		return fake.BatchApplyUpdateActionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.batchApplyUpdateActionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionWithContextCallCount() int {
+	fake.batchApplyUpdateActionWithContextMutex.RLock()
+	defer fake.batchApplyUpdateActionWithContextMutex.RUnlock()
+	return len(fake.batchApplyUpdateActionWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionWithContextCalls(stub func(context.Context, *elasticache.BatchApplyUpdateActionInput, ...request.Option) (*elasticache.BatchApplyUpdateActionOutput, error)) {
+	fake.batchApplyUpdateActionWithContextMutex.Lock()
+	defer fake.batchApplyUpdateActionWithContextMutex.Unlock()
+	fake.BatchApplyUpdateActionWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionWithContextArgsForCall(i int) (context.Context, *elasticache.BatchApplyUpdateActionInput, []request.Option) {
+	fake.batchApplyUpdateActionWithContextMutex.RLock()
+	defer fake.batchApplyUpdateActionWithContextMutex.RUnlock()
+	argsForCall := fake.batchApplyUpdateActionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionWithContextReturns(result1 *elasticache.BatchApplyUpdateActionOutput, result2 error) {
+	fake.batchApplyUpdateActionWithContextMutex.Lock()
+	defer fake.batchApplyUpdateActionWithContextMutex.Unlock()
+	fake.BatchApplyUpdateActionWithContextStub = nil
+	fake.batchApplyUpdateActionWithContextReturns = struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchApplyUpdateActionWithContextReturnsOnCall(i int, result1 *elasticache.BatchApplyUpdateActionOutput, result2 error) {
+	fake.batchApplyUpdateActionWithContextMutex.Lock()
+	defer fake.batchApplyUpdateActionWithContextMutex.Unlock()
+	fake.BatchApplyUpdateActionWithContextStub = nil
+	if fake.batchApplyUpdateActionWithContextReturnsOnCall == nil {
+		fake.batchApplyUpdateActionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.BatchApplyUpdateActionOutput
+			result2 error
+		})
+	}
+	fake.batchApplyUpdateActionWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.BatchApplyUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateAction(arg1 *elasticache.BatchStopUpdateActionInput) (*elasticache.BatchStopUpdateActionOutput, error) {
+	fake.batchStopUpdateActionMutex.Lock()
+	ret, specificReturn := fake.batchStopUpdateActionReturnsOnCall[len(fake.batchStopUpdateActionArgsForCall)]
+	fake.batchStopUpdateActionArgsForCall = append(fake.batchStopUpdateActionArgsForCall, struct {
+		arg1 *elasticache.BatchStopUpdateActionInput
+	}{arg1})
+	fake.recordInvocation("BatchStopUpdateAction", []interface{}{arg1})
+	fake.batchStopUpdateActionMutex.Unlock()
+	if fake.BatchStopUpdateActionStub != nil {
+		return fake.BatchStopUpdateActionStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.batchStopUpdateActionReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionCallCount() int {
+	fake.batchStopUpdateActionMutex.RLock()
+	defer fake.batchStopUpdateActionMutex.RUnlock()
+	return len(fake.batchStopUpdateActionArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionCalls(stub func(*elasticache.BatchStopUpdateActionInput) (*elasticache.BatchStopUpdateActionOutput, error)) {
+	fake.batchStopUpdateActionMutex.Lock()
+	defer fake.batchStopUpdateActionMutex.Unlock()
+	fake.BatchStopUpdateActionStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionArgsForCall(i int) *elasticache.BatchStopUpdateActionInput {
+	fake.batchStopUpdateActionMutex.RLock()
+	defer fake.batchStopUpdateActionMutex.RUnlock()
+	argsForCall := fake.batchStopUpdateActionArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionReturns(result1 *elasticache.BatchStopUpdateActionOutput, result2 error) {
+	fake.batchStopUpdateActionMutex.Lock()
+	defer fake.batchStopUpdateActionMutex.Unlock()
+	fake.BatchStopUpdateActionStub = nil
+	fake.batchStopUpdateActionReturns = struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionReturnsOnCall(i int, result1 *elasticache.BatchStopUpdateActionOutput, result2 error) {
+	fake.batchStopUpdateActionMutex.Lock()
+	defer fake.batchStopUpdateActionMutex.Unlock()
+	fake.BatchStopUpdateActionStub = nil
+	if fake.batchStopUpdateActionReturnsOnCall == nil {
+		fake.batchStopUpdateActionReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.BatchStopUpdateActionOutput
+			result2 error
+		})
+	}
+	fake.batchStopUpdateActionReturnsOnCall[i] = struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionRequest(arg1 *elasticache.BatchStopUpdateActionInput) (*request.Request, *elasticache.BatchStopUpdateActionOutput) {
+	fake.batchStopUpdateActionRequestMutex.Lock()
+	ret, specificReturn := fake.batchStopUpdateActionRequestReturnsOnCall[len(fake.batchStopUpdateActionRequestArgsForCall)]
+	fake.batchStopUpdateActionRequestArgsForCall = append(fake.batchStopUpdateActionRequestArgsForCall, struct {
+		arg1 *elasticache.BatchStopUpdateActionInput
+	}{arg1})
+	fake.recordInvocation("BatchStopUpdateActionRequest", []interface{}{arg1})
+	fake.batchStopUpdateActionRequestMutex.Unlock()
+	if fake.BatchStopUpdateActionRequestStub != nil {
+		return fake.BatchStopUpdateActionRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.batchStopUpdateActionRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionRequestCallCount() int {
+	fake.batchStopUpdateActionRequestMutex.RLock()
+	defer fake.batchStopUpdateActionRequestMutex.RUnlock()
+	return len(fake.batchStopUpdateActionRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionRequestCalls(stub func(*elasticache.BatchStopUpdateActionInput) (*request.Request, *elasticache.BatchStopUpdateActionOutput)) {
+	fake.batchStopUpdateActionRequestMutex.Lock()
+	defer fake.batchStopUpdateActionRequestMutex.Unlock()
+	fake.BatchStopUpdateActionRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionRequestArgsForCall(i int) *elasticache.BatchStopUpdateActionInput {
+	fake.batchStopUpdateActionRequestMutex.RLock()
+	defer fake.batchStopUpdateActionRequestMutex.RUnlock()
+	argsForCall := fake.batchStopUpdateActionRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionRequestReturns(result1 *request.Request, result2 *elasticache.BatchStopUpdateActionOutput) {
+	fake.batchStopUpdateActionRequestMutex.Lock()
+	defer fake.batchStopUpdateActionRequestMutex.Unlock()
+	fake.BatchStopUpdateActionRequestStub = nil
+	fake.batchStopUpdateActionRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.BatchStopUpdateActionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.BatchStopUpdateActionOutput) {
+	fake.batchStopUpdateActionRequestMutex.Lock()
+	defer fake.batchStopUpdateActionRequestMutex.Unlock()
+	fake.BatchStopUpdateActionRequestStub = nil
+	if fake.batchStopUpdateActionRequestReturnsOnCall == nil {
+		fake.batchStopUpdateActionRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.BatchStopUpdateActionOutput
+		})
+	}
+	fake.batchStopUpdateActionRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.BatchStopUpdateActionOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContext(arg1 context.Context, arg2 *elasticache.BatchStopUpdateActionInput, arg3 ...request.Option) (*elasticache.BatchStopUpdateActionOutput, error) {
+	fake.batchStopUpdateActionWithContextMutex.Lock()
+	ret, specificReturn := fake.batchStopUpdateActionWithContextReturnsOnCall[len(fake.batchStopUpdateActionWithContextArgsForCall)]
+	fake.batchStopUpdateActionWithContextArgsForCall = append(fake.batchStopUpdateActionWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.BatchStopUpdateActionInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("BatchStopUpdateActionWithContext", []interface{}{arg1, arg2, arg3})
+	fake.batchStopUpdateActionWithContextMutex.Unlock()
+	if fake.BatchStopUpdateActionWithContextStub != nil {
+		return fake.BatchStopUpdateActionWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.batchStopUpdateActionWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContextCallCount() int {
+	fake.batchStopUpdateActionWithContextMutex.RLock()
+	defer fake.batchStopUpdateActionWithContextMutex.RUnlock()
+	return len(fake.batchStopUpdateActionWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContextCalls(stub func(context.Context, *elasticache.BatchStopUpdateActionInput, ...request.Option) (*elasticache.BatchStopUpdateActionOutput, error)) {
+	fake.batchStopUpdateActionWithContextMutex.Lock()
+	defer fake.batchStopUpdateActionWithContextMutex.Unlock()
+	fake.BatchStopUpdateActionWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContextArgsForCall(i int) (context.Context, *elasticache.BatchStopUpdateActionInput, []request.Option) {
+	fake.batchStopUpdateActionWithContextMutex.RLock()
+	defer fake.batchStopUpdateActionWithContextMutex.RUnlock()
+	argsForCall := fake.batchStopUpdateActionWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContextReturns(result1 *elasticache.BatchStopUpdateActionOutput, result2 error) {
+	fake.batchStopUpdateActionWithContextMutex.Lock()
+	defer fake.batchStopUpdateActionWithContextMutex.Unlock()
+	fake.BatchStopUpdateActionWithContextStub = nil
+	fake.batchStopUpdateActionWithContextReturns = struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContextReturnsOnCall(i int, result1 *elasticache.BatchStopUpdateActionOutput, result2 error) {
+	fake.batchStopUpdateActionWithContextMutex.Lock()
+	defer fake.batchStopUpdateActionWithContextMutex.Unlock()
+	fake.BatchStopUpdateActionWithContextStub = nil
+	if fake.batchStopUpdateActionWithContextReturnsOnCall == nil {
+		fake.batchStopUpdateActionWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.BatchStopUpdateActionOutput
+			result2 error
+		})
+	}
+	fake.batchStopUpdateActionWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.BatchStopUpdateActionOutput
 		result2 error
 	}{result1, result2}
 }
@@ -2571,11 +3251,11 @@ func (fake *FakeElastiCacheAPI) CopySnapshotRequestReturnsOnCall(i int, result1 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CopySnapshotWithContext(arg1 aws.Context, arg2 *elasticache.CopySnapshotInput, arg3 ...request.Option) (*elasticache.CopySnapshotOutput, error) {
+func (fake *FakeElastiCacheAPI) CopySnapshotWithContext(arg1 context.Context, arg2 *elasticache.CopySnapshotInput, arg3 ...request.Option) (*elasticache.CopySnapshotOutput, error) {
 	fake.copySnapshotWithContextMutex.Lock()
 	ret, specificReturn := fake.copySnapshotWithContextReturnsOnCall[len(fake.copySnapshotWithContextArgsForCall)]
 	fake.copySnapshotWithContextArgsForCall = append(fake.copySnapshotWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CopySnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -2597,13 +3277,13 @@ func (fake *FakeElastiCacheAPI) CopySnapshotWithContextCallCount() int {
 	return len(fake.copySnapshotWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CopySnapshotWithContextCalls(stub func(aws.Context, *elasticache.CopySnapshotInput, ...request.Option) (*elasticache.CopySnapshotOutput, error)) {
+func (fake *FakeElastiCacheAPI) CopySnapshotWithContextCalls(stub func(context.Context, *elasticache.CopySnapshotInput, ...request.Option) (*elasticache.CopySnapshotOutput, error)) {
 	fake.copySnapshotWithContextMutex.Lock()
 	defer fake.copySnapshotWithContextMutex.Unlock()
 	fake.CopySnapshotWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CopySnapshotWithContextArgsForCall(i int) (aws.Context, *elasticache.CopySnapshotInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CopySnapshotWithContextArgsForCall(i int) (context.Context, *elasticache.CopySnapshotInput, []request.Option) {
 	fake.copySnapshotWithContextMutex.RLock()
 	defer fake.copySnapshotWithContextMutex.RUnlock()
 	argsForCall := fake.copySnapshotWithContextArgsForCall[i]
@@ -2762,11 +3442,11 @@ func (fake *FakeElastiCacheAPI) CreateCacheClusterRequestReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContext(arg1 aws.Context, arg2 *elasticache.CreateCacheClusterInput, arg3 ...request.Option) (*elasticache.CreateCacheClusterOutput, error) {
+func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContext(arg1 context.Context, arg2 *elasticache.CreateCacheClusterInput, arg3 ...request.Option) (*elasticache.CreateCacheClusterOutput, error) {
 	fake.createCacheClusterWithContextMutex.Lock()
 	ret, specificReturn := fake.createCacheClusterWithContextReturnsOnCall[len(fake.createCacheClusterWithContextArgsForCall)]
 	fake.createCacheClusterWithContextArgsForCall = append(fake.createCacheClusterWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -2788,13 +3468,13 @@ func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContextCallCount() int {
 	return len(fake.createCacheClusterWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContextCalls(stub func(aws.Context, *elasticache.CreateCacheClusterInput, ...request.Option) (*elasticache.CreateCacheClusterOutput, error)) {
+func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContextCalls(stub func(context.Context, *elasticache.CreateCacheClusterInput, ...request.Option) (*elasticache.CreateCacheClusterOutput, error)) {
 	fake.createCacheClusterWithContextMutex.Lock()
 	defer fake.createCacheClusterWithContextMutex.Unlock()
 	fake.CreateCacheClusterWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContextArgsForCall(i int) (aws.Context, *elasticache.CreateCacheClusterInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CreateCacheClusterWithContextArgsForCall(i int) (context.Context, *elasticache.CreateCacheClusterInput, []request.Option) {
 	fake.createCacheClusterWithContextMutex.RLock()
 	defer fake.createCacheClusterWithContextMutex.RUnlock()
 	argsForCall := fake.createCacheClusterWithContextArgsForCall[i]
@@ -2953,11 +3633,11 @@ func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupRequestReturnsOnCall(i 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContext(arg1 aws.Context, arg2 *elasticache.CreateCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.CreateCacheParameterGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContext(arg1 context.Context, arg2 *elasticache.CreateCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.CreateCacheParameterGroupOutput, error) {
 	fake.createCacheParameterGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.createCacheParameterGroupWithContextReturnsOnCall[len(fake.createCacheParameterGroupWithContextArgsForCall)]
 	fake.createCacheParameterGroupWithContextArgsForCall = append(fake.createCacheParameterGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -2979,13 +3659,13 @@ func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContextCallCount() 
 	return len(fake.createCacheParameterGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContextCalls(stub func(aws.Context, *elasticache.CreateCacheParameterGroupInput, ...request.Option) (*elasticache.CreateCacheParameterGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContextCalls(stub func(context.Context, *elasticache.CreateCacheParameterGroupInput, ...request.Option) (*elasticache.CreateCacheParameterGroupOutput, error)) {
 	fake.createCacheParameterGroupWithContextMutex.Lock()
 	defer fake.createCacheParameterGroupWithContextMutex.Unlock()
 	fake.CreateCacheParameterGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.CreateCacheParameterGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CreateCacheParameterGroupWithContextArgsForCall(i int) (context.Context, *elasticache.CreateCacheParameterGroupInput, []request.Option) {
 	fake.createCacheParameterGroupWithContextMutex.RLock()
 	defer fake.createCacheParameterGroupWithContextMutex.RUnlock()
 	argsForCall := fake.createCacheParameterGroupWithContextArgsForCall[i]
@@ -3144,11 +3824,11 @@ func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupRequestReturnsOnCall(i i
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContext(arg1 aws.Context, arg2 *elasticache.CreateCacheSecurityGroupInput, arg3 ...request.Option) (*elasticache.CreateCacheSecurityGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContext(arg1 context.Context, arg2 *elasticache.CreateCacheSecurityGroupInput, arg3 ...request.Option) (*elasticache.CreateCacheSecurityGroupOutput, error) {
 	fake.createCacheSecurityGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.createCacheSecurityGroupWithContextReturnsOnCall[len(fake.createCacheSecurityGroupWithContextArgsForCall)]
 	fake.createCacheSecurityGroupWithContextArgsForCall = append(fake.createCacheSecurityGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheSecurityGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -3170,13 +3850,13 @@ func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContextCallCount() i
 	return len(fake.createCacheSecurityGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContextCalls(stub func(aws.Context, *elasticache.CreateCacheSecurityGroupInput, ...request.Option) (*elasticache.CreateCacheSecurityGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContextCalls(stub func(context.Context, *elasticache.CreateCacheSecurityGroupInput, ...request.Option) (*elasticache.CreateCacheSecurityGroupOutput, error)) {
 	fake.createCacheSecurityGroupWithContextMutex.Lock()
 	defer fake.createCacheSecurityGroupWithContextMutex.Unlock()
 	fake.CreateCacheSecurityGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.CreateCacheSecurityGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CreateCacheSecurityGroupWithContextArgsForCall(i int) (context.Context, *elasticache.CreateCacheSecurityGroupInput, []request.Option) {
 	fake.createCacheSecurityGroupWithContextMutex.RLock()
 	defer fake.createCacheSecurityGroupWithContextMutex.RUnlock()
 	argsForCall := fake.createCacheSecurityGroupWithContextArgsForCall[i]
@@ -3335,11 +4015,11 @@ func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupRequestReturnsOnCall(i int
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContext(arg1 aws.Context, arg2 *elasticache.CreateCacheSubnetGroupInput, arg3 ...request.Option) (*elasticache.CreateCacheSubnetGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContext(arg1 context.Context, arg2 *elasticache.CreateCacheSubnetGroupInput, arg3 ...request.Option) (*elasticache.CreateCacheSubnetGroupOutput, error) {
 	fake.createCacheSubnetGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.createCacheSubnetGroupWithContextReturnsOnCall[len(fake.createCacheSubnetGroupWithContextArgsForCall)]
 	fake.createCacheSubnetGroupWithContextArgsForCall = append(fake.createCacheSubnetGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateCacheSubnetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -3361,13 +4041,13 @@ func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContextCallCount() int
 	return len(fake.createCacheSubnetGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContextCalls(stub func(aws.Context, *elasticache.CreateCacheSubnetGroupInput, ...request.Option) (*elasticache.CreateCacheSubnetGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContextCalls(stub func(context.Context, *elasticache.CreateCacheSubnetGroupInput, ...request.Option) (*elasticache.CreateCacheSubnetGroupOutput, error)) {
 	fake.createCacheSubnetGroupWithContextMutex.Lock()
 	defer fake.createCacheSubnetGroupWithContextMutex.Unlock()
 	fake.CreateCacheSubnetGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.CreateCacheSubnetGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContextArgsForCall(i int) (context.Context, *elasticache.CreateCacheSubnetGroupInput, []request.Option) {
 	fake.createCacheSubnetGroupWithContextMutex.RLock()
 	defer fake.createCacheSubnetGroupWithContextMutex.RUnlock()
 	argsForCall := fake.createCacheSubnetGroupWithContextArgsForCall[i]
@@ -3526,11 +4206,11 @@ func (fake *FakeElastiCacheAPI) CreateReplicationGroupRequestReturnsOnCall(i int
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContext(arg1 aws.Context, arg2 *elasticache.CreateReplicationGroupInput, arg3 ...request.Option) (*elasticache.CreateReplicationGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.CreateReplicationGroupInput, arg3 ...request.Option) (*elasticache.CreateReplicationGroupOutput, error) {
 	fake.createReplicationGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.createReplicationGroupWithContextReturnsOnCall[len(fake.createReplicationGroupWithContextArgsForCall)]
 	fake.createReplicationGroupWithContextArgsForCall = append(fake.createReplicationGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateReplicationGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -3552,13 +4232,13 @@ func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContextCallCount() int
 	return len(fake.createReplicationGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContextCalls(stub func(aws.Context, *elasticache.CreateReplicationGroupInput, ...request.Option) (*elasticache.CreateReplicationGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.CreateReplicationGroupInput, ...request.Option) (*elasticache.CreateReplicationGroupOutput, error)) {
 	fake.createReplicationGroupWithContextMutex.Lock()
 	defer fake.createReplicationGroupWithContextMutex.Unlock()
 	fake.CreateReplicationGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.CreateReplicationGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CreateReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.CreateReplicationGroupInput, []request.Option) {
 	fake.createReplicationGroupWithContextMutex.RLock()
 	defer fake.createReplicationGroupWithContextMutex.RUnlock()
 	argsForCall := fake.createReplicationGroupWithContextArgsForCall[i]
@@ -3717,11 +4397,11 @@ func (fake *FakeElastiCacheAPI) CreateSnapshotRequestReturnsOnCall(i int, result
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) CreateSnapshotWithContext(arg1 aws.Context, arg2 *elasticache.CreateSnapshotInput, arg3 ...request.Option) (*elasticache.CreateSnapshotOutput, error) {
+func (fake *FakeElastiCacheAPI) CreateSnapshotWithContext(arg1 context.Context, arg2 *elasticache.CreateSnapshotInput, arg3 ...request.Option) (*elasticache.CreateSnapshotOutput, error) {
 	fake.createSnapshotWithContextMutex.Lock()
 	ret, specificReturn := fake.createSnapshotWithContextReturnsOnCall[len(fake.createSnapshotWithContextArgsForCall)]
 	fake.createSnapshotWithContextArgsForCall = append(fake.createSnapshotWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.CreateSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -3743,13 +4423,13 @@ func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextCallCount() int {
 	return len(fake.createSnapshotWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextCalls(stub func(aws.Context, *elasticache.CreateSnapshotInput, ...request.Option) (*elasticache.CreateSnapshotOutput, error)) {
+func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextCalls(stub func(context.Context, *elasticache.CreateSnapshotInput, ...request.Option) (*elasticache.CreateSnapshotOutput, error)) {
 	fake.createSnapshotWithContextMutex.Lock()
 	defer fake.createSnapshotWithContextMutex.Unlock()
 	fake.CreateSnapshotWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextArgsForCall(i int) (aws.Context, *elasticache.CreateSnapshotInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextArgsForCall(i int) (context.Context, *elasticache.CreateSnapshotInput, []request.Option) {
 	fake.createSnapshotWithContextMutex.RLock()
 	defer fake.createSnapshotWithContextMutex.RUnlock()
 	argsForCall := fake.createSnapshotWithContextArgsForCall[i]
@@ -3778,6 +4458,197 @@ func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextReturnsOnCall(i int, re
 	}
 	fake.createSnapshotWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.CreateSnapshotOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCount(arg1 *elasticache.DecreaseReplicaCountInput) (*elasticache.DecreaseReplicaCountOutput, error) {
+	fake.decreaseReplicaCountMutex.Lock()
+	ret, specificReturn := fake.decreaseReplicaCountReturnsOnCall[len(fake.decreaseReplicaCountArgsForCall)]
+	fake.decreaseReplicaCountArgsForCall = append(fake.decreaseReplicaCountArgsForCall, struct {
+		arg1 *elasticache.DecreaseReplicaCountInput
+	}{arg1})
+	fake.recordInvocation("DecreaseReplicaCount", []interface{}{arg1})
+	fake.decreaseReplicaCountMutex.Unlock()
+	if fake.DecreaseReplicaCountStub != nil {
+		return fake.DecreaseReplicaCountStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.decreaseReplicaCountReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountCallCount() int {
+	fake.decreaseReplicaCountMutex.RLock()
+	defer fake.decreaseReplicaCountMutex.RUnlock()
+	return len(fake.decreaseReplicaCountArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountCalls(stub func(*elasticache.DecreaseReplicaCountInput) (*elasticache.DecreaseReplicaCountOutput, error)) {
+	fake.decreaseReplicaCountMutex.Lock()
+	defer fake.decreaseReplicaCountMutex.Unlock()
+	fake.DecreaseReplicaCountStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountArgsForCall(i int) *elasticache.DecreaseReplicaCountInput {
+	fake.decreaseReplicaCountMutex.RLock()
+	defer fake.decreaseReplicaCountMutex.RUnlock()
+	argsForCall := fake.decreaseReplicaCountArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountReturns(result1 *elasticache.DecreaseReplicaCountOutput, result2 error) {
+	fake.decreaseReplicaCountMutex.Lock()
+	defer fake.decreaseReplicaCountMutex.Unlock()
+	fake.DecreaseReplicaCountStub = nil
+	fake.decreaseReplicaCountReturns = struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountReturnsOnCall(i int, result1 *elasticache.DecreaseReplicaCountOutput, result2 error) {
+	fake.decreaseReplicaCountMutex.Lock()
+	defer fake.decreaseReplicaCountMutex.Unlock()
+	fake.DecreaseReplicaCountStub = nil
+	if fake.decreaseReplicaCountReturnsOnCall == nil {
+		fake.decreaseReplicaCountReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DecreaseReplicaCountOutput
+			result2 error
+		})
+	}
+	fake.decreaseReplicaCountReturnsOnCall[i] = struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountRequest(arg1 *elasticache.DecreaseReplicaCountInput) (*request.Request, *elasticache.DecreaseReplicaCountOutput) {
+	fake.decreaseReplicaCountRequestMutex.Lock()
+	ret, specificReturn := fake.decreaseReplicaCountRequestReturnsOnCall[len(fake.decreaseReplicaCountRequestArgsForCall)]
+	fake.decreaseReplicaCountRequestArgsForCall = append(fake.decreaseReplicaCountRequestArgsForCall, struct {
+		arg1 *elasticache.DecreaseReplicaCountInput
+	}{arg1})
+	fake.recordInvocation("DecreaseReplicaCountRequest", []interface{}{arg1})
+	fake.decreaseReplicaCountRequestMutex.Unlock()
+	if fake.DecreaseReplicaCountRequestStub != nil {
+		return fake.DecreaseReplicaCountRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.decreaseReplicaCountRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountRequestCallCount() int {
+	fake.decreaseReplicaCountRequestMutex.RLock()
+	defer fake.decreaseReplicaCountRequestMutex.RUnlock()
+	return len(fake.decreaseReplicaCountRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountRequestCalls(stub func(*elasticache.DecreaseReplicaCountInput) (*request.Request, *elasticache.DecreaseReplicaCountOutput)) {
+	fake.decreaseReplicaCountRequestMutex.Lock()
+	defer fake.decreaseReplicaCountRequestMutex.Unlock()
+	fake.DecreaseReplicaCountRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountRequestArgsForCall(i int) *elasticache.DecreaseReplicaCountInput {
+	fake.decreaseReplicaCountRequestMutex.RLock()
+	defer fake.decreaseReplicaCountRequestMutex.RUnlock()
+	argsForCall := fake.decreaseReplicaCountRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountRequestReturns(result1 *request.Request, result2 *elasticache.DecreaseReplicaCountOutput) {
+	fake.decreaseReplicaCountRequestMutex.Lock()
+	defer fake.decreaseReplicaCountRequestMutex.Unlock()
+	fake.DecreaseReplicaCountRequestStub = nil
+	fake.decreaseReplicaCountRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseReplicaCountOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DecreaseReplicaCountOutput) {
+	fake.decreaseReplicaCountRequestMutex.Lock()
+	defer fake.decreaseReplicaCountRequestMutex.Unlock()
+	fake.DecreaseReplicaCountRequestStub = nil
+	if fake.decreaseReplicaCountRequestReturnsOnCall == nil {
+		fake.decreaseReplicaCountRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DecreaseReplicaCountOutput
+		})
+	}
+	fake.decreaseReplicaCountRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseReplicaCountOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountWithContext(arg1 context.Context, arg2 *elasticache.DecreaseReplicaCountInput, arg3 ...request.Option) (*elasticache.DecreaseReplicaCountOutput, error) {
+	fake.decreaseReplicaCountWithContextMutex.Lock()
+	ret, specificReturn := fake.decreaseReplicaCountWithContextReturnsOnCall[len(fake.decreaseReplicaCountWithContextArgsForCall)]
+	fake.decreaseReplicaCountWithContextArgsForCall = append(fake.decreaseReplicaCountWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DecreaseReplicaCountInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DecreaseReplicaCountWithContext", []interface{}{arg1, arg2, arg3})
+	fake.decreaseReplicaCountWithContextMutex.Unlock()
+	if fake.DecreaseReplicaCountWithContextStub != nil {
+		return fake.DecreaseReplicaCountWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.decreaseReplicaCountWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountWithContextCallCount() int {
+	fake.decreaseReplicaCountWithContextMutex.RLock()
+	defer fake.decreaseReplicaCountWithContextMutex.RUnlock()
+	return len(fake.decreaseReplicaCountWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountWithContextCalls(stub func(context.Context, *elasticache.DecreaseReplicaCountInput, ...request.Option) (*elasticache.DecreaseReplicaCountOutput, error)) {
+	fake.decreaseReplicaCountWithContextMutex.Lock()
+	defer fake.decreaseReplicaCountWithContextMutex.Unlock()
+	fake.DecreaseReplicaCountWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountWithContextArgsForCall(i int) (context.Context, *elasticache.DecreaseReplicaCountInput, []request.Option) {
+	fake.decreaseReplicaCountWithContextMutex.RLock()
+	defer fake.decreaseReplicaCountWithContextMutex.RUnlock()
+	argsForCall := fake.decreaseReplicaCountWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountWithContextReturns(result1 *elasticache.DecreaseReplicaCountOutput, result2 error) {
+	fake.decreaseReplicaCountWithContextMutex.Lock()
+	defer fake.decreaseReplicaCountWithContextMutex.Unlock()
+	fake.DecreaseReplicaCountWithContextStub = nil
+	fake.decreaseReplicaCountWithContextReturns = struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseReplicaCountWithContextReturnsOnCall(i int, result1 *elasticache.DecreaseReplicaCountOutput, result2 error) {
+	fake.decreaseReplicaCountWithContextMutex.Lock()
+	defer fake.decreaseReplicaCountWithContextMutex.Unlock()
+	fake.DecreaseReplicaCountWithContextStub = nil
+	if fake.decreaseReplicaCountWithContextReturnsOnCall == nil {
+		fake.decreaseReplicaCountWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DecreaseReplicaCountOutput
+			result2 error
+		})
+	}
+	fake.decreaseReplicaCountWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DecreaseReplicaCountOutput
 		result2 error
 	}{result1, result2}
 }
@@ -3908,11 +4779,11 @@ func (fake *FakeElastiCacheAPI) DeleteCacheClusterRequestReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContext(arg1 aws.Context, arg2 *elasticache.DeleteCacheClusterInput, arg3 ...request.Option) (*elasticache.DeleteCacheClusterOutput, error) {
+func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContext(arg1 context.Context, arg2 *elasticache.DeleteCacheClusterInput, arg3 ...request.Option) (*elasticache.DeleteCacheClusterOutput, error) {
 	fake.deleteCacheClusterWithContextMutex.Lock()
 	ret, specificReturn := fake.deleteCacheClusterWithContextReturnsOnCall[len(fake.deleteCacheClusterWithContextArgsForCall)]
 	fake.deleteCacheClusterWithContextArgsForCall = append(fake.deleteCacheClusterWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -3934,13 +4805,13 @@ func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContextCallCount() int {
 	return len(fake.deleteCacheClusterWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContextCalls(stub func(aws.Context, *elasticache.DeleteCacheClusterInput, ...request.Option) (*elasticache.DeleteCacheClusterOutput, error)) {
+func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContextCalls(stub func(context.Context, *elasticache.DeleteCacheClusterInput, ...request.Option) (*elasticache.DeleteCacheClusterOutput, error)) {
 	fake.deleteCacheClusterWithContextMutex.Lock()
 	defer fake.deleteCacheClusterWithContextMutex.Unlock()
 	fake.DeleteCacheClusterWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContextArgsForCall(i int) (aws.Context, *elasticache.DeleteCacheClusterInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DeleteCacheClusterWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteCacheClusterInput, []request.Option) {
 	fake.deleteCacheClusterWithContextMutex.RLock()
 	defer fake.deleteCacheClusterWithContextMutex.RUnlock()
 	argsForCall := fake.deleteCacheClusterWithContextArgsForCall[i]
@@ -4099,11 +4970,11 @@ func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupRequestReturnsOnCall(i 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContext(arg1 aws.Context, arg2 *elasticache.DeleteCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.DeleteCacheParameterGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContext(arg1 context.Context, arg2 *elasticache.DeleteCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.DeleteCacheParameterGroupOutput, error) {
 	fake.deleteCacheParameterGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.deleteCacheParameterGroupWithContextReturnsOnCall[len(fake.deleteCacheParameterGroupWithContextArgsForCall)]
 	fake.deleteCacheParameterGroupWithContextArgsForCall = append(fake.deleteCacheParameterGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -4125,13 +4996,13 @@ func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContextCallCount() 
 	return len(fake.deleteCacheParameterGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContextCalls(stub func(aws.Context, *elasticache.DeleteCacheParameterGroupInput, ...request.Option) (*elasticache.DeleteCacheParameterGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContextCalls(stub func(context.Context, *elasticache.DeleteCacheParameterGroupInput, ...request.Option) (*elasticache.DeleteCacheParameterGroupOutput, error)) {
 	fake.deleteCacheParameterGroupWithContextMutex.Lock()
 	defer fake.deleteCacheParameterGroupWithContextMutex.Unlock()
 	fake.DeleteCacheParameterGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.DeleteCacheParameterGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DeleteCacheParameterGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteCacheParameterGroupInput, []request.Option) {
 	fake.deleteCacheParameterGroupWithContextMutex.RLock()
 	defer fake.deleteCacheParameterGroupWithContextMutex.RUnlock()
 	argsForCall := fake.deleteCacheParameterGroupWithContextArgsForCall[i]
@@ -4290,11 +5161,11 @@ func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupRequestReturnsOnCall(i i
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContext(arg1 aws.Context, arg2 *elasticache.DeleteCacheSecurityGroupInput, arg3 ...request.Option) (*elasticache.DeleteCacheSecurityGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContext(arg1 context.Context, arg2 *elasticache.DeleteCacheSecurityGroupInput, arg3 ...request.Option) (*elasticache.DeleteCacheSecurityGroupOutput, error) {
 	fake.deleteCacheSecurityGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.deleteCacheSecurityGroupWithContextReturnsOnCall[len(fake.deleteCacheSecurityGroupWithContextArgsForCall)]
 	fake.deleteCacheSecurityGroupWithContextArgsForCall = append(fake.deleteCacheSecurityGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheSecurityGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -4316,13 +5187,13 @@ func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContextCallCount() i
 	return len(fake.deleteCacheSecurityGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContextCalls(stub func(aws.Context, *elasticache.DeleteCacheSecurityGroupInput, ...request.Option) (*elasticache.DeleteCacheSecurityGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContextCalls(stub func(context.Context, *elasticache.DeleteCacheSecurityGroupInput, ...request.Option) (*elasticache.DeleteCacheSecurityGroupOutput, error)) {
 	fake.deleteCacheSecurityGroupWithContextMutex.Lock()
 	defer fake.deleteCacheSecurityGroupWithContextMutex.Unlock()
 	fake.DeleteCacheSecurityGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.DeleteCacheSecurityGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DeleteCacheSecurityGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteCacheSecurityGroupInput, []request.Option) {
 	fake.deleteCacheSecurityGroupWithContextMutex.RLock()
 	defer fake.deleteCacheSecurityGroupWithContextMutex.RUnlock()
 	argsForCall := fake.deleteCacheSecurityGroupWithContextArgsForCall[i]
@@ -4481,11 +5352,11 @@ func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupRequestReturnsOnCall(i int
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContext(arg1 aws.Context, arg2 *elasticache.DeleteCacheSubnetGroupInput, arg3 ...request.Option) (*elasticache.DeleteCacheSubnetGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContext(arg1 context.Context, arg2 *elasticache.DeleteCacheSubnetGroupInput, arg3 ...request.Option) (*elasticache.DeleteCacheSubnetGroupOutput, error) {
 	fake.deleteCacheSubnetGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.deleteCacheSubnetGroupWithContextReturnsOnCall[len(fake.deleteCacheSubnetGroupWithContextArgsForCall)]
 	fake.deleteCacheSubnetGroupWithContextArgsForCall = append(fake.deleteCacheSubnetGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteCacheSubnetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -4507,13 +5378,13 @@ func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContextCallCount() int
 	return len(fake.deleteCacheSubnetGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContextCalls(stub func(aws.Context, *elasticache.DeleteCacheSubnetGroupInput, ...request.Option) (*elasticache.DeleteCacheSubnetGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContextCalls(stub func(context.Context, *elasticache.DeleteCacheSubnetGroupInput, ...request.Option) (*elasticache.DeleteCacheSubnetGroupOutput, error)) {
 	fake.deleteCacheSubnetGroupWithContextMutex.Lock()
 	defer fake.deleteCacheSubnetGroupWithContextMutex.Unlock()
 	fake.DeleteCacheSubnetGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.DeleteCacheSubnetGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteCacheSubnetGroupInput, []request.Option) {
 	fake.deleteCacheSubnetGroupWithContextMutex.RLock()
 	defer fake.deleteCacheSubnetGroupWithContextMutex.RUnlock()
 	argsForCall := fake.deleteCacheSubnetGroupWithContextArgsForCall[i]
@@ -4672,11 +5543,11 @@ func (fake *FakeElastiCacheAPI) DeleteReplicationGroupRequestReturnsOnCall(i int
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContext(arg1 aws.Context, arg2 *elasticache.DeleteReplicationGroupInput, arg3 ...request.Option) (*elasticache.DeleteReplicationGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.DeleteReplicationGroupInput, arg3 ...request.Option) (*elasticache.DeleteReplicationGroupOutput, error) {
 	fake.deleteReplicationGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.deleteReplicationGroupWithContextReturnsOnCall[len(fake.deleteReplicationGroupWithContextArgsForCall)]
 	fake.deleteReplicationGroupWithContextArgsForCall = append(fake.deleteReplicationGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteReplicationGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -4698,13 +5569,13 @@ func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContextCallCount() int
 	return len(fake.deleteReplicationGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContextCalls(stub func(aws.Context, *elasticache.DeleteReplicationGroupInput, ...request.Option) (*elasticache.DeleteReplicationGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.DeleteReplicationGroupInput, ...request.Option) (*elasticache.DeleteReplicationGroupOutput, error)) {
 	fake.deleteReplicationGroupWithContextMutex.Lock()
 	defer fake.deleteReplicationGroupWithContextMutex.Unlock()
 	fake.DeleteReplicationGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.DeleteReplicationGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DeleteReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteReplicationGroupInput, []request.Option) {
 	fake.deleteReplicationGroupWithContextMutex.RLock()
 	defer fake.deleteReplicationGroupWithContextMutex.RUnlock()
 	argsForCall := fake.deleteReplicationGroupWithContextArgsForCall[i]
@@ -4863,11 +5734,11 @@ func (fake *FakeElastiCacheAPI) DeleteSnapshotRequestReturnsOnCall(i int, result
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContext(arg1 aws.Context, arg2 *elasticache.DeleteSnapshotInput, arg3 ...request.Option) (*elasticache.DeleteSnapshotOutput, error) {
+func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContext(arg1 context.Context, arg2 *elasticache.DeleteSnapshotInput, arg3 ...request.Option) (*elasticache.DeleteSnapshotOutput, error) {
 	fake.deleteSnapshotWithContextMutex.Lock()
 	ret, specificReturn := fake.deleteSnapshotWithContextReturnsOnCall[len(fake.deleteSnapshotWithContextArgsForCall)]
 	fake.deleteSnapshotWithContextArgsForCall = append(fake.deleteSnapshotWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DeleteSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -4889,13 +5760,13 @@ func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContextCallCount() int {
 	return len(fake.deleteSnapshotWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContextCalls(stub func(aws.Context, *elasticache.DeleteSnapshotInput, ...request.Option) (*elasticache.DeleteSnapshotOutput, error)) {
+func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContextCalls(stub func(context.Context, *elasticache.DeleteSnapshotInput, ...request.Option) (*elasticache.DeleteSnapshotOutput, error)) {
 	fake.deleteSnapshotWithContextMutex.Lock()
 	defer fake.deleteSnapshotWithContextMutex.Unlock()
 	fake.DeleteSnapshotWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContextArgsForCall(i int) (aws.Context, *elasticache.DeleteSnapshotInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DeleteSnapshotWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteSnapshotInput, []request.Option) {
 	fake.deleteSnapshotWithContextMutex.RLock()
 	defer fake.deleteSnapshotWithContextMutex.RUnlock()
 	argsForCall := fake.deleteSnapshotWithContextArgsForCall[i]
@@ -5052,11 +5923,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesReturnsOnCall(i int, r
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 func(*elasticache.DescribeCacheClustersOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 func(*elasticache.DescribeCacheClustersOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeCacheClustersPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheClustersPagesWithContextReturnsOnCall[len(fake.describeCacheClustersPagesWithContextArgsForCall)]
 	fake.describeCacheClustersPagesWithContextArgsForCall = append(fake.describeCacheClustersPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 func(*elasticache.DescribeCacheClustersOutput, bool) bool
 		arg4 []request.Option
@@ -5079,13 +5950,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContextCallCount()
 	return len(fake.describeCacheClustersPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheClustersInput, func(*elasticache.DescribeCacheClustersOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheClustersInput, func(*elasticache.DescribeCacheClustersOutput, bool) bool, ...request.Option) error) {
 	fake.describeCacheClustersPagesWithContextMutex.Lock()
 	defer fake.describeCacheClustersPagesWithContextMutex.Unlock()
 	fake.DescribeCacheClustersPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheClustersInput, func(*elasticache.DescribeCacheClustersOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheClustersPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheClustersInput, func(*elasticache.DescribeCacheClustersOutput, bool) bool, []request.Option) {
 	fake.describeCacheClustersPagesWithContextMutex.RLock()
 	defer fake.describeCacheClustersPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheClustersPagesWithContextArgsForCall[i]
@@ -5178,11 +6049,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheClustersRequestReturnsOnCall(i int,
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 ...request.Option) (*elasticache.DescribeCacheClustersOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 ...request.Option) (*elasticache.DescribeCacheClustersOutput, error) {
 	fake.describeCacheClustersWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheClustersWithContextReturnsOnCall[len(fake.describeCacheClustersWithContextArgsForCall)]
 	fake.describeCacheClustersWithContextArgsForCall = append(fake.describeCacheClustersWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -5204,13 +6075,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContextCallCount() int 
 	return len(fake.describeCacheClustersWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheClustersInput, ...request.Option) (*elasticache.DescribeCacheClustersOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheClustersInput, ...request.Option) (*elasticache.DescribeCacheClustersOutput, error)) {
 	fake.describeCacheClustersWithContextMutex.Lock()
 	defer fake.describeCacheClustersWithContextMutex.Unlock()
 	fake.DescribeCacheClustersWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheClustersInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheClustersWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheClustersInput, []request.Option) {
 	fake.describeCacheClustersWithContextMutex.RLock()
 	defer fake.describeCacheClustersWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheClustersWithContextArgsForCall[i]
@@ -5367,11 +6238,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesReturnsOnCall(i 
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheEngineVersionsInput, arg3 func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheEngineVersionsInput, arg3 func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeCacheEngineVersionsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheEngineVersionsPagesWithContextReturnsOnCall[len(fake.describeCacheEngineVersionsPagesWithContextArgsForCall)]
 	fake.describeCacheEngineVersionsPagesWithContextArgsForCall = append(fake.describeCacheEngineVersionsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheEngineVersionsInput
 		arg3 func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool
 		arg4 []request.Option
@@ -5394,13 +6265,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContextCallC
 	return len(fake.describeCacheEngineVersionsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheEngineVersionsInput, func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheEngineVersionsInput, func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, ...request.Option) error) {
 	fake.describeCacheEngineVersionsPagesWithContextMutex.Lock()
 	defer fake.describeCacheEngineVersionsPagesWithContextMutex.Unlock()
 	fake.DescribeCacheEngineVersionsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheEngineVersionsInput, func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheEngineVersionsInput, func(*elasticache.DescribeCacheEngineVersionsOutput, bool) bool, []request.Option) {
 	fake.describeCacheEngineVersionsPagesWithContextMutex.RLock()
 	defer fake.describeCacheEngineVersionsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheEngineVersionsPagesWithContextArgsForCall[i]
@@ -5493,11 +6364,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsRequestReturnsOnCall(
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheEngineVersionsInput, arg3 ...request.Option) (*elasticache.DescribeCacheEngineVersionsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheEngineVersionsInput, arg3 ...request.Option) (*elasticache.DescribeCacheEngineVersionsOutput, error) {
 	fake.describeCacheEngineVersionsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheEngineVersionsWithContextReturnsOnCall[len(fake.describeCacheEngineVersionsWithContextArgsForCall)]
 	fake.describeCacheEngineVersionsWithContextArgsForCall = append(fake.describeCacheEngineVersionsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheEngineVersionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -5519,13 +6390,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContextCallCount(
 	return len(fake.describeCacheEngineVersionsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheEngineVersionsInput, ...request.Option) (*elasticache.DescribeCacheEngineVersionsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheEngineVersionsInput, ...request.Option) (*elasticache.DescribeCacheEngineVersionsOutput, error)) {
 	fake.describeCacheEngineVersionsWithContextMutex.Lock()
 	defer fake.describeCacheEngineVersionsWithContextMutex.Unlock()
 	fake.DescribeCacheEngineVersionsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheEngineVersionsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheEngineVersionsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheEngineVersionsInput, []request.Option) {
 	fake.describeCacheEngineVersionsWithContextMutex.RLock()
 	defer fake.describeCacheEngineVersionsWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheEngineVersionsWithContextArgsForCall[i]
@@ -5682,11 +6553,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesReturnsOnCall(i
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheParameterGroupsInput, arg3 func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheParameterGroupsInput, arg3 func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeCacheParameterGroupsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheParameterGroupsPagesWithContextReturnsOnCall[len(fake.describeCacheParameterGroupsPagesWithContextArgsForCall)]
 	fake.describeCacheParameterGroupsPagesWithContextArgsForCall = append(fake.describeCacheParameterGroupsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParameterGroupsInput
 		arg3 func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -5709,13 +6580,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContextCall
 	return len(fake.describeCacheParameterGroupsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheParameterGroupsInput, func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheParameterGroupsInput, func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, ...request.Option) error) {
 	fake.describeCacheParameterGroupsPagesWithContextMutex.Lock()
 	defer fake.describeCacheParameterGroupsPagesWithContextMutex.Unlock()
 	fake.DescribeCacheParameterGroupsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheParameterGroupsInput, func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheParameterGroupsInput, func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool, []request.Option) {
 	fake.describeCacheParameterGroupsPagesWithContextMutex.RLock()
 	defer fake.describeCacheParameterGroupsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheParameterGroupsPagesWithContextArgsForCall[i]
@@ -5808,11 +6679,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsRequestReturnsOnCall
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheParameterGroupsInput, arg3 ...request.Option) (*elasticache.DescribeCacheParameterGroupsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheParameterGroupsInput, arg3 ...request.Option) (*elasticache.DescribeCacheParameterGroupsOutput, error) {
 	fake.describeCacheParameterGroupsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheParameterGroupsWithContextReturnsOnCall[len(fake.describeCacheParameterGroupsWithContextArgsForCall)]
 	fake.describeCacheParameterGroupsWithContextArgsForCall = append(fake.describeCacheParameterGroupsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParameterGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -5834,13 +6705,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContextCallCount
 	return len(fake.describeCacheParameterGroupsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheParameterGroupsInput, ...request.Option) (*elasticache.DescribeCacheParameterGroupsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheParameterGroupsInput, ...request.Option) (*elasticache.DescribeCacheParameterGroupsOutput, error)) {
 	fake.describeCacheParameterGroupsWithContextMutex.Lock()
 	defer fake.describeCacheParameterGroupsWithContextMutex.Unlock()
 	fake.DescribeCacheParameterGroupsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheParameterGroupsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParameterGroupsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheParameterGroupsInput, []request.Option) {
 	fake.describeCacheParameterGroupsWithContextMutex.RLock()
 	defer fake.describeCacheParameterGroupsWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheParameterGroupsWithContextArgsForCall[i]
@@ -5997,11 +6868,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesReturnsOnCall(i int,
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheParametersInput, arg3 func(*elasticache.DescribeCacheParametersOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheParametersInput, arg3 func(*elasticache.DescribeCacheParametersOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeCacheParametersPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheParametersPagesWithContextReturnsOnCall[len(fake.describeCacheParametersPagesWithContextArgsForCall)]
 	fake.describeCacheParametersPagesWithContextArgsForCall = append(fake.describeCacheParametersPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParametersInput
 		arg3 func(*elasticache.DescribeCacheParametersOutput, bool) bool
 		arg4 []request.Option
@@ -6024,13 +6895,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContextCallCount
 	return len(fake.describeCacheParametersPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheParametersInput, func(*elasticache.DescribeCacheParametersOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheParametersInput, func(*elasticache.DescribeCacheParametersOutput, bool) bool, ...request.Option) error) {
 	fake.describeCacheParametersPagesWithContextMutex.Lock()
 	defer fake.describeCacheParametersPagesWithContextMutex.Unlock()
 	fake.DescribeCacheParametersPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheParametersInput, func(*elasticache.DescribeCacheParametersOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParametersPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheParametersInput, func(*elasticache.DescribeCacheParametersOutput, bool) bool, []request.Option) {
 	fake.describeCacheParametersPagesWithContextMutex.RLock()
 	defer fake.describeCacheParametersPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheParametersPagesWithContextArgsForCall[i]
@@ -6123,11 +6994,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParametersRequestReturnsOnCall(i in
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheParametersInput, arg3 ...request.Option) (*elasticache.DescribeCacheParametersOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheParametersInput, arg3 ...request.Option) (*elasticache.DescribeCacheParametersOutput, error) {
 	fake.describeCacheParametersWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheParametersWithContextReturnsOnCall[len(fake.describeCacheParametersWithContextArgsForCall)]
 	fake.describeCacheParametersWithContextArgsForCall = append(fake.describeCacheParametersWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheParametersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -6149,13 +7020,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContextCallCount() in
 	return len(fake.describeCacheParametersWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheParametersInput, ...request.Option) (*elasticache.DescribeCacheParametersOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheParametersInput, ...request.Option) (*elasticache.DescribeCacheParametersOutput, error)) {
 	fake.describeCacheParametersWithContextMutex.Lock()
 	defer fake.describeCacheParametersWithContextMutex.Unlock()
 	fake.DescribeCacheParametersWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheParametersInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheParametersWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheParametersInput, []request.Option) {
 	fake.describeCacheParametersWithContextMutex.RLock()
 	defer fake.describeCacheParametersWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheParametersWithContextArgsForCall[i]
@@ -6312,11 +7183,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesReturnsOnCall(i 
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheSecurityGroupsInput, arg3 func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheSecurityGroupsInput, arg3 func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeCacheSecurityGroupsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheSecurityGroupsPagesWithContextReturnsOnCall[len(fake.describeCacheSecurityGroupsPagesWithContextArgsForCall)]
 	fake.describeCacheSecurityGroupsPagesWithContextArgsForCall = append(fake.describeCacheSecurityGroupsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSecurityGroupsInput
 		arg3 func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -6339,13 +7210,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContextCallC
 	return len(fake.describeCacheSecurityGroupsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheSecurityGroupsInput, func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheSecurityGroupsInput, func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, ...request.Option) error) {
 	fake.describeCacheSecurityGroupsPagesWithContextMutex.Lock()
 	defer fake.describeCacheSecurityGroupsPagesWithContextMutex.Unlock()
 	fake.DescribeCacheSecurityGroupsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheSecurityGroupsInput, func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheSecurityGroupsInput, func(*elasticache.DescribeCacheSecurityGroupsOutput, bool) bool, []request.Option) {
 	fake.describeCacheSecurityGroupsPagesWithContextMutex.RLock()
 	defer fake.describeCacheSecurityGroupsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheSecurityGroupsPagesWithContextArgsForCall[i]
@@ -6438,11 +7309,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsRequestReturnsOnCall(
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheSecurityGroupsInput, arg3 ...request.Option) (*elasticache.DescribeCacheSecurityGroupsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheSecurityGroupsInput, arg3 ...request.Option) (*elasticache.DescribeCacheSecurityGroupsOutput, error) {
 	fake.describeCacheSecurityGroupsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheSecurityGroupsWithContextReturnsOnCall[len(fake.describeCacheSecurityGroupsWithContextArgsForCall)]
 	fake.describeCacheSecurityGroupsWithContextArgsForCall = append(fake.describeCacheSecurityGroupsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSecurityGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -6464,13 +7335,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContextCallCount(
 	return len(fake.describeCacheSecurityGroupsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheSecurityGroupsInput, ...request.Option) (*elasticache.DescribeCacheSecurityGroupsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheSecurityGroupsInput, ...request.Option) (*elasticache.DescribeCacheSecurityGroupsOutput, error)) {
 	fake.describeCacheSecurityGroupsWithContextMutex.Lock()
 	defer fake.describeCacheSecurityGroupsWithContextMutex.Unlock()
 	fake.DescribeCacheSecurityGroupsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheSecurityGroupsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSecurityGroupsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheSecurityGroupsInput, []request.Option) {
 	fake.describeCacheSecurityGroupsWithContextMutex.RLock()
 	defer fake.describeCacheSecurityGroupsWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheSecurityGroupsWithContextArgsForCall[i]
@@ -6627,11 +7498,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesReturnsOnCall(i in
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheSubnetGroupsInput, arg3 func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheSubnetGroupsInput, arg3 func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeCacheSubnetGroupsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheSubnetGroupsPagesWithContextReturnsOnCall[len(fake.describeCacheSubnetGroupsPagesWithContextArgsForCall)]
 	fake.describeCacheSubnetGroupsPagesWithContextArgsForCall = append(fake.describeCacheSubnetGroupsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSubnetGroupsInput
 		arg3 func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -6654,13 +7525,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContextCallCou
 	return len(fake.describeCacheSubnetGroupsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheSubnetGroupsInput, func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheSubnetGroupsInput, func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, ...request.Option) error) {
 	fake.describeCacheSubnetGroupsPagesWithContextMutex.Lock()
 	defer fake.describeCacheSubnetGroupsPagesWithContextMutex.Unlock()
 	fake.DescribeCacheSubnetGroupsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheSubnetGroupsInput, func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheSubnetGroupsInput, func(*elasticache.DescribeCacheSubnetGroupsOutput, bool) bool, []request.Option) {
 	fake.describeCacheSubnetGroupsPagesWithContextMutex.RLock()
 	defer fake.describeCacheSubnetGroupsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheSubnetGroupsPagesWithContextArgsForCall[i]
@@ -6753,11 +7624,11 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsRequestReturnsOnCall(i 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheSubnetGroupsInput, arg3 ...request.Option) (*elasticache.DescribeCacheSubnetGroupsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheSubnetGroupsInput, arg3 ...request.Option) (*elasticache.DescribeCacheSubnetGroupsOutput, error) {
 	fake.describeCacheSubnetGroupsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeCacheSubnetGroupsWithContextReturnsOnCall[len(fake.describeCacheSubnetGroupsWithContextArgsForCall)]
 	fake.describeCacheSubnetGroupsWithContextArgsForCall = append(fake.describeCacheSubnetGroupsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheSubnetGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -6779,13 +7650,13 @@ func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContextCallCount() 
 	return len(fake.describeCacheSubnetGroupsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheSubnetGroupsInput, ...request.Option) (*elasticache.DescribeCacheSubnetGroupsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheSubnetGroupsInput, ...request.Option) (*elasticache.DescribeCacheSubnetGroupsOutput, error)) {
 	fake.describeCacheSubnetGroupsWithContextMutex.Lock()
 	defer fake.describeCacheSubnetGroupsWithContextMutex.Unlock()
 	fake.DescribeCacheSubnetGroupsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheSubnetGroupsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeCacheSubnetGroupsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheSubnetGroupsInput, []request.Option) {
 	fake.describeCacheSubnetGroupsWithContextMutex.RLock()
 	defer fake.describeCacheSubnetGroupsWithContextMutex.RUnlock()
 	argsForCall := fake.describeCacheSubnetGroupsWithContextArgsForCall[i]
@@ -6942,11 +7813,11 @@ func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesReturnsOnCal
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeEngineDefaultParametersInput, arg3 func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeEngineDefaultParametersInput, arg3 func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeEngineDefaultParametersPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeEngineDefaultParametersPagesWithContextReturnsOnCall[len(fake.describeEngineDefaultParametersPagesWithContextArgsForCall)]
 	fake.describeEngineDefaultParametersPagesWithContextArgsForCall = append(fake.describeEngineDefaultParametersPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEngineDefaultParametersInput
 		arg3 func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool
 		arg4 []request.Option
@@ -6969,13 +7840,13 @@ func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContextC
 	return len(fake.describeEngineDefaultParametersPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeEngineDefaultParametersInput, func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeEngineDefaultParametersInput, func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, ...request.Option) error) {
 	fake.describeEngineDefaultParametersPagesWithContextMutex.Lock()
 	defer fake.describeEngineDefaultParametersPagesWithContextMutex.Unlock()
 	fake.DescribeEngineDefaultParametersPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeEngineDefaultParametersInput, func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeEngineDefaultParametersInput, func(*elasticache.DescribeEngineDefaultParametersOutput, bool) bool, []request.Option) {
 	fake.describeEngineDefaultParametersPagesWithContextMutex.RLock()
 	defer fake.describeEngineDefaultParametersPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeEngineDefaultParametersPagesWithContextArgsForCall[i]
@@ -7068,11 +7939,11 @@ func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersRequestReturnsOnC
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContext(arg1 aws.Context, arg2 *elasticache.DescribeEngineDefaultParametersInput, arg3 ...request.Option) (*elasticache.DescribeEngineDefaultParametersOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContext(arg1 context.Context, arg2 *elasticache.DescribeEngineDefaultParametersInput, arg3 ...request.Option) (*elasticache.DescribeEngineDefaultParametersOutput, error) {
 	fake.describeEngineDefaultParametersWithContextMutex.Lock()
 	ret, specificReturn := fake.describeEngineDefaultParametersWithContextReturnsOnCall[len(fake.describeEngineDefaultParametersWithContextArgsForCall)]
 	fake.describeEngineDefaultParametersWithContextArgsForCall = append(fake.describeEngineDefaultParametersWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEngineDefaultParametersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -7094,13 +7965,13 @@ func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContextCallCo
 	return len(fake.describeEngineDefaultParametersWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContextCalls(stub func(aws.Context, *elasticache.DescribeEngineDefaultParametersInput, ...request.Option) (*elasticache.DescribeEngineDefaultParametersOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContextCalls(stub func(context.Context, *elasticache.DescribeEngineDefaultParametersInput, ...request.Option) (*elasticache.DescribeEngineDefaultParametersOutput, error)) {
 	fake.describeEngineDefaultParametersWithContextMutex.Lock()
 	defer fake.describeEngineDefaultParametersWithContextMutex.Unlock()
 	fake.DescribeEngineDefaultParametersWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeEngineDefaultParametersInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeEngineDefaultParametersWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeEngineDefaultParametersInput, []request.Option) {
 	fake.describeEngineDefaultParametersWithContextMutex.RLock()
 	defer fake.describeEngineDefaultParametersWithContextMutex.RUnlock()
 	argsForCall := fake.describeEngineDefaultParametersWithContextArgsForCall[i]
@@ -7257,11 +8128,11 @@ func (fake *FakeElastiCacheAPI) DescribeEventsPagesReturnsOnCall(i int, result1 
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeEventsInput, arg3 func(*elasticache.DescribeEventsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeEventsInput, arg3 func(*elasticache.DescribeEventsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeEventsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeEventsPagesWithContextReturnsOnCall[len(fake.describeEventsPagesWithContextArgsForCall)]
 	fake.describeEventsPagesWithContextArgsForCall = append(fake.describeEventsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEventsInput
 		arg3 func(*elasticache.DescribeEventsOutput, bool) bool
 		arg4 []request.Option
@@ -7284,13 +8155,13 @@ func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContextCallCount() int {
 	return len(fake.describeEventsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeEventsInput, func(*elasticache.DescribeEventsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeEventsInput, func(*elasticache.DescribeEventsOutput, bool) bool, ...request.Option) error) {
 	fake.describeEventsPagesWithContextMutex.Lock()
 	defer fake.describeEventsPagesWithContextMutex.Unlock()
 	fake.DescribeEventsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeEventsInput, func(*elasticache.DescribeEventsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeEventsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeEventsInput, func(*elasticache.DescribeEventsOutput, bool) bool, []request.Option) {
 	fake.describeEventsPagesWithContextMutex.RLock()
 	defer fake.describeEventsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeEventsPagesWithContextArgsForCall[i]
@@ -7383,11 +8254,11 @@ func (fake *FakeElastiCacheAPI) DescribeEventsRequestReturnsOnCall(i int, result
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEventsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeEventsInput, arg3 ...request.Option) (*elasticache.DescribeEventsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeEventsWithContext(arg1 context.Context, arg2 *elasticache.DescribeEventsInput, arg3 ...request.Option) (*elasticache.DescribeEventsOutput, error) {
 	fake.describeEventsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeEventsWithContextReturnsOnCall[len(fake.describeEventsWithContextArgsForCall)]
 	fake.describeEventsWithContextArgsForCall = append(fake.describeEventsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeEventsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -7409,13 +8280,13 @@ func (fake *FakeElastiCacheAPI) DescribeEventsWithContextCallCount() int {
 	return len(fake.describeEventsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEventsWithContextCalls(stub func(aws.Context, *elasticache.DescribeEventsInput, ...request.Option) (*elasticache.DescribeEventsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeEventsWithContextCalls(stub func(context.Context, *elasticache.DescribeEventsInput, ...request.Option) (*elasticache.DescribeEventsOutput, error)) {
 	fake.describeEventsWithContextMutex.Lock()
 	defer fake.describeEventsWithContextMutex.Unlock()
 	fake.DescribeEventsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeEventsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeEventsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeEventsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeEventsInput, []request.Option) {
 	fake.describeEventsWithContextMutex.RLock()
 	defer fake.describeEventsWithContextMutex.RUnlock()
 	argsForCall := fake.describeEventsWithContextArgsForCall[i]
@@ -7572,11 +8443,11 @@ func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesReturnsOnCall(i in
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeReplicationGroupsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeReplicationGroupsPagesWithContextReturnsOnCall[len(fake.describeReplicationGroupsPagesWithContextArgsForCall)]
 	fake.describeReplicationGroupsPagesWithContextArgsForCall = append(fake.describeReplicationGroupsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 func(*elasticache.DescribeReplicationGroupsOutput, bool) bool
 		arg4 []request.Option
@@ -7599,13 +8470,13 @@ func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContextCallCou
 	return len(fake.describeReplicationGroupsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeReplicationGroupsInput, func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeReplicationGroupsInput, func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, ...request.Option) error) {
 	fake.describeReplicationGroupsPagesWithContextMutex.Lock()
 	defer fake.describeReplicationGroupsPagesWithContextMutex.Unlock()
 	fake.DescribeReplicationGroupsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReplicationGroupsInput, func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReplicationGroupsInput, func(*elasticache.DescribeReplicationGroupsOutput, bool) bool, []request.Option) {
 	fake.describeReplicationGroupsPagesWithContextMutex.RLock()
 	defer fake.describeReplicationGroupsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeReplicationGroupsPagesWithContextArgsForCall[i]
@@ -7698,11 +8569,11 @@ func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsRequestReturnsOnCall(i 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 ...request.Option) (*elasticache.DescribeReplicationGroupsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContext(arg1 context.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 ...request.Option) (*elasticache.DescribeReplicationGroupsOutput, error) {
 	fake.describeReplicationGroupsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeReplicationGroupsWithContextReturnsOnCall[len(fake.describeReplicationGroupsWithContextArgsForCall)]
 	fake.describeReplicationGroupsWithContextArgsForCall = append(fake.describeReplicationGroupsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -7724,13 +8595,13 @@ func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContextCallCount() 
 	return len(fake.describeReplicationGroupsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContextCalls(stub func(aws.Context, *elasticache.DescribeReplicationGroupsInput, ...request.Option) (*elasticache.DescribeReplicationGroupsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContextCalls(stub func(context.Context, *elasticache.DescribeReplicationGroupsInput, ...request.Option) (*elasticache.DescribeReplicationGroupsOutput, error)) {
 	fake.describeReplicationGroupsWithContextMutex.Lock()
 	defer fake.describeReplicationGroupsWithContextMutex.Unlock()
 	fake.DescribeReplicationGroupsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReplicationGroupsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeReplicationGroupsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReplicationGroupsInput, []request.Option) {
 	fake.describeReplicationGroupsWithContextMutex.RLock()
 	defer fake.describeReplicationGroupsWithContextMutex.RUnlock()
 	argsForCall := fake.describeReplicationGroupsWithContextArgsForCall[i]
@@ -7950,11 +8821,11 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesReturnsO
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput, arg3 func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput, arg3 func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeReservedCacheNodesOfferingsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeReservedCacheNodesOfferingsPagesWithContextReturnsOnCall[len(fake.describeReservedCacheNodesOfferingsPagesWithContextArgsForCall)]
 	fake.describeReservedCacheNodesOfferingsPagesWithContextArgsForCall = append(fake.describeReservedCacheNodesOfferingsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput
 		arg3 func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool
 		arg4 []request.Option
@@ -7977,13 +8848,13 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithCont
 	return len(fake.describeReservedCacheNodesOfferingsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, ...request.Option) error) {
 	fake.describeReservedCacheNodesOfferingsPagesWithContextMutex.Lock()
 	defer fake.describeReservedCacheNodesOfferingsPagesWithContextMutex.Unlock()
 	fake.DescribeReservedCacheNodesOfferingsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, func(*elasticache.DescribeReservedCacheNodesOfferingsOutput, bool) bool, []request.Option) {
 	fake.describeReservedCacheNodesOfferingsPagesWithContextMutex.RLock()
 	defer fake.describeReservedCacheNodesOfferingsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeReservedCacheNodesOfferingsPagesWithContextArgsForCall[i]
@@ -8076,11 +8947,11 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsRequestReturn
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput, arg3 ...request.Option) (*elasticache.DescribeReservedCacheNodesOfferingsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContext(arg1 context.Context, arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput, arg3 ...request.Option) (*elasticache.DescribeReservedCacheNodesOfferingsOutput, error) {
 	fake.describeReservedCacheNodesOfferingsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeReservedCacheNodesOfferingsWithContextReturnsOnCall[len(fake.describeReservedCacheNodesOfferingsWithContextArgsForCall)]
 	fake.describeReservedCacheNodesOfferingsWithContextArgsForCall = append(fake.describeReservedCacheNodesOfferingsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesOfferingsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -8102,13 +8973,13 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContextCa
 	return len(fake.describeReservedCacheNodesOfferingsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContextCalls(stub func(aws.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOfferingsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContextCalls(stub func(context.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOfferingsOutput, error)) {
 	fake.describeReservedCacheNodesOfferingsWithContextMutex.Lock()
 	defer fake.describeReservedCacheNodesOfferingsWithContextMutex.Unlock()
 	fake.DescribeReservedCacheNodesOfferingsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesOfferingsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReservedCacheNodesOfferingsInput, []request.Option) {
 	fake.describeReservedCacheNodesOfferingsWithContextMutex.RLock()
 	defer fake.describeReservedCacheNodesOfferingsWithContextMutex.RUnlock()
 	argsForCall := fake.describeReservedCacheNodesOfferingsWithContextArgsForCall[i]
@@ -8202,11 +9073,11 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesReturnsOnCall(i i
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReservedCacheNodesInput, arg3 func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeReservedCacheNodesInput, arg3 func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeReservedCacheNodesPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeReservedCacheNodesPagesWithContextReturnsOnCall[len(fake.describeReservedCacheNodesPagesWithContextArgsForCall)]
 	fake.describeReservedCacheNodesPagesWithContextArgsForCall = append(fake.describeReservedCacheNodesPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesInput
 		arg3 func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool
 		arg4 []request.Option
@@ -8229,13 +9100,13 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContextCallCo
 	return len(fake.describeReservedCacheNodesPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeReservedCacheNodesInput, func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeReservedCacheNodesInput, func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, ...request.Option) error) {
 	fake.describeReservedCacheNodesPagesWithContextMutex.Lock()
 	defer fake.describeReservedCacheNodesPagesWithContextMutex.Unlock()
 	fake.DescribeReservedCacheNodesPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReservedCacheNodesInput, func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReservedCacheNodesInput, func(*elasticache.DescribeReservedCacheNodesOutput, bool) bool, []request.Option) {
 	fake.describeReservedCacheNodesPagesWithContextMutex.RLock()
 	defer fake.describeReservedCacheNodesPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeReservedCacheNodesPagesWithContextArgsForCall[i]
@@ -8328,11 +9199,11 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesRequestReturnsOnCall(i
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReservedCacheNodesInput, arg3 ...request.Option) (*elasticache.DescribeReservedCacheNodesOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContext(arg1 context.Context, arg2 *elasticache.DescribeReservedCacheNodesInput, arg3 ...request.Option) (*elasticache.DescribeReservedCacheNodesOutput, error) {
 	fake.describeReservedCacheNodesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeReservedCacheNodesWithContextReturnsOnCall[len(fake.describeReservedCacheNodesWithContextArgsForCall)]
 	fake.describeReservedCacheNodesWithContextArgsForCall = append(fake.describeReservedCacheNodesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReservedCacheNodesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -8354,13 +9225,13 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContextCallCount()
 	return len(fake.describeReservedCacheNodesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContextCalls(stub func(aws.Context, *elasticache.DescribeReservedCacheNodesInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContextCalls(stub func(context.Context, *elasticache.DescribeReservedCacheNodesInput, ...request.Option) (*elasticache.DescribeReservedCacheNodesOutput, error)) {
 	fake.describeReservedCacheNodesWithContextMutex.Lock()
 	defer fake.describeReservedCacheNodesWithContextMutex.Unlock()
 	fake.DescribeReservedCacheNodesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReservedCacheNodesInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReservedCacheNodesInput, []request.Option) {
 	fake.describeReservedCacheNodesWithContextMutex.RLock()
 	defer fake.describeReservedCacheNodesWithContextMutex.RUnlock()
 	argsForCall := fake.describeReservedCacheNodesWithContextArgsForCall[i]
@@ -8389,6 +9260,321 @@ func (fake *FakeElastiCacheAPI) DescribeReservedCacheNodesWithContextReturnsOnCa
 	}
 	fake.describeReservedCacheNodesWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.DescribeReservedCacheNodesOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdates(arg1 *elasticache.DescribeServiceUpdatesInput) (*elasticache.DescribeServiceUpdatesOutput, error) {
+	fake.describeServiceUpdatesMutex.Lock()
+	ret, specificReturn := fake.describeServiceUpdatesReturnsOnCall[len(fake.describeServiceUpdatesArgsForCall)]
+	fake.describeServiceUpdatesArgsForCall = append(fake.describeServiceUpdatesArgsForCall, struct {
+		arg1 *elasticache.DescribeServiceUpdatesInput
+	}{arg1})
+	fake.recordInvocation("DescribeServiceUpdates", []interface{}{arg1})
+	fake.describeServiceUpdatesMutex.Unlock()
+	if fake.DescribeServiceUpdatesStub != nil {
+		return fake.DescribeServiceUpdatesStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.describeServiceUpdatesReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesCallCount() int {
+	fake.describeServiceUpdatesMutex.RLock()
+	defer fake.describeServiceUpdatesMutex.RUnlock()
+	return len(fake.describeServiceUpdatesArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesCalls(stub func(*elasticache.DescribeServiceUpdatesInput) (*elasticache.DescribeServiceUpdatesOutput, error)) {
+	fake.describeServiceUpdatesMutex.Lock()
+	defer fake.describeServiceUpdatesMutex.Unlock()
+	fake.DescribeServiceUpdatesStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesArgsForCall(i int) *elasticache.DescribeServiceUpdatesInput {
+	fake.describeServiceUpdatesMutex.RLock()
+	defer fake.describeServiceUpdatesMutex.RUnlock()
+	argsForCall := fake.describeServiceUpdatesArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesReturns(result1 *elasticache.DescribeServiceUpdatesOutput, result2 error) {
+	fake.describeServiceUpdatesMutex.Lock()
+	defer fake.describeServiceUpdatesMutex.Unlock()
+	fake.DescribeServiceUpdatesStub = nil
+	fake.describeServiceUpdatesReturns = struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesReturnsOnCall(i int, result1 *elasticache.DescribeServiceUpdatesOutput, result2 error) {
+	fake.describeServiceUpdatesMutex.Lock()
+	defer fake.describeServiceUpdatesMutex.Unlock()
+	fake.DescribeServiceUpdatesStub = nil
+	if fake.describeServiceUpdatesReturnsOnCall == nil {
+		fake.describeServiceUpdatesReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DescribeServiceUpdatesOutput
+			result2 error
+		})
+	}
+	fake.describeServiceUpdatesReturnsOnCall[i] = struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPages(arg1 *elasticache.DescribeServiceUpdatesInput, arg2 func(*elasticache.DescribeServiceUpdatesOutput, bool) bool) error {
+	fake.describeServiceUpdatesPagesMutex.Lock()
+	ret, specificReturn := fake.describeServiceUpdatesPagesReturnsOnCall[len(fake.describeServiceUpdatesPagesArgsForCall)]
+	fake.describeServiceUpdatesPagesArgsForCall = append(fake.describeServiceUpdatesPagesArgsForCall, struct {
+		arg1 *elasticache.DescribeServiceUpdatesInput
+		arg2 func(*elasticache.DescribeServiceUpdatesOutput, bool) bool
+	}{arg1, arg2})
+	fake.recordInvocation("DescribeServiceUpdatesPages", []interface{}{arg1, arg2})
+	fake.describeServiceUpdatesPagesMutex.Unlock()
+	if fake.DescribeServiceUpdatesPagesStub != nil {
+		return fake.DescribeServiceUpdatesPagesStub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	fakeReturns := fake.describeServiceUpdatesPagesReturns
+	return fakeReturns.result1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesCallCount() int {
+	fake.describeServiceUpdatesPagesMutex.RLock()
+	defer fake.describeServiceUpdatesPagesMutex.RUnlock()
+	return len(fake.describeServiceUpdatesPagesArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesCalls(stub func(*elasticache.DescribeServiceUpdatesInput, func(*elasticache.DescribeServiceUpdatesOutput, bool) bool) error) {
+	fake.describeServiceUpdatesPagesMutex.Lock()
+	defer fake.describeServiceUpdatesPagesMutex.Unlock()
+	fake.DescribeServiceUpdatesPagesStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesArgsForCall(i int) (*elasticache.DescribeServiceUpdatesInput, func(*elasticache.DescribeServiceUpdatesOutput, bool) bool) {
+	fake.describeServiceUpdatesPagesMutex.RLock()
+	defer fake.describeServiceUpdatesPagesMutex.RUnlock()
+	argsForCall := fake.describeServiceUpdatesPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesReturns(result1 error) {
+	fake.describeServiceUpdatesPagesMutex.Lock()
+	defer fake.describeServiceUpdatesPagesMutex.Unlock()
+	fake.DescribeServiceUpdatesPagesStub = nil
+	fake.describeServiceUpdatesPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesReturnsOnCall(i int, result1 error) {
+	fake.describeServiceUpdatesPagesMutex.Lock()
+	defer fake.describeServiceUpdatesPagesMutex.Unlock()
+	fake.DescribeServiceUpdatesPagesStub = nil
+	if fake.describeServiceUpdatesPagesReturnsOnCall == nil {
+		fake.describeServiceUpdatesPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeServiceUpdatesPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeServiceUpdatesInput, arg3 func(*elasticache.DescribeServiceUpdatesOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeServiceUpdatesPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeServiceUpdatesPagesWithContextReturnsOnCall[len(fake.describeServiceUpdatesPagesWithContextArgsForCall)]
+	fake.describeServiceUpdatesPagesWithContextArgsForCall = append(fake.describeServiceUpdatesPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeServiceUpdatesInput
+		arg3 func(*elasticache.DescribeServiceUpdatesOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	fake.recordInvocation("DescribeServiceUpdatesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeServiceUpdatesPagesWithContextMutex.Unlock()
+	if fake.DescribeServiceUpdatesPagesWithContextStub != nil {
+		return fake.DescribeServiceUpdatesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	fakeReturns := fake.describeServiceUpdatesPagesWithContextReturns
+	return fakeReturns.result1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesWithContextCallCount() int {
+	fake.describeServiceUpdatesPagesWithContextMutex.RLock()
+	defer fake.describeServiceUpdatesPagesWithContextMutex.RUnlock()
+	return len(fake.describeServiceUpdatesPagesWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeServiceUpdatesInput, func(*elasticache.DescribeServiceUpdatesOutput, bool) bool, ...request.Option) error) {
+	fake.describeServiceUpdatesPagesWithContextMutex.Lock()
+	defer fake.describeServiceUpdatesPagesWithContextMutex.Unlock()
+	fake.DescribeServiceUpdatesPagesWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeServiceUpdatesInput, func(*elasticache.DescribeServiceUpdatesOutput, bool) bool, []request.Option) {
+	fake.describeServiceUpdatesPagesWithContextMutex.RLock()
+	defer fake.describeServiceUpdatesPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeServiceUpdatesPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesWithContextReturns(result1 error) {
+	fake.describeServiceUpdatesPagesWithContextMutex.Lock()
+	defer fake.describeServiceUpdatesPagesWithContextMutex.Unlock()
+	fake.DescribeServiceUpdatesPagesWithContextStub = nil
+	fake.describeServiceUpdatesPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeServiceUpdatesPagesWithContextMutex.Lock()
+	defer fake.describeServiceUpdatesPagesWithContextMutex.Unlock()
+	fake.DescribeServiceUpdatesPagesWithContextStub = nil
+	if fake.describeServiceUpdatesPagesWithContextReturnsOnCall == nil {
+		fake.describeServiceUpdatesPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeServiceUpdatesPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesRequest(arg1 *elasticache.DescribeServiceUpdatesInput) (*request.Request, *elasticache.DescribeServiceUpdatesOutput) {
+	fake.describeServiceUpdatesRequestMutex.Lock()
+	ret, specificReturn := fake.describeServiceUpdatesRequestReturnsOnCall[len(fake.describeServiceUpdatesRequestArgsForCall)]
+	fake.describeServiceUpdatesRequestArgsForCall = append(fake.describeServiceUpdatesRequestArgsForCall, struct {
+		arg1 *elasticache.DescribeServiceUpdatesInput
+	}{arg1})
+	fake.recordInvocation("DescribeServiceUpdatesRequest", []interface{}{arg1})
+	fake.describeServiceUpdatesRequestMutex.Unlock()
+	if fake.DescribeServiceUpdatesRequestStub != nil {
+		return fake.DescribeServiceUpdatesRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.describeServiceUpdatesRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesRequestCallCount() int {
+	fake.describeServiceUpdatesRequestMutex.RLock()
+	defer fake.describeServiceUpdatesRequestMutex.RUnlock()
+	return len(fake.describeServiceUpdatesRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesRequestCalls(stub func(*elasticache.DescribeServiceUpdatesInput) (*request.Request, *elasticache.DescribeServiceUpdatesOutput)) {
+	fake.describeServiceUpdatesRequestMutex.Lock()
+	defer fake.describeServiceUpdatesRequestMutex.Unlock()
+	fake.DescribeServiceUpdatesRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesRequestArgsForCall(i int) *elasticache.DescribeServiceUpdatesInput {
+	fake.describeServiceUpdatesRequestMutex.RLock()
+	defer fake.describeServiceUpdatesRequestMutex.RUnlock()
+	argsForCall := fake.describeServiceUpdatesRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesRequestReturns(result1 *request.Request, result2 *elasticache.DescribeServiceUpdatesOutput) {
+	fake.describeServiceUpdatesRequestMutex.Lock()
+	defer fake.describeServiceUpdatesRequestMutex.Unlock()
+	fake.DescribeServiceUpdatesRequestStub = nil
+	fake.describeServiceUpdatesRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeServiceUpdatesOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DescribeServiceUpdatesOutput) {
+	fake.describeServiceUpdatesRequestMutex.Lock()
+	defer fake.describeServiceUpdatesRequestMutex.Unlock()
+	fake.DescribeServiceUpdatesRequestStub = nil
+	if fake.describeServiceUpdatesRequestReturnsOnCall == nil {
+		fake.describeServiceUpdatesRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DescribeServiceUpdatesOutput
+		})
+	}
+	fake.describeServiceUpdatesRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeServiceUpdatesOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesWithContext(arg1 context.Context, arg2 *elasticache.DescribeServiceUpdatesInput, arg3 ...request.Option) (*elasticache.DescribeServiceUpdatesOutput, error) {
+	fake.describeServiceUpdatesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeServiceUpdatesWithContextReturnsOnCall[len(fake.describeServiceUpdatesWithContextArgsForCall)]
+	fake.describeServiceUpdatesWithContextArgsForCall = append(fake.describeServiceUpdatesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeServiceUpdatesInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DescribeServiceUpdatesWithContext", []interface{}{arg1, arg2, arg3})
+	fake.describeServiceUpdatesWithContextMutex.Unlock()
+	if fake.DescribeServiceUpdatesWithContextStub != nil {
+		return fake.DescribeServiceUpdatesWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.describeServiceUpdatesWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesWithContextCallCount() int {
+	fake.describeServiceUpdatesWithContextMutex.RLock()
+	defer fake.describeServiceUpdatesWithContextMutex.RUnlock()
+	return len(fake.describeServiceUpdatesWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesWithContextCalls(stub func(context.Context, *elasticache.DescribeServiceUpdatesInput, ...request.Option) (*elasticache.DescribeServiceUpdatesOutput, error)) {
+	fake.describeServiceUpdatesWithContextMutex.Lock()
+	defer fake.describeServiceUpdatesWithContextMutex.Unlock()
+	fake.DescribeServiceUpdatesWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeServiceUpdatesInput, []request.Option) {
+	fake.describeServiceUpdatesWithContextMutex.RLock()
+	defer fake.describeServiceUpdatesWithContextMutex.RUnlock()
+	argsForCall := fake.describeServiceUpdatesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesWithContextReturns(result1 *elasticache.DescribeServiceUpdatesOutput, result2 error) {
+	fake.describeServiceUpdatesWithContextMutex.Lock()
+	defer fake.describeServiceUpdatesWithContextMutex.Unlock()
+	fake.DescribeServiceUpdatesWithContextStub = nil
+	fake.describeServiceUpdatesWithContextReturns = struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeServiceUpdatesWithContextReturnsOnCall(i int, result1 *elasticache.DescribeServiceUpdatesOutput, result2 error) {
+	fake.describeServiceUpdatesWithContextMutex.Lock()
+	defer fake.describeServiceUpdatesWithContextMutex.Unlock()
+	fake.DescribeServiceUpdatesWithContextStub = nil
+	if fake.describeServiceUpdatesWithContextReturnsOnCall == nil {
+		fake.describeServiceUpdatesWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DescribeServiceUpdatesOutput
+			result2 error
+		})
+	}
+	fake.describeServiceUpdatesWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DescribeServiceUpdatesOutput
 		result2 error
 	}{result1, result2}
 }
@@ -8517,11 +9703,11 @@ func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesReturnsOnCall(i int, resul
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContext(arg1 aws.Context, arg2 *elasticache.DescribeSnapshotsInput, arg3 func(*elasticache.DescribeSnapshotsOutput, bool) bool, arg4 ...request.Option) error {
+func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeSnapshotsInput, arg3 func(*elasticache.DescribeSnapshotsOutput, bool) bool, arg4 ...request.Option) error {
 	fake.describeSnapshotsPagesWithContextMutex.Lock()
 	ret, specificReturn := fake.describeSnapshotsPagesWithContextReturnsOnCall[len(fake.describeSnapshotsPagesWithContextArgsForCall)]
 	fake.describeSnapshotsPagesWithContextArgsForCall = append(fake.describeSnapshotsPagesWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeSnapshotsInput
 		arg3 func(*elasticache.DescribeSnapshotsOutput, bool) bool
 		arg4 []request.Option
@@ -8544,13 +9730,13 @@ func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContextCallCount() int
 	return len(fake.describeSnapshotsPagesWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContextCalls(stub func(aws.Context, *elasticache.DescribeSnapshotsInput, func(*elasticache.DescribeSnapshotsOutput, bool) bool, ...request.Option) error) {
+func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeSnapshotsInput, func(*elasticache.DescribeSnapshotsOutput, bool) bool, ...request.Option) error) {
 	fake.describeSnapshotsPagesWithContextMutex.Lock()
 	defer fake.describeSnapshotsPagesWithContextMutex.Unlock()
 	fake.DescribeSnapshotsPagesWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeSnapshotsInput, func(*elasticache.DescribeSnapshotsOutput, bool) bool, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeSnapshotsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeSnapshotsInput, func(*elasticache.DescribeSnapshotsOutput, bool) bool, []request.Option) {
 	fake.describeSnapshotsPagesWithContextMutex.RLock()
 	defer fake.describeSnapshotsPagesWithContextMutex.RUnlock()
 	argsForCall := fake.describeSnapshotsPagesWithContextArgsForCall[i]
@@ -8643,11 +9829,11 @@ func (fake *FakeElastiCacheAPI) DescribeSnapshotsRequestReturnsOnCall(i int, res
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContext(arg1 aws.Context, arg2 *elasticache.DescribeSnapshotsInput, arg3 ...request.Option) (*elasticache.DescribeSnapshotsOutput, error) {
+func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContext(arg1 context.Context, arg2 *elasticache.DescribeSnapshotsInput, arg3 ...request.Option) (*elasticache.DescribeSnapshotsOutput, error) {
 	fake.describeSnapshotsWithContextMutex.Lock()
 	ret, specificReturn := fake.describeSnapshotsWithContextReturnsOnCall[len(fake.describeSnapshotsWithContextArgsForCall)]
 	fake.describeSnapshotsWithContextArgsForCall = append(fake.describeSnapshotsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeSnapshotsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -8669,13 +9855,13 @@ func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContextCallCount() int {
 	return len(fake.describeSnapshotsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContextCalls(stub func(aws.Context, *elasticache.DescribeSnapshotsInput, ...request.Option) (*elasticache.DescribeSnapshotsOutput, error)) {
+func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContextCalls(stub func(context.Context, *elasticache.DescribeSnapshotsInput, ...request.Option) (*elasticache.DescribeSnapshotsOutput, error)) {
 	fake.describeSnapshotsWithContextMutex.Lock()
 	defer fake.describeSnapshotsWithContextMutex.Unlock()
 	fake.DescribeSnapshotsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeSnapshotsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeSnapshotsInput, []request.Option) {
 	fake.describeSnapshotsWithContextMutex.RLock()
 	defer fake.describeSnapshotsWithContextMutex.RUnlock()
 	argsForCall := fake.describeSnapshotsWithContextArgsForCall[i]
@@ -8704,6 +9890,512 @@ func (fake *FakeElastiCacheAPI) DescribeSnapshotsWithContextReturnsOnCall(i int,
 	}
 	fake.describeSnapshotsWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.DescribeSnapshotsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActions(arg1 *elasticache.DescribeUpdateActionsInput) (*elasticache.DescribeUpdateActionsOutput, error) {
+	fake.describeUpdateActionsMutex.Lock()
+	ret, specificReturn := fake.describeUpdateActionsReturnsOnCall[len(fake.describeUpdateActionsArgsForCall)]
+	fake.describeUpdateActionsArgsForCall = append(fake.describeUpdateActionsArgsForCall, struct {
+		arg1 *elasticache.DescribeUpdateActionsInput
+	}{arg1})
+	fake.recordInvocation("DescribeUpdateActions", []interface{}{arg1})
+	fake.describeUpdateActionsMutex.Unlock()
+	if fake.DescribeUpdateActionsStub != nil {
+		return fake.DescribeUpdateActionsStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.describeUpdateActionsReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsCallCount() int {
+	fake.describeUpdateActionsMutex.RLock()
+	defer fake.describeUpdateActionsMutex.RUnlock()
+	return len(fake.describeUpdateActionsArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsCalls(stub func(*elasticache.DescribeUpdateActionsInput) (*elasticache.DescribeUpdateActionsOutput, error)) {
+	fake.describeUpdateActionsMutex.Lock()
+	defer fake.describeUpdateActionsMutex.Unlock()
+	fake.DescribeUpdateActionsStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsArgsForCall(i int) *elasticache.DescribeUpdateActionsInput {
+	fake.describeUpdateActionsMutex.RLock()
+	defer fake.describeUpdateActionsMutex.RUnlock()
+	argsForCall := fake.describeUpdateActionsArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsReturns(result1 *elasticache.DescribeUpdateActionsOutput, result2 error) {
+	fake.describeUpdateActionsMutex.Lock()
+	defer fake.describeUpdateActionsMutex.Unlock()
+	fake.DescribeUpdateActionsStub = nil
+	fake.describeUpdateActionsReturns = struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsReturnsOnCall(i int, result1 *elasticache.DescribeUpdateActionsOutput, result2 error) {
+	fake.describeUpdateActionsMutex.Lock()
+	defer fake.describeUpdateActionsMutex.Unlock()
+	fake.DescribeUpdateActionsStub = nil
+	if fake.describeUpdateActionsReturnsOnCall == nil {
+		fake.describeUpdateActionsReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DescribeUpdateActionsOutput
+			result2 error
+		})
+	}
+	fake.describeUpdateActionsReturnsOnCall[i] = struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPages(arg1 *elasticache.DescribeUpdateActionsInput, arg2 func(*elasticache.DescribeUpdateActionsOutput, bool) bool) error {
+	fake.describeUpdateActionsPagesMutex.Lock()
+	ret, specificReturn := fake.describeUpdateActionsPagesReturnsOnCall[len(fake.describeUpdateActionsPagesArgsForCall)]
+	fake.describeUpdateActionsPagesArgsForCall = append(fake.describeUpdateActionsPagesArgsForCall, struct {
+		arg1 *elasticache.DescribeUpdateActionsInput
+		arg2 func(*elasticache.DescribeUpdateActionsOutput, bool) bool
+	}{arg1, arg2})
+	fake.recordInvocation("DescribeUpdateActionsPages", []interface{}{arg1, arg2})
+	fake.describeUpdateActionsPagesMutex.Unlock()
+	if fake.DescribeUpdateActionsPagesStub != nil {
+		return fake.DescribeUpdateActionsPagesStub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	fakeReturns := fake.describeUpdateActionsPagesReturns
+	return fakeReturns.result1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesCallCount() int {
+	fake.describeUpdateActionsPagesMutex.RLock()
+	defer fake.describeUpdateActionsPagesMutex.RUnlock()
+	return len(fake.describeUpdateActionsPagesArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesCalls(stub func(*elasticache.DescribeUpdateActionsInput, func(*elasticache.DescribeUpdateActionsOutput, bool) bool) error) {
+	fake.describeUpdateActionsPagesMutex.Lock()
+	defer fake.describeUpdateActionsPagesMutex.Unlock()
+	fake.DescribeUpdateActionsPagesStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesArgsForCall(i int) (*elasticache.DescribeUpdateActionsInput, func(*elasticache.DescribeUpdateActionsOutput, bool) bool) {
+	fake.describeUpdateActionsPagesMutex.RLock()
+	defer fake.describeUpdateActionsPagesMutex.RUnlock()
+	argsForCall := fake.describeUpdateActionsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesReturns(result1 error) {
+	fake.describeUpdateActionsPagesMutex.Lock()
+	defer fake.describeUpdateActionsPagesMutex.Unlock()
+	fake.DescribeUpdateActionsPagesStub = nil
+	fake.describeUpdateActionsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesReturnsOnCall(i int, result1 error) {
+	fake.describeUpdateActionsPagesMutex.Lock()
+	defer fake.describeUpdateActionsPagesMutex.Unlock()
+	fake.DescribeUpdateActionsPagesStub = nil
+	if fake.describeUpdateActionsPagesReturnsOnCall == nil {
+		fake.describeUpdateActionsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeUpdateActionsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeUpdateActionsInput, arg3 func(*elasticache.DescribeUpdateActionsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeUpdateActionsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeUpdateActionsPagesWithContextReturnsOnCall[len(fake.describeUpdateActionsPagesWithContextArgsForCall)]
+	fake.describeUpdateActionsPagesWithContextArgsForCall = append(fake.describeUpdateActionsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeUpdateActionsInput
+		arg3 func(*elasticache.DescribeUpdateActionsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	fake.recordInvocation("DescribeUpdateActionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeUpdateActionsPagesWithContextMutex.Unlock()
+	if fake.DescribeUpdateActionsPagesWithContextStub != nil {
+		return fake.DescribeUpdateActionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	fakeReturns := fake.describeUpdateActionsPagesWithContextReturns
+	return fakeReturns.result1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesWithContextCallCount() int {
+	fake.describeUpdateActionsPagesWithContextMutex.RLock()
+	defer fake.describeUpdateActionsPagesWithContextMutex.RUnlock()
+	return len(fake.describeUpdateActionsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeUpdateActionsInput, func(*elasticache.DescribeUpdateActionsOutput, bool) bool, ...request.Option) error) {
+	fake.describeUpdateActionsPagesWithContextMutex.Lock()
+	defer fake.describeUpdateActionsPagesWithContextMutex.Unlock()
+	fake.DescribeUpdateActionsPagesWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeUpdateActionsInput, func(*elasticache.DescribeUpdateActionsOutput, bool) bool, []request.Option) {
+	fake.describeUpdateActionsPagesWithContextMutex.RLock()
+	defer fake.describeUpdateActionsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeUpdateActionsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesWithContextReturns(result1 error) {
+	fake.describeUpdateActionsPagesWithContextMutex.Lock()
+	defer fake.describeUpdateActionsPagesWithContextMutex.Unlock()
+	fake.DescribeUpdateActionsPagesWithContextStub = nil
+	fake.describeUpdateActionsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeUpdateActionsPagesWithContextMutex.Lock()
+	defer fake.describeUpdateActionsPagesWithContextMutex.Unlock()
+	fake.DescribeUpdateActionsPagesWithContextStub = nil
+	if fake.describeUpdateActionsPagesWithContextReturnsOnCall == nil {
+		fake.describeUpdateActionsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeUpdateActionsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsRequest(arg1 *elasticache.DescribeUpdateActionsInput) (*request.Request, *elasticache.DescribeUpdateActionsOutput) {
+	fake.describeUpdateActionsRequestMutex.Lock()
+	ret, specificReturn := fake.describeUpdateActionsRequestReturnsOnCall[len(fake.describeUpdateActionsRequestArgsForCall)]
+	fake.describeUpdateActionsRequestArgsForCall = append(fake.describeUpdateActionsRequestArgsForCall, struct {
+		arg1 *elasticache.DescribeUpdateActionsInput
+	}{arg1})
+	fake.recordInvocation("DescribeUpdateActionsRequest", []interface{}{arg1})
+	fake.describeUpdateActionsRequestMutex.Unlock()
+	if fake.DescribeUpdateActionsRequestStub != nil {
+		return fake.DescribeUpdateActionsRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.describeUpdateActionsRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsRequestCallCount() int {
+	fake.describeUpdateActionsRequestMutex.RLock()
+	defer fake.describeUpdateActionsRequestMutex.RUnlock()
+	return len(fake.describeUpdateActionsRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsRequestCalls(stub func(*elasticache.DescribeUpdateActionsInput) (*request.Request, *elasticache.DescribeUpdateActionsOutput)) {
+	fake.describeUpdateActionsRequestMutex.Lock()
+	defer fake.describeUpdateActionsRequestMutex.Unlock()
+	fake.DescribeUpdateActionsRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsRequestArgsForCall(i int) *elasticache.DescribeUpdateActionsInput {
+	fake.describeUpdateActionsRequestMutex.RLock()
+	defer fake.describeUpdateActionsRequestMutex.RUnlock()
+	argsForCall := fake.describeUpdateActionsRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsRequestReturns(result1 *request.Request, result2 *elasticache.DescribeUpdateActionsOutput) {
+	fake.describeUpdateActionsRequestMutex.Lock()
+	defer fake.describeUpdateActionsRequestMutex.Unlock()
+	fake.DescribeUpdateActionsRequestStub = nil
+	fake.describeUpdateActionsRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeUpdateActionsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DescribeUpdateActionsOutput) {
+	fake.describeUpdateActionsRequestMutex.Lock()
+	defer fake.describeUpdateActionsRequestMutex.Unlock()
+	fake.DescribeUpdateActionsRequestStub = nil
+	if fake.describeUpdateActionsRequestReturnsOnCall == nil {
+		fake.describeUpdateActionsRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DescribeUpdateActionsOutput
+		})
+	}
+	fake.describeUpdateActionsRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeUpdateActionsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContext(arg1 context.Context, arg2 *elasticache.DescribeUpdateActionsInput, arg3 ...request.Option) (*elasticache.DescribeUpdateActionsOutput, error) {
+	fake.describeUpdateActionsWithContextMutex.Lock()
+	ret, specificReturn := fake.describeUpdateActionsWithContextReturnsOnCall[len(fake.describeUpdateActionsWithContextArgsForCall)]
+	fake.describeUpdateActionsWithContextArgsForCall = append(fake.describeUpdateActionsWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeUpdateActionsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("DescribeUpdateActionsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.describeUpdateActionsWithContextMutex.Unlock()
+	if fake.DescribeUpdateActionsWithContextStub != nil {
+		return fake.DescribeUpdateActionsWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.describeUpdateActionsWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContextCallCount() int {
+	fake.describeUpdateActionsWithContextMutex.RLock()
+	defer fake.describeUpdateActionsWithContextMutex.RUnlock()
+	return len(fake.describeUpdateActionsWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContextCalls(stub func(context.Context, *elasticache.DescribeUpdateActionsInput, ...request.Option) (*elasticache.DescribeUpdateActionsOutput, error)) {
+	fake.describeUpdateActionsWithContextMutex.Lock()
+	defer fake.describeUpdateActionsWithContextMutex.Unlock()
+	fake.DescribeUpdateActionsWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeUpdateActionsInput, []request.Option) {
+	fake.describeUpdateActionsWithContextMutex.RLock()
+	defer fake.describeUpdateActionsWithContextMutex.RUnlock()
+	argsForCall := fake.describeUpdateActionsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContextReturns(result1 *elasticache.DescribeUpdateActionsOutput, result2 error) {
+	fake.describeUpdateActionsWithContextMutex.Lock()
+	defer fake.describeUpdateActionsWithContextMutex.Unlock()
+	fake.DescribeUpdateActionsWithContextStub = nil
+	fake.describeUpdateActionsWithContextReturns = struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContextReturnsOnCall(i int, result1 *elasticache.DescribeUpdateActionsOutput, result2 error) {
+	fake.describeUpdateActionsWithContextMutex.Lock()
+	defer fake.describeUpdateActionsWithContextMutex.Unlock()
+	fake.DescribeUpdateActionsWithContextStub = nil
+	if fake.describeUpdateActionsWithContextReturnsOnCall == nil {
+		fake.describeUpdateActionsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DescribeUpdateActionsOutput
+			result2 error
+		})
+	}
+	fake.describeUpdateActionsWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DescribeUpdateActionsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCount(arg1 *elasticache.IncreaseReplicaCountInput) (*elasticache.IncreaseReplicaCountOutput, error) {
+	fake.increaseReplicaCountMutex.Lock()
+	ret, specificReturn := fake.increaseReplicaCountReturnsOnCall[len(fake.increaseReplicaCountArgsForCall)]
+	fake.increaseReplicaCountArgsForCall = append(fake.increaseReplicaCountArgsForCall, struct {
+		arg1 *elasticache.IncreaseReplicaCountInput
+	}{arg1})
+	fake.recordInvocation("IncreaseReplicaCount", []interface{}{arg1})
+	fake.increaseReplicaCountMutex.Unlock()
+	if fake.IncreaseReplicaCountStub != nil {
+		return fake.IncreaseReplicaCountStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.increaseReplicaCountReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountCallCount() int {
+	fake.increaseReplicaCountMutex.RLock()
+	defer fake.increaseReplicaCountMutex.RUnlock()
+	return len(fake.increaseReplicaCountArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountCalls(stub func(*elasticache.IncreaseReplicaCountInput) (*elasticache.IncreaseReplicaCountOutput, error)) {
+	fake.increaseReplicaCountMutex.Lock()
+	defer fake.increaseReplicaCountMutex.Unlock()
+	fake.IncreaseReplicaCountStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountArgsForCall(i int) *elasticache.IncreaseReplicaCountInput {
+	fake.increaseReplicaCountMutex.RLock()
+	defer fake.increaseReplicaCountMutex.RUnlock()
+	argsForCall := fake.increaseReplicaCountArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountReturns(result1 *elasticache.IncreaseReplicaCountOutput, result2 error) {
+	fake.increaseReplicaCountMutex.Lock()
+	defer fake.increaseReplicaCountMutex.Unlock()
+	fake.IncreaseReplicaCountStub = nil
+	fake.increaseReplicaCountReturns = struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountReturnsOnCall(i int, result1 *elasticache.IncreaseReplicaCountOutput, result2 error) {
+	fake.increaseReplicaCountMutex.Lock()
+	defer fake.increaseReplicaCountMutex.Unlock()
+	fake.IncreaseReplicaCountStub = nil
+	if fake.increaseReplicaCountReturnsOnCall == nil {
+		fake.increaseReplicaCountReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.IncreaseReplicaCountOutput
+			result2 error
+		})
+	}
+	fake.increaseReplicaCountReturnsOnCall[i] = struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountRequest(arg1 *elasticache.IncreaseReplicaCountInput) (*request.Request, *elasticache.IncreaseReplicaCountOutput) {
+	fake.increaseReplicaCountRequestMutex.Lock()
+	ret, specificReturn := fake.increaseReplicaCountRequestReturnsOnCall[len(fake.increaseReplicaCountRequestArgsForCall)]
+	fake.increaseReplicaCountRequestArgsForCall = append(fake.increaseReplicaCountRequestArgsForCall, struct {
+		arg1 *elasticache.IncreaseReplicaCountInput
+	}{arg1})
+	fake.recordInvocation("IncreaseReplicaCountRequest", []interface{}{arg1})
+	fake.increaseReplicaCountRequestMutex.Unlock()
+	if fake.IncreaseReplicaCountRequestStub != nil {
+		return fake.IncreaseReplicaCountRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.increaseReplicaCountRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountRequestCallCount() int {
+	fake.increaseReplicaCountRequestMutex.RLock()
+	defer fake.increaseReplicaCountRequestMutex.RUnlock()
+	return len(fake.increaseReplicaCountRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountRequestCalls(stub func(*elasticache.IncreaseReplicaCountInput) (*request.Request, *elasticache.IncreaseReplicaCountOutput)) {
+	fake.increaseReplicaCountRequestMutex.Lock()
+	defer fake.increaseReplicaCountRequestMutex.Unlock()
+	fake.IncreaseReplicaCountRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountRequestArgsForCall(i int) *elasticache.IncreaseReplicaCountInput {
+	fake.increaseReplicaCountRequestMutex.RLock()
+	defer fake.increaseReplicaCountRequestMutex.RUnlock()
+	argsForCall := fake.increaseReplicaCountRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountRequestReturns(result1 *request.Request, result2 *elasticache.IncreaseReplicaCountOutput) {
+	fake.increaseReplicaCountRequestMutex.Lock()
+	defer fake.increaseReplicaCountRequestMutex.Unlock()
+	fake.IncreaseReplicaCountRequestStub = nil
+	fake.increaseReplicaCountRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseReplicaCountOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.IncreaseReplicaCountOutput) {
+	fake.increaseReplicaCountRequestMutex.Lock()
+	defer fake.increaseReplicaCountRequestMutex.Unlock()
+	fake.IncreaseReplicaCountRequestStub = nil
+	if fake.increaseReplicaCountRequestReturnsOnCall == nil {
+		fake.increaseReplicaCountRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.IncreaseReplicaCountOutput
+		})
+	}
+	fake.increaseReplicaCountRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseReplicaCountOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountWithContext(arg1 context.Context, arg2 *elasticache.IncreaseReplicaCountInput, arg3 ...request.Option) (*elasticache.IncreaseReplicaCountOutput, error) {
+	fake.increaseReplicaCountWithContextMutex.Lock()
+	ret, specificReturn := fake.increaseReplicaCountWithContextReturnsOnCall[len(fake.increaseReplicaCountWithContextArgsForCall)]
+	fake.increaseReplicaCountWithContextArgsForCall = append(fake.increaseReplicaCountWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.IncreaseReplicaCountInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("IncreaseReplicaCountWithContext", []interface{}{arg1, arg2, arg3})
+	fake.increaseReplicaCountWithContextMutex.Unlock()
+	if fake.IncreaseReplicaCountWithContextStub != nil {
+		return fake.IncreaseReplicaCountWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.increaseReplicaCountWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountWithContextCallCount() int {
+	fake.increaseReplicaCountWithContextMutex.RLock()
+	defer fake.increaseReplicaCountWithContextMutex.RUnlock()
+	return len(fake.increaseReplicaCountWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountWithContextCalls(stub func(context.Context, *elasticache.IncreaseReplicaCountInput, ...request.Option) (*elasticache.IncreaseReplicaCountOutput, error)) {
+	fake.increaseReplicaCountWithContextMutex.Lock()
+	defer fake.increaseReplicaCountWithContextMutex.Unlock()
+	fake.IncreaseReplicaCountWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountWithContextArgsForCall(i int) (context.Context, *elasticache.IncreaseReplicaCountInput, []request.Option) {
+	fake.increaseReplicaCountWithContextMutex.RLock()
+	defer fake.increaseReplicaCountWithContextMutex.RUnlock()
+	argsForCall := fake.increaseReplicaCountWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountWithContextReturns(result1 *elasticache.IncreaseReplicaCountOutput, result2 error) {
+	fake.increaseReplicaCountWithContextMutex.Lock()
+	defer fake.increaseReplicaCountWithContextMutex.Unlock()
+	fake.IncreaseReplicaCountWithContextStub = nil
+	fake.increaseReplicaCountWithContextReturns = struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseReplicaCountWithContextReturnsOnCall(i int, result1 *elasticache.IncreaseReplicaCountOutput, result2 error) {
+	fake.increaseReplicaCountWithContextMutex.Lock()
+	defer fake.increaseReplicaCountWithContextMutex.Unlock()
+	fake.IncreaseReplicaCountWithContextStub = nil
+	if fake.increaseReplicaCountWithContextReturnsOnCall == nil {
+		fake.increaseReplicaCountWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.IncreaseReplicaCountOutput
+			result2 error
+		})
+	}
+	fake.increaseReplicaCountWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.IncreaseReplicaCountOutput
 		result2 error
 	}{result1, result2}
 }
@@ -8834,11 +10526,11 @@ func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsRequestReturnsOn
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContext(arg1 aws.Context, arg2 *elasticache.ListAllowedNodeTypeModificationsInput, arg3 ...request.Option) (*elasticache.ListAllowedNodeTypeModificationsOutput, error) {
+func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContext(arg1 context.Context, arg2 *elasticache.ListAllowedNodeTypeModificationsInput, arg3 ...request.Option) (*elasticache.ListAllowedNodeTypeModificationsOutput, error) {
 	fake.listAllowedNodeTypeModificationsWithContextMutex.Lock()
 	ret, specificReturn := fake.listAllowedNodeTypeModificationsWithContextReturnsOnCall[len(fake.listAllowedNodeTypeModificationsWithContextArgsForCall)]
 	fake.listAllowedNodeTypeModificationsWithContextArgsForCall = append(fake.listAllowedNodeTypeModificationsWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ListAllowedNodeTypeModificationsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -8860,13 +10552,13 @@ func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContextCallC
 	return len(fake.listAllowedNodeTypeModificationsWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContextCalls(stub func(aws.Context, *elasticache.ListAllowedNodeTypeModificationsInput, ...request.Option) (*elasticache.ListAllowedNodeTypeModificationsOutput, error)) {
+func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContextCalls(stub func(context.Context, *elasticache.ListAllowedNodeTypeModificationsInput, ...request.Option) (*elasticache.ListAllowedNodeTypeModificationsOutput, error)) {
 	fake.listAllowedNodeTypeModificationsWithContextMutex.Lock()
 	defer fake.listAllowedNodeTypeModificationsWithContextMutex.Unlock()
 	fake.ListAllowedNodeTypeModificationsWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContextArgsForCall(i int) (aws.Context, *elasticache.ListAllowedNodeTypeModificationsInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ListAllowedNodeTypeModificationsWithContextArgsForCall(i int) (context.Context, *elasticache.ListAllowedNodeTypeModificationsInput, []request.Option) {
 	fake.listAllowedNodeTypeModificationsWithContextMutex.RLock()
 	defer fake.listAllowedNodeTypeModificationsWithContextMutex.RUnlock()
 	argsForCall := fake.listAllowedNodeTypeModificationsWithContextArgsForCall[i]
@@ -9025,11 +10717,11 @@ func (fake *FakeElastiCacheAPI) ListTagsForResourceRequestReturnsOnCall(i int, r
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContext(arg1 aws.Context, arg2 *elasticache.ListTagsForResourceInput, arg3 ...request.Option) (*elasticache.TagListMessage, error) {
+func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContext(arg1 context.Context, arg2 *elasticache.ListTagsForResourceInput, arg3 ...request.Option) (*elasticache.TagListMessage, error) {
 	fake.listTagsForResourceWithContextMutex.Lock()
 	ret, specificReturn := fake.listTagsForResourceWithContextReturnsOnCall[len(fake.listTagsForResourceWithContextArgsForCall)]
 	fake.listTagsForResourceWithContextArgsForCall = append(fake.listTagsForResourceWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ListTagsForResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -9051,13 +10743,13 @@ func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContextCallCount() int {
 	return len(fake.listTagsForResourceWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContextCalls(stub func(aws.Context, *elasticache.ListTagsForResourceInput, ...request.Option) (*elasticache.TagListMessage, error)) {
+func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContextCalls(stub func(context.Context, *elasticache.ListTagsForResourceInput, ...request.Option) (*elasticache.TagListMessage, error)) {
 	fake.listTagsForResourceWithContextMutex.Lock()
 	defer fake.listTagsForResourceWithContextMutex.Unlock()
 	fake.ListTagsForResourceWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContextArgsForCall(i int) (aws.Context, *elasticache.ListTagsForResourceInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ListTagsForResourceWithContextArgsForCall(i int) (context.Context, *elasticache.ListTagsForResourceInput, []request.Option) {
 	fake.listTagsForResourceWithContextMutex.RLock()
 	defer fake.listTagsForResourceWithContextMutex.RUnlock()
 	argsForCall := fake.listTagsForResourceWithContextArgsForCall[i]
@@ -9216,11 +10908,11 @@ func (fake *FakeElastiCacheAPI) ModifyCacheClusterRequestReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContext(arg1 aws.Context, arg2 *elasticache.ModifyCacheClusterInput, arg3 ...request.Option) (*elasticache.ModifyCacheClusterOutput, error) {
+func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContext(arg1 context.Context, arg2 *elasticache.ModifyCacheClusterInput, arg3 ...request.Option) (*elasticache.ModifyCacheClusterOutput, error) {
 	fake.modifyCacheClusterWithContextMutex.Lock()
 	ret, specificReturn := fake.modifyCacheClusterWithContextReturnsOnCall[len(fake.modifyCacheClusterWithContextArgsForCall)]
 	fake.modifyCacheClusterWithContextArgsForCall = append(fake.modifyCacheClusterWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyCacheClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -9242,13 +10934,13 @@ func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContextCallCount() int {
 	return len(fake.modifyCacheClusterWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContextCalls(stub func(aws.Context, *elasticache.ModifyCacheClusterInput, ...request.Option) (*elasticache.ModifyCacheClusterOutput, error)) {
+func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContextCalls(stub func(context.Context, *elasticache.ModifyCacheClusterInput, ...request.Option) (*elasticache.ModifyCacheClusterOutput, error)) {
 	fake.modifyCacheClusterWithContextMutex.Lock()
 	defer fake.modifyCacheClusterWithContextMutex.Unlock()
 	fake.ModifyCacheClusterWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContextArgsForCall(i int) (aws.Context, *elasticache.ModifyCacheClusterInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ModifyCacheClusterWithContextArgsForCall(i int) (context.Context, *elasticache.ModifyCacheClusterInput, []request.Option) {
 	fake.modifyCacheClusterWithContextMutex.RLock()
 	defer fake.modifyCacheClusterWithContextMutex.RUnlock()
 	argsForCall := fake.modifyCacheClusterWithContextArgsForCall[i]
@@ -9407,11 +11099,11 @@ func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupRequestReturnsOnCall(i 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContext(arg1 aws.Context, arg2 *elasticache.ModifyCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error) {
+func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContext(arg1 context.Context, arg2 *elasticache.ModifyCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error) {
 	fake.modifyCacheParameterGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.modifyCacheParameterGroupWithContextReturnsOnCall[len(fake.modifyCacheParameterGroupWithContextArgsForCall)]
 	fake.modifyCacheParameterGroupWithContextArgsForCall = append(fake.modifyCacheParameterGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyCacheParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -9433,13 +11125,13 @@ func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContextCallCount() 
 	return len(fake.modifyCacheParameterGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContextCalls(stub func(aws.Context, *elasticache.ModifyCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)) {
+func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContextCalls(stub func(context.Context, *elasticache.ModifyCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)) {
 	fake.modifyCacheParameterGroupWithContextMutex.Lock()
 	defer fake.modifyCacheParameterGroupWithContextMutex.Unlock()
 	fake.ModifyCacheParameterGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.ModifyCacheParameterGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ModifyCacheParameterGroupWithContextArgsForCall(i int) (context.Context, *elasticache.ModifyCacheParameterGroupInput, []request.Option) {
 	fake.modifyCacheParameterGroupWithContextMutex.RLock()
 	defer fake.modifyCacheParameterGroupWithContextMutex.RUnlock()
 	argsForCall := fake.modifyCacheParameterGroupWithContextArgsForCall[i]
@@ -9598,11 +11290,11 @@ func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupRequestReturnsOnCall(i int
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContext(arg1 aws.Context, arg2 *elasticache.ModifyCacheSubnetGroupInput, arg3 ...request.Option) (*elasticache.ModifyCacheSubnetGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContext(arg1 context.Context, arg2 *elasticache.ModifyCacheSubnetGroupInput, arg3 ...request.Option) (*elasticache.ModifyCacheSubnetGroupOutput, error) {
 	fake.modifyCacheSubnetGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.modifyCacheSubnetGroupWithContextReturnsOnCall[len(fake.modifyCacheSubnetGroupWithContextArgsForCall)]
 	fake.modifyCacheSubnetGroupWithContextArgsForCall = append(fake.modifyCacheSubnetGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyCacheSubnetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -9624,13 +11316,13 @@ func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContextCallCount() int
 	return len(fake.modifyCacheSubnetGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContextCalls(stub func(aws.Context, *elasticache.ModifyCacheSubnetGroupInput, ...request.Option) (*elasticache.ModifyCacheSubnetGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContextCalls(stub func(context.Context, *elasticache.ModifyCacheSubnetGroupInput, ...request.Option) (*elasticache.ModifyCacheSubnetGroupOutput, error)) {
 	fake.modifyCacheSubnetGroupWithContextMutex.Lock()
 	defer fake.modifyCacheSubnetGroupWithContextMutex.Unlock()
 	fake.ModifyCacheSubnetGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.ModifyCacheSubnetGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContextArgsForCall(i int) (context.Context, *elasticache.ModifyCacheSubnetGroupInput, []request.Option) {
 	fake.modifyCacheSubnetGroupWithContextMutex.RLock()
 	defer fake.modifyCacheSubnetGroupWithContextMutex.RUnlock()
 	argsForCall := fake.modifyCacheSubnetGroupWithContextArgsForCall[i]
@@ -9915,11 +11607,11 @@ func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationRequestR
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithContext(arg1 aws.Context, arg2 *elasticache.ModifyReplicationGroupShardConfigurationInput, arg3 ...request.Option) (*elasticache.ModifyReplicationGroupShardConfigurationOutput, error) {
+func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithContext(arg1 context.Context, arg2 *elasticache.ModifyReplicationGroupShardConfigurationInput, arg3 ...request.Option) (*elasticache.ModifyReplicationGroupShardConfigurationOutput, error) {
 	fake.modifyReplicationGroupShardConfigurationWithContextMutex.Lock()
 	ret, specificReturn := fake.modifyReplicationGroupShardConfigurationWithContextReturnsOnCall[len(fake.modifyReplicationGroupShardConfigurationWithContextArgsForCall)]
 	fake.modifyReplicationGroupShardConfigurationWithContextArgsForCall = append(fake.modifyReplicationGroupShardConfigurationWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyReplicationGroupShardConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -9941,13 +11633,13 @@ func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithCont
 	return len(fake.modifyReplicationGroupShardConfigurationWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithContextCalls(stub func(aws.Context, *elasticache.ModifyReplicationGroupShardConfigurationInput, ...request.Option) (*elasticache.ModifyReplicationGroupShardConfigurationOutput, error)) {
+func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithContextCalls(stub func(context.Context, *elasticache.ModifyReplicationGroupShardConfigurationInput, ...request.Option) (*elasticache.ModifyReplicationGroupShardConfigurationOutput, error)) {
 	fake.modifyReplicationGroupShardConfigurationWithContextMutex.Lock()
 	defer fake.modifyReplicationGroupShardConfigurationWithContextMutex.Unlock()
 	fake.ModifyReplicationGroupShardConfigurationWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithContextArgsForCall(i int) (aws.Context, *elasticache.ModifyReplicationGroupShardConfigurationInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithContextArgsForCall(i int) (context.Context, *elasticache.ModifyReplicationGroupShardConfigurationInput, []request.Option) {
 	fake.modifyReplicationGroupShardConfigurationWithContextMutex.RLock()
 	defer fake.modifyReplicationGroupShardConfigurationWithContextMutex.RUnlock()
 	argsForCall := fake.modifyReplicationGroupShardConfigurationWithContextArgsForCall[i]
@@ -9980,11 +11672,11 @@ func (fake *FakeElastiCacheAPI) ModifyReplicationGroupShardConfigurationWithCont
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContext(arg1 aws.Context, arg2 *elasticache.ModifyReplicationGroupInput, arg3 ...request.Option) (*elasticache.ModifyReplicationGroupOutput, error) {
+func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.ModifyReplicationGroupInput, arg3 ...request.Option) (*elasticache.ModifyReplicationGroupOutput, error) {
 	fake.modifyReplicationGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.modifyReplicationGroupWithContextReturnsOnCall[len(fake.modifyReplicationGroupWithContextArgsForCall)]
 	fake.modifyReplicationGroupWithContextArgsForCall = append(fake.modifyReplicationGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ModifyReplicationGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -10006,13 +11698,13 @@ func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContextCallCount() int
 	return len(fake.modifyReplicationGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContextCalls(stub func(aws.Context, *elasticache.ModifyReplicationGroupInput, ...request.Option) (*elasticache.ModifyReplicationGroupOutput, error)) {
+func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.ModifyReplicationGroupInput, ...request.Option) (*elasticache.ModifyReplicationGroupOutput, error)) {
 	fake.modifyReplicationGroupWithContextMutex.Lock()
 	defer fake.modifyReplicationGroupWithContextMutex.Unlock()
 	fake.ModifyReplicationGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.ModifyReplicationGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ModifyReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.ModifyReplicationGroupInput, []request.Option) {
 	fake.modifyReplicationGroupWithContextMutex.RLock()
 	defer fake.modifyReplicationGroupWithContextMutex.RUnlock()
 	argsForCall := fake.modifyReplicationGroupWithContextArgsForCall[i]
@@ -10171,11 +11863,11 @@ func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingRequestReturns
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContext(arg1 aws.Context, arg2 *elasticache.PurchaseReservedCacheNodesOfferingInput, arg3 ...request.Option) (*elasticache.PurchaseReservedCacheNodesOfferingOutput, error) {
+func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContext(arg1 context.Context, arg2 *elasticache.PurchaseReservedCacheNodesOfferingInput, arg3 ...request.Option) (*elasticache.PurchaseReservedCacheNodesOfferingOutput, error) {
 	fake.purchaseReservedCacheNodesOfferingWithContextMutex.Lock()
 	ret, specificReturn := fake.purchaseReservedCacheNodesOfferingWithContextReturnsOnCall[len(fake.purchaseReservedCacheNodesOfferingWithContextArgsForCall)]
 	fake.purchaseReservedCacheNodesOfferingWithContextArgsForCall = append(fake.purchaseReservedCacheNodesOfferingWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.PurchaseReservedCacheNodesOfferingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -10197,13 +11889,13 @@ func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContextCal
 	return len(fake.purchaseReservedCacheNodesOfferingWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContextCalls(stub func(aws.Context, *elasticache.PurchaseReservedCacheNodesOfferingInput, ...request.Option) (*elasticache.PurchaseReservedCacheNodesOfferingOutput, error)) {
+func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContextCalls(stub func(context.Context, *elasticache.PurchaseReservedCacheNodesOfferingInput, ...request.Option) (*elasticache.PurchaseReservedCacheNodesOfferingOutput, error)) {
 	fake.purchaseReservedCacheNodesOfferingWithContextMutex.Lock()
 	defer fake.purchaseReservedCacheNodesOfferingWithContextMutex.Unlock()
 	fake.PurchaseReservedCacheNodesOfferingWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContextArgsForCall(i int) (aws.Context, *elasticache.PurchaseReservedCacheNodesOfferingInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContextArgsForCall(i int) (context.Context, *elasticache.PurchaseReservedCacheNodesOfferingInput, []request.Option) {
 	fake.purchaseReservedCacheNodesOfferingWithContextMutex.RLock()
 	defer fake.purchaseReservedCacheNodesOfferingWithContextMutex.RUnlock()
 	argsForCall := fake.purchaseReservedCacheNodesOfferingWithContextArgsForCall[i]
@@ -10362,11 +12054,11 @@ func (fake *FakeElastiCacheAPI) RebootCacheClusterRequestReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContext(arg1 aws.Context, arg2 *elasticache.RebootCacheClusterInput, arg3 ...request.Option) (*elasticache.RebootCacheClusterOutput, error) {
+func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContext(arg1 context.Context, arg2 *elasticache.RebootCacheClusterInput, arg3 ...request.Option) (*elasticache.RebootCacheClusterOutput, error) {
 	fake.rebootCacheClusterWithContextMutex.Lock()
 	ret, specificReturn := fake.rebootCacheClusterWithContextReturnsOnCall[len(fake.rebootCacheClusterWithContextArgsForCall)]
 	fake.rebootCacheClusterWithContextArgsForCall = append(fake.rebootCacheClusterWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.RebootCacheClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -10388,13 +12080,13 @@ func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContextCallCount() int {
 	return len(fake.rebootCacheClusterWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContextCalls(stub func(aws.Context, *elasticache.RebootCacheClusterInput, ...request.Option) (*elasticache.RebootCacheClusterOutput, error)) {
+func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContextCalls(stub func(context.Context, *elasticache.RebootCacheClusterInput, ...request.Option) (*elasticache.RebootCacheClusterOutput, error)) {
 	fake.rebootCacheClusterWithContextMutex.Lock()
 	defer fake.rebootCacheClusterWithContextMutex.Unlock()
 	fake.RebootCacheClusterWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContextArgsForCall(i int) (aws.Context, *elasticache.RebootCacheClusterInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) RebootCacheClusterWithContextArgsForCall(i int) (context.Context, *elasticache.RebootCacheClusterInput, []request.Option) {
 	fake.rebootCacheClusterWithContextMutex.RLock()
 	defer fake.rebootCacheClusterWithContextMutex.RUnlock()
 	argsForCall := fake.rebootCacheClusterWithContextArgsForCall[i]
@@ -10553,11 +12245,11 @@ func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceRequestReturnsOnCall(i int
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContext(arg1 aws.Context, arg2 *elasticache.RemoveTagsFromResourceInput, arg3 ...request.Option) (*elasticache.TagListMessage, error) {
+func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContext(arg1 context.Context, arg2 *elasticache.RemoveTagsFromResourceInput, arg3 ...request.Option) (*elasticache.TagListMessage, error) {
 	fake.removeTagsFromResourceWithContextMutex.Lock()
 	ret, specificReturn := fake.removeTagsFromResourceWithContextReturnsOnCall[len(fake.removeTagsFromResourceWithContextArgsForCall)]
 	fake.removeTagsFromResourceWithContextArgsForCall = append(fake.removeTagsFromResourceWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.RemoveTagsFromResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -10579,13 +12271,13 @@ func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContextCallCount() int
 	return len(fake.removeTagsFromResourceWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContextCalls(stub func(aws.Context, *elasticache.RemoveTagsFromResourceInput, ...request.Option) (*elasticache.TagListMessage, error)) {
+func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContextCalls(stub func(context.Context, *elasticache.RemoveTagsFromResourceInput, ...request.Option) (*elasticache.TagListMessage, error)) {
 	fake.removeTagsFromResourceWithContextMutex.Lock()
 	defer fake.removeTagsFromResourceWithContextMutex.Unlock()
 	fake.RemoveTagsFromResourceWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContextArgsForCall(i int) (aws.Context, *elasticache.RemoveTagsFromResourceInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) RemoveTagsFromResourceWithContextArgsForCall(i int) (context.Context, *elasticache.RemoveTagsFromResourceInput, []request.Option) {
 	fake.removeTagsFromResourceWithContextMutex.RLock()
 	defer fake.removeTagsFromResourceWithContextMutex.RUnlock()
 	argsForCall := fake.removeTagsFromResourceWithContextArgsForCall[i]
@@ -10744,11 +12436,11 @@ func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupRequestReturnsOnCall(i i
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContext(arg1 aws.Context, arg2 *elasticache.ResetCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error) {
+func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContext(arg1 context.Context, arg2 *elasticache.ResetCacheParameterGroupInput, arg3 ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error) {
 	fake.resetCacheParameterGroupWithContextMutex.Lock()
 	ret, specificReturn := fake.resetCacheParameterGroupWithContextReturnsOnCall[len(fake.resetCacheParameterGroupWithContextArgsForCall)]
 	fake.resetCacheParameterGroupWithContextArgsForCall = append(fake.resetCacheParameterGroupWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.ResetCacheParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -10770,13 +12462,13 @@ func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContextCallCount() i
 	return len(fake.resetCacheParameterGroupWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContextCalls(stub func(aws.Context, *elasticache.ResetCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)) {
+func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContextCalls(stub func(context.Context, *elasticache.ResetCacheParameterGroupInput, ...request.Option) (*elasticache.CacheParameterGroupNameMessage, error)) {
 	fake.resetCacheParameterGroupWithContextMutex.Lock()
 	defer fake.resetCacheParameterGroupWithContextMutex.Unlock()
 	fake.ResetCacheParameterGroupWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContextArgsForCall(i int) (aws.Context, *elasticache.ResetCacheParameterGroupInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) ResetCacheParameterGroupWithContextArgsForCall(i int) (context.Context, *elasticache.ResetCacheParameterGroupInput, []request.Option) {
 	fake.resetCacheParameterGroupWithContextMutex.RLock()
 	defer fake.resetCacheParameterGroupWithContextMutex.RUnlock()
 	argsForCall := fake.resetCacheParameterGroupWithContextArgsForCall[i]
@@ -10935,11 +12627,11 @@ func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressRequestReturnsOnC
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContext(arg1 aws.Context, arg2 *elasticache.RevokeCacheSecurityGroupIngressInput, arg3 ...request.Option) (*elasticache.RevokeCacheSecurityGroupIngressOutput, error) {
+func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContext(arg1 context.Context, arg2 *elasticache.RevokeCacheSecurityGroupIngressInput, arg3 ...request.Option) (*elasticache.RevokeCacheSecurityGroupIngressOutput, error) {
 	fake.revokeCacheSecurityGroupIngressWithContextMutex.Lock()
 	ret, specificReturn := fake.revokeCacheSecurityGroupIngressWithContextReturnsOnCall[len(fake.revokeCacheSecurityGroupIngressWithContextArgsForCall)]
 	fake.revokeCacheSecurityGroupIngressWithContextArgsForCall = append(fake.revokeCacheSecurityGroupIngressWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.RevokeCacheSecurityGroupIngressInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -10961,13 +12653,13 @@ func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContextCallCo
 	return len(fake.revokeCacheSecurityGroupIngressWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContextCalls(stub func(aws.Context, *elasticache.RevokeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.RevokeCacheSecurityGroupIngressOutput, error)) {
+func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContextCalls(stub func(context.Context, *elasticache.RevokeCacheSecurityGroupIngressInput, ...request.Option) (*elasticache.RevokeCacheSecurityGroupIngressOutput, error)) {
 	fake.revokeCacheSecurityGroupIngressWithContextMutex.Lock()
 	defer fake.revokeCacheSecurityGroupIngressWithContextMutex.Unlock()
 	fake.RevokeCacheSecurityGroupIngressWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContextArgsForCall(i int) (aws.Context, *elasticache.RevokeCacheSecurityGroupIngressInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContextArgsForCall(i int) (context.Context, *elasticache.RevokeCacheSecurityGroupIngressInput, []request.Option) {
 	fake.revokeCacheSecurityGroupIngressWithContextMutex.RLock()
 	defer fake.revokeCacheSecurityGroupIngressWithContextMutex.RUnlock()
 	argsForCall := fake.revokeCacheSecurityGroupIngressWithContextArgsForCall[i]
@@ -11126,11 +12818,11 @@ func (fake *FakeElastiCacheAPI) TestFailoverRequestReturnsOnCall(i int, result1 
 	}{result1, result2}
 }
 
-func (fake *FakeElastiCacheAPI) TestFailoverWithContext(arg1 aws.Context, arg2 *elasticache.TestFailoverInput, arg3 ...request.Option) (*elasticache.TestFailoverOutput, error) {
+func (fake *FakeElastiCacheAPI) TestFailoverWithContext(arg1 context.Context, arg2 *elasticache.TestFailoverInput, arg3 ...request.Option) (*elasticache.TestFailoverOutput, error) {
 	fake.testFailoverWithContextMutex.Lock()
 	ret, specificReturn := fake.testFailoverWithContextReturnsOnCall[len(fake.testFailoverWithContextArgsForCall)]
 	fake.testFailoverWithContextArgsForCall = append(fake.testFailoverWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.TestFailoverInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
@@ -11152,13 +12844,13 @@ func (fake *FakeElastiCacheAPI) TestFailoverWithContextCallCount() int {
 	return len(fake.testFailoverWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) TestFailoverWithContextCalls(stub func(aws.Context, *elasticache.TestFailoverInput, ...request.Option) (*elasticache.TestFailoverOutput, error)) {
+func (fake *FakeElastiCacheAPI) TestFailoverWithContextCalls(stub func(context.Context, *elasticache.TestFailoverInput, ...request.Option) (*elasticache.TestFailoverOutput, error)) {
 	fake.testFailoverWithContextMutex.Lock()
 	defer fake.testFailoverWithContextMutex.Unlock()
 	fake.TestFailoverWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) TestFailoverWithContextArgsForCall(i int) (aws.Context, *elasticache.TestFailoverInput, []request.Option) {
+func (fake *FakeElastiCacheAPI) TestFailoverWithContextArgsForCall(i int) (context.Context, *elasticache.TestFailoverInput, []request.Option) {
 	fake.testFailoverWithContextMutex.RLock()
 	defer fake.testFailoverWithContextMutex.RUnlock()
 	argsForCall := fake.testFailoverWithContextArgsForCall[i]
@@ -11251,11 +12943,11 @@ func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableReturnsOnCall(i in
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 ...request.WaiterOption) error {
+func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 ...request.WaiterOption) error {
 	fake.waitUntilCacheClusterAvailableWithContextMutex.Lock()
 	ret, specificReturn := fake.waitUntilCacheClusterAvailableWithContextReturnsOnCall[len(fake.waitUntilCacheClusterAvailableWithContextArgsForCall)]
 	fake.waitUntilCacheClusterAvailableWithContextArgsForCall = append(fake.waitUntilCacheClusterAvailableWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
@@ -11277,13 +12969,13 @@ func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContextCallCou
 	return len(fake.waitUntilCacheClusterAvailableWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error) {
+func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error) {
 	fake.waitUntilCacheClusterAvailableWithContextMutex.Lock()
 	defer fake.waitUntilCacheClusterAvailableWithContextMutex.Unlock()
 	fake.WaitUntilCacheClusterAvailableWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheClustersInput, []request.WaiterOption) {
+func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterAvailableWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheClustersInput, []request.WaiterOption) {
 	fake.waitUntilCacheClusterAvailableWithContextMutex.RLock()
 	defer fake.waitUntilCacheClusterAvailableWithContextMutex.RUnlock()
 	argsForCall := fake.waitUntilCacheClusterAvailableWithContextArgsForCall[i]
@@ -11373,11 +13065,11 @@ func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedReturnsOnCall(i int,
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContext(arg1 aws.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 ...request.WaiterOption) error {
+func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContext(arg1 context.Context, arg2 *elasticache.DescribeCacheClustersInput, arg3 ...request.WaiterOption) error {
 	fake.waitUntilCacheClusterDeletedWithContextMutex.Lock()
 	ret, specificReturn := fake.waitUntilCacheClusterDeletedWithContextReturnsOnCall[len(fake.waitUntilCacheClusterDeletedWithContextArgsForCall)]
 	fake.waitUntilCacheClusterDeletedWithContextArgsForCall = append(fake.waitUntilCacheClusterDeletedWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeCacheClustersInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
@@ -11399,13 +13091,13 @@ func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContextCallCount
 	return len(fake.waitUntilCacheClusterDeletedWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContextCalls(stub func(aws.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error) {
+func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContextCalls(stub func(context.Context, *elasticache.DescribeCacheClustersInput, ...request.WaiterOption) error) {
 	fake.waitUntilCacheClusterDeletedWithContextMutex.Lock()
 	defer fake.waitUntilCacheClusterDeletedWithContextMutex.Unlock()
 	fake.WaitUntilCacheClusterDeletedWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeCacheClustersInput, []request.WaiterOption) {
+func (fake *FakeElastiCacheAPI) WaitUntilCacheClusterDeletedWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeCacheClustersInput, []request.WaiterOption) {
 	fake.waitUntilCacheClusterDeletedWithContextMutex.RLock()
 	defer fake.waitUntilCacheClusterDeletedWithContextMutex.RUnlock()
 	argsForCall := fake.waitUntilCacheClusterDeletedWithContextArgsForCall[i]
@@ -11495,11 +13187,11 @@ func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableReturnsOnCall(
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 ...request.WaiterOption) error {
+func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContext(arg1 context.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 ...request.WaiterOption) error {
 	fake.waitUntilReplicationGroupAvailableWithContextMutex.Lock()
 	ret, specificReturn := fake.waitUntilReplicationGroupAvailableWithContextReturnsOnCall[len(fake.waitUntilReplicationGroupAvailableWithContextArgsForCall)]
 	fake.waitUntilReplicationGroupAvailableWithContextArgsForCall = append(fake.waitUntilReplicationGroupAvailableWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
@@ -11521,13 +13213,13 @@ func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContextCal
 	return len(fake.waitUntilReplicationGroupAvailableWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContextCalls(stub func(aws.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error) {
+func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContextCalls(stub func(context.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error) {
 	fake.waitUntilReplicationGroupAvailableWithContextMutex.Lock()
 	defer fake.waitUntilReplicationGroupAvailableWithContextMutex.Unlock()
 	fake.WaitUntilReplicationGroupAvailableWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReplicationGroupsInput, []request.WaiterOption) {
+func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupAvailableWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReplicationGroupsInput, []request.WaiterOption) {
 	fake.waitUntilReplicationGroupAvailableWithContextMutex.RLock()
 	defer fake.waitUntilReplicationGroupAvailableWithContextMutex.RUnlock()
 	argsForCall := fake.waitUntilReplicationGroupAvailableWithContextArgsForCall[i]
@@ -11617,11 +13309,11 @@ func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedReturnsOnCall(i 
 	}{result1}
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContext(arg1 aws.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 ...request.WaiterOption) error {
+func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContext(arg1 context.Context, arg2 *elasticache.DescribeReplicationGroupsInput, arg3 ...request.WaiterOption) error {
 	fake.waitUntilReplicationGroupDeletedWithContextMutex.Lock()
 	ret, specificReturn := fake.waitUntilReplicationGroupDeletedWithContextReturnsOnCall[len(fake.waitUntilReplicationGroupDeletedWithContextArgsForCall)]
 	fake.waitUntilReplicationGroupDeletedWithContextArgsForCall = append(fake.waitUntilReplicationGroupDeletedWithContextArgsForCall, struct {
-		arg1 aws.Context
+		arg1 context.Context
 		arg2 *elasticache.DescribeReplicationGroupsInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
@@ -11643,13 +13335,13 @@ func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContextCallC
 	return len(fake.waitUntilReplicationGroupDeletedWithContextArgsForCall)
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContextCalls(stub func(aws.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error) {
+func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContextCalls(stub func(context.Context, *elasticache.DescribeReplicationGroupsInput, ...request.WaiterOption) error) {
 	fake.waitUntilReplicationGroupDeletedWithContextMutex.Lock()
 	defer fake.waitUntilReplicationGroupDeletedWithContextMutex.Unlock()
 	fake.WaitUntilReplicationGroupDeletedWithContextStub = stub
 }
 
-func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContextArgsForCall(i int) (aws.Context, *elasticache.DescribeReplicationGroupsInput, []request.WaiterOption) {
+func (fake *FakeElastiCacheAPI) WaitUntilReplicationGroupDeletedWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeReplicationGroupsInput, []request.WaiterOption) {
 	fake.waitUntilReplicationGroupDeletedWithContextMutex.RLock()
 	defer fake.waitUntilReplicationGroupDeletedWithContextMutex.RUnlock()
 	argsForCall := fake.waitUntilReplicationGroupDeletedWithContextArgsForCall[i]
@@ -11694,6 +13386,18 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.authorizeCacheSecurityGroupIngressRequestMutex.RUnlock()
 	fake.authorizeCacheSecurityGroupIngressWithContextMutex.RLock()
 	defer fake.authorizeCacheSecurityGroupIngressWithContextMutex.RUnlock()
+	fake.batchApplyUpdateActionMutex.RLock()
+	defer fake.batchApplyUpdateActionMutex.RUnlock()
+	fake.batchApplyUpdateActionRequestMutex.RLock()
+	defer fake.batchApplyUpdateActionRequestMutex.RUnlock()
+	fake.batchApplyUpdateActionWithContextMutex.RLock()
+	defer fake.batchApplyUpdateActionWithContextMutex.RUnlock()
+	fake.batchStopUpdateActionMutex.RLock()
+	defer fake.batchStopUpdateActionMutex.RUnlock()
+	fake.batchStopUpdateActionRequestMutex.RLock()
+	defer fake.batchStopUpdateActionRequestMutex.RUnlock()
+	fake.batchStopUpdateActionWithContextMutex.RLock()
+	defer fake.batchStopUpdateActionWithContextMutex.RUnlock()
 	fake.copySnapshotMutex.RLock()
 	defer fake.copySnapshotMutex.RUnlock()
 	fake.copySnapshotRequestMutex.RLock()
@@ -11736,6 +13440,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.createSnapshotRequestMutex.RUnlock()
 	fake.createSnapshotWithContextMutex.RLock()
 	defer fake.createSnapshotWithContextMutex.RUnlock()
+	fake.decreaseReplicaCountMutex.RLock()
+	defer fake.decreaseReplicaCountMutex.RUnlock()
+	fake.decreaseReplicaCountRequestMutex.RLock()
+	defer fake.decreaseReplicaCountRequestMutex.RUnlock()
+	fake.decreaseReplicaCountWithContextMutex.RLock()
+	defer fake.decreaseReplicaCountWithContextMutex.RUnlock()
 	fake.deleteCacheClusterMutex.RLock()
 	defer fake.deleteCacheClusterMutex.RUnlock()
 	fake.deleteCacheClusterRequestMutex.RLock()
@@ -11882,6 +13592,16 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeReservedCacheNodesRequestMutex.RUnlock()
 	fake.describeReservedCacheNodesWithContextMutex.RLock()
 	defer fake.describeReservedCacheNodesWithContextMutex.RUnlock()
+	fake.describeServiceUpdatesMutex.RLock()
+	defer fake.describeServiceUpdatesMutex.RUnlock()
+	fake.describeServiceUpdatesPagesMutex.RLock()
+	defer fake.describeServiceUpdatesPagesMutex.RUnlock()
+	fake.describeServiceUpdatesPagesWithContextMutex.RLock()
+	defer fake.describeServiceUpdatesPagesWithContextMutex.RUnlock()
+	fake.describeServiceUpdatesRequestMutex.RLock()
+	defer fake.describeServiceUpdatesRequestMutex.RUnlock()
+	fake.describeServiceUpdatesWithContextMutex.RLock()
+	defer fake.describeServiceUpdatesWithContextMutex.RUnlock()
 	fake.describeSnapshotsMutex.RLock()
 	defer fake.describeSnapshotsMutex.RUnlock()
 	fake.describeSnapshotsPagesMutex.RLock()
@@ -11892,6 +13612,22 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeSnapshotsRequestMutex.RUnlock()
 	fake.describeSnapshotsWithContextMutex.RLock()
 	defer fake.describeSnapshotsWithContextMutex.RUnlock()
+	fake.describeUpdateActionsMutex.RLock()
+	defer fake.describeUpdateActionsMutex.RUnlock()
+	fake.describeUpdateActionsPagesMutex.RLock()
+	defer fake.describeUpdateActionsPagesMutex.RUnlock()
+	fake.describeUpdateActionsPagesWithContextMutex.RLock()
+	defer fake.describeUpdateActionsPagesWithContextMutex.RUnlock()
+	fake.describeUpdateActionsRequestMutex.RLock()
+	defer fake.describeUpdateActionsRequestMutex.RUnlock()
+	fake.describeUpdateActionsWithContextMutex.RLock()
+	defer fake.describeUpdateActionsWithContextMutex.RUnlock()
+	fake.increaseReplicaCountMutex.RLock()
+	defer fake.increaseReplicaCountMutex.RUnlock()
+	fake.increaseReplicaCountRequestMutex.RLock()
+	defer fake.increaseReplicaCountRequestMutex.RUnlock()
+	fake.increaseReplicaCountWithContextMutex.RLock()
+	defer fake.increaseReplicaCountWithContextMutex.RUnlock()
 	fake.listAllowedNodeTypeModificationsMutex.RLock()
 	defer fake.listAllowedNodeTypeModificationsMutex.RUnlock()
 	fake.listAllowedNodeTypeModificationsRequestMutex.RLock()
