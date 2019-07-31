@@ -1,0 +1,15 @@
+# Source: firehose-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: UAA5xxErrorCount
+    rules:
+      - alert: UAA5xxErrorCount
+        expr: sum(increase(firehose_value_metric_uaa_requests_global_status_5_xx_count[6h])) > 10
+        labels:
+          severity: warning
+        annotations:
+          summary: "UAA - 5xx error count"
+          description: "Amount of 5xx errors in UAA has increased considerably over the last six hours: {{ $value | printf \"%.0f\" }}"

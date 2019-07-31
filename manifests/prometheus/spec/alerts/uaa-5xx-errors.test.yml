@@ -1,0 +1,33 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - spec/alerts/fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1h
+    input_series:
+      - series: 'firehose_value_metric_uaa_requests_global_status_5_xx_count{bosh_job_ip="0.0.0.1"}'
+        values: 0 2 0 1 0 0 0 2
+      - series: 'firehose_value_metric_uaa_requests_global_status_5_xx_count{bosh_job_ip="0.0.0.2"}'
+        values: 0 0 0 1 0 0 0 2
+      - series: 'firehose_value_metric_uaa_requests_global_status_5_xx_count{bosh_job_ip="0.0.0.3"}'
+        values: 0 0 0 1 2 0 0 1
+
+    alert_rule_test:
+      # Does not fire without enough data
+      - eval_time: 3h
+        alertname: UAA5xxErrorCount
+      # Does not fire when not reaching the threshold
+      - eval_time: 6h
+        alertname: UAA5xxErrorCount
+      # Fires when there has been an increase of 10 errors over 6h
+      - eval_time: 8h
+        alertname: UAA5xxErrorCount
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "UAA - 5xx error count"
+              description: "Amount of 5xx errors in UAA has increased considerably over the last six hours: 11"
