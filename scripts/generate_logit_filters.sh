@@ -46,7 +46,7 @@ echo "filter {" > /output/generated_logit_filters.conf
     sed 's/^/  /' < /tmp/syslog_standard.conf
     sed 's/^/  /' < /mnt/config/logit/11_app_syslog_drain.conf
     sed 's/^/  /' < /tmp/logsearch-for-cloudfoundry/src/logsearch-config/target/logstash-filters-default.conf
-    sed 's/^/  /' < /mnt/config/logit/20_custom_filters.conf
+    sed 's/^/  /' < /mnt/config/logit/20_custom_cf_filters.conf
     echo "}"
 } >> /output/generated_logit_filters.conf
 
