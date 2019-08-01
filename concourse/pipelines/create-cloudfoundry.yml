@@ -390,7 +390,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-billing.git
       branch: master
-      tag_filter: v0.64.0 
+      tag_filter: v0.65.0
 
   - name: paas-accounts
     type: git
@@ -3265,6 +3265,7 @@ jobs:
                     'UAA_ENDPOINT' => '${UAA_ENDPOINT}',
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
                     'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
+                    'COSTS_ENDPOINT' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/totals',
                     'TLS_DOMAINS' => [
                       'healthcheck.${APPS_DNS_ZONE_NAME}',
                       'api.${SYSTEM_DNS_ZONE_NAME}',
