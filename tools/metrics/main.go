@@ -149,6 +149,7 @@ func Main() error {
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
 		BillingCostsGauge(logger, os.Getenv("COSTS_ENDPOINT"), 15*time.Minute, plans),
+		CurrencyGauges(logger, 5*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))

@@ -13,6 +13,7 @@ require (
 	github.com/go-martini/martini v0.0.0-20170121215854-22fa46961aab // indirect
 	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/hashicorp/go-multierror v1.0.0
+	github.com/jarcoal/httpmock v1.0.4
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/miekg/dns v0.0.0-20171128074819-6da3249dfb57
