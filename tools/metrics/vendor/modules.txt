@@ -67,7 +67,9 @@ github.com/hpcloud/tail/ratelimiter
 github.com/hpcloud/tail/util
 github.com/hpcloud/tail/watch
 github.com/hpcloud/tail/winfile
-# github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
+# github.com/jarcoal/httpmock v1.0.4
+github.com/jarcoal/httpmock
+# github.com/jmespath/go-jmespath v0.0.0-20160202185014-0b12d6b521d8
 github.com/jmespath/go-jmespath
 # github.com/mattn/go-colorable v0.0.9
 github.com/mattn/go-colorable
