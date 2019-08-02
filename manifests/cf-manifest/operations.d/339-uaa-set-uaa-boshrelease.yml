@@ -2,7 +2,7 @@
 - type: replace
   path: /releases/name=uaa
   value:
-    name: "uaa"
-    version: "0.1.9"
-    url: "https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-0.1.9.tgz"
-    sha1: "c103d7266639c4be65fef5352130a3ab013ed2a3"
+    name: uaa
+    version: 0.1.10
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-0.1.10.tgz
+    sha1: 7b52512beac9d6c761702b7b711a33d756379c59
