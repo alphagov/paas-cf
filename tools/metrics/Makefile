@@ -29,9 +29,5 @@ generate-fakes:
 	counterfeiter -o fakes/fake_cloudwatch_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface/interface.go CloudWatchAPI
 
-	# Project fakes
-	counterfeiter -o service_fakes/fake_cloudfront_service.go \
-		cloudfront.go CloudFrontServiceInterface
-
 	$(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||" fakes/fake_*.go
 	$(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||" service_fakes/fake_*.go
