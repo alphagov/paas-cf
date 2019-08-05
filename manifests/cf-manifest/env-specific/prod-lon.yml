@@ -2,7 +2,7 @@
 cell_instances: 33
 router_instances: 3
 api_instances: 8
-doppler_instances: 15
+doppler_instances: 21
 log_api_instances: 6
 cc_hourly_rate_limit: 15000
 paas_region_name: london
