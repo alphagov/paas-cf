@@ -3,13 +3,27 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
-    name: ExchangeRatesDrifting
+    name: ExchangeRatesDriftingUnderCharging
     rules:
-      - alert: ExchangeRatesDrifting_Critical
-        expr: "paas_currency_real_ratio > paas_currency_configured_ratio"
+      - alert: ExchangeRatesDriftingUnderCharging_Critical
+        expr: "(paas_currency_real_ratio / paas_currency_configured_ratio) > 1.025"
         for: 12h
         labels:
           severity: critical
         annotations:
           summary: "Exchange rate for {{ $labels.currency }} has drifted"
           description: "The real exchange rate for {{ $labels.currency }} has drifted from the configured rate, we are at risk of undercharging."
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ExchangeRatesDriftingOverCharging
+    rules:
+      - alert: ExchangeRatesDriftingOverCharging_Critical
+        expr: "(paas_currency_real_ratio / paas_currency_configured_ratio) < 0.975"
+        for: 12h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Exchange rate for {{ $labels.currency }} has drifted"
+          description: "The real exchange rate for {{ $labels.currency }} has drifted from the configured rate, we are at risk of overcharging."
