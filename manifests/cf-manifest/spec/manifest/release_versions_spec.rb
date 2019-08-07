@@ -28,7 +28,7 @@ RSpec.describe "release versions" do
 
     pinned_releases = {
       'uaa' => {
-        local: '0.1.9',
+        local: '0.1.10',
         upstream: '73.4.0',
       },
       'loggregator-agent' => {
