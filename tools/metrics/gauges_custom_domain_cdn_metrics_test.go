@@ -159,7 +159,6 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				return len(metrics)
 			}, 3*time.Second).Should(BeNumerically(">=", 6))
 
-
 			var metricNames []string
 			for _, m := range metrics {
 				metricNames = append(metricNames, m.Name)
@@ -197,7 +196,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				return len(metrics)
 			}, 3*time.Second).Should(BeNumerically(">=", 6))
 
-			expected := MetricTag{ Label: "distribution_id", Value: "dist-1"}
+			expected := MetricTag{Label: "distribution_id", Value: "dist-1"}
 			Expect(metrics[0].Tags).To(ContainElement(expected))
 			Expect(metrics[1].Tags).To(ContainElement(expected))
 			Expect(metrics[2].Tags).To(ContainElement(expected))

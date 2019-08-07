@@ -18,6 +18,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
 	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/costexplorer"
 	"github.com/pkg/errors"
 
 	"code.cloudfoundry.org/lager"
@@ -103,6 +104,10 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to AWS API")
 	}
+	awsRegion := *sess.Config.Region
+	if awsRegion != "eu-west-1" && awsRegion != "eu-west-2" {
+		return fmt.Errorf("unexpected aws region %s", awsRegion)
+	}
 
 	cfs := NewCloudFrontService(sess)
 	tlsChecker := &tlscheck.TLSChecker{}
@@ -115,6 +120,8 @@ func Main() error {
 		return errors.Wrap(err, "failed to connect to AWS API in US East 1")
 	}
 	cloudWatch := NewCloudWatchService(usEast1Sess, logger)
+
+	costExplorer := costexplorer.New(sess)
 
 	// Combine all metrics into single stream
 	gauges := []MetricReader{
@@ -134,6 +141,7 @@ func Main() error {
 		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
+		AWSCostExplorerGauge(logger, awsRegion, costExplorer, time.Minute), //6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
 		BillingCostsGauge(logger, os.Getenv("COSTS_ENDPOINT"), 15*time.Minute),
 	}

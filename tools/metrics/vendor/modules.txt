@@ -1,12 +1,13 @@
 # code.cloudfoundry.org/lager v1.0.0
 code.cloudfoundry.org/lager
-# github.com/aws/aws-sdk-go v1.12.65
+# github.com/aws/aws-sdk-go v1.21.8
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/session
 github.com/aws/aws-sdk-go/service/cloudfront
 github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface
 github.com/aws/aws-sdk-go/service/cloudwatch
 github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface
+github.com/aws/aws-sdk-go/service/costexplorer
 github.com/aws/aws-sdk-go/service/elasticache
 github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface
 github.com/aws/aws-sdk-go/service/s3
@@ -15,24 +16,36 @@ github.com/aws/aws-sdk-go/aws/request
 github.com/aws/aws-sdk-go/aws/awserr
 github.com/aws/aws-sdk-go/aws/credentials
 github.com/aws/aws-sdk-go/aws/endpoints
+github.com/aws/aws-sdk-go/internal/sdkio
 github.com/aws/aws-sdk-go/aws/client
 github.com/aws/aws-sdk-go/aws/corehandlers
+github.com/aws/aws-sdk-go/aws/credentials/processcreds
 github.com/aws/aws-sdk-go/aws/credentials/stscreds
+github.com/aws/aws-sdk-go/aws/csm
 github.com/aws/aws-sdk-go/aws/defaults
+github.com/aws/aws-sdk-go/internal/ini
+github.com/aws/aws-sdk-go/internal/shareddefaults
 github.com/aws/aws-sdk-go/aws/awsutil
 github.com/aws/aws-sdk-go/aws/client/metadata
 github.com/aws/aws-sdk-go/aws/signer/v4
 github.com/aws/aws-sdk-go/private/protocol
 github.com/aws/aws-sdk-go/private/protocol/restxml
 github.com/aws/aws-sdk-go/private/protocol/query
-github.com/aws/aws-sdk-go/internal/shareddefaults
+github.com/aws/aws-sdk-go/private/protocol/jsonrpc
+github.com/aws/aws-sdk-go/internal/s3err
+github.com/aws/aws-sdk-go/private/protocol/eventstream
+github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
+github.com/aws/aws-sdk-go/private/protocol/rest
+github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
+github.com/aws/aws-sdk-go/internal/sdkrand
 github.com/aws/aws-sdk-go/service/sts
+github.com/aws/aws-sdk-go/service/sts/stsiface
 github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
 github.com/aws/aws-sdk-go/aws/credentials/endpointcreds
 github.com/aws/aws-sdk-go/aws/ec2metadata
-github.com/aws/aws-sdk-go/private/protocol/rest
-github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
 github.com/aws/aws-sdk-go/private/protocol/query/queryutil
+github.com/aws/aws-sdk-go/private/protocol/json/jsonutil
+github.com/aws/aws-sdk-go/internal/sdkuri
 # github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973
 github.com/beorn7/perks/quantile
 # github.com/cloudfoundry-community/go-cfclient v0.0.0-20170822114502-6142a01e9815
@@ -42,8 +55,6 @@ github.com/cloudfoundry-community/go-uaa
 github.com/cloudfoundry-community/go-uaa/passwordcredentials
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
-# github.com/go-ini/ini v1.32.0
-github.com/go-ini/ini
 # github.com/golang/protobuf v1.3.1
 github.com/golang/protobuf/proto
 # github.com/hashicorp/errwrap v1.0.0
@@ -56,7 +67,7 @@ github.com/hpcloud/tail/ratelimiter
 github.com/hpcloud/tail/util
 github.com/hpcloud/tail/watch
 github.com/hpcloud/tail/winfile
-# github.com/jmespath/go-jmespath v0.0.0-20160202185014-0b12d6b521d8
+# github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 github.com/jmespath/go-jmespath
 # github.com/mattn/go-colorable v0.0.9
 github.com/mattn/go-colorable
