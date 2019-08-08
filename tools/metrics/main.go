@@ -141,7 +141,7 @@ func Main() error {
 		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
-		AWSCostExplorerGauge(logger, awsRegion, costExplorer, time.Minute), //6*time.Hour),
+		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
 		BillingCostsGauge(logger, os.Getenv("COSTS_ENDPOINT"), 15*time.Minute),
 	}
