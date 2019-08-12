@@ -4,10 +4,14 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/lager"
-	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/pingdumb"
 )
 
-func ELBNodeFailureCountGauge(logger lager.Logger, config pingdumb.ReportConfig, interval time.Duration) MetricReadCloser {
+func ELBNodeFailureCountGauge(
+	logger lager.Logger,
+	config pingdumb.ReportConfig,
+	interval time.Duration,
+) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		r, err := pingdumb.GetReport(config)
 		if err != nil {
