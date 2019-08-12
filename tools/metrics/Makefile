@@ -23,7 +23,7 @@ generate-fakes:
 	counterfeiter -o pkg/cloudfront/fakes/fake_cloudfront_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface/interface.go CloudFrontAPI
 
-	counterfeiter -o fakes/fake_s3_client.go \
+	counterfeiter -o pkg/s3/fakes/fake_s3_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go S3API
 
 	counterfeiter -o fakes/fake_cloudwatch_client.go \
