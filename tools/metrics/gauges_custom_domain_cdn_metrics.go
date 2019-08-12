@@ -9,12 +9,13 @@ import (
 	"time"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 )
 
 func CustomDomainCDNMetricsCollector(
 	logger lager.Logger,
 	cloudFront cloudfront.CloudFrontServiceInterface,
-	cloudWatch CloudWatchService,
+	cloudWatch cloudwatch.CloudWatchService,
 	interval time.Duration,
 ) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
@@ -55,7 +56,11 @@ func CustomDomainCDNMetricsCollector(
 
 }
 
-func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger lager.Logger) ([]Metric, error) {
+func getMetricsForDistribution(
+	id string,
+	cloudWatch cloudwatch.CloudWatchService,
+	logger lager.Logger,
+) ([]Metric, error) {
 	logger.Info("get-metrics-for-distribution", lager.Data{"distribution-id": id})
 	cloudwatchOutputs, err := cloudWatch.GetCDNMetricsForDistribution(id)
 

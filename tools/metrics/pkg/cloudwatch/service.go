@@ -1,32 +1,26 @@
-package main
+package cloudwatch
 
 import (
 	"code.cloudfoundry.org/lager"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
-	"github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface"
 	"time"
 )
 
-type CloudWatchService struct {
-	Client cloudwatchiface.CloudWatchAPI
-	Logger lager.Logger
-}
-
-type metricMapping struct {
-	Name      string
-	Statistic string
-}
-
-func NewCloudWatchService(sess *session.Session, logger lager.Logger) CloudWatchService {
+func NewService(
+	sess *session.Session,
+	logger lager.Logger,
+) CloudWatchService {
 	return CloudWatchService{
 		Client: cloudwatch.New(sess),
 		Logger: logger.Session("cloudwatch-service"),
 	}
 }
 
-func (cw *CloudWatchService) GetCDNMetricsForDistribution(distributionId string) ([]*cloudwatch.GetMetricStatisticsOutput, error) {
+func (cw *CloudWatchService) GetCDNMetricsForDistribution(
+	distributionId string,
+) ([]*cloudwatch.GetMetricStatisticsOutput, error) {
 	metricNames := []metricMapping{
 		{Name: "Requests", Statistic: "Sum"},
 		{Name: "BytesDownloaded", Statistic: "Sum"},

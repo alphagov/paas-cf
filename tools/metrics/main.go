@@ -25,6 +25,7 @@ import (
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 )
 
 func initPrometheus() (*prometheus.Registry, http.Handler) {
@@ -122,7 +123,7 @@ func Main() error {
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to AWS API in US East 1")
 	}
-	cloudWatch := NewCloudWatchService(usEast1Sess, logger)
+	cloudWatch := cloudwatch.NewService(usEast1Sess, logger)
 
 	costExplorer := costexplorer.New(sess)
 

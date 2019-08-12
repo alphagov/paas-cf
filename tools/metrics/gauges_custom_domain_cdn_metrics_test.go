@@ -4,7 +4,7 @@ import (
 	"code.cloudfoundry.org/lager"
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cloudwatch"
+	awscw "github.com/aws/aws-sdk-go/service/cloudwatch"
 	"time"
 
 	. "github.com/alphagov/paas-cf/tools/metrics"
@@ -12,6 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 )
 
 type CloudFrontServiceStub struct {
@@ -26,14 +27,14 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 
 	var logger lager.Logger
 	var cloudwatchFake fakes.FakeCloudWatchAPI
-	var cloudwatchService CloudWatchService
+	var cloudwatchService cloudwatch.CloudWatchService
 
 	BeforeEach(func() {
 		logger = lager.NewLogger("gauges_custom_domain_cdn_metrics_test")
 		logger.RegisterSink(lager.NewWriterSink(GinkgoWriter, lager.DEBUG))
 		cloudwatchFake.GetMetricStatisticsCalls(
-			func(input *cloudwatch.GetMetricStatisticsInput) (*cloudwatch.GetMetricStatisticsOutput, error) {
-				output := cloudwatch.GetMetricStatisticsOutput{
+			func(input *awscw.GetMetricStatisticsInput) (*awscw.GetMetricStatisticsOutput, error) {
+				output := awscw.GetMetricStatisticsOutput{
 					Datapoints: nil,
 					Label:      nil,
 				}
@@ -72,7 +73,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				output.Label = input.MetricName
 				switch aws.StringValue(input.MetricName) {
 				case "Requests":
-					output.Datapoints = []*cloudwatch.Datapoint{
+					output.Datapoints = []*awscw.Datapoint{
 						{
 							Sum:       aws.Float64(m.requests),
 							Unit:      aws.String("None"),
@@ -81,7 +82,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 					}
 
 				case "BytesDownloaded":
-					output.Datapoints = []*cloudwatch.Datapoint{
+					output.Datapoints = []*awscw.Datapoint{
 						{
 							Sum:       aws.Float64(m.bytesdownloaded),
 							Unit:      aws.String("None"),
@@ -90,7 +91,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 					}
 
 				case "BytesUploaded":
-					output.Datapoints = []*cloudwatch.Datapoint{
+					output.Datapoints = []*awscw.Datapoint{
 						{
 							Sum:       aws.Float64(m.bytesuploaded),
 							Unit:      aws.String("None"),
@@ -99,7 +100,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 					}
 
 				case "TotalErrorRate":
-					output.Datapoints = []*cloudwatch.Datapoint{
+					output.Datapoints = []*awscw.Datapoint{
 						{
 							Average:   aws.Float64(m.totalerrorrate),
 							Unit:      aws.String("Percent"),
@@ -108,7 +109,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 					}
 
 				case "4xxErrorRate":
-					output.Datapoints = []*cloudwatch.Datapoint{
+					output.Datapoints = []*awscw.Datapoint{
 						{
 							Average:   aws.Float64(m.fourxxerrorrate),
 							Unit:      aws.String("Percent"),
@@ -117,7 +118,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 					}
 
 				case "5xxErrorRate":
-					output.Datapoints = []*cloudwatch.Datapoint{
+					output.Datapoints = []*awscw.Datapoint{
 						{
 							Average:   aws.Float64(m.fivexxerrorrate),
 							Unit:      aws.String("Percent"),
@@ -130,7 +131,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 			},
 		)
 
-		cloudwatchService = CloudWatchService{
+		cloudwatchService = cloudwatch.CloudWatchService{
 			Client: &cloudwatchFake,
 			Logger: logger,
 		}
