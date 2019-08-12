@@ -10,13 +10,15 @@ import (
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 )
 
 type CloudFrontServiceStub struct {
-	domains []CustomDomain
+	domains []cloudfront.CustomDomain
 }
 
-func (cf *CloudFrontServiceStub) CustomDomains() ([]CustomDomain, error) {
+func (cf *CloudFrontServiceStub) CustomDomains() ([]cloudfront.CustomDomain, error) {
 	return cf.domains, nil
 }
 
@@ -138,8 +140,8 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 		It("returns the 6 metrics for the cloudfront distribution", func() {
 
 			cloudFrontStub := CloudFrontServiceStub{
-				domains: []CustomDomain{
-					CustomDomain{
+				domains: []cloudfront.CustomDomain{
+					cloudfront.CustomDomain{
 						CloudFrontDomain: "foo.bar.cloudapps.digital",
 						AliasDomain:      "foo.bar.gov.uk",
 						DistributionId:   "dist-1",
@@ -175,8 +177,8 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 		It("tags the 6 metrics with the distribution id", func() {
 
 			cloudFrontStub := CloudFrontServiceStub{
-				domains: []CustomDomain{
-					CustomDomain{
+				domains: []cloudfront.CustomDomain{
+					cloudfront.CustomDomain{
 						CloudFrontDomain: "foo.bar.cloudapps.digital",
 						AliasDomain:      "foo.bar.gov.uk",
 						DistributionId:   "dist-1",
@@ -209,14 +211,14 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 	Context("with 2 or more distribution", func() {
 		It("returns the 6 metrics per cloudfront distribution", func() {
 			cloudFrontStub := CloudFrontServiceStub{
-				domains: []CustomDomain{
-					CustomDomain{
+				domains: []cloudfront.CustomDomain{
+					cloudfront.CustomDomain{
 						CloudFrontDomain: "foo.bar.cloudapps.digital",
 						AliasDomain:      "foo.bar.gov.uk",
 						DistributionId:   "dist-1",
 					},
 
-					CustomDomain{
+					cloudfront.CustomDomain{
 						CloudFrontDomain: "bar.baz.cloudapps.digital",
 						AliasDomain:      "bar.baz.gov.uk",
 						DistributionId:   "dist-2",

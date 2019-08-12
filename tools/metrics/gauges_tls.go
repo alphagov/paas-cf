@@ -7,10 +7,17 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/lager"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
 )
 
-func TLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, addr string, interval time.Duration) MetricReadCloser {
+func TLSValidityGauge(
+	logger lager.Logger,
+	certChecker tlscheck.CertChecker,
+	addr string,
+	interval time.Duration,
+) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		if !strings.Contains(addr, ":") {
 			addr += ":443"
@@ -35,7 +42,7 @@ func TLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, add
 			Name:  "tls.certificates.validity",
 			Value: daysUntilExpiry,
 			Tags: MetricTags{
-				{ Label: "hostname", Value: host },
+				{Label: "hostname", Value: host},
 			},
 			Unit: "days",
 		}
@@ -43,7 +50,12 @@ func TLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, add
 	})
 }
 
-func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, cfs *CloudFrontService, interval time.Duration) MetricReadCloser {
+func CDNTLSValidityGauge(
+	logger lager.Logger,
+	certChecker tlscheck.CertChecker,
+	cfs *cloudfront.CloudFrontService,
+	interval time.Duration,
+) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		customDomains, err := cfs.CustomDomains()
 		if err != nil {
@@ -73,7 +85,7 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 					Name:  "cdn.tls.certificates.expiry",
 					Value: daysUntilExpiry,
 					Tags: MetricTags{
-						{ Label:"hostname", Value: customDomain.AliasDomain },
+						{Label: "hostname", Value: customDomain.AliasDomain},
 					},
 					Unit: "days",
 				})
@@ -85,7 +97,7 @@ func CDNTLSValidityGauge(logger lager.Logger, certChecker tlscheck.CertChecker, 
 				Name:  "cdn.tls.certificates.validity",
 				Value: float64(validity),
 				Tags: MetricTags{
-					{ Label: "hostname", Value: customDomain.AliasDomain },
+					{Label: "hostname", Value: customDomain.AliasDomain},
 				},
 				Unit: "",
 			})

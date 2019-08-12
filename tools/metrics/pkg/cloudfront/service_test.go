@@ -1,45 +1,47 @@
-package main
+package cloudfront_test
 
 import (
 	"errors"
 
-	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cloudfront"
+	awscf "github.com/aws/aws-sdk-go/service/cloudfront"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront/fakes"
 )
 
 var _ = Describe("CloudFront", func() {
 	var (
 		fakeClient            *fakes.FakeCloudFrontAPI
-		cfs                   *CloudFrontService
-		distributionSummaries []*cloudfront.DistributionSummary
+		cfs                   *cloudfront.CloudFrontService
+		distributionSummaries []*awscf.DistributionSummary
 	)
 
 	BeforeEach(func() {
 		fakeClient = &fakes.FakeCloudFrontAPI{}
-		cfs = &CloudFrontService{
+		cfs = &cloudfront.CloudFrontService{
 			Client: fakeClient,
 		}
 
-		distributionSummaries = []*cloudfront.DistributionSummary{
-			&cloudfront.DistributionSummary{
+		distributionSummaries = []*awscf.DistributionSummary{
+			&awscf.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d1.cloudfront.aws"),
-				Id: aws.String("dist-1"),
-				Aliases: &cloudfront.Aliases{
+				Id:         aws.String("dist-1"),
+				Aliases: &awscf.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
 						aws.String("s1.service.gov.uk"),
 					},
 				},
 			},
-			&cloudfront.DistributionSummary{
+			&awscf.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d2.cloudfront.aws"),
-				Id: aws.String("dist-2"),
-				Aliases: &cloudfront.Aliases{
+				Id:         aws.String("dist-2"),
+				Aliases: &awscf.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
 						aws.String("s2.service.gov.uk"),
@@ -52,13 +54,13 @@ var _ = Describe("CloudFront", func() {
 
 	It("lists all custom domains", func() {
 		fakeClient.ListDistributionsPagesStub = func(
-			input *cloudfront.ListDistributionsInput,
-			fn func(*cloudfront.ListDistributionsOutput, bool) bool,
+			input *awscf.ListDistributionsInput,
+			fn func(*awscf.ListDistributionsOutput, bool) bool,
 		) error {
 			for i, distributionSummary := range distributionSummaries {
-				page := &cloudfront.ListDistributionsOutput{
-					DistributionList: &cloudfront.DistributionList{
-						Items: []*cloudfront.DistributionSummary{
+				page := &awscf.ListDistributionsOutput{
+					DistributionList: &awscf.DistributionList{
+						Items: []*awscf.DistributionSummary{
 							distributionSummary,
 						},
 					},
@@ -72,7 +74,7 @@ var _ = Describe("CloudFront", func() {
 
 		domains, err := cfs.CustomDomains()
 		Expect(err).ToNot(HaveOccurred())
-		Expect(domains).To(Equal([]CustomDomain{
+		Expect(domains).To(Equal([]cloudfront.CustomDomain{
 			{
 				CloudFrontDomain: "d1.cloudfront.aws",
 				AliasDomain:      "s1.service.gov.uk",
@@ -94,8 +96,8 @@ var _ = Describe("CloudFront", func() {
 	Context("when there are no CloudFront distributions", func() {
 		It("lists all custom domains", func() {
 			fakeClient.ListDistributionsPagesStub = func(
-				input *cloudfront.ListDistributionsInput,
-				fn func(*cloudfront.ListDistributionsOutput, bool) bool,
+				input *awscf.ListDistributionsInput,
+				fn func(*awscf.ListDistributionsOutput, bool) bool,
 			) error {
 				return nil
 			}
@@ -110,8 +112,8 @@ var _ = Describe("CloudFront", func() {
 		cloudFrontErr := errors.New("some error")
 		It("should return the error", func() {
 			fakeClient.ListDistributionsPagesStub = func(
-				input *cloudfront.ListDistributionsInput,
-				fn func(*cloudfront.ListDistributionsOutput, bool) bool,
+				input *awscf.ListDistributionsInput,
+				fn func(*awscf.ListDistributionsOutput, bool) bool,
 			) error {
 				return cloudFrontErr
 			}

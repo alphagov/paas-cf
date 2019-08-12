@@ -1,20 +1,11 @@
-package main
+package cloudfront
 
 import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudfront"
-	"github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface"
 )
 
-type CloudFrontServiceInterface interface {
-	CustomDomains() ([]CustomDomain, error)
-}
-
-type CloudFrontService struct {
-	Client cloudfrontiface.CloudFrontAPI
-}
-
-func NewCloudFrontService(sess *session.Session) *CloudFrontService {
+func NewService(sess *session.Session) *CloudFrontService {
 	return &CloudFrontService{
 		Client: cloudfront.New(sess),
 	}

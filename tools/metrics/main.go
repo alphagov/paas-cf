@@ -24,6 +24,7 @@ import (
 	"code.cloudfoundry.org/lager"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 )
 
 func initPrometheus() (*prometheus.Registry, http.Handler) {
@@ -111,7 +112,7 @@ func Main() error {
 		return fmt.Errorf("unexpected aws region %s", awsRegion)
 	}
 
-	cfs := NewCloudFrontService(sess)
+	cfs := cloudfront.NewService(sess)
 	tlsChecker := &tlscheck.TLSChecker{}
 
 	ecs := NewElasticacheService(sess)

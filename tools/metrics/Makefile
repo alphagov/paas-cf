@@ -20,7 +20,7 @@ generate-fakes:
 	counterfeiter -o fakes/fake_elasticacheiface_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface/interface.go ElastiCacheAPI
 
-	counterfeiter -o fakes/fake_cloudfront_client.go \
+	counterfeiter -o pkg/cloudfront/fakes/fake_cloudfront_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface/interface.go CloudFrontAPI
 
 	counterfeiter -o fakes/fake_s3_client.go \

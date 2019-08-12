@@ -7,9 +7,16 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"strings"
 	"time"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 )
 
-func CustomDomainCDNMetricsCollector(logger lager.Logger, cloudFront CloudFrontServiceInterface, cloudWatch CloudWatchService, interval time.Duration, ) MetricReadCloser {
+func CustomDomainCDNMetricsCollector(
+	logger lager.Logger,
+	cloudFront cloudfront.CloudFrontServiceInterface,
+	cloudWatch CloudWatchService,
+	interval time.Duration,
+) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		logSess := logger.Session("custom-domain-cdn-metrics-collector")
 		logSess.Info("fetching-custom-domains")
@@ -63,18 +70,16 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 			continue
 		}
 
-
-
 		switch aws.StringValue(output.Label) {
 		case "Requests", "BytesDownloaded", "BytesUploaded":
 			{
 				logger.Info(
 					"metric-discovered",
 					lager.Data{
-						"distribution-id": id,
+						"distribution-id":        id,
 						"cloudwatch-metric-name": *output.Label,
 						"prometheus-metric-name": metricName(*output.Label),
-						"metric-value": output.Datapoints[0].Sum,
+						"metric-value":           output.Datapoints[0].Sum,
 					},
 				)
 
@@ -98,10 +103,10 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 				logger.Info(
 					"metric-discovered",
 					lager.Data{
-						"distribution-id": id,
+						"distribution-id":        id,
 						"cloudwatch-metric-name": *output.Label,
 						"prometheus-metric-name": metricName(*output.Label),
-						"metric-value": output.Datapoints[0].Average,
+						"metric-value":           output.Datapoints[0].Average,
 					},
 				)
 
@@ -127,7 +132,7 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 
 func metricLabels(id string) MetricTags {
 	return MetricTags{
-		{ Label: "distribution_id", Value: id },
+		{Label: "distribution_id", Value: id},
 	}
 }
 
