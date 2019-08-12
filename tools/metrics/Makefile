@@ -17,17 +17,17 @@ generate-fakes:
 	go generate ./...
 
 	# AWS fakes
-	counterfeiter -o pkg/elasticache/fakes/fake_elasticacheiface_client.go \
-		vendor/github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface/interface.go ElastiCacheAPI
-
 	counterfeiter -o pkg/cloudfront/fakes/fake_cloudfront_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface/interface.go CloudFrontAPI
 
+	counterfeiter -o pkg/cloudwatch/fakes/fake_cloudwatch_client.go \
+		vendor/github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface/interface.go CloudWatchAPI
+
+	counterfeiter -o pkg/elasticache/fakes/fake_elasticacheiface_client.go \
+		vendor/github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface/interface.go ElastiCacheAPI
+
 	counterfeiter -o pkg/s3/fakes/fake_s3_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go S3API
-
-	counterfeiter -o fakes/fake_cloudwatch_client.go \
-		vendor/github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface/interface.go CloudWatchAPI
 
 	$(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||" fakes/fake_*.go
 	$(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||" service_fakes/fake_*.go
