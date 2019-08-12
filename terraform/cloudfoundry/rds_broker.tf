@@ -107,29 +107,6 @@ resource "aws_db_parameter_group" "rds_broker_postgres95" {
   }
 }
 
-resource "aws_db_parameter_group" "rds_broker_postgres95_shared_preload_libraries" {
-  name        = "rdsbroker-postgres95-${var.env}-shared-preload-libraries"
-  family      = "postgres9.5"
-  description = "RDS Broker Postgres 9.5 parameter group with some shared_preload_libraries enabled"
-
-  parameter {
-    apply_method = "pending-reboot"
-    name         = "rds.force_ssl"
-    value        = "1"
-  }
-
-  parameter {
-    apply_method = "pending-reboot"
-    name         = "shared_preload_libraries"
-    value        = "pg_stat_statements"
-  }
-
-  parameter {
-    name  = "rds.log_retention_period"
-    value = "10080"                    // 7 days in minutes
-  }
-}
-
 resource "aws_db_parameter_group" "rds_broker_postgres10" {
   name        = "rdsbroker-postgres10-${var.env}"
   family      = "postgres10"
