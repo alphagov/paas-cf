@@ -22,6 +22,8 @@ import (
 	"github.com/pkg/errors"
 
 	"code.cloudfoundry.org/lager"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
 )
 
 func initPrometheus() (*prometheus.Registry, http.Handler) {
@@ -92,7 +94,7 @@ func Main() error {
 		ClientSecret: os.Getenv("CF_CLIENT_SECRET"),
 	}
 
-	a, err := NewAivenClient(
+	a, err := aiven.NewClient(
 		os.Getenv("AIVEN_PROJECT"),
 		os.Getenv("AIVEN_API_TOKEN"),
 	)

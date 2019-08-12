@@ -4,20 +4,22 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-			"net/url"
+	"net/url"
 	"time"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
 )
 
 var _ = Describe("Aiven", func() {
 	var (
-		aivenClient *AivenClient
+		aivenClient     *aiven.Client
 		fakeAivenServer *fakes.FakeAivenServer
 	)
 
 	BeforeEach(func() {
 		var err error
 		fakeAivenServer = fakes.NewFakeAivenServer("123456")
-		aivenClient, err = NewAivenClient("test", "123456")
+		aivenClient, err = aiven.NewClient("test", "123456")
 		Expect(err).ToNot(HaveOccurred())
 		aivenClient.BaseURL, err = url.Parse(fakeAivenServer.Server.URL)
 		Expect(err).ToNot(HaveOccurred())
