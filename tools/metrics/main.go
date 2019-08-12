@@ -26,6 +26,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 )
 
 func initPrometheus() (*prometheus.Registry, http.Handler) {
@@ -116,7 +117,7 @@ func Main() error {
 	cfs := cloudfront.NewService(sess)
 	tlsChecker := &tlscheck.TLSChecker{}
 
-	ecs := NewElasticacheService(sess)
+	ecs := elasticache.NewService(sess)
 	s3 := NewS3Service(sess)
 
 	usEast1Sess, err := session.NewSession(&aws.Config{Region: aws.String("us-east-1")})

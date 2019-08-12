@@ -6,13 +6,15 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	. "github.com/alphagov/paas-cf/tools/metrics"
-	fakes "github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/elasticache"
+	awsec "github.com/aws/aws-sdk-go/service/elasticache"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache/fakes"
 )
 
 var _ = Describe("Elasticache Gauges", func() {
@@ -21,17 +23,17 @@ var _ = Describe("Elasticache Gauges", func() {
 		logger             lager.Logger
 		log                *gbytes.Buffer
 		elasticacheAPI     *fakes.FakeElastiCacheAPI
-		elasticacheService *ElasticacheService
+		elasticacheService *elasticache.ElasticacheService
 
-		cacheParameterGroups []*elasticache.CacheParameterGroup
+		cacheParameterGroups []*awsec.CacheParameterGroup
 
 		describeCacheParameterGroupsPagesStub = func(
-			input *elasticache.DescribeCacheParameterGroupsInput,
-			fn func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool,
+			input *awsec.DescribeCacheParameterGroupsInput,
+			fn func(*awsec.DescribeCacheParameterGroupsOutput, bool) bool,
 		) error {
 			for i, cacheParameterGroup := range cacheParameterGroups {
-				page := &elasticache.DescribeCacheParameterGroupsOutput{
-					CacheParameterGroups: []*elasticache.CacheParameterGroup{cacheParameterGroup},
+				page := &awsec.DescribeCacheParameterGroupsOutput{
+					CacheParameterGroups: []*awsec.CacheParameterGroup{cacheParameterGroup},
 				}
 				if !fn(page, i+1 >= len(cacheParameterGroups)) {
 					break
@@ -40,15 +42,15 @@ var _ = Describe("Elasticache Gauges", func() {
 			return nil
 		}
 
-		cacheClusters []*elasticache.CacheCluster
+		cacheClusters []*awsec.CacheCluster
 
 		describeCacheClustersPagesStub = func(
-			input *elasticache.DescribeCacheClustersInput,
-			fn func(*elasticache.DescribeCacheClustersOutput, bool) bool,
+			input *awsec.DescribeCacheClustersInput,
+			fn func(*awsec.DescribeCacheClustersOutput, bool) bool,
 		) error {
 			for i, cacheCluster := range cacheClusters {
-				page := &elasticache.DescribeCacheClustersOutput{
-					CacheClusters: []*elasticache.CacheCluster{cacheCluster},
+				page := &awsec.DescribeCacheClustersOutput{
+					CacheClusters: []*awsec.CacheCluster{cacheCluster},
 				}
 				if !fn(page, i+1 >= len(cacheClusters)) {
 					break
@@ -65,7 +67,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		elasticacheAPI = &fakes.FakeElastiCacheAPI{}
 		elasticacheAPI.DescribeCacheParameterGroupsPagesStub = describeCacheParameterGroupsPagesStub
 		elasticacheAPI.DescribeCacheClustersPagesStub = describeCacheClustersPagesStub
-		elasticacheService = &ElasticacheService{Client: elasticacheAPI}
+		elasticacheService = &elasticache.ElasticacheService{Client: elasticacheAPI}
 	})
 
 	It("returns zero if there are no clusters", func() {
@@ -85,7 +87,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns the number of nodes", func() {
-		cacheClusters = []*elasticache.CacheCluster{
+		cacheClusters = []*awsec.CacheCluster{
 			{
 				NumCacheNodes: aws.Int64(2),
 			},
@@ -115,8 +117,8 @@ var _ = Describe("Elasticache Gauges", func() {
 
 		awsErr := errors.New("some error")
 		elasticacheAPI.DescribeCacheClustersPagesStub = func(
-			input *elasticache.DescribeCacheClustersInput,
-			fn func(*elasticache.DescribeCacheClustersOutput, bool) bool,
+			input *awsec.DescribeCacheClustersInput,
+			fn func(*awsec.DescribeCacheClustersOutput, bool) bool,
 		) error {
 			return awsErr
 		}
@@ -145,8 +147,8 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns zero if there are only default cache parameter groups", func() {
-		cacheParameterGroups = []*elasticache.CacheParameterGroup{
-			&elasticache.CacheParameterGroup{
+		cacheParameterGroups = []*awsec.CacheParameterGroup{
+			&awsec.CacheParameterGroup{
 				CacheParameterGroupName: aws.String("default.redis3.2"),
 			},
 		}
@@ -166,14 +168,14 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns the number of cache parameter groups exluding the default ones", func() {
-		cacheParameterGroups = []*elasticache.CacheParameterGroup{
-			&elasticache.CacheParameterGroup{
+		cacheParameterGroups = []*awsec.CacheParameterGroup{
+			&awsec.CacheParameterGroup{
 				CacheParameterGroupName: aws.String("default.redis3.2"),
 			},
-			&elasticache.CacheParameterGroup{
+			&awsec.CacheParameterGroup{
 				CacheParameterGroupName: aws.String("group-1"),
 			},
-			&elasticache.CacheParameterGroup{
+			&awsec.CacheParameterGroup{
 				CacheParameterGroupName: aws.String("group-1"),
 			},
 		}
@@ -199,8 +201,8 @@ var _ = Describe("Elasticache Gauges", func() {
 
 		awsErr := errors.New("some error")
 		elasticacheAPI.DescribeCacheParameterGroupsPagesStub = func(
-			input *elasticache.DescribeCacheParameterGroupsInput,
-			fn func(*elasticache.DescribeCacheParameterGroupsOutput, bool) bool,
+			input *awsec.DescribeCacheParameterGroupsInput,
+			fn func(*awsec.DescribeCacheParameterGroupsOutput, bool) bool,
 		) error {
 			return awsErr
 		}

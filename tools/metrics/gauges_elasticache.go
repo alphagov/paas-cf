@@ -5,12 +5,14 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/lager"
-	"github.com/aws/aws-sdk-go/service/elasticache"
+	awsec "github.com/aws/aws-sdk-go/service/elasticache"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 )
 
 func ElasticCacheInstancesGauge(
 	logger lager.Logger,
-	ecs *ElasticacheService,
+	ecs *elasticache.ElasticacheService,
 	interval time.Duration,
 ) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
@@ -18,8 +20,8 @@ func ElasticCacheInstancesGauge(
 
 		cacheParameterGroupCount := 0
 		err := ecs.Client.DescribeCacheParameterGroupsPages(
-			&elasticache.DescribeCacheParameterGroupsInput{},
-			func(page *elasticache.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
+			&awsec.DescribeCacheParameterGroupsInput{},
+			func(page *awsec.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
 				for _, cacheParameterGroup := range page.CacheParameterGroups {
 					if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
 						cacheParameterGroupCount++
@@ -42,8 +44,8 @@ func ElasticCacheInstancesGauge(
 
 		nodeCount := int64(0)
 		err = ecs.Client.DescribeCacheClustersPages(
-			&elasticache.DescribeCacheClustersInput{},
-			func(page *elasticache.DescribeCacheClustersOutput, lastPage bool) bool {
+			&awsec.DescribeCacheClustersInput{},
+			func(page *awsec.DescribeCacheClustersOutput, lastPage bool) bool {
 				for _, cacheCluster := range page.CacheClusters {
 					nodeCount = nodeCount + *cacheCluster.NumCacheNodes
 				}
