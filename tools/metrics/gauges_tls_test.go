@@ -7,16 +7,17 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/lager"
-	. "github.com/alphagov/paas-cf/tools/metrics"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront/fakes"
-	tlscheck_fakes "github.com/alphagov/paas-cf/tools/metrics/tlscheck/fakes"
 	"github.com/aws/aws-sdk-go/aws"
 	awscf "github.com/aws/aws-sdk-go/service/cloudfront"
 
+	. "github.com/alphagov/paas-cf/tools/metrics"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront/fakes"
+	tlscheck_fakes "github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck/fakes"
 )
 
 func ExpectMetric(metric Metric, name string, value int, host string) {

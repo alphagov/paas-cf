@@ -16,7 +16,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
-	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/costexplorer"
 	"github.com/pkg/errors"
@@ -28,6 +27,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 )
 
 func initPrometheus() (*prometheus.Registry, http.Handler) {

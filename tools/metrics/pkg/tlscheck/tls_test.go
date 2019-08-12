@@ -3,7 +3,7 @@ package tlscheck_test
 import (
 	"crypto/tls"
 
-	. "github.com/alphagov/paas-cf/tools/metrics/tlscheck"
+	. "github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
