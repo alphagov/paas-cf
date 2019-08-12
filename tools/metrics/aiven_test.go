@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"net/url"
 	"time"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven/fakes"
 )
 
 var _ = Describe("Aiven", func() {
