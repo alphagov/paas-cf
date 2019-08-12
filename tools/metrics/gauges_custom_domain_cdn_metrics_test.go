@@ -1,11 +1,11 @@
 package main_test
 
 import (
+	"time"
+
 	"code.cloudfoundry.org/lager"
-	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/aws/aws-sdk-go/aws"
 	awscw "github.com/aws/aws-sdk-go/service/cloudwatch"
-	"time"
 
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	. "github.com/onsi/ginkgo"
@@ -13,6 +13,7 @@ import (
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch/fakes"
 )
 
 type CloudFrontServiceStub struct {
