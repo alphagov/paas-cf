@@ -1,19 +1,12 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 	"time"
 
 	"code.cloudfoundry.org/lager"
-)
 
-type CostByPlan struct {
-	PlanGUID string  `json:"plan_guid"`
-	Cost     float64 `json:"cost"`
-}
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/billing"
+)
 
 func BillingCostsGauge(
 	logger lager.Logger,
@@ -23,7 +16,9 @@ func BillingCostsGauge(
 ) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		lsession := logger.Session("billing-gauges")
-		costs, err := GetCostsByPlan(lsession, endpoint)
+		billing := billing.NewClient(endpoint, lsession)
+
+		costs, err := billing.GetCostsByPlan()
 		if err != nil {
 			lsession.Error("Failed to get billing costs metrics", err)
 			return err
@@ -36,41 +31,7 @@ func BillingCostsGauge(
 	})
 }
 
-func GetCostsByPlan(logger lager.Logger, endpoint string) ([]CostByPlan, error) {
-	lsession := logger.Session("billing-metrics")
-	lsession.Info("Started Billing metrics")
-	req, err := http.NewRequest("GET", endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Accept", "application/json")
-	httpClient := http.DefaultClient
-
-	resp, err := httpClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Returned statuscode from costs endpoint %d", resp.StatusCode)
-	}
-	bodyBuffer, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	totalCosts := make([]CostByPlan, 0)
-	err = json.Unmarshal(bodyBuffer, &totalCosts)
-	if err != nil {
-		return nil, err
-	}
-
-	lsession.Info("Finished Billing metrics")
-	return totalCosts, nil
-}
-
-func CostsByPlanGauges(totalCosts []CostByPlan, plans map[string]string) []Metric {
+func CostsByPlanGauges(totalCosts []billing.CostByPlan, plans map[string]string) []Metric {
 	metrics := make([]Metric, 0)
 
 	for _, plan := range totalCosts {

@@ -4,12 +4,14 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/billing"
 )
 
 var _ = Describe("Billing Gauges", func() {
 	It("should return zero for no costs", func() {
 		plans := map[string]string{}
-		totalCosts := []CostByPlan{}
+		totalCosts := []billing.CostByPlan{}
 		gauges := CostsByPlanGauges(totalCosts, plans)
 
 		Expect(gauges).To(HaveLen(0))
@@ -23,7 +25,7 @@ var _ = Describe("Billing Gauges", func() {
 			"5f2eec8a-0cad-4ab9-b81e-d6adade2fd42": "task",
 			"69977068-8ef5-4172-bfdb-e8cea3c14d01": "postgres small",
 		}
-		totalCosts := []CostByPlan{
+		totalCosts := []billing.CostByPlan{
 			{
 				PlanGUID: "11f779fa-425c-4c86-9530-d0aebcb3c3e6",
 				Cost:     2.1,
