@@ -9,7 +9,6 @@ require (
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20170822114502-6142a01e9815
 	github.com/cloudfoundry-community/go-uaa v0.2.2
 	github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 // indirect
-	github.com/go-ini/ini v1.32.0 // indirect
 	github.com/go-martini/martini v0.0.0-20170121215854-22fa46961aab // indirect
 	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/hashicorp/go-multierror v1.0.0
@@ -26,5 +25,4 @@ require (
 	github.com/prometheus/common v0.0.0-20181126121408-4724e9255275
 	github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d // indirect
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
-	gopkg.in/ini.v1 v1.44.0 // indirect
 )
