@@ -8,9 +8,20 @@ ifeq ($(UNAME),Darwin)
 	SED_CMD=sed -i '' -e
 endif
 
+.PHONY: acceptance-tests
+acceptance-tests:
+	ginkgo acceptance
+
+.PHONY: pkg-tests
+pkg-tests:
+	ginkgo -r pkg
+
+.PHONY: main-tests
+main-tests:
+	ginkgo
+
 .PHONY: test
-test:
-	go test -v ./...
+test: main-tests pkg-tests
 
 .PHONY: generate-fakes
 generate-fakes:
