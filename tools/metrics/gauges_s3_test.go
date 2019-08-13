@@ -12,6 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3/fakes"
 )
@@ -42,7 +43,7 @@ var _ = Describe("S3 Gauges", func() {
 
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -51,7 +52,7 @@ var _ = Describe("S3 Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.s3.buckets.count"))
 
 		Expect(metric.Value).To(Equal(float64(0)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
 	It("returns the correct number of buckets when there are buckets", func() {
@@ -74,7 +75,7 @@ var _ = Describe("S3 Gauges", func() {
 
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -83,6 +84,6 @@ var _ = Describe("S3 Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.s3.buckets.count"))
 
 		Expect(metric.Value).To(Equal(float64(3)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 })

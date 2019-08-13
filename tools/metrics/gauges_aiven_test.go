@@ -8,6 +8,7 @@ import (
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven/fakes"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 var _ = Describe("Aiven", func() {
@@ -42,7 +43,7 @@ var _ = Describe("Aiven", func() {
 		It("lists all custom domains", func() {
 			gauge := AivenCostGauge(aivenClient, 1*time.Second)
 			defer gauge.Close()
-			var metric Metric
+			var metric m.Metric
 			Eventually(func() string {
 				var err error
 				metric, err = gauge.ReadMetric()
@@ -51,7 +52,7 @@ var _ = Describe("Aiven", func() {
 			}, 3*time.Second).Should(Equal("aiven.estimated.cost"))
 
 			Expect(metric.Value).To(Equal(10.88))
-			Expect(metric.Kind).To(Equal(Gauge))
+			Expect(metric.Kind).To(Equal(m.Gauge))
 		})
 	})
 })

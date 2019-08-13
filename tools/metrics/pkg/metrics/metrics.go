@@ -1,4 +1,4 @@
-package main
+package metrics
 
 import (
 	"context"
@@ -11,15 +11,15 @@ import (
 )
 
 const (
-	Gauge   eventKind = "gauge"
-	Counter eventKind = "counter"
+	Gauge   EventKind = "gauge"
+	Counter EventKind = "counter"
 )
 
 var (
 	EOS = errors.New("End Of Stream")
 )
 
-type eventKind string
+type EventKind string
 
 type MetricWriter interface {
 	WriteMetrics([]Metric) error
@@ -58,7 +58,7 @@ func (ts MetricTags) String() string {
 
 type Metric struct {
 	ID    string
-	Kind  eventKind
+	Kind  EventKind
 	Name  string
 	Time  time.Time
 	Value float64
@@ -91,7 +91,7 @@ func NewMetricPoller(interval time.Duration, fn PollFunc) MetricReadCloser {
 			default:
 				err := fn(buf)
 				if err != nil {
-					buf.events <- event{err: err}
+					buf.Events <- Event{Err: err}
 				}
 			}
 			time.Sleep(interval)
@@ -100,30 +100,30 @@ func NewMetricPoller(interval time.Duration, fn PollFunc) MetricReadCloser {
 	return buf
 }
 
-type event struct {
-	metric Metric
-	err    error
+type Event struct {
+	Metric Metric
+	Err    error
 }
 
 type MetricBuffer struct {
-	events chan event
+	Events chan Event
 	ctx    context.Context
 	cancel context.CancelFunc
 }
 
 func (eq *MetricBuffer) WriteMetrics(ms []Metric) error {
 	for _, m := range ms {
-		eq.events <- event{metric: m}
+		eq.Events <- Event{Metric: m}
 	}
 	return nil
 }
 
 func (eq *MetricBuffer) ReadMetric() (Metric, error) {
-	ev, ok := <-eq.events
+	ev, ok := <-eq.Events
 	if !ok {
 		return Metric{}, EOS
 	}
-	return ev.metric, ev.err
+	return ev.Metric, ev.Err
 }
 
 func (eq *MetricBuffer) Close() {
@@ -131,7 +131,7 @@ func (eq *MetricBuffer) Close() {
 }
 
 func NewMetricBuffer(n int) *MetricBuffer {
-	events := make(chan event, n)
+	events := make(chan Event, n)
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
 		<-ctx.Done()
@@ -155,7 +155,7 @@ func NewMultiMetricReader(rs ...MetricReader) MetricReadCloser {
 		go func(r MetricReader) {
 			for {
 				if err := CopyMetrics(buf, r); err != nil {
-					buf.events <- event{err: err}
+					buf.Events <- Event{Err: err}
 				}
 			}
 		}(r)

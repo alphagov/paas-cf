@@ -6,6 +6,7 @@ import (
 	"code.cloudfoundry.org/lager"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/billing"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 func BillingCostsGauge(
@@ -13,8 +14,8 @@ func BillingCostsGauge(
 	endpoint string,
 	interval time.Duration,
 	plans map[string]string,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		lsession := logger.Session("billing-gauges")
 		billing := billing.NewClient(endpoint, lsession)
 
@@ -31,18 +32,18 @@ func BillingCostsGauge(
 	})
 }
 
-func CostsByPlanGauges(totalCosts []billing.CostByPlan, plans map[string]string) []Metric {
-	metrics := make([]Metric, 0)
+func CostsByPlanGauges(totalCosts []billing.CostByPlan, plans map[string]string) []m.Metric {
+	metrics := make([]m.Metric, 0)
 
 	for _, plan := range totalCosts {
-		metrics = append(metrics, Metric{
-			Kind:  Gauge,
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "billing.total.costs",
 			Value: plan.Cost,
-			Tags: MetricTags{
-				MetricTag{Label: "plan_guid", Value: plan.PlanGUID},
-				MetricTag{Label: "name", Value: plans[plan.PlanGUID]},
+			Tags: m.MetricTags{
+				m.MetricTag{Label: "plan_guid", Value: plan.PlanGUID},
+				m.MetricTag{Label: "name", Value: plans[plan.PlanGUID]},
 			},
 			Unit: "pounds",
 		})

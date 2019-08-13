@@ -6,6 +6,7 @@ import (
 	. "github.com/onsi/gomega/gstruct"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/billing"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 var _ = Describe("Billing Gauges", func() {
@@ -55,7 +56,7 @@ var _ = Describe("Billing Gauges", func() {
 			MatchFields(IgnoreExtras, Fields{
 				"Name":  Equal("billing.total.costs"),
 				"Unit":  Equal("pounds"),
-				"Kind":  Equal(Gauge),
+				"Kind":  Equal(m.Gauge),
 				"Value": Equal(2.09),
 				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 					"Label": Equal("plan_guid"), "Value": Equal("69977068-8ef5-4172-bfdb-e8cea3c14d01"),

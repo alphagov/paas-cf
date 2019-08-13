@@ -8,15 +8,17 @@ import (
 	awsec "github.com/aws/aws-sdk-go/service/elasticache"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 func ElasticCacheInstancesGauge(
 	logger lager.Logger,
 	ecs *elasticache.ElasticacheService,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
-		metrics := []Metric{}
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		metrics := []m.Metric{}
 
 		cacheParameterGroupCount := 0
 		err := ecs.Client.DescribeCacheParameterGroupsPages(
@@ -34,8 +36,8 @@ func ElasticCacheInstancesGauge(
 			return err
 		}
 
-		metrics = append(metrics, Metric{
-			Kind:  Gauge,
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "aws.elasticache.cache_parameter_group.count",
 			Value: float64(cacheParameterGroupCount),
@@ -56,8 +58,8 @@ func ElasticCacheInstancesGauge(
 			return err
 		}
 
-		metrics = append(metrics, Metric{
-			Kind:  Gauge,
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "aws.elasticache.node.count",
 			Value: float64(nodeCount),

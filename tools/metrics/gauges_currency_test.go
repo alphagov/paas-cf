@@ -8,6 +8,8 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	"github.com/jarcoal/httpmock"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 var _ = Describe("Currency", func() {
@@ -29,7 +31,7 @@ var _ = Describe("Currency", func() {
 			Expect(metric).To(MatchFields(IgnoreExtras, Fields{
 				"Name":  Equal("currency.configured"),
 				"Unit":  Equal("ratio"),
-				"Kind":  Equal(Gauge),
+				"Kind":  Equal(m.Gauge),
 				"Value": BeNumerically("==", ConfiguredUSDExchangeRate),
 				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 					"Label": Equal("currency"), "Value": Equal("USD"),
@@ -143,7 +145,7 @@ var _ = Describe("Currency", func() {
 			Expect(metrics).To(ContainElement(MatchFields(IgnoreExtras, Fields{
 				"Name":  Equal("currency.configured"),
 				"Unit":  Equal("ratio"),
-				"Kind":  Equal(Gauge),
+				"Kind":  Equal(m.Gauge),
 				"Value": BeNumerically("==", ConfiguredUSDExchangeRate),
 				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 					"Label": Equal("currency"), "Value": Equal("USD"),
@@ -153,7 +155,7 @@ var _ = Describe("Currency", func() {
 			Expect(metrics).To(ContainElement(MatchFields(IgnoreExtras, Fields{
 				"Name":  Equal("currency.real"),
 				"Unit":  Equal("ratio"),
-				"Kind":  Equal(Gauge),
+				"Kind":  Equal(m.Gauge),
 				"Value": BeNumerically("==", 0.8),
 				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 					"Label": Equal("currency"), "Value": Equal("USD"),

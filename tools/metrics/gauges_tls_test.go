@@ -17,15 +17,16 @@ import (
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront/fakes"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	tlscheck_fakes "github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck/fakes"
 )
 
-func ExpectMetric(metric Metric, name string, value int, host string) {
+func ExpectMetric(metric m.Metric, name string, value int, host string) {
 	Expect(metric.Name).To(Equal(name))
 	Expect(metric.Value).To(Equal(float64(value)))
-	Expect(metric.Kind).To(Equal(Gauge))
+	Expect(metric.Kind).To(Equal(m.Gauge))
 
-	expectedTag := MetricTag{Label: "hostname", Value: host}
+	expectedTag := m.MetricTag{Label: "hostname", Value: host}
 	Expect(metric.Tags).To(ContainElement(expectedTag))
 }
 
@@ -101,7 +102,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := TLSValidityGauge(logger, tlsChecker, "somedomain.com:443", 1*time.Second)
 				defer gauge.Close()
 
-				var metric Metric
+				var metric m.Metric
 				Eventually(func() error {
 					var err error
 					metric, err = gauge.ReadMetric()
@@ -123,7 +124,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := TLSValidityGauge(logger, tlsChecker, "somedomain.com:443", 1*time.Second)
 				defer gauge.Close()
 
-				var metric Metric
+				var metric m.Metric
 				Eventually(func() error {
 					var err error
 					metric, err = gauge.ReadMetric()
@@ -156,7 +157,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := TLSValidityGauge(logger, tlsChecker, "somedomain.com", 1*time.Second)
 				defer gauge.Close()
 
-				var metric Metric
+				var metric m.Metric
 				Eventually(func() error {
 					var err error
 					metric, err = gauge.ReadMetric()
@@ -164,7 +165,7 @@ var _ = Describe("TLS gauges", func() {
 				}, 3*time.Second).ShouldNot(HaveOccurred())
 				Expect(metric.Value).To(Equal(float64(123)))
 
-				expectedTag := MetricTag{Label: "hostname", Value: "somedomain.com"}
+				expectedTag := m.MetricTag{Label: "hostname", Value: "somedomain.com"}
 				Expect(metric.Tags).To(ContainElement(expectedTag))
 			})
 		})
@@ -196,7 +197,7 @@ var _ = Describe("TLS gauges", func() {
 			gauge := CDNTLSValidityGauge(logger, tlsChecker, cloudFrontService, 1*time.Second)
 			defer gauge.Close()
 
-			var metrics []Metric
+			var metrics []m.Metric
 			Eventually(func() int {
 				metric, _ := gauge.ReadMetric()
 				metrics = append(metrics, metric)
@@ -258,7 +259,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := CDNTLSValidityGauge(logger, tlsChecker, cloudFrontService, 5*time.Second)
 				defer gauge.Close()
 
-				var metrics []Metric
+				var metrics []m.Metric
 				Eventually(func() int {
 					metric, err := gauge.ReadMetric()
 					if err == nil {

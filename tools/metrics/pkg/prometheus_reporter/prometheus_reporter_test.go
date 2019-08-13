@@ -1,4 +1,4 @@
-package main
+package prometheusreporter
 
 import (
 	"time"
@@ -6,6 +6,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/prometheus/client_golang/prometheus"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 type testRegistry struct {
@@ -28,7 +30,7 @@ var _ = Describe("PrometheusReporter", func() {
 
 	var registry *testRegistry
 	var reporter *PrometheusReporter
-	var events []Metric
+	var events []m.Metric
 	var err error
 	var metricsChan chan prometheus.Metric
 	var metrics []prometheus.Metric
@@ -65,20 +67,21 @@ var _ = Describe("PrometheusReporter", func() {
 
 	Context("when there is a counter event", func() {
 		BeforeEach(func() {
-			events = []Metric{
-				Metric{
-					Kind:  Counter,
+			events = []m.Metric{
+				m.Metric{
+					Kind:  m.Counter,
 					Name:  "test.metric",
 					Value: 12.34,
 					Time:  time.Now(),
 					Unit:  "count",
-					Tags: MetricTags{
+					Tags: m.MetricTags{
 						{Label: "foo", Value: "bar"},
 						{Label: "bar", Value: "baz"},
 					},
 				},
 			}
 		})
+
 		It("should process it", func() {
 			Expect(err).ToNot(HaveOccurred())
 			Eventually(func() int { return len(metrics) }).Should(Equal(1))
@@ -100,20 +103,21 @@ var _ = Describe("PrometheusReporter", func() {
 
 	Context("when there is a gauge event", func() {
 		BeforeEach(func() {
-			events = []Metric{
-				Metric{
-					Kind:  Gauge,
+			events = []m.Metric{
+				m.Metric{
+					Kind:  m.Gauge,
 					Name:  "test.metric",
 					Value: 12.34,
 					Time:  time.Now(),
 					Unit:  "count",
-					Tags: MetricTags{
+					Tags: m.MetricTags{
 						{Label: "foo", Value: "bar"},
 						{Label: "bar", Value: "baz"},
 					},
 				},
 			}
 		})
+
 		It("should process it", func() {
 			Expect(err).ToNot(HaveOccurred())
 			Eventually(func() int { return len(metrics) }).Should(Equal(1))

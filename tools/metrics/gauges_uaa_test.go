@@ -8,6 +8,8 @@ import (
 	. "github.com/onsi/gomega/gstruct"
 
 	uaaclient "github.com/cloudfoundry-community/go-uaa"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 var _ = Describe("UAA", func() {
@@ -34,7 +36,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("uaa"),
@@ -56,7 +58,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 4),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("uaa"),
@@ -68,7 +70,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 2),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("google"),
@@ -80,7 +82,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("microsoft"),
@@ -139,7 +141,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.active.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("uaa"),
@@ -175,7 +177,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.active.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("google"),
@@ -190,19 +192,19 @@ var _ = Describe("UAA", func() {
 				LastLogonTime: int(OneDayAgo.Unix() * 1000),
 			}, {
 				Origin:        "google",
-				LastLogonTime: int(time.Now().Add(MinusOneDay * 60).Unix() * 1000),
+				LastLogonTime: int(time.Now().Add(MinusOneDay*60).Unix() * 1000),
 			}, {
 				Origin:        "microsoft",
-				LastLogonTime: int(time.Now().Add(MinusOneDay * 2).Unix() * 1000),
+				LastLogonTime: int(time.Now().Add(MinusOneDay*2).Unix() * 1000),
 			}, {
 				Origin:        "microsoft",
-				LastLogonTime: int(time.Now().Add(MinusOneDay * 91).Unix() * 1000),
+				LastLogonTime: int(time.Now().Add(MinusOneDay*91).Unix() * 1000),
 			}, {
 				Origin:        "uaa",
-				LastLogonTime: int(time.Now().Add(MinusOneDay * 2).Unix() * 1000),
+				LastLogonTime: int(time.Now().Add(MinusOneDay*2).Unix() * 1000),
 			}, {
 				Origin:        "uaa",
-				LastLogonTime: int(time.Now().Add(MinusOneDay * 31).Unix() * 1000),
+				LastLogonTime: int(time.Now().Add(MinusOneDay*31).Unix() * 1000),
 			}}
 
 			gauges := UAAActiveUsersByOriginGauges(users)
@@ -213,7 +215,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.active.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("google"),
@@ -225,7 +227,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.active.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("microsoft"),
@@ -237,7 +239,7 @@ var _ = Describe("UAA", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"Name":  Equal("uaa.active.users"),
 					"Unit":  Equal("count"),
-					"Kind":  Equal(Gauge),
+					"Kind":  Equal(m.Gauge),
 					"Value": BeNumerically("==", 1),
 					"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
 						"Label": Equal("origin"), "Value": Equal("uaa"),

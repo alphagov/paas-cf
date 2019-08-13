@@ -14,6 +14,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch/fakes"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 type CloudFrontServiceStub struct {
@@ -154,7 +155,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 			reader := CustomDomainCDNMetricsCollector(logger, &cloudFrontStub, cloudwatchService, 15*time.Second)
 			defer reader.Close()
 
-			var metrics []Metric
+			var metrics []m.Metric
 			Eventually(func() int {
 				metric, err := reader.ReadMetric()
 				if err == nil {
@@ -191,7 +192,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 			reader := CustomDomainCDNMetricsCollector(logger, &cloudFrontStub, cloudwatchService, 15*time.Second)
 			defer reader.Close()
 
-			var metrics []Metric
+			var metrics []m.Metric
 			Eventually(func() int {
 				metric, err := reader.ReadMetric()
 				if err == nil {
@@ -200,7 +201,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 				return len(metrics)
 			}, 3*time.Second).Should(BeNumerically(">=", 6))
 
-			expected := MetricTag{Label: "distribution_id", Value: "dist-1"}
+			expected := m.MetricTag{Label: "distribution_id", Value: "dist-1"}
 			Expect(metrics[0].Tags).To(ContainElement(expected))
 			Expect(metrics[1].Tags).To(ContainElement(expected))
 			Expect(metrics[2].Tags).To(ContainElement(expected))
@@ -231,7 +232,7 @@ var _ = Describe("GaugesCustomDomainCDNMetrics", func() {
 			reader := CustomDomainCDNMetricsCollector(logger, &cloudFrontStub, cloudwatchService, 15*time.Second)
 			defer reader.Close()
 
-			var metrics []Metric
+			var metrics []m.Metric
 			Eventually(func() int {
 				metric, err := reader.ReadMetric()
 				if err == nil {

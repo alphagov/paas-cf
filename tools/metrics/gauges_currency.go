@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/lager"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 const ConfiguredUSDExchangeRate = 0.8
@@ -70,17 +72,17 @@ func getCurrencyFromECB(base string, target string) (float64, error) {
 	return rate, nil
 }
 
-func ActualUSDExchangeRateGauge() (Metric, error) {
+func ActualUSDExchangeRateGauge() (m.Metric, error) {
 	usdExchangeRate, err := getCurrencyFromECB("USD", "GBP")
 	if err != nil {
-		return Metric{}, err
+		return m.Metric{}, err
 	}
 
-	return Metric{
-		Kind: Gauge,
+	return m.Metric{
+		Kind: m.Gauge,
 		Time: time.Now(),
 		Name: "currency.real",
-		Tags: MetricTags{
+		Tags: m.MetricTags{
 			{Label: "currency", Value: "USD"},
 		},
 		Unit:  "ratio",
@@ -88,12 +90,12 @@ func ActualUSDExchangeRateGauge() (Metric, error) {
 	}, nil
 }
 
-func ConfiguredUSDExchangeRateGauge() Metric {
-	return Metric{
-		Kind: Gauge,
+func ConfiguredUSDExchangeRateGauge() m.Metric {
+	return m.Metric{
+		Kind: m.Gauge,
 		Time: time.Now(),
 		Name: "currency.configured",
-		Tags: MetricTags{
+		Tags: m.MetricTags{
 			{Label: "currency", Value: "USD"},
 		},
 		Unit:  "ratio",
@@ -101,8 +103,8 @@ func ConfiguredUSDExchangeRateGauge() Metric {
 	}
 }
 
-func CurrencyMetricGauges(logger lager.Logger) ([]Metric, error) {
-	metrics := make([]Metric, 0)
+func CurrencyMetricGauges(logger lager.Logger) ([]m.Metric, error) {
+	metrics := make([]m.Metric, 0)
 
 	metrics = append(metrics, ConfiguredUSDExchangeRateGauge())
 
@@ -120,8 +122,8 @@ func CurrencyMetricGauges(logger lager.Logger) ([]Metric, error) {
 
 func CurrencyGauges(
 	logger lager.Logger, interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		metrics, err := CurrencyMetricGauges(logger)
 
 		if err != nil {

@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-func AivenCostGauge(client *aiven.Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
-		metrics := []Metric{}
+func AivenCostGauge(client *aiven.Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		metrics := []m.Metric{}
 		invoices, err := client.GetInvoices()
 		if err != nil {
 			return err
@@ -21,8 +22,8 @@ func AivenCostGauge(client *aiven.Client, interval time.Duration) MetricReadClos
 				if err != nil {
 					return err
 				}
-				metrics = append(metrics, Metric{
-					Kind:  Gauge,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Gauge,
 					Time:  time.Now(),
 					Name:  "aiven.estimated.cost",
 					Value: currentCost,

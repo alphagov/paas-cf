@@ -10,6 +10,8 @@ import (
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 func CustomDomainCDNMetricsCollector(
@@ -17,8 +19,8 @@ func CustomDomainCDNMetricsCollector(
 	cloudFront cloudfront.CloudFrontServiceInterface,
 	cloudWatch cloudwatch.CloudWatchService,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		logSess := logger.Session("custom-domain-cdn-metrics-collector")
 		logSess.Info("fetching-custom-domains")
 		domains, err := cloudFront.CustomDomains()
@@ -39,7 +41,7 @@ func CustomDomainCDNMetricsCollector(
 		}
 		logSess.Info("distributions-discovered", lager.Data{"distribution-ids": logkeys})
 
-		var metrics []Metric
+		var metrics []m.Metric
 		for distributionId := range distinctDistributionIds {
 			ms, err := getMetricsForDistribution(distributionId, cloudWatch, logSess)
 			if err != nil {
@@ -60,7 +62,7 @@ func getMetricsForDistribution(
 	id string,
 	cloudWatch cloudwatch.CloudWatchService,
 	logger lager.Logger,
-) ([]Metric, error) {
+) ([]m.Metric, error) {
 	logger.Info("get-metrics-for-distribution", lager.Data{"distribution-id": id})
 	cloudwatchOutputs, err := cloudWatch.GetCDNMetricsForDistribution(id)
 
@@ -68,7 +70,7 @@ func getMetricsForDistribution(
 		return nil, err
 	}
 
-	var metrics []Metric
+	var metrics []m.Metric
 	for _, output := range cloudwatchOutputs {
 		if len(output.Datapoints) == 0 {
 			logger.Info("get-metrics-for-distribution", lager.Data{"distribution-id": id, "metric-name": *output.Label})
@@ -93,13 +95,15 @@ func getMetricsForDistribution(
 					unit = "bytes"
 				}
 
-				metrics = append(metrics, Metric{
-					Kind:  Counter,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Counter,
 					Name:  metricName(*output.Label),
 					Time:  time.Now(),
 					Value: *output.Datapoints[0].Sum,
-					Tags:  metricLabels(id),
-					Unit:  unit,
+					Tags: m.MetricTags{
+						{Label: "distribution_id", Value: id},
+					},
+					Unit: unit,
 				})
 			}
 
@@ -115,13 +119,15 @@ func getMetricsForDistribution(
 					},
 				)
 
-				metrics = append(metrics, Metric{
-					Kind:  Gauge,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Gauge,
 					Name:  metricName(*output.Label),
 					Time:  time.Now(),
 					Value: *output.Datapoints[0].Average,
-					Tags:  metricLabels(id),
-					Unit:  "ratio",
+					Tags: m.MetricTags{
+						{Label: "distribution_id", Value: id},
+					},
+					Unit: "ratio",
 				})
 			}
 
@@ -133,12 +139,6 @@ func getMetricsForDistribution(
 	}
 
 	return metrics, nil
-}
-
-func metricLabels(id string) MetricTags {
-	return MetricTags{
-		{Label: "distribution_id", Value: id},
-	}
 }
 
 func metricName(metric string) string {

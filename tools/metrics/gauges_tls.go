@@ -9,6 +9,7 @@ import (
 	"code.cloudfoundry.org/lager"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 )
 
@@ -17,8 +18,8 @@ func TLSValidityGauge(
 	certChecker tlscheck.CertChecker,
 	addr string,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		if !strings.Contains(addr, ":") {
 			addr += ":443"
 		}
@@ -36,17 +37,17 @@ func TLSValidityGauge(
 			return err
 		}
 
-		metric := Metric{
-			Kind:  Gauge,
+		metric := m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "tls.certificates.validity",
 			Value: daysUntilExpiry,
-			Tags: MetricTags{
+			Tags: m.MetricTags{
 				{Label: "hostname", Value: host},
 			},
 			Unit: "days",
 		}
-		return w.WriteMetrics([]Metric{metric})
+		return w.WriteMetrics([]m.Metric{metric})
 	})
 }
 
@@ -55,15 +56,15 @@ func CDNTLSValidityGauge(
 	certChecker tlscheck.CertChecker,
 	cfs *cloudfront.CloudFrontService,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		customDomains, err := cfs.CustomDomains()
 		if err != nil {
 			logger.Error("cloudfront-list-distributions-failure", err, lager.Data{})
 			return err
 		}
 
-		metrics := []Metric{}
+		metrics := []m.Metric{}
 		for _, customDomain := range customDomains {
 			daysUntilExpiry, err := certChecker.DaysUntilExpiry(
 				customDomain.CloudFrontDomain+":443",
@@ -79,24 +80,24 @@ func CDNTLSValidityGauge(
 			var validity int
 			if err == nil {
 				validity = 1
-				metrics = append(metrics, Metric{
-					Kind:  Gauge,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Gauge,
 					Time:  time.Now(),
 					Name:  "cdn.tls.certificates.expiry",
 					Value: daysUntilExpiry,
-					Tags: MetricTags{
+					Tags: m.MetricTags{
 						{Label: "hostname", Value: customDomain.AliasDomain},
 					},
 					Unit: "days",
 				})
 			}
 
-			metrics = append(metrics, Metric{
-				Kind:  Gauge,
+			metrics = append(metrics, m.Metric{
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "cdn.tls.certificates.validity",
 				Value: float64(validity),
-				Tags: MetricTags{
+				Tags: m.MetricTags{
 					{Label: "hostname", Value: customDomain.AliasDomain},
 				},
 				Unit: "",

@@ -1,10 +1,12 @@
-package main
+package prometheusreporter
 
 import (
 	"strings"
 
 	multierror "github.com/hashicorp/go-multierror"
 	"github.com/prometheus/client_golang/prometheus"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 // PrometheusReporter is translating events into Prometheus metrics
@@ -21,10 +23,10 @@ func NewPrometheusReporter(registry prometheus.Registerer) *PrometheusReporter {
 	}
 }
 
-// WriteMetrics converts the received metrics into Prometheus metrics.
-// Any metrics are registered in the Prometheus registry the first time they created and we update these metrics later.
+// WriteMetrics converts the received into Prometheus metrics.
+// Any are registered in the Prometheus registry the first time they created and we update these metrics later.
 // This way we can manage counters correctly.
-func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
+func (p *PrometheusReporter) WriteMetrics(events []m.Metric) error {
 	var errs error
 	for _, event := range events {
 		labels := prometheus.Labels{}
@@ -33,7 +35,6 @@ func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
 			labelNames[i] = tag.Label
 			labels[tag.Label] = tag.Value
 		}
-
 
 		metricName := strings.Replace(event.Name, ".", "_", -1)
 
@@ -44,7 +45,7 @@ func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
 		}
 
 		switch event.Kind {
-		case Counter:
+		case m.Counter:
 			vec, exists := p.metricVecs[event.Name]
 			if !exists {
 				counterVec := prometheus.NewCounterVec(prometheus.CounterOpts{
@@ -63,7 +64,7 @@ func (p *PrometheusReporter) WriteMetrics(events []Metric) error {
 			}
 
 			metric.Add(event.Value)
-		case Gauge:
+		case m.Gauge:
 			vec, exists := p.metricVecs[event.Name]
 			if !exists {
 				gaugeVec := prometheus.NewGaugeVec(prometheus.GaugeOpts{

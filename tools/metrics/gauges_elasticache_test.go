@@ -15,6 +15,7 @@ import (
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache/fakes"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 var _ = Describe("Elasticache Gauges", func() {
@@ -74,7 +75,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -83,7 +84,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.elasticache.node.count"))
 
 		Expect(metric.Value).To(Equal(float64(0)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
 	It("returns the number of nodes", func() {
@@ -99,7 +100,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -108,7 +109,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.elasticache.node.count"))
 
 		Expect(metric.Value).To(Equal(float64(3)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
 	It("handles AWS API errors when getting the number of nodes", func() {
@@ -134,7 +135,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -143,7 +144,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.elasticache.cache_parameter_group.count"))
 
 		Expect(metric.Value).To(Equal(float64(0)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
 	It("returns zero if there are only default cache parameter groups", func() {
@@ -155,7 +156,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -164,7 +165,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.elasticache.cache_parameter_group.count"))
 
 		Expect(metric.Value).To(Equal(float64(0)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
 	It("returns the number of cache parameter groups exluding the default ones", func() {
@@ -183,7 +184,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric Metric
+		var metric m.Metric
 		Eventually(func() string {
 			var err error
 			metric, err = gauge.ReadMetric()
@@ -192,7 +193,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(Equal("aws.elasticache.cache_parameter_group.count"))
 
 		Expect(metric.Value).To(Equal(float64(2)))
-		Expect(metric.Kind).To(Equal(Gauge))
+		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
 	It("handles AWS API errors when getting the number of cache parameter groups", func() {
