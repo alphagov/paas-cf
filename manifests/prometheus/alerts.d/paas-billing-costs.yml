@@ -1,0 +1,54 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: PaaSBillingDBCostsExceedRDSCosts
+    rules:
+      - alert: PaaSBillingDBCostsExceedRDSCosts
+        expr: sum(increase(paas_billing_total_costs_pounds{name=~"mysql.+|postgres.+"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service="Amazon Relational Database Service"}) > 1.1
+        labels:
+          severity: warning
+        annotations:
+          summary: "PaaS Billing DB costs exceed AWS RDS costs by > 10%"
+          description: "PaaS Billing DB costs exceed AWS RDS costs by > 10%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: PaaSBillingDBCostsFallsShortOfRDSCosts
+    rules:
+      - alert: PaaSBillingDBCostsFallsShortOfRDSCosts
+        expr: sum(increase(paas_billing_total_costs_pounds{name=~"mysql.+|postgres.+"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service="Amazon Relational Database Service"}) < .9
+        labels:
+          severity: warning
+        annotations:
+          summary: "PaaS Billing DB costs fall short of AWS RDS costs by > 10%"
+          description: "PaaS Billing DB costs fall short of AWS RDS costs by > 10%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: PaaSBillingAppCostsExceedEC2Costs
+    rules:
+      - alert: PaaSBillingAppCostsExceedEC2Costs
+        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"^EC2.+"}) > 1.1
+        labels:
+          severity: warning
+        annotations:
+          summary: "PaaS Billing App costs exceed AWS EC2 costs by > 10%"
+          description: "PaaS Billing App costs exceed AWS EC2 costs by > 10%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: PaaSBillingAppCostsFallsShortOfEC2Costs
+    rules:
+      - alert: PaaSBillingAppCostsFallsShortOfEC2Costs
+        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"^EC2.+"}) < .9
+        labels:
+          severity: warning
+        annotations:
+          summary: "PaaS Billing App costs fall short of AWS EC2 costs by > 10%"
+          description: "PaaS Billing App costs fall short of AWS EC2 costs by > 10%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
