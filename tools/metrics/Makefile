@@ -40,5 +40,4 @@ generate-fakes:
 	counterfeiter -o pkg/s3/fakes/fake_s3_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go S3API
 
-	$(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||" fakes/fake_*.go
-	$(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||" service_fakes/fake_*.go
+	find pkg -name 'fake*.go' | xargs $(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||"
