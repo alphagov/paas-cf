@@ -41,3 +41,11 @@ generate-fakes:
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go S3API
 
 	find pkg -name 'fake*.go' | xargs $(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||"
+
+.PHONY: generate-config
+generate-config:
+	jq '.pricing_plans | map({(.plan_guid): (.name)}) | add' "../../config/billing/output/eu-west-2.json" > plan_guids.json
+
+.PHONY: run
+run: generate-config
+	go run .
