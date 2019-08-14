@@ -12,11 +12,3 @@
 - type: replace
   path: /addons/name=forwarder_agent/jobs/name=loggr-forwarder-agent/properties/tags?/deployment
   value: ((environment))
-
-- type: replace
-  path: /releases/name=loggregator-agent
-  value:
-    name: "loggregator-agent"
-    version: "3.19"
-    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-agent-release?v=3.19"
-    sha1: "cecab8716a456387e979b8cefdf74c1a9a9f2a51"

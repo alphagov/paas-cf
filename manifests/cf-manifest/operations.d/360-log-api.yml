@@ -22,3 +22,14 @@
 - type: replace
   path: /instance_groups/name=log-api/instances
   value: ((log_api_instances))
+
+- type: replace
+  path: /releases/name=loggregator
+  # We cannot use a version of loggregator past 105.5 until we get rid of ELBs
+  # This is because of TLS cipher suite mismatch
+  value:
+    name: "loggregator"
+    version: "105.5"
+    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=105.5"
+    sha1: "62b9210def7c5179f6088b9449f551f57f1a1ee8"
+

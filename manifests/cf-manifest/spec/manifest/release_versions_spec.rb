@@ -29,11 +29,11 @@ RSpec.describe "release versions" do
     pinned_releases = {
       'uaa' => {
         local: '0.1.11',
-        upstream: '73.4.0',
+        upstream: '74.0.0',
       },
-      'loggregator-agent' => {
-        local: '3.19',
-        upstream: '3.18',
+      'loggregator' => {
+        local: '105.5',
+        upstream: '105.6',
       }
     }
 
@@ -112,9 +112,13 @@ RSpec.describe "release versions" do
       .fetch(0)
 
     upstream_version = Gem::Version.new(cf_manifest_version.gsub(/^v/, '').gsub(/\.0$/, ''))
-    paas_version = Gem::Version.new(cf_acceptance_tests_resource['source']['branch'].gsub(/^cf/, ''))
 
-    expect(paas_version).to be >= upstream_version, "we should upgrade the cf-acceptance-tests' branch in the create-cloundfoundry pipeline to 'cf#{upstream_version}'"
+    if cf_acceptance_tests_resource['source']['branch'] == 'master'
+      expect(upstream_version).to be == Gem::Version.new('11.0'), 'there was no release of github.com/cloudfoundry/cf-acceptance-tests for cf-deployment v11.0. remove this erroring line and uncomment the below if they fix this for v12'
+    else
+      paas_version = Gem::Version.new(cf_acceptance_tests_resource['source']['branch'].gsub(/^cf/, ''))
+      expect(paas_version).to be >= upstream_version, "we should upgrade the cf-acceptance-tests' branch in the create-cloundfoundry pipeline to 'cf#{upstream_version}'"
+    end
   end
 
   specify "releases do not include buildpacks" do
