@@ -3256,6 +3256,8 @@ jobs:
                 . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
+                jq '.pricing_plans | map({(.plan_guid): (.name)}) | add' "paas-cf/config/billing/output/${AWS_REGION}.json" > paas-cf/tools/metrics/plan_guids.json
+
                 cd paas-cf/tools/metrics
 
                 ruby -ryaml -e "

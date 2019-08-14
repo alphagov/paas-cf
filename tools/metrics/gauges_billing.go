@@ -19,6 +19,7 @@ func BillingCostsGauge(
 	logger lager.Logger,
 	endpoint string,
 	interval time.Duration,
+	plans map[string]string,
 ) MetricReadCloser {
 	return NewMetricPoller(interval, func(w MetricWriter) error {
 		lsession := logger.Session("billing-gauges")
@@ -28,7 +29,7 @@ func BillingCostsGauge(
 			return err
 		}
 
-		metrics := CostsByPlanGauges(costs)
+		metrics := CostsByPlanGauges(costs, plans)
 
 		lsession.Info("Writing billing metrics")
 		return w.WriteMetrics(metrics)
@@ -69,7 +70,7 @@ func GetCostsByPlan(logger lager.Logger, endpoint string) ([]CostByPlan, error) 
 	return totalCosts, nil
 }
 
-func CostsByPlanGauges(totalCosts []CostByPlan) []Metric {
+func CostsByPlanGauges(totalCosts []CostByPlan, plans map[string]string) []Metric {
 	metrics := make([]Metric, 0)
 
 	for _, plan := range totalCosts {
@@ -78,8 +79,11 @@ func CostsByPlanGauges(totalCosts []CostByPlan) []Metric {
 			Time:  time.Now(),
 			Name:  "billing.total.costs",
 			Value: plan.Cost,
-			Tags:  MetricTags{MetricTag{Label: "plan_guid", Value: plan.PlanGUID}},
-			Unit:  "pounds",
+			Tags: MetricTags{
+				MetricTag{Label: "plan_guid", Value: plan.PlanGUID},
+				MetricTag{Label: "name", Value: plans[plan.PlanGUID]},
+			},
+			Unit: "pounds",
 		})
 	}
 
