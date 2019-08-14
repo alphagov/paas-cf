@@ -1155,6 +1155,34 @@
 			]
 		},
 		{
+			"name": "redis tiny-ha-3.2",
+			"valid_from": "2019-08-01",
+			"plan_guid": "ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_t2_small") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis small-ha-3.2",
+			"valid_from": "2019-08-01",
+			"plan_guid": "9162ed5b-0c88-4f43-bcaf-c6d4a45dd243",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_t2_medium") %>",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "cloudfront cdn-route",
 			"valid_from": "2017-01-01",
 			"plan_guid": "fc055c72-1075-44c9-9aee-bddd52e1b053",
