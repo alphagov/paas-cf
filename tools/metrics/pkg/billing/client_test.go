@@ -1,6 +1,8 @@
 package billing_test
 
 import (
+	"time"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
@@ -137,6 +139,72 @@ var _ = Describe("Client", func() {
 				MatchFields(IgnoreExtras, Fields{
 					"PlanGUID": Equal("c14848e6-9cfc-432a-abd1-5a64802f28c9"),
 					"Name":     Equal("a postgres big plan"),
+				}),
+			))
+		})
+	})
+
+	Context("GetLatestCurrencyRates", func() {
+		It("Should get fail when not 200", func() {
+			httpmock.RegisterResponder(
+				"GET", `=~^https://billing.cloud.service.gov.uk/currency_rates`,
+				httpmock.NewStringResponder(400, ``),
+			)
+
+			_, err := client.GetLatestCurrencyRates()
+
+			Expect(httpmock.GetTotalCallCount()).To(BeNumerically("==", 1))
+
+			Expect(err).To(HaveOccurred())
+			Expect(err).To(MatchError(ContainSubstring(
+				"Billing client received statuscode 400",
+			)))
+		})
+
+		It("Should get the latest currency rates successfully", func() {
+			httpmock.RegisterResponder(
+				"GET", `=~^https://billing.cloud.service.gov.uk/currency_rates`,
+				httpmock.NewStringResponder(200, `[
+					{
+						"code": "GBP",
+						"valid_from": "1970-01-01T00:00:00+00:00",
+						"rate": 1
+					},
+					{
+						"code": "USD",
+						"valid_from": "1970-01-01T00:00:00+00:00",
+						"rate": 0.8
+					},
+					{
+						"code": "USD",
+						"valid_from": "2019-08-15T00:00:00+00:00",
+						"rate": 0.9
+					}
+				]`),
+			)
+
+			rates, err := client.GetLatestCurrencyRates()
+
+			Expect(httpmock.GetTotalCallCount()).To(BeNumerically("==", 1))
+
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(rates).To(HaveLen(2))
+
+			Expect(rates).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Code": Equal("GBP"),
+					"Rate": BeNumerically("==", 1),
+				}),
+			))
+
+			Expect(rates).To(ContainElement(
+				MatchFields(IgnoreExtras, Fields{
+					"Code": Equal("USD"),
+					"Rate": BeNumerically("==", 0.9),
+					"ValidFrom": BeTemporally(
+						">=", time.Date(2019, time.August, 15, 0, 0, 0, 0, time.UTC),
+					),
 				}),
 			))
 		})

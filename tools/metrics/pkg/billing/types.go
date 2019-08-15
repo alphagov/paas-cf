@@ -1,6 +1,8 @@
 package billing
 
 import (
+	"time"
+
 	"code.cloudfoundry.org/lager"
 )
 
@@ -14,6 +16,12 @@ type Plan struct {
 	Name     string `json:"name"`
 
 	// Additional fields omitted see alphagov/paas-billing
+}
+
+type CurrencyRate struct {
+	Code      string    `json:"code"`
+	Rate      float64   `json:"rate"`
+	ValidFrom time.Time `json:"valid_from"`
 }
 
 type Client struct {

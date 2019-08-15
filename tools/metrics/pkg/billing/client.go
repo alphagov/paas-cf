@@ -107,3 +107,39 @@ func (c *Client) GetPlans() ([]Plan, error) {
 	lsession.Info("finish")
 	return plans, nil
 }
+
+func (c *Client) GetLatestCurrencyRates() ([]CurrencyRate, error) {
+	lsession := c.logger.Session("get-currency-rates")
+	lsession.Info("start")
+
+	rangeStart := "2015-12-23"
+	rangeStop := time.Now().Format("2006-01-02")
+	url := fmt.Sprintf(
+		"%s/currency_rates?range_start=%s&range_stop=%s",
+		c.billingAPIEndpoint, rangeStart, rangeStop,
+	)
+
+	rates := make([]CurrencyRate, 0)
+	err := c.getJSON(url, &rates)
+	if err != nil {
+		lsession.Error("get-json", err)
+		return nil, err
+	}
+
+	latestRatesByCode := make(map[string]CurrencyRate, 0)
+	for _, rate := range rates {
+		latestRate, ok := latestRatesByCode[rate.Code]
+
+		if !ok || rate.ValidFrom.After(latestRate.ValidFrom) {
+			latestRatesByCode[rate.Code] = rate
+		}
+	}
+
+	latestRates := make([]CurrencyRate, 0)
+	for _, latestRate := range latestRatesByCode {
+		latestRates = append(latestRates, latestRate)
+	}
+
+	lsession.Info("finish")
+	return latestRates, nil
+}
