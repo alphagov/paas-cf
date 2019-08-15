@@ -42,10 +42,6 @@ generate-fakes:
 
 	find pkg -name 'fake*.go' | xargs $(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||"
 
-.PHONY: generate-config
-generate-config:
-	jq '.pricing_plans | map({(.plan_guid): (.name)}) | add' "../../config/billing/output/eu-west-2.json" > plan_guids.json
-
 .PHONY: run
-run: generate-config
+run:
 	go run .
