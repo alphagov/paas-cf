@@ -3266,7 +3266,7 @@ jobs:
                     'UAA_ENDPOINT' => '${UAA_ENDPOINT}',
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
                     'ELB_ADDRESS' => 'https://healthcheck.${APPS_DNS_ZONE_NAME}/',
-                    'COSTS_ENDPOINT' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/totals',
+                    'BILLING_ENDPOINT' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}',
                     'TLS_DOMAINS' => [
                       'healthcheck.${APPS_DNS_ZONE_NAME}',
                       'api.${SYSTEM_DNS_ZONE_NAME}',
