@@ -132,7 +132,7 @@ var _ = Describe("Currency", func() {
 				"Kind":  Equal(m.Gauge),
 				"Value": BeNumerically("==", 0.8),
 				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
-					"Label": Equal("currency"), "Value": Equal("USD"),
+					"Label": Equal("code"), "Value": Equal("USD"),
 				})),
 			})))
 		})

@@ -81,7 +81,7 @@ func ActualUSDExchangeRateGauge() (m.Metric, error) {
 		Time: time.Now(),
 		Name: "currency.real",
 		Tags: m.MetricTags{
-			{Label: "currency", Value: "USD"},
+			{Label: "code", Value: "USD"},
 		},
 		Unit:  "ratio",
 		Value: float64(usdExchangeRate),
