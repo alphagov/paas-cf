@@ -24,22 +24,6 @@ var _ = Describe("Currency", func() {
 		httpmock.DeactivateAndReset()
 	})
 
-	Context("Configured exchange rate", func() {
-		It("Should return the configured exchange rate", func() {
-			metric := ConfiguredUSDExchangeRateGauge()
-
-			Expect(metric).To(MatchFields(IgnoreExtras, Fields{
-				"Name":  Equal("currency.configured"),
-				"Unit":  Equal("ratio"),
-				"Kind":  Equal(m.Gauge),
-				"Value": BeNumerically("==", ConfiguredUSDExchangeRate),
-				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
-					"Label": Equal("currency"), "Value": Equal("USD"),
-				})),
-			}))
-		})
-	})
-
 	Context("European Central Bank API", func() {
 		It("Should gracefully return an error when the request is bad", func() {
 			httpmock.RegisterResponder(
@@ -140,17 +124,7 @@ var _ = Describe("Currency", func() {
 
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(metrics).To(HaveLen(2))
-
-			Expect(metrics).To(ContainElement(MatchFields(IgnoreExtras, Fields{
-				"Name":  Equal("currency.configured"),
-				"Unit":  Equal("ratio"),
-				"Kind":  Equal(m.Gauge),
-				"Value": BeNumerically("==", ConfiguredUSDExchangeRate),
-				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
-					"Label": Equal("currency"), "Value": Equal("USD"),
-				})),
-			})))
+			Expect(metrics).To(HaveLen(1))
 
 			Expect(metrics).To(ContainElement(MatchFields(IgnoreExtras, Fields{
 				"Name":  Equal("currency.real"),

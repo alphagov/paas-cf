@@ -12,8 +12,6 @@ import (
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-const ConfiguredUSDExchangeRate = 0.8
-
 type ECBCurrencyRatesResponse struct {
 	Rates map[string]float64 `json:"rates"` // Map of symbol (eg GBP) to rate
 }
@@ -90,23 +88,8 @@ func ActualUSDExchangeRateGauge() (m.Metric, error) {
 	}, nil
 }
 
-func ConfiguredUSDExchangeRateGauge() m.Metric {
-	return m.Metric{
-		Kind: m.Gauge,
-		Time: time.Now(),
-		Name: "currency.configured",
-		Tags: m.MetricTags{
-			{Label: "currency", Value: "USD"},
-		},
-		Unit:  "ratio",
-		Value: float64(ConfiguredUSDExchangeRate),
-	}
-}
-
 func CurrencyMetricGauges(logger lager.Logger) ([]m.Metric, error) {
 	metrics := make([]m.Metric, 0)
-
-	metrics = append(metrics, ConfiguredUSDExchangeRateGauge())
 
 	logger.Info("Getting ECB currency information for USD")
 	actualUSDExchangeRateGauge, err := ActualUSDExchangeRateGauge()
