@@ -77,6 +77,18 @@
                       free: false
                       metadata:
                         displayName: Redis medium highly-available
+                    - id: ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d
+                      name: tiny-ha-3.2
+                      description: 1.5GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis tiny highly-available
+                    - id: 9162ed5b-0c88-4f43-bcaf-c6d4a45dd243
+                      name: small-ha-3.2
+                      description: 3GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis small highly-available
 
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab:
@@ -109,6 +121,27 @@
                   cluster-enabled: 'no'
                   maxmemory-policy: volatile-lru
                   reserved-memory: '0'
+              ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d:
+                instance_type: cache.t2.small
+                replicas_per_node_group: 1
+                shard_count: 1
+                snapshot_retention_limit: 7
+                automatic_failover_enabled: true
+                parameters:
+                  cluster-enabled: 'no'
+                  maxmemory-policy: volatile-lru
+                  reserved-memory: '0'
+              9162ed5b-0c88-4f43-bcaf-c6d4a45dd243:
+                instance_type: cache.t2.medium
+                replicas_per_node_group: 1
+                shard_count: 1
+                snapshot_retention_limit: 7
+                automatic_failover_enabled: true
+                parameters:
+                  cluster-enabled: 'no'
+                  maxmemory-policy: volatile-lru
+                  reserved-memory: '0'
+
 
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions/-
