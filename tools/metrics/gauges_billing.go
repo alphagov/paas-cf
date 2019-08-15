@@ -30,7 +30,14 @@ func BillingCostsGauge(
 			return err
 		}
 
+		rates, err := billing.GetLatestCurrencyRates()
+		if err != nil {
+			lsession.Error("Failed to get latest currency rates", err)
+			return err
+		}
+
 		metrics := CostsByPlanGauges(costs, plans)
+		metrics = append(metrics, CurrencyRateGauges(rates)...)
 
 		lsession.Info("Writing billing metrics")
 		return w.WriteMetrics(metrics)
@@ -59,6 +66,27 @@ func CostsByPlanGauges(
 				m.MetricTag{Label: "name", Value: plansMapping[plan.PlanGUID]},
 			},
 			Unit: "pounds",
+		})
+	}
+
+	return metrics
+}
+
+func CurrencyRateGauges(
+	rates []billing.CurrencyRate,
+) []m.Metric {
+	metrics := make([]m.Metric, 0)
+
+	for _, rate := range rates {
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
+			Time:  time.Now(),
+			Name:  "billing.currency.configured",
+			Value: rate.Rate,
+			Tags: m.MetricTags{
+				m.MetricTag{Label: "code", Value: rate.Code},
+			},
+			Unit: "ratio",
 		})
 	}
 

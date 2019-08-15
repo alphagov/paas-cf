@@ -88,4 +88,41 @@ var _ = Describe("Billing Gauges", func() {
 			}),
 		))
 	})
+
+	It("Should return the correct rates for currencies", func() {
+		rates := []billing.CurrencyRate{
+			{Code: "USD", Rate: 0.9},
+			{Code: "GBP", Rate: 1},
+		}
+
+		metrics := CurrencyRateGauges(rates)
+
+		Expect(metrics).To(HaveLen(2))
+
+		Expect(metrics).To(ContainElement(
+			MatchFields(IgnoreExtras, Fields{
+				"Name":  Equal("billing.currency.configured"),
+				"Unit":  Equal("ratio"),
+				"Kind":  Equal(m.Gauge),
+				"Value": BeNumerically("==", 1),
+				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+					"Label": Equal("code"),
+					"Value": Equal("GBP"),
+				})),
+			}),
+		))
+
+		Expect(metrics).To(ContainElement(
+			MatchFields(IgnoreExtras, Fields{
+				"Name":  Equal("billing.currency.configured"),
+				"Unit":  Equal("ratio"),
+				"Kind":  Equal(m.Gauge),
+				"Value": BeNumerically("==", 0.9),
+				"Tags": ContainElement(MatchFields(IgnoreExtras, Fields{
+					"Label": Equal("code"),
+					"Value": Equal("USD"),
+				})),
+			}),
+		))
+	})
 })
