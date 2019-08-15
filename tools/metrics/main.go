@@ -131,11 +131,6 @@ func Main() error {
 
 	costExplorer := costexplorer.New(sess)
 
-	plans, err := GetPlanGUIDS("plan_guids.json")
-	if err != nil {
-		return errors.Wrap(err, "failed to load plan_guids.json")
-	}
-
 	// Combine all metrics into single stream
 	gauges := []m.MetricReader{
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
@@ -156,7 +151,7 @@ func Main() error {
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
-		BillingCostsGauge(logger, os.Getenv("COSTS_ENDPOINT"), 15*time.Minute, plans),
+		BillingCostsGauge(logger, os.Getenv("BILLING_ENDPOINT"), 15*time.Minute),
 		CurrencyGauges(logger, 5*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
