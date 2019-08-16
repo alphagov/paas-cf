@@ -6,6 +6,8 @@ import (
 
 	"code.cloudfoundry.org/lager"
 	uaaclient "github.com/cloudfoundry-community/go-uaa"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 type UAAClientConfig struct {
@@ -18,8 +20,8 @@ func UAAGauges(
 	logger lager.Logger,
 	cfg *UAAClientConfig,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		lsession := logger.Session("uaa-gauges")
 
 		metrics, err := UAAMetrics(lsession, cfg)
@@ -33,7 +35,7 @@ func UAAGauges(
 	})
 }
 
-func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]Metric, error) {
+func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]m.Metric, error) {
 	lsession := logger.Session("uaa-metrics")
 	lsession.Info("Started UAA metrics")
 
@@ -44,18 +46,18 @@ func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]Metric, error) {
 	err := uaa.Validate()
 	if err != nil {
 		lsession.Error("Failed to validate UAA client", err)
-		return []Metric{}, err
+		return []m.Metric{}, err
 	}
 	lsession.Info("Validated UAA client")
 
 	users, err := uaa.ListAllUsers("", "", "origin,lastLogonTime", "")
 	if err != nil {
 		lsession.Error("Failed to list all UAA users", err)
-		return []Metric{}, err
+		return []m.Metric{}, err
 	}
 	lsession.Info("Listed all UAA users")
 
-	metrics := make([]Metric, 0)
+	metrics := make([]m.Metric, 0)
 
 	lsession.Info("Computing UAA users by origin")
 	metrics = append(metrics, UAAUsersByOriginGauges(users)...)
@@ -69,21 +71,23 @@ func UAAMetrics(logger lager.Logger, cfg *UAAClientConfig) ([]Metric, error) {
 	return metrics, nil
 }
 
-func UAAUsersByOriginGauges(users []uaaclient.User) []Metric {
+func UAAUsersByOriginGauges(users []uaaclient.User) []m.Metric {
 	usersByOriginCount := make(map[string]int, 0)
 	for _, user := range users {
 		usersByOriginCount[user.Origin] += 1
 	}
 
-	metrics := make([]Metric, 0)
+	metrics := make([]m.Metric, 0)
 	for origin, usersCount := range usersByOriginCount {
-		metrics = append(metrics, Metric{
-			Kind:  Gauge,
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "uaa.users",
 			Value: float64(usersCount),
-			Tags:  MetricTags{MetricTag{Label: "origin", Value: origin}},
-			Unit:  "count",
+			Tags: m.MetricTags{
+				{Label: "origin", Value: origin},
+			},
+			Unit: "count",
 		})
 	}
 
@@ -107,22 +111,24 @@ func UAAActiveUsers(users []uaaclient.User) []uaaclient.User {
 	return activeUsers
 }
 
-func UAAActiveUsersByOriginGauges(users []uaaclient.User) []Metric {
+func UAAActiveUsersByOriginGauges(users []uaaclient.User) []m.Metric {
 	usersByOriginCount := make(map[string]int, 0)
 
 	for _, user := range UAAActiveUsers(users) {
 		usersByOriginCount[user.Origin] += 1
 	}
 
-	metrics := make([]Metric, 0)
+	metrics := make([]m.Metric, 0)
 	for origin, usersCount := range usersByOriginCount {
-		metrics = append(metrics, Metric{
-			Kind:  Gauge,
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "uaa.active.users",
 			Value: float64(usersCount),
-			Tags:  MetricTags{MetricTag{Label: "origin", Value: origin}},
-			Unit:  "count",
+			Tags: m.MetricTags{
+				{Label: "origin", Value: origin},
+			},
+			Unit: "count",
 		})
 	}
 

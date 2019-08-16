@@ -7,10 +7,20 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"strings"
 	"time"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-func CustomDomainCDNMetricsCollector(logger lager.Logger, cloudFront CloudFrontServiceInterface, cloudWatch CloudWatchService, interval time.Duration, ) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func CustomDomainCDNMetricsCollector(
+	logger lager.Logger,
+	cloudFront cloudfront.CloudFrontServiceInterface,
+	cloudWatch cloudwatch.CloudWatchService,
+	interval time.Duration,
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		logSess := logger.Session("custom-domain-cdn-metrics-collector")
 		logSess.Info("fetching-custom-domains")
 		domains, err := cloudFront.CustomDomains()
@@ -31,7 +41,7 @@ func CustomDomainCDNMetricsCollector(logger lager.Logger, cloudFront CloudFrontS
 		}
 		logSess.Info("distributions-discovered", lager.Data{"distribution-ids": logkeys})
 
-		var metrics []Metric
+		var metrics []m.Metric
 		for distributionId := range distinctDistributionIds {
 			ms, err := getMetricsForDistribution(distributionId, cloudWatch, logSess)
 			if err != nil {
@@ -48,7 +58,11 @@ func CustomDomainCDNMetricsCollector(logger lager.Logger, cloudFront CloudFrontS
 
 }
 
-func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger lager.Logger) ([]Metric, error) {
+func getMetricsForDistribution(
+	id string,
+	cloudWatch cloudwatch.CloudWatchService,
+	logger lager.Logger,
+) ([]m.Metric, error) {
 	logger.Info("get-metrics-for-distribution", lager.Data{"distribution-id": id})
 	cloudwatchOutputs, err := cloudWatch.GetCDNMetricsForDistribution(id)
 
@@ -56,14 +70,12 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 		return nil, err
 	}
 
-	var metrics []Metric
+	var metrics []m.Metric
 	for _, output := range cloudwatchOutputs {
 		if len(output.Datapoints) == 0 {
 			logger.Info("get-metrics-for-distribution", lager.Data{"distribution-id": id, "metric-name": *output.Label})
 			continue
 		}
-
-
 
 		switch aws.StringValue(output.Label) {
 		case "Requests", "BytesDownloaded", "BytesUploaded":
@@ -71,10 +83,10 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 				logger.Info(
 					"metric-discovered",
 					lager.Data{
-						"distribution-id": id,
+						"distribution-id":        id,
 						"cloudwatch-metric-name": *output.Label,
 						"prometheus-metric-name": metricName(*output.Label),
-						"metric-value": output.Datapoints[0].Sum,
+						"metric-value":           output.Datapoints[0].Sum,
 					},
 				)
 
@@ -83,13 +95,15 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 					unit = "bytes"
 				}
 
-				metrics = append(metrics, Metric{
-					Kind:  Counter,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Counter,
 					Name:  metricName(*output.Label),
 					Time:  time.Now(),
 					Value: *output.Datapoints[0].Sum,
-					Tags:  metricLabels(id),
-					Unit:  unit,
+					Tags: m.MetricTags{
+						{Label: "distribution_id", Value: id},
+					},
+					Unit: unit,
 				})
 			}
 
@@ -98,20 +112,22 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 				logger.Info(
 					"metric-discovered",
 					lager.Data{
-						"distribution-id": id,
+						"distribution-id":        id,
 						"cloudwatch-metric-name": *output.Label,
 						"prometheus-metric-name": metricName(*output.Label),
-						"metric-value": output.Datapoints[0].Average,
+						"metric-value":           output.Datapoints[0].Average,
 					},
 				)
 
-				metrics = append(metrics, Metric{
-					Kind:  Gauge,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Gauge,
 					Name:  metricName(*output.Label),
 					Time:  time.Now(),
 					Value: *output.Datapoints[0].Average,
-					Tags:  metricLabels(id),
-					Unit:  "ratio",
+					Tags: m.MetricTags{
+						{Label: "distribution_id", Value: id},
+					},
+					Unit: "ratio",
 				})
 			}
 
@@ -123,12 +139,6 @@ func getMetricsForDistribution(id string, cloudWatch CloudWatchService, logger l
 	}
 
 	return metrics, nil
-}
-
-func metricLabels(id string) MetricTags {
-	return MetricTags{
-		{ Label: "distribution_id", Value: id },
-	}
 }
 
 func metricName(metric string) string {

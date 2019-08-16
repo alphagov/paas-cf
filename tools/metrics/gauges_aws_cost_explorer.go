@@ -8,6 +8,8 @@ import (
 	"code.cloudfoundry.org/lager"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/costexplorer"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
 func AWSCostExplorerGauge(
@@ -15,12 +17,12 @@ func AWSCostExplorerGauge(
 	awsRegion string,
 	costExplorer *costexplorer.CostExplorer,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		twoDaysAgo := time.Now().AddDate(0, 0, -2)
 		year, month, date := twoDaysAgo.Date()
 
-		metrics := []Metric{}
+		metrics := []m.Metric{}
 
 		serviceUsage, err := awsServiceUsageInRegionOnDate(awsRegion, year, month, date, costExplorer)
 		if err != nil {
@@ -34,13 +36,13 @@ func AWSCostExplorerGauge(
 				logger.Fatal("5", fmt.Errorf("error parsing service unblended cost as float: %s", err))
 			}
 
-			metrics = append(metrics, Metric{
-				Kind:  Gauge,
+			metrics = append(metrics, m.Metric{
+				Kind:  m.Gauge,
 				Time:  twoDaysAgo,
 				Name:  "aws.cost_explorer.by_service",
 				Value: unblendedCost,
 				Unit:  "pounds",
-				Tags: MetricTags{
+				Tags: m.MetricTags{
 					{Label: "type", Value: "UnblendedCost"},
 					{Label: "service", Value: serviceName},
 				},
@@ -59,13 +61,13 @@ func AWSCostExplorerGauge(
 				logger.Fatal("5", fmt.Errorf("error parsing region unblended cost as float: %s", err))
 			}
 
-			metrics = append(metrics, Metric{
-				Kind:  Gauge,
+			metrics = append(metrics, m.Metric{
+				Kind:  m.Gauge,
 				Time:  twoDaysAgo,
 				Name:  "aws.cost_explorer.by_region",
 				Value: unblendedCost,
 				Unit:  "pounds",
-				Tags: MetricTags{
+				Tags: m.MetricTags{
 					{Label: "type", Value: "UnblendedCost"},
 					{Label: "region", Value: regionName},
 				},

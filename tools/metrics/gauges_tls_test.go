@@ -7,24 +7,26 @@ import (
 	"time"
 
 	"code.cloudfoundry.org/lager"
-	. "github.com/alphagov/paas-cf/tools/metrics"
-	"github.com/alphagov/paas-cf/tools/metrics/fakes"
-	tlscheck_fakes "github.com/alphagov/paas-cf/tools/metrics/tlscheck/fakes"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cloudfront"
+	awscf "github.com/aws/aws-sdk-go/service/cloudfront"
 
+	. "github.com/alphagov/paas-cf/tools/metrics"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront/fakes"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
+	tlscheck_fakes "github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck/fakes"
 )
 
-func ExpectMetric(metric Metric, name string, value int, host string) {
+func ExpectMetric(metric m.Metric, name string, value int, host string) {
 	Expect(metric.Name).To(Equal(name))
 	Expect(metric.Value).To(Equal(float64(value)))
-	Expect(metric.Kind).To(Equal(Gauge))
+	Expect(metric.Kind).To(Equal(m.Gauge))
 
-
-	expectedTag := MetricTag { Label: "hostname", Value: host }
+	expectedTag := m.MetricTag{Label: "hostname", Value: host}
 	Expect(metric.Tags).To(ContainElement(expectedTag))
 }
 
@@ -34,26 +36,26 @@ var _ = Describe("TLS gauges", func() {
 		logger            lager.Logger
 		log               *gbytes.Buffer
 		tlsChecker        *tlscheck_fakes.FakeCertChecker
-		cloudFrontService *CloudFrontService
+		cloudFrontService *cloudfront.CloudFrontService
 		cloudFrontClient  *fakes.FakeCloudFrontAPI
 
-		distributionSummaries = []*cloudfront.DistributionSummary{
-			&cloudfront.DistributionSummary{
+		distributionSummaries = []*awscf.DistributionSummary{
+			&awscf.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d1.cloudfront.aws"),
-				Id: aws.String("dist-1"),
-				Aliases: &cloudfront.Aliases{
+				Id:         aws.String("dist-1"),
+				Aliases: &awscf.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
 						aws.String("s1.service.gov.uk"),
 					},
 				},
 			},
-			&cloudfront.DistributionSummary{
+			&awscf.DistributionSummary{
 				Enabled:    aws.Bool(true),
 				DomainName: aws.String("d2.cloudfront.aws"),
-				Id: aws.String("dist-2"),
-				Aliases: &cloudfront.Aliases{
+				Id:         aws.String("dist-2"),
+				Aliases: &awscf.Aliases{
 					Quantity: aws.Int64(2),
 					Items: []*string{
 						aws.String("s2.service.gov.uk"),
@@ -63,13 +65,13 @@ var _ = Describe("TLS gauges", func() {
 			},
 		}
 		listDistributionsPageStub = func(
-			input *cloudfront.ListDistributionsInput,
-			fn func(*cloudfront.ListDistributionsOutput, bool) bool,
+			input *awscf.ListDistributionsInput,
+			fn func(*awscf.ListDistributionsOutput, bool) bool,
 		) error {
 			for i, distributionSummary := range distributionSummaries {
-				page := &cloudfront.ListDistributionsOutput{
-					DistributionList: &cloudfront.DistributionList{
-						Items: []*cloudfront.DistributionSummary{
+				page := &awscf.ListDistributionsOutput{
+					DistributionList: &awscf.DistributionList{
+						Items: []*awscf.DistributionSummary{
 							distributionSummary,
 						},
 					},
@@ -88,7 +90,7 @@ var _ = Describe("TLS gauges", func() {
 		logger.RegisterSink(lager.NewWriterSink(log, lager.INFO))
 		tlsChecker = &tlscheck_fakes.FakeCertChecker{}
 		cloudFrontClient = &fakes.FakeCloudFrontAPI{}
-		cloudFrontService = &CloudFrontService{Client: cloudFrontClient}
+		cloudFrontService = &cloudfront.CloudFrontService{Client: cloudFrontClient}
 	})
 
 	Describe("TLS validity gauge", func() {
@@ -100,7 +102,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := TLSValidityGauge(logger, tlsChecker, "somedomain.com:443", 1*time.Second)
 				defer gauge.Close()
 
-				var metric Metric
+				var metric m.Metric
 				Eventually(func() error {
 					var err error
 					metric, err = gauge.ReadMetric()
@@ -122,7 +124,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := TLSValidityGauge(logger, tlsChecker, "somedomain.com:443", 1*time.Second)
 				defer gauge.Close()
 
-				var metric Metric
+				var metric m.Metric
 				Eventually(func() error {
 					var err error
 					metric, err = gauge.ReadMetric()
@@ -155,7 +157,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := TLSValidityGauge(logger, tlsChecker, "somedomain.com", 1*time.Second)
 				defer gauge.Close()
 
-				var metric Metric
+				var metric m.Metric
 				Eventually(func() error {
 					var err error
 					metric, err = gauge.ReadMetric()
@@ -163,7 +165,7 @@ var _ = Describe("TLS gauges", func() {
 				}, 3*time.Second).ShouldNot(HaveOccurred())
 				Expect(metric.Value).To(Equal(float64(123)))
 
-				expectedTag := MetricTag{ Label: "hostname", Value: "somedomain.com"}
+				expectedTag := m.MetricTag{Label: "hostname", Value: "somedomain.com"}
 				Expect(metric.Tags).To(ContainElement(expectedTag))
 			})
 		})
@@ -195,7 +197,7 @@ var _ = Describe("TLS gauges", func() {
 			gauge := CDNTLSValidityGauge(logger, tlsChecker, cloudFrontService, 1*time.Second)
 			defer gauge.Close()
 
-			var metrics []Metric
+			var metrics []m.Metric
 			Eventually(func() int {
 				metric, _ := gauge.ReadMetric()
 				metrics = append(metrics, metric)
@@ -257,7 +259,7 @@ var _ = Describe("TLS gauges", func() {
 				gauge := CDNTLSValidityGauge(logger, tlsChecker, cloudFrontService, 5*time.Second)
 				defer gauge.Close()
 
-				var metrics []Metric
+				var metrics []m.Metric
 				Eventually(func() int {
 					metric, err := gauge.ReadMetric()
 					if err == nil {

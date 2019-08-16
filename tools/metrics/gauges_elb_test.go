@@ -9,7 +9,7 @@ import (
 	"code.cloudfoundry.org/lager"
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
-	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/pingdumb"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

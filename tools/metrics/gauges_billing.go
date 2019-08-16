@@ -1,89 +1,92 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
 	"time"
 
 	"code.cloudfoundry.org/lager"
-)
 
-type CostByPlan struct {
-	PlanGUID string  `json:"plan_guid"`
-	Cost     float64 `json:"cost"`
-}
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/billing"
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
+)
 
 func BillingCostsGauge(
 	logger lager.Logger,
 	endpoint string,
 	interval time.Duration,
-	plans map[string]string,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		lsession := logger.Session("billing-gauges")
-		costs, err := GetCostsByPlan(lsession, endpoint)
+		billing := billing.NewClient(endpoint, lsession)
+
+		plans, err := billing.GetPlans()
+		if err != nil {
+			lsession.Error("Failed to get billing plans", err)
+			return err
+		}
+
+		costs, err := billing.GetCostsByPlan()
 		if err != nil {
 			lsession.Error("Failed to get billing costs metrics", err)
 			return err
 		}
 
+		rates, err := billing.GetLatestCurrencyRates()
+		if err != nil {
+			lsession.Error("Failed to get latest currency rates", err)
+			return err
+		}
+
 		metrics := CostsByPlanGauges(costs, plans)
+		metrics = append(metrics, CurrencyRateGauges(rates)...)
 
 		lsession.Info("Writing billing metrics")
 		return w.WriteMetrics(metrics)
 	})
 }
 
-func GetCostsByPlan(logger lager.Logger, endpoint string) ([]CostByPlan, error) {
-	lsession := logger.Session("billing-metrics")
-	lsession.Info("Started Billing metrics")
-	req, err := http.NewRequest("GET", endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Accept", "application/json")
-	httpClient := http.DefaultClient
+func CostsByPlanGauges(
+	totalCosts []billing.CostByPlan,
+	plans []billing.Plan,
+) []m.Metric {
+	metrics := make([]m.Metric, 0)
 
-	resp, err := httpClient.Do(req)
-
-	if err != nil {
-		return nil, err
+	plansMapping := make(map[string]string, 0)
+	for _, plan := range plans {
+		plansMapping[plan.PlanGUID] = plan.Name
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Returned statuscode from costs endpoint %d", resp.StatusCode)
-	}
-	bodyBuffer, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	totalCosts := make([]CostByPlan, 0)
-	err = json.Unmarshal(bodyBuffer, &totalCosts)
-	if err != nil {
-		return nil, err
-	}
-
-	lsession.Info("Finished Billing metrics")
-	return totalCosts, nil
-}
-
-func CostsByPlanGauges(totalCosts []CostByPlan, plans map[string]string) []Metric {
-	metrics := make([]Metric, 0)
 
 	for _, plan := range totalCosts {
-		metrics = append(metrics, Metric{
-			Kind:  Gauge,
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
 			Time:  time.Now(),
 			Name:  "billing.total.costs",
 			Value: plan.Cost,
-			Tags: MetricTags{
-				MetricTag{Label: "plan_guid", Value: plan.PlanGUID},
-				MetricTag{Label: "name", Value: plans[plan.PlanGUID]},
+			Tags: m.MetricTags{
+				m.MetricTag{Label: "plan_guid", Value: plan.PlanGUID},
+				m.MetricTag{Label: "name", Value: plansMapping[plan.PlanGUID]},
 			},
 			Unit: "pounds",
+		})
+	}
+
+	return metrics
+}
+
+func CurrencyRateGauges(
+	rates []billing.CurrencyRate,
+) []m.Metric {
+	metrics := make([]m.Metric, 0)
+
+	for _, rate := range rates {
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
+			Time:  time.Now(),
+			Name:  "billing.currency.configured",
+			Value: rate.Rate,
+			Tags: m.MetricTags{
+				m.MetricTag{Label: "code", Value: rate.Code},
+			},
+			Unit: "ratio",
 		})
 	}
 

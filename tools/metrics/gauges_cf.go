@@ -8,10 +8,12 @@ import (
 	"time"
 
 	"github.com/cloudfoundry-community/go-cfclient"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func QuotaGauge(c *Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		orgs, err := c.cf.ListOrgs()
 		if err != nil {
 			return err
@@ -46,37 +48,37 @@ func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
 			return err
 		}
 
-		return w.WriteMetrics([]Metric{
+		return w.WriteMetrics([]m.Metric{
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.services.reserved", // number of services reserved by quotas
 				Value: float64(reservedServices),
 				Unit:  "count",
 			},
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.services.allocated", // number of services in use
 				Value: float64(allocatedServices),
 				Unit:  "count",
 			},
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.memory.reserved", // memory reserved by org quotas
 				Value: float64(reservedMemory),
 				Unit:  "megabytes",
 			},
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.memory.allocated", // memory allocated to apps
 				Value: float64(allocatedMemory),
 				Unit:  "megabytes",
 			},
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.quota.routes.reserved", // number of routes reserved
 				Value: float64(reservedRoutes),
@@ -86,8 +88,8 @@ func QuotaGauge(c *Client, interval time.Duration) MetricReadCloser {
 	})
 }
 
-func UserCountGauge(c *Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func UserCountGauge(c *Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		// global auditor role cannot use /v2/users
 		// so we have to fetch users from each org
 		orgs, err := c.cf.ListOrgs()
@@ -107,9 +109,9 @@ func UserCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			}
 		}
 
-		return w.WriteMetrics([]Metric{
+		return w.WriteMetrics([]m.Metric{
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.users.count",
 				Value: float64(len(userGuids)),
@@ -118,8 +120,8 @@ func UserCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 	})
 }
 
-func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func AppCountGauge(c *Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		apps, err := c.cf.ListApps()
 		if err != nil {
 			return err
@@ -170,15 +172,15 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			}
 		}
 
-		metrics := []Metric{}
+		metrics := []m.Metric{}
 		for state, countByTrial := range counters {
 			for orgIsTrial, count := range countByTrial {
-				metrics = append(metrics, Metric{
-					Kind:  Gauge,
+				metrics = append(metrics, m.Metric{
+					Kind:  m.Gauge,
 					Time:  time.Now(),
 					Name:  "op.apps.count",
 					Value: float64(count),
-					Tags: MetricTags{
+					Tags: m.MetricTags{
 						{Label: "state", Value: state},
 						{Label: "trial_org", Value: strconv.FormatBool(orgIsTrial)},
 					},
@@ -190,8 +192,8 @@ func AppCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 	})
 }
 
-func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func ServiceCountGauge(c *Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		serviceInstances, err := c.cf.ListServiceInstances()
 		if err != nil {
 			return err
@@ -267,16 +269,16 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			counters[orgIsTrial][servicePlanIsFree][service.Label]++
 		}
 
-		metrics := []Metric{}
+		metrics := []m.Metric{}
 		for orgIsTrial, x := range counters {
 			for servicePlanIsFree, y := range x {
 				for serviceLabel, count := range y {
-					metrics = append(metrics, Metric{
-						Kind:  Gauge,
+					metrics = append(metrics, m.Metric{
+						Kind:  m.Gauge,
 						Time:  time.Now(),
 						Name:  "op.services.provisioned",
 						Value: float64(count),
-						Tags: MetricTags{
+						Tags: m.MetricTags{
 							{Label: "type", Value: serviceLabel},
 							{Label: "trial_org", Value: strconv.FormatBool(orgIsTrial)},
 							{Label: "free_service", Value: strconv.FormatBool(servicePlanIsFree)},
@@ -290,8 +292,8 @@ func ServiceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 	})
 }
 
-func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func OrgCountGauge(c *Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		orgs, err := c.cf.ListOrgs()
 		if err != nil {
 			return err
@@ -305,33 +307,35 @@ func OrgCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 			}
 			counters[quota.Name]++
 		}
-		metrics := []Metric{}
+		metrics := []m.Metric{}
 		for name, count := range counters {
 			if strings.HasPrefix(name, "ACC-") || strings.HasPrefix(name, "CATS-") || strings.HasPrefix(name, "SMOKE-") {
 				continue
 			}
-			metrics = append(metrics, Metric{
-				Kind:  Gauge,
+			metrics = append(metrics, m.Metric{
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.orgs.count",
 				Value: float64(count),
-				Tags:  MetricTags{{Label: "quota", Value: name}},
-				Unit:  "count",
+				Tags: m.MetricTags{
+					{Label: "quota", Value: name},
+				},
+				Unit: "count",
 			})
 		}
 		return w.WriteMetrics(metrics)
 	})
 }
 
-func SpaceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func SpaceCountGauge(c *Client, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		spaces, err := c.cf.ListSpaces()
 		if err != nil {
 			return err
 		}
-		return w.WriteMetrics([]Metric{
+		return w.WriteMetrics([]m.Metric{
 			{
-				Kind:  Gauge,
+				Kind:  m.Gauge,
 				Time:  time.Now(),
 				Name:  "op.spaces.count",
 				Value: float64(len(spaces)),
@@ -341,8 +345,8 @@ func SpaceCountGauge(c *Client, interval time.Duration) MetricReadCloser {
 	})
 }
 
-func EventCountGauge(c *Client, eventType string, interval time.Duration) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
+func EventCountGauge(c *Client, eventType string, interval time.Duration) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		u, err := url.Parse("/v2/events")
 		if err != nil {
 			return err
@@ -355,9 +359,9 @@ func EventCountGauge(c *Client, eventType string, interval time.Duration) Metric
 		q.Add("q", "timestamp>"+maxAge.Format(time.RFC3339Nano))
 		u.RawQuery = q.Encode()
 		batchUrl := u.String()
-		gauge := Metric{
+		gauge := m.Metric{
 			Time: time.Now(),
-			Kind: Gauge,
+			Kind: m.Gauge,
 			Name: "op.events." + eventType,
 			Unit: "count",
 		}
@@ -377,7 +381,7 @@ func EventCountGauge(c *Client, eventType string, interval time.Duration) Metric
 			}
 			batchUrl = batch.NextUrl
 		}
-		return w.WriteMetrics([]Metric{gauge})
+		return w.WriteMetrics([]m.Metric{gauge})
 	})
 }
 

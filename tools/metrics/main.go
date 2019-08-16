@@ -15,20 +15,24 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/alphagov/paas-cf/tools/metrics/pingdumb"
-	"github.com/alphagov/paas-cf/tools/metrics/tlscheck"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/pingdumb"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/costexplorer"
 	"github.com/pkg/errors"
 
 	"code.cloudfoundry.org/lager"
-)
 
-func initPrometheus() (*prometheus.Registry, http.Handler) {
-	registry := prometheus.NewRegistry()
-	handler := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
-	return registry, handler
-}
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/aiven"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/debug"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
+	promrep "github.com/alphagov/paas-cf/tools/metrics/pkg/prometheus_reporter"
+)
 
 func getHTTPPort() int {
 	portStr := os.Getenv("PORT")
@@ -63,7 +67,11 @@ func runHTTPServer(port int, metricsHandler http.Handler) {
 }
 
 func Main() error {
-	prometheusRegistry, prometheusHandler := initPrometheus()
+	prometheusRegistry := prometheus.NewRegistry()
+	prometheusHandler := promhttp.HandlerFor(
+		prometheusRegistry,
+		promhttp.HandlerOpts{},
+	)
 
 	runHTTPServer(getHTTPPort(), prometheusHandler)
 
@@ -92,7 +100,7 @@ func Main() error {
 		ClientSecret: os.Getenv("CF_CLIENT_SECRET"),
 	}
 
-	a, err := NewAivenClient(
+	a, err := aiven.NewClient(
 		os.Getenv("AIVEN_PROJECT"),
 		os.Getenv("AIVEN_API_TOKEN"),
 	)
@@ -109,27 +117,22 @@ func Main() error {
 		return fmt.Errorf("unexpected aws region %s", awsRegion)
 	}
 
-	cfs := NewCloudFrontService(sess)
+	cfs := cloudfront.NewService(sess)
 	tlsChecker := &tlscheck.TLSChecker{}
 
-	ecs := NewElasticacheService(sess)
-	s3 := NewS3Service(sess)
+	ecs := elasticache.NewService(sess)
+	s3 := s3.NewService(sess)
 
 	usEast1Sess, err := session.NewSession(&aws.Config{Region: aws.String("us-east-1")})
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to AWS API in US East 1")
 	}
-	cloudWatch := NewCloudWatchService(usEast1Sess, logger)
+	cloudWatch := cloudwatch.NewService(usEast1Sess, logger)
 
 	costExplorer := costexplorer.New(sess)
 
-	plans, err := GetPlanGUIDS("plan_guids.json")
-	if err != nil {
-		return errors.Wrap(err, "failed to load plan_guids.json")
-	}
-
 	// Combine all metrics into single stream
-	gauges := []MetricReader{
+	gauges := []m.MetricReader{
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
 		ServiceCountGauge(c, 5*time.Minute),             // poll number of provisioned services
 		OrgCountGauge(c, 5*time.Minute),                 // poll number of orgs
@@ -148,26 +151,25 @@ func Main() error {
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
-		BillingCostsGauge(logger, os.Getenv("COSTS_ENDPOINT"), 15*time.Minute, plans),
+		BillingCostsGauge(logger, os.Getenv("BILLING_ENDPOINT"), 15*time.Minute),
+		CurrencyGauges(logger, 5*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))
 	}
-	metrics := NewMultiMetricReader(gauges...)
+	metrics := m.NewMultiMetricReader(gauges...)
 	defer metrics.Close()
 
-	prometheusReporter := NewPrometheusReporter(prometheusRegistry)
+	prometheusReporter := promrep.NewPrometheusReporter(prometheusRegistry)
 
-	multiWriter := NewMultiMetricWriter(
-		prometheusReporter,
-	)
+	multiWriter := m.NewMultiMetricWriter(prometheusReporter)
 
 	if os.Getenv("DEBUG") == "1" {
-		multiWriter.AddWriter(StdOutWriter{})
+		multiWriter.AddWriter(debug.StdOutWriter{})
 	}
 
 	for {
-		if err := CopyMetrics(multiWriter, metrics); err != nil {
+		if err := m.CopyMetrics(multiWriter, metrics); err != nil {
 			logger.Error("error-streaming-metrics", err)
 		}
 	}

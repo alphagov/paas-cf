@@ -1,31 +1,35 @@
 package main
 
 import (
-	"code.cloudfoundry.org/lager"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"time"
+
+	"code.cloudfoundry.org/lager"
+	awss3 "github.com/aws/aws-sdk-go/service/s3"
+
+	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
 )
 
 func S3BucketsGauge(
 	logger lager.Logger,
-	s3Service *S3Service,
+	s3Service *s3.S3Service,
 	interval time.Duration,
-) MetricReadCloser {
-	return NewMetricPoller(interval, func(w MetricWriter) error {
-		metrics := []Metric{}
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		metrics := []m.Metric{}
 
-		buckets, err := s3Service.Client.ListBuckets(&s3.ListBucketsInput{})
+		buckets, err := s3Service.Client.ListBuckets(&awss3.ListBucketsInput{})
 
 		if err != nil {
 			return err
 		}
 
-		metrics = append(metrics, Metric{
-			Kind: Gauge,
-			Time: time.Now(),
-			Name: "aws.s3.buckets.count",
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
+			Time:  time.Now(),
+			Name:  "aws.s3.buckets.count",
 			Value: float64(len(buckets.Buckets)),
-			Unit: "count",
+			Unit:  "count",
 		})
 
 		return w.WriteMetrics(metrics)
