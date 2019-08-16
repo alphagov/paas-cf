@@ -302,8 +302,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: master
-      tag_filter: v3.5.0
+      branch: cf11.0
 
   - name: cf-smoke-tests-release
     type: git
