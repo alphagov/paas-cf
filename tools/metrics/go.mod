@@ -15,6 +15,7 @@ require (
 	github.com/jarcoal/httpmock v1.0.4
 	github.com/martini-contrib/render v0.0.0-20150707142108-ec18f8345a11 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.2 // indirect
 	github.com/miekg/dns v0.0.0-20171128074819-6da3249dfb57
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.5.0
