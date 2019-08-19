@@ -20,6 +20,8 @@ get_creds_from_env_or_pass() {
   LOGIT_SYSLOG_ADDRESS="${LOGIT_SYSLOG_ADDRESS:-$(pass "logit/${AWS_ACCOUNT}/syslog_address")}"
   LOGIT_SYSLOG_PORT="${LOGIT_SYSLOG_PORT:-$(pass "logit/${AWS_ACCOUNT}/syslog_port")}"
   LOGIT_CA_CERT="${LOGIT_CA_CERT:-$(pass "logit/${AWS_ACCOUNT}/ca_cert")}"
+  LOGIT_ELASTICSEARCH_URL="${LOGIT_ELASTICSEARCH_URL:-$(pass "logit/${AWS_ACCOUNT}/elasticsearch_url")}"
+  LOGIT_ELASTICSEARCH_API_KEY="${LOGIT_ELASTICSEARCH_API_KEY:-$(pass "logit/${AWS_ACCOUNT}/elasticsearch_api_key")}"
 }
 
 upload() {
@@ -32,6 +34,8 @@ meta:
   logit:
     syslog_address: ${LOGIT_SYSLOG_ADDRESS}
     syslog_port: ${LOGIT_SYSLOG_PORT}
+    elasticsearch_url: ${LOGIT_ELASTICSEARCH_URL}
+    elasticsearch_api_key: ${LOGIT_ELASTICSEARCH_API_KEY}
     ca_cert: |
 $(echo "${LOGIT_CA_CERT}" | sed 's/^/      /')
 EOF

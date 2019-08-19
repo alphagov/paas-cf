@@ -134,7 +134,7 @@ func Main() error {
 
 	logitClient, err := logit.NewService(
 		logger,
-		os.Getenv("LOGIT_ELASTICSEARCH_ENDPOINT"),
+		os.Getenv("LOGIT_ELASTICSEARCH_URL"),
 		os.Getenv("LOGIT_ELASTICSEARCH_API_KEY"),
 	)
 	if err != nil {
