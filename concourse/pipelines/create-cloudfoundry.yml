@@ -1321,6 +1321,7 @@ jobs:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             CREDHUB_CLIENT_ID: credhub-admin
             CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
           run:
             path: sh
             args:
@@ -1333,6 +1334,7 @@ jobs:
                 < cf-tfstate/cf.tfstate \
                 > cf-terraform-outputs.yml
 
+                echo 'Getting variables'
                 CF_ADMIN=admin
                 CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
                 CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
@@ -1344,9 +1346,11 @@ jobs:
                 METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
                 LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
 
-                credhub api -s "$BOSH_ENVIRONMENT:8844/api" --skip-tls-validation
+                echo 'Logging into Credhub'
+                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
                 credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
 
+                echo 'Setting secrets'
                 credhub set --name=/concourse/main/create-cloudfoundry/cf-admin --type value --value "${CF_ADMIN}"
                 credhub set --name=/concourse/main/create-cloudfoundry/cf-pass --type password --password "${CF_PASS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/cf-client-secret --type password --password "${CF_CLIENT_SECRET}"
@@ -1357,6 +1361,9 @@ jobs:
                 credhub set --name=/concourse/main/create-cloudfoundry/metrics-aws-access-key-id --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
                 credhub set --name=/concourse/main/create-cloudfoundry/metrics-aws-secret-access-key --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
                 credhub set --name=/concourse/main/create-cloudfoundry/logit-address --type value --value "${LOGIT_ADDRESS}"
+
+                echo 'Accessible secrets'
+                credhub find --path /concourse/main/create-cloudfoundry
 
   - name: prometheus-deploy
     serial: true
