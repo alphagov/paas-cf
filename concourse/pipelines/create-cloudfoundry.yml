@@ -5,27 +5,27 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -40,12 +40,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+        tag: 4467c23cef4a5d87d531b88700300b222fbf2916
 
 groups:
   - name: deploy
@@ -512,7 +512,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+              tag: 4467c23cef4a5d87d531b88700300b222fbf2916
           inputs:
             - name: paas-cf
           params:
@@ -553,7 +553,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+                tag: 4467c23cef4a5d87d531b88700300b222fbf2916
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -978,7 +978,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+              tag: 4467c23cef4a5d87d531b88700300b222fbf2916
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -1199,6 +1199,11 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-vars-store
           - get: bosh-CA-crt
+          - get: logit-secrets
+          - get: cf-vars-store
+            passed: ['generate-cf-config']
+          - get: cf-tfstate
+            passed: ['generate-cf-config']
 
       - aggregate:
         - task: get-and-upload-stemcell
@@ -1299,6 +1304,66 @@ jobs:
                 export BOSH_CLIENT_SECRET
 
                 bosh -n deploy cf-manifest/cf-manifest.yml
+
+      - task: copy-cf-secrets-to-concourse-credhub-ns
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-manifest
+            - name: cf-vars-store
+            - name: logit-secrets
+            - name: cf-tfstate
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            CREDHUB_CLIENT_ID: credhub-admin
+            CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                < cf-tfstate/cf.tfstate \
+                > cf-terraform-outputs.yml
+
+                echo 'Getting variables'
+                CF_ADMIN=admin
+                CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
+                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
+                API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
+                PAAS_ACCOUNTS_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
+                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
+                METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
+                METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
+                LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
+
+                echo 'Logging into Credhub'
+                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
+                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
+
+                echo 'Setting secrets'
+                credhub set --name=/concourse/main/create-cloudfoundry/cf-admin --type value --value "${CF_ADMIN}"
+                credhub set --name=/concourse/main/create-cloudfoundry/cf-pass --type password --password "${CF_PASS}"
+                credhub set --name=/concourse/main/create-cloudfoundry/cf-client-secret --type password --password "${CF_CLIENT_SECRET}"
+                credhub set --name=/concourse/main/create-cloudfoundry/paas-accounts-password --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
+                credhub set --name=/concourse/main/create-cloudfoundry/api-endpoint --type value --value "${API_ENDPOINT}"
+                credhub set --name=/concourse/main/create-cloudfoundry/uaa-endpoint --type value --value "${UAA_ENDPOINT}"
+                credhub set --name=/concourse/main/create-cloudfoundry/metrics-secret --type password --password "${METRICS_SECRET}"
+                credhub set --name=/concourse/main/create-cloudfoundry/metrics-aws-access-key-id --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
+                credhub set --name=/concourse/main/create-cloudfoundry/metrics-aws-secret-access-key --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
+                credhub set --name=/concourse/main/create-cloudfoundry/logit-address --type value --value "${LOGIT_ADDRESS}"
+
+                echo 'Accessible secrets'
+                credhub find --path /concourse/main/create-cloudfoundry
 
   - name: prometheus-deploy
     serial: true
@@ -2663,22 +2728,6 @@ jobs:
           trigger: true
           passed: ['post-deploy']
 
-        - get: cf-vars-store
-          passed: ['post-deploy']
-
-        - get: cf-manifest
-          passed: ['post-deploy']
-
-        - get: cf-tfstate
-          passed: ['post-deploy']
-
-        - get: logit-secrets
-          passed: ['post-deploy']
-
-      - task: retrieve-config
-        tags: [colocated-with-web]
-        config: *post-deploy-config
-
       - task: deploy-paas-accounts
         tags: [colocated-with-web]
         config:
@@ -2687,11 +2736,13 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
+            BASIC_AUTH_PASSWORD: ((paas-accounts-password))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
           inputs:
             - name: paas-cf
             - name: paas-accounts
-            - name: config
-            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -2701,10 +2752,6 @@ jobs:
               - |
                 DB_PLAN="tiny-unencrypted-9.5"
 
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                BASIC_AUTH_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
                 if ! cf service accounts-db > /dev/null; then
@@ -2802,12 +2849,6 @@ jobs:
         - get: cf-vars-store
           passed: ['post-deploy']
 
-        - get: cf-tfstate
-          passed: ['post-deploy']
-
-        - get: logit-secrets
-          passed: ['post-deploy']
-
       - task: build
         tags: [colocated-with-web]
         config:
@@ -2842,7 +2883,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+              tag: 4467c23cef4a5d87d531b88700300b222fbf2916
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -2894,10 +2935,6 @@ jobs:
                   | spruce merge --cherry-pick applications \
                     > paas-admin-manifest/manifest.yml
 
-      - task: retrieve-config
-        tags: [colocated-with-web]
-        config: *post-deploy-config
-
       - task: deploy
         tags: [colocated-with-web]
         config:
@@ -2907,10 +2944,12 @@ jobs:
             - name: paas-cf
             - name: paas-admin-dist
             - name: paas-admin-manifest
-            - name: config
-            - name: cf-vars-store
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
+            CF_CLIENT_SECRET: ((cf-client-secret))
           run:
             path: sh
             args:
@@ -2918,11 +2957,6 @@ jobs:
               - -u
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                export CF_CLIENT_SECRET
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
                 cf api "${API_ENDPOINT}"
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
                 cf target -o admin -s public
@@ -2952,11 +2986,11 @@ jobs:
               DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
               DEPLOY_ENV: ((deploy_env))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              ACCOUNTS_PASSWORD: ((paas-accounts-password))
             inputs:
               - name: paas-cf
               - name: paas-admin
               - name: admin-creds
-              - name: cf-vars-store
             run:
               path: sh
               args:
@@ -2977,7 +3011,6 @@ jobs:
                   CF_API_BASE_URL="https://api.${SYSTEM_DNS_ZONE_NAME}" \
                   ACCOUNTS_API_BASE_URL="https://accounts.${SYSTEM_DNS_ZONE_NAME}" \
                   ACCOUNTS_USERNAME="admin" \
-                  ACCOUNTS_PASSWORD="$(awk '/^secrets_paas_accounts_admin_password:/ { print $2 }' < ../cf-vars-store/cf-vars-store.yml)" \
                     npm run test:acceptance
 
         ensure:
@@ -3058,22 +3091,6 @@ jobs:
           trigger: true
           passed: ['post-deploy']
 
-        - get: cf-vars-store
-          passed: ['post-deploy']
-
-        - get: cf-manifest
-          passed: ['post-deploy']
-
-        - get: cf-tfstate
-          passed: ['post-deploy']
-
-        - get: logit-secrets
-          passed: ['post-deploy']
-
-      - task: retrieve-config
-        tags: [colocated-with-web]
-        config: *post-deploy-config
-
       - task: deploy-paas-billing
         tags: [colocated-with-web]
         config:
@@ -3083,11 +3100,14 @@ jobs:
             AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
+            CF_CLIENT_SECRET: ((cf-client-secret))
+            LOGIT_ADDRESS: ((logit-address))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
           inputs:
             - name: paas-cf
             - name: paas-billing
-            - name: config
-            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -3100,10 +3120,6 @@ jobs:
                   BILLING_DB_PLAN="medium-9.5"
                 fi
 
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
                 if ! cf service billing-db > /dev/null; then
@@ -3181,12 +3197,13 @@ jobs:
             AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
           inputs:
             - name: paas-cf
             - name: paas-billing
               path: src/github.com/alphagov/paas-billing
-            - name: config
-            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -3194,7 +3211,6 @@ jobs:
               - -u
               - -c
               - |
-                . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
                 export GOPATH="${PWD}"
@@ -3209,23 +3225,6 @@ jobs:
         trigger: true
         passed: ['post-deploy']
 
-      - aggregate:
-        - get: cf-manifest
-          passed: ['post-deploy']
-
-        - get: cf-vars-store
-          passed: ['post-deploy']
-
-        - get: cf-tfstate
-          passed: ['post-deploy']
-
-        - get: logit-secrets
-          passed: ['post-deploy']
-
-      - task: retrieve-config
-        tags: [colocated-with-web]
-        config: *post-deploy-config
-
       - task: deploy
         tags: [colocated-with-web]
         config:
@@ -3238,10 +3237,15 @@ jobs:
             AWS_REGION: ((aws_region))
             AIVEN_API_TOKEN: ((aiven_api_token))
             AIVEN_PROJECT: paas-cf-((aws_account))
+            METRICS_SECRET: ((metrics-secret))
+            UAA_ENDPOINT: ((uaa-endpoint))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
+            METRICS_AWS_ACCESS_KEY_ID: ((metrics-aws-access-key-id))
+            METRICS_AWS_SECRET_ACCESS_KEY: ((metrics-aws-secret-access-key))
           inputs:
             - name: paas-cf
-            - name: config
-            - name: cf-vars-store
           run:
             path: sh
             args:
@@ -3249,10 +3253,6 @@ jobs:
               - -u
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
-
-                . ./config/config.sh
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
                 cd paas-cf/tools/metrics
@@ -3470,7 +3470,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 50f6eb732334e0af7192bb884e558e3dc7e9fa33
+            tag: 4467c23cef4a5d87d531b88700300b222fbf2916
         inputs:
           - name: paas-cf
           - name: rotated-cf-vars-store
