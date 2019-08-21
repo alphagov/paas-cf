@@ -11,6 +11,10 @@
   value: ((cell_instances))
 
 - type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=rep/properties/containers/proxy/additional_memory_allocation_mb?
+  value: 48
+
+- type: replace
   path: /instance_groups/name=diego-cell/jobs/name=cflinuxfs3-rootfs-setup/properties/cflinuxfs3-rootfs/trusted_certs
   value:
     - ((aws_rds_combined_ca_bundle))
