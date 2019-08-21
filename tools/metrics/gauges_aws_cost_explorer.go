@@ -31,19 +31,19 @@ func AWSCostExplorerGauge(
 		for _, group := range serviceUsage {
 			serviceName := *group.Keys[0]
 
-			unblendedCost, err := strconv.ParseFloat(*group.Metrics["UnblendedCost"].Amount, 64)
+			amortizedCost, err := strconv.ParseFloat(*group.Metrics["AmortizedCost"].Amount, 64)
 			if err != nil {
-				logger.Fatal("5", fmt.Errorf("error parsing service unblended cost as float: %s", err))
+				logger.Fatal("5", fmt.Errorf("error parsing service amortized cost as float: %s", err))
 			}
 
 			metrics = append(metrics, m.Metric{
 				Kind:  m.Gauge,
 				Time:  twoDaysAgo,
 				Name:  "aws.cost_explorer.by_service",
-				Value: unblendedCost,
+				Value: amortizedCost,
 				Unit:  "pounds",
 				Tags: m.MetricTags{
-					{Label: "type", Value: "UnblendedCost"},
+					{Label: "type", Value: "AmortizedCost"},
 					{Label: "service", Value: serviceName},
 				},
 			})
@@ -56,19 +56,19 @@ func AWSCostExplorerGauge(
 		for _, group := range regionUsage {
 			regionName := *group.Keys[0]
 
-			unblendedCost, err := strconv.ParseFloat(*group.Metrics["UnblendedCost"].Amount, 64)
+			amortizedCost, err := strconv.ParseFloat(*group.Metrics["AmortizedCost"].Amount, 64)
 			if err != nil {
-				logger.Fatal("5", fmt.Errorf("error parsing region unblended cost as float: %s", err))
+				logger.Fatal("5", fmt.Errorf("error parsing region amortized cost as float: %s", err))
 			}
 
 			metrics = append(metrics, m.Metric{
 				Kind:  m.Gauge,
 				Time:  twoDaysAgo,
 				Name:  "aws.cost_explorer.by_region",
-				Value: unblendedCost,
+				Value: amortizedCost,
 				Unit:  "pounds",
 				Tags: m.MetricTags{
-					{Label: "type", Value: "UnblendedCost"},
+					{Label: "type", Value: "AmortizedCost"},
 					{Label: "region", Value: regionName},
 				},
 			})
@@ -86,10 +86,10 @@ func awsServiceUsageInRegionOnDate(awsRegion string, year int, month time.Month,
 	//    --time-period Start=2019-07-29,End=2019-07-30 \
 	//    --granularity DAILY \
 	//    --filter '{"Dimensions": {"Key": "REGION", "Values": ["eu-west-2"]}}' \
-	//    --metrics UnblendedCost \
+	//    --metrics AmortizedCost \
 	//    --group-by '[{"Type": "DIMENSION", "Key": "SERVICE"}]'
 	query := costexplorer.GetCostAndUsageInput{
-		Metrics:     []*string{aws.String(costexplorer.MetricUnblendedCost)},
+		Metrics:     []*string{aws.String(costexplorer.MetricAmortizedCost)},
 		Granularity: aws.String(costexplorer.GranularityDaily),
 		TimePeriod: &costexplorer.DateInterval{
 			Start: aws.String(from.Format("2006-01-02")),
@@ -127,10 +127,10 @@ func awsRegionUsageOnDate(year int, month time.Month, date int, costExplorer *co
 	// aws-vault exec paas-dev -- aws ce get-cost-and-usage \
 	//   --time-period Start=2019-07-29,End=2019-07-30 \
 	//   --granularity DAILY \
-	//   --metrics UnblendedCost \
+	//   --metrics AmortizedCost \
 	//   --group-by '[{"Type": "DIMENSION", "Key": "REGION"}]'
 	query := costexplorer.GetCostAndUsageInput{
-		Metrics:     []*string{aws.String(costexplorer.MetricUnblendedCost)},
+		Metrics:     []*string{aws.String(costexplorer.MetricAmortizedCost)},
 		Granularity: aws.String(costexplorer.GranularityDaily),
 		TimePeriod: &costexplorer.DateInterval{
 			Start: aws.String(from.Format("2006-01-02")),
