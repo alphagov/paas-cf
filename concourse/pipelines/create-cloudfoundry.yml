@@ -428,6 +428,11 @@ resources:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_master
 
+  - name: migrator
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-migrator.git
+
   - name: pagerduty-secrets
     type: s3-iam
     source:
@@ -1014,6 +1019,7 @@ jobs:
           - get: cf-tfstate
             passed: ['cf-terraform']
           - get: logit-secrets
+          - get: migrator
 
       - aggregate:
         - task: extract-terraform-outputs
@@ -1113,6 +1119,36 @@ jobs:
             put: cloud-config
             params:
               file: cloud-config/cloud-config.yml
+
+        - task: migrate-secrets-to-credhub
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *golang-image-resource
+            inputs:
+              - name: cf-vars-store
+              - name: migrator
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              CREDHUB_CLIENT: credhub-admin
+              CREDHUB_SECRET: ((bosh-credhub-admin))
+              CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+              DEPLOY_ENV: ((deploy_env))
+            run:
+              path: sh
+              args:
+                - -u
+                - -e
+                - -c
+                - |
+                  export CREDHUB_SERVER="https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
+                  export GOBIN=/go/bin
+                  export HOME="$(pwd)"
+
+                  mkdir -p /go/src/github.com/alphagov/ && cp -R migrator /go/src/github.com/alphagov/
+                  cd /go/src/github.com/alphagov/migrator && go install && cd
+
+                  migrator migrate -v cf-vars-store/cf-vars-store.yml -e "${DEPLOY_ENV}" -d "${DEPLOY_ENV}"
 
         - task: generate-cf-manifest
           tags: [colocated-with-web]
