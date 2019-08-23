@@ -97,7 +97,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 4467c23cef4a5d87d531b88700300b222fbf2916
+              tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
           inputs:
             - name: paas-cf
           params:
@@ -167,7 +167,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli-v2
-              tag: 4467c23cef4a5d87d531b88700300b222fbf2916
+              tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
           inputs:
             - name: bosh-vars-store
             - name: paas-cf
@@ -256,7 +256,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: 4467c23cef4a5d87d531b88700300b222fbf2916
+              tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
           inputs:
             - name: terraform-variables
             - name: paas-cf
