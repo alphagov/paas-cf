@@ -28,6 +28,8 @@ private
     env['ENV_SPECIFIC_BOSH_VARS_FILE'] = 'default.yml'
     env['GRAFANA_AUTH_GOOGLE_CLIENT_ID'] = 'google-client-id'
     env['GRAFANA_AUTH_GOOGLE_CLIENT_SECRET'] = 'google-client-secret'
+    env['UAA_CLIENTS_CF_EXPORTER_SECRET'] = 'uaa_clients_cf_exporter_secret'
+    env['UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET'] = 'uaa_clients_firehose_exporter_secret'
     env
   end
 

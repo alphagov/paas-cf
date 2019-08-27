@@ -1201,9 +1201,8 @@ jobs:
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
                   cp cf-vars-store/cf-vars-store.yml cf-vars-store-updated/
 
-                  VARS_STORE=cf-vars-store-updated/cf-vars-store.yml \
-                    ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
-                      > cf-manifest/cf-manifest.yml
+                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
+                    > cf-manifest/cf-manifest.yml
 
                   ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
                     > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
@@ -1384,6 +1383,8 @@ jobs:
                 LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
                 LOGIT_ELASTICSEARCH_URL=$($VAL_FROM_YAML meta.logit.elasticsearch_url logit-secrets/logit-secrets.yml)
                 LOGIT_ELASTICSEARCH_API_KEY=$($VAL_FROM_YAML meta.logit.elasticsearch_api_key logit-secrets/logit-secrets.yml)
+                UAA_CLIENTS_CF_EXPORTER_SECRET=$($VAL_FROM_YAML uaa_clients_cf_exporter_secret cf-vars-store/cf-vars-store.yml)
+                UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$($VAL_FROM_YAML uaa_clients_firehose_exporter_secret cf-vars-store/cf-vars-store.yml)
 
                 echo 'Logging into Credhub'
                 credhub api -s "$BOSH_ENVIRONMENT:8844/api"
@@ -1405,6 +1406,8 @@ jobs:
                 credhub set --name=/concourse/main/create-cloudfoundry/logit-address --type value --value "${LOGIT_ADDRESS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/logit-elasticsearch-url --type value --value "${LOGIT_ELASTICSEARCH_URL}"
                 credhub set --name=/concourse/main/create-cloudfoundry/logit-elasticsearch-api-key --type password --password "${LOGIT_ELASTICSEARCH_API_KEY}"
+                credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_cf_exporter_secret --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
+                credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_firehose_exporter_secret --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
 
                 echo 'Accessible secrets'
                 credhub find --path /concourse/main/create-cloudfoundry
@@ -1509,6 +1512,8 @@ jobs:
             ENV_SPECIFIC_BOSH_VARS_FILE: ((env_specific_bosh_vars_file))
             GRAFANA_AUTH_GOOGLE_CLIENT_ID: ((grafana_auth_google_client_id))
             GRAFANA_AUTH_GOOGLE_CLIENT_SECRET: ((grafana_auth_google_client_secret))
+            UAA_CLIENTS_CF_EXPORTER_SECRET: ((uaa_clients_cf_exporter_secret))
+            UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET: ((uaa_clients_firehose_exporter_secret))
           run:
             path: sh
             args:
@@ -1518,9 +1523,8 @@ jobs:
               - |
                 cp prometheus-vars-store/prometheus-vars-store.yml prometheus-vars-store-updated/
 
-                VARS_STORE=prometheus-vars-store-updated/prometheus-vars-store.yml \
-                  ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
-                    > prometheus-manifest/prometheus-manifest.yml
+                ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
+                  > prometheus-manifest/prometheus-manifest.yml
 
                 ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
                   > prometheus-manifest-pre-vars/prometheus-manifest-pre-vars.yml
