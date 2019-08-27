@@ -1143,7 +1143,8 @@ jobs:
                 - |
                   export CREDHUB_SERVER="https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
                   export GOBIN=/go/bin
-                  export HOME="$(pwd)"
+                  HOME="$(pwd)"
+                  export
 
                   mkdir -p /go/src/github.com/alphagov/ && cp -R migrator /go/src/github.com/alphagov/
                   cd /go/src/github.com/alphagov/migrator && go install && cd
@@ -1425,6 +1426,39 @@ jobs:
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
           - get: pagerduty-secrets
+          - get: migrator
+
+      - task: migrate-prometheus-secrets-to-credhub
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *golang-image-resource
+          inputs:
+            - name: prometheus-vars-store
+            - name: migrator
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -u
+              - -e
+              - -c
+              - |
+                export CREDHUB_SERVER="https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
+                export GOBIN=/go/bin
+                HOME="$(pwd)"
+                export HOME
+
+
+                mkdir -p /go/src/github.com/alphagov/ && cp -R migrator /go/src/github.com/alphagov/
+                cd /go/src/github.com/alphagov/migrator && go install && cd
+
+                migrator migrate -v prometheus-vars-store/prometheus-vars-store.yml -e "${DEPLOY_ENV}" -d prometheus
 
       - task: extract-terraform-outputs
         tags: [colocated-with-web]
