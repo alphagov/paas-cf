@@ -72,7 +72,7 @@ resource "pingdom_check" "paas_admin_healthcheck" {
   name                     = "PaaS Admin - ${var.env}"
   host                     = "admin.${var.system_dns_zone_name}"
   url                      = "/healthcheck"
-  shouldcontain            = "costs"
+  shouldcontain            = "\"OK\""
   encryption               = true
   resolution               = 1
   uselegacynotifications   = true
