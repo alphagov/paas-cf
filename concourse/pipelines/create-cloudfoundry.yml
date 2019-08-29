@@ -428,11 +428,6 @@ resources:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_master
 
-  - name: migrator
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-migrator.git
-
   - name: pagerduty-secrets
     type: s3-iam
     source:
@@ -619,19 +614,18 @@ jobs:
           - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
-          - get: cf-vars-store
       - task: wait-for-app-availability-tests
         tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: cf-vars-store
             - name: deployed-healthcheck
             - name: pipeline-trigger
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CF_ADMIN: admin
+            CF_PASS: ((cf_pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -646,7 +640,6 @@ jobs:
                   exit 0
                 fi
 
-                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
@@ -761,7 +754,6 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: cf-vars-store
           - get: paas-cf
             passed: ['generate-secrets']
 
@@ -799,7 +791,6 @@ jobs:
             - name: paas-cf
             - name: pipeline-trigger
             - name: deployed-healthcheck
-            - name: cf-vars-store
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -810,6 +801,7 @@ jobs:
             CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
             AWS_DEFAULT_REGION: ((aws_region))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            CF_PASS: ((cf_pass))
           run:
             path: sh
             args:
@@ -824,8 +816,6 @@ jobs:
 
                 export CONCOURSE_WEB_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
-                export CF_PASS
-                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
@@ -1013,13 +1003,11 @@ jobs:
           - get: bosh-secrets
           - get: cf-secrets
             passed: ['cf-terraform']
-          - get: cf-vars-store
           - get: vpc-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
           - get: logit-secrets
-          - get: migrator
 
       - aggregate:
         - task: extract-terraform-outputs
@@ -1119,58 +1107,6 @@ jobs:
             put: cloud-config
             params:
               file: cloud-config/cloud-config.yml
-
-        - task: modify-cf-vars-store-for-credhub-migration
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *gov-paas-bosh-cli-v2-image-resource
-            inputs:
-              - name: paas-cf
-              - name: cf-vars-store
-            outputs:
-              - name: vars_to_migrate
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ruby paas-cf/concourse/scripts/modify_vars_store_for_credhub_migration.rb \
-                    cf-vars-store/cf-vars-store.yml
-
-                  mv cf_vars_to_migrate.yml vars_to_migrate
-
-        - task: migrate-secrets-to-credhub
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *golang-image-resource
-            inputs:
-              - name: vars_to_migrate
-              - name: migrator
-            params:
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              CREDHUB_CLIENT: credhub-admin
-              CREDHUB_SECRET: ((bosh-credhub-admin))
-              CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
-              DEPLOY_ENV: ((deploy_env))
-            run:
-              path: sh
-              args:
-                - -u
-                - -e
-                - -c
-                - |
-                  export CREDHUB_SERVER="https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
-                  export GOBIN=/go/bin
-                  HOME="$(pwd)"
-                  export
-
-                  mkdir -p /go/src/github.com/alphagov/ && cp -R migrator /go/src/github.com/alphagov/
-                  cd /go/src/github.com/alphagov/migrator && go install && cd
-
-                  migrator migrate -v vars_to_migrate/cf_vars_to_migrate.yml -e "${DEPLOY_ENV}" -d "${DEPLOY_ENV}"
 
         - task: generate-cf-manifest
           tags: [colocated-with-web]
@@ -1454,46 +1390,12 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['cf-deploy']
-          - get: prometheus-vars-store
           - get: bosh-vars-store
           - get: bosh-CA-crt
           - get: bosh-secrets
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
           - get: pagerduty-secrets
-          - get: migrator
-
-      - task: migrate-prometheus-secrets-to-credhub
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *golang-image-resource
-          inputs:
-            - name: prometheus-vars-store
-            - name: migrator
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            CREDHUB_CLIENT: credhub-admin
-            CREDHUB_SECRET: ((bosh-credhub-admin))
-            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
-            DEPLOY_ENV: ((deploy_env))
-          run:
-            path: sh
-            args:
-              - -u
-              - -e
-              - -c
-              - |
-                export CREDHUB_SERVER="https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
-                export GOBIN=/go/bin
-                HOME="$(pwd)"
-                export HOME
-
-
-                mkdir -p /go/src/github.com/alphagov/ && cp -R migrator /go/src/github.com/alphagov/
-                cd /go/src/github.com/alphagov/migrator && go install && cd
-
-                migrator migrate -v prometheus-vars-store/prometheus-vars-store.yml -e "${DEPLOY_ENV}" -d prometheus
 
       - task: extract-terraform-outputs
         tags: [colocated-with-web]
