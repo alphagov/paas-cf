@@ -1370,6 +1370,15 @@ jobs:
                 < cf-tfstate/cf.tfstate \
                 > cf-terraform-outputs.yml
 
+                if [ -s cf-vars-store/cf-vars-store.yml ]
+                then
+                  echo cf-vars-store.yml has vars to copy.
+                else
+                  echo cf-vars-store.yml is empty. Skipping ...
+                  exit 0
+                fi
+
+
                 echo 'Getting variables'
                 CF_ADMIN=admin
                 CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
