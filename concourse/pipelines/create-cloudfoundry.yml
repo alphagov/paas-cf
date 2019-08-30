@@ -1349,7 +1349,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
-            - name: cf-vars-store
             - name: logit-secrets
             - name: cf-tfstate
           params:
@@ -1358,6 +1357,7 @@ jobs:
             CREDHUB_CLIENT_ID: credhub-admin
             CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            DEPLOY_ENV: ((deploy_env))
           run:
             path: sh
             args:
@@ -1370,34 +1370,25 @@ jobs:
                 < cf-tfstate/cf.tfstate \
                 > cf-terraform-outputs.yml
 
-                if [ -s cf-vars-store/cf-vars-store.yml ]
-                then
-                  echo cf-vars-store.yml has vars to copy.
-                else
-                  echo cf-vars-store.yml is empty. Skipping ...
-                  exit 0
-                fi
-
+                echo 'Logging into Credhub'
+                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
+                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
 
                 echo 'Getting variables'
                 CF_ADMIN=admin
-                CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
-                CF_CLIENT_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_billing_secret cf-vars-store/cf-vars-store.yml)
+                CF_PASS=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password)
+                CF_CLIENT_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_uaa_clients_paas_billing_secret)
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
-                PAAS_ACCOUNTS_PASSWORD=$($VAL_FROM_YAML secrets_paas_accounts_admin_password cf-vars-store/cf-vars-store.yml)
-                METRICS_SECRET=$($VAL_FROM_YAML secrets_uaa_clients_paas_metrics_secret cf-vars-store/cf-vars-store.yml)
+                PAAS_ACCOUNTS_PASSWORD=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_paas_accounts_admin_password)
+                METRICS_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_uaa_clients_paas_metrics_secret)
                 METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
                 METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
                 LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
                 LOGIT_ELASTICSEARCH_URL=$($VAL_FROM_YAML meta.logit.elasticsearch_url logit-secrets/logit-secrets.yml)
                 LOGIT_ELASTICSEARCH_API_KEY=$($VAL_FROM_YAML meta.logit.elasticsearch_api_key logit-secrets/logit-secrets.yml)
-                UAA_CLIENTS_CF_EXPORTER_SECRET=$($VAL_FROM_YAML uaa_clients_cf_exporter_secret cf-vars-store/cf-vars-store.yml)
-                UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$($VAL_FROM_YAML uaa_clients_firehose_exporter_secret cf-vars-store/cf-vars-store.yml)
-
-                echo 'Logging into Credhub'
-                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
-                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
+                UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_cf_exporter_secret)
+                UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_firehose_exporter_secret)
 
                 echo 'Setting secrets'
                 credhub set --name=/concourse/main/create-cloudfoundry/cf-admin --type value --value "${CF_ADMIN}"
