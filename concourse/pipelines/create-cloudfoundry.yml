@@ -619,19 +619,18 @@ jobs:
           - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
-          - get: cf-vars-store
       - task: wait-for-app-availability-tests
         tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
             - name: paas-cf
-            - name: cf-vars-store
             - name: deployed-healthcheck
             - name: pipeline-trigger
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CF_ADMIN: admin
+            CF_PASS: ((cf-pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -646,7 +645,6 @@ jobs:
                   exit 0
                 fi
 
-                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
@@ -799,7 +797,6 @@ jobs:
             - name: paas-cf
             - name: pipeline-trigger
             - name: deployed-healthcheck
-            - name: cf-vars-store
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -810,6 +807,7 @@ jobs:
             CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
             AWS_DEFAULT_REGION: ((aws_region))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            CF_PASS: ((cf-pass))
           run:
             path: sh
             args:
@@ -824,8 +822,7 @@ jobs:
 
                 export CONCOURSE_WEB_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
-                export CF_PASS
-                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
+
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
@@ -1396,6 +1393,9 @@ jobs:
                 ELASTICACHE_BROKER_PASS=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_elasticache_broker_admin_password)
                 S3_BROKER_PASS=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_s3_broker_admin_password)
                 UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_admin_client_secret)
+                UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_paas_admin_secret)
+                SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_test_user_password)
+
 
                 echo 'Setting secrets'
                 credhub set --name=/concourse/main/create-cloudfoundry/cf-admin --type value --value "${CF_ADMIN}"
@@ -1422,6 +1422,8 @@ jobs:
                 credhub set --name=/concourse/main/create-cloudfoundry/secrets_elasticache_broker_admin_password --type password --password "${ELASTICACHE_BROKER_PASS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/secrets_s3_broker_admin_password --type password --password "${S3_BROKER_PASS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/uaa_admin_client_secret --type password --password "${UAA_ADMIN_CLIENT_SECRET}"
+                credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_paas_admin_secret --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
+                credhub set --name=/concourse/main/create-cloudfoundry/secrets_test_user_password --type password --password "${SECRETS_TEST_USER_PASSWORD}"
 
                 echo 'Accessible secrets'
                 credhub find --path /concourse/main/create-cloudfoundry
@@ -2520,6 +2522,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: smoketest-user
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: smoke-tests-config
           tags: [colocated-with-web]
@@ -2543,6 +2546,10 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
 
   - name: acceptance-tests
     plan:
@@ -2565,6 +2572,7 @@ jobs:
           params:
             PREFIX: acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - do:
           - task: generate-test-config
@@ -2603,6 +2611,9 @@ jobs:
             file: paas-cf/concourse/tasks/delete_admin.yml
             params:
               DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
+              API_ENDPOINT: ((api-endpoint))
+              CF_ADMIN: ((cf-admin))
+              CF_PASS: ((cf-pass))
 
   - name: custom-acceptance-tests
     plan:
@@ -2625,6 +2636,7 @@ jobs:
           params:
             PREFIX: custom-acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: generate-test-config
           tags: [colocated-with-web]
@@ -2659,11 +2671,11 @@ jobs:
               image_resource: *cf-cli-image-resource
               inputs:
                 - name: paas-cf
-                - name: cf-vars-store
                 - name: cf-manifest
               params:
                 CF_ADMIN: admin
                 SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                CF_PASS: ((cf-pass))
               run:
                 path: bash
                 args:
@@ -2671,7 +2683,6 @@ jobs:
                   - |
                     set -ueo pipefail
 
-                    CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                     echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
 
@@ -2724,6 +2735,9 @@ jobs:
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
 
   - name: custom-broker-acceptance-tests
     plan:
@@ -2746,6 +2760,7 @@ jobs:
           params:
             PREFIX: custom-broker-acceptance-test-user
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: generate-test-config
           tags: [colocated-with-web]
@@ -2779,6 +2794,9 @@ jobs:
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
 
   - name: bosh-tests
     plan:
@@ -2997,7 +3015,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
-            - name: cf-vars-store
           outputs:
             - name: paas-admin-manifest
           params:
@@ -3005,6 +3022,7 @@ jobs:
             NOTIFY_API_KEY: ((notify_api_key))
             NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
             AWS_REGION: ((aws_region))
+            UAA_CLIENTS_PAAS_ADMIN_SECERT: uaa_clients_paas_admin_secret
           run:
             path: sh
             args:
@@ -3021,14 +3039,14 @@ jobs:
                    - logit-syslog-drain
                   env:
                     OAUTH_CLIENT_ID: "paas-admin"
-                    OAUTH_CLIENT_SECRET: "(( grab uaa_clients_paas_admin_secret ))"
+                    OAUTH_CLIENT_SECRET: ((uaa_clients_paas_admin_secret))
                     API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
                     BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
-                    ACCOUNTS_SECRET: "(( grab secrets_paas_accounts_admin_password ))"
+                    ACCOUNTS_SECRET: ((paas-accounts-password))
                     NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
-                    SESSION_SECRET: (( concat "session-" uaa_clients_paas_admin_secret ))
+                    SESSION_SECRET: (( concat "session-" "${UAA_CLIENTS_PAAS_ADMIN_SECERT}" ))
                     AWS_REGION: "$AWS_REGION"
                     MS_CLIENT_ID: ((microsoft_adminoidc_client_id))
                     MS_CLIENT_SECRET: ((microsoft_adminoidc_client_secret))
@@ -3041,7 +3059,6 @@ jobs:
                 spruce merge \
                   paas-admin-dist/manifest.yml \
                   paas-admin-env-and-routes.yml \
-                  cf-vars-store/cf-vars-store.yml \
                   | spruce merge --cherry-pick applications \
                     > paas-admin-manifest/manifest.yml
 
@@ -3082,6 +3099,7 @@ jobs:
           params:
             PREFIX: paas-admin-test-user
             DISABLE_ADMIN_USER_CREATION: false
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: acceptance-tests
           tags: [colocated-with-web]
@@ -3127,6 +3145,10 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
 
       - get: paas-admin-git-keys
 
@@ -4015,7 +4037,6 @@ jobs:
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
-        - get: cf-vars-store
 
       - task: assert-should-run
         tags: [colocated-with-web]
@@ -4048,6 +4069,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: cont-smoketest-user
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: smoke-tests-config
           tags: [colocated-with-web]
@@ -4077,6 +4099,10 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
 
   - name: continuous-billing-smoke-tests
     serial_groups: [smoke-tests]
@@ -4091,7 +4117,6 @@ jobs:
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
-        - get: cf-vars-store
 
       - do:
         - task: create-temp-user
@@ -4099,6 +4124,7 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: cont-billing-smoketest-user
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: run-billing-smoke-tests
           tags: [colocated-with-web]
@@ -4132,6 +4158,10 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
 
   - name: check-certificates
     build_logs_to_retain: 50
@@ -4177,7 +4207,6 @@ jobs:
     plan:
       - aggregate:
         - get: paas-cf
-        - get: cf-vars-store
 
       - task: cleanup-deleted-cf-users
         tags: [colocated-with-web]
@@ -4189,18 +4218,15 @@ jobs:
             - name: cf-vars-store
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
           run:
             path: sh
             args:
             - -e
             - -c
             - |
-              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-
-              CF_USER=admin
-              CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
-              API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-
               echo | cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}"
 
               ./paas-cf/scripts/cleanup-deleted-cf-users.sh --delete
