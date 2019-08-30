@@ -59,6 +59,6 @@ docker run \
     --env "CREDHUB_CLIENT" --env "CREDHUB_SECRET" --env "CREDHUB_CA_CERT" \
     --env "CREDHUB_PROXY=socks5://localhost:25555" \
     -v "${HOME}/.bosh_history/${DEPLOY_ENV}:/root/.bash_history" \
-    --mount type=bind,source="$1",target=/root/import.yml \
+    -v "${1}:/root/import.yml" \
     governmentpaas/bosh-shell:47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc \
     -c "credhub import -f /root/import.yml"

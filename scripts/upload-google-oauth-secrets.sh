@@ -4,7 +4,7 @@ set -eu
 
 export PASSWORD_STORE_DIR=${OAUTH_PASSWORD_STORE_DIR}
 
-CREDHUB_NAMESPACE=${CREDHUB_NAMESPACE:-/concourse/main/create-cloudfoundry/}
+CREDHUB_NAMESPACE=${CREDHUB_NAMESPACE:-/concourse/main/create-cloudfoundry}
 
 GOOGLE_OAUTH_CLIENT_ID=$(pass "google/${MAKEFILE_ENV_TARGET}/oauth/client_id")
 GOOGLE_OAUTH_CLIENT_SECRET=$(pass "google/${MAKEFILE_ENV_TARGET}/oauth/client_secret")
@@ -33,22 +33,22 @@ EOF
 cat > "${CREDHUB_SECRETS}" << EOF
 ---
 credentials:
-  - name: ${CREDHUB_NAMESPACE}google_oauth_client_id
+  - name: ${CREDHUB_NAMESPACE}/google_oauth_client_id
     type: value
     value: ${GOOGLE_OAUTH_CLIENT_ID}
-  - name: ${CREDHUB_NAMESPACE}google_oauth_client_secret
+  - name: ${CREDHUB_NAMESPACE}/google_oauth_client_secret
     type: value
     value: ${GOOGLE_OAUTH_CLIENT_SECRET}
-  - name: ${CREDHUB_NAMESPACE}grafana_auth_google_client_id
+  - name: ${CREDHUB_NAMESPACE}/grafana_auth_google_client_id
     type: value
     value: ${GRAFANA_AUTH_GOOGLE_CLIENT_ID}
-  - name: ${CREDHUB_NAMESPACE}grafana_auth_google_client_secret
+  - name: ${CREDHUB_NAMESPACE}/grafana_auth_google_client_secret
     type: value
     value: ${GRAFANA_AUTH_GOOGLE_CLIENT_SECRET}
-  - name: ${CREDHUB_NAMESPACE}google_paas_admin_client_id
+  - name: ${CREDHUB_NAMESPACE}/google_paas_admin_client_id
     type: value
     value: ${GOOGLE_PAAS_ADMIN_CLIENT_ID}
-  - name: ${CREDHUB_NAMESPACE}google_paas_admin_client_secret
+  - name: ${CREDHUB_NAMESPACE}/google_paas_admin_client_secret
     type: value
     value: ${GOOGLE_PAAS_ADMIN_CLIENT_SECRET}
 EOF

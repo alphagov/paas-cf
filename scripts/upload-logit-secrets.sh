@@ -12,7 +12,8 @@ set -eu
 
 setup_env() {
   export PASSWORD_STORE_DIR=${LOGIT_PASSWORD_STORE_DIR}
-  secrets_uri="s3://gds-paas-${DEPLOY_ENV}-state/logit-secrets.yml"
+  CREDHUB_NAMESPACE=${CREDHUB_NAMESPACE:-/concourse/main/create-cloudfoundry}
+  S3_URI="s3://gds-paas-${DEPLOY_ENV}-state/logit-secrets.yml"
 }
 
 get_creds_from_env_or_pass() {
@@ -23,11 +24,7 @@ get_creds_from_env_or_pass() {
   LOGIT_ELASTICSEARCH_URL="${LOGIT_ELASTICSEARCH_URL:-$(pass "logit/${AWS_ACCOUNT}/elasticsearch_url")}"
   LOGIT_ELASTICSEARCH_API_KEY="${LOGIT_ELASTICSEARCH_API_KEY:-$(pass "logit/${AWS_ACCOUNT}/elasticsearch_api_key")}"
 }
-
-upload() {
-  setup_env
-  get_creds_from_env_or_pass
-
+upload_s3() {
   cat << EOF | aws s3 cp - "${secrets_uri}"
 ---
 meta:
@@ -40,7 +37,15 @@ meta:
 $(echo "${LOGIT_CA_CERT}" | sed 's/^/      /')
 EOF
 
+}
+upload_credhub() {
 
+}
+upload() {
+  setup_env
+  get_creds_from_env_or_pass
+  upload_s3
+  upload_credhub
 }
 
 upload
