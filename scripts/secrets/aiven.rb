@@ -2,8 +2,9 @@
 # frozen_string_literal: true
 
 def get_secrets()
-  ENV['PASSWORD_STORE_DIR'] = ENV['AIVEN_PASSWORD_STORE_HIGH_DIR'] || ENV['LOGIT_PASSWORD_STORE_DIR']
+  ENV['PASSWORD_STORE_DIR'] = ENV['AIVEN_PASSWORD_STORE_HIGH_DIR'] || ENV['AIVEN_PASSWORD_STORE_DIR']
   credhub_namespace = ENV['CREDHUB_NAMESPACE'] || '/concourse/main/create-cloudfoundry'
+
   aiven_api_token = ENV['AIVEN_API_TOKEN'] || `pass "aiven.io/${MAKEFILE_ENV_TARGET}/api_token"`
 
   {
