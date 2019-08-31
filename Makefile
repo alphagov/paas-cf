@@ -269,7 +269,7 @@ upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Consol
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
-	@bash scripts/secrets/google-oauth.sh | scripts/upload_secrets.rb
+	@scripts/upload_secrets.rb secrets/google-oauth.rb
 
 .PHONY: upload-microsoft-oauth-secrets
 upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identity credentials to S3
@@ -277,7 +277,7 @@ upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identi
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${OAUTH_PASSWORD_STORE_DIR},,$(error Must pass OAUTH_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${OAUTH_PASSWORD_STORE_DIR}),,$(error Password store ${OAUTH_PASSWORD_STORE_DIR} does not exist))
-	@bash scripts/secrets/microsoft-oauth.sh | scripts/upload_secrets.rb
+	@scripts/upload_secrets.rb secrets/microsoft-oauth.rb
 
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3
@@ -285,7 +285,7 @@ upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${NOTIFY_PASSWORD_STORE_DIR},,$(error Must pass NOTIFY_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${NOTIFY_PASSWORD_STORE_DIR}),,$(error Password store ${NOTIFY_PASSWORD_STORE_DIR} does not exist))
-	@bash scripts/secrets/notify.sh | scripts/upload_secrets.rb
+	@scripts/upload_secrets.rb secrets/notify.rb
 
 .PHONY: upload-aiven-secrets
 upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to S3
@@ -293,21 +293,21 @@ upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to S3
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${AIVEN_PASSWORD_STORE_DIR},,$(error Must pass AIVEN_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${AIVEN_PASSWORD_STORE_DIR}),,$(error Password store ${AIVEN_PASSWORD_STORE_DIR} does not exist))
-	@scripts/upload_secrets_require.rb secrets/aiven.rb
+	@scripts/upload_secrets.rb secrets/aiven.rb
 
 .PHONY: upload-logit-secrets
 upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to S3
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set environment to dev/staging/prod))
 	$(if ${LOGIT_PASSWORD_STORE_DIR},,$(error Must pass LOGIT_PASSWORD_STORE_DIR=<path_to_password_store>))
 	$(if $(wildcard ${LOGIT_PASSWORD_STORE_DIR}),,$(error Password store ${LOGIT_PASSWORD_STORE_DIR} does not exist))
-	@scripts/upload_secrets_require.rb secrets/logit_require.rb
+	@scripts/upload_secrets.rb secrets/logit.rb
 
 .PHONY: upload-pagerduty-secrets
 upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials to S3
 	$(eval export PAGERDUTY_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if $(wildcard ${PAGERDUTY_PASSWORD_STORE_DIR}),,$(error Password store ${PAGERDUTY_PASSWORD_STORE_DIR} does not exist))
-	@bash scripts/secrets/pagerduty.sh | scripts/upload_secrets.rb
+	@scripts/upload_secrets.rb secrets/pagerduty.rb
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
