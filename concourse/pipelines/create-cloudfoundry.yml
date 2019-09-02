@@ -1389,7 +1389,6 @@ jobs:
                 LOGIT_ELASTICSEARCH_API_KEY=$($VAL_FROM_YAML meta.logit.elasticsearch_api_key logit-secrets/logit-secrets.yml)
                 UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_cf_exporter_secret)
                 UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_firehose_exporter_secret)
-                GRAFANA_PASS=$(credhub get -q -n /${DEPLOY_ENV}/prometheus/grafana_password)
                 RDS_BROKER_PASS=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_rds_broker_admin_password)
                 CDN_BROKER_PASS=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_cdn_broker_admin_password)
                 AIVEN_BROKER_PASS=$(credhub get -q -n /${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_aiven_broker_admin_password)
@@ -1418,7 +1417,6 @@ jobs:
                 credhub set --name=/concourse/main/create-cloudfoundry/logit_elasticsearch_api_key --type password --password "${LOGIT_ELASTICSEARCH_API_KEY}"
                 credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_cf_exporter_secret --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
                 credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_firehose_exporter_secret --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/grafana_password --type password --password "${GRAFANA_PASS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/secrets_rds_broker_admin_password --type password --password "${RDS_BROKER_PASS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/secrets_cdn_broker_admin_password --type password --password "${CDN_BROKER_PASS}"
                 credhub set --name=/concourse/main/create-cloudfoundry/secrets_aiven_broker_admin_password --type password --password "${AIVEN_BROKER_PASS}"
@@ -1608,6 +1606,41 @@ jobs:
                 export BOSH_CLIENT_SECRET
 
                 bosh -n deploy prometheus-manifest/prometheus-manifest.yml
+
+      - task: copy-prometheus-secrets-to-concourse-credhub-ns
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            CREDHUB_CLIENT_ID: credhub-admin
+            CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                echo 'Logging into Credhub'
+                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
+                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
+
+                echo 'Getting variables'
+                GRAFANA_PASS=$(credhub get -q -n /${DEPLOY_ENV}/prometheus/grafana_password)
+
+                echo 'Setting secrets'
+                credhub set --name=/concourse/main/create-cloudfoundry/grafana_password --type password --password "${GRAFANA_PASS}"
+
+                echo 'Accessible secrets'
+                credhub find --path /concourse/main/create-cloudfoundry
 
       - aggregate:
         - task: deploy-cloudwatch-exporter
