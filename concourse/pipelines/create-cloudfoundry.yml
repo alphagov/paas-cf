@@ -619,18 +619,19 @@ jobs:
           - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
+          - get: cf-vars-store
       - task: wait-for-app-availability-tests
         tags: [colocated-with-web]
         config:
           platform: linux
           inputs:
             - name: paas-cf
+            - name: cf-vars-store
             - name: deployed-healthcheck
             - name: pipeline-trigger
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CF_ADMIN: admin
-            CF_PASS: ((cf-pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -645,6 +646,7 @@ jobs:
                   exit 0
                 fi
 
+                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
@@ -797,6 +799,7 @@ jobs:
             - name: paas-cf
             - name: pipeline-trigger
             - name: deployed-healthcheck
+            - name: cf-vars-store
           params:
             SKIP_SSL_VALIDATION: true
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -807,7 +810,6 @@ jobs:
             CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
             AWS_DEFAULT_REGION: ((aws_region))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-            CF_PASS: ((cf-pass))
           run:
             path: sh
             args:
@@ -822,7 +824,8 @@ jobs:
 
                 export CONCOURSE_WEB_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
-
+                export CF_PASS
+                CF_PASS=$(awk '/cf_admin_password/ {print $2}' cf-vars-store/cf-vars-store.yml | tr -d '"')
                 export PIPELINE_TRIGGER_VERSION
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
@@ -1398,21 +1401,21 @@ jobs:
 
 
                 echo 'Setting secrets'
-                credhub set --name=/concourse/main/create-cloudfoundry/cf-admin --type value --value "${CF_ADMIN}"
-                credhub set --name=/concourse/main/create-cloudfoundry/cf-pass --type password --password "${CF_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/cf-client-secret --type password --password "${CF_CLIENT_SECRET}"
+                credhub set --name=/concourse/main/cf_admin --type value --value "${CF_ADMIN}"
+                credhub set --name=/concourse/main/cf_pass --type password --password "${CF_PASS}"
+                credhub set --name=/concourse/main/create-cloudfoundry/cf_client_secret --type password --password "${CF_CLIENT_SECRET}"
 
-                credhub set --name=/concourse/main/create-cloudfoundry/paas-accounts-password --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
-                credhub set --name=/concourse/main/create-cloudfoundry/api-endpoint --type value --value "${API_ENDPOINT}"
-                credhub set --name=/concourse/main/create-cloudfoundry/uaa-endpoint --type value --value "${UAA_ENDPOINT}"
+                credhub set --name=/concourse/main/create-cloudfoundry/paas_accounts_password --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
+                credhub set --name=/concourse/main/api_endpoint --type value --value "${API_ENDPOINT}"
+                credhub set --name=/concourse/main/create-cloudfoundry/uaa_endpoint --type value --value "${UAA_ENDPOINT}"
 
-                credhub set --name=/concourse/main/create-cloudfoundry/metrics-secret --type password --password "${METRICS_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/metrics-aws-access-key-id --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
-                credhub set --name=/concourse/main/create-cloudfoundry/metrics-aws-secret-access-key --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
+                credhub set --name=/concourse/main/create-cloudfoundry/metrics_secret --type password --password "${METRICS_SECRET}"
+                credhub set --name=/concourse/main/create-cloudfoundry/metrics_aws_access_key_id --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
+                credhub set --name=/concourse/main/create-cloudfoundry/metrics_aws_secret_access_key --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
 
-                credhub set --name=/concourse/main/create-cloudfoundry/logit-address --type value --value "${LOGIT_ADDRESS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/logit-elasticsearch-url --type value --value "${LOGIT_ELASTICSEARCH_URL}"
-                credhub set --name=/concourse/main/create-cloudfoundry/logit-elasticsearch-api-key --type password --password "${LOGIT_ELASTICSEARCH_API_KEY}"
+                credhub set --name=/concourse/main/create-cloudfoundry/logit_address --type value --value "${LOGIT_ADDRESS}"
+                credhub set --name=/concourse/main/create-cloudfoundry/logit_elasticsearch_url --type value --value "${LOGIT_ELASTICSEARCH_URL}"
+                credhub set --name=/concourse/main/create-cloudfoundry/logit_elasticsearch_api_key --type password --password "${LOGIT_ELASTICSEARCH_API_KEY}"
                 credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_cf_exporter_secret --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
                 credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_firehose_exporter_secret --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
                 credhub set --name=/concourse/main/create-cloudfoundry/grafana_password --type password --password "${GRAFANA_PASS}"
@@ -1615,9 +1618,9 @@ jobs:
             params:
               DEPLOY_ENV: ((deploy_env))
               AWS_REGION: ((aws_region))
-              API_ENDPOINT: ((api-endpoint))
-              CF_ADMIN: ((cf-admin))
-              CF_PASS: ((cf-pass))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
             inputs:
               - name: paas-cf
               - name: config
@@ -1771,9 +1774,9 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           run:
             path: sh
             args:
@@ -1792,9 +1795,9 @@ jobs:
             - name: config
           params:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           run:
             path: sh
             args:
@@ -1849,9 +1852,9 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
             RDS_BROKER_PASS: ((secrets_rds_broker_admin_password))
           run:
             path: sh
@@ -1939,9 +1942,9 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
             CDN_BROKER_PASS: ((secrets_cdn_broker_admin_password))
           run:
             path: sh
@@ -1970,9 +1973,9 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
             S3_BROKER_PASS: ((secrets_s3_broker_admin_password))
           run:
             path: sh
@@ -2001,9 +2004,9 @@ jobs:
             - name: paas-cf
             - name: cf-manifest
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -2024,9 +2027,9 @@ jobs:
             - name: paas-cf
             - name: cf-manifest
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -2046,9 +2049,9 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -2068,9 +2071,9 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           image_resource: *cf-cli-image-resource
           run:
             path: sh
@@ -2114,9 +2117,9 @@ jobs:
           inputs:
             - name: paas-cf
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           run:
             path: sh
             args:
@@ -2164,12 +2167,11 @@ jobs:
           image_resource: *cf-cli-image-resource
           params:
             TEST_HEAVY_LOAD: ((test_heavy_load))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
-          params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
           run:
             path: sh
             args:
@@ -2232,8 +2234,8 @@ jobs:
             - name: cf-manifest
           params:
             DEPLOY_ENV: ((deploy_env))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN_PASSWORD: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN_PASSWORD: ((cf_pass))
           run:
             path: sh
             args:
@@ -2252,9 +2254,9 @@ jobs:
           params:
             DISABLE_HEALTHCHECK_DB: ((disable_healthcheck_db))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
           outputs:
@@ -2318,9 +2320,9 @@ jobs:
               - name: paas-cf
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              API_ENDPOINT: ((api-endpoint))
-              CF_ADMIN: ((cf-admin))
-              CF_PASS: ((cf-pass))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
             run:
               path: sh
               args:
@@ -2378,9 +2380,9 @@ jobs:
             AIVEN_PROJECT: paas-cf-((aws_account))
             AIVEN_CLOUD: aws-((aws_region))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
             AIVEN_BROKER_PASS: ((secrets_aiven_broker_admin_password))
           run:
             path: sh
@@ -2434,9 +2436,9 @@ jobs:
             - name: paas-cf
             - name: config
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
             ELASTICACHE_BROKER_PASS: ((secrets_elasticache_broker_admin_password))
           run:
             path: sh
@@ -2547,9 +2549,9 @@ jobs:
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
   - name: acceptance-tests
     plan:
@@ -2611,9 +2613,9 @@ jobs:
             file: paas-cf/concourse/tasks/delete_admin.yml
             params:
               DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
-              API_ENDPOINT: ((api-endpoint))
-              CF_ADMIN: ((cf-admin))
-              CF_PASS: ((cf-pass))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
 
   - name: custom-acceptance-tests
     plan:
@@ -2675,7 +2677,7 @@ jobs:
               params:
                 CF_ADMIN: admin
                 SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                CF_PASS: ((cf-pass))
+                CF_PASS: ((cf_pass))
               run:
                 path: bash
                 args:
@@ -2735,9 +2737,9 @@ jobs:
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
   - name: custom-broker-acceptance-tests
     plan:
@@ -2794,9 +2796,9 @@ jobs:
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
   - name: bosh-tests
     plan:
@@ -2864,10 +2866,10 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
-            BASIC_AUTH_PASSWORD: ((paas-accounts-password))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            BASIC_AUTH_PASSWORD: ((paas_accounts_password))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
             - name: paas-accounts
@@ -3043,7 +3045,7 @@ jobs:
                     API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
                     BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
-                    ACCOUNTS_SECRET: ((paas-accounts-password))
+                    ACCOUNTS_SECRET: ((paas_accounts_password))
                     NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
                     SESSION_SECRET: (( concat "session-" "${UAA_CLIENTS_PAAS_ADMIN_SECERT}" ))
@@ -3073,10 +3075,10 @@ jobs:
             - name: paas-admin-manifest
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
-            CF_CLIENT_SECRET: ((cf-client-secret))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            CF_CLIENT_SECRET: ((cf_client_secret))
           run:
             path: sh
             args:
@@ -3114,7 +3116,7 @@ jobs:
               DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
               DEPLOY_ENV: ((deploy_env))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              ACCOUNTS_PASSWORD: ((paas-accounts-password))
+              ACCOUNTS_PASSWORD: ((paas_accounts_password))
             inputs:
               - name: paas-cf
               - name: paas-admin
@@ -3146,9 +3148,9 @@ jobs:
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
       - get: paas-admin-git-keys
 
@@ -3232,11 +3234,11 @@ jobs:
             AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
-            CF_CLIENT_SECRET: ((cf-client-secret))
-            LOGIT_ADDRESS: ((logit-address))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            CF_CLIENT_SECRET: ((cf_client_secret))
+            LOGIT_ADDRESS: ((logit_address))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
             - name: paas-billing
@@ -3329,9 +3331,9 @@ jobs:
             AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
             - name: paas-billing
@@ -3371,18 +3373,18 @@ jobs:
             AIVEN_API_TOKEN: ((aiven_api_token))
             AIVEN_PROJECT: paas-cf-((aws_account))
 
-            UAA_ENDPOINT: ((uaa-endpoint))
-            API_ENDPOINT: ((api-endpoint))
+            UAA_ENDPOINT: ((uaa_endpoint))
+            API_ENDPOINT: ((api_endpoint))
 
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
-            METRICS_SECRET: ((metrics-secret))
-            METRICS_AWS_ACCESS_KEY_ID: ((metrics-aws-access-key-id))
-            METRICS_AWS_SECRET_ACCESS_KEY: ((metrics-aws-secret-access-key))
+            METRICS_SECRET: ((metrics_secret))
+            METRICS_AWS_ACCESS_KEY_ID: ((metrics_aws_access_key_id))
+            METRICS_AWS_SECRET_ACCESS_KEY: ((metrics_aws_secret_access_key))
 
-            LOGIT_ELASTICSEARCH_URL: ((logit-elasticsearch-url))
-            LOGIT_ELASTICSEARCH_API_KEY: ((logit-elasticsearch-api-key))
+            LOGIT_ELASTICSEARCH_URL: ((logit_elasticsearch_url))
+            LOGIT_ELASTICSEARCH_API_KEY: ((logit_elasticsearch_api_key))
           inputs:
             - name: paas-cf
           run:
@@ -4100,9 +4102,9 @@ jobs:
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
   - name: continuous-billing-smoke-tests
     serial_groups: [smoke-tests]
@@ -4159,9 +4161,9 @@ jobs:
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
           params:
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
 
   - name: check-certificates
     build_logs_to_retain: 50
@@ -4218,9 +4220,9 @@ jobs:
             - name: cf-vars-store
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            API_ENDPOINT: ((api-endpoint))
-            CF_ADMIN: ((cf-admin))
-            CF_PASS: ((cf-pass))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
           run:
             path: sh
             args:
