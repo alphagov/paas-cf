@@ -22,6 +22,6 @@ run:
         --var=system_domain="${SYSTEM_DOMAIN}" \
         --var=app_domain="${APP_DOMAIN}" \
         --var=name_prefix="${NAME_PREFIX:-CATS}" \
-        --var=secrets_test_user_password=((secrets_test_user_password)) \
+        --var=secrets_test_user_password="${TEST_USER_PASSWORD}" \
         "paas-cf/manifests/cf-manifest/test-config/${TEST_PROPERTIES}.yml" | \
           ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' > test-config/config.json

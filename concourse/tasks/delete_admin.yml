@@ -21,8 +21,6 @@ run:
         exit 0
       fi
 
-      VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-      SYSTEM_DNS_ZONE_NAME=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.system_domain cf-manifest/cf-manifest.yml)
       USERNAME=$(cat admin-creds/username)
 
       echo "Removing user ${USERNAME}"
