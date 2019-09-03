@@ -88,7 +88,6 @@ private
     workdir = Dir.mktmpdir('paas-cf-test')
 
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
-    copy_fixture_file('logit-secrets.yml', "#{workdir}/logit-secrets")
     copy_fixture_file('bosh-secrets.yml', "#{workdir}/bosh-secrets")
     generate_cf_secrets_fixture("#{workdir}/cf-secrets")
     copy_fixture_file('environment-variables.yml', workdir)

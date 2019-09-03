@@ -273,15 +273,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-manifest-pre-vars.yml
 
-  - name: logit-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: logit-secrets.yml
-      initial_version: "-"
-      initial_content_text: ""
-
   - name: cloud-config
     type: s3-iam
     source:
@@ -1018,7 +1009,6 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
-          - get: logit-secrets
           - get: migrator
 
       - aggregate:
@@ -1163,7 +1153,6 @@ jobs:
               - name: bosh-secrets
               - name: cf-secrets
               - name: vpc-peering-opsfile
-              - name: logit-secrets
               - name: ms-oauth-endpoints
             outputs:
               - name: cf-manifest
@@ -1229,7 +1218,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: bosh-vars-store
           - get: bosh-CA-crt
-          - get: logit-secrets
           - get: cf-tfstate
             passed: ['generate-cf-config']
 
@@ -1341,7 +1329,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
-            - name: logit-secrets
             - name: cf-tfstate
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
@@ -1737,7 +1724,6 @@ jobs:
         passed: ['cf-deploy']
       - get: bosh-CA-crt
       - get: paas-aiven-broker
-      - get: logit-secrets
 
     - task: retrieve-config
       tags: [colocated-with-web]
@@ -1747,7 +1733,6 @@ jobs:
           - name: paas-cf
           - name: cf-manifest
           - name: cf-tfstate
-          - name: logit-secrets
         outputs:
           - name: config
         params:
@@ -1775,7 +1760,6 @@ jobs:
               export S3_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_s3_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
-              export LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
               EOT
 
               ls -l config/*
@@ -1810,6 +1794,7 @@ jobs:
             - name: config
           params:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            LOGIT_ADDRESS: ((logit-address))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
