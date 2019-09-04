@@ -3,7 +3,12 @@
 
 def get_secrets()
   ENV['PASSWORD_STORE_DIR'] = ENV['NOTIFY_PASSWORD_STORE_DIR']
-  credhub_namespace = ENV['CREDHUB_NAMESPACE'] || '/concourse/main/create-cloudfoundry'
+  
+  begin
+    credhub_namespace = ENV['CREDHUB_NAMESPACE'].split(',')
+  rescue NoMethodError # env var was not set
+    credhub_namespace = ['/concourse/main/create-cloudfoundry', "/#{ENV['DEPLOY_ENV']}/#{ENV['DEPLOY_ENV']}"]
+  end
 
   notify_api_key = ENV['NOTIFY_API_KEY'] || `pass "notify/${MAKEFILE_ENV_TARGET}/api_key"`
 

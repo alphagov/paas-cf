@@ -17,12 +17,12 @@
         release: syslog
         properties:
           syslog:
-            address: ((meta.logit.syslog_address))
-            port: ((meta.logit.syslog_port))
+            address: ((logit_syslog_address))
+            port: ((logit_syslog_port))
             transport: 'tcp'
             tls_enabled: true
             permitted_peer: "*.logit.io"
-            ca_cert: ((meta.logit.ca_cert))
+            ca_cert: ((logit_ca_cert))
             custom_rule: |
               $MaxMessageSize 64k
               if ($programname startswith "vcap.") then ~

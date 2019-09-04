@@ -3,7 +3,11 @@
 
 def get_secrets()
   ENV['PASSWORD_STORE_DIR'] = ENV['LOGIT_PASSWORD_STORE_DIR']
-  credhub_namespace = ENV['CREDHUB_NAMESPACE'] || '/concourse/main/create-cloudfoundry'
+  begin
+    credhub_namespace = ENV['CREDHUB_NAMESPACE'].split(',')
+  rescue NoMethodError # env var was not set
+    credhub_namespace = ['/concourse/main/create-cloudfoundry', "/#{ENV['DEPLOY_ENV']}/#{ENV['DEPLOY_ENV']}"]
+  end
   logit_syslog_address = ENV['LOGIT_SYSLOG_ADDRESS'] || `pass "logit/${MAKEFILE_ENV_TARGET}/syslog_address"`
   logit_syslog_port = ENV['LOGIT_SYSLOG_PORT'] || `pass "logit/${MAKEFILE_ENV_TARGET}/syslog_port"`
   logit_ca_cert = ENV['LOGIT_CA_CERT'] || `pass "logit/${MAKEFILE_ENV_TARGET}/ca_cert"`

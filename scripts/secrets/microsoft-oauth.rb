@@ -3,7 +3,12 @@
 
 def get_secrets()
   ENV['PASSWORD_STORE_DIR'] = ENV['OAUTH_PASSWORD_STORE_DIR']
-  credhub_namespace = ENV['CREDHUB_NAMESPACE'] || '/concourse/main/create-cloudfoundry'
+  
+  begin
+    credhub_namespace = ENV['CREDHUB_NAMESPACE'].split(',')
+  rescue NoMethodError # env var was not set
+    credhub_namespace = ['/concourse/main/create-cloudfoundry', "/#{ENV['DEPLOY_ENV']}/#{ENV['DEPLOY_ENV']}"]
+  end
 
   microsoft_oauth_tenant_id = ENV['MICROSOFT_OAUTH_TENANT_ID'] || `pass "microsoft/${MAKEFILE_ENV_TARGET}/oauth/tenant_id"`
   microsoft_oauth_client_id = ENV['MICROSOFT_OAUTH_CLIENT_ID'] || `pass "microsoft/${MAKEFILE_ENV_TARGET}/oauth/client_id"`

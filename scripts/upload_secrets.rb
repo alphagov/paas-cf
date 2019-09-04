@@ -19,10 +19,12 @@ credhub_secrets = Hash['credentials', []]
 # created so we can `chomp` each secret to remove `\n`
 secrets['secrets'].each do |secret, value|
   s3_secrets.push(Hash[secret, value.chomp])
-  name = "#{config['credhub_namespace']}/#{secret}"
-  credhub_secrets['credentials'].push(
-    Hash['name', name, 'type', 'value', 'value', value.chomp]
-  )
+  config['credhub_namespace'].each do |namespace|
+    name = "#{namespace}/#{secret}"
+    credhub_secrets['credentials'].push(
+      Hash['name', name, 'type', 'value', 'value', value.chomp]
+    )
+  end
 end
 
 s3_secrets_file = Tempfile.new('s3-secrets')

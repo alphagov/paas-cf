@@ -3,7 +3,12 @@
 
 def get_secrets()
   ENV['PASSWORD_STORE_DIR'] = ENV['AIVEN_PASSWORD_STORE_HIGH_DIR'] || ENV['LOGIT_PASSWORD_STORE_DIR']
-  credhub_namespace = ENV['CREDHUB_NAMESPACE'] || '/concourse/main/create-cloudfoundry'
+
+  begin
+    credhub_namespace = ENV['CREDHUB_NAMESPACE'].split(',')
+  rescue NoMethodError # env var was not set
+    credhub_namespace = ['/concourse/main/create-cloudfoundry', "/#{ENV['DEPLOY_ENV']}/#{ENV['DEPLOY_ENV']}"]
+  end
 
   google_oauth_client_id = ENV['GOOGLE_OAUTH_CLIENT_ID'] || `pass "google/${MAKEFILE_ENV_TARGET}/oauth/client_id"`
   google_oauth_client_secret = ENV['GOOGLE_OAUTH_CLIENT_SECRET'] || `pass "google/${MAKEFILE_ENV_TARGET}/oauth/client_secret"`
