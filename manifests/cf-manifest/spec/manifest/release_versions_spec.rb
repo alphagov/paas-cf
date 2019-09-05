@@ -30,10 +30,6 @@ RSpec.describe "release versions" do
       'uaa' => {
         local: '0.1.11',
         upstream: '74.0.0',
-      },
-      'loggregator' => {
-        local: '105.5',
-        upstream: '105.6',
       }
     }
 

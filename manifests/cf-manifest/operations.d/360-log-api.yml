@@ -20,11 +20,9 @@
 
 - type: replace
   path: /releases/name=loggregator
-  # We cannot use a version of loggregator past 105.5 until we get rid of ELBs
-  # This is because of TLS cipher suite mismatch
   value:
     name: "loggregator"
-    version: "105.5"
-    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=105.5"
-    sha1: "62b9210def7c5179f6088b9449f551f57f1a1ee8"
+    version: "105.6"
+    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=105.6"
+    sha1: "eccfbd65e1d217a2b46afd414163e82553fb3084"
 
