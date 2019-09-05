@@ -1367,59 +1367,62 @@ jobs:
                 credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
 
                 echo 'Getting variables'
+                BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
                 CF_ADMIN=admin
-                CF_PASS=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password")
-                CF_CLIENT_SECRET=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_uaa_clients_paas_billing_secret")
+                CF_PASS=$(credhub get -q -n "${BOSH_NS}/cf_admin_password")
+                CF_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret")
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
-                PAAS_ACCOUNTS_PASSWORD=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_paas_accounts_admin_password")
-                METRICS_SECRET=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_uaa_clients_paas_metrics_secret")
+                PAAS_ACCOUNTS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_paas_accounts_admin_password")
+                METRICS_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_metrics_secret")
                 METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
                 METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
                 LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
                 LOGIT_ELASTICSEARCH_URL=$($VAL_FROM_YAML meta.logit.elasticsearch_url logit-secrets/logit-secrets.yml)
                 LOGIT_ELASTICSEARCH_API_KEY=$($VAL_FROM_YAML meta.logit.elasticsearch_api_key logit-secrets/logit-secrets.yml)
-                UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_cf_exporter_secret")
-                UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_firehose_exporter_secret")
-                RDS_BROKER_PASS=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_rds_broker_admin_password")
-                CDN_BROKER_PASS=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_cdn_broker_admin_password")
-                AIVEN_BROKER_PASS=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_aiven_broker_admin_password")
-                ELASTICACHE_BROKER_PASS=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_elasticache_broker_admin_password")
-                S3_BROKER_PASS=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_s3_broker_admin_password")
-                UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_admin_client_secret")
-                UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_clients_paas_admin_secret")
-                SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/secrets_test_user_password")
+                UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_cf_exporter_secret")
+                UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret")
+                RDS_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_rds_broker_admin_password")
+                CDN_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_cdn_broker_admin_password")
+                AIVEN_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_aiven_broker_admin_password")
+                ELASTICACHE_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_elasticache_broker_admin_password")
+                S3_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_s3_broker_admin_password")
+                UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_admin_client_secret")
+                UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
+                SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
 
 
                 echo 'Setting secrets'
-                credhub set --name=/concourse/main/cf_admin --type value --value "${CF_ADMIN}"
-                credhub set --name=/concourse/main/cf_pass --type password --password "${CF_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/cf_client_secret --type password --password "${CF_CLIENT_SECRET}"
+                TEAM_NS="/concourse/main"
+                PIPELINE_NS="${TEAM_NS}/create-cloudfoundry"
+                credhub set --name="${TEAM_NS}/cf_admin" --type value --value "${CF_ADMIN}"
+                credhub set --name="${TEAM_NS}/cf_pass" --type password --password "${CF_PASS}"
+                credhub set --name="${PIPELINE_NS}/cf_client_secret" --type password --password "${CF_CLIENT_SECRET}"
 
-                credhub set --name=/concourse/main/create-cloudfoundry/paas_accounts_password --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
-                credhub set --name=/concourse/main/api_endpoint --type value --value "${API_ENDPOINT}"
-                credhub set --name=/concourse/main/create-cloudfoundry/uaa_endpoint --type value --value "${UAA_ENDPOINT}"
+                credhub set --name="${PIPELINE_NS}/paas_accounts_password" --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
+                credhub set --name="${TEAM_NS}/api_endpoint" --type value --value "${API_ENDPOINT}"
+                credhub set --name="${PIPELINE_NS}/uaa_endpoint" --type value --value "${UAA_ENDPOINT}"
 
-                credhub set --name=/concourse/main/create-cloudfoundry/metrics_secret --type password --password "${METRICS_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/metrics_aws_access_key_id --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
-                credhub set --name=/concourse/main/create-cloudfoundry/metrics_aws_secret_access_key --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
+                credhub set --name="${PIPELINE_NS}/metrics_secret" --type password --password "${METRICS_SECRET}"
+                credhub set --name="${PIPELINE_NS}/metrics_aws_access_key_id" --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
+                credhub set --name="${PIPELINE_NS}/metrics_aws_secret_access_key" --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
 
-                credhub set --name=/concourse/main/create-cloudfoundry/logit_address --type value --value "${LOGIT_ADDRESS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/logit_elasticsearch_url --type value --value "${LOGIT_ELASTICSEARCH_URL}"
-                credhub set --name=/concourse/main/create-cloudfoundry/logit_elasticsearch_api_key --type password --password "${LOGIT_ELASTICSEARCH_API_KEY}"
-                credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_cf_exporter_secret --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_firehose_exporter_secret --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/secrets_rds_broker_admin_password --type password --password "${RDS_BROKER_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/secrets_cdn_broker_admin_password --type password --password "${CDN_BROKER_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/secrets_aiven_broker_admin_password --type password --password "${AIVEN_BROKER_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/secrets_elasticache_broker_admin_password --type password --password "${ELASTICACHE_BROKER_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/secrets_s3_broker_admin_password --type password --password "${S3_BROKER_PASS}"
-                credhub set --name=/concourse/main/create-cloudfoundry/uaa_admin_client_secret --type password --password "${UAA_ADMIN_CLIENT_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/uaa_clients_paas_admin_secret --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
-                credhub set --name=/concourse/main/create-cloudfoundry/secrets_test_user_password --type password --password "${SECRETS_TEST_USER_PASSWORD}"
+                credhub set --name="${PIPELINE_NS}/logit_address" --type value --value "${LOGIT_ADDRESS}"
+                credhub set --name="${PIPELINE_NS}/logit_elasticsearch_url" --type value --value "${LOGIT_ELASTICSEARCH_URL}"
+                credhub set --name="${PIPELINE_NS}/logit_elasticsearch_api_key" --type password --password "${LOGIT_ELASTICSEARCH_API_KEY}"
+                credhub set --name="${PIPELINE_NS}/uaa_clients_cf_exporter_secret" --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
+                credhub set --name="${PIPELINE_NS}/uaa_clients_firehose_exporter_secret" --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
+                credhub set --name="${PIPELINE_NS}/secrets_rds_broker_admin_password" --type password --password "${RDS_BROKER_PASS}"
+                credhub set --name="${PIPELINE_NS}/secrets_cdn_broker_admin_password" --type password --password "${CDN_BROKER_PASS}"
+                credhub set --name="${PIPELINE_NS}/secrets_aiven_broker_admin_password" --type password --password "${AIVEN_BROKER_PASS}"
+                credhub set --name="${PIPELINE_NS}/secrets_elasticache_broker_admin_password" --type password --password "${ELASTICACHE_BROKER_PASS}"
+                credhub set --name="${PIPELINE_NS}/secrets_s3_broker_admin_password" --type password --password "${S3_BROKER_PASS}"
+                credhub set --name="${PIPELINE_NS}/uaa_admin_client_secret" --type password --password "${UAA_ADMIN_CLIENT_SECRET}"
+                credhub set --name="${PIPELINE_NS}/uaa_clients_paas_admin_secret" --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
+                credhub set --name="${PIPELINE_NS}/secrets_test_user_password" --type password --password "${SECRETS_TEST_USER_PASSWORD}"
 
                 echo 'Accessible secrets'
-                credhub find --path /concourse/main/create-cloudfoundry
+                credhub find --path "${TEAM_NS}"
 
   - name: prometheus-deploy
     serial: true
