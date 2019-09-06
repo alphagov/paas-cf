@@ -239,17 +239,15 @@ vm_extensions:
     - ((terraform_outputs_cf_rds_client_security_group))
     - ((terraform_outputs_cloud_controller_security_group))
 
-- name: cf_doppler_elbs
-  cloud_properties:
-    elbs:
-    - ((terraform_outputs_cf_doppler_elb_name))
-    lb_target_groups:
-    - ((terraform_outputs_cf_doppler_target_group_name))
-
-- name: cf_loggregator_rlp_target_groups
+# We combine the doppler and loggregator load balancer cloud config
+# options because cf-deployment uses Bosh links to manage sending
+# traffic to the doppler instances. The load balancer needs only
+# know about the log-api instances.
+- name: cf_doppler_loggregator_lb
   cloud_properties:
     lb_target_groups:
     - ((terraform_outputs_cf_loggregator_rlp_target_group_name))
+    - ((terraform_outputs_cf_doppler_target_group_name))
 
 - name: ssh_proxy_elb
   cloud_properties:

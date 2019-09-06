@@ -19,7 +19,7 @@ resource "aws_route53_record" "cf_doppler" {
   name    = "doppler.${var.system_dns_zone_name}."
   type    = "CNAME"
   ttl     = "60"
-  records = ["${aws_elb.cf_doppler.dns_name}"]
+  records = ["${aws_lb.cf_loggregator.dns_name}"]
 }
 
 resource "aws_route53_record" "cf_ssh_proxy" {
