@@ -5,7 +5,7 @@ help() {
   cat <<-EOF
   Usage $0 [credhub credentials file]
 
-  This scripts acts as a proxy to `credhub import` in the target environment.
+  This scripts acts as a proxy to "credhub import" in the target environment.
   See the credhub cli documentation for how the file should be formatted.
 EOF
 }
