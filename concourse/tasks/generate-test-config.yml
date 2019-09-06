@@ -8,6 +8,7 @@ image_resource:
 inputs:
   - name: paas-cf
   - name: admin-creds
+  - name: cf-vars-store
 outputs:
   - name: test-config
 run:
@@ -17,11 +18,11 @@ run:
     - -c
     - |
       bosh interpolate --var-errs \
+        --vars-file=cf-vars-store/cf-vars-store.yml \
         --var=admin_user="$(cat admin-creds/username)" \
         --var=admin_password="$(cat admin-creds/password)" \
         --var=system_domain="${SYSTEM_DOMAIN}" \
         --var=app_domain="${APP_DOMAIN}" \
         --var=name_prefix="${NAME_PREFIX:-CATS}" \
-        --var=secrets_test_user_password="${TEST_USER_PASSWORD}" \
         "paas-cf/manifests/cf-manifest/test-config/${TEST_PROPERTIES}.yml" | \
           ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(STDIN))' > test-config/config.json
