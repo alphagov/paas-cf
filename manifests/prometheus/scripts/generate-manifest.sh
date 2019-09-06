@@ -21,6 +21,11 @@ for i in "${PAAS_CF_DIR}"/manifests/prometheus/alerts.d/*.yml; do
   alerts_opsfile_args+="-o $i "
 done
 
+vars_store_args=""
+if [ -n "${VARS_STORE:-}" ]; then
+  vars_store_args=" --var-errs --vars-store ${VARS_STORE}"
+fi
+
 if [ "${ENABLE_ALERT_NOTIFICATIONS:-}" == "false" ]; then
   opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/disable-alert-notifications.yml"
 fi
@@ -31,6 +36,7 @@ trap 'rm -f "${variables_file}"' EXIT
 bosh interpolate - \
   --var-errs \
   --vars-file "${WORKDIR}/bosh-vars-store/bosh-vars-store.yml" \
+  --vars-file "${WORKDIR}/cf-vars-store/cf-vars-store.yml" \
 > "${variables_file}" \
 <<EOF
 ---
@@ -42,8 +48,8 @@ app_domain: $APPS_DNS_ZONE_NAME
 metron_deployment_name: $DEPLOY_ENV
 skip_ssl_verify: false
 traffic_controller_external_port: 443
-uaa_clients_cf_exporter_secret: $UAA_CLIENTS_CF_EXPORTER_SECRET
-uaa_clients_firehose_exporter_secret: $UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET
+uaa_clients_cf_exporter_secret: ((uaa_clients_cf_exporter_secret))
+uaa_clients_firehose_exporter_secret: ((uaa_clients_firehose_exporter_secret))
 aws_account: $AWS_ACCOUNT
 grafana_auth_google_client_id: $GRAFANA_AUTH_GOOGLE_CLIENT_ID
 grafana_auth_google_client_secret: $GRAFANA_AUTH_GOOGLE_CLIENT_SECRET
@@ -59,4 +65,5 @@ bosh interpolate \
   --var-file bosh_ca_cert="${WORKDIR}/bosh-CA-crt/bosh-CA.crt" \
   ${opsfile_args} \
   ${alerts_opsfile_args} \
+  ${vars_store_args} \
   "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"
