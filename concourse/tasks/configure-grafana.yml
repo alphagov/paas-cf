@@ -7,7 +7,6 @@ image_resource:
     tag: 2.5-slim
 inputs:
   - name: paas-cf
-  - name: config
 run:
   path: ruby
   args:
@@ -43,12 +42,11 @@ run:
         JSON.parse(resp.body)
       end
 
-      conf          = File.read("#{Dir.pwd}/config/config.sh")
       system_domain = ENV.fetch('SYSTEM_DNS_ZONE_NAME')
       deploy_env    = ENV.fetch('DEPLOY_ENV')
       slim          = ENV.fetch('SLIM_DEV_DEPLOYMENT')
       azs           = (slim == 'true') ? 1 : 2
-      grafana_pass  = conf[/GRAFANA_PASS=(.*)$/, 1]
+      grafana_pass  = ENV.fetch('GRAFANA_PASS')
 
       users_that_should_exist = YAML.load_file(
         "#{Dir.pwd}/paas-cf/config/users.yml"

@@ -70,14 +70,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-secrets.yml
 
-  - name: cf-vars-store
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: cf-vars-store.yml
-      initial_version: "-"
-
   - name: cf-manifest
     type: s3-iam
     source:
@@ -133,7 +125,6 @@ jobs:
             trigger: true
           - get: bosh-vars-store
           - get: paas-cf
-          - get: cf-vars-store
           - get: cf-manifest
           - get: bosh-CA-crt
 
