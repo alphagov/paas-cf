@@ -13,7 +13,7 @@ end
 
 aiven_api_token = ENV['AIVEN_API_TOKEN'] || `pass "aiven.io/${MAKEFILE_ENV_TARGET}/api_token"`
 
-upload_secrets({
+upload_secrets(
   'config' => {
     'credhub_namespace' => credhub_namespace,
     's3_path' => "s3://gds-paas-#{ENV['DEPLOY_ENV']}-state/aiven-secrets.yml"
@@ -21,5 +21,4 @@ upload_secrets({
   'secrets' => {
     'aiven_api_token' => aiven_api_token
   }
-})
-
+)

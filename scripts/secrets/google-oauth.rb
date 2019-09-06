@@ -18,7 +18,7 @@ grafana_auth_google_client_secret = ENV['GRAFANA_AUTH_GOOGLE_CLIENT_SECRET'] || 
 google_paas_admin_client_id = ENV['GOOGLE_PAAS_ADMIN_CLIENT_ID'] || `pass "google/${MAKEFILE_ENV_TARGET}/oauth/paas_admin_client_id"`
 google_paas_admin_client_secret = ENV['GOOGLE_PAAS_ADMIN_CLIENT_SECRET'] || `pass "google/${MAKEFILE_ENV_TARGET}/oauth/paas_admin_client_secret"`
 
-upload_secrets({
+upload_secrets(
   'config' => {
     'credhub_namespace' => credhub_namespace,
     's3_path' => "s3://gds-paas-#{ENV['DEPLOY_ENV']}-state/google-oauth-secrets.yml"
@@ -31,4 +31,4 @@ upload_secrets({
     'google_paas_admin_client_id' => google_paas_admin_client_id,
     'google_paas_admin_client_secret' => google_paas_admin_client_secret
   }
-})
+)

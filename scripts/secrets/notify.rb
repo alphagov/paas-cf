@@ -13,7 +13,7 @@ end
 
 notify_api_key = ENV['NOTIFY_API_KEY'] || `pass "notify/${MAKEFILE_ENV_TARGET}/api_key"`
 
-upload_secrets({
+upload_secrets(
   'config' => {
     'credhub_namespace' => credhub_namespace,
     's3_path' => "s3://gds-paas-#{ENV['DEPLOY_ENV']}-state/notify-secrets.yml"
@@ -21,4 +21,4 @@ upload_secrets({
   'secrets' => {
     'notify_api_key' => notify_api_key
   }
-})
+)

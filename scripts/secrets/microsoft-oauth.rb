@@ -18,7 +18,7 @@ microsoft_adminoidc_tenant_id = ENV['MICROSOFT_ADMINOIDC_TENANT_ID'] || `pass "m
 microsoft_adminoidc_client_id = ENV['MICROSOFT_ADMINOIDC_CLIENT_ID'] || `pass "microsoft/${MAKEFILE_ENV_TARGET}/paas-admin-oidc/client_id"`
 microsoft_adminoidc_client_secret = ENV['MICROSOFT_ADMINOIDC_CLIENT_SECRET'] || `pass "microsoft/${MAKEFILE_ENV_TARGET}/paas-admin-oidc/client_secret"`
 
-upload_secrets({
+upload_secrets(
   'config' => {
     'credhub_namespace' => credhub_namespace,
     's3_path' => "s3://gds-paas-#{ENV['DEPLOY_ENV']}-state/microsoft-oauth-secrets.yml"
@@ -31,4 +31,4 @@ upload_secrets({
     'microsoft_adminoidc_client_id' => microsoft_adminoidc_client_id,
     'microsoft_adminoidc_client_secret' => microsoft_adminoidc_client_secret
   }
-})
+)

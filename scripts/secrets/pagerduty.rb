@@ -13,7 +13,7 @@ end
 
 alertmanager_pagerduty_service_key = ENV['ALERTMANAGER_PAGERDUTY_SERVICE_KEY'] || `pass "pagerduty/${MAKEFILE_ENV_TARGET}/alertmanager_pagerduty_service_key"`
 
-upload_secrets({
+upload_secrets(
   'config' => {
     'credhub_namespace' => credhub_namespace,
     's3_path' => "s3://gds-paas-#{ENV['DEPLOY_ENV']}-state/pagerduty-secrets.yml"
@@ -21,4 +21,4 @@ upload_secrets({
   'secrets' => {
     'alertmanager_pagerduty_service_key' => alertmanager_pagerduty_service_key
   }
-})
+)
