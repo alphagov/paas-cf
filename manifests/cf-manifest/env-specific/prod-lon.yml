@@ -1,7 +1,7 @@
 ---
 cell_instances: 33
 router_instances: 3
-api_instances: 8
+api_instances: 12
 doppler_instances: 27
 log_api_instances: 6
 cc_hourly_rate_limit: 15000
