@@ -1774,7 +1774,7 @@ jobs:
             - name: config
           params:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            LOGIT_ADDRESS: ((logit-address))
+            LOGIT_ADDRESS: ((logit_syslog_address))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
@@ -3208,7 +3208,7 @@ jobs:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
             CF_CLIENT_SECRET: ((cf_client_secret))
-            LOGIT_ADDRESS: ((logit_address))
+            LOGIT_ADDRESS: ((logit_syslog_address))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
