@@ -55,50 +55,6 @@ resource "aws_proxy_protocol_policy" "cf_router_system_domain_haproxy" {
   instance_ports = ["443"]
 }
 
-resource "aws_elb" "cf_doppler" {
-  name                      = "${var.env}-cf-doppler"
-  subnets                   = ["${split(",", var.infra_subnet_ids)}"]
-  idle_timeout              = "${var.elb_idle_timeout}"
-  cross_zone_load_balancing = "true"
-
-  security_groups = [
-    "${aws_security_group.cf_api_elb.id}",
-  ]
-
-  access_logs {
-    bucket        = "${aws_s3_bucket.elb_access_log.id}"
-    bucket_prefix = "cf-doppler"
-    interval      = 5
-  }
-
-  health_check {
-    target              = "SSL:8081"
-    interval            = "${var.health_check_interval}"
-    timeout             = "${var.health_check_timeout}"
-    healthy_threshold   = "${var.health_check_healthy}"
-    unhealthy_threshold = "${var.health_check_unhealthy}"
-  }
-
-  listener {
-    instance_port      = 8081
-    instance_protocol  = "ssl"
-    lb_port            = 443
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
-  }
-}
-
-resource "aws_lb_ssl_negotiation_policy" "cf_doppler" {
-  name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}"
-  load_balancer = "${aws_elb.cf_doppler.id}"
-  lb_port       = 443
-
-  attribute {
-    name  = "Reference-Security-Policy"
-    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
-  }
-}
-
 resource "aws_elb" "cf_router" {
   name                      = "${var.env}-cf-router"
   subnets                   = ["${split(",", var.infra_subnet_ids)}"]
