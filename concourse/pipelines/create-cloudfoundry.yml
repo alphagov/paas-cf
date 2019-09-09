@@ -424,13 +424,6 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-migrator.git
 
-  - name: pagerduty-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: pagerduty-secrets.yml
-
 jobs:
   - name: pipeline-lock
     serial: true
@@ -1415,7 +1408,6 @@ jobs:
           - get: bosh-secrets
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
-          - get: pagerduty-secrets
           - get: migrator
 
       - task: migrate-prometheus-secrets-to-credhub
@@ -1481,7 +1473,6 @@ jobs:
             - name: bosh-CA-crt
             - name: terraform-outputs
             - name: bosh-secrets
-            - name: pagerduty-secrets
           outputs:
             - name: prometheus-manifest
             - name: prometheus-manifest-pre-vars
