@@ -37,10 +37,10 @@ resource "aws_db_parameter_group" "cf_pg_9_5" {
 
 resource "aws_db_instance" "cf" {
   identifier           = "${var.env}-cf"
-  allocated_storage    = 10
+  allocated_storage    = 100
   engine               = "postgres"
   engine_version       = "9.5"
-  instance_class       = "db.m4.large"
+  instance_class       = "${var.cf_db_instance_type}"
   username             = "dbadmin"
   password             = "${var.secrets_cf_db_master_password}"
   db_subnet_group_name = "${aws_db_subnet_group.cf_rds.name}"

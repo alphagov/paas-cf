@@ -117,6 +117,10 @@ variable "cf_db_maintenance_window" {
   description = "The window during which updates to the CF database instance can occur."
 }
 
+variable "cf_db_instance_type" {
+  description = "The instance type (e.g. db.m5.large)"
+}
+
 variable "cdn_db_maintenance_window" {
   description = "The window during which updates to the CDN database instance can occur."
 }
