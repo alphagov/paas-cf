@@ -1120,13 +1120,34 @@ jobs:
             params:
               file: cloud-config/cloud-config.yml
 
+        - task: modify-cf-vars-store-for-credhub-migration
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *ruby-slim-image-resource
+            inputs:
+              - name: paas-cf
+              - name: cf-vars-store
+            outputs:
+              - name: vars_to_migrate
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ruby paas-cf/concourse/scripts/modify_vars_store_for_credhub_migration.rb \
+                    cf-vars-store/cf-vars-store.yml
+
+                  mv cf_vars_to_migrate.yml vars_to_migrate
+
         - task: migrate-secrets-to-credhub
           tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *golang-image-resource
             inputs:
-              - name: cf-vars-store
+              - name: vars_to_migrate
               - name: migrator
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
@@ -1149,7 +1170,7 @@ jobs:
                   mkdir -p /go/src/github.com/alphagov/ && cp -R migrator /go/src/github.com/alphagov/
                   cd /go/src/github.com/alphagov/migrator && go install && cd
 
-                  migrator migrate -v cf-vars-store/cf-vars-store.yml -e "${DEPLOY_ENV}" -d "${DEPLOY_ENV}"
+                  migrator migrate -v vars_to_migrate/cf_vars_to_migrate.yml -e "${DEPLOY_ENV}" -d "${DEPLOY_ENV}"
 
         - task: generate-cf-manifest
           tags: [colocated-with-web]
