@@ -8,14 +8,14 @@ require 'tempfile'
 def upload_secrets secrets
   config = secrets['config']
 
-  s3_secrets = []
+  s3_secrets = {}
   credhub_secrets = Hash['credentials', []]
 
   # create objects containing the secrets for s3 and credhub.
   # although we could parse the 'raw' object for s3, a new object is
   # created so we can `chomp` each secret to remove `\n`
   secrets['secrets'].each do |secret, value|
-    s3_secrets.push(Hash[secret, value.chomp])
+    s3_secrets[secret] = value.chomp
     config['credhub_namespace'].each do |namespace|
       name = "#{namespace}/#{secret}"
       credhub_secrets['credentials'].push(
@@ -26,7 +26,7 @@ def upload_secrets secrets
 
   s3_secrets_file = Tempfile.new('s3-secrets')
   begin
-    s3_secrets_file.write({ 'secrets' => s3_secrets }.to_yaml)
+    s3_secrets_file.write(s3_secrets.to_yaml)
     s3_secrets_file.close
     system('aws', 's3', 'cp', s3_secrets_file.path, config['s3_path'])
   ensure
