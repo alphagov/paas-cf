@@ -45,6 +45,7 @@ resource "aws_db_instance" "cf" {
   password             = "${var.secrets_cf_db_master_password}"
   db_subnet_group_name = "${aws_db_subnet_group.cf_rds.name}"
   parameter_group_name = "${aws_db_parameter_group.cf_pg_9_5.id}"
+  apply_immediately    = true
 
   storage_type               = "gp2"
   backup_window              = "02:00-03:00"
