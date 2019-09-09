@@ -12,6 +12,8 @@ end
 logit_syslog_address = ENV['LOGIT_SYSLOG_ADDRESS'] || `pass "logit/${MAKEFILE_ENV_TARGET}/syslog_address"`
 logit_syslog_port = ENV['LOGIT_SYSLOG_PORT'] || `pass "logit/${MAKEFILE_ENV_TARGET}/syslog_port"`
 logit_ca_cert = ENV['LOGIT_CA_CERT'] || `pass "logit/${MAKEFILE_ENV_TARGET}/ca_cert"`
+logit_elasticsearch_url = ENV['LOGIT_ELASTICSEARCH_URL'] || `pass "logit/${AWS_ACCOUNT}/elasticsearch_url"`
+logit_elasticsearch_api_key = ENV['LOGIT_ELASTICSEARCH_API_KEY'] || `pass "logit/${AWS_ACCOUNT}/elasticsearch_api_key"`
 
 upload_secrets(
   'config' => {
@@ -21,6 +23,8 @@ upload_secrets(
   'secrets' => {
     'logit_syslog_address' => logit_syslog_address,
     'logit_syslog_port' => logit_syslog_port,
-    'logit_ca_cert' => logit_ca_cert
+    'logit_ca_cert' => logit_ca_cert,
+    'logit_elasticsearch_url' => logit_elasticsearch_url,
+    'logit_elasticsearch_api_key' => logit_elasticsearch_api_key
   }
 )
