@@ -1,11 +1,7 @@
 ---
 - type: replace
   path: /instance_groups/name=log-api/vm_extensions?/-
-  value: cf_doppler_elbs
-
-- type: replace
-  path: /instance_groups/name=log-api/vm_extensions?/-
-  value: cf_loggregator_rlp_target_groups
+  value: cf_loggregator_doppler_target_groups
   
 - type: remove
   path: /instance_groups/name=log-api/jobs/name=route_registrar
