@@ -47,7 +47,7 @@ tests:
         exp_alerts:
           - exp_labels:
               severity: critical
-              notify: pagerduty
+              notify: pagerduty-24-7
               exported_job: continuous-smoke-tests
               pipeline: create-cloudfoundry
               status: failed
