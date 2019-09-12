@@ -273,15 +273,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-manifest-pre-vars.yml
 
-  - name: logit-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: logit-secrets.yml
-      initial_version: "-"
-      initial_content_text: ""
-
   - name: cloud-config
     type: s3-iam
     source:
@@ -427,13 +418,6 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_master
-
-  - name: pagerduty-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: pagerduty-secrets.yml
 
 jobs:
   - name: pipeline-lock
@@ -1007,7 +991,6 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
-          - get: logit-secrets
 
       - aggregate:
         - task: extract-terraform-outputs
@@ -1120,7 +1103,6 @@ jobs:
               - name: bosh-secrets
               - name: cf-secrets
               - name: vpc-peering-opsfile
-              - name: logit-secrets
               - name: ms-oauth-endpoints
             outputs:
               - name: cf-manifest
@@ -1142,11 +1124,6 @@ jobs:
                   environment: ((deploy_env))
                   deployment_name: ((deploy_env))
                   aws_account: ((aws_account))
-                  google_oauth_client_id: ((google_oauth_client_id))
-                  google_oauth_client_secret: ((google_oauth_client_secret))
-                  microsoft_oauth_tenant_id: ((microsoft_oauth_tenant_id))
-                  microsoft_oauth_client_id: ((microsoft_oauth_client_id))
-                  microsoft_oauth_client_secret: ((microsoft_oauth_client_secret))
                   microsoft_oauth_auth_url: $(cat ms-oauth-endpoints/authorization_endpoint)
                   microsoft_oauth_token_url: $(cat ms-oauth-endpoints/token_endpoint)
                   microsoft_oauth_token_key_url: $(cat ms-oauth-endpoints/token_key_endpoint)
@@ -1386,7 +1363,6 @@ jobs:
           - get: bosh-secrets
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
-          - get: pagerduty-secrets
 
       - task: extract-terraform-outputs
         tags: [colocated-with-web]
@@ -1419,7 +1395,6 @@ jobs:
             - name: bosh-CA-crt
             - name: terraform-outputs
             - name: bosh-secrets
-            - name: pagerduty-secrets
           outputs:
             - name: prometheus-manifest
             - name: prometheus-manifest-pre-vars
@@ -1651,7 +1626,6 @@ jobs:
         passed: ['cf-deploy']
       - get: bosh-CA-crt
       - get: paas-aiven-broker
-      - get: logit-secrets
 
     - task: retrieve-config
       tags: [colocated-with-web]
@@ -1661,7 +1635,6 @@ jobs:
           - name: paas-cf
           - name: cf-manifest
           - name: cf-tfstate
-          - name: logit-secrets
         outputs:
           - name: config
         params:
@@ -1689,7 +1662,6 @@ jobs:
               export S3_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_s3_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
-              export LOGIT_ADDRESS=syslog-tls://$($VAL_FROM_YAML meta.logit.syslog_address logit-secrets/logit-secrets.yml):$($VAL_FROM_YAML meta.logit.syslog_port logit-secrets/logit-secrets.yml)
               EOT
 
               ls -l config/*
@@ -1724,6 +1696,7 @@ jobs:
             - name: config
           params:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            LOGIT_ADDRESS: ((logit_syslog_address))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
@@ -3157,7 +3130,7 @@ jobs:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
             CF_CLIENT_SECRET: ((cf_client_secret))
-            LOGIT_ADDRESS: ((logit_address))
+            LOGIT_ADDRESS: ((logit_syslog_address))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))

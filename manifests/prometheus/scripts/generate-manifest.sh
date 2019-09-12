@@ -54,7 +54,6 @@ bosh interpolate \
   --vars-file="${variables_file}" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
   --vars-file="${WORKDIR}/bosh-secrets/bosh-secrets.yml" \
-  --vars-file="${WORKDIR}/pagerduty-secrets/pagerduty-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/prometheus/env-specific/${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   --var-file bosh_ca_cert="${WORKDIR}/bosh-CA-crt/bosh-CA.crt" \
   ${opsfile_args} \
