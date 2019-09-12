@@ -79,21 +79,6 @@ resource "aws_lb_listener_rule" "cf_loggregator_rlp_log_stream" {
   }
 }
 
-resource "aws_lb_target_group" "cf_doppler" {
-  name     = "${var.env}-cf-doppler"
-  port     = 8081
-  protocol = "HTTPS"
-  vpc_id   = "${var.vpc_id}"
-
-  health_check {
-    matcher = "200-499"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_lb_listener_rule" "cf_doppler" {
   listener_arn = "${aws_lb_listener.cf_loggregator.arn}"
   priority     = "113"
@@ -106,6 +91,21 @@ resource "aws_lb_listener_rule" "cf_doppler" {
   condition {
     field  = "host-header"
     values = ["doppler.*"]
+  }
+}
+
+resource "aws_lb_target_group" "cf_doppler" {
+  name     = "${var.env}-cf-doppler"
+  port     = 8081
+  protocol = "HTTPS"
+  vpc_id   = "${var.vpc_id}"
+
+  health_check {
+    matcher = "200-499"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
