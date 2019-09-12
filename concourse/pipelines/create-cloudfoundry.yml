@@ -64,6 +64,7 @@ groups:
       - deploy-paas-admin
       - deploy-paas-billing
       - deploy-paas-metrics
+      - deploy-paas-auditor
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -96,6 +97,7 @@ groups:
       - deploy-paas-admin
       - deploy-paas-billing
       - deploy-paas-metrics
+      - deploy-paas-auditor
   - name: operator
     jobs:
       - generate-git-keys
@@ -391,6 +393,12 @@ resources:
       uri: https://github.com/alphagov/paas-billing.git
       branch: master
       tag_filter: v0.66.0
+
+  - name: paas-auditor
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-auditor.git
+      branch: master
 
   - name: paas-accounts
     type: git
@@ -1391,7 +1399,8 @@ jobs:
                 BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
                 CF_ADMIN=admin
                 CF_PASS=$(credhub get -q -n "${BOSH_NS}/cf_admin_password")
-                CF_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret")
+                CF_BILLING_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret")
+                CF_AUDITOR_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
                 PAAS_ACCOUNTS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_paas_accounts_admin_password")
@@ -1418,7 +1427,8 @@ jobs:
                 PIPELINE_NS="${TEAM_NS}/create-cloudfoundry"
                 credhub set --name="${TEAM_NS}/cf_admin" --type value --value "${CF_ADMIN}"
                 credhub set --name="${TEAM_NS}/cf_pass" --type password --password "${CF_PASS}"
-                credhub set --name="${PIPELINE_NS}/cf_client_secret" --type password --password "${CF_CLIENT_SECRET}"
+                credhub set --name="${PIPELINE_NS}/cf_billing_client_secret" --type password --password "${CF_BILLING_CLIENT_SECRET}"
+                credhub set --name="${PIPELINE_NS}/cf_auditor_client_secret" --type password --password "${CF_AUDITOR_CLIENT_SECRET}"
 
                 credhub set --name="${PIPELINE_NS}/paas_accounts_password" --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
                 credhub set --name="${TEAM_NS}/api_endpoint" --type value --value "${API_ENDPOINT}"
@@ -3107,7 +3117,6 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
-            CF_CLIENT_SECRET: ((cf_client_secret))
           run:
             path: sh
             args:
@@ -3263,7 +3272,7 @@ jobs:
             AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
-            CF_CLIENT_SECRET: ((cf_client_secret))
+            CF_BILLING_CLIENT_SECRET: ((cf_billing_client_secret))
             LOGIT_ADDRESS: ((logit_address))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
@@ -3306,7 +3315,7 @@ jobs:
                 ruby -ryaml -e "
                   env = {
                     'CF_CLIENT_ID' => 'paas-billing',
-                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
+                    'CF_CLIENT_SECRET' => '${CF_BILLING_CLIENT_SECRET}',
                     'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
                     'CF_API_ADDRESS' => '${API_ENDPOINT}',
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
@@ -3484,6 +3493,90 @@ jobs:
                 echo 'Waiting 2 minutes before running the acceptance tests'
                 sleep 120
                 ginkgo
+
+  - name: deploy-paas-auditor
+    serial: true
+    plan:
+      - get: paas-auditor
+        trigger: true
+
+      - aggregate:
+        - get: paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+      - task: deploy-paas-auditor
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+            CF_AUDITOR_CLIENT_SECRET: ((cf-auditor-client-secret))
+            LOGIT_ADDRESS: ((logit-address))
+            API_ENDPOINT: ((api-endpoint))
+            CF_ADMIN: ((cf-admin))
+            CF_PASS: ((cf-pass))
+          inputs:
+            - name: paas-auditor
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                AUDITOR_DB_PLAN="tiny-unencrypted-10"
+                if [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ] || [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                  AUDITOR_DB_PLAN="small-10"
+                fi
+
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if ! cf service auditor-db > /dev/null; then
+                  cf create-service postgres "${AUDITOR_DB_PLAN}" auditor-db
+                  while ! cf service auditor-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of auditor-db service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                if ! cf service auditor-logit-ssl-drain > /dev/null; then
+                  cf create-user-provided-service \
+                    auditor-logit-ssl-drain \
+                    -l "${LOGIT_ADDRESS}"
+                fi
+
+                cd paas-auditor
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-auditor',
+                    'CF_CLIENT_SECRET' => '${CF_AUDITOR_CLIENT_SECRET}',
+                    'CF_CLIENT_REDIRECT_URL' => 'https://auditor.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                  }
+
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = [
+                      'auditor-db',
+                      'auditor-logit-ssl-drain'
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf push paas-auditor -f manifest.yml
+
+                while ! cf service auditor-logit-ssl-drain | grep -c 'create succeeded' > /dev/null; do
+                  echo "Waiting for binding of auditor-logit-ssl-drain service to paas-auditor app to complete..."
+                  sleep 10
+                done
 
   - name: tag-release
     plan:
