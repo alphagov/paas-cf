@@ -1124,7 +1124,7 @@ jobs:
           tags: [colocated-with-web]
           config:
             platform: linux
-            image_resource: *ruby-slim-image-resource
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
               - name: cf-vars-store
