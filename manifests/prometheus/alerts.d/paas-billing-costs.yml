@@ -35,13 +35,13 @@
     name: PaaSBillingAppCostsExceedEC2Costs
     rules:
       - alert: PaaSBillingAppCostsExceedEC2Costs
-        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"Amazon Elastic Compute Cloud - Compute"}) > 1.1
+        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"Amazon Elastic Compute Cloud - Compute"}) > 1.4
         labels:
           severity: warning
           layer: billing
         annotations:
-          summary: "PaaS Billing App costs exceed AWS EC2 costs by > 10%"
-          description: "PaaS Billing App costs exceed AWS EC2 costs by > 10%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
+          summary: "PaaS Billing App costs exceed AWS EC2 costs by > 40%"
+          description: "PaaS Billing App costs exceed AWS EC2 costs by > 40%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
 
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
@@ -49,10 +49,10 @@
     name: PaaSBillingAppCostsFallsShortOfEC2Costs
     rules:
       - alert: PaaSBillingAppCostsFallsShortOfEC2Costs
-        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"Amazon Elastic Compute Cloud - Compute"}) < .9
+        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"Amazon Elastic Compute Cloud - Compute"}) < .6
         labels:
           severity: warning
           layer: billing
         annotations:
-          summary: "PaaS Billing App costs fall short of AWS EC2 costs by > 10%"
-          description: "PaaS Billing App costs fall short of AWS EC2 costs by > 10%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"
+          summary: "PaaS Billing App costs fall short of AWS EC2 costs by > 40%"
+          description: "PaaS Billing App costs fall short of AWS EC2 costs by > 40%. The difference is currently: £{{ $value | printf \"%.2f\" }}, which indicates there may be an issue with paas-billing's costs"

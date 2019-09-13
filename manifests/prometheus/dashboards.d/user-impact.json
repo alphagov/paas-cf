@@ -671,7 +671,7 @@
                 },
                 "tableColumn": "",
                 "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\",layer!=\"tenant\"}) or vector(0)",
+                    "expr": "count(ALERTS{alertstate=\"firing\",layer=\"\"}) or vector(0)",
                     "format": "time_series",
                     "instant": true,
                     "intervalFactor": 1,
@@ -694,8 +694,8 @@
                 "colorValue": false,
                 "colors": [
                     "#299c46",
-                    "rgba(237, 129, 40, 0.89)",
-                    "#d44a3a"
+                    "#fa6400",
+                    "#fa6400"
                 ],
                 "datasource": "prometheus",
                 "format": "none",
@@ -746,14 +746,14 @@
                 },
                 "tableColumn": "",
                 "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\",layer=\"tenant\"}) or vector(0)",
+                    "expr": "count(ALERTS{alertstate=\"firing\",layer=~\"^.+$\"}) or vector(0)",
                     "format": "time_series",
                     "instant": true,
                     "intervalFactor": 1,
                     "refId": "A"
                 }],
                 "thresholds": "1,1",
-                "title": "Tenant Alerts",
+                "title": "Other Alerts",
                 "type": "singlestat",
                 "valueFontSize": "200%",
                 "valueMaps": [{
