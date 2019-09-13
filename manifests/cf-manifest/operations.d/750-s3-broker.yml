@@ -40,6 +40,11 @@
             iam_user_path: "/paas-s3-broker/"
             iam_ip_restriction_policy_arn: "((terraform_outputs_s3_broker_ip_restriction_policy_arn))"
             deploy_environment: "((environment))"
+            locket:
+              api_location: "locket.service.cf.internal:8891"
+              ca_cert: "((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))"
+              client_cert: "((diego_locket_client.certificate))"
+              client_key: "((diego_locket_client.private_key))"
             catalog:
               services:
                 - id: 36880794-1682-4a4b-8771-be655904237d
