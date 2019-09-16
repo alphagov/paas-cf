@@ -85,8 +85,13 @@ prepare_environment() {
   # Note: this credential is not interpolated into the pipeline. It is used as a guard against forgetting
   # to upload the credentials and has been placed here for consistency with the other credentials.
   # shellcheck disable=SC2154
-  if [ -z "${alertmanager_pagerduty_service_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
-    echo "Could not retrieve PagerDuty service key for Alertmanager. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
+  if [ -z "${alertmanager_pagerduty_24_7_service_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+    echo "Could not retrieve PagerDuty 24/7 service key for Alertmanager. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
+    exit 1
+  fi
+  # shellcheck disable=SC2154
+  if [ -z "${alertmanager_pagerduty_in_hours_service_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
+    echo "Could not retrieve PagerDuty in-hours service key for Alertmanager. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
     exit 1
   fi
 

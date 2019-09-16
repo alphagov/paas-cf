@@ -6,4 +6,7 @@
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=critical-receiver/email_configs
 
 - type: remove
-  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=pagerduty-receiver/pagerduty_configs
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=pagerduty-24-7-receiver/pagerduty_configs
+
+- type: remove
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers/name=pagerduty-in-hours-receiver/pagerduty_configs

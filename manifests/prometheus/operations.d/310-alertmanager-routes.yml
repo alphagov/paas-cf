@@ -18,9 +18,14 @@
         match:
           severity: "critical"
         continue: true
-      - receiver: pagerduty-receiver
+      - receiver: pagerduty-24-7-receiver
         match:
-          notify: "pagerduty"
+          notify: "pagerduty-24-7"
+        repeat_interval: 4h
+        continue: true
+      - receiver: pagerduty-in-hours-receiver
+        match:
+          notify: "pagerduty-in-hours"
         repeat_interval: 4h
 
 - type: replace
@@ -46,7 +51,15 @@
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
   value:
-    name: pagerduty-receiver
+    name: pagerduty-24-7-receiver
     pagerduty_configs:
-      - service_key: ((alertmanager_pagerduty_service_key))
+      - service_key: ((alertmanager_pagerduty_24_7_service_key))
+        description: "[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: pagerduty-in-hours-receiver
+    pagerduty_configs:
+      - service_key: ((alertmanager_pagerduty_in_hours_service_key))
         description: "[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"

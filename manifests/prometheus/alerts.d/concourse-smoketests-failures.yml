@@ -18,7 +18,7 @@
         expr: increase(concourse_builds_finished{exported_job="continuous-smoke-tests",pipeline="create-cloudfoundry",status="failed"}[30m]) >= 3
         labels:
           severity: critical
-          notify: pagerduty
+          notify: pagerduty-24-7
         annotations:
           summary: Concourse continuous-smoke-tests failures
           description: The continuous-smoke-tests Concourse job has failed at least three times in the last 30 minutes.
@@ -40,7 +40,7 @@
         expr: increase(concourse_builds_finished{exported_job="smoke-tests",pipeline=~"monitor-.+",status="failed"}[30m]) >= 3
         labels:
           severity: critical
-          notify: pagerduty
+          notify: pagerduty-24-7
         annotations:
           summary: "Concourse remote smoke-tests failures on {{ $labels.pipeline }} pipeline"
           description: "The Concourse job running smoke-tests remotely (in the {{ $labels.pipeline }} pipeline) has failed at least three times in the last 30 minutes."

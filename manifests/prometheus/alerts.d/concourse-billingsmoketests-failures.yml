@@ -18,7 +18,7 @@
         expr: increase(concourse_builds_finished{exported_job="continuous-billing-smoke-tests",pipeline="create-cloudfoundry",status="failed"}[30m]) >= 3
         labels:
           severity: critical
-          notify: pagerduty
+          notify: pagerduty-in-hours
         annotations:
           summary: Concourse continuous-billing-smoke-tests failures
           description: The continuous-billing-smoke-tests Concourse job has failed at least three times in the last 30 minutes.
