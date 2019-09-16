@@ -5,7 +5,11 @@
   value:
     targets:
       # The port will be added in the upstream relabel configuration
+      #
+      # This is the BOSH director
       - "10.0.0.6"
+      # This is the Prometheus monitoring its own node exporter
+      - "127.0.0.1"
     labels:
       __meta_bosh_job_process_name: node_exporter
 
@@ -14,5 +18,5 @@
   value:
     source_labels:
     - __address__
-    regex: "^10[.].*"
+    regex: "^(10|127)[.].*"
     action: keep
