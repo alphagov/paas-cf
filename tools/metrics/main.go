@@ -163,7 +163,8 @@ func Main() error {
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
 		BillingCostsGauge(logger, os.Getenv("BILLING_ENDPOINT"), 15*time.Minute),
 		CurrencyGauges(logger, 5*time.Minute),
-		BillingPerformanceGauge(logger, 15*time.Minute, logitClient),
+		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
+		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))
