@@ -10,34 +10,34 @@ import (
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-func BillingPerformanceGauge(
+func BillingCollectorPerformanceGauge(
 	logger lager.Logger,
 	interval time.Duration,
 	client logit.LogitElasticsearchClient,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
-		metrics, err := BillingPerformanceMetricGauges(logger, client)
+		metrics, err := BillingCollectorPerformanceMetricGauges(logger, client)
 		if err != nil {
-			logger.Error("billing-performance-metric-gauges", err)
+			logger.Error("billing-collector-performance-metric-gauges", err)
 			return err
 		}
 		err = w.WriteMetrics(metrics)
 		if err != nil {
-			logger.Error("billing-performance-gauge-write-metrics", err)
+			logger.Error("billing-collector-performance-gauge-write-metrics", err)
 			return err
 		}
 		return nil
 	})
 }
 
-type BillingElasticsearchQueryParams struct {
+type BillingCollectorElasticsearchQueryParams struct {
 	Message       string
 	SqlFile       string
 	QueryInterval string
 }
 
-func BillingPerformanceMetricGauges(logger lager.Logger, client logit.LogitElasticsearchClient) ([]m.Metric, error) {
-	queries := []BillingElasticsearchQueryParams{
+func BillingCollectorPerformanceMetricGauges(logger lager.Logger, client logit.LogitElasticsearchClient) ([]m.Metric, error) {
+	queries := []BillingCollectorElasticsearchQueryParams{
 		{
 			Message:       "paas-billing.store.finish-sql-file",
 			SqlFile:       "create_billable_event_components.sql",
@@ -56,7 +56,7 @@ func BillingPerformanceMetricGauges(logger lager.Logger, client logit.LogitElast
 	}
 	var metrics []m.Metric
 	for _, query := range queries {
-		hitsByDeployment, err := GetElapsedTimesByDeployment(logger, client, query)
+		hitsByDeployment, err := GetCollectorElapsedTimesByDeployment(logger, client, query)
 		if err != nil {
 			return metrics, err
 		}
@@ -64,7 +64,7 @@ func BillingPerformanceMetricGauges(logger lager.Logger, client logit.LogitElast
 			if average, ok := ArithmeticMean(hits); ok {
 				metrics = append(metrics, m.Metric{
 					Kind: m.Gauge,
-					Name: "billing.performance.elapsed",
+					Name: "billing.collector.performance.elapsed",
 					Time: time.Now(),
 					Tags: []m.MetricTag{
 						{Label: "deployment", Value: deployment},
@@ -80,10 +80,10 @@ func BillingPerformanceMetricGauges(logger lager.Logger, client logit.LogitElast
 	return metrics, nil
 }
 
-func GetElapsedTimesByDeployment(
+func GetCollectorElapsedTimesByDeployment(
 	logger lager.Logger,
 	client logit.LogitElasticsearchClient,
-	queryParams BillingElasticsearchQueryParams,
+	queryParams BillingCollectorElasticsearchQueryParams,
 ) (map[string][]int64, error) {
 	query, err := BuildQuery(queryParams)
 	if err != nil {
@@ -123,7 +123,7 @@ func GetElapsedTimesByDeployment(
 	return result, nil
 }
 
-func BuildQuery(queryParams BillingElasticsearchQueryParams) (string, error) {
+func BuildQuery(queryParams BillingCollectorElasticsearchQueryParams) (string, error) {
 	type M map[string]interface{}
 	criteria := []interface{}{M{"match_phrase": M{"@message": queryParams.Message}}}
 	if queryParams.SqlFile != "" {
@@ -143,16 +143,4 @@ func BuildQuery(queryParams BillingElasticsearchQueryParams) (string, error) {
 		return "", err
 	}
 	return string(bytes), nil
-}
-
-func ArithmeticMean(data []int64) (float64, bool) {
-	count := len(data)
-	if count <= 0 {
-		return 0, false
-	}
-	sum := int64(0)
-	for _, hit := range data {
-		sum += hit
-	}
-	return float64(sum) / float64(count), true
 }
