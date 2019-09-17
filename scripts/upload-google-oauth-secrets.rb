@@ -3,8 +3,6 @@
 
 require_relative 'upload_secrets.rb'
 
-ENV['PASSWORD_STORE_DIR'] = ENV['AIVEN_PASSWORD_STORE_HIGH_DIR'] || ENV['LOGIT_PASSWORD_STORE_DIR']
-
 deploy_env = ENV.fetch('DEPLOY_ENV')
 
 credhub_namespaces = [
