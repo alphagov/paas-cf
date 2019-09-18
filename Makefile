@@ -340,3 +340,9 @@ show-tenant-comms-addresses:
 	$(eval export API_TOKEN=`cf oauth-token | cut -f 2 -d ' '`)
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
 	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ./user_emails
+
+.PHONY: credhub
+credhub:
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
+	@scripts/credhub_shell.sh
