@@ -61,7 +61,9 @@ if you want to deploy to DEV account.
 
 Run the `create-cloudfoundry` pipeline. This configure and deploy CloudFoundry.
 
-Run `make dev showenv` to show environment information such as system URLs and Concourse password.
+Run `make dev showenv` to show environment information such as system URLs.
+
+Run `make dev credhub` to get access to the credhub credential store.
 
 This pipeline implements locking, to prevent two executions of the
 same pipelines to happen at the same time. More details
@@ -81,9 +83,12 @@ Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, a
 To interact with a CloudFoundry environment you will need the following:
 
 - the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
-- `API_ENDPOINT` and `CF_ADMIN_PASSWORD` from `make dev showenv`
+- The API endpoint from `make dev showenv`.
 
-Then you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), using the `admin` user.
+To login, you should prefer using your Google account, by logging in using `cf login --sso` as [documented here](https://docs.cloud.service.gov.uk/get_started.html#use-single-sign-on)
+
+Alternatively, you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), 
+to log in as the `admin` user, using the CF admin password from `make dev credhub`.
 
 ## Running tests locally
 
