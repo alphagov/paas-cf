@@ -132,7 +132,7 @@ var _ = Describe("S3 broker", func() {
 
 			By("deploying a second app", func() {
 				Expect(cf.Cf(
-					"push", appOneName,
+					"push", appTwoName,
 					"--no-start",
 					"-b", testConfig.GetGoBuildpackName(),
 					"-p", "../../../example-apps/healthcheck",
