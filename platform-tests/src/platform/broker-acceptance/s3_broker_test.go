@@ -86,25 +86,25 @@ var _ = Describe("S3 broker", func() {
 		})
 	})
 
-	Context("multiple operations against a single bucket", func(){
+	Context("multiple operations against a single bucket", func() {
 		var (
 			appOneName          string
 			appTwoName          string
 			serviceInstanceName string
 		)
 
-		It("do not run in to race conditions", func(){
+		It("do not run in to race conditions", func() {
 			appOneName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 			appTwoName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-s3-bucket")
 
-			By("creating the service: " + serviceInstanceName, func() {
+			By("creating the service: "+serviceInstanceName, func() {
 				Expect(
 					cf.
 						Cf("create-service", serviceName, testPlanName, serviceInstanceName).
 						Wait(testConfig.DefaultTimeoutDuration()),
 				).
-				To(Exit(0))
+					To(Exit(0))
 				pollForServiceCreationCompletion(serviceInstanceName)
 			})
 
@@ -144,7 +144,7 @@ var _ = Describe("S3 broker", func() {
 				cf.Cf("delete", appTwoName, "-f").Wait(testConfig.DefaultTimeoutDuration())
 			})
 
-			By("binding and unbinding the two apps simultaneously, we should see no errors", func(){
+			By("binding and unbinding the two apps simultaneously, we should see no errors", func() {
 				// Prepare four channels
 				bindAppOneChan := make(chan int)
 				bindAppTwoChan := make(chan int)
