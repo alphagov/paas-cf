@@ -250,14 +250,10 @@ unpause-kick-off: check-env ## Unpause the morning kick-off of deployment.
 	concourse/scripts/pause-kick-off.sh unpin
 
 .PHONY: showenv
-showenv: check-env ## Display environment information
-	$(eval export TARGET_CONCOURSE=deployer)
-	@concourse/scripts/environment.sh
-	@scripts/show-vars-store-secrets.sh cf-vars-store cf_admin_password uaa_admin_client_secret
-	@echo export CONCOURSE_IP=$$(aws ec2 describe-instances \
-		--filters "Name=tag:deploy_env,Values=${DEPLOY_ENV}" 'Name=tag:instance_group,Values=concourse' \
-		--query 'Reservations[].Instances[].PublicIpAddress' --output text)
-	@scripts/show-vars-store-secrets.sh prometheus-vars-store alertmanager_password grafana_password grafana_mon_password prometheus_password
+showenv: ## Display environment information
+	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	@scripts/showenv.sh
 
 .PHONY: upload-all-secrets
 upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
