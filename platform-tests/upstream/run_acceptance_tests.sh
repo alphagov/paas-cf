@@ -8,7 +8,7 @@ if  [ "${DISABLE_CF_ACCEPTANCE_TESTS:-}" = "true" ]; then
 fi
 
 SLEEPTIME=90
-NODES=3
+NODES=5
 SLOW_SPEC_THRESHOLD=120
 
 # Build Skip regex to ignore tests
