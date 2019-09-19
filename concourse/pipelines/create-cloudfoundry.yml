@@ -5,27 +5,27 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -40,12 +40,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+        tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
 
 groups:
   - name: deploy
@@ -496,7 +496,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+              tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
           inputs:
             - name: paas-cf
           params:
@@ -537,7 +537,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+                tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -957,7 +957,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+              tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -2908,7 +2908,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+              tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3508,7 +3508,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 47b25fd03f4dcaf8851ee859f5e8ec0b915cf8fc
+            tag: cf791cec329bff5577cd8b3c9511bf89f988b5d4
         inputs:
           - name: paas-cf
           - name: rotated-cf-vars-store
