@@ -2,6 +2,7 @@ package acceptance_test
 
 import (
 	"io/ioutil"
+	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
@@ -93,27 +94,9 @@ var _ = Describe("S3 broker", func() {
 			serviceInstanceName string
 		)
 
-		It("do not run in to race conditions", func() {
+		BeforeEach(func() {
 			appOneName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 			appTwoName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
-			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-s3-bucket")
-
-			By("creating the service: "+serviceInstanceName, func() {
-				Expect(
-					cf.
-						Cf("create-service", serviceName, testPlanName, serviceInstanceName).
-						Wait(testConfig.DefaultTimeoutDuration()),
-				).
-					To(Exit(0))
-				pollForServiceCreationCompletion(serviceInstanceName)
-			})
-			defer By("deleting the service", func() {
-				Expect(
-					cf.Cf("delete-service", serviceInstanceName, "-f").
-						Wait(testConfig.DefaultTimeoutDuration()),
-				).To(Exit(0))
-				pollForServiceDeletionCompletion(serviceInstanceName)
-			})
 
 			By("deploying a first app", func() {
 				Expect(cf.Cf(
@@ -124,9 +107,6 @@ var _ = Describe("S3 broker", func() {
 					"-f", "../../../example-apps/healthcheck/manifest.yml",
 					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
-			})
-			defer By("deleting the first app", func() {
-				cf.Cf("delete", appOneName, "-f").Wait(testConfig.DefaultTimeoutDuration())
 			})
 
 			By("deploying a second app", func() {
@@ -139,10 +119,43 @@ var _ = Describe("S3 broker", func() {
 					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
-			defer By("deleting the second app", func() {
+
+			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-s3-bucket")
+
+			By("creating the service: "+serviceInstanceName, func() {
+				Expect(
+					cf.
+						Cf("create-service", serviceName, testPlanName, serviceInstanceName).
+						Wait(testConfig.DefaultTimeoutDuration()),
+				).
+					To(Exit(0))
+				pollForServiceCreationCompletion(serviceInstanceName)
+			})
+
+			By("Waiting for AWS to be eventually consistent", func() {
+				time.Sleep(10 * time.Second)
+			})
+		})
+
+		AfterEach(func() {
+			By("deleting the first app", func() {
+				cf.Cf("delete", appOneName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+			})
+
+			By("deleting the second app", func() {
 				cf.Cf("delete", appTwoName, "-f").Wait(testConfig.DefaultTimeoutDuration())
 			})
 
+			By("deleting the service", func() {
+				Expect(
+					cf.Cf("delete-service", serviceInstanceName, "-f").
+						Wait(testConfig.DefaultTimeoutDuration()),
+				).To(Exit(0))
+				pollForServiceDeletionCompletion(serviceInstanceName)
+			})
+		})
+
+		It("do not run in to race conditions", func(done Done) {
 			By("binding the two apps simultaneously, we should see no errors", func() {
 				bindAppOneChan := make(chan int)
 				bindAppTwoChan := make(chan int)
@@ -150,13 +163,12 @@ var _ = Describe("S3 broker", func() {
 				bindServiceToAppAsync(appOneName, serviceInstanceName, bindAppOneChan)
 				bindServiceToAppAsync(appTwoName, serviceInstanceName, bindAppTwoChan)
 
-				Eventually(func() int {
-					return <-bindAppOneChan
-				}).Should(Equal(0))
+				Expect(<-bindAppOneChan).To(Equal(0))
+				Expect(<-bindAppTwoChan).To(Equal(0))
+			})
 
-				Eventually(func() int {
-					return <-bindAppTwoChan
-				}).Should(Equal(0))
+			By("Waiting for AWS to be eventually consistent", func() {
+				time.Sleep(10 * time.Second)
 			})
 
 			By("unbinding the two apps simultaneously, we should see no errors", func() {
@@ -166,15 +178,13 @@ var _ = Describe("S3 broker", func() {
 				unbindServiceFromAppAsync(appOneName, serviceInstanceName, unbindAppOneChan)
 				unbindServiceFromAppAsync(appTwoName, serviceInstanceName, unbindAppTwoChan)
 
-				Eventually(func() int {
-					return <-unbindAppOneChan
-				}).Should(Equal(0))
-
-				Eventually(func() int {
-					return <-unbindAppTwoChan
-				}).Should(Equal(0))
+				Expect(<-unbindAppOneChan).To(Equal(0))
+				Expect(<-unbindAppTwoChan).To(Equal(0))
 			})
-		})
+
+			close(done)
+		}, 60, // Override default timeout of 1 second for async to be one minute
+		)
 	})
 })
 
