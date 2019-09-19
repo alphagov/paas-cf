@@ -29,12 +29,6 @@
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
   cf_admin: true
 
-- email: "russell.howe@digital.cabinet-office.gov.uk"
-  google_id: 109846986393208462188
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
-  cf_admin: true
-
 - email: "tom.whitwell@digital.cabinet-office.gov.uk"
   google_id: 106988454860052458239
   origin: "google"
