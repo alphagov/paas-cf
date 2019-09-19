@@ -30,6 +30,9 @@ private
     env['GRAFANA_AUTH_GOOGLE_CLIENT_SECRET'] = 'google-client-secret'
     env['UAA_CLIENTS_CF_EXPORTER_SECRET'] = 'uaa_clients_cf_exporter_secret'
     env['UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET'] = 'uaa_clients_firehose_exporter_secret'
+    env['BOSH_CA_CERT'] = 'bosh-ca-cert'
+    env['BOSH_EXPORTER_PASSWORD'] = 'bosh-exporter-password'
+    env['VCAP_PASSWORD'] = 'vcap-password'
     env
   end
 
