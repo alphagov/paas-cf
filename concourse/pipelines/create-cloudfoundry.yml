@@ -3145,8 +3145,10 @@ jobs:
               - -c
               - |
                 BILLING_DB_PLAN="tiny-unencrypted-9.5"
-                if [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ] || [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
                   BILLING_DB_PLAN="medium-9.5"
+                elif [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
+                  BILLING_DB_PLAN="large-9.5"
                 fi
 
                 echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
