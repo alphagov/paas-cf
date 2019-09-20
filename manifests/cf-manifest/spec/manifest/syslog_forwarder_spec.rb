@@ -13,10 +13,9 @@ RSpec.describe "syslog forwarder config" do
   end
 
   it "configures the addon properties" do
-    expect(syslog_properties['syslog']['address']).to eq("logit-syslog-url.internal")
-    expect(syslog_properties['syslog']['port']).to eq 6514
+    expect(syslog_properties['syslog']['address']).to eq("((logit_syslog_address))")
+    expect(syslog_properties['syslog']['port']).to eq "((logit_syslog_port))"
     expect(syslog_properties['syslog']['permitted_peer']).to eq "*.logit.io"
-    expect(syslog_properties['syslog']['ca_cert']).to include("LOGIT_CA_CERT_1")
-    expect(syslog_properties['syslog']['ca_cert']).to include("LOGIT_CA_CERT_2")
+    expect(syslog_properties['syslog']['ca_cert']).to eq("((logit_ca_cert))")
   end
 end

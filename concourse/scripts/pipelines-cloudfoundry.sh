@@ -6,24 +6,6 @@ export TARGET_CONCOURSE=deployer
 # shellcheck disable=SC2091
 $("${SCRIPT_DIR}/environment.sh" "$@")
 
-# shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/aiven.sh"
-
-# shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/google-oauth.sh"
-
-# shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/microsoft-oauth.sh"
-
-# shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/notify.sh"
-
-# shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/logit.sh"
-
-# shellcheck disable=SC1090
-. "${SCRIPT_DIR}/lib/pagerduty.sh"
-
 download_git_id_rsa() {
   git_id_rsa_file=$(mktemp -t id_rsa.XXXXXX)
 
@@ -58,48 +40,9 @@ prepare_environment() {
 
   download_git_id_rsa
   get_git_concourse_pool_clone_full_url_ssh
-  get_aiven_secrets
-  get_google_oauth_secrets
-  get_microsoft_oauth_secrets
-  get_notify_secrets
-  get_logit_ca_cert
-  get_pagerduty_secrets
 
   if [ -n "${SLIM_DEV_DEPLOYMENT:-}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
     echo "SLIM_DEV_DEPLOYMENT set for non-dev deployment. Aborting!"
-    exit 1
-  fi
-
-  # shellcheck disable=SC2154
-  if [ -z "${aiven_api_token+x}" ] ; then
-    echo "Could not retrieve API token for Aiven. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-aiven-secrets\`?"
-    exit 1
-  fi
-
-  # shellcheck disable=SC2154
-  if [ -z "${notify_api_key+x}" ] ; then
-    echo "Could not retrieve api key for Notify. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-notify-secrets\`?"
-    exit 1
-  fi
-
-  # Note: this credential is not interpolated into the pipeline. It is used as a guard against forgetting
-  # to upload the credentials and has been placed here for consistency with the other credentials.
-  # shellcheck disable=SC2154
-  if [ -z "${alertmanager_pagerduty_24_7_service_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
-    echo "Could not retrieve PagerDuty 24/7 service key for Alertmanager. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
-    exit 1
-  fi
-  # shellcheck disable=SC2154
-  if [ -z "${alertmanager_pagerduty_in_hours_service_key+x}" ] && [ "${MAKEFILE_ENV_TARGET}" != "dev" ]; then
-    echo "Could not retrieve PagerDuty in-hours service key for Alertmanager. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-pagerduty-secrets\`?"
-    exit 1
-  fi
-
-  # Note: this credential is not interpolated into the pipeline. It is used as a guard against forgetting
-  # to upload the credentials and has been placed here for consistency with the other credentials.
-  # shellcheck disable=SC2154
-  if [ -z "${logit_ca_cert+x}" ] ; then
-    echo "Could not retrieve Logit CA cert. Did you run \`make ${MAKEFILE_ENV_TARGET} upload-logit-secrets\`?"
     exit 1
   fi
 
@@ -146,27 +89,13 @@ bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
-aiven_api_token: ${aiven_api_token:-}
 concourse_web_password: ${CONCOURSE_WEB_PASSWORD}
-google_oauth_client_id: "${google_oauth_client_id:-}"
-google_oauth_client_secret: "${google_oauth_client_secret:-}"
-google_paas_admin_client_id: "${google_paas_admin_client_id:-}"
-google_paas_admin_client_secret: "${google_paas_admin_client_secret:-}"
-microsoft_oauth_tenant_id: "${microsoft_oauth_tenant_id:-}"
-microsoft_oauth_client_id: "${microsoft_oauth_client_id:-}"
-microsoft_oauth_client_secret: "${microsoft_oauth_client_secret:-}"
-microsoft_adminoidc_tenant_id: "${microsoft_adminoidc_tenant_id:-}"
-microsoft_adminoidc_client_id: "${microsoft_adminoidc_client_id:-}"
-microsoft_adminoidc_client_secret: "${microsoft_adminoidc_client_secret:-}"
-notify_api_key: ${notify_api_key:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
 slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
 monitored_state_bucket: ${MONITORED_STATE_BUCKET:-}
 monitored_aws_region: ${MONITORED_AWS_REGION:-}
 monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}
-grafana_auth_google_client_id: "${grafana_auth_google_client_id:-}"
-grafana_auth_google_client_secret: "${grafana_auth_google_client_secret:-}"
 deploy_env_tag_prefix: "${deploy_env_tag_prefix}"
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
