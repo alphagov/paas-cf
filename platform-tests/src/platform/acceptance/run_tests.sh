@@ -2,18 +2,15 @@
 
 set -eu
 
-nodes=4
-if [ "${SLIM_DEV_DEPLOYMENT:-}" = "true" ]; then
-  nodes=2
-fi
+nodes=5
 
 if [ -n "${GINKGO_FOCUS:-}" ]; then
   ginkgo -p \
     -nodes="${nodes}" \
-    -timeout=1h30m \
+    -timeout=20m \
     -focus="${GINKGO_FOCUS}"
 else
   ginkgo -p \
     -nodes="${nodes}" \
-    -timeout=1h30m
+    -timeout=20m
 fi

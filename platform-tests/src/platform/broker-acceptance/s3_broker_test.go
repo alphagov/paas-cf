@@ -2,6 +2,7 @@ package acceptance_test
 
 import (
 	"io/ioutil"
+	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
@@ -85,4 +86,122 @@ var _ = Describe("S3 broker", func() {
 
 		})
 	})
+
+	Context("multiple operations against a single bucket", func() {
+		var (
+			appOneName          string
+			appTwoName          string
+			serviceInstanceName string
+		)
+
+		BeforeEach(func() {
+			appOneName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
+			appTwoName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
+
+			By("deploying a first app", func() {
+				Expect(cf.Cf(
+					"push", appOneName,
+					"--no-start",
+					"-b", testConfig.GetGoBuildpackName(),
+					"-p", "../../../example-apps/healthcheck",
+					"-f", "../../../example-apps/healthcheck/manifest.yml",
+					"-d", testConfig.GetAppsDomain(),
+				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+			})
+
+			By("deploying a second app", func() {
+				Expect(cf.Cf(
+					"push", appTwoName,
+					"--no-start",
+					"-b", testConfig.GetGoBuildpackName(),
+					"-p", "../../../example-apps/healthcheck",
+					"-f", "../../../example-apps/healthcheck/manifest.yml",
+					"-d", testConfig.GetAppsDomain(),
+				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+			})
+
+			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-s3-bucket")
+
+			By("creating the service: "+serviceInstanceName, func() {
+				Expect(
+					cf.
+						Cf("create-service", serviceName, testPlanName, serviceInstanceName).
+						Wait(testConfig.DefaultTimeoutDuration()),
+				).
+					To(Exit(0))
+				pollForServiceCreationCompletion(serviceInstanceName)
+			})
+
+			By("Waiting for AWS to be eventually consistent", func() {
+				time.Sleep(10 * time.Second)
+			})
+		})
+
+		AfterEach(func() {
+			By("deleting the first app", func() {
+				cf.Cf("delete", appOneName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+			})
+
+			By("deleting the second app", func() {
+				cf.Cf("delete", appTwoName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+			})
+
+			By("deleting the service", func() {
+				Expect(
+					cf.Cf("delete-service", serviceInstanceName, "-f").
+						Wait(testConfig.DefaultTimeoutDuration()),
+				).To(Exit(0))
+				pollForServiceDeletionCompletion(serviceInstanceName)
+			})
+		})
+
+		It("do not run in to race conditions", func(done Done) {
+			By("binding the two apps simultaneously, we should see no errors", func() {
+				bindAppOneChan := make(chan int)
+				bindAppTwoChan := make(chan int)
+
+				bindServiceToAppAsync(appOneName, serviceInstanceName, bindAppOneChan)
+				bindServiceToAppAsync(appTwoName, serviceInstanceName, bindAppTwoChan)
+
+				Expect(<-bindAppOneChan).To(Equal(0))
+				Expect(<-bindAppTwoChan).To(Equal(0))
+			})
+
+			By("Waiting for AWS to be eventually consistent", func() {
+				time.Sleep(10 * time.Second)
+			})
+
+			By("unbinding the two apps simultaneously, we should see no errors", func() {
+				unbindAppOneChan := make(chan int)
+				unbindAppTwoChan := make(chan int)
+
+				unbindServiceFromAppAsync(appOneName, serviceInstanceName, unbindAppOneChan)
+				unbindServiceFromAppAsync(appTwoName, serviceInstanceName, unbindAppTwoChan)
+
+				Expect(<-unbindAppOneChan).To(Equal(0))
+				Expect(<-unbindAppTwoChan).To(Equal(0))
+			})
+
+			close(done)
+		}, 60, // Override default timeout of 1 second for async to be one minute
+		)
+	})
 })
+
+func bindServiceToAppAsync(appName string, serviceInstanceName string, outChan chan<- int) {
+	go (func() {
+		session := cf.Cf("bind-service", appName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		exitCode := session.ExitCode()
+
+		outChan <- exitCode
+	})()
+}
+
+func unbindServiceFromAppAsync(appName string, serviceInstanceName string, outChan chan<- int) {
+	go (func() {
+		session := cf.Cf("unbind-service", appName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		exitCode := session.ExitCode()
+
+		outChan <- exitCode
+	})()
+}
