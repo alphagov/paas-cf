@@ -16,9 +16,10 @@ Some useful credentials path are listed below.
 $(column -t -s "|" <<PATHS
 PROMETHEUS PASSWORD|/$DEPLOY_ENV/prometheus/prometheus_password
 GRAFANA PASSWORD|/$DEPLOY_ENV/prometheus/grafana_password
+GRAFANA MONITOR PASSWORD|/$DEPLOY_ENV/prometheus/grafana_mon_password
 ALERTMANAGER PASSWORD|/$DEPLOY_ENV/prometheus/alertmanager_password
-UAA ADMIN CLIENT SECRET|/concourse/main/create-cloudfoundry/uaa_admin_client_secret
 CF ADMIN PASSWORD|/$DEPLOY_ENV/prometheus/cf_admin_password
+UAA ADMIN CLIENT SECRET|/concourse/main/create-cloudfoundry/uaa_admin_client_secret
 PATHS
 )
 -------
