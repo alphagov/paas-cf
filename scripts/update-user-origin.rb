@@ -20,7 +20,7 @@ def usage
 
     > uaac token client get admin -s <uaa-admin-token>
 
-    Where <uaa-admin-token> can be retrieved with make prod showenv
+    Where <uaa-admin-token> can be retrieved with make prod credhub
   USAGE
 end
 
