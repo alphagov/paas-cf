@@ -89,7 +89,6 @@ bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
-concourse_web_password: ${CONCOURSE_WEB_PASSWORD}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
 slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}

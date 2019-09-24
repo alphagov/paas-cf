@@ -66,6 +66,7 @@ jobs:
         MONITORED_DEPLOY_ENV: ((monitored_deploy_env))
         MONITORED_STATE_BUCKET: ((monitored_state_bucket))
         MONITORED_AWS_REGION: ((monitored_aws_region))
+        CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
       run:
         path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
 

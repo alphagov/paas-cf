@@ -511,6 +511,7 @@ jobs:
             SKIP_AWS_CREDENTIAL_VALIDATION: true
             NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
