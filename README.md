@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/alphagov/paas-cf.svg?branch=master)](https://travis-ci.org/alphagov/paas-cf)
+[![Build Status](https://travis-ci.com/alphagov/paas-cf.svg?branch=master)](https://travis-ci.com/alphagov/paas-cf)
 
 # paas-cf
 
