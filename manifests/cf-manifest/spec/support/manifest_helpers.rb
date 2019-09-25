@@ -89,7 +89,6 @@ private
 
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
     copy_fixture_file('bosh-secrets.yml', "#{workdir}/bosh-secrets")
-    generate_cf_secrets_fixture("#{workdir}/cf-secrets")
     copy_fixture_file('environment-variables.yml', workdir)
     copy_ipsec_cert_fixtures("#{workdir}/ipsec-CA")
     render_vpc_peering_opsfile("#{workdir}/vpc-peering-opsfile", environment)

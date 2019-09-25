@@ -19,17 +19,6 @@ module FixtureHelpers
     FileUtils.cp(fixtures_dir.join(file), "#{target_dir}/#{target_file}")
   end
 
-  def generate_cf_secrets_fixture(target_dir)
-    FileUtils.mkdir(target_dir) unless Dir.exist?(target_dir)
-    File.open("#{target_dir}/cf-secrets.yml", 'w') do |file|
-      output, error, status = Open3.capture3(File.expand_path("../../../cf-manifest/scripts/generate-cf-secrets.rb", __dir__))
-      unless status.success?
-        raise "Error generating cf-secrets, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
-      end
-      file.write(output)
-    end
-  end
-
 private
 
   def fixtures_dir
