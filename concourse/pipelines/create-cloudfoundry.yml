@@ -3492,7 +3492,6 @@ jobs:
     - aggregate:
       - get: paas-cf
         passed: ['rotate-cf-admin-password']
-      - get: cf-secrets
       - get: cf-vars-store
         passed: ['rotate-cf-admin-password']
         trigger: true
@@ -3506,11 +3505,9 @@ jobs:
         image_resource: *ruby-slim-image-resource
         inputs:
           - name: paas-cf
-          - name: cf-secrets
           - name: cf-vars-store
           - name: cf-manifest-pre-vars
         outputs:
-          - name: modified-cf-secrets
           - name: modified-cf-vars-store
         run:
           path: sh
@@ -3518,9 +3515,6 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-secrets.rb < \
-                cf-secrets/cf-secrets.yml > \
-                modified-cf-secrets/cf-secrets.yml
               ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
@@ -3565,9 +3559,6 @@ jobs:
                 > modified-cf-vars-store/cf-vars-store.yml
       on_success:
         do:
-        - put: cf-secrets
-          params:
-            file: modified-cf-secrets/cf-secrets.yml
         - put: cf-vars-store
           params:
             file: modified-cf-vars-store/cf-vars-store.yml
