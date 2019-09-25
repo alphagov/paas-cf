@@ -34,12 +34,12 @@
           db_prefix: "rdsbroker"
           master_password_seed: ((secrets_rds_broker_master_password_seed))
         loggregator:
-          ca_cert: "((loggregator_ca.certificate))((loggregator_ca_old.certificate))"
+          ca_cert: "((loggregator_rds_metrics_collector.ca))"
           client_cert: "((loggregator_rds_metrics_collector.certificate))"
           client_key: "((loggregator_rds_metrics_collector.private_key))"
         locket:
           api_location: "locket.service.cf.internal:8891"
-          ca_cert: "((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))"
+          ca_cert: "((diego_locket_client.ca))"
           client_cert: "((diego_locket_client.certificate))"
           client_key: "((diego_locket_client.private_key))"
         scheduler:

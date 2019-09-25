@@ -34,7 +34,7 @@
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/ca_certs?
   value:
     - ((aws_rds_combined_ca_bundle))
-    - ((uaa_ca.certificate))((uaa_ca_old.certificate))
+    - ((uaa_ssl.ca))
 
 - type: remove
   path: /instance_groups/name=uaa/jobs/name=uaa/consumes
