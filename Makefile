@@ -42,9 +42,7 @@ concourse_spec:
 	cd concourse/scripts &&\
 		bundle exec rspec
 
-shared_manifests_spec:
-	cd manifests/shared &&\
-		bundle exec rspec
+cloud_config_manifests_spec:
 	cd manifests/cloud-config &&\
 		bundle exec rspec
 
@@ -56,7 +54,7 @@ prometheus_manifest_spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
 
-manifests_spec: shared_manifests_spec cf_manifest_spec prometheus_manifest_spec
+manifests_spec: cloud_config_manifests_spec cf_manifest_spec prometheus_manifest_spec
 
 terraform_spec:
 	cd terraform/scripts &&\
