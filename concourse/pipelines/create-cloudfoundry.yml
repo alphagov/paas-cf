@@ -558,7 +558,7 @@ jobs:
               CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
               DEPLOY_ENV: ((deploy_env))
             run:
-              path: sh
+              path: bash
               args:
                 - -c
                 - -e
@@ -567,31 +567,39 @@ jobs:
 
                   credhub login
 
-                  # TODO: some of these secrets are needed by concourse and bosh, but not all of them. At the moment
-                  # we're setting them all in both places, but it shouldn't be too difficult to separate them out into
-                  # things concourse needs, things bosh needs, and things both things need.
+                  # Most credentials need to be available to concourse and bosh,
+                  # but there are a couple that are only needed by concourse (and not bosh).
+                  #
+                  # We'll set them all in the /concourse/main namespace, then copy the values
+                  # that we need in bosh to the /$DEPLOY_ENV/$DEPLOY_ENV namespace
 
-                  for secret_name in \
-                      secrets_cf_db_master_password \
-                      secrets_cdn_db_master_password \
-                      external_cc_database_password \
-                      external_bbs_database_password \
-                      external_locket_database_password \
-                      external_uaa_database_password \
-                      external_silk_controller_database_password \
-                      external_policy_server_database_password; do
+                  bosh_credentials=(
+                    external_cc_database_password
+                    external_bbs_database_password
+                    external_locket_database_password
+                    external_uaa_database_password
+                    external_silk_controller_database_password
+                    external_policy_server_database_password
+                  )
 
-                    value=$("$VAL_FROM_YAML" "$secret_name" cf-secrets/cf-secrets.yml)
+                  concourse_credentials=(
+                    secrets_cf_db_master_password
+                    secrets_cdn_db_master_password
+                    ${bosh_credentials[@]}
+                  )
 
+                  for secret_name in ${concourse_credentials[*]}; do
+                    value=$("$VAL_FROM_YAML" "$secret_name" cf-secrets/cf-secrets.yml || true)
                     if [ -z "${value:-}" ]; then
                       credhub generate --type password --no-overwrite --name "/concourse/main/$secret_name"
-                      value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
-                      credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                     else
                       credhub set --type password --name "/concourse/main/$secret_name" --password "$value"
-                      credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                     fi
+                  done
 
+                  for secret_name in ${bosh_credentials[*]}; do
+                    value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
+                    credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                   done
 
   - name: pre-deploy
