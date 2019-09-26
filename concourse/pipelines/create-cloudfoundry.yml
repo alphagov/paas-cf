@@ -222,14 +222,6 @@ resources:
             ]
         }
 
-  - name: cf-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: cf-secrets.yml
-      initial_version: "-"
-
   - name: cf-vars-store
     type: s3-iam
     source:
@@ -506,7 +498,6 @@ jobs:
             passed: ['pipeline-lock']
             trigger: true
           - get: ipsec-CA
-          - get: cf-secrets
       - aggregate:
         - task: generate-ipsec-CA
           tags: [colocated-with-web]
@@ -550,7 +541,6 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
-              - name: cf-secrets
             params:
               CREDHUB_CLIENT: credhub-admin
               CREDHUB_SECRET: ((bosh-credhub-admin))
@@ -563,8 +553,6 @@ jobs:
                 - -c
                 - -e
                 - |
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-
                   credhub login
 
                   # Most credentials need to be available to concourse and bosh,
@@ -589,12 +577,7 @@ jobs:
                   )
 
                   for secret_name in ${concourse_credentials[*]}; do
-                    value=$("$VAL_FROM_YAML" "$secret_name" cf-secrets/cf-secrets.yml || true)
-                    if [ -z "${value:-}" ]; then
-                      credhub generate --type password --no-overwrite --name "/concourse/main/$secret_name"
-                    else
-                      credhub set --type password --name "/concourse/main/$secret_name" --password "$value"
-                    fi
+                    credhub generate --type password --no-overwrite --name "/concourse/main/$secret_name"
                   done
 
                   for secret_name in ${bosh_credentials[*]}; do
