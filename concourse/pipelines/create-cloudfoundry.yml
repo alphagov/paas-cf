@@ -181,27 +181,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh.tfstate
 
-  - name: bosh-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-secrets.yml
-
-  - name: bosh-vars-store
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-vars-store.yml
-
-  - name: bosh-CA-crt
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-CA.crt
-
   - name: ipsec-CA
     type: s3-iam
     source:
@@ -984,7 +963,6 @@ jobs:
           - get: paas-cf
             passed: ['cf-terraform']
           - get: ipsec-CA
-          - get: bosh-secrets
           - get: cf-secrets
             passed: ['cf-terraform']
           - get: vpc-tfstate
@@ -1100,7 +1078,6 @@ jobs:
               - name: paas-cf
               - name: ipsec-CA
               - name: terraform-outputs
-              - name: bosh-secrets
               - name: cf-secrets
               - name: vpc-peering-opsfile
               - name: ms-oauth-endpoints
@@ -1110,6 +1087,7 @@ jobs:
             params:
               ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+              VCAP_PASSWORD: ((vcap-password))
             run:
               path: sh
               args:
@@ -1128,6 +1106,7 @@ jobs:
                   microsoft_oauth_token_url: $(cat ms-oauth-endpoints/token_endpoint)
                   microsoft_oauth_token_key_url: $(cat ms-oauth-endpoints/token_key_endpoint)
                   microsoft_oauth_issuer: $(cat ms-oauth-endpoints/issuer)
+                  vcap_password: $VCAP_PASSWORD
                   EOF
 
                   tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
@@ -1161,8 +1140,6 @@ jobs:
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
-          - get: bosh-vars-store
-          - get: bosh-CA-crt
           - get: cf-tfstate
             passed: ['generate-cf-config']
 
@@ -1173,14 +1150,13 @@ jobs:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
-              - name: bosh-vars-store
               - name: paas-cf
               - name: cf-manifest
-              - name: bosh-CA-crt
             params:
               BOSH_ENVIRONMENT: ((bosh_fqdn))
-              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_CA_CERT: ((bosh-ca-cert))
               BOSH_DEPLOYMENT: ((deploy_env))
+              BOSH_CLIENT_SECRET: ((bosh-client-secret))
             run:
               path: sh
               args:
@@ -1190,9 +1166,7 @@ jobs:
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
-                  export BOSH_CLIENT_SECRET
 
                   stemcell_index=0
                   while true; do
@@ -1217,24 +1191,20 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: cloud-config
-              - name: bosh-vars-store
               - name: paas-cf
-              - name: bosh-CA-crt
             params:
               BOSH_ENVIRONMENT: ((bosh_fqdn))
-              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_CA_CERT: ((bosh-ca-cert))
               BOSH_DEPLOYMENT: ((deploy_env))
+              BOSH_CLIENT_SECRET: ((bosh-client-secret))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
-                  export BOSH_CLIENT_SECRET
 
                   bosh -n update-cloud-config cloud-config/cloud-config.yml
 
@@ -1246,23 +1216,19 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
-            - name: bosh-vars-store
-            - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_CA_CERT: ((bosh-ca-cert))
             BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
-                export BOSH_CLIENT_SECRET
 
                 bosh -n deploy cf-manifest/cf-manifest.yml
 
@@ -1358,9 +1324,6 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['cf-deploy']
-          - get: bosh-vars-store
-          - get: bosh-CA-crt
-          - get: bosh-secrets
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
 
@@ -1391,10 +1354,7 @@ jobs:
           image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
-            - name: bosh-vars-store
-            - name: bosh-CA-crt
             - name: terraform-outputs
-            - name: bosh-secrets
           outputs:
             - name: prometheus-manifest
             - name: prometheus-manifest-pre-vars
@@ -1411,13 +1371,19 @@ jobs:
             GRAFANA_AUTH_GOOGLE_CLIENT_SECRET: ((grafana_auth_google_client_secret))
             UAA_CLIENTS_CF_EXPORTER_SECRET: ((uaa_clients_cf_exporter_secret))
             UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET: ((uaa_clients_firehose_exporter_secret))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
+            VCAP_PASSWORD: ((vcap-password))
           run:
-            path: sh
+            path: bash
             args:
               - -e
               - -u
               - -c
               - |
+                BOSH_CA_CERT="$(awk -v ORS='\\n' '1' <(printenv BOSH_CA_CERT | tr -d '\r'))"
+                export BOSH_CA_CERT
+
                 ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
                   > prometheus-manifest/prometheus-manifest.yml
 
@@ -1462,23 +1428,20 @@ jobs:
           inputs:
             - name: paas-cf
             - name: prometheus-manifest
-            - name: bosh-vars-store
-            - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_CA_CERT: ((bosh-ca-cert))
             BOSH_DEPLOYMENT: prometheus
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
-                export BOSH_CLIENT_SECRET
 
                 bosh -n deploy prometheus-manifest/prometheus-manifest.yml
 
@@ -1622,9 +1585,6 @@ jobs:
         passed: ['generate-cf-config']
       - get: cf-tfstate
         passed: ['generate-cf-config']
-      - get: bosh-vars-store
-        passed: ['cf-deploy']
-      - get: bosh-CA-crt
       - get: paas-aiven-broker
 
     - task: retrieve-config
@@ -2246,23 +2206,19 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
-              - name: bosh-vars-store
-              - name: bosh-CA-crt
             params:
               BOSH_ENVIRONMENT: ((bosh_fqdn))
-              BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+              BOSH_CA_CERT: ((bosh-ca-cert))
               BOSH_DEPLOYMENT: ((deploy_env))
+              BOSH_CLIENT_SECRET: ((bosh-client-secret))
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                   BOSH_CLIENT=admin
-                  BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                   export BOSH_CLIENT
-                  export BOSH_CLIENT_SECRET
 
                   bosh run-errand rotate-cc-database-key --when-changed
 
@@ -2707,8 +2663,6 @@ jobs:
           - get: paas-cf
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
           - get: cf-manifest
-          - get: bosh-vars-store
-          - get: bosh-CA-crt
       - task: test-bosh-vms
         tags: [colocated-with-web]
         config:
@@ -2717,23 +2671,19 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
-            - name: bosh-vars-store
-            - name: bosh-CA-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_CA_CERT: ((bosh-ca-cert))
             BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT=admin
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
-                export BOSH_CLIENT_SECRET
 
                 bosh deployment
                 bosh vms | tee vms.txt

@@ -28,15 +28,11 @@ fi
 variables_file="$(mktemp)"
 trap 'rm -f "${variables_file}"' EXIT
 
-bosh interpolate - \
-  --var-errs \
-  --vars-file "${WORKDIR}/bosh-vars-store/bosh-vars-store.yml" \
-> "${variables_file}" \
-<<EOF
+cat <<EOF > "${variables_file}"
 ---
 metrics_environment: $DEPLOY_ENV
 bosh_url: $BOSH_URL
-uaa_bosh_exporter_client_secret: ((bosh_exporter_password))
+uaa_bosh_exporter_client_secret: $BOSH_EXPORTER_PASSWORD
 system_domain: $SYSTEM_DNS_ZONE_NAME
 app_domain: $APPS_DNS_ZONE_NAME
 metron_deployment_name: $DEPLOY_ENV
@@ -47,15 +43,15 @@ uaa_clients_firehose_exporter_secret: $UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET
 aws_account: $AWS_ACCOUNT
 grafana_auth_google_client_id: $GRAFANA_AUTH_GOOGLE_CLIENT_ID
 grafana_auth_google_client_secret: $GRAFANA_AUTH_GOOGLE_CLIENT_SECRET
+bosh_ca_cert: "$BOSH_CA_CERT"
+vcap_password: $VCAP_PASSWORD
 EOF
 
 # shellcheck disable=SC2086
 bosh interpolate \
   --vars-file="${variables_file}" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
-  --vars-file="${WORKDIR}/bosh-secrets/bosh-secrets.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/prometheus/env-specific/${ENV_SPECIFIC_BOSH_VARS_FILE}" \
-  --var-file bosh_ca_cert="${WORKDIR}/bosh-CA-crt/bosh-CA.crt" \
   ${opsfile_args} \
   ${alerts_opsfile_args} \
   "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"
