@@ -74,7 +74,7 @@ def import_to_credhub credhub_secrets
     '--rm',
     *env_params,
     '-v', "#{credhub_secrets_file.path}:/root/import.yml",
-    'governmentpaas/bosh-shell:cf791cec329bff5577cd8b3c9511bf89f988b5d4',
+    'governmentpaas/bosh-shell:54cc3c9f49f9032e46dd4538c626f2533bf90a94',
     '-c', 'credhub import -f /root/import.yml'
   )
 end
