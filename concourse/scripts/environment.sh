@@ -28,16 +28,18 @@ case $TARGET_CONCOURSE in
     ;;
 esac
 
-CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER:-admin}
-if [ -z "${CONCOURSE_WEB_PASSWORD:-}" ]; then
-  CONCOURSE_WEB_PASSWORD=$(concourse/scripts/val_from_yaml.rb secrets.concourse_web_password <(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/concourse-secrets.yml" -))
+if [ "$USER" == "root" ] ; then
+  # We are running in Concourse
+  : "${CONCOURSE_WEB_PASSWORD:?CONCOURSE_WEB_PASSWORD must be set}"
+  cat <<EOF
+export CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER:-admin}
+export CONCOURSE_WEB_PASSWORD=${CONCOURSE_WEB_PASSWORD}
+EOF
 fi
 
 cat <<EOF
 export AWS_ACCOUNT=${AWS_ACCOUNT}
 export DEPLOY_ENV=${DEPLOY_ENV}
-export CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER}
-export CONCOURSE_WEB_PASSWORD=${CONCOURSE_WEB_PASSWORD}
 export CONCOURSE_URL=${CONCOURSE_URL}
 export FLY_CMD=${FLY_CMD}
 export FLY_TARGET=${FLY_TARGET}

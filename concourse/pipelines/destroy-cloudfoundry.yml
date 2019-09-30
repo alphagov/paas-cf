@@ -110,6 +110,7 @@ jobs:
             ENABLE_DESTROY: ((enable_destroy))
             SKIP_AWS_CREDENTIAL_VALIDATION: true
             NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger

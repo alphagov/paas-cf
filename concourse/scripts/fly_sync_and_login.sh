@@ -4,10 +4,16 @@ set -euo pipefail
 # Required env vars
 # shellcheck disable=SC2086
 : $CONCOURSE_URL \
-  $CONCOURSE_WEB_USER \
-  $CONCOURSE_WEB_PASSWORD \
   $FLY_CMD \
   $FLY_TARGET
+
+if [ "$USER" == "root" ] ; then
+  # We are running in Concourse
+  # Required env vars
+  # shellcheck disable=SC2086
+  : $CONCOURSE_WEB_USER \
+    $CONCOURSE_WEB_PASSWORD
+fi
 
 fetch_fly() {
   echo "Downloading fly .."
@@ -28,7 +34,15 @@ fly_sync() {
 
 fly_login() {
   echo "Doing fly login .."
-  $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}" -u "${CONCOURSE_WEB_USER}" -p "${CONCOURSE_WEB_PASSWORD}"
+  if [ "$USER" == "root" ] ; then
+    # We are running in Concourse
+    $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}" -u "${CONCOURSE_WEB_USER}" -p "${CONCOURSE_WEB_PASSWORD}"
+  else
+    # We are running from our computer
+    # Check if we are logged in, if we aren't then use the browser
+    $FLY_CMD -t "${FLY_TARGET}" status || \
+      $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}"
+  fi
 }
 
 fly_is_runnable() {

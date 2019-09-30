@@ -186,10 +186,9 @@ need to run the pipeline from start in order to bring the changes forward.
 
 ## Concourse credentials
 
-By default, the environment setup script retrieves the admin user password set
-in paas-bootstrap and stored in S3 in the `concourse-secrets.yml` file. If the
-`CONCOURSE_WEB_PASSWORD` environment variable is set, this will be used instead.
-These credentials are output by all of the pipeline deployment tasks.
+When run from your laptop, the environment setup script does not interact with
+Concourse using long lived credentials. If you need to get persistent Concourse
+credentials please use `make <env> credhub`.
 
 ## Overnight deletion of environments
 
