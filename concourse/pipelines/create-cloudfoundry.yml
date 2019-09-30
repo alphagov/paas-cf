@@ -208,7 +208,7 @@ resources:
       initial_content_text: |
         {
             "version": 3,
-            "terraform_version": "0.11.1",
+            "terraform_version": "0.11.14",
             "serial": 0,
             "modules": [
                 {

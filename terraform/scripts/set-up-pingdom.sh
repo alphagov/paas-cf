@@ -2,9 +2,9 @@
 
 set -eu
 TERRAFORM_ACTION=${1}
-TF_VERSION=0.11.1
+PINGDOM_TF_VERSION=0.11.1
 PLUGIN_VERSION=0.2.3
-BINARY=terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)
+BINARY=terraform-provider-pingdom-tf-${PINGDOM_TF_VERSION}-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 
 # Get Pingdom credentials
