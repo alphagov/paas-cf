@@ -548,26 +548,60 @@ jobs:
           tags: [colocated-with-web]
           config:
             platform: linux
-            image_resource: *ruby-slim-image-resource
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
               - name: cf-secrets
-            outputs:
-              - name: generated-cf-secrets
+            params:
+              CREDHUB_CLIENT: credhub-admin
+              CREDHUB_SECRET: ((bosh-credhub-admin))
+              CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+              CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+              DEPLOY_ENV: ((deploy_env))
             run:
-              path: sh
+              path: bash
               args:
                 - -c
                 - -e
                 - |
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-cf-secrets.rb \
-                    --existing-secrets cf-secrets/cf-secrets.yml \
-                    > generated-cf-secrets/cf-secrets.yml
-                  ls -l generated-cf-secrets
-          on_success:
-            put: cf-secrets
-            params:
-              file: generated-cf-secrets/cf-secrets.yml
+                  VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                  credhub login
+
+                  # Most credentials need to be available to concourse and bosh,
+                  # but there are a couple that are only needed by concourse (and not bosh).
+                  #
+                  # We'll set them all in the /concourse/main namespace, then copy the values
+                  # that we need in bosh to the /$DEPLOY_ENV/$DEPLOY_ENV namespace
+
+                  bosh_credentials=(
+                    external_cc_database_password
+                    external_bbs_database_password
+                    external_locket_database_password
+                    external_uaa_database_password
+                    external_silk_controller_database_password
+                    external_policy_server_database_password
+                  )
+
+                  concourse_credentials=(
+                    secrets_cf_db_master_password
+                    secrets_cdn_db_master_password
+                    ${bosh_credentials[@]}
+                  )
+
+                  for secret_name in ${concourse_credentials[*]}; do
+                    value=$("$VAL_FROM_YAML" "$secret_name" cf-secrets/cf-secrets.yml || true)
+                    if [ -z "${value:-}" ]; then
+                      credhub generate --type password --no-overwrite --name "/concourse/main/$secret_name"
+                    else
+                      credhub set --type password --name "/concourse/main/$secret_name" --password "$value"
+                    fi
+                  done
+
+                  for secret_name in ${bosh_credentials[*]}; do
+                    value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
+                    credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
+                  done
 
   - name: pre-deploy
     plan:
@@ -819,8 +853,6 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: cf-tfstate
-          - get: cf-secrets
-            passed: ['generate-secrets']
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
@@ -831,7 +863,6 @@ jobs:
             - name: paas-cf
             - name: vpc-tfstate
             - name: concourse-tfstate
-            - name: cf-secrets
           outputs:
             - name: terraform-variables
           run:
@@ -844,8 +875,17 @@ jobs:
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < concourse-tfstate/concourse.tfstate > terraform-variables/concourse.tfvars.sh
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
-                < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
+
+                cat <<EOF > terraform-variables/cf-secrets.tfvars.sh
+                export TF_VAR_secrets_cf_db_master_password="((secrets_cf_db_master_password))"
+                export TF_VAR_secrets_cdn_db_master_password="((secrets_cdn_db_master_password))"
+                export TF_VAR_external_cc_database_password="((external_cc_database_password))"
+                export TF_VAR_external_bbs_database_password="((external_bbs_database_password))"
+                export TF_VAR_external_locket_database_password="((external_locket_database_password))"
+                export TF_VAR_external_uaa_database_password="((external_uaa_database_password))"
+                export TF_VAR_external_silk_controller_database_password="((external_silk_controller_database_password))"
+                export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
+                EOF
 
       - task: generate-peer-tfvars
         tags: [colocated-with-web]
@@ -964,8 +1004,6 @@ jobs:
           - get: paas-cf
             passed: ['cf-terraform']
           - get: ipsec-CA
-          - get: cf-secrets
-            passed: ['cf-terraform']
           - get: vpc-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
@@ -1079,7 +1117,6 @@ jobs:
               - name: paas-cf
               - name: ipsec-CA
               - name: terraform-outputs
-              - name: cf-secrets
               - name: vpc-peering-opsfile
               - name: ms-oauth-endpoints
             outputs:
@@ -3493,7 +3530,6 @@ jobs:
     - aggregate:
       - get: paas-cf
         passed: ['rotate-cf-admin-password']
-      - get: cf-secrets
       - get: cf-vars-store
         passed: ['rotate-cf-admin-password']
         trigger: true
@@ -3507,11 +3543,9 @@ jobs:
         image_resource: *ruby-slim-image-resource
         inputs:
           - name: paas-cf
-          - name: cf-secrets
           - name: cf-vars-store
           - name: cf-manifest-pre-vars
         outputs:
-          - name: modified-cf-secrets
           - name: modified-cf-vars-store
         run:
           path: sh
@@ -3519,9 +3553,6 @@ jobs:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-cf-secrets.rb < \
-                cf-secrets/cf-secrets.yml > \
-                modified-cf-secrets/cf-secrets.yml
               ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
                 --vars-store cf-vars-store/cf-vars-store.yml \
                 --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
@@ -3566,9 +3597,6 @@ jobs:
                 > modified-cf-vars-store/cf-vars-store.yml
       on_success:
         do:
-        - put: cf-secrets
-          params:
-            file: modified-cf-secrets/cf-secrets.yml
         - put: cf-vars-store
           params:
             file: modified-cf-vars-store/cf-vars-store.yml
