@@ -2,8 +2,8 @@
 
 set -eu
 RELEASE=0.2.3
-TF_VERSION=0.11.1
-BINARY=terraform-provider-pingdom-tf-${TF_VERSION}-$(uname -s)-$(uname -m)
+PINGDOM_TF_VERSION=0.11.1
+BINARY=terraform-provider-pingdom-tf-${PINGDOM_TF_VERSION}-$(uname -s)-$(uname -m)
 
 # Setup the working grounds.
 PAAS_CF_DIR=$(pwd)

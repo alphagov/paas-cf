@@ -11,7 +11,7 @@ matrix:
     - rvm: 2.5
 env:
   global:
-    - TF_VERSION="0.11.1"
+    - TF_VERSION="0.11.14"
     - BOSH_CLI_VERSION="2.0.48"
     - PROMETHEUS_VERSION="2.6.1"
     - DEPLOY_ENV="travis"
