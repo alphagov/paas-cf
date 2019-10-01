@@ -63,13 +63,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-CA.crt
 
-  - name: cf-secrets
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: cf-secrets.yml
-
   - name: cf-manifest
     type: s3-iam
     source:
@@ -211,7 +204,6 @@ jobs:
           - get: cf-tfstate
           - get: concourse-tfstate
           - get: vpc-tfstate
-          - get: cf-secrets
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
@@ -227,7 +219,6 @@ jobs:
             - name: cf-tfstate
             - name: concourse-tfstate
             - name: vpc-tfstate
-            - name: cf-secrets
           outputs:
             - name: terraform-variables
           run:
@@ -245,9 +236,17 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
                 ls -l terraform-variables/vpc.tfvars.sh
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_yaml.rb \
-                < cf-secrets/cf-secrets.yml > terraform-variables/cf-secrets.tfvars.sh
-                ls -l terraform-variables/cf-secrets.tfvars.sh
+
+                cat <<EOF > terraform-variables/cf-secrets.tfvars.sh
+                export TF_VAR_secrets_cf_db_master_password="((secrets_cf_db_master_password))"
+                export TF_VAR_secrets_cdn_db_master_password="((secrets_cdn_db_master_password))"
+                export TF_VAR_external_cc_database_password="((external_cc_database_password))"
+                export TF_VAR_external_bbs_database_password="((external_bbs_database_password))"
+                export TF_VAR_external_locket_database_password="((external_locket_database_password))"
+                export TF_VAR_external_uaa_database_password="((external_uaa_database_password))"
+                export TF_VAR_external_silk_controller_database_password="((external_silk_controller_database_password))"
+                export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
+                EOF
 
       - task: cf-terraform-destroy
         tags: [colocated-with-web]
