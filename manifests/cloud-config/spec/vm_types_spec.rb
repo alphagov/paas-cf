@@ -2,6 +2,14 @@
 RSpec.describe "vm_types" do
   let(:vm_types) { cloud_config_with_defaults.fetch("vm_types") }
 
+  describe "compilation" do
+    let(:pool) { vm_types.find { |p| p["name"] == "router" } }
+
+    it "should not exist" do
+      expect(vm_types.find { |p| p["name"] == "compilation" }).to be_nil
+    end
+  end
+
   describe "the router pool" do
     let(:pool) { vm_types.find { |p| p["name"] == "router" } }
 

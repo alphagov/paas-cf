@@ -244,12 +244,12 @@ resources:
       region_name: ((aws_region))
       versioned_file: cf-manifest-pre-vars.yml
 
-  - name: cloud-config
+  - name: paas-cf-cloud-config
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
-      versioned_file: cloud-config.yml
+      versioned_file: paas-cf-cloud-config.yml
 
   - name: deployed-healthcheck
     type: s3-iam
@@ -1068,7 +1068,7 @@ jobs:
                     > ms-oauth-endpoints/issuer
 
       - do:
-        - task: generate-cloud-config
+        - task: generate-paas-cf-cloud-config
           tags: [colocated-with-web]
           config:
             platform: linux
@@ -1077,19 +1077,19 @@ jobs:
               - name: paas-cf
               - name: terraform-outputs
             outputs:
-              - name: cloud-config
+              - name: paas-cf-cloud-config
             run:
               path: sh
               args:
                 - -e
                 - -c
                 - |
-                  paas-cf/manifests/cloud-config/scripts/generate-cloud-config.sh > cloud-config/cloud-config.yml
+                  paas-cf/manifests/cloud-config/scripts/generate-cloud-config.sh > paas-cf-cloud-config/paas-cf-cloud-config.yml
 
           on_success:
-            put: cloud-config
+            put: paas-cf-cloud-config
             params:
-              file: cloud-config/cloud-config.yml
+              file: paas-cf-cloud-config/paas-cf-cloud-config.yml
 
         - task: generate-cf-manifest
           tags: [colocated-with-web]
@@ -1157,7 +1157,7 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['generate-cf-config']
-          - get: cloud-config
+          - get: paas-cf-cloud-config
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
@@ -1205,13 +1205,13 @@ jobs:
                     stemcell_index=$((stemcell_index + 1))
                   done
 
-        - task: update-cloud-config
+        - task: update-paas-cf-cloud-config
           tags: [colocated-with-web]
           config:
             platform: linux
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
-              - name: cloud-config
+              - name: paas-cf-cloud-config
               - name: paas-cf
             params:
               BOSH_ENVIRONMENT: ((bosh_fqdn))
@@ -1227,7 +1227,10 @@ jobs:
                   BOSH_CLIENT=admin
                   export BOSH_CLIENT
 
-                  bosh -n update-cloud-config cloud-config/cloud-config.yml
+                  bosh -n update-config \
+                    --type=cloud \
+                    --name=paas-cf \
+                    paas-cf-cloud-config/paas-cf-cloud-config.yml
 
       - task: cf-deploy
         tags: [colocated-with-web]
