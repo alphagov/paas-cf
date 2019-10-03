@@ -18,4 +18,4 @@ bosh interpolate \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   ${opsfile_args} \
-  "${PAAS_CF_DIR}/manifests/cloud-config/cloud-config.yml"
+  "${PAAS_CF_DIR}/manifests/cloud-config/paas-cf-cloud-config.yml"

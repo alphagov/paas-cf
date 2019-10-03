@@ -1,18 +1,14 @@
 ---
 azs:
 - name: z1
+  cpi: aws
   cloud_properties: {availability_zone: ((terraform_outputs_zone0)) }
 - name: z2
+  cpi: aws
   cloud_properties: {availability_zone: ((terraform_outputs_zone1)) }
 - name: z3
+  cpi: aws
   cloud_properties: {availability_zone: ((terraform_outputs_zone2)) }
-
-compilation:
-  vm_type: compilation
-  az: z1
-  network: cf
-  reuse_compilation_vms: true
-  workers: 6
 
 disk_types:
 - name: 5GB
@@ -136,14 +132,6 @@ networks:
     az: z3
 
 vm_types:
-- name: compilation
-  cloud_properties:
-    iam_instance_profile: compilation-vm
-    instance_type: ((compilation_vm_instance_type))
-    ephemeral_disk:
-      size: 20480
-      type: gp2
-
 - name: nano
   cloud_properties:
     instance_type: ((nano_vm_instance_type))
