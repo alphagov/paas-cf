@@ -106,9 +106,9 @@ meta:
                       --data "${post_data}" \
                       --silent \
                       --fail)"
-                    echo -ne "${response}" | jq '.id' > "annotation_details/${az}"
+                    echo "${response}" | jq '.id' > "annotation_details/${az}"
                   done
-                  echo -ne ${START_TIME} > "annotation_details/start_time"
+                  echo "${START_TIME}" > "annotation_details/start_time"
     - &end-grafana-job-annotation
       try:
         task: end-grafana-job-annotation
@@ -157,7 +157,7 @@ meta:
                 )"
                 for az in $(seq 1 ${AZ_COUNT}); do
                   curl --request PUT \
-                    --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations/$(cat annotation_details/${az})" \
+                    --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations/$(cat "annotation_details/${az}")" \
                     --user "admin:${GRAFANA_PASS}" \
                     --header 'content-type: application/json' \
                     --data "${patch_data}" \
@@ -207,7 +207,6 @@ meta:
                   }
                   DATA
                   )"
-                  echo -ne > marker_id/marker_id
                   for az in $(seq 1 ${AZ_COUNT}); do
                     response="$(curl --request POST \
                       --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations" \
@@ -216,7 +215,7 @@ meta:
                       --data "${post_data}" \
                       --silent \
                       --fail)"
-                    echo -ne "${response}" | jq '.id' >> "marker_id/overview_marker_id"
+                    echo "${response}" | jq '.id' >> "marker_id/overview_marker_id"
                   done
           on_success:
             put: overview-marker-id
