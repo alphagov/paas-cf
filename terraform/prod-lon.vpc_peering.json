@@ -6,7 +6,7 @@
         "subnet_cidr": "172.16.0.0/22"
     },
     {
-        "peer_name": "dit-services_datasci",
+        "peer_name": "traderemedies-services_datasci",
         "account_id": "604925858717",
         "vpc_id": "vpc-0338ce744086cd767",
         "subnet_cidr": "172.16.4.0/22"
