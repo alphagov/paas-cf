@@ -638,6 +638,8 @@ jobs:
   - name: pipeline-lock
     serial: true
     plan:
+      - *add-grafana-job-annotation
+      - *add-grafana-overview-annotation
       - aggregate:
         - get: paas-cf
           trigger: ((auto_deploy))
@@ -731,11 +733,13 @@ jobs:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
         params: {bump: patch}
+      - *end-grafana-job-annotation
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: paas-cf
             passed: ['pipeline-lock']
@@ -829,9 +833,11 @@ jobs:
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                   done
+      - *end-grafana-job-annotation
 
   - name: pre-deploy
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
@@ -922,10 +928,12 @@ jobs:
 
                 echo "timeout waiting for api-availability-tests job to start"
                 exit 1
+      - *end-grafana-job-annotation
 
   - name: app-availability-tests
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
@@ -970,10 +978,12 @@ jobs:
 
                 echo "Running app-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+      - *end-grafana-job-annotation
 
   - name: api-availability-tests
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
@@ -1066,11 +1076,13 @@ jobs:
                   PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                   JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
                   aws s3 rm "s3://((state_bucket))/${JOB_FILE}"
+      - *end-grafana-job-annotation
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: paas-cf
             passed: ['pre-deploy']
@@ -1219,11 +1231,13 @@ jobs:
                 . cf-terraform-outputs/cf.tfstate.sh
 
                 paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
+      - *end-grafana-job-annotation
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['cf-terraform']
@@ -1390,11 +1404,12 @@ jobs:
             - put: cf-manifest-pre-vars
               params:
                 file: cf-manifest-pre-vars/cf-manifest-pre-vars.yml
-
+      - *end-grafana-job-annotation
   - name: cf-deploy
     serial_groups: [cf-deploy]
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-cf-config']
@@ -1582,10 +1597,13 @@ jobs:
 
                 echo 'Accessible secrets'
                 credhub find --path "${TEAM_NS}"
+      - *end-grafana-job-annotation
 
   - name: prometheus-deploy
     serial: true
     plan:
+      - *add-grafana-job-annotation
+
       - aggregate:
           - get: pipeline-trigger
             passed: ['cf-deploy']
@@ -1840,9 +1858,12 @@ jobs:
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             GRAFANA_PASS: ((grafana_password))
 
+      - *end-grafana-job-annotation
+
   - name: post-deploy
     serial: true
     plan:
+    - *add-grafana-job-annotation
     - aggregate:
       - get: pipeline-trigger
         passed: ['cf-deploy']
@@ -2628,10 +2649,11 @@ jobs:
                 delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
                 delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
                 delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
-
+    - *end-grafana-job-annotation
   - name: smoke-tests
     serial_groups: [smoke-tests]
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
@@ -2677,9 +2699,11 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: acceptance-tests
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
@@ -2740,9 +2764,11 @@ jobs:
               API_ENDPOINT: ((api_endpoint))
               CF_ADMIN: ((cf_admin))
               CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: custom-acceptance-tests
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
@@ -2863,9 +2889,11 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: custom-broker-acceptance-tests
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
@@ -2921,9 +2949,11 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: bosh-tests
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
@@ -2962,10 +2992,12 @@ jobs:
                 else
                   echo "Success: All VMs are up and running."
                 fi
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-accounts
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-accounts
         trigger: true
 
@@ -3077,10 +3109,12 @@ jobs:
 
                 done
                 )
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-admin
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-admin
         trigger: true
 
@@ -3326,10 +3360,12 @@ jobs:
 
                 echo "Pushing tag refs/tags/${new_tag} to ${REPO}"
                 git push tag_origin "refs/tags/${new_tag}"
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-billing
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-billing
         trigger: true
 
@@ -3466,10 +3502,12 @@ jobs:
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
                 make acceptance
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-metrics
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-cf
         trigger: true
         passed: ['post-deploy']
@@ -3570,9 +3608,11 @@ jobs:
                 echo 'Waiting 2 minutes before running the acceptance tests'
                 sleep 120
                 ginkgo
+      - *end-grafana-job-annotation
 
   - name: tag-release
     plan:
+      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
@@ -3610,10 +3650,13 @@ jobs:
               fi
               paas-cf/concourse/scripts/tag_release.sh \
                 "${OUTPUT_TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${INPUT_TAG_PREFIX}"
+      - *end-grafana-job-annotation
+      - *end-grafana-overview-annotation
 
   - name: pipeline-unlock
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: pipeline-trigger
         passed: ['tag-release']
         trigger: true
@@ -3644,9 +3687,11 @@ jobs:
             put: pipeline-pool
             params:
               release: pipeline-pool
+      - *end-grafana-job-annotation
 
   - name: pipeline-check-lock
     plan:
+      - *add-grafana-job-annotation
       - get: pipeline-pool
       - task: print-pipeline-lock-state
         tags: [colocated-with-web]
@@ -3679,13 +3724,16 @@ jobs:
                - %cr at %ci
                - %s
               "
+      - *end-grafana-job-annotation
 
   - name: pipeline-release-lock
     plan:
+      - *add-grafana-job-annotation
       - get: pipeline-pool
       - put: pipeline-pool
         params:
           release: pipeline-pool
+      - *end-grafana-job-annotation
 
   - name: rotate-cf-admin-password
     serial: true
