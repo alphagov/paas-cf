@@ -378,6 +378,17 @@ resource_types:
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
 resources:
+  - name: metadata
+    type: metadata
+
+  - name: overview-marker-id
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: overview_marker_id
+      initial_version: "-"
+
   - name: pipeline-trigger
     type: semver-iam
     source:
