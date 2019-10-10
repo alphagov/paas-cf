@@ -637,7 +637,6 @@ jobs:
   - name: pipeline-lock
     serial: true
     plan:
-      - *add-grafana-job-annotation
       - *add-grafana-overview-annotation
       - in_parallel:
         - get: paas-cf
@@ -732,7 +731,6 @@ jobs:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
       - put: pipeline-trigger
         params: {bump: patch}
-      - *end-grafana-job-annotation
 
   - name: generate-secrets
     serial_groups: [cf-deploy]
@@ -3647,7 +3645,6 @@ jobs:
   - name: pipeline-unlock
     serial: true
     plan:
-      - *add-grafana-job-annotation
       - get: pipeline-trigger
         passed: ['tag-release']
         trigger: true
@@ -3678,7 +3675,6 @@ jobs:
             put: pipeline-pool
             params:
               release: pipeline-pool
-      - *end-grafana-job-annotation
 
   - name: pipeline-check-lock
     plan:
