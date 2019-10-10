@@ -102,12 +102,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "11f779fa-425c-4c86-9530-d0aebcb3c3e6"
-    name: "tiny-unencrypted-10"
-    description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.micro."
+    name: "tiny-unencrypted-11"
+    description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.micro."
     free: true
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
@@ -117,12 +117,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "a68e4934-6c37-4f10-89b2-6388df093221"
-    name: "small-10"
-    description: "20GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.small."
+    name: "small-11"
+    description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.small."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
@@ -134,12 +134,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "b2ef068e-5937-4522-ab97-758f6e9ce0ff"
-    name: "small-ha-10"
-    description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.small."
+    name: "small-ha-11"
+    description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.small."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
@@ -151,12 +151,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "d9e7b133-e584-4a9b-bef9-c53c2f2142f6"
-    name: "medium-10"
-    description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.large."
+    name: "medium-11"
+    description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.large."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
@@ -168,12 +168,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "0c89ea29-e6b3-44be-9b39-85cd42c3911e"
-    name: "medium-ha-10"
-    description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.large."
+    name: "medium-ha-11"
+    description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.large."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
@@ -186,12 +186,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "da44b024-52bd-459f-8078-38591d574c90"
-    name: "large-10"
-    description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
+    name: "large-11"
+    description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
@@ -203,12 +203,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "4140d479-601a-4585-ae1e-df67a9fa6b36"
-    name: "large-ha-10"
-    description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
+    name: "large-ha-11"
+    description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
@@ -221,12 +221,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "43b01f78-0c9f-482e-b77f-e28189ccd870"
-    name: "xlarge-10"
-    description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.4xlarge."
+    name: "xlarge-11"
+    description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
@@ -238,12 +238,12 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "2f6df103-8216-4bc4-bb38-a6422e03c981"
-    name: "xlarge-ha-10"
-    description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.4xlarge."
+    name: "xlarge-ha-11"
+    description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
       bullets:
-        - "Dedicated Postgres 10 server"
+        - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
         - "AWS RDS"
     rds_properties:
