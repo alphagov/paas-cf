@@ -932,7 +932,6 @@ jobs:
   - name: app-availability-tests
     serial: true
     plan:
-      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
@@ -977,12 +976,10 @@ jobs:
 
                 echo "Running app-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
-      - *end-grafana-job-annotation
 
   - name: api-availability-tests
     serial: true
     plan:
-      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
@@ -1075,7 +1072,6 @@ jobs:
                   PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
                   JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
                   aws s3 rm "s3://((state_bucket))/${JOB_FILE}"
-      - *end-grafana-job-annotation
 
   - name: cf-terraform
     serial_groups: [cf-deploy]
