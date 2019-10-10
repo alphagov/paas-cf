@@ -101,7 +101,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "11f779fa-425c-4c86-9530-d0aebcb3c3e6"
+    id: "9adbd87b-1ce8-4f9b-8562-b57041988fbe"
     name: "tiny-unencrypted-11"
     description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.micro."
     free: true
@@ -116,7 +116,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "a68e4934-6c37-4f10-89b2-6388df093221"
+    id: "b3fe2e1d-ffc5-4c35-8083-8c2b397b1e72"
     name: "small-11"
     description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.small."
     free: false
@@ -133,7 +133,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "b2ef068e-5937-4522-ab97-758f6e9ce0ff"
+    id: "9ec72113-5955-4385-96ad-52ef777c10fe"
     name: "small-ha-11"
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.small."
     free: false
@@ -150,7 +150,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "d9e7b133-e584-4a9b-bef9-c53c2f2142f6"
+    id: "e1dac552-b77b-4ae8-8d72-2d6186bf3380"
     name: "medium-11"
     description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.large."
     free: false
@@ -167,7 +167,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "0c89ea29-e6b3-44be-9b39-85cd42c3911e"
+    id: "8bdac429-5789-4ee7-ac2e-8800c94ac747"
     name: "medium-ha-11"
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.large."
     free: false
@@ -185,7 +185,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "da44b024-52bd-459f-8078-38591d574c90"
+    id: "07faed7b-3ed9-4904-af64-8e0b75e1e355"
     name: "large-11"
     description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
@@ -202,7 +202,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "4140d479-601a-4585-ae1e-df67a9fa6b36"
+    id: "1826881e-31a2-46ca-997d-d920eb9ecd20"
     name: "large-ha-11"
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
@@ -220,7 +220,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "43b01f78-0c9f-482e-b77f-e28189ccd870"
+    id: "0cc655f7-337b-4caf-9544-cbea6f30ccd4"
     name: "xlarge-11"
     description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.4xlarge."
     free: false
@@ -237,7 +237,7 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "2f6df103-8216-4bc4-bb38-a6422e03c981"
+    id: "31cd6855-62b4-4786-925a-8df2c7f98f97"
     name: "xlarge-ha-11"
     description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.4xlarge."
     free: false
