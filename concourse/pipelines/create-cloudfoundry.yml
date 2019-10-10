@@ -637,7 +637,6 @@ jobs:
   - name: pipeline-lock
     serial: true
     plan:
-      - *add-grafana-overview-annotation
       - in_parallel:
         - get: paas-cf
           trigger: ((auto_deploy))
@@ -729,6 +728,9 @@ jobs:
             CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
+
+      - *add-grafana-overview-annotation
+
       - put: pipeline-trigger
         params: {bump: patch}
 
