@@ -738,7 +738,6 @@ jobs:
     serial_groups: [cf-deploy]
     serial: true
     plan:
-      - *add-grafana-job-annotation
       - aggregate:
           - get: paas-cf
             passed: ['pipeline-lock']
@@ -832,11 +831,9 @@ jobs:
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                   done
-      - *end-grafana-job-annotation
 
   - name: pre-deploy
     plan:
-      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['generate-secrets']
@@ -927,7 +924,6 @@ jobs:
 
                 echo "timeout waiting for api-availability-tests job to start"
                 exit 1
-      - *end-grafana-job-annotation
 
   - name: app-availability-tests
     serial: true
@@ -1400,6 +1396,7 @@ jobs:
               params:
                 file: cf-manifest-pre-vars/cf-manifest-pre-vars.yml
       - *end-grafana-job-annotation
+
   - name: cf-deploy
     serial_groups: [cf-deploy]
     serial: true
@@ -2645,6 +2642,7 @@ jobs:
                 delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
                 delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
     - *end-grafana-job-annotation
+
   - name: smoke-tests
     serial_groups: [smoke-tests]
     plan:
@@ -2948,7 +2946,6 @@ jobs:
 
   - name: bosh-tests
     plan:
-      - *add-grafana-job-annotation
       - aggregate:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
@@ -2987,7 +2984,6 @@ jobs:
                 else
                   echo "Success: All VMs are up and running."
                 fi
-      - *end-grafana-job-annotation
 
   - name: deploy-paas-accounts
     serial: true
@@ -3686,7 +3682,6 @@ jobs:
 
   - name: pipeline-check-lock
     plan:
-      - *add-grafana-job-annotation
       - get: pipeline-pool
       - task: print-pipeline-lock-state
         tags: [colocated-with-web]
@@ -3719,16 +3714,13 @@ jobs:
                - %cr at %ci
                - %s
               "
-      - *end-grafana-job-annotation
 
   - name: pipeline-release-lock
     plan:
-      - *add-grafana-job-annotation
       - get: pipeline-pool
       - put: pipeline-pool
         params:
           release: pipeline-pool
-      - *end-grafana-job-annotation
 
   - name: rotate-cf-admin-password
     serial: true
