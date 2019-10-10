@@ -4171,6 +4171,8 @@ jobs:
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
+      - *add-grafana-job-annotation
+
       - aggregate:
         - get: smoke-tests-timer
           trigger: true
@@ -4240,18 +4242,23 @@ jobs:
               TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
-          task: remove-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
-          params:
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
+          aggregate:
+            - task: remove-temp-user
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                API_ENDPOINT: ((api_endpoint))
+                CF_ADMIN: ((cf_admin))
+                CF_PASS: ((cf_pass))
+
+            - *end-grafana-job-annotation
 
   - name: continuous-billing-smoke-tests
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
+      - *add-grafana-job-annotation
+
       - aggregate:
         - get: billing-smoke-tests-timer
           trigger: true
@@ -4299,13 +4306,16 @@ jobs:
                   make acceptance
 
         ensure:
-          task: remove-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
-          params:
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
+          aggregate:
+            - task: remove-temp-user
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                API_ENDPOINT: ((api_endpoint))
+                CF_ADMIN: ((cf_admin))
+                CF_PASS: ((cf_pass))
+
+            - *end-grafana-job-annotation
 
   - name: check-certificates
     build_logs_to_retain: 50
