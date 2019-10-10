@@ -113,7 +113,7 @@ jobs:
     serial_groups: [ destroy ]
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['init']
             trigger: true
@@ -195,7 +195,7 @@ jobs:
     serial_groups: [ destroy ]
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['delete-deployment']
             trigger: true

@@ -73,7 +73,7 @@ jobs:
 - name: smoke-tests
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - get: test-config
     - get: paas-cf
     - get: cf-smoke-tests-release

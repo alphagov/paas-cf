@@ -158,7 +158,7 @@ jobs:
 jobs:
 - name: myjob
   plan:
-  - aggregate:
+  - in_parallel:
     - get: paas-cf
       passed: ['some_previous_job']
 `))
@@ -170,7 +170,33 @@ jobs:
 jobs:
 - name: myjob
   plan:
-  - aggregate:
+  - in_parallel:
+    - get: paas-cf
+`)))
+				Expect(session.Err.Contents()).To(BeEmpty())
+			})
+		})
+
+		Context("paas-cf resource within in_parallel in plan", func() {
+			BeforeEach(func() {
+				jobName = "myjob"
+				stdin.Write([]byte(`---
+jobs:
+- name: myjob
+  plan:
+  - in_parallel:
+    - get: paas-cf
+      passed: ['some_previous_job']
+`))
+			})
+
+			It("removes passed from paas-cf resource", func() {
+				Eventually(session).Should(gexec.Exit(0))
+				Expect(session.Out.Contents()).To(Equal([]byte(`---
+jobs:
+- name: myjob
+  plan:
+  - in_parallel:
     - get: paas-cf
 `)))
 				Expect(session.Err.Contents()).To(BeEmpty())
@@ -184,7 +210,7 @@ jobs:
 jobs:
 - name: myjob
   plan:
-  - aggregate:
+  - in_parallel:
     - do:
       - get: paas-cf
         passed: ['some_previous_job']
@@ -197,7 +223,35 @@ jobs:
 jobs:
 - name: myjob
   plan:
-  - aggregate:
+  - in_parallel:
+    - do:
+      - get: paas-cf
+`)))
+				Expect(session.Err.Contents()).To(BeEmpty())
+			})
+		})
+
+		Context("paas-cf resource within do within in_parallel in plan", func() {
+			BeforeEach(func() {
+				jobName = "myjob"
+				stdin.Write([]byte(`---
+jobs:
+- name: myjob
+  plan:
+  - in_parallel:
+    - do:
+      - get: paas-cf
+        passed: ['some_previous_job']
+`))
+			})
+
+			It("removes passed from paas-cf resource", func() {
+				Eventually(session).Should(gexec.Exit(0))
+				Expect(session.Out.Contents()).To(Equal([]byte(`---
+jobs:
+- name: myjob
+  plan:
+  - in_parallel:
     - do:
       - get: paas-cf
 `)))
@@ -206,7 +260,7 @@ jobs:
 		})
 	})
 
-	Context("paas-cf resource nested throughout plan", func() {
+	Context("paas-cf resource nested throughout plan in aggregate", func() {
 		BeforeEach(func() {
 			jobName = "myjob"
 			stdin.Write([]byte(`---
@@ -215,7 +269,7 @@ jobs:
   plan:
   - get: paas-cf
     passed: 'some_job'
-  - aggregate:
+  - in_parallel:
     - get: paas-cf
       passed: ['some', 'jobs']
     - do:
@@ -231,7 +285,41 @@ jobs:
 - name: myjob
   plan:
   - get: paas-cf
-  - aggregate:
+  - in_parallel:
+    - get: paas-cf
+    - do:
+      - get: paas-cf
+`)))
+			Expect(session.Err.Contents()).To(BeEmpty())
+		})
+	})
+
+	Context("paas-cf resource nested throughout plan in in_parallel", func() {
+		BeforeEach(func() {
+			jobName = "myjob"
+			stdin.Write([]byte(`---
+jobs:
+- name: myjob
+  plan:
+  - get: paas-cf
+    passed: 'some_job'
+  - in_parallel:
+    - get: paas-cf
+      passed: ['some', 'jobs']
+    - do:
+      - get: paas-cf
+        passed: ['some_previous_job']
+`))
+		})
+
+		It("removes passed from all paas-cf resources", func() {
+			Eventually(session).Should(gexec.Exit(0))
+			Expect(session.Out.Contents()).To(Equal([]byte(`---
+jobs:
+- name: myjob
+  plan:
+  - get: paas-cf
+  - in_parallel:
     - get: paas-cf
     - do:
       - get: paas-cf

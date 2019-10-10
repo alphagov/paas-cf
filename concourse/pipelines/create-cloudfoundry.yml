@@ -639,7 +639,7 @@ jobs:
     plan:
       - *add-grafana-job-annotation
       - *add-grafana-overview-annotation
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: ((auto_deploy))
         - get: git-ssh-private-key
@@ -738,14 +738,14 @@ jobs:
     serial_groups: [cf-deploy]
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: paas-cf
             passed: ['pipeline-lock']
           - get: pipeline-trigger
             passed: ['pipeline-lock']
             trigger: true
           - get: ipsec-CA
-      - aggregate:
+      - in_parallel:
         - task: generate-ipsec-CA
           tags: [colocated-with-web]
           config:
@@ -834,7 +834,7 @@ jobs:
 
   - name: pre-deploy
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
@@ -928,7 +928,7 @@ jobs:
   - name: app-availability-tests
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
@@ -976,7 +976,7 @@ jobs:
   - name: api-availability-tests
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
@@ -1074,7 +1074,7 @@ jobs:
     serial: true
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: paas-cf
             passed: ['pre-deploy']
           - get: pipeline-trigger
@@ -1229,7 +1229,7 @@ jobs:
     serial: true
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['cf-terraform']
             trigger: true
@@ -1241,7 +1241,7 @@ jobs:
           - get: cf-tfstate
             passed: ['cf-terraform']
 
-      - aggregate:
+      - in_parallel:
         - task: extract-terraform-outputs
           tags: [colocated-with-web]
           config:
@@ -1388,7 +1388,7 @@ jobs:
                     > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
 
           on_success:
-            aggregate:
+            in_parallel:
             - put: cf-manifest
               params:
                 file: cf-manifest/cf-manifest.yml
@@ -1402,7 +1402,7 @@ jobs:
     serial: true
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-cf-config']
             trigger: true
@@ -1415,7 +1415,7 @@ jobs:
           - get: cf-tfstate
             passed: ['generate-cf-config']
 
-      - aggregate:
+      - in_parallel:
         - task: get-and-upload-stemcell
           tags: [colocated-with-web]
           config:
@@ -1596,7 +1596,7 @@ jobs:
     plan:
       - *add-grafana-job-annotation
 
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['cf-deploy']
             trigger: true
@@ -1756,7 +1756,7 @@ jobs:
                 echo 'Accessible secrets'
                 credhub find --path /concourse/main/create-cloudfoundry
 
-      - aggregate:
+      - in_parallel:
         - task: deploy-cloudwatch-exporter
           tags: [colocated-with-web]
           config:
@@ -1856,7 +1856,7 @@ jobs:
     serial: true
     plan:
     - *add-grafana-job-annotation
-    - aggregate:
+    - in_parallel:
       - get: pipeline-trigger
         passed: ['cf-deploy']
         trigger: true
@@ -1907,7 +1907,7 @@ jobs:
 
               ls -l config/*
 
-    - aggregate:
+    - in_parallel:
       - task: upload-buildpacks
         tags: [colocated-with-web]
         config:
@@ -2251,7 +2251,7 @@ jobs:
               - |
                 ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
 
-    - aggregate:
+    - in_parallel:
       - task: block-create-account-endpoints
         tags: [colocated-with-web]
         config:
@@ -2503,7 +2503,7 @@ jobs:
 
                   bosh run-errand rotate-cc-database-key --when-changed
 
-    - aggregate:
+    - in_parallel:
       - task: deploy-aiven-service-broker
         tags: [colocated-with-web]
         config:
@@ -2647,7 +2647,7 @@ jobs:
     serial_groups: [smoke-tests]
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2697,7 +2697,7 @@ jobs:
   - name: acceptance-tests
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2762,7 +2762,7 @@ jobs:
   - name: custom-acceptance-tests
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2791,7 +2791,7 @@ jobs:
             NAME_PREFIX: ACC
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
-        - aggregate:
+        - in_parallel:
           - task: "Run custom acceptance tests"
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
@@ -2887,7 +2887,7 @@ jobs:
   - name: custom-broker-acceptance-tests
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2916,7 +2916,7 @@ jobs:
             NAME_PREFIX: BACC
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
-        - aggregate:
+        - in_parallel:
           - task: "Run broker custom acceptance tests"
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-broker-acceptance-tests-run.yml
@@ -2946,7 +2946,7 @@ jobs:
 
   - name: bosh-tests
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2992,7 +2992,7 @@ jobs:
       - get: paas-accounts
         trigger: true
 
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -3109,7 +3109,7 @@ jobs:
       - get: paas-admin
         trigger: true
 
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -3360,7 +3360,7 @@ jobs:
       - get: paas-billing
         trigger: true
 
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -3604,7 +3604,7 @@ jobs:
   - name: tag-release
     plan:
       - *add-grafana-job-annotation
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
             trigger: true
@@ -3726,7 +3726,7 @@ jobs:
     serial: true
     serial_groups: [smoke-tests]
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-vars-store
 
@@ -3792,7 +3792,7 @@ jobs:
     serial: true
     serial_groups: [smoke-tests]
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
         passed: ['rotate-cf-admin-password']
       - get: cf-vars-store
@@ -3879,7 +3879,7 @@ jobs:
   - name: rotate-database-encryption-keys
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-vars-store
       - get: cf-manifest-pre-vars
@@ -3918,7 +3918,7 @@ jobs:
   - name: rotate-prometheus-credentials
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: prometheus-vars-store
       - get: prometheus-manifest-pre-vars
@@ -3956,7 +3956,7 @@ jobs:
   - name: expire-aws-keys
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-tfstate
       - get: expire-aws-keys-timer
@@ -3974,7 +3974,7 @@ jobs:
   - name: rotate-cf-certs-cas
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
@@ -4007,7 +4007,7 @@ jobs:
   - name: rotate-cf-certs-leafs
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
@@ -4040,7 +4040,7 @@ jobs:
   - name: set-smoke-test-creds
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-vars-store
     - task: retrieve-config
@@ -4084,7 +4084,7 @@ jobs:
   - name: delete-old-cf-certs
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
@@ -4173,7 +4173,7 @@ jobs:
     plan:
       - *add-grafana-job-annotation
 
-      - aggregate:
+      - in_parallel:
         - get: smoke-tests-timer
           trigger: true
         - get: deployed-healthcheck
@@ -4242,7 +4242,7 @@ jobs:
               TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
-          aggregate:
+          in_parallel:
             - task: remove-temp-user
               tags: [colocated-with-web]
               file: paas-cf/concourse/tasks/delete_admin.yml
@@ -4259,7 +4259,7 @@ jobs:
     plan:
       - *add-grafana-job-annotation
 
-      - aggregate:
+      - in_parallel:
         - get: billing-smoke-tests-timer
           trigger: true
         - get: paas-billing
@@ -4306,7 +4306,7 @@ jobs:
                   make acceptance
 
         ensure:
-          aggregate:
+          in_parallel:
             - task: remove-temp-user
               tags: [colocated-with-web]
               file: paas-cf/concourse/tasks/delete_admin.yml
@@ -4320,7 +4320,7 @@ jobs:
   - name: check-certificates
     build_logs_to_retain: 50
     plan:
-      - aggregate:
+      - in_parallel:
         - get: check-certificates-timer
           trigger: true
         - get: paas-cf
@@ -4359,7 +4359,7 @@ jobs:
   - name: cleanup-deleted-cf-users
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
 
       - task: cleanup-deleted-cf-users
