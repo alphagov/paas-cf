@@ -4171,8 +4171,6 @@ jobs:
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
-      - *add-grafana-job-annotation
-
       - in_parallel:
         - get: smoke-tests-timer
           trigger: true
@@ -4251,14 +4249,10 @@ jobs:
                 CF_ADMIN: ((cf_admin))
                 CF_PASS: ((cf_pass))
 
-            - *end-grafana-job-annotation
-
   - name: continuous-billing-smoke-tests
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
-      - *add-grafana-job-annotation
-
       - in_parallel:
         - get: billing-smoke-tests-timer
           trigger: true
@@ -4314,8 +4308,6 @@ jobs:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
                 CF_PASS: ((cf_pass))
-
-            - *end-grafana-job-annotation
 
   - name: check-certificates
     build_logs_to_retain: 50
