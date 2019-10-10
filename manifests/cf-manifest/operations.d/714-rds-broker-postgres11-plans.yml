@@ -121,10 +121,6 @@
     description: "20GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.small."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -142,10 +138,6 @@
     description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.small."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "AWS RDS"
@@ -163,10 +155,6 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.large."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -184,10 +172,6 @@
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.large."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -206,10 +190,6 @@
     description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -227,10 +207,6 @@
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -249,10 +225,6 @@
     description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -270,10 +242,6 @@
     description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
