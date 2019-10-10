@@ -24,7 +24,6 @@
         "bloom",
         "btree_gin",
         "btree_gist",
-        "chkpass",
         "citext",
         "cube",
         "dblink",
@@ -50,6 +49,7 @@
         "pg_repack",
         "pg_similarity",
         "pg_stat_statements",
+        "pg_transport",
         "pg_trgm",
         "pg_visibility",
         "pgcrypto",
@@ -58,6 +58,7 @@
         "pgrowlocks",
         "pgrouting",
         "pgstattuple",
+        "pgtap",
         "plcoffee",
         "plls",
         "plperl",
@@ -73,12 +74,11 @@
         "sslinfo",
         "tablefunc",
         "test_parser",
-        "tsearch2",
         "tsm_system_rows",
         "tsm_system_time",
         "unaccent",
         "uuid-ossp"
-    ]
+      ]
 
     tiny_plan_rds_properties: &tiny_plan_rds_properties
       db_instance_class: "db.t3.micro"
