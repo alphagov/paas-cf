@@ -1,0 +1,70 @@
+{
+	"name": "redis tiny-clustered-3.2",
+	"valid_from": "2017-01-01",
+	"plan_guid": "3a51701c-eef3-447c-882b-907ad2bcb7ab",
+	"number_of_nodes": 1,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_t2_micro") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis tiny-3.2",
+	"valid_from": "2017-01-01",
+	"plan_guid": "c84d1bef-9500-4ce9-88b2-c0bd421bbf8a",
+	"number_of_nodes": 1,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_t2_micro") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis medium-ha-3.2",
+	"valid_from": "2019-01-01",
+	"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
+	"number_of_nodes": 2,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_m5_large") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis tiny-ha-3.2",
+	"valid_from": "2019-08-01",
+	"plan_guid": "ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d",
+	"number_of_nodes": 2,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_t2_small") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis small-ha-3.2",
+	"valid_from": "2019-08-01",
+	"plan_guid": "9162ed5b-0c88-4f43-bcaf-c6d4a45dd243",
+	"number_of_nodes": 2,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * <%= price("elasticache_t2_medium") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},

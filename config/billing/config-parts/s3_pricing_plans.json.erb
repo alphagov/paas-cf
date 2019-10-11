@@ -1,0 +1,13 @@
+{
+	"name": "aws-s3-bucket default",
+	"valid_from": "2019-02-01",
+	"plan_guid": "24efab31-8cbd-47c0-8513-a9345f3c512b",
+	"components": [
+		{
+			"name": "storage",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("s3_bucket_default") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},

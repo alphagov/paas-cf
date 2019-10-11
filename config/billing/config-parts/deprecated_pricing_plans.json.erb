@@ -1,0 +1,42 @@
+{
+	"name": "mongodb tiny (compose)",
+	"valid_from": "2017-01-01",
+	"plan_guid": "fdfd4fc1-ce69-451c-a436-c2e2795b9abe",
+	"memory_in_mb": 1024,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "<%= price("compose_mongodb_tiny") %> * $memory_in_mb * ceil($time_in_seconds / 3600)",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis tiny (compose)",
+	"valid_from": "2017-01-01",
+	"plan_guid": "a8574a4b-9c6c-40ea-a0df-e9b7507948c8",
+	"memory_in_mb": 256,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "<%= price("compose_redis_tiny") %> * $memory_in_mb * ceil($time_in_seconds / 3600)",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch tiny (compose)",
+	"valid_from": "2017-01-01",
+	"plan_guid": "6d051078-0913-403c-9763-1d03ecee50d9",
+	"memory_in_mb": 2048,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "<%= price("compose_elasticsearh_tiny") %> * $memory_in_mb * ceil($time_in_seconds / 3600)",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+}

@@ -1,9 +1,10 @@
 {
+	"ignore_missing_plans": true,
 	"currency_rates": [
 		{
 			"code": "GBP",
 			"valid_from": "epoch",
-			"rate": 1
+			"rate": "0.133"
 		},
 		{
 			"code": "USD",
@@ -15,7 +16,8 @@
 			"valid_from": "2019-10-18",
 			"rate": 0.78
 		}
-	],
+]
+,
 	"vat_rates": [
 		{
 			"code": "Standard",
@@ -32,1319 +34,1328 @@
 			"valid_from": "epoch",
 			"rate": 0
 		}
-	],
-	"ignore_missing_plans": true,
+]
+,
 	"pricing_plans": [
 		{
-			"name": "unknown-plan",
-			"valid_from": "1970-01-01",
-			"plan_guid": "d5091c33-2f9d-4b15-82dc-4ad69717fc03",
-			"components": [
-				{
-					"name": "unknown",
-					"formula": "0",
-					"currency_code": "GBP",
-					"vat_code": "Zero"
-				}
-			]
-		},
-		{
-			"name": "prometheus",
-			"valid_from": "2017-01-01",
-			"plan_guid": "cc65268f-98e9-40ef-aa8c-8e595204064d",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "0",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "prometheus",
-			"valid_from": "2017-01-01",
-			"plan_guid": "7ab58e11-3959-49b4-9218-807e3e78f9af",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "0",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "prometheus",
-			"valid_from": "2017-01-01",
-			"plan_guid": "01889e73-78b3-41d9-b29e-71d6ccfc8821",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "0",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "prometheus",
-			"valid_from": "2017-01-01",
-			"plan_guid": "b5998c91-d379-4df7-b329-11450f8459f1",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "0",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "app",
-			"valid_from": "2017-01-01",
-			"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "platform",
-					"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01) * 0.40",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "staging",
-			"valid_from": "2017-01-01",
-			"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "platform",
-					"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01) * 0.40",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "task",
-			"valid_from": "2017-01-01",
-			"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "platform",
-					"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01) * 0.40",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "app",
-			"valid_from": "2019-03-01",
-			"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "platform",
-					"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)) * 0.40",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "staging",
-			"valid_from": "2019-03-01",
-			"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "platform",
-					"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)) * 0.40",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "task",
-			"valid_from": "2019-03-01",
-			"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "platform",
-					"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)) * 0.40",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres tiny-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "5f2eec8a-0cad-4ab9-b81e-d6adade2fd42",
-			"storage_in_mb": 5120,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.021",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres small-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.041",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres small-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "2611d776-9991-4940-a755-880eafbc33a0",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.041",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres small-ha-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "359bcb39-0264-46bd-9120-0182c3829067",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.082",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres small-ha-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "d9f1d61d-0a65-45ad-8fc9-88c921d038d2",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.082",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres medium-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "9b882524-ab58-4c18-b501-d2a3f4619104",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.211",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres medium-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "17ef8670-5134-4ae6-b7fc-9ee8e52394c5",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.211",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres medium-ha-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "bf5b99c2-7990-4b66-b341-1bb83566d76e",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.422",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres medium-ha-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "8d50ccc5-707c-4306-be8f-f59a158eb736",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.422",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres large-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "238a1328-4f77-4b70-9bd9-2cdbbfb999c8",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.846",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres large-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "8ea15f55-fbd2-41a3-a679-482d67a3d9ea",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.846",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres large-ha-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "dfe4ab2b-2069-41a5-ba08-2be21b0c76d3",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.693",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres large-ha-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "620055b3-fe7c-46fc-87ad-c7d8f4fe7f34",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.693",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres xlarge-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "1065c353-54dd-4f6b-a5b4-a4b5aa4575c6",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.693",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres xlarge-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "3cb1947e-1df5-4483-8e9e-07c9294f9347",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.693",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres xlarge-ha-unencrypted-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "7119925f-518d-4263-96ac-16990295aad6",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 3.385",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres xlarge-ha-9.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "a91c8e59-8869-42fd-8a99-8989151d7353",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 3.385",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres tiny-unencrypted-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "11f779fa-425c-4c86-9530-d0aebcb3c3e6",
-			"storage_in_mb": 5120,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.021",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres small-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "a68e4934-6c37-4f10-89b2-6388df093221",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.041",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres small-ha-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "b2ef068e-5937-4522-ab97-758f6e9ce0ff",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.082",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres medium-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "d9e7b133-e584-4a9b-bef9-c53c2f2142f6",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.211",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres medium-ha-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "0c89ea29-e6b3-44be-9b39-85cd42c3911e",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.422",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres large-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "da44b024-52bd-459f-8078-38591d574c90",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.846",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres large-ha-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "4140d479-601a-4585-ae1e-df67a9fa6b36",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.693",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres xlarge-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "43b01f78-0c9f-482e-b77f-e28189ccd870",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.693",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "postgres xlarge-ha-10.5",
-			"valid_from": "2017-01-01",
-			"plan_guid": "2f6df103-8216-4bc4-bb38-a6422e03c981",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 3.385",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql tiny-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "69977068-8ef5-4172-bfdb-e8cea3c14d01",
-			"storage_in_mb": 5120,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.019",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql small-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "7fdde6ea-cc27-466c-86aa-46181fc20d25",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.038",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql small-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "b0ccc8c9-09b0-4c3e-9880-091cc41c2ab5",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.038",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql small-ha-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "72279ebd-6001-4e38-aaef-72b68c4fa6fd",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.076",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql small-ha-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "6aa563c1-5aeb-46a1-9509-badcf5995c96",
-			"storage_in_mb": 20480,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.076",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql medium-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "4eb35ca9-a7ec-46c6-b137-d819848536cd",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.203",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql medium-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "29cdedeb-e910-4a7a-b606-2c4e42eea478",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.203",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql medium-ha-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "e60edf62-b701-4e38-846f-b0b3db728349",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.405",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql medium-ha-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "8d139b9e-bc82-4749-8ad6-7733980292d6",
-			"storage_in_mb": 102400,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.405",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql large-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "6725bf1f-71e8-447a-b6a1-659247fcc03c",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.811",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql large-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "98a9b7cf-e067-4915-8190-ce8224dd04dc",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.811",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql large-ha-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.621",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql large-ha-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "d5efbf83-5e00-47a5-a668-2ef1307d5a23",
-			"storage_in_mb": 524288,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.621",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql xlarge-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "a37144bf-4e05-451b-87ba-0a2c57a23a91",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.622",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql xlarge-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "e03020e8-eaed-49c2-bd58-23b7cb871c22",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.622",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql xlarge-ha-unencrypted-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "065a7de5-28e8-4de1-8a39-4b4f752e2f2f",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 3.245",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mysql xlarge-ha-5.7",
-			"valid_from": "2017-01-01",
-			"plan_guid": "4edc975c-3f07-46f1-bd87-ecb35b76298f",
-			"storage_in_mb": 2097152,
-			"memory_in_mb": 0,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 3.245",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				},
-				{
-					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "redis tiny-clustered-3.2",
-			"valid_from": "2017-01-01",
-			"plan_guid": "3a51701c-eef3-447c-882b-907ad2bcb7ab",
-			"number_of_nodes": 1,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "redis tiny-3.2",
-			"valid_from": "2017-01-01",
-			"plan_guid": "c84d1bef-9500-4ce9-88b2-c0bd421bbf8a",
-			"number_of_nodes": 1,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "redis medium-ha-3.2",
-			"valid_from": "2019-01-01",
-			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
-			"number_of_nodes": 2,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "redis tiny-ha-3.2",
-			"valid_from": "2019-08-01",
-			"plan_guid": "ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d",
-			"number_of_nodes": 2,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.038",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "redis small-ha-3.2",
-			"valid_from": "2019-08-01",
-			"plan_guid": "9162ed5b-0c88-4f43-bcaf-c6d4a45dd243",
-			"number_of_nodes": 2,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.077",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "cloudfront cdn-route",
-			"valid_from": "2017-01-01",
-			"plan_guid": "fc055c72-1075-44c9-9aee-bddd52e1b053",
-			"components": [
-				{
-					"name": "distribution",
-					"formula": "0",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "mongodb tiny (compose)",
-			"valid_from": "2017-01-01",
-			"plan_guid": "fdfd4fc1-ce69-451c-a436-c2e2795b9abe",
-			"memory_in_mb": 1024,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "((1936.57/(48*1024))/30/24) * $memory_in_mb * ceil($time_in_seconds / 3600)",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "redis tiny (compose)",
-			"valid_from": "2017-01-01",
-			"plan_guid": "a8574a4b-9c6c-40ea-a0df-e9b7507948c8",
-			"memory_in_mb": 256,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "((1936.57/(48*1024))/30/24) * $memory_in_mb * ceil($time_in_seconds / 3600)",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch tiny (compose)",
-			"valid_from": "2017-01-01",
-			"plan_guid": "6d051078-0913-403c-9763-1d03ecee50d9",
-			"memory_in_mb": 2048,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "((1936.57/(48*1024))/30/24) * $memory_in_mb * ceil($time_in_seconds / 3600)",
-					"currency_code": "GBP",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch tiny-5.x",
-			"valid_from": "2018-09-01",
-			"plan_guid": "07264114-c666-440b-934a-015508be4475",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.178",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch tiny-6.x",
-			"valid_from": "2018-09-01",
-			"plan_guid": "7c0e6f6a-e443-41a0-83df-981bd35923a9",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.178",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch small-ha-5.x",
-			"valid_from": "2017-01-01",
-			"plan_guid": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.548",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch small-ha-6.x",
-			"valid_from": "2017-01-01",
-			"plan_guid": "225e97cc-f786-408c-8b59-d2118248a53d",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 0.548",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch medium-ha-5.x",
-			"valid_from": "2018-10-01",
-			"plan_guid": "242a4782-7454-4ff4-93b2-dd88b333cb46",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.096",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch medium-ha-6.x",
-			"valid_from": "2018-10-01",
-			"plan_guid": "760e9fc7-9402-4869-8ac6-babdc9e02247",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 1.096",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "elasticsearch large-ha-6.x",
-			"valid_from": "2018-10-01",
-			"plan_guid": "90f12775-0b60-4a90-b2bc-c8c28a1ca85e",
-			"components": [
-				{
-					"name": "instance",
-					"formula": "ceil($time_in_seconds/3600) * 2.192",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
-			"name": "aws-s3-bucket default",
-			"valid_from": "2019-02-01",
-			"plan_guid": "24efab31-8cbd-47c0-8513-a9345f3c512b",
-			"components": [
-				{
-					"name": "storage",
-					"formula": "ceil($time_in_seconds/3600) * 0.00685",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
+	"name": "unknown-plan",
+	"valid_from": "1970-01-01",
+	"plan_guid": "d5091c33-2f9d-4b15-82dc-4ad69717fc03",
+	"components": [
+		{
+			"name": "unknown",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Zero"
 		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "cc65268f-98e9-40ef-aa8c-8e595204064d",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "7ab58e11-3959-49b4-9218-807e3e78f9af",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "01889e73-78b3-41d9-b29e-71d6ccfc8821",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "b5998c91-d379-4df7-b329-11450f8459f1",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "app",
+	"valid_from": "2017-01-01",
+	"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01) * 0.40",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "staging",
+	"valid_from": "2017-01-01",
+	"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01) * 0.40",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "task",
+	"valid_from": "2017-01-01",
+	"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * 0.01) * 0.40",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "app",
+	"valid_from": "2019-03-01",
+	"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)) * 0.40",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "staging",
+	"valid_from": "2019-03-01",
+	"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)) * 0.40",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "task",
+	"valid_from": "2019-03-01",
+	"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (0.01 / 3600)) * 0.40",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "postgres tiny-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "5f2eec8a-0cad-4ab9-b81e-d6adade2fd42",
+	"storage_in_mb": 5120,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.021",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres small-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "b7d0a368-ac92-4eff-9b8d-ab4ba45bed0e",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.041",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres small-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "2611d776-9991-4940-a755-880eafbc33a0",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.041",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres small-ha-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "359bcb39-0264-46bd-9120-0182c3829067",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.082",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres small-ha-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "d9f1d61d-0a65-45ad-8fc9-88c921d038d2",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.082",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres medium-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "9b882524-ab58-4c18-b501-d2a3f4619104",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.211",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres medium-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "17ef8670-5134-4ae6-b7fc-9ee8e52394c5",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.211",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres medium-ha-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "bf5b99c2-7990-4b66-b341-1bb83566d76e",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.422",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres medium-ha-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "8d50ccc5-707c-4306-be8f-f59a158eb736",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.422",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres large-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "238a1328-4f77-4b70-9bd9-2cdbbfb999c8",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.846",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres large-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "8ea15f55-fbd2-41a3-a679-482d67a3d9ea",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.846",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres large-ha-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "dfe4ab2b-2069-41a5-ba08-2be21b0c76d3",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.693",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres large-ha-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "620055b3-fe7c-46fc-87ad-c7d8f4fe7f34",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.693",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres xlarge-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "1065c353-54dd-4f6b-a5b4-a4b5aa4575c6",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.693",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres xlarge-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "3cb1947e-1df5-4483-8e9e-07c9294f9347",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.693",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres xlarge-ha-unencrypted-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "7119925f-518d-4263-96ac-16990295aad6",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 3.385",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres xlarge-ha-9.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "a91c8e59-8869-42fd-8a99-8989151d7353",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 3.385",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "postgres tiny-unencrypted-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "11f779fa-425c-4c86-9530-d0aebcb3c3e6",
+	"storage_in_mb": 5120,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.021",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres small-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "a68e4934-6c37-4f10-89b2-6388df093221",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.041",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres small-ha-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "b2ef068e-5937-4522-ab97-758f6e9ce0ff",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.082",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres medium-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "d9e7b133-e584-4a9b-bef9-c53c2f2142f6",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.211",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres medium-ha-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "0c89ea29-e6b3-44be-9b39-85cd42c3911e",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.422",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres large-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "da44b024-52bd-459f-8078-38591d574c90",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.846",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres large-ha-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "4140d479-601a-4585-ae1e-df67a9fa6b36",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.693",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres xlarge-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "43b01f78-0c9f-482e-b77f-e28189ccd870",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.693",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "postgres xlarge-ha-10.5",
+	"valid_from": "2017-01-01",
+	"plan_guid": "2f6df103-8216-4bc4-bb38-a6422e03c981",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 3.385",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "mysql tiny-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "69977068-8ef5-4172-bfdb-e8cea3c14d01",
+	"storage_in_mb": 5120,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.019",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql small-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "7fdde6ea-cc27-466c-86aa-46181fc20d25",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.038",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql small-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "b0ccc8c9-09b0-4c3e-9880-091cc41c2ab5",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.038",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql small-ha-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "72279ebd-6001-4e38-aaef-72b68c4fa6fd",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.076",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql small-ha-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "6aa563c1-5aeb-46a1-9509-badcf5995c96",
+	"storage_in_mb": 20480,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.076",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql medium-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "4eb35ca9-a7ec-46c6-b137-d819848536cd",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.203",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql medium-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "29cdedeb-e910-4a7a-b606-2c4e42eea478",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.203",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql medium-ha-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "e60edf62-b701-4e38-846f-b0b3db728349",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.405",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql medium-ha-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "8d139b9e-bc82-4749-8ad6-7733980292d6",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.405",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql large-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "6725bf1f-71e8-447a-b6a1-659247fcc03c",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.811",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql large-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "98a9b7cf-e067-4915-8190-ce8224dd04dc",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.811",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql large-ha-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "63cdac92-9e44-42a6-ba3f-7be3dccf5dc6",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.621",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql large-ha-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "d5efbf83-5e00-47a5-a668-2ef1307d5a23",
+	"storage_in_mb": 524288,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.621",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql xlarge-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "a37144bf-4e05-451b-87ba-0a2c57a23a91",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.622",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql xlarge-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "e03020e8-eaed-49c2-bd58-23b7cb871c22",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.622",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql xlarge-ha-unencrypted-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "065a7de5-28e8-4de1-8a39-4b4f752e2f2f",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 3.245",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql xlarge-ha-5.7",
+	"valid_from": "2017-01-01",
+	"plan_guid": "4edc975c-3f07-46f1-bd87-ecb35b76298f",
+	"storage_in_mb": 2097152,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 3.245",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "redis tiny-clustered-3.2",
+	"valid_from": "2017-01-01",
+	"plan_guid": "3a51701c-eef3-447c-882b-907ad2bcb7ab",
+	"number_of_nodes": 1,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis tiny-3.2",
+	"valid_from": "2017-01-01",
+	"plan_guid": "c84d1bef-9500-4ce9-88b2-c0bd421bbf8a",
+	"number_of_nodes": 1,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis medium-ha-3.2",
+	"valid_from": "2019-01-01",
+	"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
+	"number_of_nodes": 2,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis tiny-ha-3.2",
+	"valid_from": "2019-08-01",
+	"plan_guid": "ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d",
+	"number_of_nodes": 2,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.038",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis small-ha-3.2",
+	"valid_from": "2019-08-01",
+	"plan_guid": "9162ed5b-0c88-4f43-bcaf-c6d4a45dd243",
+	"number_of_nodes": 2,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.077",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "cloudfront cdn-route",
+	"valid_from": "2017-01-01",
+	"plan_guid": "fc055c72-1075-44c9-9aee-bddd52e1b053",
+	"components": [
+		{
+			"name": "distribution",
+			"formula": "0",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "elasticsearch tiny-5.x",
+	"valid_from": "2018-09-01",
+	"plan_guid": "07264114-c666-440b-934a-015508be4475",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.178",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch tiny-6.x",
+	"valid_from": "2018-09-01",
+	"plan_guid": "7c0e6f6a-e443-41a0-83df-981bd35923a9",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.178",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch small-ha-5.x",
+	"valid_from": "2017-01-01",
+	"plan_guid": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.548",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch small-ha-6.x",
+	"valid_from": "2017-01-01",
+	"plan_guid": "225e97cc-f786-408c-8b59-d2118248a53d",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 0.548",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch medium-ha-5.x",
+	"valid_from": "2018-10-01",
+	"plan_guid": "242a4782-7454-4ff4-93b2-dd88b333cb46",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.096",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch medium-ha-6.x",
+	"valid_from": "2018-10-01",
+	"plan_guid": "760e9fc7-9402-4869-8ac6-babdc9e02247",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 1.096",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch large-ha-6.x",
+	"valid_from": "2018-10-01",
+	"plan_guid": "90f12775-0b60-4a90-b2bc-c8c28a1ca85e",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * 2.192",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "aws-s3-bucket default",
+	"valid_from": "2019-02-01",
+	"plan_guid": "24efab31-8cbd-47c0-8513-a9345f3c512b",
+	"components": [
+		{
+			"name": "storage",
+			"formula": "ceil($time_in_seconds/3600) * 0.00685",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+
+		{
+	"name": "mongodb tiny (compose)",
+	"valid_from": "2017-01-01",
+	"plan_guid": "fdfd4fc1-ce69-451c-a436-c2e2795b9abe",
+	"memory_in_mb": 1024,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "((1936.57/(48*1024))/30/24) * $memory_in_mb * ceil($time_in_seconds / 3600)",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "redis tiny (compose)",
+	"valid_from": "2017-01-01",
+	"plan_guid": "a8574a4b-9c6c-40ea-a0df-e9b7507948c8",
+	"memory_in_mb": 256,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "((1936.57/(48*1024))/30/24) * $memory_in_mb * ceil($time_in_seconds / 3600)",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "elasticsearch tiny (compose)",
+	"valid_from": "2017-01-01",
+	"plan_guid": "6d051078-0913-403c-9763-1d03ecee50d9",
+	"memory_in_mb": 2048,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "((1936.57/(48*1024))/30/24) * $memory_in_mb * ceil($time_in_seconds / 3600)",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+}
+
 	]
 }
