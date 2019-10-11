@@ -1,4 +1,3 @@
-
 RSpec.describe "RDS broker properties" do
   let(:manifest) { manifest_without_vars_store }
 
@@ -73,74 +72,57 @@ RSpec.describe "RDS broker properties" do
       }
     end
 
-    shared_examples "tiny sized t2 class plans" do
+    shared_examples "plans using t2 and m4 instances" do
+      it { expect(rds_properties).to have_key("db_instance_class") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.t2\.[a-z]+$/).or match(/^db\.m4\.[a-z0-9]+$/) }
+    end
+
+    shared_examples "plans using t3 and m5 instances" do
+      it { expect(rds_properties).to have_key("db_instance_class") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.t3\.[a-z]+$/).or match(/^db\.m5\.[a-z0-9]+$/) }
+    end
+
+    shared_examples "tiny sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 5) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.t2.micro") }
+      it { expect(rds_properties).to have_key("db_instance_class") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.micro$/) }
     end
 
-    shared_examples "tiny sized t3 class plans" do
+    shared_examples "small sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
-      it { expect(rds_properties).to include("allocated_storage" => 5) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.t3.micro") }
+      it { expect(rds_properties).to include("allocated_storage" => 100) }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.small$/) }
     end
 
-    shared_examples "small sized t2 class plans" do
+    shared_examples "old small sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 20) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.t2.small") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.small$/) }
     end
 
-    shared_examples "small sized t3 class plans" do
+    shared_examples "medium sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 100) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.t3.small") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.large$/) }
     end
 
-    shared_examples "medium sized m4 class plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
-
-      it { expect(rds_properties).to include("allocated_storage" => 100) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.m4.large") }
-    end
-
-    shared_examples "medium sized m5 class plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
-
-      it { expect(rds_properties).to include("allocated_storage" => 100) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.m5.large") }
-    end
-
-    shared_examples "large sized m4 class plans" do
+    shared_examples "large sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 512) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.m4.2xlarge") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.2xlarge$/) }
     end
 
-    shared_examples "large sized m5 class plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
-
-      it { expect(rds_properties).to include("allocated_storage" => 512) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.m5.2xlarge") }
-    end
-
-    shared_examples "xlarge sized m4 class plans" do
+    shared_examples "xlarge sized plans" do
       let(:rds_properties) { subject.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 2048) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.m4.4xlarge") }
-    end
-
-    shared_examples "xlarge sized m5 class plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
-
-      it { expect(rds_properties).to include("allocated_storage" => 2048) }
-      it { expect(rds_properties).to include("db_instance_class" => "db.m5.4xlarge") }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.4xlarge$/) }
     end
 
     shared_examples "backup enabled plans" do
@@ -221,6 +203,15 @@ RSpec.describe "RDS broker properties" do
           "large-ha-10",
           "xlarge-10",
           "xlarge-ha-10",
+          "tiny-unencrypted-11",
+          "small-11",
+          "small-ha-11",
+          "medium-11",
+          "medium-ha-11",
+          "large-11",
+          "large-ha-11",
+          "xlarge-11",
+          "xlarge-ha-11",
         )
       end
 
@@ -231,6 +222,7 @@ RSpec.describe "RDS broker properties" do
           it "uses solid state storage" do
             expect(rds_properties).to include("storage_type" => "gp2")
           end
+
           it "sets the db subnet group and security groups from terraform" do
             expect(rds_properties).to include(
               "db_subnet_group_name" => terraform_fixture_value("rds_broker_dbs_subnet_group"),
@@ -245,6 +237,8 @@ RSpec.describe "RDS broker properties" do
           it "uses postgres 9.5" do
             expect(rds_properties["engine_version"]).to eq("9.5")
           end
+
+          include_examples "plans using t2 and m4 instances"
         end
 
         shared_examples "postgres 10 plans" do
@@ -253,6 +247,18 @@ RSpec.describe "RDS broker properties" do
           it "uses postgres 10" do
             expect(rds_properties["engine_version"]).to eq("10")
           end
+
+          include_examples "plans using t2 and m4 instances"
+        end
+
+        shared_examples "postgres 11 plans" do
+          let(:rds_properties) { subject.fetch("rds_properties") }
+
+          it "uses postgres 11" do
+            expect(rds_properties["engine_version"]).to eq("11")
+          end
+
+          include_examples "plans using t3 and m5 instances"
         end
 
         describe "tiny-unencrypted-9.5" do
@@ -264,7 +270,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "tiny sized t2 class plans"
+          it_behaves_like "tiny sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -275,7 +281,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -286,7 +292,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -297,7 +303,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -308,7 +314,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -319,7 +325,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -330,7 +336,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -341,7 +347,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -352,7 +358,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -363,7 +369,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -374,7 +380,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -385,7 +391,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -396,7 +402,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -407,7 +413,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -418,7 +424,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -429,7 +435,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -440,7 +446,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -456,7 +462,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "tiny sized t2 class plans"
+          it_behaves_like "tiny sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -467,7 +473,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -478,7 +484,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -489,7 +495,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -500,7 +506,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -511,7 +517,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -522,7 +528,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -533,7 +539,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -544,7 +550,111 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        # Postgres 11
+        describe "tiny-unencrypted-11" do
+          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-11" } }
+
+          it "is marked as free" do
+            expect(subject.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-11" do
+          subject { pg_plans.find { |p| p["name"] == "small-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-ha-11" do
+          subject { pg_plans.find { |p| p["name"] == "small-ha-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-11" do
+          subject { pg_plans.find { |p| p["name"] == "medium-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-ha-11" do
+          subject { pg_plans.find { |p| p["name"] == "medium-ha-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-11" do
+          subject { pg_plans.find { |p| p["name"] == "large-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-11" do
+          subject { pg_plans.find { |p| p["name"] == "large-ha-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-11" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-ha-11" do
+          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-11" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -595,15 +705,19 @@ RSpec.describe "RDS broker properties" do
           it "uses MySQL 5.7" do
             expect(rds_properties["engine_version"]).to start_with("5.7")
           end
+
           it "uses solid state storage" do
             expect(rds_properties).to include("storage_type" => "gp2")
           end
+
           it "sets the db subnet group and security groups from terraform" do
             expect(rds_properties).to include(
               "db_subnet_group_name" => terraform_fixture_value("rds_broker_dbs_subnet_group"),
               "vpc_security_group_ids" => [terraform_fixture_value("rds_broker_dbs_security_group_id")],
             )
           end
+
+          include_examples "plans using t2 and m4 instances"
         end
 
         shared_examples "all mysql 8.0 plans" do
@@ -612,17 +726,20 @@ RSpec.describe "RDS broker properties" do
           it "uses MySQL 8.0" do
             expect(rds_properties["engine_version"]).to start_with("8.0")
           end
+
           it "uses solid state storage" do
             expect(rds_properties).to include("storage_type" => "gp2")
           end
+
           it "sets the db subnet group and security groups from terraform" do
             expect(rds_properties).to include(
               "db_subnet_group_name" => terraform_fixture_value("rds_broker_dbs_subnet_group"),
               "vpc_security_group_ids" => [terraform_fixture_value("rds_broker_dbs_security_group_id")],
             )
           end
-        end
 
+          include_examples "plans using t3 and m5 instances"
+        end
 
         describe "tiny-unencrypted-5.7" do
           subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7" } }
@@ -632,7 +749,7 @@ RSpec.describe "RDS broker properties" do
           end
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "tiny sized t2 class plans"
+          it_behaves_like "tiny sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -642,7 +759,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "small-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -652,7 +769,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "small-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -662,7 +779,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "small-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -672,7 +789,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "small-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "small sized t2 class plans"
+          it_behaves_like "old small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -682,7 +799,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "medium-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -692,7 +809,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "medium-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -702,7 +819,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "medium-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -712,7 +829,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "medium-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "medium sized m4 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -722,7 +839,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "large-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -732,7 +849,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "large-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -742,7 +859,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "large-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -752,7 +869,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "large-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized m4 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -762,7 +879,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "xlarge-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -772,7 +889,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "xlarge-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -782,7 +899,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -792,7 +909,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "xlarge-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "xlarge sized m4 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -806,7 +923,7 @@ RSpec.describe "RDS broker properties" do
           end
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "tiny sized t3 class plans"
+          it_behaves_like "tiny sized plans"
           it_behaves_like "backup disabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -816,7 +933,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "small-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "small sized t3 class plans"
+          it_behaves_like "small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -826,7 +943,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "small-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "small sized t3 class plans"
+          it_behaves_like "small sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -836,7 +953,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "medium-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "medium sized m5 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -846,7 +963,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "medium-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "medium sized m5 class plans"
+          it_behaves_like "medium sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -856,7 +973,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "large-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "large sized m5 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -866,7 +983,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "large-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "large sized m5 class plans"
+          it_behaves_like "large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -876,7 +993,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "xlarge-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "xlarge sized m5 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -886,7 +1003,7 @@ RSpec.describe "RDS broker properties" do
           subject { my_plans.find { |p| p["name"] == "xlarge-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "xlarge sized m5 class plans"
+          it_behaves_like "xlarge sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
