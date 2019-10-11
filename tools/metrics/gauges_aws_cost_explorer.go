@@ -41,7 +41,7 @@ func AWSCostExplorerGauge(
 				Time:  twoDaysAgo,
 				Name:  "aws.cost_explorer.by_service",
 				Value: amortizedCost,
-				Unit:  "pounds",
+				Unit:  "dollars",
 				Tags: m.MetricTags{
 					{Label: "type", Value: "AmortizedCost"},
 					{Label: "service", Value: serviceName},
