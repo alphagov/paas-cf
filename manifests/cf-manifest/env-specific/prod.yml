@@ -1,6 +1,6 @@
 ---
 cell_instances: 30
-router_instances: 3
+router_instances: 6
 api_instances: 6
 doppler_instances: 16
 log_api_instances: 6
