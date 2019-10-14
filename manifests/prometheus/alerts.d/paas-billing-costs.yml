@@ -7,7 +7,7 @@
     name: PaaSBillingDBCostsExceedRDSCosts
     rules:
       - alert: PaaSBillingDBCostsExceedRDSCosts
-        expr: sum(increase(paas_billing_total_costs_pounds{name=~"mysql.+|postgres.+"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service="Amazon Relational Database Service"}) > 1
+        expr: sum(increase(paas_billing_total_costs_pounds{name=~"mysql.+|postgres.+"}[24h])) / sum(paas_aws_cost_explorer_by_service_dollars{service="Amazon Relational Database Service"}) > 1
         labels:
           severity: warning
           layer: billing
@@ -21,7 +21,7 @@
     name: PaaSBillingDBCostsFallsShortOfRDSCosts
     rules:
       - alert: PaaSBillingDBCostsFallsShortOfRDSCosts
-        expr: sum(increase(paas_billing_total_costs_pounds{name=~"mysql.+|postgres.+"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service="Amazon Relational Database Service"}) < .6
+        expr: sum(increase(paas_billing_total_costs_pounds{name=~"mysql.+|postgres.+"}[24h])) / sum(paas_aws_cost_explorer_by_service_dollars{service="Amazon Relational Database Service"}) < .6
         labels:
           severity: warning
           layer: billing
@@ -35,7 +35,7 @@
     name: PaaSBillingAppCostsExceedEC2Costs
     rules:
       - alert: PaaSBillingAppCostsExceedEC2Costs
-        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"Amazon Elastic Compute Cloud - Compute"}) > 1.4
+        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_dollars{service=~"Amazon Elastic Compute Cloud - Compute"}) > 1.4
         labels:
           severity: warning
           layer: billing
@@ -49,7 +49,7 @@
     name: PaaSBillingAppCostsFallsShortOfEC2Costs
     rules:
       - alert: PaaSBillingAppCostsFallsShortOfEC2Costs
-        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_pounds{service=~"Amazon Elastic Compute Cloud - Compute"}) < .6
+        expr: sum(increase(paas_billing_total_costs_pounds{name="app"}[24h])) / sum(paas_aws_cost_explorer_by_service_dollars{service=~"Amazon Elastic Compute Cloud - Compute"}) < .6
         labels:
           severity: warning
           layer: billing
