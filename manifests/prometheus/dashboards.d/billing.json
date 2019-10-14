@@ -1,0 +1,726 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "links": [],
+    "panels": [
+      {
+        "aliasColors": {
+          "AWS EC2 costs / week (new)": "light-blue",
+          "AWS EC2 costs / week (old)": "light-blue",
+          "Compute billed / week": "light-orange",
+          "Proportion of AWS EC2 costs billed (7 day rolling average) (new)": "light-green",
+          "Proportion of AWS EC2 costs billed (7 day rolling average) (old)": "light-green"
+        },
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "fill": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "id": 6,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Proportion of AWS EC2 costs billed (7 day rolling average) (new)",
+            "yaxis": 2
+          },
+          {
+            "alias": "Proportion of AWS EC2 costs billed (7 day rolling average) (old)",
+            "yaxis": 2
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of AWS EC2 costs billed (7 day rolling average) (old)",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of AWS EC2 costs billed (7 day rolling average) (new)",
+            "refId": "E"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d]))",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Compute billed / week",
+            "refId": "B"
+          },
+          {
+            "expr": "sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS EC2 costs / week (old)",
+            "refId": "C"
+          },
+          {
+            "expr": "sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS EC2 costs / week (new)",
+            "refId": "D"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Proportion of AWS EC2 costs billed / week",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "currencyGBP",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "decimals": 1,
+            "format": "percentunit",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {
+          "AWS RDS costs / week (new)": "light-orange",
+          "AWS RDS costs / week (old)": "light-orange",
+          "Proportion of RDS costs billed (7 day rolling average) (new)": "light-green",
+          "Proportion of RDS costs billed (7 day rolling average) (old)": "light-green"
+        },
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "fill": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "id": 4,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Proportion of RDS costs billed (7 day rolling average) (old)",
+            "yaxis": 2
+          },
+          {
+            "alias": "Proportion of RDS costs billed (7 day rolling average) (new)",
+            "yaxis": 2
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of RDS costs billed (7 day rolling average) (old)",
+            "refId": "C"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of RDS costs billed (7 day rolling average) (new)",
+            "refId": "D"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d]))",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "RDS billed / week",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d])) * 7 * $exchange_rate",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS RDS costs / week (old)",
+            "refId": "B"
+          },
+          {
+            "expr": "sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d])) * 7 * $exchange_rate",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS RDS costs / week (new)",
+            "refId": "E"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Proportion of AWS RDS costs billed  / week",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "decimals": null,
+            "format": "currencyGBP",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "decimals": 1,
+            "format": "percentunit",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {
+          "AWS Redis spend / week (new)": "light-orange",
+          "AWS Redis spend / week (old)": "light-orange",
+          "Proportion of AWS Redis spend billed (7 day rolling average) (new)": "light-green",
+          "Proportion of AWS Redis spend billed (7 day rolling average) (old)": "light-green"
+        },
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "fill": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 0,
+          "y": 9
+        },
+        "id": 8,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Proportion of AWS Redis spend billed (7 day rolling average) (new)",
+            "yaxis": 2
+          },
+          {
+            "alias": "Proportion of AWS Redis spend billed (7 day rolling average) (old)",
+            "yaxis": 2
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of AWS Redis spend billed (7 day rolling average) (old)",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of AWS Redis spend billed (7 day rolling average) (new)",
+            "refId": "D"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d]))",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "Redis billed / week",
+            "refId": "B"
+          },
+          {
+            "expr": "(sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS Redis spend / week (old)",
+            "refId": "C"
+          },
+          {
+            "expr": "(sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS Redis spend / week (new)",
+            "refId": "E"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Proportion of AWS Redis costs billed / week",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "decimals": null,
+            "format": "currencyGBP",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "decimals": 1,
+            "format": "percentunit",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {
+          "AWS S3 costs / week (new)": "light-orange",
+          "AWS S3 costs / week (old)": "light-orange",
+          "Proportion of S3 costs billed (7 day rolling average) (new)": "light-green",
+          "Proportion of S3 costs billed (7 day rolling average) (old)": "light-green"
+        },
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "fill": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 9
+        },
+        "id": 12,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Proportion of S3 costs billed (7 day rolling average) (new)",
+            "yaxis": 2
+          },
+          {
+            "alias": "Proportion of S3 costs billed (7 day rolling average) (old)",
+            "yaxis": 2
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of S3 costs billed (7 day rolling average) (old)",
+            "refId": "C"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of S3 costs billed (7 day rolling average) (new)",
+            "refId": "D"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d]))",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "S3 billed / week",
+            "refId": "A"
+          },
+          {
+            "expr": "(sum(avg_over_time(paas_aws_cost_explorer_by_service_pounds{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS S3 costs / week (old)",
+            "refId": "B"
+          },
+          {
+            "expr": "(sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "AWS S3 costs / week (new)",
+            "refId": "E"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Proportion of AWS S3 costs billed  / week",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "currencyGBP",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "decimals": 1,
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "fill": 0,
+        "gridPos": {
+          "h": 9,
+          "w": 18,
+          "x": 0,
+          "y": 18
+        },
+        "id": 10,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Proportion of Aiven costs billed (1 day rolling average)",
+            "yaxis": 2
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"elasticsearch.+\"}[1d])) / sum(delta(paas_aiven_estimated_cost_pounds[1d])) > 0",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Proportion of Aiven costs billed (1 day rolling average)",
+            "refId": "A"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"elasticsearch.+\"}[1d]))",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "Elasitcsearch billed / day",
+            "refId": "B"
+          },
+          {
+            "expr": "sum(delta(paas_aiven_estimated_cost_pounds[1d])) > 0",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "Aiven costs / day",
+            "refId": "C"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Proportion of Aiven costs billed / day",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "decimals": null,
+            "format": "currencyGBP",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "decimals": 1,
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "content": "\n## Note about Aiven / Elasticsearch bills\n\nBecause Aiven don't split their invoices between regions, the Aiven bill is for London _and_ Ireland combined.\n\nTo get an idea of how much we're recharging you have to look at both regions.\n\n\n\n",
+        "gridPos": {
+          "h": 9,
+          "w": 6,
+          "x": 18,
+          "y": 18
+        },
+        "id": 14,
+        "links": [],
+        "mode": "markdown",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "type": "text"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 18,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "0.8",
+            "value": "0.8"
+          },
+          "hide": 0,
+          "label": "Exchange rate",
+          "name": "exchange_rate",
+          "options": [
+            {
+              "text": "0.8",
+              "value": "0.8"
+            }
+          ],
+          "query": "0.8",
+          "skipUrlSync": false,
+          "type": "textbox"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "",
+    "title": "Billing compared to spending",
+    "uid": "billing-compared-to-spending",
+    "version": 7
+  },
+  "overwrite": true,
+  "folderId": 0
+}
