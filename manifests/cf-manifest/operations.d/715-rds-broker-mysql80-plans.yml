@@ -35,7 +35,7 @@
     xlarge_plan_rds_properties: &xlarge_plan_rds_properties
       db_instance_class: "db.m5.4xlarge"
       allocated_storage: 2048
-      
+
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
   value:
@@ -221,5 +221,3 @@
       <<: *xlarge_plan_rds_properties # yamllint disable-line
       multi_az: true
       storage_encrypted: true
-
-
