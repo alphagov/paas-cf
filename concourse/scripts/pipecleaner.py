@@ -102,7 +102,7 @@ class Pipecleaner(object):
                 discovered_blocks = []
 
                 # Flatten array blocks as we don't care
-                for block_type in ('aggregate', 'do'):
+                for block_type in ('aggregate', 'in_parallel', 'do'):
                     if block_type in item:
                         discovered_blocks.extend(item[block_type])
                         del item[block_type]

@@ -3,7 +3,7 @@
 set -eu
 
 CONTAINER_REPO="governmentpaas/bosh-shell"
-CONTAINER_TAG="54cc3c9f49f9032e46dd4538c626f2533bf90a94"
+CONTAINER_TAG="ba9a734b3e7017b4ce75e444c1c018853ed144ba"
 CONTAINER="${CONTAINER_REPO}:${CONTAINER_TAG}"
 
 # Setup Bosh variables

@@ -5,27 +5,27 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -40,13 +40,242 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
 
+  tasks:
+    - &add-grafana-job-annotation
+      put: metadata
+      on_success:
+        try:
+          task: add-grafana-job-annotation
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *curl-ssl-image-resource
+            inputs:
+              - name: metadata
+            outputs:
+              - name: annotation_details
+            params:
+                  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                  DEPLOY_ENV: ((deploy_env))
+                  SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+                  GRAFANA_PASS: ((grafana_password))
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  AZ_COUNT=2
+                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                    AZ_COUNT=1
+                  fi
+                  START_TIME=$(date +%s000)
+                  BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
+                  BUILD_JOB_NAME=$(cat metadata/build_job_name)
+                  BUILD_NAME=$(cat metadata/build_name)
+                  post_data="$(cat <<DATA
+                  {
+                    "tags": [
+                      "deployment",
+                      "concourse",
+                      "incomplete",
+                      "${BUILD_PIPELINE_NAME}",
+                      "${BUILD_JOB_NAME}",
+                      "BUILD_ID=${BUILD_NAME}"
+                    ],
+                    "time": ${START_TIME},
+                    "isRegion": true,
+                    "timeEnd": ${START_TIME},
+                    "text": "Started ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME} #${BUILD_NAME}"
+                  }
+                  DATA
+                  )"
+                  for az in $(seq 1 ${AZ_COUNT}); do
+                    response="$(curl --request POST \
+                      --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations" \
+                      --user "admin:${GRAFANA_PASS}" \
+                      --header 'content-type: application/json' \
+                      --data "${post_data}" \
+                      --silent \
+                      --fail)"
+                    echo "${response}" | jq '.id' > "annotation_details/${az}"
+                  done
+                  echo "${START_TIME}" > "annotation_details/start_time"
+    - &end-grafana-job-annotation
+      try:
+        task: end-grafana-job-annotation
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *curl-ssl-image-resource
+          inputs:
+            - name: metadata
+            - name: annotation_details
+          params:
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                DEPLOY_ENV: ((deploy_env))
+                SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+                GRAFANA_PASS: ((grafana_password))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                AZ_COUNT=2
+                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                  AZ_COUNT=1
+                fi
+                BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
+                BUILD_JOB_NAME=$(cat metadata/build_job_name)
+                BUILD_NAME=$(cat metadata/build_name)
+                patch_data="$(cat <<DATA
+                {
+                  "tags": [
+                    "deployment",
+                    "concourse",
+                    "completed",
+                    "${BUILD_PIPELINE_NAME}",
+                    "${BUILD_JOB_NAME}",
+                    "BUILD_ID=${BUILD_NAME}"
+                  ],
+                  "text": "${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME} #${BUILD_NAME}",
+                  "time": $(cat annotation_details/start_time),
+                  "isRegion": true,
+                  "timeEnd": $(date +%s000)
+                }
+                DATA
+                )"
+                for az in $(seq 1 ${AZ_COUNT}); do
+                  curl --request PUT \
+                    --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations/$(cat "annotation_details/${az}")" \
+                    --user "admin:${GRAFANA_PASS}" \
+                    --header 'content-type: application/json' \
+                    --data "${patch_data}" \
+                    --silent \
+                    --fail
+                done
+    - &add-grafana-overview-annotation
+      put: metadata
+      on_success:
+        try:
+          task: add-grafana-overview-annotation
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *curl-ssl-image-resource
+            inputs:
+              - name: metadata
+            outputs:
+              - name: marker_id
+            params:
+                  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                  DEPLOY_ENV: ((deploy_env))
+                  SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+                  GRAFANA_PASS: ((grafana_password))
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  AZ_COUNT=2
+                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                    AZ_COUNT=1
+                  fi
+                  BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
+                  post_data="$(cat <<DATA
+                  {
+                    "tags": [
+                      "deployment-overview",
+                      "concourse",
+                      "incomplete",
+                      "${BUILD_PIPELINE_NAME}"
+                    ],
+                    "isRegion": true,
+                    "text": "Deployment of ${BUILD_PIPELINE_NAME} started"
+                  }
+                  DATA
+                  )"
+                  for az in $(seq 1 ${AZ_COUNT}); do
+                    response="$(curl --request POST \
+                      --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations" \
+                      --user "admin:${GRAFANA_PASS}" \
+                      --header 'content-type: application/json' \
+                      --data "${post_data}" \
+                      --silent \
+                      --fail)"
+                    echo "${response}" | jq '.id' >> "marker_id/overview_marker_id"
+                  done
+          on_success:
+            put: overview-marker-id
+            params:
+              file: marker_id/overview_marker_id
+
+    - &end-grafana-overview-annotation
+      do:
+        - get: overview-marker-id
+        - put: metadata
+      on_success:
+        try:
+          task: end-grafana-overview-annotation
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *curl-ssl-image-resource
+            inputs:
+              - name: metadata
+              - name: overview-marker-id
+            params:
+                  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                  DEPLOY_ENV: ((deploy_env))
+                  SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+                  GRAFANA_PASS: ((grafana_password))
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  AZ_COUNT=2
+                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
+                    AZ_COUNT=1
+                  fi
+                  BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
+                  patch_data="$(cat <<DATA
+                  {
+                    "tags": [
+                      "deployment-overview",
+                      "concourse",
+                      "completed",
+                      "${BUILD_PIPELINE_NAME}"
+                    ],
+                    "timeEnd": $(date +%s000),
+                    "text": "Deployment of ${BUILD_PIPELINE_NAME}"
+                  }
+                  DATA
+                  )"
+                  for az in $(seq 1 ${AZ_COUNT}); do
+                    this_grafana_annotation_id=$(sed -n "${az}p" overview-marker-id/overview_marker_id)
+                    curl --request PATCH \
+                      --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations/${this_grafana_annotation_id}" \
+                      --user "admin:${GRAFANA_PASS}" \
+                      --header 'content-type: application/json' \
+                      --data "${patch_data}" \
+                      --silent \
+                      --fail
+                  done
 groups:
   - name: deploy
     jobs:
@@ -132,6 +361,12 @@ groups:
       - delete-old-cf-certs
       - set-smoke-test-creds
 resource_types:
+- name: metadata
+  type: docker-image
+  source:
+    repository: olhtbr/metadata-resource
+    tag: 2.0.1
+
 - name: s3-iam
   type: docker-image
   source:
@@ -145,6 +380,17 @@ resource_types:
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
 resources:
+  - name: metadata
+    type: metadata
+
+  - name: overview-marker-id
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: overview_marker_id
+      initial_version: "-"
+
   - name: pipeline-trigger
     type: semver-iam
     source:
@@ -394,7 +640,7 @@ jobs:
   - name: pipeline-lock
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: ((auto_deploy))
         - get: git-ssh-private-key
@@ -467,7 +713,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+              tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
           inputs:
             - name: paas-cf
           params:
@@ -485,6 +731,9 @@ jobs:
             CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
+
+      - *add-grafana-overview-annotation
+
       - put: pipeline-trigger
         params: {bump: patch}
 
@@ -492,14 +741,14 @@ jobs:
     serial_groups: [cf-deploy]
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: paas-cf
             passed: ['pipeline-lock']
           - get: pipeline-trigger
             passed: ['pipeline-lock']
             trigger: true
           - get: ipsec-CA
-      - aggregate:
+      - in_parallel:
         - task: generate-ipsec-CA
           tags: [colocated-with-web]
           config:
@@ -508,7 +757,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+                tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -588,7 +837,7 @@ jobs:
 
   - name: pre-deploy
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
@@ -682,7 +931,7 @@ jobs:
   - name: app-availability-tests
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
@@ -730,7 +979,7 @@ jobs:
   - name: api-availability-tests
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-secrets']
             trigger: true
@@ -827,7 +1076,8 @@ jobs:
     serial_groups: [cf-deploy]
     serial: true
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: paas-cf
             passed: ['pre-deploy']
           - get: pipeline-trigger
@@ -960,7 +1210,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+              tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -975,12 +1225,14 @@ jobs:
                 . cf-terraform-outputs/cf.tfstate.sh
 
                 paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
+      - *end-grafana-job-annotation
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
     serial: true
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['cf-terraform']
             trigger: true
@@ -992,7 +1244,7 @@ jobs:
           - get: cf-tfstate
             passed: ['cf-terraform']
 
-      - aggregate:
+      - in_parallel:
         - task: extract-terraform-outputs
           tags: [colocated-with-web]
           config:
@@ -1139,19 +1391,21 @@ jobs:
                     > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
 
           on_success:
-            aggregate:
+            in_parallel:
             - put: cf-manifest
               params:
                 file: cf-manifest/cf-manifest.yml
             - put: cf-manifest-pre-vars
               params:
                 file: cf-manifest-pre-vars/cf-manifest-pre-vars.yml
+      - *end-grafana-job-annotation
 
   - name: cf-deploy
     serial_groups: [cf-deploy]
     serial: true
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['generate-cf-config']
             trigger: true
@@ -1164,7 +1418,7 @@ jobs:
           - get: cf-tfstate
             passed: ['generate-cf-config']
 
-      - aggregate:
+      - in_parallel:
         - task: get-and-upload-stemcell
           tags: [colocated-with-web]
           config:
@@ -1338,11 +1592,14 @@ jobs:
 
                 echo 'Accessible secrets'
                 credhub find --path "${TEAM_NS}"
+      - *end-grafana-job-annotation
 
   - name: prometheus-deploy
     serial: true
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['cf-deploy']
             trigger: true
@@ -1502,7 +1759,7 @@ jobs:
                 echo 'Accessible secrets'
                 credhub find --path /concourse/main/create-cloudfoundry
 
-      - aggregate:
+      - in_parallel:
         - task: deploy-cloudwatch-exporter
           tags: [colocated-with-web]
           config:
@@ -1596,10 +1853,13 @@ jobs:
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             GRAFANA_PASS: ((grafana_password))
 
+      - *end-grafana-job-annotation
+
   - name: post-deploy
     serial: true
     plan:
-    - aggregate:
+    - *add-grafana-job-annotation
+    - in_parallel:
       - get: pipeline-trigger
         passed: ['cf-deploy']
         trigger: true
@@ -1650,7 +1910,7 @@ jobs:
 
               ls -l config/*
 
-    - aggregate:
+    - in_parallel:
       - task: upload-buildpacks
         tags: [colocated-with-web]
         config:
@@ -1994,7 +2254,7 @@ jobs:
               - |
                 ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
 
-    - aggregate:
+    - in_parallel:
       - task: block-create-account-endpoints
         tags: [colocated-with-web]
         config:
@@ -2246,7 +2506,7 @@ jobs:
 
                   bosh run-errand rotate-cc-database-key --when-changed
 
-    - aggregate:
+    - in_parallel:
       - task: deploy-aiven-service-broker
         tags: [colocated-with-web]
         config:
@@ -2384,11 +2644,13 @@ jobs:
                 delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
                 delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
                 delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
+    - *end-grafana-job-annotation
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2433,10 +2695,12 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: acceptance-tests
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2496,10 +2760,12 @@ jobs:
               API_ENDPOINT: ((api_endpoint))
               CF_ADMIN: ((cf_admin))
               CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: custom-acceptance-tests
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2528,7 +2794,7 @@ jobs:
             NAME_PREFIX: ACC
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
-        - aggregate:
+        - in_parallel:
           - task: "Run custom acceptance tests"
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
@@ -2619,10 +2885,12 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: custom-broker-acceptance-tests
     plan:
-      - aggregate:
+      - *add-grafana-job-annotation
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2651,7 +2919,7 @@ jobs:
             NAME_PREFIX: BACC
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
-        - aggregate:
+        - in_parallel:
           - task: "Run broker custom acceptance tests"
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-broker-acceptance-tests-run.yml
@@ -2677,10 +2945,11 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
 
   - name: bosh-tests
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
             trigger: true
@@ -2722,10 +2991,11 @@ jobs:
   - name: deploy-paas-accounts
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-accounts
         trigger: true
 
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -2833,14 +3103,16 @@ jobs:
 
                 done
                 )
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-admin
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-admin
         trigger: true
 
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -2882,7 +3154,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+              tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3082,14 +3354,16 @@ jobs:
 
                 echo "Pushing tag refs/tags/${new_tag} to ${REPO}"
                 git push tag_origin "refs/tags/${new_tag}"
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-billing
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-billing
         trigger: true
 
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -3222,10 +3496,12 @@ jobs:
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
                 make acceptance
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-metrics
     serial: true
     plan:
+      - *add-grafana-job-annotation
       - get: paas-cf
         trigger: true
         passed: ['post-deploy']
@@ -3326,10 +3602,11 @@ jobs:
                 echo 'Waiting 2 minutes before running the acceptance tests'
                 sleep 120
                 ginkgo
+      - *end-grafana-job-annotation
 
   - name: tag-release
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
             trigger: true
@@ -3366,6 +3643,8 @@ jobs:
               fi
               paas-cf/concourse/scripts/tag_release.sh \
                 "${OUTPUT_TAG_PREFIX}" "${aws_account}" "${deploy_env}" "${INPUT_TAG_PREFIX}"
+
+      - *end-grafana-overview-annotation
 
   - name: pipeline-unlock
     serial: true
@@ -3447,7 +3726,7 @@ jobs:
     serial: true
     serial_groups: [smoke-tests]
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-vars-store
 
@@ -3484,7 +3763,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 54cc3c9f49f9032e46dd4538c626f2533bf90a94
+            tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
         inputs:
           - name: paas-cf
           - name: rotated-cf-vars-store
@@ -3513,7 +3792,7 @@ jobs:
     serial: true
     serial_groups: [smoke-tests]
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
         passed: ['rotate-cf-admin-password']
       - get: cf-vars-store
@@ -3600,7 +3879,7 @@ jobs:
   - name: rotate-database-encryption-keys
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-vars-store
       - get: cf-manifest-pre-vars
@@ -3639,7 +3918,7 @@ jobs:
   - name: rotate-prometheus-credentials
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: prometheus-vars-store
       - get: prometheus-manifest-pre-vars
@@ -3677,7 +3956,7 @@ jobs:
   - name: expire-aws-keys
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-tfstate
       - get: expire-aws-keys-timer
@@ -3695,7 +3974,7 @@ jobs:
   - name: rotate-cf-certs-cas
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
@@ -3728,7 +4007,7 @@ jobs:
   - name: rotate-cf-certs-leafs
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
@@ -3761,7 +4040,7 @@ jobs:
   - name: set-smoke-test-creds
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-vars-store
     - task: retrieve-config
@@ -3805,7 +4084,7 @@ jobs:
   - name: delete-old-cf-certs
     serial: true
     plan:
-    - aggregate:
+    - in_parallel:
       - get: paas-cf
       - get: cf-manifest-pre-vars
       - get: cf-vars-store
@@ -3892,7 +4171,7 @@ jobs:
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
-      - aggregate:
+      - in_parallel:
         - get: smoke-tests-timer
           trigger: true
         - get: deployed-healthcheck
@@ -3961,19 +4240,20 @@ jobs:
               TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
 
         ensure:
-          task: remove-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
-          params:
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
+          in_parallel:
+            - task: remove-temp-user
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                API_ENDPOINT: ((api_endpoint))
+                CF_ADMIN: ((cf_admin))
+                CF_PASS: ((cf_pass))
 
   - name: continuous-billing-smoke-tests
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
     plan:
-      - aggregate:
+      - in_parallel:
         - get: billing-smoke-tests-timer
           trigger: true
         - get: paas-billing
@@ -4020,18 +4300,19 @@ jobs:
                   make acceptance
 
         ensure:
-          task: remove-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
-          params:
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
+          in_parallel:
+            - task: remove-temp-user
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/delete_admin.yml
+              params:
+                API_ENDPOINT: ((api_endpoint))
+                CF_ADMIN: ((cf_admin))
+                CF_PASS: ((cf_pass))
 
   - name: check-certificates
     build_logs_to_retain: 50
     plan:
-      - aggregate:
+      - in_parallel:
         - get: check-certificates-timer
           trigger: true
         - get: paas-cf
@@ -4070,7 +4351,7 @@ jobs:
   - name: cleanup-deleted-cf-users
     serial: true
     plan:
-      - aggregate:
+      - in_parallel:
         - get: paas-cf
 
       - task: cleanup-deleted-cf-users
