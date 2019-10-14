@@ -17,7 +17,7 @@ import (
 var _ = Describe("Postgres backing service", func() {
 	const (
 		serviceName  = "postgres"
-		testPlanName = "tiny-unencrypted-10"
+		testPlanName = "tiny-unencrypted-11"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -40,6 +40,15 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-9.5"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-9.5"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-ha-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-ha-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-ha-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-unencrypted-9.5"))
+			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-ha-unencrypted-9.5"))
+
 			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-10"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("small-10"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-10"))
@@ -49,14 +58,16 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-10"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-10"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-10"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("small-ha-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("medium-ha-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-ha-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-unencrypted-9.5"))
-			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-ha-unencrypted-9.5"))
+
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-11"))
 		})
 	})
 	Context("creating a database instance", func() {
