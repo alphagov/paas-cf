@@ -5,27 +5,27 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -40,12 +40,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+        tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
 
   tasks:
     - &add-grafana-job-annotation
@@ -276,6 +276,7 @@ meta:
                       --silent \
                       --fail
                   done
+
 groups:
   - name: deploy
     jobs:
@@ -298,6 +299,7 @@ groups:
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
       - bosh-tests
+      - rotate-certs
       - tag-release
       - pipeline-unlock
   - name: platform-core
@@ -351,15 +353,12 @@ groups:
       - check-certificates
   - name: credentials
     jobs:
-      - rotate-cf-admin-password
+      - set-smoke-test-creds
       - rotate-cloudfoundry-credentials
       - rotate-database-encryption-keys
       - rotate-prometheus-credentials
       - expire-aws-keys
-      - rotate-cf-certs-cas
-      - rotate-cf-certs-leafs
-      - delete-old-cf-certs
-      - set-smoke-test-creds
+      - rotate-cf-admin-password
 resource_types:
 - name: metadata
   type: docker-image
@@ -467,14 +466,6 @@ resources:
                 }
             ]
         }
-
-  - name: cf-vars-store
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: cf-vars-store.yml
-      initial_version: "-"
 
   - name: cf-manifest
     type: s3-iam
@@ -615,14 +606,6 @@ resources:
       tag_filter: ((deploy_env_tag_prefix))
       commit_verification_keys: ((gpg_public_keys))
 
-  - name: prometheus-vars-store
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: prometheus-vars-store.yml
-      initial_version: "-"
-
   - name: prometheus-manifest-pre-vars
     type: s3-iam
     source:
@@ -713,7 +696,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+              tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
           inputs:
             - name: paas-cf
           params:
@@ -757,7 +740,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+                tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -1210,7 +1193,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+              tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -3154,7 +3137,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+              tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3604,7 +3587,8 @@ jobs:
                 ginkgo
       - *end-grafana-job-annotation
 
-  - name: tag-release
+  - name: rotate-certs
+    serial: true
     plan:
       - in_parallel:
           - get: pipeline-trigger
@@ -3612,6 +3596,80 @@ jobs:
             trigger: true
           - get: paas-cf
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
+      - task: remove-transitional-flag-for-ca
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                credhub login
+                ./paas-cf/concourse/scripts/ca-rotation-remove-transitional.rb
+
+      - task: move-transitional-flag-for-ca
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                credhub login
+                ./paas-cf/concourse/scripts/ca-rotation-move-transitional.rb
+
+      - task: set-transitional-flag-for-ca
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                credhub login
+                ./paas-cf/concourse/scripts/ca-rotation-set-transitional.rb
+
+  - name: tag-release
+    plan:
+      - aggregate:
+          - get: pipeline-trigger
+            passed: ['rotate-certs']
+            trigger: true
+          - get: paas-cf
+            passed: ['rotate-certs']
           - get: git-keys
 
       - put: release-version
@@ -3726,34 +3784,31 @@ jobs:
     serial: true
     serial_groups: [smoke-tests]
     plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: cf-vars-store
-
     - task: generate-cf-admin-password
       tags: [colocated-with-web]
       config:
         platform: linux
         image_resource: *gov-paas-bosh-cli-v2-image-resource
-        inputs:
-          - name: cf-vars-store
         outputs:
-          - name: rotated-cf-vars-store
+          - name: passwords
+        params:
+          CREDHUB_CLIENT: credhub-admin
+          CREDHUB_SECRET: ((bosh-credhub-admin))
+          CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          DEPLOY_ENV: ((deploy_env))
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              sed "s/^cf_admin_password:.*$//" cf-vars-store/cf-vars-store.yml \
-                > rotated-cf-vars-store/rotated-cf-vars-store.yml
+              credhub login
 
-              bosh interpolate - --vars-store rotated-cf-vars-store/rotated-cf-vars-store.yml <<EOF
-              ---
-              variables:
-              - name: cf_admin_password
-                type: password
-              EOF
+              credhub generate -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" -t password
+              credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" | tr -d '[:space:]' > passwords/cf-admin-password
+              credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/uaa_admin_client_secret" | tr -d '[:space:]' > passwords/uaa-secret
+              credhub set -t password -n "/concourse/main/cf_pass" -w "$(cat passwords/cf-admin-password)"
 
     - task: update-cf-admin-password
       tags: [colocated-with-web]
@@ -3763,10 +3818,9 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: ba9a734b3e7017b4ce75e444c1c018853ed144ba
+            tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
         inputs:
-          - name: paas-cf
-          - name: rotated-cf-vars-store
+          - name: passwords
         params:
           UAA_ENDPOINT: "https://uaa.((system_dns_zone_name))"
         run:
@@ -3775,18 +3829,12 @@ jobs:
             - -e
             - -c
             - |
-              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-
-              UAA_ADMIN_CLIENT_SECRET=$($VAL_FROM_YAML uaa_admin_client_secret rotated-cf-vars-store/rotated-cf-vars-store.yml)
-              CF_ADMIN_PASSWORD=$($VAL_FROM_YAML cf_admin_password rotated-cf-vars-store/rotated-cf-vars-store.yml)
+              UAA_ADMIN_CLIENT_SECRET=$(cat passwords/uaa-secret)
+              CF_ADMIN_PASSWORD=$(cat passwords/cf-admin-password)
 
               uaac target "${UAA_ENDPOINT}"
               uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
               uaac password set admin -p "${CF_ADMIN_PASSWORD}"
-      on_success:
-        put: cf-vars-store
-        params:
-          file: rotated-cf-vars-store/rotated-cf-vars-store.yml
 
   - name: rotate-cloudfoundry-credentials
     serial: true
@@ -3794,78 +3842,49 @@ jobs:
     plan:
     - in_parallel:
       - get: paas-cf
-        passed: ['rotate-cf-admin-password']
-      - get: cf-vars-store
-        passed: ['rotate-cf-admin-password']
-        trigger: true
-      - get: cf-manifest-pre-vars
       - get: cf-tfstate
 
     - task: rotate-credentials
       tags: [colocated-with-web]
       config:
         platform: linux
-        image_resource: *ruby-slim-image-resource
-        inputs:
-          - name: paas-cf
-          - name: cf-vars-store
-          - name: cf-manifest-pre-vars
-        outputs:
-          - name: modified-cf-vars-store
+        image_resource: *gov-paas-bosh-cli-v2-image-resource
+        params:
+          CREDHUB_CLIENT: credhub-admin
+          CREDHUB_SECRET: ((bosh-credhub-admin))
+          CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          DEPLOY_ENV: ((deploy_env))
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
-                --vars-store cf-vars-store/cf-vars-store.yml \
-                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
-                --passwords \
-                --ssh \
-                --rsa \
-                --preserve cc_bulk_api_password \
-                --preserve cc_db_encryption_key \
-                --preserve cc_db_encryption_key_id \
-                --preserve cc_internal_api_password \
-                --preserve cc_staging_upload_password \
-                --preserve cf_admin_password \
-                --preserve cf_bosh_password \
-                --preserve consul_encrypt_key \
-                --preserve diego_bbs_encryption_keys_passphrase \
-                --preserve diego_ssh_proxy_host_key \
-                --preserve nats_password \
-                --preserve router_route_services_secret \
-                --preserve router_status_password \
-                --preserve secrets_aiven_broker_admin_password \
-                --preserve secrets_cdn_broker_admin_password \
-                --preserve secrets_elasticache_broker_admin_password \
-                --preserve secrets_rds_broker_admin_password \
-                --preserve secrets_rds_broker_master_password_seed \
-                --preserve secrets_rds_broker_state_encryption_key \
-                --preserve secrets_uaa_clients_cdn_broker_secret \
-                --preserve uaa_admin_client_secret \
-                --preserve uaa_clients_cc-routing_secret \
-                --preserve uaa_clients_cc-service-dashboards_secret \
-                --preserve uaa_clients_cc_service_key_client_secret \
-                --preserve uaa_clients_cloud_controller_username_lookup_secret \
-                --preserve uaa_clients_doppler_secret \
-                --preserve uaa_clients_gorouter_secret \
-                --preserve uaa_clients_network_policy_secret \
-                --preserve uaa_clients_paas_admin_secret \
-                --preserve uaa_clients_routing_api_client_secret \
-                --preserve uaa_clients_ssh-proxy_secret \
-                --preserve uaa_clients_tcp_emitter_secret \
-                --preserve uaa_clients_tcp_router_secret \
-                --preserve uaa_default_encryption_passphrase \
-                --preserve uaa_default_encryption_passphrase_id \
-                > modified-cf-vars-store/cf-vars-store.yml
-      on_success:
-        do:
-        - put: cf-vars-store
-          params:
-            file: modified-cf-vars-store/cf-vars-store.yml
+              BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
+              credhub login
 
+              credhub generate -n "${BOSH_NS}/secrets_paas_accounts_admin_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_test_user_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_login_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_notifications_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_metrics_secret" -t password
+              credhub generate -n "${BOSH_NS}/uaa_clients_cf_exporter_secret" -t password
+              credhub generate -n "${BOSH_NS}/uaa_clients_cf_smoke_tests_secret" -t password
+              credhub generate -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret" -t password
+
+              credhub get -n "${BOSH_NS}/uaa_jwt_signing_key" -k private_key | sed '/^$/d' > old_key
+              credhub get -n "${BOSH_NS}/uaa_jwt_signing_key" -k public_key | sed '/^$/d' > old_pub
+              credhub set -n "${BOSH_NS}/uaa_jwt_signing_key_old" -t rsa -p old_key -u old_pub
+
+              UAA_JWT_SIGNING_KEY_ID_OLD=$(credhub get -q -n "${BOSH_NS}/uaa_jwt_signing_key_id" | sed 's/\s//g' | tr -d '\n')
+              credhub set --name="${BOSH_NS}/uaa_jwt_signing_key_id_old" -t password -w "${UAA_JWT_SIGNING_KEY_ID_OLD}"
+
+              credhub generate -n "${BOSH_NS}/uaa_jwt_signing_key_id" -t password
+              credhub generate -n "${BOSH_NS}/uaa_jwt_signing_key" -t rsa -k 2048
+              
     - task: forget-access-keys
       tags: [colocated-with-web]
       file: paas-cf/concourse/tasks/forget-access-keys.yml
@@ -3879,79 +3898,68 @@ jobs:
   - name: rotate-database-encryption-keys
     serial: true
     plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: cf-vars-store
-      - get: cf-manifest-pre-vars
-
     - task: rotate-db-encryption-key
       tags: [colocated-with-web]
       config:
         platform: linux
-        image_resource: *ruby-slim-image-resource
-        inputs:
-          - name: paas-cf
-          - name: cf-vars-store
-          - name: cf-manifest-pre-vars
-        outputs:
-          - name: modified-cf-vars-store
+        image_resource: *gov-paas-bosh-cli-v2-image-resource
+        params:
+          CREDHUB_CLIENT: credhub-admin
+          CREDHUB_SECRET: ((bosh-credhub-admin))
+          CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          DEPLOY_ENV: ((deploy_env))
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
-                --vars-store cf-vars-store/cf-vars-store.yml \
-                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
-                --passwords \
-                --rotate cc_db_encryption_key \
-                --rotate cc_db_encryption_key_id \
-                --rotate uaa_default_encryption_passphrase \
-                --rotate uaa_default_encryption_passphrase_id \
-                > modified-cf-vars-store/cf-vars-store.yml
-      on_success:
-        put: cf-vars-store
-        params:
-          file: modified-cf-vars-store/cf-vars-store.yml
+              BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
+              credhub login
+
+              CC_DB_KEY_OLD=$(credhub get -q -n "${BOSH_NS}/cc_db_encryption_key" | sed 's/\s//g' | tr -d '\n')
+              CC_DB_KEY_ID_OLD=$(credhub get -q -n "${BOSH_NS}/cc_db_encryption_key_id" | sed 's/\s//g' | tr -d '\n')
+              UAA_ENCRYPTION_PASSPHRASE_OLD=$(credhub get -q -n "${BOSH_NS}/uaa_default_encryption_passphrase" | sed 's/\s//g' | tr -d '\n')
+              UAA_ENCRYPTION_PASSPHRASE_ID_OLD=$(credhub get -q -n "${BOSH_NS}/uaa_default_encryption_passphrase_id" | sed 's/\s//g' | tr -d '\n')
+
+              credhub set --name="${BOSH_NS}/cc_db_encryption_key_old" --type password --password "${CC_DB_KEY_OLD}"
+              credhub set --name="${BOSH_NS}/cc_db_encryption_key_id_old" --type password --password "${CC_DB_KEY_ID_OLD}"
+              credhub set --name="${BOSH_NS}/uaa_default_encryption_passphrase_old" --type password --password "${UAA_ENCRYPTION_PASSPHRASE_OLD}"
+              credhub set --name="${BOSH_NS}/uaa_default_encryption_passphrase_id_old" --type password --password "${UAA_ENCRYPTION_PASSPHRASE_ID_OLD}"
+
+              credhub generate -n "${BOSH_NS}/cc_db_encryption_key" -t password
+              credhub generate -n "${BOSH_NS}/cc_db_encryption_key_id" -t password
+              credhub generate -n "${BOSH_NS}/uaa_default_encryption_passphrase" -t password
+              credhub generate -n "${BOSH_NS}/uaa_default_encryption_passphrase_id" -t password
 
   - name: rotate-prometheus-credentials
     serial: true
     plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: prometheus-vars-store
-      - get: prometheus-manifest-pre-vars
-
     - task: rotate-credentials
       tags: [colocated-with-web]
       config:
         platform: linux
-        image_resource: *ruby-slim-image-resource
-        inputs:
-          - name: paas-cf
-          - name: prometheus-vars-store
-          - name: prometheus-manifest-pre-vars
-        outputs:
-          - name: modified-prometheus-vars-store
+        image_resource: *gov-paas-bosh-cli-v2-image-resource
+        params:
+          CREDHUB_CLIENT: credhub-admin
+          CREDHUB_SECRET: ((bosh-credhub-admin))
+          CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          DEPLOY_ENV: ((deploy_env))
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb \
-                --vars-store prometheus-vars-store/prometheus-vars-store.yml \
-                --manifest prometheus-manifest-pre-vars/prometheus-manifest-pre-vars.yml \
-                --passwords \
-                --ssh \
-                --rsa \
-                --preserve grafana_mon_password \
-                > modified-prometheus-vars-store/prometheus-vars-store.yml
-      on_success:
-        put: prometheus-vars-store
-        params:
-          file: modified-prometheus-vars-store/prometheus-vars-store.yml
+              PROM_NS="/${DEPLOY_ENV}/prometheus"
+              credhub login
+
+              credhub generate -n "${PROM_NS}/prometheus_password" -t password
+              credhub generate -n "${PROM_NS}/grafana_secret_key" -t password
+              credhub generate -n "${PROM_NS}/grafana_password" -t password
+              credhub generate -n "${PROM_NS}/alertmanager_password" -t password
 
   - name: expire-aws-keys
     serial: true
@@ -3971,148 +3979,69 @@ jobs:
         params:
           file: updated-tfstate/cf.tfstate
 
-  - name: rotate-cf-certs-cas
-    serial: true
-    plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: cf-manifest-pre-vars
-      - get: cf-vars-store
-    - task: rotate-cf-certs
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *ruby-slim-image-resource
-        inputs:
-          - name: paas-cf
-          - name: cf-manifest-pre-vars
-          - name: cf-vars-store
-        outputs:
-          - name: updated-cf-certs
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --ca \
-                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
-                --vars-store cf-vars-store/cf-vars-store.yml \
-                > updated-cf-certs/cf-vars-store.yml
-      on_success:
-        put: cf-vars-store
-        params:
-          file: updated-cf-certs/cf-vars-store.yml
-
-  - name: rotate-cf-certs-leafs
-    serial: true
-    plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: cf-manifest-pre-vars
-      - get: cf-vars-store
-    - task: rotate-cf-certs
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *ruby-slim-image-resource
-        inputs:
-          - name: paas-cf
-          - name: cf-manifest-pre-vars
-          - name: cf-vars-store
-        outputs:
-          - name: updated-cf-certs
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --leaf \
-                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
-                --vars-store cf-vars-store/cf-vars-store.yml \
-                > updated-cf-certs/cf-vars-store.yml
-      on_success:
-        put: cf-vars-store
-        params:
-          file: updated-cf-certs/cf-vars-store.yml
-
   - name: set-smoke-test-creds
     serial: true
     plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: cf-vars-store
-    - task: retrieve-config
-      tags: [colocated-with-web]
-      config:
-        image_resource: *ruby-slim-image-resource
-        platform: linux
-        inputs:
-          - name: paas-cf
-          - name: cf-vars-store
-        outputs:
-          - name: config
-        params:
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-        run:
-          path: sh
-          args:
-            - -e
-            - -c
-            - |
-              VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
-
-              cat << EOT > config/config.sh
-              export CF_ADMIN=admin
-              export CF_PASS=$($VAL_FROM_YAML cf_admin_password cf-vars-store/cf-vars-store.yml)
-              export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-              EOT
-
-              ls -l config/*
-
     - task: set-smoke-test-creds
       tags: [colocated-with-web]
-      file: paas-cf/concourse/tasks/set-smoke-test-creds.yml
-      params:
-        APP_DOMAIN: ((apps_dns_zone_name))
-        SYSTEM_DOMAIN: ((system_dns_zone_name))
-        STATE_BUCKET: ((state_bucket))
-    - put: smoke-test-config
-      params: { file: new-smoke-test-config/smoke-test-config.json }
-
-  - name: delete-old-cf-certs
-    serial: true
-    plan:
-    - in_parallel:
-      - get: paas-cf
-      - get: cf-manifest-pre-vars
-      - get: cf-vars-store
-    - task: rotate-cf-certs
-      tags: [colocated-with-web]
       config:
         platform: linux
-        image_resource: *ruby-slim-image-resource
-        inputs:
-          - name: paas-cf
-          - name: cf-manifest-pre-vars
-          - name: cf-vars-store
+        image_resource: *cf-cli-image-resource
         outputs:
-          - name: updated-cf-certs
+          - name: new-smoke-test-config
+        params:
+          APP_DOMAIN: ((apps_dns_zone_name))
+          SYSTEM_DOMAIN: ((system_dns_zone_name))
+          STATE_BUCKET: ((state_bucket))
+          API_ENDPOINT: ((api_endpoint))
+          CF_ADMIN: ((cf_admin))
+          CF_PASS: ((cf_pass))
         run:
           path: sh
           args:
             - -e
             - -c
             - |
-              ./paas-cf/manifests/cf-manifest/scripts/rotate-vars-store-secrets.rb --delete \
-                --manifest cf-manifest-pre-vars/cf-manifest-pre-vars.yml \
-                --vars-store cf-vars-store/cf-vars-store.yml \
-                > updated-cf-certs/cf-vars-store.yml
-      on_success:
-        put: cf-vars-store
-        params:
-          file: updated-cf-certs/cf-vars-store.yml
+              NEW_SMOKE_TEST_PASSWORD=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c32)
+              TEST_CONFIG=new-smoke-test-config/smoke-test-config.json
+
+              cat <<EOF > "${TEST_CONFIG}"
+              {
+                "api": "api.${SYSTEM_DOMAIN}",
+                "apps_domain": "${APP_DOMAIN}",
+                "user": "smoke-test",
+                "password": "${NEW_SMOKE_TEST_PASSWORD}",
+                "org": "continuous-smoke-test",
+                "space": "continuous-smoke-test",
+                "use_existing_org": true,
+                "use_existing_space": true,
+                "skip_ssl_validation": false,
+                "artifacts_directory": "/tmp/artifacts",
+                "suite_name": "CF_SMOKE_TESTS",
+                "logging_app": "",
+                "runtime_app": "",
+                "ginkgo_opts": "",
+                "backend": ""
+              }
+              EOF
+
+              echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+              cf create-org continuous-smoke-test
+              cf create-space continuous-smoke-test -o continuous-smoke-test
+
+              TEST_PASSWORD="$(jq -r .password $TEST_CONFIG)"
+              TEST_ORG="$(jq -r .org $TEST_CONFIG)"
+              TEST_SPACE="$(jq -r .space $TEST_CONFIG)"
+              TEST_USER="$(jq -r .user $TEST_CONFIG)"
+
+              cf t -o "${TEST_ORG}" -s "${TEST_SPACE}"
+              cf delete-user "${TEST_USER}" -f # create-user isn't idempotent :-(
+              cf create-user "${TEST_USER}" "${TEST_PASSWORD}"
+              cf set-space-role "${TEST_USER}" "${TEST_ORG}" "${TEST_SPACE}" SpaceManager
+
+    - put: smoke-test-config
+      params: { file: new-smoke-test-config/smoke-test-config.json }
 
   - name: generate-git-keys
     plan:
@@ -4316,19 +4245,20 @@ jobs:
         - get: check-certificates-timer
           trigger: true
         - get: paas-cf
-          # passed: ['generate-cf-config']
-        - get: cf-vars-store
-          # passed: ['generate-cf-config']
         - get: ipsec-CA
 
       - task: check-certificates
         tags: [colocated-with-web]
         config:
           platform: linux
-          image_resource: *ruby-slim-image-resource
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
           inputs:
             - name: paas-cf
-            - name: cf-vars-store
             - name: ipsec-CA
           run:
             path: sh
@@ -4336,17 +4266,13 @@ jobs:
               - -e
               - -c
               - |
-                ./paas-cf/concourse/scripts/check-certificates.rb 30 < cf-vars-store/cf-vars-store.yml
+                credhub login
+                ./paas-cf/concourse/scripts/check-certificates.rb 15
 
                 tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
-                cat <<EOF > ipsec_cert.yml
-                ---
-                ipsec:
-                  certificate: |
-                $(sed 's/^/    /' ipsec-CA/ipsec-CA.crt)
-                EOF
 
-                ./paas-cf/concourse/scripts/check-certificates.rb 30 < ipsec_cert.yml
+                echo "Checking if ipsec-CA.crt expires in the next 30 days"
+                openssl x509 -checkend 2592000 -noout -in ipsec-CA/ipsec-CA.crt
 
   - name: cleanup-deleted-cf-users
     serial: true

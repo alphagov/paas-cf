@@ -28,15 +28,6 @@
 - type: remove
   path: /instance_groups/name=router/jobs/name=gorouter/properties/routing_api
 
-  # Upstream uses application_ca and service_cf_internal_ca
-  # We want to use these but also rotate them
-  #
-  # We also want to use the uaa_ca (and uaa_ca_old)
-  # so we can have TLS between gorouter and UAA
-- type: replace
-  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/ca_certs?
-  value: ((application_ca.certificate))((application_ca_old.certificate))((service_cf_internal_ca.certificate))((service_cf_internal_ca_old.certificate))((uaa_ca.certificate))((uaa_ca_old.certificate))
-
 - type: replace
   path: /instance_groups/name=router/jobs/name=gorouter/properties/router/drain_wait?
   value: 120
