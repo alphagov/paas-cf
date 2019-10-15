@@ -1,0 +1,553 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "links": [],
+    "panels": [
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorPrefix": false,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "description": "",
+        "format": "s",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 0,
+          "y": 0
+        },
+        "id": 2,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "sparkline": {
+          "fillColor": "rgba(255, 255, 255, 0.18)",
+          "full": false,
+          "lineColor": "rgb(255, 255, 255)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "avg(paas_billing_api_performance_elapsed_seconds)",
+            "format": "time_series",
+            "instant": false,
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "thresholds": "5,5",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "API response time",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "avg"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorPostfix": false,
+        "colorPrefix": false,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "description": "",
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 6,
+          "y": 0
+        },
+        "id": 4,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "sparkline": {
+          "fillColor": "rgba(255, 255, 255, 0.18)",
+          "full": false,
+          "lineColor": "rgb(255, 255, 255)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "sum(increase(concourse_builds_finished{exported_job=\"continuous-billing-smoke-tests\", status=\"succeeded\"}[1h])) / sum(increase(concourse_builds_finished{exported_job=\"continuous-billing-smoke-tests\"}[1h]))",
+            "format": "time_series",
+            "instant": false,
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.95,0.99",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Billing smoke tests passing",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "avg"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "description": "",
+        "format": "s",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 12,
+          "y": 0
+        },
+        "id": 6,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "sparkline": {
+          "fillColor": "rgba(255, 255, 255, 0.18)",
+          "full": false,
+          "lineColor": "rgb(255, 255, 255)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "max(paas_billing_collector_performance_elapsed_seconds)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "thresholds": "600,1200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Slowest collector job performance",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "avg"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "#299c46",
+          "#d44a3a"
+        ],
+        "description": "",
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 18,
+          "y": 0
+        },
+        "id": 10,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "sparkline": {
+          "fillColor": "rgba(255, 255, 255, 0.18)",
+          "full": false,
+          "lineColor": "rgb(255, 255, 255)",
+          "show": true
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "( sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d]))+ sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d]))+ sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d]))+ sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d]))) / (( sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d])))*7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.9,1.1",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Proportion of AWS costs billable",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "N/A",
+            "value": "null"
+          }
+        ],
+        "valueName": "avg"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 0,
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "id": 8,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "aggregation": "Last",
+            "alias": "Compute / AWS EC2",
+            "decimals": 2,
+            "displayAliasType": "Warning / Critical",
+            "displayType": "Regular",
+            "displayValueWithAlias": "Never",
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate)",
+            "format": "time_series",
+            "instant": false,
+            "intervalFactor": 1,
+            "legendFormat": "Compute / AWS EC2",
+            "refId": "A",
+            "units": "none",
+            "valueHandler": "Number Threshold"
+          },
+          {
+            "aggregation": "Last",
+            "alias": "b",
+            "decimals": 2,
+            "displayAliasType": "Warning / Critical",
+            "displayType": "Regular",
+            "displayValueWithAlias": "Never",
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "instant": false,
+            "intervalFactor": 1,
+            "legendFormat": "Database / AWS RDS",
+            "refId": "B",
+            "units": "none",
+            "valueHandler": "Number Threshold"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "Redis / AWS Elasticache",
+            "refId": "C"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "legendFormat": "S3 / AWS S3",
+            "refId": "D"
+          },
+          {
+            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"elasticsearch.+\"}[7d])) / sum(delta(paas_aiven_estimated_cost_pounds[7d])) > 0",
+            "format": "time_series",
+            "interval": "",
+            "intervalFactor": 1,
+            "legendFormat": "Elasticsearch / Aiven (note - regions not separated)",
+            "refId": "E"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Proportion of 3rd party costs billed (7 day rolling average)",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "decimals": null,
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 18,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "text": "0.8",
+            "value": "0.8"
+          },
+          "hide": 0,
+          "label": "Exchange rate",
+          "name": "exchange_rate",
+          "options": [
+            {
+              "text": "0.8",
+              "value": "0.8"
+            }
+          ],
+          "query": "0.8",
+          "skipUrlSync": false,
+          "type": "textbox"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-30d",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "",
+    "title": "Billing SLIs",
+    "uid": "billing-slis",
+    "version": 7
+  },
+  "overwrite": true,
+  "folderId": 0
+}
