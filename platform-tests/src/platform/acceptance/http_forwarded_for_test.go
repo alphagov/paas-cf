@@ -61,10 +61,18 @@ var _ = Describe("X-Forwarded headers", func() {
 		xffNoWhitespace := strings.Replace(headers.X_Forwarded_For[0], " ", "", -1)
 		xffIPs := strings.Split(xffNoWhitespace, ",")
 
-		Expect(xffIPs).To(ConsistOf(
-			fakeProxyIP,
-			egressIP,
-			"127.0.0.1", // FIXME: haproxy -> gorouter, undesirable.
-		))
+		var loadBalancerIP string
+		for _, v := range xffIPs {
+		  if strings.HasPrefix(v, "10") {
+			loadBalancerIP = v
+		  }
+		}
+
+		cidr := "10.0.0.0/8"
+		_, ipnet, _ := net.ParseCIDR(cidr)
+
+		Expect(xffIPs).Should(ContainElement(fakeProxyIP))
+		Expect(xffIPs).Should(ContainElement(egressIP))
+		Expect(ipnet.Contains(net.ParseIP(loadBalancerIP))).To(Equal(true))
 	})
 })

@@ -76,7 +76,7 @@ var _ = Describe("plain HTTP requests", func() {
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(resp.StatusCode).To(Equal(301))
-				Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", testConfig.GetAppsDomain())))
+				Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s:443/", testConfig.GetAppsDomain())))
 
 				By("does not include an HSTS header")
 				// See https://tools.ietf.org/html/rfc6797#section-7.2
@@ -90,7 +90,7 @@ var _ = Describe("plain HTTP requests", func() {
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(resp.StatusCode).To(Equal(301))
-				Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s/", testConfig.GetAppsDomain())))
+				Expect(resp.Header.Get("Location")).To(Equal(fmt.Sprintf("https://foo.%s:443/", testConfig.GetAppsDomain())))
 			})
 		})
 	})
