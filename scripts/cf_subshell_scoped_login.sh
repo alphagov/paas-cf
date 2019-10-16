@@ -20,8 +20,8 @@ case $TARGET in
     API_URL="https://api.london.staging.cloudpipeline.digital"
     ;;
   *)
-    echo "Unrecognised target '${TARGET}'" 1>&2
-    exit 1
+    echo "\"${TARGET}\" is not a named environment. Assuming this is a development environment." 1>&2
+    API_URL="https://api.${TARGET}.dev.cloudpipeline.digital"
     ;;
 esac
 
