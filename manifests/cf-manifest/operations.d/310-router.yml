@@ -52,20 +52,6 @@
           value: max-age=31536000; includeSubDomains; preload
 
 - type: replace
-  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/max_idle_connections?
-  # See this page
-  # https://docs.cloudfoundry.org/adminguide/routing-keepalive.html
-  #
-  # Default value is 100, means each router maintains 100 conns with backends
-  #
-  # Recommended value for 1000 rps with 1s latency is 2000
-  #
-  # Increase this to 2500 which means connections between router and envoy
-  # is more likely to be re-used, should reduce latency and memory consumption
-  #
-  value: 2500
-
-- type: replace
   path: /instance_groups/name=router/networks/0/name
   value: router
 
