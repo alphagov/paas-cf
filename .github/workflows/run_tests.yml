@@ -1,0 +1,121 @@
+name: Run unit tests
+on: [push, pull_request]
+
+env:
+  TF_VERSION: "0.11.14"
+  BOSH_CLI_VERSION: "2.0.48"
+  PROMETHEUS_VERSION: "2.6.1"
+  DEPLOY_ENV: "github"
+  TMPDIR: "/tmp"
+
+jobs:
+
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Add bin to $PATH
+        run: |
+          echo "##[set-env name=PATH;]~/bin:$PATH"
+
+      - name: Ensure bin
+        run: |
+          mkdir ~/bin
+
+      - name: Install shellcheck
+        run: |
+          echo "Fetching shellcheck"
+          set -e
+          wget -O ~/bin/shellcheck https://github.com/alphagov/paas-cf/releases/download/shellcheck_binary_0.4.6/shellcheck_linux_amd64
+          chmod +x ~/bin/shellcheck
+          set +e
+          shellcheck -V
+
+      - name: Install Terraform
+        run: |
+          echo "Fetching Terraform"
+          set -e
+          wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+          unzip -o terraform_${TF_VERSION}_linux_amd64.zip -d ~/bin
+          rm terraform_${TF_VERSION}_linux_amd64.zip
+          set +e
+          terraform version
+
+      - name: Install bosh cli v2
+        run: |
+          echo "Fetching bosh cli v2"
+          set -e
+          wget https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64
+          mv bosh-cli-${BOSH_CLI_VERSION}-linux-amd64 ~/bin/bosh && chmod +x ~/bin/bosh
+          set +e
+          bosh --version
+
+      - name: Install promtool
+        run: |
+          echo "Fetching Promtool ${PROMETHEUS_VERSION}"
+          set -e
+          wget -O prometheus.tgz "https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz"
+          tar xzf "prometheus.tgz" \
+             -C $HOME/bin/ \
+             --wildcards \
+             --wildcards-match-slash \
+             --strip-components=1 \
+             '*promtool'
+          set +e
+          promtool --version
+
+      - name: Install yamllint
+        run: |
+          pip install --user yamllint
+
+      - name: Install Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.5.5
+          architecture: "x64"
+
+      - name: Show ruby version in use
+        run: |
+          ruby -v
+
+      - name: Speed up gem installation by turning off local docs
+        run: |
+          echo "gem: --no-document" > ~/.gemrc
+
+      - name: Install Bundler
+        run: |
+          gem install bundler:1.17.1
+
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: '1.12'
+
+      - name: Set Go env vars
+        # We take the dirname of $GITHUB_WORKSPACE because, for some reason,
+        # by default it's `/home/runner/work/paas-cf/paas-cf`
+        # but when we checkout the source it drops the second mention of the
+        # repo name
+        run: |
+          echo "##[set-env name=GOPATH;]$(dirname $GITHUB_WORKSPACE)"
+          echo "##[set-env name=PATH;]$HOME/gopath:$PATH"
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v1
+        with:
+          # Path must be relative to /home/runner
+          # https://github.com/microsoft/azure-pipelines-agent/blob/master/src/Agent.Sdk/Util/IOUtil.cs#L300
+          #
+          # We need to checkout the code in to a GOPATH-like place.
+          # We set the GOPATH to the original $GITHUB_WORKSPACE earlier.
+          path: src/github.com/alphagov/paas-cf
+          ref: ${{github.sha}}
+
+      - name: Install gems via Bundler
+        run: |
+          bundle install --jobs=3 --retry=3 --deployment
+
+      - name: Run tests
+        run: |
+          make test
