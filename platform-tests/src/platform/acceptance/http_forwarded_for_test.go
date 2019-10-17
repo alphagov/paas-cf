@@ -63,16 +63,23 @@ var _ = Describe("X-Forwarded headers", func() {
 
 		var loadBalancerIP string
 		for _, v := range xffIPs {
-		  if strings.HasPrefix(v, "10") {
-			loadBalancerIP = v
-		  }
+			if strings.HasPrefix(v, "10") {
+				loadBalancerIP = v
+			}
 		}
 
-		cidr := "10.0.0.0/8"
-		_, ipnet, _ := net.ParseCIDR(cidr)
+		if loadBalancerIP == "" {
+			By("Using the ELB") // FIXME remove when we have no ELBs
+			Expect(xffIPs).To(ConsistOf(fakeProxyIP, egressIP, "127.0.0.1"))
+		} else {
+			By("Using the ALB")
 
-		Expect(xffIPs).Should(ContainElement(fakeProxyIP))
-		Expect(xffIPs).Should(ContainElement(egressIP))
-		Expect(ipnet.Contains(net.ParseIP(loadBalancerIP))).To(Equal(true))
+			cidr := "10.0.0.0/8"
+			_, ipnet, _ := net.ParseCIDR(cidr)
+
+			Expect(xffIPs).Should(ContainElement(fakeProxyIP))
+			Expect(xffIPs).Should(ContainElement(egressIP))
+			Expect(ipnet.Contains(net.ParseIP(loadBalancerIP))).To(Equal(true))
+		}
 	})
 })
