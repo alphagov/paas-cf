@@ -15,6 +15,9 @@ bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="govpaas-alerting-staging@digital.cabinet-office.gov.uk"
 
+apps_wildcard_weight="50"
+apps_wildcard_canary_weight="50"
+
 # 14313354 - GOV.UK PaaS Contact - staging
 # 14270725 - PaaS PagerDuty in hours
 pingdom_contact_ids = [ 14313354, 14270725 ]

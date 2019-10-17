@@ -43,7 +43,27 @@ resource "aws_route53_record" "apps_wildcard" {
   name    = "*.${var.apps_dns_zone_name}"
   type    = "CNAME"
   ttl     = "60"
+  records = ["${aws_elb.cf_router.dns_name}"]
+
+  set_identifier = "apps-wildcard"
+
+  weighted_routing_policy {
+    weight = "${var.apps_wildcard_weight}"
+  }
+}
+
+resource "aws_route53_record" "apps_wildcard_canary" {
+  zone_id = "${var.apps_dns_zone_id}"
+  name    = "*.${var.apps_dns_zone_name}"
+  type    = "CNAME"
+  ttl     = "60"
   records = ["${aws_lb.cf_router_app_domain.dns_name}"]
+
+  set_identifier = "apps-wildcard-canary"
+
+  weighted_routing_policy {
+    weight = "${var.apps_wildcard_canary_weight}"
+  }
 }
 
 resource "aws_route53_record" "system_apex" {
