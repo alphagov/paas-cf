@@ -13,7 +13,7 @@ usage() {
   cat <<EOF
 Usage:
 
-  $SCRIPT -o <orgname>
+  $SCRIPT --org <orgname> --owner '<owner name>'
 
 $SCRIPT will create an organisation in the CF service where you
 are currently logged in.
@@ -25,7 +25,8 @@ Requirements:
  * You must login with the cf client with an "admin" user.
 
 Where:
-  -o <orgname> Organisation to create.
+  --org <orgname> Organisation to create.
+  --owner <owner name> The department or authority that manages this org (see ./scripts/list-org-owners.sh for a current list)
 EOF
   exit 1
 }
@@ -37,8 +38,8 @@ abort_usage() {
 }
 
 check_params_and_environment() {
-  if [ -z "${ORG:-}" ]; then
-    abort_usage "Org must be defined"
+  if [ -z "${ORG:-}" ] || [ -z "${OWNER:-}" ]; then
+    abort_usage "Org and Owner must be defined"
   fi
 
   if ! cf orgs >/dev/null 2>&1; then
@@ -69,6 +70,10 @@ create_org_space() {
     exit 1
   fi
   cf create-org "${ORG}"
+
+  # annotate the org with it's owner
+  cf curl "/v3/organizations/$(cf org "${ORG}" --guid)" -d '{"metadata":{"annotations":{"owner":"'"${OWNER}"'"}}}' -X PATCH
+
   cf create-space "${DEFAULT_SPACE}" -o "${ORG}"
 
   # cf create-{org|space} has the side-effect of giving roles in the org/space
@@ -148,8 +153,12 @@ while [[ $# -gt 0 ]]; do
   key="$1"
   shift
   case $key in
-    -o|--org)
+    --org)
       ORG="$1"
+      shift
+    ;;
+    --owner)
+      OWNER="$1"
       shift
     ;;
     *)
