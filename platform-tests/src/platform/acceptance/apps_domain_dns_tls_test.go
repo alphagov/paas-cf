@@ -11,6 +11,8 @@ import (
 var _ = Describe("The apps apex domain", func() {
 
 	It("should have the same DNS records as the healthcheck app", func() {
+		Skip("FIXME: Stop skipping when we are not canarying the LBs")
+
 		apexIPs, err := net.LookupIP(testConfig.GetAppsDomain())
 		Expect(err).NotTo(HaveOccurred())
 		healthcheckIPs, err := net.LookupIP("healthcheck." + testConfig.GetAppsDomain())
