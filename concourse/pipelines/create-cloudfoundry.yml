@@ -589,7 +589,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-billing.git
       branch: master
-      tag_filter: v0.66.0
+      tag_filter: v0.68.0
 
   - name: paas-accounts
     type: git
@@ -3884,7 +3884,7 @@ jobs:
 
               credhub generate -n "${BOSH_NS}/uaa_jwt_signing_key_id" -t password
               credhub generate -n "${BOSH_NS}/uaa_jwt_signing_key" -t rsa -k 2048
-              
+
     - task: forget-access-keys
       tags: [colocated-with-web]
       file: paas-cf/concourse/tasks/forget-access-keys.yml
