@@ -35,7 +35,7 @@ resource "aws_route53_record" "system_wildcard" {
   name    = "*.${var.system_dns_zone_name}"
   type    = "CNAME"
   ttl     = "60"
-  records = ["${aws_elb.cf_router_system_domain.dns_name}"]
+  records = ["${aws_lb.cf_router_system_domain.dns_name}"]
 }
 
 resource "aws_route53_record" "apps_wildcard" {
@@ -44,6 +44,26 @@ resource "aws_route53_record" "apps_wildcard" {
   type    = "CNAME"
   ttl     = "60"
   records = ["${aws_elb.cf_router.dns_name}"]
+
+  set_identifier = "apps-wildcard"
+
+  weighted_routing_policy {
+    weight = "${var.apps_wildcard_weight}"
+  }
+}
+
+resource "aws_route53_record" "apps_wildcard_canary" {
+  zone_id = "${var.apps_dns_zone_id}"
+  name    = "*.${var.apps_dns_zone_name}"
+  type    = "CNAME"
+  ttl     = "60"
+  records = ["${aws_lb.cf_router_app_domain.dns_name}"]
+
+  set_identifier = "apps-wildcard-canary"
+
+  weighted_routing_policy {
+    weight = "${var.apps_wildcard_canary_weight}"
+  }
 }
 
 resource "aws_route53_record" "system_apex" {
@@ -52,8 +72,8 @@ resource "aws_route53_record" "system_apex" {
   type    = "A"
 
   alias {
-    name                   = "${aws_elb.cf_router_system_domain.dns_name}"
-    zone_id                = "${aws_elb.cf_router_system_domain.zone_id}"
+    name                   = "${aws_lb.cf_router_system_domain.dns_name}"
+    zone_id                = "${aws_lb.cf_router_system_domain.zone_id}"
     evaluate_target_health = true
   }
 }
@@ -80,8 +100,8 @@ resource "aws_route53_record" "apps_apex" {
   type    = "A"
 
   alias {
-    name                   = "${aws_elb.cf_router.dns_name}"
-    zone_id                = "${aws_elb.cf_router.zone_id}"
+    name                   = "${aws_lb.cf_router_app_domain.dns_name}"
+    zone_id                = "${aws_lb.cf_router_app_domain.zone_id}"
     evaluate_target_health = true
   }
 }

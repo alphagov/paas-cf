@@ -145,3 +145,13 @@ variable "prometheus_azs" {
   description = "Availability zones for Prometheus instances"
   default     = ["z1", "z2"]
 }
+
+variable "apps_wildcard_weight" {
+  description = "Amount of traffic the wildcard DNS record receives"
+  default     = 100
+}
+
+variable "apps_wildcard_canary_weight" {
+  description = "Amount of traffic the wildcard canary DNS record receives"
+  default     = 0
+}
