@@ -242,5 +242,4 @@ vm_extensions:
   cloud_properties:
     lb_target_groups:
     - ((terraform_outputs_cf_router_app_domain_https_target_group_name))
-    - ((terraform_outputs_cf_router_app_domain_http_target_group_name))
     - ((terraform_outputs_cf_router_system_domain_https_target_group_name))

@@ -133,8 +133,15 @@ resource "aws_lb_listener" "cf_router_app_domain_http" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.cf_router_app_domain_http.arn}"
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+      path        = "/"
+      query       = ""
+    }
   }
 }
 
@@ -159,7 +166,7 @@ resource "aws_lb_target_group" "cf_router_app_domain_https" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    port                = 82
+    port                = 8080
     path                = "/health"
     protocol            = "HTTP"
     interval            = "${var.health_check_interval}"
@@ -180,8 +187,10 @@ resource "aws_lb_target_group" "cf_router_app_domain_http" {
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
+  # This needs to be here whilst we deploy BOSH to deregister the instances
+
   health_check {
-    port                = 82
+    port                = 8080
     path                = "/health"
     protocol            = "HTTP"
     interval            = "${var.health_check_interval}"
@@ -190,7 +199,6 @@ resource "aws_lb_target_group" "cf_router_app_domain_http" {
     unhealthy_threshold = "${var.health_check_unhealthy}"
     matcher             = "200-299"
   }
-
   lifecycle {
     create_before_destroy = true
   }
@@ -231,7 +239,7 @@ resource "aws_lb_target_group" "cf_router_system_domain_https" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    port                = 82
+    port                = 8080
     path                = "/health"
     protocol            = "HTTP"
     interval            = "${var.health_check_interval}"
@@ -248,10 +256,6 @@ resource "aws_lb_target_group" "cf_router_system_domain_https" {
 
 output "cf_router_system_domain_https_target_group_name" {
   value = "${aws_lb_target_group.cf_router_system_domain_https.name}"
-}
-
-output "cf_router_app_domain_http_target_group_name" {
-  value = "${aws_lb_target_group.cf_router_app_domain_http.name}"
 }
 
 output "cf_router_app_domain_https_target_group_name" {
