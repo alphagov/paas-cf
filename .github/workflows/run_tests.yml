@@ -116,6 +116,14 @@ jobs:
         run: |
           bundle install --jobs=3 --retry=3 --deployment
 
+      - name: Cat /etc/resolv.conf
+        run: |
+          cat /etc/resolv.conf
+
+      - name: Cat /etc/hosts
+        run: |
+          cat /etc/hosts
+
       - name: Run tests
         run: |
           make test
