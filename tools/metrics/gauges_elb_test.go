@@ -38,7 +38,7 @@ var _ = Describe("ELB Gauges", func() {
 				Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 					dialer := &net.Dialer{}
 					logger.Info("attempting-dial", lager.Data{"address": address})
-					return dialer.DialContext(ctx, network, "127.0.0.1:8553")
+					return dialer.DialContext(ctx, network, ":8553")
 				},
 			},
 		}
