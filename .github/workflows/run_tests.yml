@@ -131,7 +131,8 @@ jobs:
         # this line to the `/etc/hosts` file in order for the lookup
         # to succeed
         run: |
-          sudo echo "127.0.0.1 gauges.test" >> /etc/hosts
+          sudo -i
+          echo "127.0.0.1 gauges.test" >> /etc/hosts
 
       - name: Cat /etc/hosts again
         run: |
