@@ -36,6 +36,7 @@ var _ = Describe("ELB Gauges", func() {
 			&net.Resolver{
 				Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
 					dialer := &net.Dialer{}
+					logger.Info("attempting-dial", lager.Data{"address": address})
 					return dialer.DialContext(ctx, network, "127.0.0.1:8553")
 				},
 			},
@@ -57,7 +58,7 @@ var _ = Describe("ELB Gauges", func() {
 	BeforeEach(func() {
 		logger = lager.NewLogger("logger")
 		log = gbytes.NewBuffer()
-		logger.RegisterSink(lager.NewWriterSink(log, lager.INFO))
+		logger.RegisterSink(lager.NewWriterSink(GinkgoWriter, lager.INFO))
 	})
 
 	It("emits two metrics", func() {

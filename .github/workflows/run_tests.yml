@@ -116,28 +116,6 @@ jobs:
         run: |
           bundle install --jobs=3 --retry=3 --deployment
 
-      - name: Cat /etc/resolv.conf
-        run: |
-          cat /etc/resolv.conf
-
-      - name: Cat /etc/hosts
-        run: |
-          cat /etc/hosts
-
-      - name: Add necessary host entries for DNS lookup in tests to work
-        # tools/metrics/gauges_elb_test.go runs its own DNS server
-        # as part of the test setup. Under GitHub actions, this
-        # DNS server doesn't seem to be doing anything, so we add
-        # this line to the `/etc/hosts` file in order for the lookup
-        # to succeed
-        run: |
-          sudo -i
-          echo "127.0.0.1 gauges.test" >> /etc/hosts
-
-      - name: Cat /etc/hosts again
-        run: |
-          cat /etc/hosts
-
       - name: Run tests
         run: |
           make test
