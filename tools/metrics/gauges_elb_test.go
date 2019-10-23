@@ -44,7 +44,7 @@ var _ = Describe("ELB Gauges", func() {
 		}
 
 		go func() {
-			defer GinkgoRecover()
+			//defer GinkgoRecover()
 			Expect(fakes.ListenAndServeDNS(":8553", records)).To(Succeed())
 		}()
 
