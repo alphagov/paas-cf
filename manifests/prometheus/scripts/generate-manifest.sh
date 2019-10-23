@@ -52,6 +52,7 @@ bosh interpolate \
   --vars-file="${variables_file}" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
   --vars-file="${PAAS_CF_DIR}/manifests/prometheus/env-specific/${ENV_SPECIFIC_BOSH_VARS_FILE}" \
+  --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/env-specific/${ENV_SPECIFIC_BOSH_VARS_FILE}" \
   ${opsfile_args} \
   ${alerts_opsfile_args} \
   "${PROM_BOSHRELEASE_DIR}/manifests/prometheus.yml"
