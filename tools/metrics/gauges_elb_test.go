@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"os"
 	"time"
 
 	"code.cloudfoundry.org/lager"
@@ -58,7 +59,7 @@ var _ = Describe("ELB Gauges", func() {
 	BeforeEach(func() {
 		logger = lager.NewLogger("logger")
 		log = gbytes.NewBuffer()
-		logger.RegisterSink(lager.NewWriterSink(GinkgoWriter, lager.INFO))
+		logger.RegisterSink(lager.NewWriterSink(os.Stdout, lager.INFO))
 	})
 
 	It("emits two metrics", func() {
