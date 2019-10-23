@@ -2,6 +2,7 @@ package fakes
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/miekg/dns"
 )
@@ -12,7 +13,9 @@ var (
 
 func ListenAndServeDNS(listenAddr string, records map[string][]string) error {
 	server = &dns.Server{Addr: listenAddr, Net: "udp"}
+	log.Println(fmt.Sprintf("created server to listen on %s", listenAddr))
 	dns.HandleFunc(".", func(w dns.ResponseWriter, r *dns.Msg) {
+		log.Println(fmt.Sprintf("handling lookup: %v", r))
 		m := new(dns.Msg)
 		m.SetReply(r)
 		m.Compress = false
