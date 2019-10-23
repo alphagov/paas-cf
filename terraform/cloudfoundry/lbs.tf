@@ -119,6 +119,7 @@ resource "aws_lb" "cf_router_app_domain" {
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.web.id}"]
   subnets            = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout       = 900
 
   access_logs {
     bucket  = "${aws_s3_bucket.elb_access_log.id}"
@@ -210,6 +211,7 @@ resource "aws_lb" "cf_router_system_domain" {
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.cf_api_elb.id}"]
   subnets            = ["${split(",", var.infra_subnet_ids)}"]
+  idle_timeout       = 900
 
   access_logs {
     bucket  = "${aws_s3_bucket.elb_access_log.id}"
