@@ -60,6 +60,7 @@ var _ = Describe("ELB Gauges", func() {
 		logger = lager.NewLogger("logger")
 		log = gbytes.NewBuffer()
 		logger.RegisterSink(lager.NewWriterSink(os.Stdout, lager.INFO))
+		logger.RegisterSink(lager.NewWriterSink(log, lager.INFO))
 	})
 
 	It("emits two metrics", func() {
