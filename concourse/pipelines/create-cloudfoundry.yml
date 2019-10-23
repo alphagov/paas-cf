@@ -1131,6 +1131,10 @@ jobs:
                 export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
                 EOF
 
+                cat <<EOF > terraform-variables/cyber-secrets.tfvars.sh
+                export TF_VAR_csls_kinesis_destination_arn="((cyber_csls_kinesis_destination_arn))"
+                EOF
+
       - task: generate-peer-tfvars
         tags: [colocated-with-web]
         config:
@@ -1177,6 +1181,7 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
+                . terraform-variables/cyber-secrets.tfvars.sh
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
                 terraform init paas-cf/terraform/cloudfoundry

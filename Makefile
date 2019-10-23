@@ -280,6 +280,12 @@ upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to Credh
 	$(eval export PASSWORD_STORE_DIR=${PAAS_HIGH_PASSWORD_STORE_DIR})
 	@scripts/upload-aiven-secrets.rb
 
+.PHONY: upload-cyber-secrets
+upload-cyber-secrets: check-env ## Decrypt and upload Cyber credentials to Credhub
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@scripts/upload-cyber-secrets.rb
+
 .PHONY: upload-logit-secrets
 upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
