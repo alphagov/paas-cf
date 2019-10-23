@@ -36,10 +36,11 @@ REGIONS.each do |region|
     g = Generator.new(region, pricing_data)
     json_content = g.generate(template)
 
-    JSON.parse json_content
+    content = JSON.parse json_content
+    pretty_json_content = JSON.pretty_generate(content, indent: "\t")
 
     File.open("#{__dir__}/output/#{region}.json", "w") do |f|
-      f.write json_content
+      f.write pretty_json_content
     end
 
     if File.exist?("#{__dir__}/output/#{region}.err.json")
@@ -48,7 +49,7 @@ REGIONS.each do |region|
   rescue JSON::ParserError
     puts "Config for #{region} is not valid JSON. Written content to #{__dir__}/output/#{region}.err.json"
     File.open("#{__dir__}/output/#{region}.err.json", "w") do |f|
-      f.write json_content
+      f.write pretty_json_content
     end
 
     puts `jq '.' #{__dir__}/output/#{region}.err.json`
