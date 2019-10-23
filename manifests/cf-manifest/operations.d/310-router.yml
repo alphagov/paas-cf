@@ -48,6 +48,27 @@
           value: max-age=31536000; includeSubDomains; preload
 
 - type: replace
+  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/max_idle_connections?
+  # See this page
+  # https://docs.cloudfoundry.org/adminguide/routing-keepalive.html
+  #
+  # The default is off, which breaks HTTP 1.0 connections, but we no longer
+  # have people using this legacy protocol version
+  #
+  # Once this is enabled, gorouter maintains 100 idle connections with backends
+  # (hardcoded)
+  #
+  # Once this is enabled, gorouter maintains the configured value idle
+  # connections with frontends (i.e. the AWS LB)
+  #
+  # Increase this to 2500 which means connections between router and envoy
+  # is more likely to be re-used, should reduce latency and memory consumption
+  #
+  # The value 2500 does not apply to Envoy but the hard-coded 100 value does
+  #
+  value: 2500
+
+- type: replace
   path: /instance_groups/name=router/networks/0/name
   value: router
 
