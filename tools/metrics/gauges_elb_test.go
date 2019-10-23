@@ -63,6 +63,7 @@ var _ = Describe("ELB Gauges", func() {
 	})
 
 	It("emits two metrics", func() {
+		logger.Info("test-output", lager.Data{"address": "http://gauges.test:8580"})
 		config := pingdumb.ReportConfig{
 			Target:    "http://gauges.test:8580",
 			Resolvers: resolvers,
