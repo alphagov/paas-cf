@@ -29,12 +29,6 @@ resource "aws_security_group" "cf_rds" {
   }
 }
 
-resource "aws_db_parameter_group" "cf_pg_9_5" {
-  name        = "${var.env}-pg95-cf"
-  family      = "postgres9.5"
-  description = "RDS CF Postgres 9.5 parameter group"
-}
-
 resource "aws_db_parameter_group" "cf_pg_11" {
   name        = "${var.env}-pg11-cf"
   family      = "postgres11"
@@ -61,8 +55,8 @@ resource "aws_db_instance" "cf" {
   skip_final_snapshot       = "${var.cf_db_skip_final_snapshot}"
   vpc_security_group_ids    = ["${aws_security_group.cf_rds.id}"]
 
-  allow_major_version_upgrade = true
-  auto_minor_version_upgrade  = true
+  allow_major_version_upgrade = false
+  auto_minor_version_upgrade  = false
   apply_immediately           = false
 
   tags {
