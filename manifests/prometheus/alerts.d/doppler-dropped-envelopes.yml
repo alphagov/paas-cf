@@ -9,6 +9,7 @@
       - alert: DopplerDroppedEnvelopes
         expr: sum(increase(firehose_counter_event_loggregator_doppler_dropped_total[1h])) > 100
         labels:
+          layer: logging
           severity: warning
         annotations:
           summary: "Doppler - dropped envelopes"

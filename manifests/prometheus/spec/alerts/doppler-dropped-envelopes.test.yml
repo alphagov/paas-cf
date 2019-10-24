@@ -35,6 +35,7 @@ tests:
         alertname: DopplerDroppedEnvelopes
         exp_alerts:
           - exp_labels:
+              layer: logging
               severity: warning
             exp_annotations:
               summary: "Doppler - dropped envelopes"
