@@ -818,6 +818,30 @@ jobs:
                     credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                   done
 
+        - task: generate-cf-admin-password
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
+            inputs:
+              - name: paas-cf
+            params:
+              CREDHUB_CLIENT: credhub-admin
+              CREDHUB_SECRET: ((bosh-credhub-admin))
+              CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+              CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+              DEPLOY_ENV: ((deploy_env))
+            run:
+              path: bash
+              args:
+                - -c
+                - -e
+                - |
+                  credhub login
+                  credhub generate -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" -t password --no-overwrite
+                  credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" | tr -d '[:space:]' > cf-admin-password
+                  credhub set -t password -n "/concourse/main/cf_pass" -w "$(cat cf-admin-password)"
+
   - name: pre-deploy
     plan:
       - in_parallel:
