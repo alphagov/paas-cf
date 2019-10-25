@@ -1924,6 +1924,7 @@ jobs:
           params:
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             LOGIT_ADDRESS: ((logit_syslog_address))
+            LOGIT_PORT: ((logit_syslog_port))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
@@ -1967,9 +1968,13 @@ jobs:
 
                 cf target -o admin -s public
                 if ! cf service logit-syslog-drain > /dev/null; then
-                  cf create-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
+                  cf create-user-provided-service \
+                    logit-syslog-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
                 else
-                  cf update-user-provided-service logit-syslog-drain -l "${LOGIT_ADDRESS}"
+                  cf update-user-provided-service \
+                    logit-syslog-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
                 fi
 
       - task: register-rds-broker
@@ -3362,6 +3367,7 @@ jobs:
             DEPLOY_ENV: ((deploy_env))
             CF_CLIENT_SECRET: ((cf_client_secret))
             LOGIT_ADDRESS: ((logit_syslog_address))
+            LOGIT_PORT: ((logit_syslog_port))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
@@ -3395,7 +3401,11 @@ jobs:
                 if ! cf service billing-logit-ssl-drain > /dev/null; then
                   cf create-user-provided-service \
                     billing-logit-ssl-drain \
-                    -l "${LOGIT_ADDRESS}"
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                else
+                  cf update-user-provided-service \
+                    billing-logit-ssl-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
                 fi
 
                 cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
