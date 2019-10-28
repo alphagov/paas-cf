@@ -17,7 +17,7 @@ import (
 var _ = Describe("MySQL backing service", func() {
 	const (
 		serviceName  = "mysql"
-		testPlanName = "tiny-unencrypted-5.7"
+		testPlanName = "tiny-unencrypted-8.0"
 	)
 
 	It("should have registered the mysql service", func() {
@@ -48,6 +48,16 @@ var _ = Describe("MySQL backing service", func() {
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("large-ha-unencrypted-5.7"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-unencrypted-5.7"))
 			Expect(cfMarketplaceOutput).ToNot(ContainSubstring("xlarge-ha-unencrypted-5.7"))
+
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-8.0"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-8.0"))
 		})
 	})
 

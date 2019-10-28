@@ -1,0 +1,179 @@
+{
+	"name": "unknown-plan",
+	"valid_from": "1970-01-01",
+	"plan_guid": "d5091c33-2f9d-4b15-82dc-4ad69717fc03",
+	"components": [
+		{
+			"name": "unknown",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Zero"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "cc65268f-98e9-40ef-aa8c-8e595204064d",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "7ab58e11-3959-49b4-9218-807e3e78f9af",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "01889e73-78b3-41d9-b29e-71d6ccfc8821",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "prometheus",
+	"valid_from": "2017-01-01",
+	"plan_guid": "b5998c91-d379-4df7-b329-11450f8459f1",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "0",
+			"currency_code": "GBP",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "app",
+	"valid_from": "2017-01-01",
+	"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>) * <%= price("platform_fee") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "staging",
+	"valid_from": "2017-01-01",
+	"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>) * <%= price("platform_fee") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "task",
+	"valid_from": "2017-01-01",
+	"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * ceil($time_in_seconds / 3600) * ($memory_in_mb/1024.0) * <%= price("app_cost_per_gb_hour") %>) * <%= price("platform_fee") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "app",
+	"valid_from": "2019-03-01",
+	"plan_guid": "f4d4b95a-f55e-4593-8d54-3364c25798c4",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (<%= price("app_cost_per_gb_hour") %> / 3600)",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (<%= price("app_cost_per_gb_hour") %> / 3600)) * <%= price("platform_fee") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "staging",
+	"valid_from": "2019-03-01",
+	"plan_guid": "9d071c77-7a68-4346-9981-e8dafac95b6f",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (<%= price("app_cost_per_gb_hour") %> / 3600)",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (<%= price("app_cost_per_gb_hour") %> / 3600)) * <%= price("platform_fee") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "task",
+	"valid_from": "2019-03-01",
+	"plan_guid": "ebfa9453-ef66-450c-8c37-d53dfd931038",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "$number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (<%= price("app_cost_per_gb_hour") %> / 3600)",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "platform",
+			"formula": "($number_of_nodes * $time_in_seconds * ($memory_in_mb/1024.0) * (<%= price("app_cost_per_gb_hour") %> / 3600)) * <%= price("platform_fee") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},

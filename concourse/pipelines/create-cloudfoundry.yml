@@ -2047,6 +2047,18 @@ jobs:
                 xlarge-5.7
                 EOF
 
+                cat <<EOF | xargs -n1 cf enable-service-access mysql -p
+                tiny-unencrypted-8.0
+                small-8.0
+                small-ha-8.0
+                medium-ha-8.0
+                medium-8.0
+                large-ha-8.0
+                large-8.0
+                xlarge-ha-8.0
+                xlarge-8.0
+                EOF
+
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -p
                 tiny-unencrypted-9.5
                 small-ha-9.5
@@ -2069,6 +2081,18 @@ jobs:
                 large-ha-10
                 xlarge-10
                 xlarge-ha-10
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -p
+                tiny-unencrypted-11
+                small-11
+                small-ha-11
+                medium-11
+                medium-ha-11
+                large-11
+                large-ha-11
+                xlarge-11
+                xlarge-ha-11
                 EOF
 
                 # Disable deprecated plans
