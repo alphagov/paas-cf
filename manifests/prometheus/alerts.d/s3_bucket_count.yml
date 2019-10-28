@@ -7,7 +7,7 @@
     name: S3BucketCountCloseToLimit
     rules:
       - alert: S3BucketCountCloseToLimit
-        expr: paas_aws_s3_buckets_count > ((aws_limits_s3_buckets)) / 100 * 80
+        expr: paas_aws_s3_buckets_count > ((aws_limits_s3_buckets)) * .8
         for: 1h
         labels:
           severity: warning
