@@ -838,9 +838,13 @@ jobs:
                 - -e
                 - |
                   credhub login
-                  credhub generate -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" -t password --no-overwrite
-                  credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" | tr -d '[:space:]' > cf-admin-password
-                  credhub set -t password -n "/concourse/main/cf_pass" -w "$(cat cf-admin-password)"
+                  if credhub get -q -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" > /dev/null; then
+                    echo "CF Admin Password already set. Skipping."
+                  else
+                    credhub generate -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" -t password --no-overwrite
+                    cf_admin_password=$(credhub get -n "/${DEPLOY_ENV}/${DEPLOY_ENV}/cf_admin_password" -q)
+                    credhub set -t password -n "/concourse/main/cf_pass" -w "${cf_admin_password}"
+                  fi
 
   - name: pre-deploy
     plan:
