@@ -30,7 +30,12 @@ $("${SCRIPT_DIR}/environment.sh")
 "${SCRIPT_DIR}/fly_sync_and_login.sh"
 FLY="$FLY_CMD -t ${FLY_TARGET}"
 
-VERSION="$(${FLY} resource-versions -r deployment-kick-off/deployment-timer | grep time | cut -d ' ' -f3 | head -n 1)"
+if [ "${action}" == "pin" ]; then
+  VERSION="$(${FLY} resource-versions -r deployment-kick-off/deployment-timer | grep time | cut -d ' ' -f3 | head -n 1)"
 
-${FLY} "${action}-resource" -r "deployment-kick-off/deployment-timer" -v "${VERSION}"
+  ${FLY} pin-resource -r "deployment-kick-off/deployment-timer" -v "${VERSION}"
+elif [ "${action}" == "unpin" ]; then
+  ${FLY} unpin-resource -r "deployment-kick-off/deployment-timer"
+fi
+
 
