@@ -48,6 +48,24 @@
           value: max-age=31536000; includeSubDomains; preload
 
 - type: replace
+  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/max_idle_connections?
+  # See: https://docs.cloudfoundry.org/adminguide/routing-keepalive.html
+  #
+  # Do not change this until routing-release >= 0.194
+  #
+  # Once this is non-zero, gorouter maintains 100 idle connections with
+  # backends (hardcoded)
+  #
+  # Once this is non-zero, gorouter maintains the configured value idle
+  # connections
+  #
+  # This should be explicitly set to zero until we enable it because future
+  # versions of cf-deployment default this to a non-zero value which enables
+  # the feature
+  #
+  value: 0
+
+- type: replace
   path: /instance_groups/name=router/networks/0/name
   value: router
 
