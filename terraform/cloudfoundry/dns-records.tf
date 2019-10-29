@@ -43,7 +43,7 @@ resource "aws_route53_record" "apps_wildcard" {
   name    = "*.${var.apps_dns_zone_name}"
   type    = "CNAME"
   ttl     = "60"
-  records = ["${aws_elb.cf_router.dns_name}"]
+  records = ["${aws_lb.cf_router_app_domain.dns_name}"]
 
   set_identifier = "apps-wildcard"
 

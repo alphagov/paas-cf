@@ -13,8 +13,8 @@ cdn_db_skip_final_snapshot = "true"
 cdn_db_maintenance_window = "Mon:07:00-Mon:08:00"
 support_email="govpaas-alerting-dev@digital.cabinet-office.gov.uk"
 
-apps_wildcard_weight="50"
-apps_wildcard_canary_weight="50"
+apps_wildcard_weight="0"
+apps_wildcard_canary_weight="100"
 
 # 14313350 - GOV.UK PaaS Contact - dev
 pingdom_contact_ids = [ 14313350 ]
