@@ -7,7 +7,7 @@
     name: BoshHighCPUUtilisation
     rules:
       - record: "bosh_job:bosh_job_cpu:avg1h"
-        expr: avg_over_time(bosh_job_cpu_sys{bosh_job_name!="diego-cell",bosh_job_name!="concourse"}[1h]) + avg_over_time(bosh_job_cpu_user{bosh_job_name!="diego-cell",bosh_job_name!="concourse"}[1h]) + avg_over_time(bosh_job_cpu_wait{bosh_job_name!="diego-cell",bosh_job_name!="concourse"}[1h])
+        expr: avg_over_time(bosh_job_cpu_sys{bosh_job_name!="diego-cell",bosh_job_name!~"^concourse.*",bosh_job_name!~"^compilation-.*"}[1h]) + avg_over_time(bosh_job_cpu_user{bosh_job_name!="diego-cell",bosh_job_name!~"^concourse.*",bosh_job_name!~"^compilation-.*"}[1h]) + avg_over_time(bosh_job_cpu_wait{bosh_job_name!="diego-cell",bosh_job_name!~"^concourse.*",bosh_job_name!~"^compilation-.*"}[1h])
 
       - alert: BoshHighCPUUtilisation
         expr: "bosh_job:bosh_job_cpu:avg1h > 70"
