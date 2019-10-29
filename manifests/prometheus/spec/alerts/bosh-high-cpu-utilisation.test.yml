@@ -6,6 +6,9 @@ rule_files:
 evaluation_interval: 1m
 
 tests:
+  # When CPU usage is above 80% for >= 60m
+  # when the VM is not a compilation VM
+  # then an alert should fire with the name of the VM
   - interval: 1h
     input_series:
       - series: "bosh_job_cpu_sys{bosh_job_name='test',bosh_job_index='0'}"
@@ -31,3 +34,87 @@ tests:
             exp_annotations:
               summary: "High cpu utilisation on test/0"
               description: "test/0 CPU utilisation was over 80% in the last hour on average"
+
+  # When CPU usage is above 80% for >= 60m
+  # when the VM is a compilation VM
+  # then no alerts should fire
+  - interval: 1h
+    input_series:
+      - series: "bosh_job_cpu_sys{bosh_job_name='compilation-00000000',bosh_job_index='0'}"
+        values: 60 80 95
+
+      - series: "bosh_job_cpu_user{bosh_job_name='compilation-00000000',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+      - series: "bosh_job_cpu_wait{bosh_job_name='compilation-00000000',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: BoshHighCPUUtilisation
+      - eval_time: 61m
+        alertname: BoshHighCPUUtilisation
+
+  # When CPU usage is above 80% for >= 60m
+  # when the VM is a concourse VM
+  # then no alerts should fire
+  - interval: 1h
+    input_series:
+      - series: "bosh_job_cpu_sys{bosh_job_name='concourse',bosh_job_index='0'}"
+        values: 60 80 95
+
+      - series: "bosh_job_cpu_user{bosh_job_name='concourse',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+      - series: "bosh_job_cpu_wait{bosh_job_name='concourse',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: BoshHighCPUUtilisation
+      - eval_time: 61m
+        alertname: BoshHighCPUUtilisation
+
+  # When CPU usage is above 80% for >= 60m
+  # when the VM is a concourse-worker VM
+  # then no alerts should fire
+  - interval: 1h
+    input_series:
+      - series: "bosh_job_cpu_sys{bosh_job_name='concourse-worker',bosh_job_index='0'}"
+        values: 60 80 95
+
+      - series: "bosh_job_cpu_user{bosh_job_name='concourse-worker',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+      - series: "bosh_job_cpu_wait{bosh_job_name='concourse-worker',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: BoshHighCPUUtilisation
+      - eval_time: 61m
+        alertname: BoshHighCPUUtilisation
+
+  # When CPU usage is above 80% for >= 60m
+  # when the VM is a diego-cell VM
+  # then no alerts should fire
+  - interval: 1h
+    input_series:
+      - series: "bosh_job_cpu_sys{bosh_job_name='diego-cell',bosh_job_index='0'}"
+        values: 60 80 95
+
+      - series: "bosh_job_cpu_user{bosh_job_name='diego-cell',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+      - series: "bosh_job_cpu_wait{bosh_job_name='deigo-cell',bosh_job_index='0'}"
+        values: 0 0 0 0 0
+
+
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: BoshHighCPUUtilisation
+      - eval_time: 61m
+        alertname: BoshHighCPUUtilisation
