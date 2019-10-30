@@ -32,7 +32,7 @@ RSpec.describe "release versions" do
         upstream: '1.86.0',
       },
       'uaa' => {
-        local: '0.1.14',
+        local: '0.1.15',
         upstream: '74.2.0',
       }
     }
