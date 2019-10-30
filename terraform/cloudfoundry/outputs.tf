@@ -200,3 +200,13 @@ output "yace_aws_secret_access_key" {
   sensitive = true
   value     = "${aws_iam_access_key.yace.secret}"
 }
+
+output "paas_admin_metrics_aws_access_key_id" {
+  sensitive = true
+  value     = "${aws_iam_access_key.paas_admin_metrics.id}"
+}
+
+output "paas_admin_metrics_aws_secret_access_key" {
+  sensitive = true
+  value     = "${aws_iam_access_key.paas_admin_metrics.secret}"
+}
