@@ -3,27 +3,6 @@
 - type: remove
   path: /instance_groups/name=router/vm_extensions
 
-- type: replace
-  path: /instance_groups/name=router/jobs/-
-  value:
-    name: haproxy
-    release: paas-haproxy
-    properties:
-      request_timeout_in_seconds: 900
-      ha_proxy:
-        enable_proxy_protocol: true
-        disable_http: true
-        go_router:
-          servers: [ "127.0.0.1" ]
-          port: 80
-          healthcheck_port: 8080
-        additional_frontend_config: |
-          capture response header strict-transport-security len 128
-          http-response add-header Strict-Transport-Security max-age=31536000;\ includeSubDomains;\ preload unless { capture.res.hdr(0) -m found }
-        enable_healthcheck_frontend: true
-        ssl_pem: "((router_ssl.certificate))((router_ssl.private_key))"
-        enable_http_redirect_frontend: true
-
 - type: remove
   path: /instance_groups/name=router/jobs/name=gorouter/properties/routing_api
 
