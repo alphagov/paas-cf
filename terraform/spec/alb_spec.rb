@@ -2,6 +2,10 @@ def get_lbs(tf)
   tf.dig('resource', 'aws_lb').values
 end
 
+def get_tgs(tf)
+  tf.dig('resource', 'aws_lb_target_group').values
+end
+
 describe 'alb helpers' do
   it 'should get lbs correctly' do
     terraform = {
@@ -18,6 +22,23 @@ describe 'alb helpers' do
     expect(lbs.length).to be(2)
     expect(lbs.first.dig('name')).to eq('my-application-load-balancer')
     expect(lbs.last.dig('name')).to eq('my-network-load-balancer')
+  end
+
+  it 'should get lb tgs correctly' do
+    terraform = {
+      'resource' => {
+        'aws_lb_target_group' => {
+          'my_alb_target_group' => { 'port' => '443' },
+          'my_nlb_target_group' => { 'port' => '8443' },
+        }
+      }
+    }
+
+    tgs = get_tgs(terraform)
+
+    expect(tgs.length).to be(2)
+    expect(tgs.first.dig('port')).to eq('443')
+    expect(tgs.last.dig('port')).to eq('8443')
   end
 end
 
@@ -68,5 +89,33 @@ describe 'alb' do
       .map { |r| r.dig('enable_deletion_protection') }
 
     expect(deletion_protection).to all(be(nil))
+  end
+end
+
+describe 'alb_tgs' do
+  terraform_files = TERRAFORM_FILES
+    .reject { |f| File.read(f).lines.grep(/resource\s+"aws_lb"/).empty? }
+
+  terraform_contents = terraform_files
+    .map { |f| File.read(f) }
+    .join("\n\n")
+
+  terraform = HCL::Checker.parse(terraform_contents)
+
+  it 'should be have terraform files describing albs' do
+    expect(terraform_files).not_to be_empty
+  end
+
+  it 'should be valid terraform' do
+    expect(terraform).not_to be(false)
+  end
+
+  it 'should have deregistration configured' do
+    deregistration_delay = get_tgs(terraform)
+      .reject { |r| r.dig('name').match?(/broker|alertmanager|prometheus/) }
+      .reject { |r| r.dig('port') == 83 } # This is temporary port
+      .map { |r| r.dig('deregistration_delay') }
+
+    expect(deregistration_delay).to all(be < 120)
   end
 end

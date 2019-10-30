@@ -48,5 +48,9 @@
   path: /instance_groups/name=diego-cell/jobs/name=route_emitter/properties/uaa
 
 - type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=route_emitter/properties/diego/route_emitter/sync_interval_in_seconds?
+  value: 30
+
+- type: replace
   path: /instance_groups/name=diego-cell/networks/0/name
   value: cell
