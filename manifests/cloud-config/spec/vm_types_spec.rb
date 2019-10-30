@@ -10,17 +10,6 @@ RSpec.describe "vm_types" do
     end
   end
 
-  describe "the router pool" do
-    let(:pool) { vm_types.find { |p| p["name"] == "router" } }
-
-    it "should use the correct elb instance" do
-      expect(pool["cloud_properties"]["elbs"]).to match_array([
-        terraform_fixture_value(:cf_router_elb_name),
-        terraform_fixture_value(:cf_router_system_domain_elb_name),
-      ])
-    end
-  end
-
   describe "the cell pool" do
     let(:pool) { vm_types.find { |p| p["name"] == "cell" } }
 
