@@ -59,14 +59,6 @@ output "cdn_db_connection_string" {
   value     = "${format("postgresql://%v:%v@%v/%v", aws_db_instance.cdn.username, var.secrets_cdn_db_master_password, aws_db_instance.cdn.address, aws_db_instance.cdn.name)}"
 }
 
-output "cf_router_elb_name" {
-  value = "${aws_elb.cf_router.name}"
-}
-
-output "cf_router_system_domain_elb_name" {
-  value = "${aws_elb.cf_router_system_domain.name}"
-}
-
 output "cf_ssh_proxy_elb_name" {
   value = "${aws_elb.ssh_proxy.name}"
 }
