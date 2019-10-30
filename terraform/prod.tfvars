@@ -15,8 +15,8 @@ bosh_db_backup_retention_period = "35"
 bosh_db_skip_final_snapshot = "false"
 support_email="gov-uk-paas-support@digital.cabinet-office.gov.uk"
 
-apps_wildcard_weight="0"
-apps_wildcard_canary_weight="100"
+apps_wildcard_weight="100"
+apps_wildcard_canary_weight="0"
 
 # 14313358 - GOV.UK PaaS Contact - prod
 # 14270734 - PaaS PagerDuty 24x7
