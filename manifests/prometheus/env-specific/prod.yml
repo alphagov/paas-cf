@@ -3,4 +3,4 @@
 # AWS Limits not accesible via API
 aws_limits_elasticache_cache_parameter_groups: 100
 aws_limits_elasticache_nodes: 100
-aws_limits_s3_buckets: 100
+aws_limits_s3_buckets: 250
