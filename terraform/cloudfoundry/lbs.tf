@@ -13,10 +13,11 @@ resource "aws_lb" "cf_loggregator" {
 }
 
 resource "aws_lb_target_group" "cf_loggregator_rlp" {
-  name     = "${var.env}-cf-loggregator-rlp"
-  port     = 8088
-  protocol = "HTTPS"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "${var.env}-cf-loggregator-rlp"
+  port                 = 8088
+  protocol             = "HTTPS"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = 60
 
   health_check {
     matcher = "200-499"
@@ -95,10 +96,11 @@ resource "aws_lb_listener_rule" "cf_doppler" {
 }
 
 resource "aws_lb_target_group" "cf_doppler" {
-  name     = "${var.env}-cf-doppler"
-  port     = 8081
-  protocol = "HTTPS"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "${var.env}-cf-doppler"
+  port                 = 8081
+  protocol             = "HTTPS"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = 60
 
   health_check {
     matcher = "200-499"
@@ -150,9 +152,8 @@ resource "aws_lb_listener" "cf_router_app_domain_https" {
   load_balancer_arn = "${aws_lb.cf_router_app_domain.arn}"
   port              = "443"
   protocol          = "HTTPS"
-
-  ssl_policy      = "${var.default_elb_security_policy}"
-  certificate_arn = "${aws_acm_certificate.apps.arn}"
+  ssl_policy        = "${var.default_elb_security_policy}"
+  certificate_arn   = "${aws_acm_certificate.apps.arn}"
 
   default_action {
     type             = "forward"
@@ -161,10 +162,11 @@ resource "aws_lb_listener" "cf_router_app_domain_https" {
 }
 
 resource "aws_lb_target_group" "cf_router_app_domain_https" {
-  name     = "${var.env}-app-tls-tg"
-  port     = 8443
-  protocol = "HTTPS"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "${var.env}-app-tls-tg"
+  port                 = 8443
+  protocol             = "HTTPS"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = 110
 
   health_check {
     port                = 8080
@@ -224,9 +226,8 @@ resource "aws_lb_listener" "cf_router_system_domain_https" {
   load_balancer_arn = "${aws_lb.cf_router_system_domain.arn}"
   port              = "443"
   protocol          = "HTTPS"
-
-  ssl_policy      = "${var.default_elb_security_policy}"
-  certificate_arn = "${data.aws_acm_certificate.system.arn}"
+  ssl_policy        = "${var.default_elb_security_policy}"
+  certificate_arn   = "${data.aws_acm_certificate.system.arn}"
 
   default_action {
     type             = "forward"
@@ -235,10 +236,11 @@ resource "aws_lb_listener" "cf_router_system_domain_https" {
 }
 
 resource "aws_lb_target_group" "cf_router_system_domain_https" {
-  name     = "${var.env}-system-tls-tg"
-  port     = 8443
-  protocol = "HTTPS"
-  vpc_id   = "${var.vpc_id}"
+  name                 = "${var.env}-system-tls-tg"
+  port                 = 8443
+  protocol             = "HTTPS"
+  vpc_id               = "${var.vpc_id}"
+  deregistration_delay = 110
 
   health_check {
     port                = 8080
