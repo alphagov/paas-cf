@@ -257,37 +257,43 @@ showenv: ## Display environment information
 upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
 
 .PHONY: upload-google-oauth-secrets
-upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to S3
+upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-google-oauth-secrets.rb
 
 .PHONY: upload-microsoft-oauth-secrets
-upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identity credentials to S3
+upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identity credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-microsoft-oauth-secrets.rb
 
 .PHONY: upload-notify-secrets
-upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to S3
+upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-notify-secrets.rb
 
 .PHONY: upload-aiven-secrets
-upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to S3
+upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to Credhub
 	$(if $(wildcard ${PAAS_HIGH_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_HIGH_PASSWORD_STORE_DIR} (PAAS_HIGH_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_HIGH_PASSWORD_STORE_DIR})
 	@scripts/upload-aiven-secrets.rb
 
+.PHONY: upload-cyber-secrets
+upload-cyber-secrets: check-env ## Decrypt and upload Cyber credentials to Credhub
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@scripts/upload-cyber-secrets.rb
+
 .PHONY: upload-logit-secrets
-upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to S3
+upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-logit-secrets.rb
 
 .PHONY: upload-pagerduty-secrets
-upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials to S3
+upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-pagerduty-secrets.rb
