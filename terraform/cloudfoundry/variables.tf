@@ -155,8 +155,3 @@ variable "apps_wildcard_canary_weight" {
   description = "Amount of traffic the wildcard canary DNS record receives"
   default     = 0
 }
-
-variable "csls_kinesis_destination_arn" {
-  description = "The destination arn for Cyber Security's CSLS"
-  type        = "string"
-}

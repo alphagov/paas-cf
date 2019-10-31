@@ -467,6 +467,30 @@ resources:
             ]
         }
 
+  - name: cyber-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: cyber.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 3,
+            "terraform_version": "0.11.14",
+            "serial": 0,
+            "modules": [
+                {
+                    "path": [
+                        "root"
+                    ],
+                    "outputs": {},
+                    "resources": {},
+                    "depends_on": []
+                }
+            ]
+        }
+
   - name: cf-manifest
     type: s3-iam
     source:
@@ -1181,10 +1205,11 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
                 . terraform-variables/concourse.tfvars.sh
                 . terraform-variables/cf-secrets.tfvars.sh
-                . terraform-variables/cyber-secrets.tfvars.sh
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
+
                 terraform init paas-cf/terraform/cloudfoundry
+
                 terraform apply \
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
@@ -1196,6 +1221,50 @@ jobs:
           put: cf-tfstate
           params:
             file: updated-tfstate/cf.tfstate
+
+      - try:
+          do:
+            - get: cyber-tfstate
+            - task: terraform-apply
+              tags: [colocated-with-web]
+              config:
+                platform: linux
+                image_resource: *terraform-image-resource
+                inputs:
+                  - name: terraform-variables
+                  - name: paas-cf
+                  - name: cyber-tfstate
+                outputs:
+                  - name: updated-tfstate
+                params:
+                  TF_VAR_env: ((deploy_env))
+                  TF_VAR_system_dns_zone_name: ((system_dns_zone_name))
+                  TF_VAR_apps_dns_zone_name: ((apps_dns_zone_name))
+                  AWS_DEFAULT_REGION: ((aws_region))
+                run:
+                  path: sh
+                  args:
+                    - -e
+                    - -c
+                    - |
+                      . terraform-variables/vpc.tfvars.sh
+                      . terraform-variables/concourse.tfvars.sh
+                      . terraform-variables/cyber-secrets.tfvars.sh
+
+                      cp cyber-tfstate/cyber.tfstate updated-tfstate/cyber.tfstate
+
+                      terraform init paas-cf/terraform/cyber
+
+                      terraform apply \
+                        -auto-approve=true \
+                        -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                        -var-file="paas-cf/terraform/((aws_region)).tfvars" \
+                        -state=updated-tfstate/cyber.tfstate \
+                        paas-cf/terraform/cyber
+              ensure:
+                put: cyber-tfstate
+                params:
+                  file: updated-tfstate/cyber.tfstate
 
       - task: extract-cf-terraform-outputs
         tags: [colocated-with-web]
