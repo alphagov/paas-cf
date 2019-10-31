@@ -73,6 +73,7 @@ describe 'alb' do
       .map { |val| val.gsub('${var.env}', 'prod-lon') }
 
 
+    expect(lb_names).not_to be_empty
     expect(lb_names).to all(match(/^[-a-z]{4,32}$/))
     expect(lb_names).not_to include(match('var.env'))
   end
@@ -81,6 +82,7 @@ describe 'alb' do
     access_logs = get_lbs(terraform)
       .map { |r| r.dig('access_logs') }
 
+    expect(access_logs).not_to be_empty
     expect(access_logs).not_to include(nil)
   end
 
@@ -88,6 +90,7 @@ describe 'alb' do
     deletion_protection = get_lbs(terraform)
       .map { |r| r.dig('enable_deletion_protection') }
 
+    expect(deletion_protection).not_to be_empty
     expect(deletion_protection).to all(be(nil))
   end
 end
@@ -116,6 +119,7 @@ describe 'alb_tgs' do
       .reject { |r| r.dig('port') == 83 } # This is temporary port
       .map { |r| r.dig('deregistration_delay') }
 
+    expect(deregistration_delay).not_to be_empty
     expect(deregistration_delay).to all(be < 120)
   end
 end
