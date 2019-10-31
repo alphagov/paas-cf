@@ -5,5 +5,5 @@ api_instances: 6
 doppler_instances: 24
 log_api_instances: 6
 adapter_instances: 2
-cc_hourly_rate_limit: 55000
+cc_hourly_rate_limit: 20000
 paas_region_name: ireland
