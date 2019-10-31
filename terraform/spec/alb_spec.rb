@@ -122,4 +122,17 @@ describe 'alb_tgs' do
     expect(deregistration_delay).not_to be_empty
     expect(deregistration_delay).to all(be < 120)
   end
+
+  it 'should have slow_start configured if it is a router' do
+    router_tgs = get_tgs(terraform)
+      .reject { |r| r.dig('name').match?(/broker|alertmanager|prometheus|rlp|doppler/) }
+      .reject { |r| r.dig('port') == 83 } # This is temporary port
+
+    expect(router_tgs).not_to be_empty
+
+    slow_start = router_tgs.map { |r| r.dig('slow_start') }
+
+    expect(slow_start).to all(be > 30) # More than the routing table sync interval
+    expect(slow_start).to all(be < 110) # Less than the drain wait time
+  end
 end

@@ -167,6 +167,7 @@ resource "aws_lb_target_group" "cf_router_app_domain_https" {
   protocol             = "HTTPS"
   vpc_id               = "${var.vpc_id}"
   deregistration_delay = 110
+  slow_start           = 45
 
   health_check {
     port                = 8080
@@ -241,6 +242,7 @@ resource "aws_lb_target_group" "cf_router_system_domain_https" {
   protocol             = "HTTPS"
   vpc_id               = "${var.vpc_id}"
   deregistration_delay = 110
+  slow_start           = 45
 
   health_check {
     port                = 8080
