@@ -5,5 +5,5 @@ api_instances: 12
 doppler_instances: 33
 log_api_instances: 6
 adapter_instances: 4 # Scaled to a multiple of 2 to balance out the AZs
-cc_hourly_rate_limit: 15000
+cc_hourly_rate_limit: 20000
 paas_region_name: london
