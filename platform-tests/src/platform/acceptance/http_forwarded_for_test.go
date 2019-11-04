@@ -68,18 +68,15 @@ var _ = Describe("X-Forwarded headers", func() {
 			}
 		}
 
-		if loadBalancerIP == "" {
-			By("Using the ELB") // FIXME remove when we have no ELBs
-			Expect(xffIPs).To(ConsistOf(fakeProxyIP, egressIP, "127.0.0.1"))
-		} else {
-			By("Using the ALB")
+		Expect(loadBalancerIP).NotTo(
+			Equal(""), "There should be an internal IP in the header",
+		)
 
-			cidr := "10.0.0.0/8"
-			_, ipnet, _ := net.ParseCIDR(cidr)
+		cidr := "10.0.0.0/8"
+		_, ipnet, _ := net.ParseCIDR(cidr)
 
-			Expect(xffIPs).Should(ContainElement(fakeProxyIP))
-			Expect(xffIPs).Should(ContainElement(egressIP))
-			Expect(ipnet.Contains(net.ParseIP(loadBalancerIP))).To(Equal(true))
-		}
+		Expect(xffIPs).Should(ContainElement(fakeProxyIP))
+		Expect(xffIPs).Should(ContainElement(egressIP))
+		Expect(ipnet.Contains(net.ParseIP(loadBalancerIP))).To(Equal(true))
 	})
 })

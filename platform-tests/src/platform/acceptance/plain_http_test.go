@@ -77,10 +77,7 @@ var _ = Describe("plain HTTP requests", func() {
 
 				Expect(resp.StatusCode).To(Equal(301))
 				Expect(resp.Header.Get("Location")).To(
-					Or(
-						Equal(fmt.Sprintf("https://foo.%s:443/", testConfig.GetAppsDomain())),
-						Equal(fmt.Sprintf("https://foo.%s/", testConfig.GetAppsDomain())), // FIXME remove when we do not have any ELBs
-					),
+					Equal(fmt.Sprintf("https://foo.%s:443/", testConfig.GetAppsDomain())),
 				)
 
 				By("does not include an HSTS header")
@@ -96,10 +93,7 @@ var _ = Describe("plain HTTP requests", func() {
 
 				Expect(resp.StatusCode).To(Equal(301))
 				Expect(resp.Header.Get("Location")).To(
-					Or(
-						Equal(fmt.Sprintf("https://foo.%s:443/", testConfig.GetAppsDomain())),
-						Equal(fmt.Sprintf("https://foo.%s/", testConfig.GetAppsDomain())), // FIXME remove when we do not have any ELBs
-					),
+					Equal(fmt.Sprintf("https://foo.%s:443/", testConfig.GetAppsDomain())),
 				)
 			})
 		})
