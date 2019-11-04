@@ -74,4 +74,18 @@ var _ = Describe("PipeCleaner", func() {
 			})
 		})
 	})
+
+	Context("secret-interpolation", func() {
+		Context("when there's a param that looks like a secret but is not interpolated", func () {
+			BeforeEach(func () {
+				command = exec.Command("./pipecleaner.py", "spec/fixtures/pipecleaner_secrets_interpolation.yml")
+			})
+
+			It("should report a warning", func () {
+				Expect(session).To(gexec.Exit(0))
+				Expect(session.Out).To(gbytes.Say("WARNING.*?job='secrets-interpolate', task='bad-secrets-interpolate'"))
+				Expect(session.Err.Contents()).To(BeEmpty())
+			})
+		})
+	})
 })

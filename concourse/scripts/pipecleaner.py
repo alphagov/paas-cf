@@ -84,6 +84,7 @@ class Pipecleaner(object):
             'unused_resource': [],
             'unused_output': [],
             'shellcheck': [],
+            'secret-interpolation': [],
         }
 
         defined_resource_names = set([e['name'] for e in data['resources']])
@@ -193,6 +194,19 @@ class Pipecleaner(object):
                                     '~': output,
                                     'fatal': True,
                                 })
+
+                    if 'params' in item['config']:
+                        config = item['config']
+                        for key in config['params']:
+                            if re.search(r'SECRET|KEY(?!S)', key):
+                                value = config['params'][key]
+                                if not re.search(r'DUMMY', value):
+                                    errors['secret-interpolation'].append({
+                                        'job': job['name'],
+                                        'task': item['task'],
+                                        '~': 'Key "' + key + '" looks like a secret, but the value is not interpolated',
+                                        'fatal': False,
+                                    })
 
             overall_used_resources = overall_used_resources.union(used_resources).union(get_resources)
 
