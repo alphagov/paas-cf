@@ -3283,7 +3283,7 @@ jobs:
             NOTIFY_API_KEY: ((notify_api_key))
             NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
             AWS_REGION: ((aws_region))
-            UAA_CLIENTS_PAAS_ADMIN_SECERT: uaa_clients_paas_admin_secret
+            UAA_CLIENTS_PAAS_ADMIN_SECRET: ((uaa_clients_paas_admin_secret))
           run:
             path: sh
             args:
@@ -3307,7 +3307,7 @@ jobs:
                     ACCOUNTS_SECRET: ((paas_accounts_password))
                     NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
-                    SESSION_SECRET: (( concat "session-" "${UAA_CLIENTS_PAAS_ADMIN_SECERT}" ))
+                    SESSION_SECRET: (( concat "session-" "${UAA_CLIENTS_PAAS_ADMIN_SECRET}" ))
                     AWS_REGION: "$AWS_REGION"
                     MS_CLIENT_ID: ((microsoft_adminoidc_client_id))
                     MS_CLIENT_SECRET: ((microsoft_adminoidc_client_secret))
