@@ -174,9 +174,6 @@ vm_types:
     ephemeral_disk:
       size: 10240
       type: gp2
-    elbs:
-    - ((terraform_outputs_cf_router_elb_name))
-    - ((terraform_outputs_cf_router_system_domain_elb_name))
 
 - name: slim_router
   cloud_properties:
@@ -184,9 +181,6 @@ vm_types:
     ephemeral_disk:
       size: 10240
       type: gp2
-    elbs:
-    - ((terraform_outputs_cf_router_elb_name))
-    - ((terraform_outputs_cf_router_system_domain_elb_name))
 
 - name: cell
   cloud_properties:
