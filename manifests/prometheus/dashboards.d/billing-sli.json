@@ -331,7 +331,7 @@
         "tableColumn": "",
         "targets": [
           {
-            "expr": "( sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d]))+ sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d]))+ sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d]))+ sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d]))) / (( sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d])))*7*$exchange_rate)",
+            "expr": "( sum(delta(paas_billing_total_costs_pounds{name=\"app\"}[7d]))+ sum(delta(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d]))+ sum(delta(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d]))+ sum(delta(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d]))) / (( sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))+ sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d])))*7*$exchange_rate)",
             "format": "time_series",
             "intervalFactor": 1,
             "refId": "A"
@@ -396,7 +396,7 @@
             "displayAliasType": "Warning / Critical",
             "displayType": "Regular",
             "displayValueWithAlias": "Never",
-            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"app\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate)",
+            "expr": "sum(delta(paas_billing_total_costs_pounds{name=\"app\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Elastic Compute Cloud - Compute\"}[7d]))*7*$exchange_rate)",
             "format": "time_series",
             "instant": false,
             "intervalFactor": 1,
@@ -412,7 +412,7 @@
             "displayAliasType": "Warning / Critical",
             "displayType": "Regular",
             "displayValueWithAlias": "Never",
-            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "expr": "sum(delta(paas_billing_total_costs_pounds{name=~\"mysql.+|postgres.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Relational Database Service\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
             "format": "time_series",
             "instant": false,
             "intervalFactor": 1,
@@ -422,7 +422,7 @@
             "valueHandler": "Number Threshold"
           },
           {
-            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
+            "expr": "sum(delta(paas_billing_total_costs_pounds{name=~\"redis.+\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon ElastiCache\",type=\"AmortizedCost\"}[7d]))* 7*$exchange_rate)",
             "format": "time_series",
             "interval": "",
             "intervalFactor": 1,
@@ -430,14 +430,14 @@
             "refId": "C"
           },
           {
-            "expr": "sum(increase(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
+            "expr": "sum(delta(paas_billing_total_costs_pounds{name=\"aws-s3-bucket default\"}[7d])) / (sum(avg_over_time(paas_aws_cost_explorer_by_service_dollars{service=\"Amazon Simple Storage Service\"}[7d]))* 7*$exchange_rate)",
             "format": "time_series",
             "intervalFactor": 1,
             "legendFormat": "S3 / AWS S3",
             "refId": "D"
           },
           {
-            "expr": "sum(increase(paas_billing_total_costs_pounds{name=~\"elasticsearch.+\"}[7d])) / sum(delta(paas_aiven_estimated_cost_pounds[7d])) > 0",
+            "expr": "sum(delta(paas_billing_total_costs_pounds{name=~\"elasticsearch.+\"}[7d])) / sum(delta(paas_aiven_estimated_cost_pounds[7d])) > 0",
             "format": "time_series",
             "interval": "",
             "intervalFactor": 1,
