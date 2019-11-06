@@ -23,6 +23,12 @@
   deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'momo']
   cf_admin: true
 
+- email: "rafal.proszowski@digital.cabinet-office.gov.uk"
+  google_id: 111800464824171130320
+  origin: "google"
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+  cf_admin: true
+
 - email: "richard.towers@digital.cabinet-office.gov.uk"
   google_id: 110880982070595988507
   origin: "google"
