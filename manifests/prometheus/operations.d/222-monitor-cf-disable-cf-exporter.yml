@@ -1,2 +1,0 @@
-- type: remove
-  path: /instance_groups/name=prometheus2/jobs/name=cf_exporter
