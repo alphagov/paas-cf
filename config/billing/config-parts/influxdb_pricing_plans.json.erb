@@ -1,0 +1,13 @@
+{
+	"name": "influxdb tiny-1.x",
+	"valid_from": "2019-11-07",
+	"plan_guid": "f636ed93-3354-4173-b8bd-031f54866528",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_influxdb_startup_4") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},

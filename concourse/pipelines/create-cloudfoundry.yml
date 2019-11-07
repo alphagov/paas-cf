@@ -606,7 +606,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker.git
-      tag_filter: v0.18.0
+      tag_filter: v0.22.0
 
   - name: paas-billing
     type: git
@@ -2685,7 +2685,10 @@ jobs:
                 else
                   cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
                 fi
+
                 cf enable-service-access elasticsearch
+
+                cf enable-service-access influxdb -o admin
 
       - task: register-elasticache-broker
         tags: [colocated-with-web]
