@@ -22,4 +22,4 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=cf_exporter/properties/cf_exporter/filter?
   value:
-    collectors: Applications,Buildpacks,Organizations,Routes,ServiceBindings,ServiceInstances,ServicePlans,Services,Spaces
+    collectors: Applications,Organizations,Routes,ServiceBindings,ServiceInstances,ServicePlans,Services,Spaces
