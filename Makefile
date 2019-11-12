@@ -24,14 +24,14 @@ scripts_spec:
 	cd scripts &&\
 		go get -d -t . &&\
 		go test
-	cd scripts &&\
-		bundle exec rspec
 
 tools_spec:
 	cd tools/metrics &&\
 		go test -v $(go list ./... | grep -v acceptance)
 	cd tools/user_emails &&\
 		go test -v ./...
+	cd tools/user_management &&\
+		bundle exec rspec --format documentation
 
 concourse_spec:
 	cd concourse &&\
