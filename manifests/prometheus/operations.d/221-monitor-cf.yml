@@ -11,3 +11,15 @@
   path: /instance_groups/name=firehose/jobs/name=firehose_exporter/properties/firehose_exporter/doppler/idle_timeout?
   value: 5m
 
+# Set the scrape interval of the Prometheus CF scraping config
+# higher so that it doesn't generate as much load so often.
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/scrape_configs/job_name=cf/scrape_interval
+  value: 10m
+
+# Filter in/enable only the collectors we want.
+# The value must be a CSV without spaces
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=cf_exporter/properties/cf_exporter/filter?
+  value:
+    collectors: Applications,Organizations,Routes,ServiceBindings,ServiceInstances,ServicePlans,Services,Spaces
