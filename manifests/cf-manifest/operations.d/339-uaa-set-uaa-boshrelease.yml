@@ -3,6 +3,6 @@
   path: /releases/name=uaa
   value:
     name: uaa
-    version: 0.1.15
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-0.1.15.tgz
-    sha1: 0316abccd6e2f7c88dff7ac6248d8ed99c0fd891
+    version: 0.0.1573667484
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-0.0.1573667484.tgz
+    sha1: 747541c371b3a7d654ac4ba8f2f7399acf1e117d
