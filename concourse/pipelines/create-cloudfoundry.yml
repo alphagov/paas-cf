@@ -620,7 +620,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: master
-      tag_filter: v0.10.0
+      tag_filter: v0.14.0
 
   - name: paas-admin
     type: git

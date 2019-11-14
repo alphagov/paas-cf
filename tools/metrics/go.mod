@@ -1,6 +1,6 @@
 module github.com/alphagov/paas-cf/tools/metrics
 
-go 1.12
+go 1.13
 
 require (
 	code.cloudfoundry.org/lager v1.0.0
