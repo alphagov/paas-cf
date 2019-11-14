@@ -67,15 +67,6 @@ func testElasticsearchConnection(tls bool) error {
 	return nil
 }
 
-func forcePlainHTTP(uri string) (string, error) {
-	u, err := url.Parse(uri)
-	if err != nil {
-		return "", err
-	}
-	u.Scheme = "http"
-	return u.String(), nil
-}
-
 type esDocument struct {
 	Index  string                 `json:"_index"`
 	Type   string                 `json:"_type"`
