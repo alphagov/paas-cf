@@ -111,6 +111,7 @@ jobs:
             - name: paas-cf
           params:
             DEPLOY_ENV: ((deploy_env))
+            SKIP_AWAIT: ((skip_autodelete_await))
           run:
             path: ./paas-cf/concourse/scripts/sleep_for_deploy_env.sh
 
