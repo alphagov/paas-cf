@@ -160,6 +160,10 @@ while [[ $# -gt 0 ]]; do
     --owner)
       OWNER="$1"
       shift
+      if [[ "$OWNER" == *"@"* ]]; then
+        >&2 echo "--owner $OWNER should be the name of the department or authority that manages this org, not the email of the owner"
+        exit 1
+      fi
     ;;
     *)
       # unknown option
