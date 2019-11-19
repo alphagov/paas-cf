@@ -1,5 +1,13 @@
 ---
 
+- type: replace
+  path: /releases/name=routing
+  value:
+    name: routing
+    version: "0.193.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/cf-routing-release?v=0.193.0"
+    sha1: "eb74a7c1f2775382daea61dc2f666833febe2dc9"
+
 - type: remove
   path: /instance_groups/name=router/vm_extensions
 
@@ -25,6 +33,23 @@
       add_headers_if_not_present:
         - name: Strict-Transport-Security
           value: max-age=31536000; includeSubDomains; preload
+
+- type: replace
+  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/max_idle_connections?
+  # See: https://docs.cloudfoundry.org/adminguide/routing-keepalive.html
+  #
+  # Do not change this until we are ready to enable keepalives
+  #
+  # Once this is non-zero, gorouter maintains 100 idle connections with
+  # backends (hardcoded)
+  #
+  # Once this is non-zero, gorouter maintains the configured value idle
+  # connections
+  #
+  # This should be explicitly set to zero until we enable it because future
+  # versions of cf-deployment default this to a non-zero value which enables
+  # the feature
+  value: 0
 
 - type: replace
   path: /instance_groups/name=router/networks/0/name
