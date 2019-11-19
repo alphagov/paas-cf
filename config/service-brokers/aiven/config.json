@@ -60,6 +60,30 @@
             }
           }
         ]
+      },
+      {
+        "id": "9e91681d-d9ae-4ab4-9b1e-8b8fbb54ce52",
+        "name": "influxdb",
+        "description": "InfluxDB instances provisioned via Aiven",
+        "bindable": true,
+        "plan_updateable": true,
+        "metadata": {
+          "displayName": "InfluxDB",
+          "providerDisplayName": "GOV.UK PaaS",
+          "supportUrl": "https://www.cloud.service.gov.uk/support"
+        },
+        "plans": [
+          {
+            "id": "f636ed93-3354-4173-b8bd-031f54866528",
+            "name": "tiny-1.x",
+            "aiven_plan": "startup-4",
+            "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 4GB RAM per VM, 16GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Tiny, single InfluxDB instance"
+            }
+          }
+        ]
       }
     ]
   }

@@ -14,6 +14,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	"github.com/cloudfoundry/cf-acceptance-tests/helpers/config"
@@ -48,6 +49,24 @@ func TestSuite(t *testing.T) {
 
 	BeforeSuite(func() {
 		testContext.Setup()
+
+		// FIXME remove InfluxDB once it is GA
+		for _, svc := range []string{"influxdb"} {
+			org := testContext.GetOrganizationName()
+
+			workflowhelpers.AsUser(
+				testContext.AdminUserContext(),
+				testContext.ShortTimeout(), func() {
+					enableServiceAccess := cf.Cf(
+						"enable-service-access", svc,
+						"-o", org,
+					).Wait(testConfig.DefaultTimeoutDuration())
+
+					Expect(enableServiceAccess).To(Exit(0))
+					Expect(enableServiceAccess).To(Say("OK"))
+				},
+			)
+		}
 	})
 
 	AfterSuite(func() {
