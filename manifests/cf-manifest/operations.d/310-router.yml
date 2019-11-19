@@ -38,7 +38,7 @@
   path: /instance_groups/name=router/jobs/name=gorouter/properties/router/max_idle_connections?
   # See: https://docs.cloudfoundry.org/adminguide/routing-keepalive.html
   #
-  # Do not change this until routing-release >= 0.193
+  # Do not change this until we are ready to enable keepalives
   #
   # Once this is non-zero, gorouter maintains 100 idle connections with
   # backends (hardcoded)
@@ -49,7 +49,6 @@
   # This should be explicitly set to zero until we enable it because future
   # versions of cf-deployment default this to a non-zero value which enables
   # the feature
-  #
   value: 0
 
 - type: replace
