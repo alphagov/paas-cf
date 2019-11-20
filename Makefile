@@ -67,7 +67,11 @@ platform_tests_spec:
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
 
-spec: scripts_spec tools_spec concourse_spec manifests_spec terraform_spec platform_tests_spec
+config_spec:
+	cd config &&\
+		bundle exec rspec
+
+spec: config_spec scripts_spec tools_spec concourse_spec manifests_spec terraform_spec platform_tests_spec
 
 compile_platform_tests:
 	GOPATH="$$(pwd)/platform-tests" \

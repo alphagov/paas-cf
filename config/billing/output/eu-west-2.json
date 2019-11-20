@@ -1666,7 +1666,7 @@
 		},
 		{
 			"name": "influxdb tiny-1.x",
-			"valid_from": "2019-11-07",
+			"valid_from": "2019-11-01",
 			"plan_guid": "f636ed93-3354-4173-b8bd-031f54866528",
 			"components": [
 				{
