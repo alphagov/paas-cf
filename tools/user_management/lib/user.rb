@@ -3,12 +3,11 @@ require 'json'
 require_relative 'uaa_resource'
 
 class User < UAAResource
-  attr_reader :email, :google_id, :deploy_envs, :cf_admin
+  attr_reader :email, :google_id, :cf_admin
 
   def initialize(obj)
     @email = obj.fetch('email')
     @google_id = obj.fetch('google_id')
-    @deploy_envs = obj.fetch('deploy_envs')
     @cf_admin = obj.fetch('cf_admin', false)
   end
 

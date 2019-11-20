@@ -9,7 +9,6 @@ RSpec.describe Group do
     @fake_user = {
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'deploy_envs' => ['prod', 'prod-lon', 'stg-lon', 'jeff'],
       'cf_admin' => true
     }
     @fake_uaa_client = RestClient::Resource.new('http://fake-uaa.internal')
@@ -160,8 +159,7 @@ RSpec.describe Group do
 
     u2 = User.new(
       'email' => 'rich.richardson@example.com',
-      'google_id' => '100000000000000000001',
-      'deploy_envs' => ['rich']
+      'google_id' => '100000000000000000001'
     )
     u2.get_user(@fake_uaa_client)
 

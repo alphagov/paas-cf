@@ -20,7 +20,6 @@ RSpec.describe User do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'deploy_envs' => ['prod', 'prod-lon', 'stg-lon', 'jeff'],
       'cf_admin' => true
     )
 
@@ -32,8 +31,7 @@ RSpec.describe User do
 
     u2 = User.new(
       'email' => 'rich.richardson@example.com',
-      'google_id' => '999999999999999999999',
-      'deploy_envs' => ['rich']
+      'google_id' => '999999999999999999999'
     )
 
     expect(u2.exists?(@fake_uaa_client)).to be false
@@ -51,7 +49,6 @@ RSpec.describe User do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'deploy_envs' => ['prod', 'prod-lon', 'stg-lon', 'jeff'],
       'cf_admin' => true
     )
 
@@ -65,8 +62,7 @@ RSpec.describe User do
 
     u2 = User.new(
       'email' => 'rich.richardson',
-      'google_id' => '999999999999999999999',
-      'deploy_envs' => ['rich']
+      'google_id' => '999999999999999999999'
     )
 
     expect { u2.create(@fake_uaa_client) }.to raise_error(Exception, /Bad Request/)
@@ -76,8 +72,7 @@ RSpec.describe User do
 
     u3 = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000',
-      'deploy_envs' => ['jeff']
+      'google_id' => '000000000000000000000'
     )
 
     expect(u3.create(@fake_uaa_client)).to be false
@@ -98,7 +93,6 @@ RSpec.describe User do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'deploy_envs' => ['prod', 'prod-lon', 'stg-lon', 'jeff'],
       'cf_admin' => true
     )
 

@@ -50,9 +50,7 @@ run:
 
       users_that_should_exist = YAML.load_file(
         "#{Dir.pwd}/paas-cf/config/users.yml"
-      ).select do |u|
-        u.dig('deploy_envs').include? deploy_env
-      end.reject do |u|
+      ).reject do |u|
         u.dig('email').nil?
       end.map do |u|
         u.fetch('email')
