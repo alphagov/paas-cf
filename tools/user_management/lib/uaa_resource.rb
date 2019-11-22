@@ -1,15 +1,22 @@
 class UAAResource
   attr_reader :guid
 
-  def get_resource(url, uaa_client)
+  def get(url, uaa_client)
     resp = uaa_client[url].get
+    unless resp.code == 200
+      raise "unexpected response fetching '#{url}'"
+    end
 
-    raise "unexpected response fetching '#{url}'" unless resp.code == 200
+    JSON.parse(resp)
+  end
 
-    parsed_resp = JSON.parse(resp)
-    raise "unexpected number of results fetching '#{url}': '#{parsed_resp['totalResults']}'" unless parsed_resp['totalResults'] == 1
+  def get_resource(url, uaa_client)
+    response = get(url, uaa_client)
+    unless response['totalResults'] == 1
+      raise "unexpected number of results fetching '#{url}': '#{response['totalResults']}'"
+    end
 
-    @guid = parsed_resp['resources'][0]['id']
-    parsed_resp['resources'][0]
+    @guid = response['resources'][0]['id']
+    response['resources'][0]
   end
 end
