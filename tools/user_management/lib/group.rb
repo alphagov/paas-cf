@@ -1,4 +1,5 @@
 require 'json'
+require 'time'
 
 require_relative 'uaa_resource'
 
@@ -24,6 +25,12 @@ class Group < UAAResource
       end
 
       unless desired_user_guids.include?(member['value'])
+        created = Time.iso8601(member['entity']['meta']['created'])
+        if Time.now - created < 3600
+          puts "WARNING: Not removing unexpected user '#{member['value']}'/'#{member['entity']['userName']}' from group '#{@name}' as they are less than an hour old (created at '#{member['entity']['meta']['created']}')"
+          next
+        end
+
         puts "WARNING: Removing unexpected user '#{member['value']}'/'#{member['entity']['userName']}' from group '#{@name}'"
         remove_member(member['value'], uaa_client)
       end

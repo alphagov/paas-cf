@@ -228,6 +228,9 @@ RSpec.describe Group do
             'value' => '00000000-0000-0000-0000-000000000002-user',
             'entity' => {
               'userName' => '000000000000000000011',
+              'meta' => {
+                'created' => (Time.now - 86400).iso8601
+              }
             }
           }
         ]))
@@ -289,6 +292,9 @@ RSpec.describe Group do
             'value' => '00000000-0000-0000-0000-000000000009-user',
             'entity' => {
               'userName' => 'admin',
+              'meta' => {
+                'created' => (Time.now - 86400).iso8601
+              }
             }
           }
         ]))
@@ -300,7 +306,7 @@ RSpec.describe Group do
       assert_not_requested(:delete, 'http://fake-uaa.internal/Groups/00000000-0000-0000-0000-000000000000-group/members/00000000-0000-0000-0000-000000000009-user')
     end
 
-    it 'removes non-admin uaa users' do
+    it 'removes non-admin uaa users created more than one hour ago' do
       stub_request(:get, 'http://fake-uaa.internal/Groups/00000000-0000-0000-0000-000000000000-group/members?returnEntities=true')
         .to_return(body: JSON.generate([
           @fake_member,
@@ -309,6 +315,9 @@ RSpec.describe Group do
             'value' => '00000000-0000-0000-0000-000000000010-user',
             'entity' => {
               'userName' => 'not-admin',
+              'meta' => {
+                'created' => (Time.now - 86400).iso8601
+              }
             }
           }
         ]))
@@ -321,6 +330,29 @@ RSpec.describe Group do
 
       g.remove_unexpected_members(@fake_uaa_client)
       assert_requested(:delete, 'http://fake-uaa.internal/Groups/00000000-0000-0000-0000-000000000000-group/members/00000000-0000-0000-0000-000000000010-user')
+    end
+
+    it 'preserves non-admin uaa users created less than an hour ago' do
+      stub_request(:get, 'http://fake-uaa.internal/Groups/00000000-0000-0000-0000-000000000000-group/members?returnEntities=true')
+        .to_return(body: JSON.generate([
+          @fake_member,
+          {
+            'origin' => 'uaa',
+            'value' => '00000000-0000-0000-0000-000000000011-user',
+            'entity' => {
+              'userName' => 'not-admin',
+              'meta' => {
+                'created' => (Time.now - 1800).iso8601
+              }
+            }
+          }
+        ]))
+
+      @u1.get_user(@fake_uaa_client)
+      g = Group.new('__test__', [@u1])
+
+      g.remove_unexpected_members(@fake_uaa_client)
+      assert_not_requested(:delete, 'http://fake-uaa.internal/Groups/00000000-0000-0000-0000-000000000000-group/members/00000000-0000-0000-0000-000000000011-user')
     end
   end
 end
