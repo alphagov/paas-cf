@@ -1,5 +1,6 @@
 require 'json'
 require 'time'
+require 'colorize'
 
 require_relative 'uaa_resource'
 
@@ -24,22 +25,22 @@ class Group < UAAResource
     end
 
     if unexpected_members.empty?
-      puts "No unexpected users found in group #{@name}."
+      puts "No unexpected users found in group #{@name}.".green
       return
     end
 
-    puts "WARNING: Unexpected members found in group #{@name}:"
+    puts "WARNING: Unexpected members found in group #{@name}:".red
     unexpected_members.each do |member|
-      puts "- guid=#{member['entity']['id']}"
-      puts "  origin=#{member['entity']['origin']}"
-      puts "  userName='#{member['entity']['userName']}'"
+      puts "- guid=#{member['entity']['id']}".red
+      puts "  origin=#{member['entity']['origin']}".red
+      puts "  userName='#{member['entity']['userName']}'".red
 
       created = Time.iso8601(member['entity']['meta']['created'])
       if Time.now - created < 3600
-        puts "  USER NOT REMOVED FROM GROUP BECAUSE THE USER IS LESS THAN 1 HOUR OLD"
+        puts "  NOT REMOVING USER FROM GROUP BECAUSE IT IS LESS THAN 1 HOUR OLD".yellow
       else
         remove_member(member['entity']['id'], uaa_client)
-        puts "  USER REMOVED FROM GROUP"
+        puts "  USER REMOVED FROM GROUP".green
       end
     end
   end
@@ -52,14 +53,21 @@ class Group < UAAResource
   end
 
   def add_desired_users(uaa_client)
-    original_member_guids = get_members(uaa_client).map { |member| member['entity']['id'] }
-    @users.each do |user|
-      if original_member_guids.include? user.guid
-        puts "Preserving desired user '#{user.google_id}'/'#{user.email}'/'#{user.guid}' in group '#{@name}'"
-      else
-        puts "Adding desired user '#{user.google_id}'/'#{user.email}'/'#{user.guid}' to group '#{@name}'"
-        add_member(user.guid, 'google', uaa_client)
-      end
+    existing_member_guids = get_members(uaa_client).map { |member| member['entity']['id'] }
+    new_users_to_add = @users.reject { |user| existing_member_guids.include?(user.guid) }
+
+    if new_users_to_add.empty?
+      puts "No users need adding to to group #{@name}.".green
+      return
+    end
+
+    puts "Adding new members to group #{@name}:".green
+    new_users_to_add.each do |user|
+      puts "- guid=#{user.guid}".green
+      puts "  origin=google".green
+      puts "  userName='#{user.google_id}'".green
+      add_member(user.guid, 'google', uaa_client)
+      puts "  USER ADDED TO GROUP".green
     end
   end
 
