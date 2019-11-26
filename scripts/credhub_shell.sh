@@ -2,13 +2,14 @@
 
 set -eu
 
+SSH_PATH=${SSH_PATH:-"/Users/${USER}/.ssh/id_rsa"}
+
 CONTAINER_REPO="governmentpaas/bosh-shell"
-CONTAINER_TAG="b5852ff97ceaa1afb1c194f801850c151b74d07c"
+CONTAINER_TAG="91fe1e826f39798986d95a02fb1ccab6f0e7c746"
 CONTAINER="${CONTAINER_REPO}:${CONTAINER_TAG}"
 
-# Setup Bosh variables
-BOSH_ID_RSA="$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/id_rsa" - | base64)"
-export BOSH_ID_RSA
+USER_ID_RSA="$(base64 "${SSH_PATH}")"
+export USER_ID_RSA
 
 BOSH_CA_CERT="$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-CA.crt" -)"
 export BOSH_CA_CERT
@@ -43,7 +44,8 @@ touch "${HOME}/.credhub_history/${DEPLOY_ENV}"
 docker run \
     -it \
     --rm \
-    --env "BOSH_ID_RSA" \
+    --env "USER_ID_RSA" \
+    --env "USER" \
     --env "BOSH_IP" \
     --env "BOSH_CLIENT=admin" \
     --env "BOSH_CLIENT_SECRET" \

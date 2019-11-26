@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/cf-acceptance-tests
-    tag: b5852ff97ceaa1afb1c194f801850c151b74d07c
+    tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
 inputs:
   - name: paas-cf
   - name: test-config
