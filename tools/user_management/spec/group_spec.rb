@@ -18,10 +18,13 @@ RSpec.describe Group do
       ]
     }
     @fake_member = {
-      'origin' => 'google',
-      'value' => '00000000-0000-0000-0000-000000000001-user',
       'entity' => {
+        'id' => '00000000-0000-0000-0000-000000000001-user',
         'userName' => '000000000000000000000',
+        'origin' => 'google',
+        'meta' => {
+          'created' => (Time.now - 1800).iso8601
+        }
       }
     }
     @fake_uaa_client = RestClient::Resource.new('http://fake-uaa.internal')
@@ -50,9 +53,9 @@ RSpec.describe Group do
       group = Group.new('__test__', [])
       members = group.get_members(@fake_uaa_client)
       expect(members.length).to eq 1
-      expect(members[0]['origin']).to eq 'google'
+      expect(members[0]['entity']['id']).to eq '00000000-0000-0000-0000-000000000001-user'
       expect(members[0]['entity']['userName']).to eq '000000000000000000000'
-      expect(members[0]['value']).to eq '00000000-0000-0000-0000-000000000001-user'
+      expect(members[0]['entity']['origin']).to eq 'google'
     end
   end
 
@@ -224,10 +227,10 @@ RSpec.describe Group do
         .to_return(body: JSON.generate([
           @fake_member,
           {
-            'origin' => 'google',
-            'value' => '00000000-0000-0000-0000-000000000002-user',
             'entity' => {
+              'id' => '00000000-0000-0000-0000-000000000002-user',
               'userName' => '000000000000000000011',
+              'origin' => 'google',
               'meta' => {
                 'created' => (Time.now - 86400).iso8601
               }
@@ -288,10 +291,10 @@ RSpec.describe Group do
         .to_return(body: JSON.generate([
           @fake_member,
           {
-            'origin' => 'uaa',
-            'value' => '00000000-0000-0000-0000-000000000009-user',
             'entity' => {
+              'id' => '00000000-0000-0000-0000-000000000009-user',
               'userName' => 'admin',
+              'origin' => 'uaa',
               'meta' => {
                 'created' => (Time.now - 86400).iso8601
               }
@@ -311,10 +314,10 @@ RSpec.describe Group do
         .to_return(body: JSON.generate([
           @fake_member,
           {
-            'origin' => 'uaa',
-            'value' => '00000000-0000-0000-0000-000000000010-user',
             'entity' => {
+              'id' => '00000000-0000-0000-0000-000000000010-user',
               'userName' => 'not-admin',
+              'origin' => 'uaa',
               'meta' => {
                 'created' => (Time.now - 86400).iso8601
               }
@@ -337,10 +340,10 @@ RSpec.describe Group do
         .to_return(body: JSON.generate([
           @fake_member,
           {
-            'origin' => 'uaa',
-            'value' => '00000000-0000-0000-0000-000000000011-user',
             'entity' => {
+              'id' => '00000000-0000-0000-0000-000000000011-user',
               'userName' => 'not-admin',
+              'origin' => 'uaa',
               'meta' => {
                 'created' => (Time.now - 1800).iso8601
               }

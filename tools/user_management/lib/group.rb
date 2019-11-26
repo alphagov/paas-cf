@@ -13,26 +13,33 @@ class Group < UAAResource
 
   def remove_unexpected_members(uaa_client)
     desired_user_guids = @users.map(&:guid)
-
-    get_members(uaa_client).each do |member|
-      unless member['entity'] && member['entity']['userName']
-        raise "did not find a userName for '#{member['value']}'"
+    unexpected_members = get_members(uaa_client).select do |member|
+      if desired_user_guids.include?(member['entity']['id'])
+        false
+      elsif member['entity']['origin'] == 'uaa' && member['entity']['userName'] == 'admin'
+        false
+      else
+        true
       end
+    end
 
-      if member['origin'] == 'uaa' && member['entity']['userName'] == 'admin'
-        puts "Preserving UAA admin user in group '#{@name}'"
-        next
-      end
+    if unexpected_members.empty?
+      puts "No unexpected users found in group #{@name}."
+      return
+    end
 
-      unless desired_user_guids.include?(member['value'])
-        created = Time.iso8601(member['entity']['meta']['created'])
-        if Time.now - created < 3600
-          puts "WARNING: Not removing unexpected user '#{member['value']}'/'#{member['entity']['userName']}' from group '#{@name}' as they are less than an hour old (created at '#{member['entity']['meta']['created']}')"
-          next
-        end
+    puts "WARNING: Unexpected members found in group #{@name}:"
+    unexpected_members.each do |member|
+      puts "- guid=#{member['entity']['id']}"
+      puts "  origin=#{member['entity']['origin']}"
+      puts "  userName='#{member['entity']['userName']}'"
 
-        puts "WARNING: Removing unexpected user '#{member['value']}'/'#{member['entity']['userName']}' from group '#{@name}'"
-        remove_member(member['value'], uaa_client)
+      created = Time.iso8601(member['entity']['meta']['created'])
+      if Time.now - created < 3600
+        puts "  USER NOT REMOVED FROM GROUP BECAUSE THE USER IS LESS THAN 1 HOUR OLD"
+      else
+        remove_member(member['entity']['id'], uaa_client)
+        puts "  USER REMOVED FROM GROUP"
       end
     end
   end
@@ -45,7 +52,7 @@ class Group < UAAResource
   end
 
   def add_desired_users(uaa_client)
-    original_member_guids = get_members(uaa_client).map { |member| member['value'] }
+    original_member_guids = get_members(uaa_client).map { |member| member['entity']['id'] }
     @users.each do |user|
       if original_member_guids.include? user.guid
         puts "Preserving desired user '#{user.google_id}'/'#{user.email}'/'#{user.guid}' in group '#{@name}'"
