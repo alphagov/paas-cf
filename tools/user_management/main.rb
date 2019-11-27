@@ -21,6 +21,7 @@ users_config = YAML.safe_load(File.read(USERS_CONFIG_PATH)).map { |uo| User.new(
 ensure_users_exist_in_uaa(users_config, uaa_client)
 
 admin_users = users_config.select(&:cf_admin)
+non_admin_users = users_config.reject(&:cf_admin)
 groups = [
   Group.new('cloud_controller.admin', admin_users),
   Group.new('cloud_controller.admin_read_only', admin_users),
@@ -30,7 +31,7 @@ groups = [
   Group.new('scim.invite', admin_users),
   Group.new('doppler.firehose', admin_users),
   Group.new('network.admin', admin_users),
-  Group.new('cloud_controller.global_auditor', users_config)
+  Group.new('cloud_controller.global_auditor', non_admin_users)
 ]
 
 ensure_uaa_groups_have_correct_members(groups, uaa_client)

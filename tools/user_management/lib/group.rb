@@ -31,7 +31,7 @@ class Group < UAAResource
 
     puts "WARNING: Unexpected members of group #{@name}:".red
     unexpected_members.each do |member|
-      puts "- guid=#{member['id']}".red
+      puts "* guid=#{member['id']}".red
       puts "  origin=#{member['origin']}".red
       puts "  userName='#{member['userName']}'".red
 
@@ -62,7 +62,7 @@ class Group < UAAResource
 
     puts "Adding new users to group #{@name}:".green
     new_users_to_add.each do |user|
-      puts "- guid=#{user.guid}".green
+      puts "* guid=#{user.guid}".green
       puts "  email='#{user.email}'".green
       puts "  origin=google".green
       puts "  userName='#{user.google_id}'".green
