@@ -78,7 +78,7 @@
             "name": "tiny-1.x",
             "aiven_plan": "startup-4",
             "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 4GB RAM per VM, 16GB disk space.",
-            "free": false,
+            "free": true,
             "metadata": {
               "displayName": "Tiny, single InfluxDB instance"
             }
