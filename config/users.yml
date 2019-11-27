@@ -60,3 +60,10 @@
   google_id: 116361542740992904571
   origin: "google"
   deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
+- email: "chris.farmiloe@digital.cabinet-office.gov.uk"
+  google_id: 106457082176451302743
+  origin: google
+  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+  cf_admin: true
+
