@@ -31,7 +31,6 @@ class User < UAAResource
 
   def get_user(uaa_client)
     scim_filter = [
-      "email+eq+\"#{@email}\"",
       'origin+eq+"google"',
       "userName+eq+\"#{@google_id}\""
     ].join('+and+')
