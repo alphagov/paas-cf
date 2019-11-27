@@ -1,0 +1,37 @@
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: prometheus
+    instances: 1
+    azs: [z1, z2, z3]
+    stemcell: default
+
+    persistent_disk_type: 100GB
+    vm_type: small
+
+    networks:
+      - name: cf
+
+    jobs:
+      - name: prometheus2
+        release: prometheus
+        properties:
+          prometheus:
+            rule_files: []
+
+            scrape_configs:
+              - job_name: prometheus
+                static_configs:
+                  - targets: [localhost:9090]
+
+      - name: route_registrar
+        release: routing
+        properties:
+          route_registrar:
+            routes:
+              - name: prometheus
+                port: 9090
+                prepend_instance_index: true
+                registration_interval: 10s
+                uris:
+                  - prometheus.((system_domain))
