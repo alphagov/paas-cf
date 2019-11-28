@@ -17,6 +17,10 @@ RSpec.describe 'prometheus' do
     manifest.fetch('instance_groups.prometheus.jobs.caddy.properties')
   end
 
+  let(:aiven_sd_config) do
+    manifest.fetch('instance_groups.prometheus.jobs.aiven-service-discovery.properties')
+  end
+
   context 'manifest' do
     it 'should have prometheus as a release' do
       release_names = releases.map { |r| r['name'] }
@@ -26,6 +30,11 @@ RSpec.describe 'prometheus' do
     it 'should have caddy as a release' do
       release_names = releases.map { |r| r['name'] }
       expect(release_names).to include('caddy')
+    end
+
+    it 'should have observability as a release' do
+      release_names = releases.map { |r| r['name'] }
+      expect(release_names).to include('observability')
     end
 
     it 'should have a prometheus instance group' do
@@ -64,7 +73,31 @@ RSpec.describe 'prometheus' do
 
       expect(prom_scrape_config).not_to be_nil
       expect(prom_scrape_config['static_configs']).to eq(
-        [{ 'targets' => ['localhost:9090']}],
+        [{ 'targets' => ['localhost:9090']}]
+      )
+    end
+
+    it 'should scrape aiven' do
+      scrape_configs = prometheus_config['scrape_configs']
+      aiven_scrape_config = scrape_configs.find { |c| c['job_name'] == 'aiven' }
+
+      expect(aiven_scrape_config).not_to be_nil
+
+      expect(aiven_scrape_config['scheme']).to eq('https')
+
+      expect(aiven_scrape_config['tls_config']).to eq(
+        'insecure_skip_verify' => true # We do IP based service discovery
+      )
+
+      expect(aiven_scrape_config['basic_auth']).to eq(
+        'username' => '((aiven_prometheus_username))',
+        'password' => '((aiven_prometheus_password))'
+      )
+
+      targets = aiven_scrape_config['file_sd_configs'].first['files'].first
+
+      expect(targets).to eq(
+        aiven_sd_config['target_path'] + '/' + aiven_sd_config['target_filename']
       )
     end
   end
@@ -117,6 +150,16 @@ RSpec.describe 'prometheus' do
         expect(proxy_hosts.first).to eq('http://q-s3-i0.prometheus.*.unit-test.bosh:9090')
         expect(proxy_hosts.last).to eq('http://localhost:9090')
       end
+    end
+  end
+
+  context 'aiven-service-discovery job' do
+    it 'should have a project' do
+      expect(aiven_sd_config.dig('aiven', 'project')).to eq('paas-cf-dev')
+    end
+
+    it 'should have an api token' do
+      expect(aiven_sd_config.dig('aiven', 'api_token')).to eq('((aiven_api_token))')
     end
   end
 end

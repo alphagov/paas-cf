@@ -7,6 +7,14 @@
     sha1: "3602cd1a33f6d6ac49175b70db6ce6b96fa84e20"
 
 - type: replace
+  path: /releases/-
+  value:
+    name: observability
+    version: 0.1.7
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/observability-0.1.7.tgz
+    sha1: a066c69960410764cf0a2eb8bfb20ea22eec0250
+
+- type: replace
   path: /variables/-
   value:
     name: paas_admin_prometheus_password
@@ -37,6 +45,29 @@
               - job_name: prometheus
                 static_configs:
                   - targets: [localhost:9090]
+
+              - job_name: aiven
+                scheme: https
+
+                basic_auth:
+                  username: ((aiven_prometheus_username))
+                  password: ((aiven_prometheus_password))
+
+                tls_config:
+                  insecure_skip_verify: true
+
+                file_sd_configs:
+                  - refresh_interval: 15s
+                    files:
+                      - /var/vcap/store/aiven-service-discovery/discovery/targets.json
+
+                relabel_configs:
+                  - source_labels: [__address__]
+                    separator: ;
+                    regex: (.*)
+                    target_label: __address__
+                    replacement: ${1}:9273
+                    action: replace
 
       - name: route_registrar
         release: routing
@@ -74,3 +105,14 @@
                 except /-/reload
               }
             }
+
+      - name: aiven-service-discovery
+        release: observability
+        properties:
+          aiven:
+            project: paas-cf-((aws_account))
+            api_token: ((aiven_api_token))
+            prometheus_endpoint_id: ((aiven_prometheus_endpoint_id))
+
+          target_path: /var/vcap/store/aiven-service-discovery/discovery
+          target_filename: targets.json
