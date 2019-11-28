@@ -1,4 +1,18 @@
 - type: replace
+  path: /releases/-
+  value:
+    name: caddy
+    version: "0.7.0"
+    url: "https://bosh.io/d/github.com/dpb587/caddy-bosh-release?v=0.7.0"
+    sha1: "3602cd1a33f6d6ac49175b70db6ce6b96fa84e20"
+
+- type: replace
+  path: /variables/-
+  value:
+    name: paas_admin_prometheus_password
+    type: password
+
+- type: replace
   path: /instance_groups/-
   value:
     name: prometheus
@@ -30,8 +44,33 @@
           route_registrar:
             routes:
               - name: prometheus
-                port: 9090
-                prepend_instance_index: true
+                port: 8080
+                prepend_instance_index: false
                 registration_interval: 10s
                 uris:
                   - prometheus.((system_domain))
+
+      - name: caddy
+        release: caddy
+        properties:
+          http_port: 8080
+          caddyfile: |
+            http://:8080 {
+              tls off
+
+              basicauth / paas-admin ((paas_admin_prometheus_password))
+
+              proxy / http://q-s3-i0.prometheus.*.((environment)).bosh:9090 http://localhost:9090 {
+                policy first
+                fail_timeout 10s
+                max_fails 5
+                try_duration 2.5s
+                try_interval 100ms
+                health_check /-/ready
+                health_check_interval 10s
+                health_check_timeout 2.5s
+                health_check_contains Ready
+                timeout 30s
+                except /-/reload
+              }
+            }
