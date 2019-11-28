@@ -84,9 +84,8 @@ RSpec.describe Group do
 
       g = Group.new('__test__', [@user])
       g.get_group(@fake_uaa_client)
-      expect do
-        g.add_member('user-guid', 'google', @fake_uaa_client)
-      end.to raise_error(RestClient::BadRequest, /Bad Request/)
+      expect { g.add_member('user-guid', 'google', @fake_uaa_client) }
+        .to raise_error(RestClient::BadRequest, /Bad Request/)
     end
   end
 
@@ -111,9 +110,8 @@ RSpec.describe Group do
 
       g = Group.new('__test__', [])
       g.get_group(@fake_uaa_client)
-      expect do
-        g.remove_member('guid-of-existing-member', @fake_uaa_client)
-      end.to raise_error(RestClient::BadRequest, /Bad Request/)
+      expect { g.remove_member('guid-of-existing-member', @fake_uaa_client) }
+        .to raise_error(RestClient::BadRequest, /Bad Request/)
     end
   end
 
