@@ -2685,6 +2685,7 @@ jobs:
             - name: config
           params:
             AIVEN_API_TOKEN: ((aiven_api_token))
+            AIVEN_PROMETHEUS_ENDPOINT_ID: ((aiven_prometheus_endpoint_id))
             SERVICE_NAME_PREFIX: ((deploy_env))
             AIVEN_PROJECT: paas-cf-((aws_account))
             AIVEN_CLOUD: aws-((aws_region))
@@ -2712,6 +2713,7 @@ jobs:
                     'AIVEN_USERNAME' => 'aiven-broker',
                     'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
                     'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
+                    'AIVEN_PROMETHEUS_ENDPOINT_ID' => '$AIVEN_PROMETHEUS_ENDPOINT_ID',
                     'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
                     'AIVEN_PROJECT' => '$AIVEN_PROJECT',
                     'AIVEN_CLOUD' => '$AIVEN_CLOUD',
