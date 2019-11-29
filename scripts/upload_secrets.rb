@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'base64'
+require 'English'
 require 'json'
 require 'yaml'
 require 'tempfile'
@@ -29,7 +31,6 @@ def import_to_credhub credhub_secrets
   s3 = Aws::S3::Resource.new(region: region)
 
   state_bucket = s3.bucket("gds-paas-#{deploy_env}-state")
-  bosh_id_rsa = Base64.encode64(state_bucket.object('id_rsa').get.body.read)
   bosh_ca_cert = state_bucket.object('bosh-CA.crt').get.body.read
 
   bosh_secrets = YAML.safe_load(state_bucket.object('bosh-secrets.yml').get.body)
@@ -46,35 +47,39 @@ def import_to_credhub credhub_secrets
     { name: 'tag:instance_group', values: ['bosh'] },
   ]).first.public_ip_address
 
-  env_vars = {
-      'BOSH_ID_RSA' => bosh_id_rsa,
-      'BOSH_IP' => bosh_ip,
-      'BOSH_CLIENT' => 'admin',
-      'BOSH_CLIENT_SECRET' => bosh_client_secret,
-      'BOSH_ENVIRONMENT' => "bosh.#{system_dns_zone_name}",
-      'BOSH_CA_CERT' => bosh_ca_cert,
-      'BOSH_DEPLOYMENT' => deploy_env,
-      'CREDHUB_SERVER' => "https://bosh.#{system_dns_zone_name}:8844/api",
-      'CREDHUB_CLIENT' => "credhub-admin",
-      'CREDHUB_SECRET' => credhub_secret,
-      'CREDHUB_CA_CERT' => credhub_ca_cert,
-      'CREDHUB_PROXY' => "socks5://localhost:25555",
-  }
-  env_vars.each { |key, value| ENV[key] = value }
+  env_params = {
+    'USER'        => ENV.fetch('USER'),
+    'USER_ID_RSA' => Base64.encode64(File.read("#{ENV['HOME']}/.ssh/id_rsa")),
 
-  env_params = env_vars.keys.flat_map { |var| ['--env', var] }
+    'BOSH_IP'            => bosh_ip,
+    'BOSH_CLIENT'        => 'admin',
+    'BOSH_CLIENT_SECRET' => bosh_client_secret,
+    'BOSH_ENVIRONMENT'   => "bosh.#{system_dns_zone_name}",
+    'BOSH_CA_CERT'       => bosh_ca_cert,
+    'BOSH_DEPLOYMENT'    => deploy_env,
+
+    'CREDHUB_SERVER'  => "https://bosh.#{system_dns_zone_name}:8844/api",
+    'CREDHUB_CLIENT'  => "credhub-admin",
+    'CREDHUB_SECRET'  => credhub_secret,
+    'CREDHUB_CA_CERT' => credhub_ca_cert,
+    'CREDHUB_PROXY'   => "socks5://localhost:25555",
+  }.flat_map { |k, v| "--env #{k}='#{v}'" }
 
   credhub_secrets_file = Tempfile.new('credhub-secrets', '/tmp')
   credhub_secrets_file.write(credhub_secrets.to_yaml)
   credhub_secrets_file.close
 
-  system(
-    'docker',
-    'run',
-    '--rm',
-    *env_params,
-    '-v', "#{credhub_secrets_file.path}:/root/import.yml",
-    'governmentpaas/bosh-shell:91fe1e826f39798986d95a02fb1ccab6f0e7c746',
-    '-c', 'credhub import -f /root/import.yml'
+  pid = spawn(
+    %(
+      docker run \
+      -it \
+      --rm #{env_params.join(' ')} \
+      -v '#{credhub_secrets_file.path}:/root/import.yml' \
+      governmentpaas/bosh-shell:91fe1e826f39798986d95a02fb1ccab6f0e7c746 \
+      -c 'credhub import -f /root/import.yml'
+    ),
+    in: STDIN, out: STDOUT, err: STDERR
   )
+  Process.wait pid
+  raise 'Child process did not exit successfully' unless $CHILD_STATUS.success?
 end
