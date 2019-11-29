@@ -1684,6 +1684,7 @@ jobs:
                 METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
                 PAAS_ADMIN_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_ADMIN_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_secret_access_key cf-terraform-outputs.yml)
+                PAAS_ADMIN_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/paas_admin_prometheus_password")
                 UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_cf_exporter_secret")
                 UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret")
                 RDS_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_rds_broker_admin_password")
@@ -1712,6 +1713,7 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/metrics_aws_access_key_id" --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
                 credhub set --name="${PIPELINE_NS}/metrics_aws_secret_access_key" --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
                 credhub set --name="${PIPELINE_NS}/paas_admin_aws_access_key_id" --type password --password "${PAAS_ADMIN_AWS_ACCESS_KEY_ID}"
+                credhub set --name="${PIPELINE_NS}/paas_admin_prometheus_password" --type password --password "${PAAS_ADMIN_PROMETHEUS_PASSWORD}"
                 credhub set --name="${PIPELINE_NS}/paas_admin_aws_secret_access_key" --type password --password "${PAAS_ADMIN_AWS_SECRET_ACCESS_KEY}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_cf_exporter_secret" --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_firehose_exporter_secret" --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
@@ -3440,6 +3442,9 @@ jobs:
                     DOMAIN_NAME: "https://admin.${SYSTEM_DNS_ZONE_NAME}"
                     AWS_ACCESS_KEY_ID: ((paas_admin_aws_access_key_id))
                     AWS_SECRET_ACCESS_KEY: ((paas_admin_aws_secret_access_key))
+                    PROMETHEUS_USERNAME: paas-admin
+                    PROMETHEUS_PASSWORD: ((paas_admin_prometheus_password))
+                    PROMETHEUS_ENDPOINT: "https://prometheus.${SYSTEM_DNS_ZONE_NAME}"
                 EOF
 
                 spruce merge \
