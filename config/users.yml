@@ -1,62 +1,67 @@
 ---
-- email: "andy.hunt@digital.cabinet-office.gov.uk"
+- email: andy.hunt@digital.cabinet-office.gov.uk
   google_id: 105669475429351042864
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'andyhunt']
   cf_admin: true
 
-- email: "lee.porte@digital.cabinet-office.gov.uk"
+- email: lee.porte@digital.cabinet-office.gov.uk
   google_id: 117637881083888816781
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'leeporte']
   cf_admin: true
 
-- email: "michael.mokrysz@digital.cabinet-office.gov.uk"
+- email: michael.mokrysz@digital.cabinet-office.gov.uk
   google_id: 107383114280997116147
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'miki']
   cf_admin: true
 
-- email: "mohamed.deerow@digital.cabinet-office.gov.uk"
+- email: mohamed.deerow@digital.cabinet-office.gov.uk
   google_id: 113581158670217946218
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'momo']
   cf_admin: true
 
-- email: "rafal.proszowski@digital.cabinet-office.gov.uk"
+- email: rafal.proszowski@digital.cabinet-office.gov.uk
   google_id: 111800464824171130320
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
   cf_admin: true
 
-- email: "richard.towers@digital.cabinet-office.gov.uk"
+- email: richard.towers@digital.cabinet-office.gov.uk
   google_id: 110880982070595988507
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'towers']
   cf_admin: true
 
-- email: "toby.lornewelch-richards@digital.cabinet-office.gov.uk"
+- email: toby.lornewelch-richards@digital.cabinet-office.gov.uk
   google_id: 115270948065632839284
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon', 'tlwr']
   cf_admin: true
 
-- email: "venus.bailey@digital.cabinet-office.gov.uk"
-  google_id: 1080011890811609622192
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+- email: venus.bailey@digital.cabinet-office.gov.uk
+  google_id: 108001189081160962219
 
-- email: "luke.malcher@digital.cabinet-office.gov.uk"
+- email: luke.malcher@digital.cabinet-office.gov.uk
   google_id: 110778878978931011243
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
 
-- email: "paul.dougan@digital.cabinet-office.gov.uk"
-  google_id: 1042068992463395715702
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+- email: paul.dougan@digital.cabinet-office.gov.uk
+  google_id: 104206899246339571570
 
-- email: "emma.pearce@digital.cabinet-office.gov.uk"
+- email: emma.pearce@digital.cabinet-office.gov.uk
   google_id: 116361542740992904571
-  origin: "google"
-  deploy_envs: ['prod', 'prod-lon', 'stg-lon']
+
+- email: mark.buckley@digital.cabinet-office.gov.uk
+  google_id: 113316348446994386136
+
+- email: lucien.west@digital.cabinet-office.gov.uk
+  google_id: 109330715895600878233
+
+- email: kirsty.armstrong@digital.cabinet-office.gov.uk
+  google_id: 117328248009254641031
+
+- email: miriam.raines@digital.cabinet-office.gov.uk
+  google_id: 116058669793311669994
+
+- email: laura.payten@digital.cabinet-office.gov.uk
+  google_id: 104063198711253168471
+
+- email: agatha.blake@digital.cabinet-office.gov.uk
+  google_id: 115206840979594971564
+
+- email: connie.briggs@digital.cabinet-office.gov.uk
+  google_id: 103867560811643836157
+
+- email: neil.edwards@digital.cabinet-office.gov.uk
+  google_id: 116276543621958296809
+
+- email: jake.mccann@digital.cabinet-office.gov.uk
+  google_id: 110058378478974615296
