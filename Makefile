@@ -178,6 +178,7 @@ stg-lon: ## Set Environment to stg-lon
 	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
+	$(eval export AWS_REGION=eu-west-2)
 	@true
 
 .PHONY: prod
@@ -197,6 +198,7 @@ prod: ## Set Environment to Production
 	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
+	$(eval export AWS_REGION=eu-west-1)
 	@true
 
 .PHONY: prod-lon
@@ -216,6 +218,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
+	$(eval export AWS_REGION=eu-west-2)
 	@true
 
 .PHONY: bosh-cli
@@ -258,7 +261,7 @@ showenv: ## Display environment information
 	@scripts/showenv.sh
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
+upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
@@ -271,6 +274,12 @@ upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identi
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-microsoft-oauth-secrets.rb
+
+.PHONY: upload-splunk-secrets
+upload-splunk-secrets: check-env ## Decrypt and upload Splunk HEC Tokens to Credhub
+	$(if $(wildcard ${PAAS_HIGH_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_HIGH_PASSWORD_STORE_DIR} (PAAS_HIGH_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_HIGH_PASSWORD_STORE_DIR})
+	@scripts/upload-splunk-secrets.rb
 
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to Credhub

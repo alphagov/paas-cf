@@ -297,6 +297,7 @@ groups:
       - post-deploy
       - deploy-paas-accounts
       - deploy-paas-admin
+      - deploy-paas-audit-to-splunk
       - deploy-paas-billing
       - deploy-paas-metrics
       - smoke-tests
@@ -330,6 +331,7 @@ groups:
     jobs:
       - deploy-paas-accounts
       - deploy-paas-admin
+      - deploy-paas-audit-to-splunk
       - deploy-paas-billing
       - deploy-paas-metrics
   - name: operator
@@ -626,6 +628,13 @@ resources:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: master
       tag_filter: v0.14.0
+
+  - name: paas-audit-to-splunk
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-audit-to-splunk.git
+      branch: master
+      tag_filter: v0.1.0
 
   - name: paas-admin
     type: git
@@ -1654,6 +1663,7 @@ jobs:
                 S3_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_s3_broker_admin_password")
                 UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_admin_client_secret")
                 UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
+                UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
                 SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
 
 
@@ -1682,6 +1692,7 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/secrets_s3_broker_admin_password" --type password --password "${S3_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/uaa_admin_client_secret" --type password --password "${UAA_ADMIN_CLIENT_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_admin_secret" --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
+                credhub set --name="${PIPELINE_NS}/uaa_clients_paas_auditor_secret" --type password --password "${UAA_CLIENTS_PAAS_AUDITOR_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_test_user_password" --type password --password "${SECRETS_TEST_USER_PASSWORD}"
 
                 echo 'Accessible secrets'
@@ -3114,6 +3125,71 @@ jobs:
                 else
                   echo "Success: All VMs are up and running."
                 fi
+
+  - name: deploy-paas-audit-to-splunk
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+        - get: paas-audit-to-splunk
+          trigger: true
+
+        - get: paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+      - task: deploy-paas-audit-to-splunk
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            UAA_API_URL: https://uaa.((system_dns_zone_name))
+            UAA_CLIENT_ID: "paas-auditor"
+            UAA_CLIENT_SECRET: ((uaa_clients_paas_auditor_secret))
+            CLOUDFOUNDRY_API_URL: https://api.((system_dns_zone_name))
+            SPLUNK_URL: https://http-inputs-gds.splunkcloud.com/services/collector
+            SPLUNK_KEY: ((splunk_key))
+            DEPLOY_ENV: ((deploy_env))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          inputs:
+            - name: paas-cf
+            - name: paas-audit-to-splunk
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                (
+                cd paas-audit-to-splunk
+
+                ruby -ryaml -e "
+                  env = {
+                    'UAA_API_URL' => '${UAA_API_URL}',
+                    'UAA_CLIENT_ID' => '${UAA_CLIENT_ID}',
+                    'UAA_CLIENT_SECRET' => '${UAA_CLIENT_SECRET}',
+                    'CLOUDFOUNDRY_API_URL' => '${CLOUDFOUNDRY_API_URL}',
+                    'ENVIRONMENT' => '${DEPLOY_ENV}',
+                    'SPLUNK_URL' => '${SPLUNK_URL}',
+                    'SPLUNK_KEY' => '${SPLUNK_KEY}',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'].merge!(env)
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+
+                cf zero-downtime-push paas-audit-to-splunk -f manifest.yml
+                )
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-accounts
     serial: true
