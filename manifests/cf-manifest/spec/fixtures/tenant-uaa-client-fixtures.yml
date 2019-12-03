@@ -1,0 +1,20 @@
+---
+stg-lon: []
+prod: []
+prod-lon:
+  - name: prod-lon-uaa-client
+    secret_name: secrets_prod-lon_uaa_client
+    uaa_client:
+      scope: openid,cloud_controller.read,cloud_controller.write
+      authorized-grant-types: refresh_token,authorization_code
+      redirect-uri: https://prod-lon-uaa.((app_domain))/callback
+      override: true
+
+dev:
+  - name: dev-uaa-client
+    secret_name: secrets_dev_uaa_client
+    uaa_client:
+      scope: openid,cloud_controller.read,cloud_controller.write
+      authorized-grant-types: refresh_token,authorization_code
+      redirect-uri: https://dev-uaa.((app_domain))/callback
+      override: true

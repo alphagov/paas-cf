@@ -1,0 +1,31 @@
+---
+# This file contains configurations for individual UAA clients for tenants in different deployments.
+#
+# To add a new client, add a new entry to the deployment in question like the below
+#
+#  - name: uaa-client-name
+#    secret_name: secrets_uaa_clients_uaa_client_name
+#    uaa_client:
+#      scope: openid,cloud_controller.read,cloud_controller.write
+#      authorized-grant-types: refresh_token,authorization_code
+#      redirect-uri: https://APP_NAME.((app_domain))/callback/URL
+#      override: true
+#
+# If the tenant is deploying the app on a custom URL, provide an array for the `uaa_client.redirect-uri` property, e.g.
+#
+#   redirect-uri:
+#     - https://APP_NAME.((app_domain))/callback/URL
+#     - https://CUSTOM_DOMA.in/callback/URL
+
+stg-lon: []
+
+prod: []
+
+prod-lon:
+  - name: dit-stratos-deployment
+    secret_name: secrets_uaa_clients_dit_console_secret
+    uaa_client:
+      scope: openid,cloud_controller.read,cloud_controller.write
+      authorized-grant-types: refresh_token,authorization_code
+      redirect-uri: https://dit-console.((app_domain))/pp/v1/auth/sso_login_callback
+      override: true

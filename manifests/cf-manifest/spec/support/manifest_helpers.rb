@@ -80,6 +80,25 @@ private
     file
   end
 
+  def render_tenant_uaa_clients_opsfile(dir, config_file, environment = "dev")
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+
+    file = File::open("#{dir}/tenant-uaa-opsfile.yml", "w+")
+    output, error, status =
+      Open3.capture3(root.join("manifests/cf-manifest/scripts/generate-tenant-uaa-client-ops-file.rb").to_s,
+                    root.join(config_file).to_s,
+                    environment)
+
+    unless status.success?
+      raise "Error generating tenant UAA client ops file, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
+    end
+
+    file.write(output)
+    file.flush
+    file.rewind
+    file
+  end
+
   def render_manifest(
     environment:,
     vars_store_file: nil,
@@ -92,6 +111,7 @@ private
     copy_fixture_file('environment-variables.yml', workdir)
     copy_ipsec_cert_fixtures("#{workdir}/ipsec-CA")
     render_vpc_peering_opsfile("#{workdir}/vpc-peering-opsfile", environment)
+    render_tenant_uaa_clients_opsfile("#{workdir}/tenant-uaa-clients-opsfile", "manifests/cf-manifest/spec/fixtures/tenant-uaa-client-fixtures.yml", "dev")
 
     env = {
       'PAAS_CF_DIR' => root.to_s,
