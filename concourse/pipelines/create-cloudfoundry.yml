@@ -1696,6 +1696,7 @@ jobs:
                 UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
                 UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
                 SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
+                CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/custom_broker_acceptance_prometheus_password")
 
 
                 echo 'Setting secrets'
@@ -1726,6 +1727,8 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_admin_secret" --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_auditor_secret" --type password --password "${UAA_CLIENTS_PAAS_AUDITOR_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_test_user_password" --type password --password "${SECRETS_TEST_USER_PASSWORD}"
+
+                credhub set --name="${PIPELINE_NS}/custom_broker_acceptance_prometheus_password" --type password --password "${CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD}"
 
                 echo 'Accessible secrets'
                 credhub find --path "${TEAM_NS}"
@@ -3103,6 +3106,9 @@ jobs:
               AWS_REGION: ((aws_region))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+
+              PROMETHEUS_BASIC_AUTH_USERNAME: custom-broker-acceptance
+              PROMETHEUS_BASIC_AUTH_PASSWORD: ((custom_broker_acceptance_prometheus_password))
             ensure:
               task: upload-test-artifacts
               tags: [colocated-with-web]

@@ -21,6 +21,12 @@
     type: password
 
 - type: replace
+  path: /variables/-
+  value:
+    name: custom_broker_acceptance_prometheus_password
+    type: password
+
+- type: replace
   path: /instance_groups/-
   value:
     name: prometheus
@@ -90,6 +96,7 @@
               tls off
 
               basicauth / paas-admin ((paas_admin_prometheus_password))
+              basicauth / custom-broker-acceptance ((custom_broker_acceptance_prometheus_password))
 
               proxy / http://q-s3-i0.prometheus.*.((environment)).bosh:9090 http://localhost:9090 {
                 policy first
