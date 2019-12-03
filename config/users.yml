@@ -1,4 +1,24 @@
 ---
+
+# This file configures platform-wide users.
+# - All users in this file get access to Grafana.
+# - Users with `cf_admin: true` get full admin privileges in Cloud Foundry.
+# - Users without the `cf_admin` option or where it is false get
+#   Global Auditor, which allows them to see everything except secrets in
+#   app environment variables.
+#
+# HOW TO ADD NEW USERS
+# - This file requires users to sign in using Google SSO. To do that we need
+#   their Google ID, which is a large number.
+# - If a new user is configured in this file who didn't already exist, they
+#   lose Global Auditor when they first log in. Subsequent pipeline runs will
+#   permanently re-add it. This seems to be UAA behaviour.
+# - To get the Google ID and avoid the confusing behaviour above:
+#   1. Invite the new user to all our production Cloud Foundry environments;
+#   2. Get them to switch to signing in with Google;
+#   3. Copy the Google ID from their account into a new user in this file;
+#   4. Release the change and they will gain Global Auditor (or admin.)
+
 - email: andy.hunt@digital.cabinet-office.gov.uk
   google_id: 105669475429351042864
   cf_admin: true
