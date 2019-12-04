@@ -14,31 +14,31 @@ class Group < UAAResource
 
   def remove_unexpected_members(uaa_client)
     desired_user_guids = @users.map(&:guid)
-    unexpected_members = get_members(uaa_client).select do |member|
-      if desired_user_guids.include?(member['id'])
+    unexpected_member_users = get_member_users(uaa_client).select do |member_user|
+      if member_user['origin'] == 'uaa' && member_user['userName'] == 'admin'
         false
-      elsif member['origin'] == 'uaa' && member['userName'] == 'admin'
+      elsif member_user['origin'] == 'google' && desired_user_guids.include?(member_user['id'])
         false
       else
         true
       end
     end
 
-    if unexpected_members.empty?
+    if unexpected_member_users.empty?
       puts "No unexpected members of group #{@name}.".green
       return
     end
 
     puts "WARNING: Unexpected members of group #{@name}:".red
-    unexpected_members.each do |member|
-      puts "* guid=#{member['id']}".red
-      puts "  origin=#{member['origin']}".red
-      puts "  userName='#{member['userName']}'".red
+    unexpected_member_users.each do |member_user|
+      puts "* guid=#{member_user['id']}".red
+      puts "  origin=#{member_user['origin']}".red
+      puts "  userName='#{member_user['userName']}'".red
 
-      if member['meta'] && member['meta']['created'] && Time.now - Time.iso8601(member['meta']['created']) < 3600
+      if member_user['meta'] && member_user['meta']['created'] && Time.now - Time.iso8601(member_user['meta']['created']) < 3600
         puts "  NOT REMOVING USER FROM GROUP BECAUSE IT IS LESS THAN 1 HOUR OLD".yellow
       else
-        remove_member(member['id'], uaa_client)
+        remove_member(member_user['id'], uaa_client)
         puts "  USER REMOVED FROM GROUP".green
       end
     end
@@ -52,7 +52,7 @@ class Group < UAAResource
   end
 
   def add_desired_users(uaa_client)
-    existing_member_guids = get_members(uaa_client).map { |member| member['id'] }
+    existing_member_guids = get_member_users(uaa_client).map { |member| member['id'] }
     new_users_to_add = @users.reject { |user| existing_member_guids.include?(user.guid) }
 
     if new_users_to_add.empty?
@@ -75,7 +75,7 @@ class Group < UAAResource
     resp = uaa_client["/Groups/#{@guid}/members"].post({
       origin: 'uaa',
       type: 'USER',
-      value: user_guid
+      value: user_guid,
     }.to_json)
     raise "unexpected response code '#{resp.code}' when adding user '#{user_guid}' as a member of group '#{@name}'" unless resp.code == 201
   end
@@ -84,20 +84,32 @@ class Group < UAAResource
     get_resource("/Groups?filter=displayName+eq+\"#{@name}\"", uaa_client)
   end
 
-  def get_members(uaa_client)
+  def get_member_users(uaa_client)
     get_group(uaa_client)['members'].map do |member|
-      begin
-        get("/Users/#{member['value']}", uaa_client)
-      rescue RestClient::NotFound
-        # When we first ran this script, some of our Groups had members without
-        # accompanying Users. These users had been manually destroyed but their
-        # memberships hadn't been cleaned up.
+      if member['origin'] == 'uaa' && member['type'] == 'USER'
+        get_uaa_user(member['value'], uaa_client)
+      else
         {
           'id' => member['value'],
-          'origin' => '*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***',
-          'userName' => '*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***'
+          'origin' => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***",
+          'userName' => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***"
         }
       end
+    end
+  end
+
+  def get_uaa_user(user_guid, uaa_client)
+    begin
+      get("/Users/#{user_guid}", uaa_client)
+    rescue RestClient::NotFound
+      # When we first ran this script, some of our Groups had members without
+      # accompanying Users. These users had been manually destroyed but their
+      # memberships hadn't been cleaned up.
+      {
+        'id' => user_guid,
+        'origin' => '*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***',
+        'userName' => '*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***'
+      }
     end
   end
 end

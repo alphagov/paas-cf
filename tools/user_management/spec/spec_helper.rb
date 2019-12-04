@@ -114,8 +114,8 @@ def stub_searching_for_group(status, display_name, id = nil, members = [])
       'displayName' => display_name,
       'members' => members.map do |member|
         {
-          'type' => 'USER',
-          'origin' => member.fetch('origin'),
+          'type' => member.fetch('type', 'USER'),
+          'origin' => member.fetch('origin', 'uaa'),
           'value' => member.fetch('id')
         }
       end
