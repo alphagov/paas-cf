@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"reflect"
 	"strings"
 
+	"github.com/Masterminds/semver"
 	"github.com/pkg/errors"
 )
 
@@ -30,14 +32,18 @@ type SecGroupResource struct {
 }
 
 type SecGroup struct {
-	Guid       string          `json:"guid"`
-	Name       string          `json:"name"`
-	Rules      []SecGroupRule  `json:"rules"`
-	Running    bool            `json:"running_default"`
-	Staging    bool            `json:"staging_default"`
-	SpacesURL  string          `json:"spaces_url"`
-	SpacesData []SpaceResource `json:"spaces"`
-	c          *Client
+	Guid              string          `json:"guid"`
+	Name              string          `json:"name"`
+	CreatedAt         string          `json:"created_at"`
+	UpdatedAt         string          `json:"updated_at"`
+	Rules             []SecGroupRule  `json:"rules"`
+	Running           bool            `json:"running_default"`
+	Staging           bool            `json:"staging_default"`
+	SpacesURL         string          `json:"spaces_url"`
+	StagingSpacesURL  string          `json:"staging_spaces_url"`
+	SpacesData        []SpaceResource `json:"spaces"`
+	StagingSpacesData []SpaceResource `json:"staging_spaces"`
+	c                 *Client
 }
 
 type SecGroupRule struct {
@@ -49,6 +55,8 @@ type SecGroupRule struct {
 	Type        int    `json:"type"`                  //ICMP type. Only valid if Protocol=="icmp"
 	Log         bool   `json:"log,omitempty"`         //If true, log this rule
 }
+
+var MinStagingSpacesVersion *semver.Version = getMinStagingSpacesVersion()
 
 func (c *Client) ListSecGroups() (secGroups []SecGroup, err error) {
 	requestURL := "/v2/security_groups?inline-relations-depth=1"
@@ -72,6 +80,8 @@ func (c *Client) ListSecGroups() (secGroups []SecGroup, err error) {
 
 		for _, secGroup := range secGroupResp.Resources {
 			secGroup.Entity.Guid = secGroup.Meta.Guid
+			secGroup.Entity.CreatedAt = secGroup.Meta.CreatedAt
+			secGroup.Entity.UpdatedAt = secGroup.Meta.UpdatedAt
 			secGroup.Entity.c = c
 			for i, space := range secGroup.Entity.SpacesData {
 				space.Entity.Guid = space.Meta.Guid
@@ -86,6 +96,87 @@ func (c *Client) ListSecGroups() (secGroups []SecGroup, err error) {
 					secGroup.Entity.SpacesData = append(secGroup.Entity.SpacesData, space)
 				}
 			}
+			if len(secGroup.Entity.StagingSpacesData) == 0 {
+				spaces, err := secGroup.Entity.ListStagingSpaceResources()
+				if err != nil {
+					return nil, err
+				}
+				for _, space := range spaces {
+					secGroup.Entity.StagingSpacesData = append(secGroup.Entity.SpacesData, space)
+				}
+			}
+			secGroups = append(secGroups, secGroup.Entity)
+		}
+
+		requestURL = secGroupResp.NextUrl
+		resp.Body.Close()
+	}
+	return secGroups, nil
+}
+
+func (c *Client) ListRunningSecGroups() ([]SecGroup, error) {
+	secGroups := make([]SecGroup, 0)
+	requestURL := "/v2/config/running_security_groups"
+	for requestURL != "" {
+		var secGroupResp SecGroupResponse
+		r := c.NewRequest("GET", requestURL)
+		resp, err := c.DoRequest(r)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "Error requesting sec groups")
+		}
+		resBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "Error reading sec group response body")
+		}
+
+		err = json.Unmarshal(resBody, &secGroupResp)
+		if err != nil {
+			return nil, errors.Wrap(err, "Error unmarshaling sec group")
+		}
+
+		for _, secGroup := range secGroupResp.Resources {
+			secGroup.Entity.Guid = secGroup.Meta.Guid
+			secGroup.Entity.CreatedAt = secGroup.Meta.CreatedAt
+			secGroup.Entity.UpdatedAt = secGroup.Meta.UpdatedAt
+			secGroup.Entity.c = c
+
+			secGroups = append(secGroups, secGroup.Entity)
+		}
+
+		requestURL = secGroupResp.NextUrl
+		resp.Body.Close()
+	}
+	return secGroups, nil
+}
+
+func (c *Client) ListStagingSecGroups() ([]SecGroup, error) {
+	secGroups := make([]SecGroup, 0)
+	requestURL := "/v2/config/staging_security_groups"
+	for requestURL != "" {
+		var secGroupResp SecGroupResponse
+		r := c.NewRequest("GET", requestURL)
+		resp, err := c.DoRequest(r)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "Error requesting sec groups")
+		}
+		resBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "Error reading sec group response body")
+		}
+
+		err = json.Unmarshal(resBody, &secGroupResp)
+		if err != nil {
+			return nil, errors.Wrap(err, "Error unmarshaling sec group")
+		}
+
+		for _, secGroup := range secGroupResp.Resources {
+			secGroup.Entity.Guid = secGroup.Meta.Guid
+			secGroup.Entity.CreatedAt = secGroup.Meta.CreatedAt
+			secGroup.Entity.UpdatedAt = secGroup.Meta.UpdatedAt
+			secGroup.Entity.c = c
+
 			secGroups = append(secGroups, secGroup.Entity)
 		}
 
@@ -118,6 +209,8 @@ func (c *Client) GetSecGroupByName(name string) (secGroup SecGroup, err error) {
 	}
 	secGroup = secGroupResp.Resources[0].Entity
 	secGroup.Guid = secGroupResp.Resources[0].Meta.Guid
+	secGroup.CreatedAt = secGroupResp.Resources[0].Meta.CreatedAt
+	secGroup.UpdatedAt = secGroupResp.Resources[0].Meta.UpdatedAt
 	secGroup.c = c
 
 	resp.Body.Close()
@@ -134,6 +227,50 @@ func (secGroup *SecGroup) ListSpaceResources() ([]SpaceResource, error) {
 		}
 		for i, spaceRes := range spaceResp.Resources {
 			spaceRes.Entity.Guid = spaceRes.Meta.Guid
+			spaceRes.Entity.CreatedAt = spaceRes.Meta.CreatedAt
+			spaceRes.Entity.UpdatedAt = spaceRes.Meta.UpdatedAt
+			spaceResp.Resources[i] = spaceRes
+		}
+		spaceResources = append(spaceResources, spaceResp.Resources...)
+		requestURL = spaceResp.NextUrl
+	}
+	return spaceResources, nil
+}
+
+func (secGroup *SecGroup) ListStagingSpaceResources() ([]SpaceResource, error) {
+	var spaceResources []SpaceResource
+	requestURL := secGroup.StagingSpacesURL
+	for requestURL != "" {
+		spaceResp, err := secGroup.c.getSpaceResponse(requestURL)
+		if err != nil {
+			// if this is a 404, let's make sure that it's not because we're on a legacy system
+			if cause := errors.Cause(err); cause != nil {
+				if httpErr, ok := cause.(CloudFoundryHTTPError); ok {
+					if httpErr.StatusCode == 404 {
+						info, infoErr := secGroup.c.GetInfo()
+						if infoErr != nil {
+							return nil, infoErr
+						}
+
+						apiVersion, versionErr := semver.NewVersion(info.APIVersion)
+						if versionErr != nil {
+							return nil, versionErr
+						}
+
+						if MinStagingSpacesVersion.GreaterThan(apiVersion) {
+							// this is probably not really an error, we're just trying to use a non-existent api
+							return nil, nil
+						}
+					}
+				}
+			}
+
+			return []SpaceResource{}, err
+		}
+		for i, spaceRes := range spaceResp.Resources {
+			spaceRes.Entity.Guid = spaceRes.Meta.Guid
+			spaceRes.Entity.CreatedAt = spaceRes.Meta.CreatedAt
+			spaceRes.Entity.UpdatedAt = spaceRes.Meta.UpdatedAt
 			spaceResp.Resources[i] = spaceRes
 		}
 		spaceResources = append(spaceResources, spaceResp.Resources...)
@@ -218,6 +355,23 @@ func (c *Client) BindSecGroup(secGUID, spaceGUID string) error {
 }
 
 /*
+BindSpaceStagingSecGroup contacts the CF endpoint to associate a space with a security group for staging functions only
+secGUID: identifies the security group to add a space to
+spaceGUID: identifies the space to associate
+*/
+func (c *Client) BindStagingSecGroupToSpace(secGUID, spaceGUID string) error {
+	//Perform the PUT and check for errors
+	resp, err := c.DoRequest(c.NewRequest("PUT", fmt.Sprintf("/v2/security_groups/%s/staging_spaces/%s", secGUID, spaceGUID)))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != 201 { //201 Created
+		return fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
+	}
+	return nil
+}
+
+/*
 BindRunningSecGroup contacts the CF endpoint to associate  a security group
 secGUID: identifies the security group to add a space to
 */
@@ -234,6 +388,22 @@ func (c *Client) BindRunningSecGroup(secGUID string) error {
 }
 
 /*
+UnbindRunningSecGroup contacts the CF endpoint to dis-associate  a security group
+secGUID: identifies the security group to add a space to
+*/
+func (c *Client) UnbindRunningSecGroup(secGUID string) error {
+	//Perform the DELETE and check for errors
+	resp, err := c.DoRequest(c.NewRequest("DELETE", fmt.Sprintf("/v2/config/running_security_groups/%s", secGUID)))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != http.StatusNoContent { //204
+		return fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
+	}
+	return nil
+}
+
+/*
 BindStagingSecGroup contacts the CF endpoint to associate a space with a security group
 secGUID: identifies the security group to add a space to
 */
@@ -244,6 +414,22 @@ func (c *Client) BindStagingSecGroup(secGUID string) error {
 		return err
 	}
 	if resp.StatusCode != 200 { //200
+		return fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
+	}
+	return nil
+}
+
+/*
+UnbindStagingSecGroup contacts the CF endpoint to dis-associate a space with a security group
+secGUID: identifies the security group to add a space to
+*/
+func (c *Client) UnbindStagingSecGroup(secGUID string) error {
+	//Perform the DELETE and check for errors
+	resp, err := c.DoRequest(c.NewRequest("DELETE", fmt.Sprintf("/v2/config/staging_security_groups/%s", secGUID)))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != http.StatusNoContent { //204
 		return fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
 	}
 	return nil
@@ -275,19 +461,20 @@ func respBodyToSecGroup(body io.ReadCloser, c *Client) (*SecGroup, error) {
 	}
 	jStruct := SecGroupResource{}
 	//make it a SecGroup
-	err = json.Unmarshal([]byte(bodyRaw), &jStruct)
+	err = json.Unmarshal(bodyRaw, &jStruct)
 	if err != nil {
 		return nil, errors.Wrap(err, "Could not unmarshal response body as json")
 	}
 	//pull a few extra fields from other places
 	ret := jStruct.Entity
 	ret.Guid = jStruct.Meta.Guid
+	ret.CreatedAt = jStruct.Meta.CreatedAt
+	ret.UpdatedAt = jStruct.Meta.UpdatedAt
 	ret.c = c
 	return &ret, nil
 }
 
-func ConvertStructToMap(st interface{}) map[string]interface{} {
-
+func convertStructToMap(st interface{}) map[string]interface{} {
 	reqRules := make(map[string]interface{})
 
 	v := reflect.ValueOf(st)
@@ -325,7 +512,7 @@ func (c *Client) secGroupCreateHelper(url, method, name string, rules []SecGroup
 	reqRules := make([]map[string]interface{}, len(rules))
 
 	for i, rule := range rules {
-		reqRules[i] = ConvertStructToMap(rule)
+		reqRules[i] = convertStructToMap(rule)
 		protocol := strings.ToLower(reqRules[i]["protocol"].(string))
 
 		// if not icmp protocol need to remove the Code/Type fields
@@ -337,11 +524,15 @@ func (c *Client) secGroupCreateHelper(url, method, name string, rules []SecGroup
 
 	req := c.NewRequest(method, url)
 	//set up request body
-	req.obj = map[string]interface{}{
-		"name":        name,
-		"rules":       reqRules,
-		"space_guids": spaceGuids,
+	inputs := map[string]interface{}{
+		"name":  name,
+		"rules": reqRules,
 	}
+
+	if spaceGuids != nil {
+		inputs["space_guids"] = spaceGuids
+	}
+	req.obj = inputs
 	//fire off the request and check for problems
 	resp, err := c.DoRequest(req)
 	if err != nil {
@@ -366,4 +557,9 @@ Description %s`,
 	}
 	//get the json from the response body
 	return respBodyToSecGroup(resp.Body, c)
+}
+
+func getMinStagingSpacesVersion() *semver.Version {
+	v, _ := semver.NewVersion("2.68.0")
+	return v
 }

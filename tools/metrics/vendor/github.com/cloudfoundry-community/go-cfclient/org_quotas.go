@@ -1,9 +1,11 @@
 package cfclient
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 
 	"github.com/pkg/errors"
@@ -21,9 +23,26 @@ type OrgQuotasResource struct {
 	Entity OrgQuota `json:"entity"`
 }
 
+type OrgQuotaRequest struct {
+	Name                    string `json:"name"`
+	NonBasicServicesAllowed bool   `json:"non_basic_services_allowed"`
+	TotalServices           int    `json:"total_services"`
+	TotalRoutes             int    `json:"total_routes"`
+	TotalPrivateDomains     int    `json:"total_private_domains"`
+	MemoryLimit             int    `json:"memory_limit"`
+	TrialDBAllowed          bool   `json:"trial_db_allowed"`
+	InstanceMemoryLimit     int    `json:"instance_memory_limit"`
+	AppInstanceLimit        int    `json:"app_instance_limit"`
+	AppTaskLimit            int    `json:"app_task_limit"`
+	TotalServiceKeys        int    `json:"total_service_keys"`
+	TotalReservedRoutePorts int    `json:"total_reserved_route_ports"`
+}
+
 type OrgQuota struct {
 	Guid                    string `json:"guid"`
 	Name                    string `json:"name"`
+	CreatedAt               string `json:"created_at,omitempty"`
+	UpdatedAt               string `json:"updated_at,omitempty"`
 	NonBasicServicesAllowed bool   `json:"non_basic_services_allowed"`
 	TotalServices           int    `json:"total_services"`
 	TotalRoutes             int    `json:"total_routes"`
@@ -48,6 +67,8 @@ func (c *Client) ListOrgQuotasByQuery(query url.Values) ([]OrgQuota, error) {
 		}
 		for _, org := range orgQuotasResp.Resources {
 			org.Entity.Guid = org.Meta.Guid
+			org.Entity.CreatedAt = org.Meta.CreatedAt
+			org.Entity.UpdatedAt = org.Meta.UpdatedAt
 			org.Entity.c = c
 			orgQuotas = append(orgQuotas, org.Entity)
 		}
@@ -93,4 +114,71 @@ func (c *Client) getOrgQuotasResponse(requestUrl string) (OrgQuotasResponse, err
 		return OrgQuotasResponse{}, errors.Wrap(err, "Error unmarshalling org quotas")
 	}
 	return orgQuotasResp, nil
+}
+
+func (c *Client) CreateOrgQuota(orgQuote OrgQuotaRequest) (*OrgQuota, error) {
+	buf := bytes.NewBuffer(nil)
+	err := json.NewEncoder(buf).Encode(orgQuote)
+	if err != nil {
+		return nil, err
+	}
+	r := c.NewRequestWithBody("POST", "/v2/quota_definitions", buf)
+	resp, err := c.DoRequest(r)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
+	}
+	return c.handleOrgQuotaResp(resp)
+}
+
+func (c *Client) UpdateOrgQuota(orgQuotaGUID string, orgQuota OrgQuotaRequest) (*OrgQuota, error) {
+	buf := bytes.NewBuffer(nil)
+	err := json.NewEncoder(buf).Encode(orgQuota)
+	if err != nil {
+		return nil, err
+	}
+	r := c.NewRequestWithBody("PUT", fmt.Sprintf("/v2/quota_definitions/%s", orgQuotaGUID), buf)
+	resp, err := c.DoRequest(r)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusCreated {
+		return nil, fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
+	}
+	return c.handleOrgQuotaResp(resp)
+}
+
+func (c *Client) DeleteOrgQuota(guid string, async bool) error {
+	resp, err := c.DoRequest(c.NewRequest("DELETE", fmt.Sprintf("/v2/quota_definitions/%s?async=%t", guid, async)))
+	if err != nil {
+		return err
+	}
+	if (async && (resp.StatusCode != http.StatusAccepted)) || (!async && (resp.StatusCode != http.StatusNoContent)) {
+		return errors.Wrapf(err, "Error deleting organization %s, response code: %d", guid, resp.StatusCode)
+	}
+	return nil
+}
+
+func (c *Client) handleOrgQuotaResp(resp *http.Response) (*OrgQuota, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	var orgQuotasResource OrgQuotasResource
+	err = json.Unmarshal(body, &orgQuotasResource)
+	if err != nil {
+		return nil, err
+	}
+	return c.mergeOrgQuotaResource(orgQuotasResource), nil
+}
+
+func (c *Client) mergeOrgQuotaResource(orgQuotaResource OrgQuotasResource) *OrgQuota {
+	orgQuotaResource.Entity.Guid = orgQuotaResource.Meta.Guid
+	orgQuotaResource.Entity.CreatedAt = orgQuotaResource.Meta.CreatedAt
+	orgQuotaResource.Entity.UpdatedAt = orgQuotaResource.Meta.UpdatedAt
+	orgQuotaResource.Entity.c = c
+	return &orgQuotaResource.Entity
 }
