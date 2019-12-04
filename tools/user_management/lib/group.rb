@@ -66,14 +66,14 @@ class Group < UAAResource
       puts "  email='#{user.email}'".green
       puts "  origin=google".green
       puts "  userName='#{user.google_id}'".green
-      add_member(user.guid, 'google', uaa_client)
+      add_member(user.guid, uaa_client)
       puts "  USER GIVEN MEMBERSHIP OF GROUP".green
     end
   end
 
-  def add_member(user_guid, origin, uaa_client)
+  def add_member(user_guid, uaa_client)
     resp = uaa_client["/Groups/#{@guid}/members"].post({
-      origin: origin,
+      origin: 'uaa',
       type: 'USER',
       value: user_guid
     }.to_json)

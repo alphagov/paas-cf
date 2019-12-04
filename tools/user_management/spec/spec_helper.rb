@@ -140,10 +140,10 @@ def stub_getting_user_by_id(status, id, origin = nil, username = nil, created = 
     }
 end
 
-def stub_adding_user_to_group(status, group_id, user_id, origin)
+def stub_adding_user_to_group(status, group_id, user_id)
   url = "http://fake-uaa.internal/Groups/#{group_id}/members"
   stub_request(:post, url)
-    .with(body: { 'type': 'USER', 'origin': origin, 'value': user_id })
+    .with(body: { 'type': 'USER', 'origin': 'uaa', 'value': user_id })
     .to_return(status: status)
 end
 

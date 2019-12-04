@@ -72,19 +72,19 @@ RSpec.describe Group do
     end
 
     it 'adds a member' do
-      stub_adding_user_to_group(201, 'guid-of-__test__-group', 'user-guid', 'google')
+      stub_adding_user_to_group(201, 'guid-of-__test__-group', 'user-guid')
 
       g = Group.new('__test__', [@user])
       g.get_group(@fake_uaa_client)
-      g.add_member('user-guid', 'google', @fake_uaa_client)
+      g.add_member('user-guid', @fake_uaa_client)
     end
 
     it 'raises an error when UAA responds with a non-201 status code' do
-      stub_adding_user_to_group(400, 'guid-of-__test__-group', 'user-guid', 'google')
+      stub_adding_user_to_group(400, 'guid-of-__test__-group', 'user-guid')
 
       g = Group.new('__test__', [@user])
       g.get_group(@fake_uaa_client)
-      expect { g.add_member('user-guid', 'google', @fake_uaa_client) }
+      expect { g.add_member('user-guid', @fake_uaa_client) }
         .to raise_error(RestClient::BadRequest, /Bad Request/)
     end
   end
@@ -137,7 +137,7 @@ RSpec.describe Group do
       g = Group.new('__test__', [@u1, @u2])
       g.get_group(@fake_uaa_client)
 
-      stub_adding_user_to_group(201, 'guid-of-__test__-group', 'user-2-guid', 'google')
+      stub_adding_user_to_group(201, 'guid-of-__test__-group', 'user-2-guid')
       g.add_desired_users(@fake_uaa_client)
     end
   end
