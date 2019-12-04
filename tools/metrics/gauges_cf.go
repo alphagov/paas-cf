@@ -246,7 +246,7 @@ func ServiceCountGauge(c *Client, interval time.Duration) m.MetricReadCloser {
 			}
 			servicePlan := findServicePlan(servicePlans, instance.ServicePlanGuid)
 			if servicePlan == nil {
-				log.Printf("Error finding service plan for service instance %s: %s\n", instance.Guid, err)
+				log.Printf("Error finding service plan for service instance %s: %s\n", instance.Guid, instance.ServicePlanGuid)
 				continue
 			}
 			space := findSpace(spaces, instance.SpaceGuid)
