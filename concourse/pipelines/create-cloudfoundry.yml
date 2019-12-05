@@ -2129,7 +2129,7 @@ jobs:
                 fi
 
                 # Enable supported plans
-                cat <<EOF | xargs -n1 cf enable-service-access mysql -p
+                cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
                 tiny-unencrypted-5.7
                 small-5.7
                 small-ha-5.7
@@ -2141,7 +2141,7 @@ jobs:
                 xlarge-5.7
                 EOF
 
-                cat <<EOF | xargs -n1 cf enable-service-access mysql -p
+                cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
                 tiny-unencrypted-8.0
                 small-8.0
                 small-ha-8.0
@@ -2153,7 +2153,7 @@ jobs:
                 xlarge-8.0
                 EOF
 
-                cat <<EOF | xargs -n1 cf enable-service-access postgres -p
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
                 tiny-unencrypted-9.5
                 small-ha-9.5
                 small-9.5
@@ -2165,7 +2165,7 @@ jobs:
                 xlarge-9.5
                 EOF
 
-                cat <<EOF | xargs -n1 cf enable-service-access postgres -p
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
                 tiny-unencrypted-10
                 small-10
                 small-ha-10
@@ -2177,7 +2177,7 @@ jobs:
                 xlarge-ha-10
                 EOF
 
-                cat <<EOF | xargs -n1 cf enable-service-access postgres -p
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
                 tiny-unencrypted-11
                 small-11
                 small-ha-11
@@ -2242,7 +2242,7 @@ jobs:
                 else
                   cf create-service-broker cdn-broker cdn-broker "${CDN_BROKER_PASS}" "https://${CDN_BROKER_SERVER}"
                 fi
-                cf enable-service-access cdn-route
+                cf enable-service-access cdn-route -b cdn-broker
 
       - task: register-s3-broker
         tags: [colocated-with-web]
@@ -2274,7 +2274,7 @@ jobs:
                   cf create-service-broker s3-broker s3-broker "${S3_BROKER_PASS}" "https://${S3_BROKER_SERVER}"
                 fi
 
-                cf enable-service-access aws-s3-bucket -p default
+                cf enable-service-access aws-s3-bucket -b s3-broker -p default
 
       - task: set-security-groups-from-manifest
         tags: [colocated-with-web]
@@ -2703,9 +2703,9 @@ jobs:
                   cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
                 fi
 
-                cf enable-service-access elasticsearch
+                cf enable-service-access elasticsearch -b aiven-broker
 
-                cf enable-service-access influxdb -o admin
+                cf enable-service-access influxdb -o admin -b aiven-broker
 
       - task: register-elasticache-broker
         tags: [colocated-with-web]
@@ -2735,7 +2735,7 @@ jobs:
                 else
                   cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
                 fi
-                cf enable-service-access redis
+                cf enable-service-access redis -b elasticache-broker
 
       - task: remove-unused-iam-access-keys
         tags: [colocated-with-web]
