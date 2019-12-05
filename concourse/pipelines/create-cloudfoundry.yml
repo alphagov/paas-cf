@@ -634,7 +634,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-audit-to-splunk.git
       branch: master
-      tag_filter: v0.1.0
+      tag_filter: v0.3.0
 
   - name: paas-admin
     type: git
