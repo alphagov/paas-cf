@@ -9,11 +9,9 @@
 #
 # HOW TO ADD NEW USERS
 # - This file requires users to sign in using Google SSO. To do that we need
-#   their Google ID, which is a large number.
-# - If a new user is configured in this file who didn't already exist, they
-#   lose Global Auditor when they first log in. Subsequent pipeline runs will
-#   permanently re-add it. This seems to be UAA behaviour.
-# - To get the Google ID and avoid the confusing behaviour above:
+#   to find out their Google ID, which is a large number.
+# - The easiest way to find out their Google ID is to have them sign up using
+#   Google SSO and then copy the number off their existing account. Here's how:
 #   1. Invite the new user to all our production Cloud Foundry environments;
 #   2. Get them to switch to signing in with Google;
 #   3. Copy the Google ID from their account into a new user in this file;
