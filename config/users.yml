@@ -47,44 +47,44 @@
   google_id: 115270948065632839284
   cf_admin: true
 
-- email: venus.bailey@digital.cabinet-office.gov.uk
-  google_id: 108001189081160962219
-
-- email: luke.malcher@digital.cabinet-office.gov.uk
-  google_id: 110778878978931011243
-
-- email: paul.dougan@digital.cabinet-office.gov.uk
-  google_id: 104206899246339571570
-
-- email: emma.pearce@digital.cabinet-office.gov.uk
-  google_id: 116361542740992904571
-
-- email: mark.buckley@digital.cabinet-office.gov.uk
-  google_id: 113316348446994386136
-
-- email: lucien.west@digital.cabinet-office.gov.uk
-  google_id: 109330715895600878233
-
-- email: kirsty.armstrong@digital.cabinet-office.gov.uk
-  google_id: 117328248009254641031
-
-- email: miriam.raines@digital.cabinet-office.gov.uk
-  google_id: 116058669793311669994
-
-- email: laura.payten@digital.cabinet-office.gov.uk
-  google_id: 104063198711253168471
-
 - email: agatha.blake@digital.cabinet-office.gov.uk
   google_id: 115206840979594971564
 
 - email: connie.briggs@digital.cabinet-office.gov.uk
   google_id: 103867560811643836157
 
-- email: neil.edwards@digital.cabinet-office.gov.uk
-  google_id: 116276543621958296809
+- email: emma.pearce@digital.cabinet-office.gov.uk
+  google_id: 116361542740992904571
 
 - email: jake.mccann@digital.cabinet-office.gov.uk
   google_id: 110058378478974615296
 
+- email: kirsty.armstrong@digital.cabinet-office.gov.uk
+  google_id: 117328248009254641031
+
+- email: laura.payten@digital.cabinet-office.gov.uk
+  google_id: 104063198711253168471
+
+- email: lucien.west@digital.cabinet-office.gov.uk
+  google_id: 109330715895600878233
+
+- email: luke.malcher@digital.cabinet-office.gov.uk
+  google_id: 110778878978931011243
+
+- email: mark.buckley@digital.cabinet-office.gov.uk
+  google_id: 113316348446994386136
+
+- email: miriam.raines@digital.cabinet-office.gov.uk
+  google_id: 116058669793311669994
+
+- email: neil.edwards@digital.cabinet-office.gov.uk
+  google_id: 116276543621958296809
+
+- email: paul.dougan@digital.cabinet-office.gov.uk
+  google_id: 104206899246339571570
+
 - email: satwinder.bharaj@digital.cabinet-office.gov.uk
   google_id: 117679332904544013345
+
+- email: venus.bailey@digital.cabinet-office.gov.uk
+  google_id: 108001189081160962219
