@@ -297,7 +297,7 @@ groups:
       - post-deploy
       - deploy-paas-accounts
       - deploy-paas-admin
-      - deploy-paas-audit-to-splunk
+      - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
       - smoke-tests
@@ -331,7 +331,7 @@ groups:
     jobs:
       - deploy-paas-accounts
       - deploy-paas-admin
-      - deploy-paas-audit-to-splunk
+      - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
   - name: operator
@@ -628,6 +628,13 @@ resources:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: master
       tag_filter: v0.14.0
+
+  - name: paas-auditor
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-auditor.git
+      branch: master
+      # tag_filter: v0.3.0 TODO(paroxp,tlwr)
 
   - name: paas-audit-to-splunk
     type: git
@@ -3126,17 +3133,72 @@ jobs:
                   echo "Success: All VMs are up and running."
                 fi
 
-  - name: deploy-paas-audit-to-splunk
+  - name: deploy-paas-auditor
     serial: true
     plan:
       - *add-grafana-job-annotation
       - in_parallel:
+        - get: paas-auditor
+          trigger: true
+
+          # TODO(tlwr,paroxp)
         - get: paas-audit-to-splunk
           trigger: true
 
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
+
+      - task: deploy-paas-auditor
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            UAA_API_URL: https://uaa.((system_dns_zone_name))
+
+            CF_CLIENT_ID: "paas-auditor"
+            CF_CLIENT_SECRET: ((uaa_clients_paas_auditor_secret))
+            CF_API_ADDRESS: https://api.((system_dns_zone_name))
+
+            DEPLOY_ENV: ((deploy_env))
+
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          inputs:
+            - name: paas-cf
+            - name: paas-auditor
+          run:
+            path: bash
+            dir: paas-auditor
+            args:
+              - -c
+              - |
+                set -ueo pipefail
+
+                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+
+                if grep -q '^(prod\|prod-lon\|stg-lon)$' <<< "$DEPLOY_ENV"; then
+                  plan="small-11"
+                else
+                  plan="tiny-unencrypted-11"
+                fi
+
+                if cf service auditor-db --guid; then
+                  echo 'Database already exists, skipping creation...'
+                else
+                  cf create-service postgres "$plan" auditor-db
+                fi
+
+                while ! cf service auditor-db | grep -iqE 'status:\s+(create|update) succeeded'; do
+                  echo "Waiting for create/update of service to complete..."
+                  sleep 30
+                done
+
+                cf push paas-auditor -f manifest.yml \
+                  --var cf_client_id="$CF_CLIENT_ID" \
+                  --var cf_client_secret="$CF_CLIENT_SECRET" \
+                  --var cf_api_address="$CF_API_ADDRESS"
 
       - task: deploy-paas-audit-to-splunk
         tags: [colocated-with-web]
