@@ -38,7 +38,7 @@ do
                         app_name=$(echo "${app}" | cut -d',' -f2 | jq -r)
                         app_stack_guid=$(echo "${app}" | cut -d',' -f3 | jq -r)
                         app_docker_image=$(echo "${app}" | cut -d',' -f4 | jq -r)
-                        if [ ! -z "${app_docker_image}" ]
+                        if [ -n "${app_docker_image}" ]
                         then
                             stack="docker"
                         elif [ "${app_stack_guid}" == "${cflinuxfs3_uuid}" ]
