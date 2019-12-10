@@ -17,12 +17,3 @@
 - type: replace
   path: /instance_groups/name=log-api/instances
   value: ((log_api_instances))
-
-- type: replace
-  path: /releases/name=loggregator
-  value:
-    name: "loggregator"
-    version: "105.6"
-    url: "https://bosh.io/d/github.com/cloudfoundry/loggregator-release?v=105.6"
-    sha1: "eccfbd65e1d217a2b46afd414163e82553fb3084"
-
