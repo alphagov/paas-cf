@@ -1,13 +1,4 @@
 ---
-
-- type: replace
-  path: /releases/name=routing
-  value:
-    name: routing
-    version: "0.193.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/cf-routing-release?v=0.193.0"
-    sha1: "eb74a7c1f2775382daea61dc2f666833febe2dc9"
-
 - type: remove
   path: /instance_groups/name=router/vm_extensions
 
