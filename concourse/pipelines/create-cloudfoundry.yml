@@ -844,7 +844,7 @@ jobs:
                   concourse_credentials=(
                     secrets_cf_db_master_password
                     secrets_cdn_db_master_password
-                    ${bosh_credentials[@]}
+                    "${bosh_credentials[@]}"
                   )
 
                   for secret_name in ${concourse_credentials[*]}; do
@@ -1539,7 +1539,7 @@ jobs:
                 - |
                   VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
 
-                  BOSH_CLIENT=admin
+                  BOSH_CLIENT='admin'
                   export BOSH_CLIENT
 
                   stemcell_index=0
@@ -1577,7 +1577,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  BOSH_CLIENT=admin
+                  BOSH_CLIENT='admin'
                   export BOSH_CLIENT
 
                   bosh -n update-config \
@@ -1604,7 +1604,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_CLIENT=admin
+                BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
                 bosh -n deploy cf-manifest/cf-manifest.yml
@@ -1643,7 +1643,7 @@ jobs:
 
                 echo 'Getting variables'
                 BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
-                CF_ADMIN=admin
+                CF_ADMIN='admin'
                 CF_PASS=$(credhub get -q -n "${BOSH_NS}/cf_admin_password")
                 CF_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret")
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
@@ -1826,7 +1826,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_CLIENT=admin
+                BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
                 bosh -n deploy prometheus-manifest/prometheus-manifest.yml
@@ -2636,7 +2636,7 @@ jobs:
                 - -e
                 - -c
                 - |
-                  BOSH_CLIENT=admin
+                  BOSH_CLIENT='admin'
                   export BOSH_CLIENT
 
                   bosh run-errand rotate-cc-database-key --when-changed
@@ -3113,7 +3113,7 @@ jobs:
               - -e
               - -c
               - |
-                BOSH_CLIENT=admin
+                BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
                 bosh deployment
