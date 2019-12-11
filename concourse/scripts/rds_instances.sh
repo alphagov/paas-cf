@@ -1,6 +1,5 @@
-#!/bin/bash
-
-set -euo pipefail
+#!/bin/sh
+set -euo
 
 ACTION=$1
 CMD=""
