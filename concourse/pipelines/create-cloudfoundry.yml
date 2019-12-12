@@ -297,7 +297,7 @@ groups:
       - post-deploy
       - deploy-paas-accounts
       - deploy-paas-admin
-      - deploy-paas-audit-to-splunk
+      - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
       - smoke-tests
@@ -331,7 +331,7 @@ groups:
     jobs:
       - deploy-paas-accounts
       - deploy-paas-admin
-      - deploy-paas-audit-to-splunk
+      - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
   - name: operator
@@ -629,12 +629,12 @@ resources:
       branch: master
       tag_filter: v0.14.0
 
-  - name: paas-audit-to-splunk
+  - name: paas-auditor
     type: git
     source:
-      uri: https://github.com/alphagov/paas-audit-to-splunk.git
+      uri: https://github.com/alphagov/paas-auditor.git
       branch: master
-      tag_filter: v0.3.0
+      tag_filter: v0.59.0
 
   - name: paas-admin
     type: git
@@ -3126,69 +3126,73 @@ jobs:
                   echo "Success: All VMs are up and running."
                 fi
 
-  - name: deploy-paas-audit-to-splunk
+  - name: deploy-paas-auditor
     serial: true
     plan:
       - *add-grafana-job-annotation
       - in_parallel:
-        - get: paas-audit-to-splunk
+        - get: paas-auditor
           trigger: true
 
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
 
-      - task: deploy-paas-audit-to-splunk
+      - task: deploy-paas-auditor
         tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
           params:
             UAA_API_URL: https://uaa.((system_dns_zone_name))
-            UAA_CLIENT_ID: "paas-auditor"
-            UAA_CLIENT_SECRET: ((uaa_clients_paas_auditor_secret))
-            CLOUDFOUNDRY_API_URL: https://api.((system_dns_zone_name))
-            SPLUNK_URL: https://http-inputs-gds.splunkcloud.com/services/collector
-            SPLUNK_KEY: ((splunk_key))
+
+            CF_CLIENT_ID: "paas-auditor"
+            CF_CLIENT_SECRET: ((uaa_clients_paas_auditor_secret))
+            CF_API_ADDRESS: https://api.((system_dns_zone_name))
+
             DEPLOY_ENV: ((deploy_env))
-            API_ENDPOINT: ((api_endpoint))
+            SPLUNK_HEC_ENDPOINT_URL: https://http-inputs-gds.splunkcloud.com/services/collector
+            SPLUNK_API_KEY: ((splunk_key))
+
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
-            - name: paas-audit-to-splunk
+            - name: paas-auditor
           run:
-            path: sh
+            path: bash
+            dir: paas-auditor
             args:
-              - -e
-              - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+                set -ueo pipefail
 
-                (
-                cd paas-audit-to-splunk
+                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
 
-                ruby -ryaml -e "
-                  env = {
-                    'UAA_API_URL' => '${UAA_API_URL}',
-                    'UAA_CLIENT_ID' => '${UAA_CLIENT_ID}',
-                    'UAA_CLIENT_SECRET' => '${UAA_CLIENT_SECRET}',
-                    'CLOUDFOUNDRY_API_URL' => '${CLOUDFOUNDRY_API_URL}',
-                    'ENVIRONMENT' => '${DEPLOY_ENV}',
-                    'SPLUNK_URL' => '${SPLUNK_URL}',
-                    'SPLUNK_KEY' => '${SPLUNK_KEY}',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
+                if grep -q '^(prod\|prod-lon\|stg-lon)$' <<< "$DEPLOY_ENV"; then
+                  plan="small-11"
+                else
+                  plan="tiny-unencrypted-11"
+                fi
 
-                cf zero-downtime-push paas-audit-to-splunk -f manifest.yml
-                )
+                if cf service auditor-db --guid; then
+                  echo 'Database already exists, skipping creation...'
+                else
+                  cf create-service postgres "$plan" auditor-db
+                fi
+
+                while ! cf service auditor-db | grep -iqE 'status:\s+(create|update) succeeded'; do
+                  echo "Waiting for create/update of service to complete..."
+                  sleep 30
+                done
+
+                cf push paas-auditor -f manifest.yml \
+                  --var cf_client_id="$CF_CLIENT_ID" \
+                  --var cf_client_secret="$CF_CLIENT_SECRET" \
+                  --var cf_api_address="$CF_API_ADDRESS" \
+                  --var deploy_env="$DEPLOY_ENV" \
+                  --var splunk_api_key="$SPLUNK_API_KEY" \
+                  --var splunk_hec_endpoint_url="$SPLUNK_HEC_ENDPOINT_URL"
       - *end-grafana-job-annotation
 
   - name: deploy-paas-accounts
