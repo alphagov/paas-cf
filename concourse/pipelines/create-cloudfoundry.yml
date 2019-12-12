@@ -3891,7 +3891,7 @@ jobs:
 
   - name: tag-release
     plan:
-      - aggregate:
+      - in_parallel:
           - get: pipeline-trigger
             passed: ['rotate-certs']
             trigger: true
