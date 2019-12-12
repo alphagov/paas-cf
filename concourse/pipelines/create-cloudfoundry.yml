@@ -636,13 +636,6 @@ resources:
       branch: master
       # tag_filter: v0.3.0 TODO(paroxp,tlwr)
 
-  - name: paas-audit-to-splunk
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-audit-to-splunk.git
-      branch: master
-      tag_filter: v0.3.0
-
   - name: paas-admin
     type: git
     source:
@@ -3141,10 +3134,6 @@ jobs:
         - get: paas-auditor
           trigger: true
 
-          # TODO(tlwr,paroxp)
-        - get: paas-audit-to-splunk
-          trigger: true
-
         - get: paas-cf
           trigger: true
           passed: ['post-deploy']
@@ -3204,58 +3193,6 @@ jobs:
                   --var deploy_env="$DEPLOY_ENV" \
                   --var splunk_api_key="$SPLUNK_API_KEY" \
                   --var splunk_hec_endpoint_url="$SPLUNK_HEC_ENDPOINT_URL"
-
-      - task: deploy-paas-audit-to-splunk
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            UAA_API_URL: https://uaa.((system_dns_zone_name))
-            UAA_CLIENT_ID: "paas-auditor"
-            UAA_CLIENT_SECRET: ((uaa_clients_paas_auditor_secret))
-            CLOUDFOUNDRY_API_URL: https://api.((system_dns_zone_name))
-            SPLUNK_URL: https://http-inputs-gds.splunkcloud.com/services/collector
-            SPLUNK_KEY: ((splunk_key))
-            DEPLOY_ENV: ((deploy_env))
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
-          inputs:
-            - name: paas-cf
-            - name: paas-audit-to-splunk
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
-
-                (
-                cd paas-audit-to-splunk
-
-                ruby -ryaml -e "
-                  env = {
-                    'UAA_API_URL' => '${UAA_API_URL}',
-                    'UAA_CLIENT_ID' => '${UAA_CLIENT_ID}',
-                    'UAA_CLIENT_SECRET' => '${UAA_CLIENT_SECRET}',
-                    'CLOUDFOUNDRY_API_URL' => '${CLOUDFOUNDRY_API_URL}',
-                    'ENVIRONMENT' => '${DEPLOY_ENV}',
-                    'SPLUNK_URL' => '${SPLUNK_URL}',
-                    'SPLUNK_KEY' => '${SPLUNK_KEY}',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'].merge!(env)
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-
-                cf zero-downtime-push paas-audit-to-splunk -f manifest.yml
-                )
       - *end-grafana-job-annotation
 
   - name: deploy-paas-accounts
