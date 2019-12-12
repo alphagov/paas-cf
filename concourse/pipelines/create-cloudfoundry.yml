@@ -634,7 +634,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-auditor.git
       branch: master
-      # tag_filter: v0.3.0 TODO(paroxp,tlwr)
+      tag_filter: v0.59.0
 
   - name: paas-admin
     type: git
