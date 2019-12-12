@@ -3162,6 +3162,8 @@ jobs:
             CF_API_ADDRESS: https://api.((system_dns_zone_name))
 
             DEPLOY_ENV: ((deploy_env))
+            SPLUNK_HEC_ENDPOINT_URL: https://http-inputs-gds.splunkcloud.com/services/collector
+            SPLUNK_API_KEY: ((splunk_key))
 
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
@@ -3198,7 +3200,10 @@ jobs:
                 cf push paas-auditor -f manifest.yml \
                   --var cf_client_id="$CF_CLIENT_ID" \
                   --var cf_client_secret="$CF_CLIENT_SECRET" \
-                  --var cf_api_address="$CF_API_ADDRESS"
+                  --var cf_api_address="$CF_API_ADDRESS" \
+                  --var deploy_env="$DEPLOY_ENV" \
+                  --var splunk_api_key="$SPLUNK_API_KEY" \
+                  --var splunk_hec_endpoint_url="$SPLUNK_HEC_ENDPOINT_URL"
 
       - task: deploy-paas-audit-to-splunk
         tags: [colocated-with-web]
