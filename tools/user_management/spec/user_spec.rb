@@ -11,6 +11,35 @@ RSpec.describe User do
     })
   end
 
+  it 'checks if a role for a user exists in an environment' do
+    u = User.new(
+      'email' => 'jeff.jefferson@example.com',
+      'google_id' => '000000000000000000000',
+      'roles' => {
+        'dev' => [{ 'role' => 'some_role' }],
+        'prod' => [{ 'role' => 'some_other_role' }],
+      },
+    )
+    expect(u.has_role_for_env?('dev', 'some_role')).to be(true)
+    expect(u.has_role_for_env?('dev', 'some_other_role')).to be(false)
+    expect(u.has_role_for_env?('prod', 'some_other_role')).to be(true)
+    expect(u.has_role_for_env?('prod', 'some_role')).to be(false)
+    expect(u.has_role_for_env?('some_env_that_does_not_exist', 'some_role_that_does_not_exist')).to be(false)
+  end
+
+  it 'does not give any roles to users without roles' do
+    u = User.new(
+      'email' => 'jeff.jefferson@example.com',
+      'google_id' => '000000000000000000000',
+      'roles' => {},
+    )
+    expect(u.has_role_for_env?('dev', 'some_role')).to be(false)
+    expect(u.has_role_for_env?('dev', 'some_other_role')).to be(false)
+    expect(u.has_role_for_env?('prod', 'some_other_role')).to be(false)
+    expect(u.has_role_for_env?('prod', 'some_role')).to be(false)
+    expect(u.has_role_for_env?('some_env_that_does_not_exist', 'some_role_that_does_not_exist')).to be(false)
+  end
+
   it 'checks if exists in UAA' do
     stub_request(:get, 'http://fake-uaa.internal/Users?filter=origin%20eq%20%22google%22%20and%20userName%20eq%20%22000000000000000000000%22')
       .to_return(body: JSON.generate(
@@ -23,7 +52,7 @@ RSpec.describe User do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'cf_admin' => true
+      'roles' => { 'dev' => [{ 'role' => 'some_role' }] },
     )
 
     expect(u.exists?(@fake_uaa_client)).to be true
@@ -46,7 +75,7 @@ RSpec.describe User do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'cf_admin' => true
+      'roles' => { 'dev' => [{ 'role' => 'some_role' }] },
     )
 
     expect(u.create(@fake_uaa_client)).to be true
@@ -90,7 +119,7 @@ RSpec.describe User do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
       'google_id' => '000000000000000000000',
-      'cf_admin' => true
+      'roles' => { 'dev' => [{ 'role' => 'some_role' }] },
     )
 
     expect { u.get_user(@fake_uaa_client) }.to raise_error(Exception)
