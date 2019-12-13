@@ -14,6 +14,7 @@ done
 
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/scale-down-dev.yml "
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/speed-up-deployment-dev.yml "
 fi
 
 alerts_opsfile_args=""
