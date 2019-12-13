@@ -15,9 +15,6 @@ It can check for the following issues:
 * Scriptlets that fail the tests implemented by `shellcheck`
   http://www.shellcheck.net/ (Fatal)
 
-If some checks are not desired (e.g. unused outputs) they can be disabled
-with the `--ignore-types` flag.
-
 """
 
 import yaml
@@ -29,8 +26,8 @@ import subprocess
 
 
 class Pipecleaner(object):
-    def __init__(self, ignore_types=[]):
-        self.ignore_types = ignore_types
+    def __init__(self):
+        pass
 
     def validate(self, filename):
         data = self.load_pipeline(filename)
@@ -47,9 +44,6 @@ class Pipecleaner(object):
 
     def call_shellcheck(self, shell, args, variables):
         """"Returns the exitcode and any output from running shellcheck"""
-        if "shellcheck" in self.ignore_types:
-            return 0, ""
-
         script = ""
 
         for switch in args[:-1]:
@@ -243,23 +237,15 @@ class Pipecleaner(object):
 if __name__ == '__main__':
     def usage():
         print """
-pipecleaner.py [--ignore-types=unused_fetch,unused_resource]
-               pipeline1.yml [pipelineN.yml...]"""
+pipecleaner.py pipeline1.yml [pipelineN.yml...]"""
         sys.exit(2)
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:],
-                                   '',
-                                   ['ignore-types='])
+        opts, args = getopt.getopt(sys.argv[1:], '', [])
     except getopt.GetoptError:
         usage()
 
     files = args
-    ignore_types = []
-
-    for flag, arg in opts:
-        if flag == '--ignore-types':
-            ignore_types = arg.split(',')
 
     if not files:
         usage()
@@ -269,7 +255,7 @@ pipecleaner.py [--ignore-types=unused_fetch,unused_resource]
     FMT = '%s' + BOLD + '* ' + ENDC + '%s' + ': %s'
 
     fatal = None
-    p = Pipecleaner(ignore_types=ignore_types)
+    p = Pipecleaner()
     for filename in files:
         errors = p.validate(filename)
 
@@ -277,9 +263,6 @@ pipecleaner.py [--ignore-types=unused_fetch,unused_resource]
             print "\n==", BOLD, filename, ENDC, "=="
 
         for err_type, err_list in errors.items():
-            if err_type in ignore_types:
-                continue
-
             for err in err_list:
                 if err['fatal']:
                     msg_prefix = '\033[91mERROR '
