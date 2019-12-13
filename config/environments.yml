@@ -1,0 +1,91 @@
+---
+# To only set an environment variable if it isn't already set, append
+# a ? to its name.
+
+meta:
+  ireland: &ireland
+    AWS_DEFAULT_REGION: eu-west-1
+    AWS_REGION: eu-west-1
+  london: &london
+    AWS_DEFAULT_REGION: eu-west-2
+    AWS_REGION: eu-west-2
+  persistent: &persistent
+    PERSISTENT_ENVIRONMENT: true
+    ENABLE_AUTO_DEPLOY: true
+  stagify: &stagify
+    TEST_HEAVY_LOAD: true
+  productionise: &productionise
+    DISABLE_CF_ACCEPTANCE_TESTS: true
+  full_password_stores: &full_password_stores
+    PAAS_PASSWORD_STORE_DIR?: ${HOME}/.paas-pass
+    PAAS_HIGH_PASSWORD_STORE_DIR?: ${HOME}/.paas-pass-high
+
+environments:
+  any-dev-env:
+    AWS_DEFAULT_REGION?: eu-west-1
+    AWS_REGION?: eu-west-1
+    AWS_ACCOUNT: dev
+    MAKEFILE_ENV_TARGET: dev
+    ENV_SPECIFIC_BOSH_VARS_FILE: default.yml
+    PERSISTENT_ENVIRONMENT: false
+    ENABLE_DESTROY: true
+    ENABLE_AUTODELETE: true
+    ENABLE_ALERT_NOTIFICATIONS?: false
+    SKIP_COMMIT_VERIFICATION: true
+    DISABLE_HEALTHCHECK_DB: true
+    DISABLE_PIPELINE_LOCKING: true
+    TEST_HEAVY_LOAD: true
+    ENABLE_MORNING_DEPLOYMENT: true
+    SLIM_DEV_DEPLOYMENT?: true
+    CONCOURSE_AUTH_DURATION: 48h
+    PAAS_PASSWORD_STORE_DIR?: ${HOME}/.paas-pass
+    PAAS_HIGH_PASSWORD_STORE_DIR?: ${HOME}/.paas-pass
+    SYSTEM_DNS_ZONE_NAME: ${DEPLOY_ENV}.dev.cloudpipeline.digital
+    APPS_DNS_ZONE_NAME: ${DEPLOY_ENV}.dev.cloudpipelineapps.digital
+    ALERT_EMAIL_ADDRESS?: govpaas-alerting-dev@digital.cabinet-office.gov.uk
+    NEW_ACCOUNT_EMAIL_ADDRESS?: the-multi-cloud-paas-team+dev@digital.cabinet-office.gov.uk
+
+  stg-lon:
+    <<: *ireland
+    <<: *persistent
+    <<: *stagify
+    <<: *full_password_stores
+    OUTPUT_TAG_PREFIX: prod-
+    AWS_ACCOUNT: staging
+    MAKEFILE_ENV_TARGET: stg-lon
+    DEPLOY_ENV: stg-lon
+    ENV_SPECIFIC_BOSH_VARS_FILE: stg-lon.yml
+    SYSTEM_DNS_ZONE_NAME: london.staging.cloudpipeline.digital
+    APPS_DNS_ZONE_NAME: london.staging.cloudpipelineapps.digital
+    ALERT_EMAIL_ADDRESS: the-multi-cloud-paas-team+stg-lon@digital.cabinet-office.gov.uk
+    NEW_ACCOUNT_EMAIL_ADDRESS: the-multi-cloud-paas-team+stg-lon@digital.cabinet-office.gov.uk
+
+  prod:
+    <<: *ireland
+    <<: *persistent
+    <<: *productionise
+    <<: *full_password_stores
+    INPUT_TAG_PREFIX: prod-
+    AWS_ACCOUNT: prod
+    MAKEFILE_ENV_TARGET: prod
+    DEPLOY_ENV: prod
+    ENV_SPECIFIC_BOSH_VARS_FILE: prod.yml
+    SYSTEM_DNS_ZONE_NAME: cloud.service.gov.uk
+    APPS_DNS_ZONE_NAME: cloudapps.digital
+    ALERT_EMAIL_ADDRESS: the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk
+    NEW_ACCOUNT_EMAIL_ADDRESS: the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk
+
+  prod-lon:
+    <<: *london
+    <<: *persistent
+    <<: *productionise
+    <<: *full_password_stores
+    INPUT_TAG_PREFIX: prod-
+    AWS_ACCOUNT: prod
+    MAKEFILE_ENV_TARGET: prod-lon
+    DEPLOY_ENV: prod-lon
+    ENV_SPECIFIC_BOSH_VARS_FILE: prod-lon.yml
+    SYSTEM_DNS_ZONE_NAME: london.cloud.service.gov.uk
+    APPS_DNS_ZONE_NAME: london.cloudapps.digital
+    ALERT_EMAIL_ADDRESS: the-multi-cloud-paas-team+prod-lon@digital.cabinet-office.gov.uk
+    NEW_ACCOUNT_EMAIL_ADDRESS: the-multi-cloud-paas-team+prod-lon@digital.cabinet-office.gov.uk

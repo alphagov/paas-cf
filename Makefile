@@ -138,87 +138,22 @@ update_merge_keys:
 
 .PHONY: dev
 dev: ## Set Environment to DEV
-	$(eval export AWS_DEFAULT_REGION ?= eu-west-1)
-	$(eval export AWS_ACCOUNT=dev)
-	$(eval export MAKEFILE_ENV_TARGET=dev)
-	$(eval export PERSISTENT_ENVIRONMENT=false)
-	$(eval export ENABLE_DESTROY=true)
-	$(eval export ENABLE_AUTODELETE=true)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS?=govpaas-alerting-dev@digital.cabinet-office.gov.uk)
-	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS?=the-multi-cloud-paas-team+dev@digital.cabinet-office.gov.uk)
-	$(eval export ENABLE_ALERT_NOTIFICATIONS ?= false)
-	$(eval export SKIP_COMMIT_VERIFICATION=true)
-	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=default.yml)
-	$(eval export DISABLE_HEALTHCHECK_DB=true)
-	$(eval export CONCOURSE_AUTH_DURATION=48h)
-	$(eval export DISABLE_PIPELINE_LOCKING=true)
-	$(eval export TEST_HEAVY_LOAD=true)
-	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(eval export ENABLE_MORNING_DEPLOYMENT=true)
-	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
+	$(foreach definition,$(shell config/print_env_vars_for_environment.rb any-dev-env true),$(eval export $(definition)))
 	@true
 
 .PHONY: stg-lon
 stg-lon: ## Set Environment to stg-lon
-	$(eval export AWS_ACCOUNT=staging)
-	$(eval export MAKEFILE_ENV_TARGET=stg-lon)
-	$(eval export PERSISTENT_ENVIRONMENT=true)
-	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export OUTPUT_TAG_PREFIX=prod-)
-	$(eval export SYSTEM_DNS_ZONE_NAME=london.staging.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=london.staging.cloudpipelineapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+stg-lon@digital.cabinet-office.gov.uk)
-	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
-	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=stg-lon.yml)
-	$(eval export DEPLOY_ENV=stg-lon)
-	$(eval export TEST_HEAVY_LOAD=true)
-	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
-	$(eval export AWS_DEFAULT_REGION=eu-west-2)
-	$(eval export AWS_REGION=eu-west-2)
+	$(foreach definition,$(shell config/print_env_vars_for_environment.rb stg-lon true),$(eval export $(definition)))
 	@true
 
 .PHONY: prod
 prod: ## Set Environment to Production
-	$(eval export AWS_ACCOUNT=prod)
-	$(eval export MAKEFILE_ENV_TARGET=prod)
-	$(eval export PERSISTENT_ENVIRONMENT=true)
-	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export INPUT_TAG_PREFIX=prod-)
-	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
-	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod@digital.cabinet-office.gov.uk)
-	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
-	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=prod.yml)
-	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
-	$(eval export DEPLOY_ENV=prod)
-	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
-	$(eval export AWS_DEFAULT_REGION=eu-west-1)
-	$(eval export AWS_REGION=eu-west-1)
+	$(foreach definition,$(shell config/print_env_vars_for_environment.rb prod true),$(eval export $(definition)))
 	@true
 
 .PHONY: prod-lon
 prod-lon: ## Set Environment to prod-lon
-	$(eval export AWS_ACCOUNT=prod)
-	$(eval export MAKEFILE_ENV_TARGET=prod-lon)
-	$(eval export PERSISTENT_ENVIRONMENT=true)
-	$(eval export ENABLE_AUTO_DEPLOY=true)
-	$(eval export INPUT_TAG_PREFIX=prod-)
-	$(eval export SYSTEM_DNS_ZONE_NAME=london.cloud.service.gov.uk)
-	$(eval export APPS_DNS_ZONE_NAME=london.cloudapps.digital)
-	$(eval export ALERT_EMAIL_ADDRESS=the-multi-cloud-paas-team+prod-lon@digital.cabinet-office.gov.uk)
-	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS=${ALERT_EMAIL_ADDRESS})
-	$(eval export ENV_SPECIFIC_BOSH_VARS_FILE=prod-lon.yml)
-	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
-	$(eval export DEPLOY_ENV=prod-lon)
-	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
-	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
-	$(eval export AWS_DEFAULT_REGION=eu-west-2)
-	$(eval export AWS_REGION=eu-west-2)
+	$(foreach definition,$(shell config/print_env_vars_for_environment.rb prod-lon true),$(eval export $(definition)))
 	@true
 
 .PHONY: bosh-cli
