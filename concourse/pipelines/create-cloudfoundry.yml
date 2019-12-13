@@ -532,13 +532,13 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf12.1
+      branch: cf12.15
 
   - name: cf-smoke-tests-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-smoke-tests-release
-      tag_filter: "40.0.119"
+      tag_filter: "40.0.123"
       submodules:
       - "src/smoke_tests"
 
