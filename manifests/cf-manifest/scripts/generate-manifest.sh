@@ -14,6 +14,7 @@ done
 
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/scale-down-dev.yml"
+  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/change-vm-types-dev.yml"
 fi
 
 # shellcheck disable=SC2086
