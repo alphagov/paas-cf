@@ -1,0 +1,46 @@
+---
+# Make everything really small
+#
+# large  => medium
+# medium => small
+# small  => nano
+
+- type: replace
+  path: /instance_groups/name=adapter/vm_type
+  value: nano
+
+- type: replace
+  path: /instance_groups/name=api/vm_type
+  value: medium
+
+- type: replace
+  path: /instance_groups/name=cc-worker/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=diego-api/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=doppler/vm_type
+  value: medium
+
+- type: replace
+  path: /instance_groups/name=log-api/vm_type
+  value: medium
+
+- type: replace
+  path: /instance_groups/name=nats/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=scheduler/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=uaa/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=router/vm_type
+  value: slim_router

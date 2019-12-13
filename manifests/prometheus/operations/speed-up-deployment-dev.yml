@@ -1,0 +1,9 @@
+---
+
+- type: replace
+  path: /update/initial_deploy_az_update_strategy?
+  value: parallel
+
+- type: replace
+  path: /update/vm_strategy?
+  value: create-swap-delete

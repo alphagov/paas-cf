@@ -14,6 +14,8 @@ done
 
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/scale-down-dev.yml"
+  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/change-vm-types-dev.yml"
+  opsfile_args="$opsfile_args -o ${PAAS_CF_DIR}/manifests/cf-manifest/operations/speed-up-deployment-dev.yml"
 fi
 
 # shellcheck disable=SC2086
@@ -29,7 +31,5 @@ bosh interpolate \
   --vars-file="${WORKDIR}/environment-variables.yml" \
   --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-internal-lookup-for-route-services.yml" \
   ${opsfile_args} \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-google-oauth.yml" \
-  --ops-file="${PAAS_CF_DIR}/manifests/cf-manifest/operations/uaa-add-microsoft-oauth.yml" \
   --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
   "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"
