@@ -15,10 +15,6 @@ It can check for the following issues:
 * Scriptlets that fail the tests implemented by `shellcheck`
   http://www.shellcheck.net/ (Fatal)
 
-By default it will exit with a nonzero exit code for any Fatal errors,
-and will exit with a nonzero code for Warnings if you pass the
-`--fatal-warnings` flag.
-
 If some checks are not desired (e.g. unused outputs) they can be disabled
 with the `--ignore-types` flag.
 
@@ -248,27 +244,22 @@ if __name__ == '__main__':
     def usage():
         print """
 pipecleaner.py [--ignore-types=unused_fetch,unused_resource]
-               [--fatal-warnings]
                pipeline1.yml [pipelineN.yml...]"""
         sys.exit(2)
 
     try:
         opts, args = getopt.getopt(sys.argv[1:],
                                    '',
-                                   ['ignore-types=',
-                                    'fatal-warnings'])
+                                   ['ignore-types='])
     except getopt.GetoptError:
         usage()
 
     files = args
     ignore_types = []
-    fatal_warnings = False
 
     for flag, arg in opts:
         if flag == '--ignore-types':
             ignore_types = arg.split(',')
-        if flag == '--fatal-warnings':
-            fatal_warnings = True
 
     if not files:
         usage()
@@ -307,5 +298,3 @@ pipecleaner.py [--ignore-types=unused_fetch,unused_resource]
 
     if fatal is True:
         sys.exit(10)
-    elif fatal is False and fatal_warnings:
-        sys.exit(20)
