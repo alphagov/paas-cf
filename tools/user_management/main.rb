@@ -5,8 +5,9 @@ require 'rest-client'
 require_relative './lib/actions'
 require_relative './lib/user'
 
-UAA_API_URL = ENV.fetch('UAA_API_URL')
-CF_TOKEN    = ENV.fetch('CF_TOKEN')
+UAA_API_URL       = ENV.fetch('UAA_API_URL')
+CF_TOKEN          = ENV.fetch('CF_TOKEN')
+ENV_TARGET        = ENV.fetch('ENV_TARGET')
 USERS_CONFIG_PATH = ENV.fetch('USERS_CONFIG_PATH')
 
 uaa_client = RestClient::Resource.new(
@@ -16,22 +17,24 @@ uaa_client = RestClient::Resource.new(
     'Content-Type' => 'application/json'
   }
 )
-users_config = YAML.safe_load(File.read(USERS_CONFIG_PATH)).map { |uo| User.new(uo) }
 
-ensure_users_exist_in_uaa(users_config, uaa_client)
+users_config = YAML.safe_load(File.read(USERS_CONFIG_PATH), aliases: true)
+users = users_config.fetch('users').map { |uo| User.new(uo) }
+cf_admin_users = users.select { |user| user.has_role_for_env?(ENV_TARGET, 'cf-admin') }
+cf_auditor_users = users.select { |user| user.has_role_for_env?(ENV_TARGET, 'cf-auditor') }
 
-admin_users = users_config.select(&:cf_admin)
-non_admin_users = users_config.reject(&:cf_admin)
+ensure_users_exist_in_uaa(cf_admin_users + cf_auditor_users, uaa_client)
+
 groups = [
-  Group.new('cloud_controller.admin', admin_users),
-  Group.new('cloud_controller.admin_read_only', admin_users),
-  Group.new('uaa.admin', admin_users),
-  Group.new('scim.read', admin_users),
-  Group.new('scim.write', admin_users),
-  Group.new('scim.invite', admin_users),
-  Group.new('doppler.firehose', admin_users),
-  Group.new('network.admin', admin_users),
-  Group.new('cloud_controller.global_auditor', non_admin_users)
+  Group.new('cloud_controller.admin', cf_admin_users),
+  Group.new('cloud_controller.admin_read_only', cf_admin_users),
+  Group.new('uaa.admin', cf_admin_users),
+  Group.new('scim.read', cf_admin_users),
+  Group.new('scim.write', cf_admin_users),
+  Group.new('scim.invite', cf_admin_users),
+  Group.new('doppler.firehose', cf_admin_users),
+  Group.new('network.admin', cf_admin_users),
+  Group.new('cloud_controller.global_auditor', cf_auditor_users)
 ]
 
 ensure_uaa_groups_have_correct_members(groups, uaa_client)

@@ -519,6 +519,15 @@ resources:
       region_name: ((aws_region))
       versioned_file: paas-cf-cloud-config.yml
 
+  - name: paas-trusted-people
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: paas-trusted-people/users.yml
+      initial_version: "-"
+      initial_content_text: ""
+
   - name: deployed-healthcheck
     type: s3-iam
     source:
@@ -1975,6 +1984,7 @@ jobs:
       - get: cf-tfstate
         passed: ['generate-cf-config']
       - get: paas-aiven-broker
+      - get: paas-trusted-people
 
     - task: retrieve-config
       tags: [colocated-with-web]
@@ -2508,10 +2518,12 @@ jobs:
           inputs:
             - name: paas-cf
             - name: cf-manifest
+            - name: paas-trusted-people
           params:
             UAA_API_URL: https://uaa.((system_dns_zone_name))
             UAA_ADMIN_CLIENT_SECRET: ((uaa_admin_client_secret))
-            USERS_CONFIG_PATH: ../../config/users.yml
+            USERS_CONFIG_PATH: paas-trusted-people/users.yml
+            ENV_TARGET: ((aws_account))
           run:
             path: sh
             args:
@@ -2523,9 +2535,8 @@ jobs:
                 uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
                 CF_TOKEN="bearer $(uaac contexts | awk '$1 ~ /access_token/ {print $2}')"
                 export CF_TOKEN
-                cd paas-cf/tools/user_management
-                bundle --quiet
-                bundle exec main.rb
+                (cd paas-cf && bundle --quiet)
+                paas-cf/tools/user_management/main.rb
 
       - task: deploy-healthcheck
         tags: [colocated-with-web]

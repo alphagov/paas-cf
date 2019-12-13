@@ -3,12 +3,12 @@ require 'json'
 require_relative 'uaa_resource'
 
 class User < UAAResource
-  attr_reader :email, :google_id, :cf_admin
+  attr_reader :email, :google_id
 
   def initialize(obj)
     @email = obj.fetch('email')
     @google_id = obj.fetch('google_id')
-    @cf_admin = obj.fetch('cf_admin', false)
+    @roles_by_env = obj.fetch("roles", {})
   end
 
   def exists?(uaa_client)
@@ -18,6 +18,10 @@ class User < UAAResource
       return false
     end
     true
+  end
+
+  def has_role_for_env?(env, role)
+    @roles_by_env.fetch(env, []).any? { |x| x['role'] == role }
   end
 
   def create(uaa_client)
