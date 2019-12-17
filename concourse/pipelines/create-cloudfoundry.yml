@@ -541,7 +541,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf12.15
+      branch: cf12.19
 
   - name: cf-smoke-tests-release
     type: git
