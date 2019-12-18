@@ -1400,6 +1400,26 @@ jobs:
 
                   cat vpc-peering-opsfile/vpc-peers.yml
 
+        - task: generate-tenant-uaa-clients-opsfile
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *ruby-slim-image-resource
+            inputs:
+              - name: paas-cf
+            outputs:
+              - name: tenant-uaa-clients-opsfile
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ruby paas-cf/manifests/cf-manifest/scripts/generate-tenant-uaa-client-ops-file.rb \
+                    "paas-cf/manifests/cf-manifest/data/100-tenant-uaa-client-config.yml" \
+                    "((makefile_env_target))" \
+                  > tenant-uaa-clients-opsfile/tenant-uaa-opsfile.yml
+
         - task: generate-microsoft-oauth-endpoints
           tags: [colocated-with-web]
           config:
@@ -1461,6 +1481,7 @@ jobs:
               - name: ipsec-CA
               - name: terraform-outputs
               - name: vpc-peering-opsfile
+              - name: tenant-uaa-clients-opsfile
               - name: ms-oauth-endpoints
             outputs:
               - name: cf-manifest
