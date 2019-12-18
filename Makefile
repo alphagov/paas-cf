@@ -267,53 +267,53 @@ upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets u
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-google-oauth-secrets.rb
+	@scripts/upload-secrets/upload-google-oauth-secrets.rb
 
 .PHONY: upload-microsoft-oauth-secrets
 upload-microsoft-oauth-secrets: check-env ## Decrypt and upload Microsoft Identity credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-microsoft-oauth-secrets.rb
+	@scripts/upload-secrets/upload-microsoft-oauth-secrets.rb
 
 .PHONY: upload-splunk-secrets
 upload-splunk-secrets: check-env ## Decrypt and upload Splunk HEC Tokens to Credhub
 	$(if $(wildcard ${PAAS_HIGH_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_HIGH_PASSWORD_STORE_DIR} (PAAS_HIGH_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_HIGH_PASSWORD_STORE_DIR})
-	@scripts/upload-splunk-secrets.rb
+	@scripts/upload-secrets/upload-splunk-secrets.rb
 
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-notify-secrets.rb
+	@scripts/upload-secrets/upload-notify-secrets.rb
 
 .PHONY: upload-aiven-secrets
 upload-aiven-secrets: check-env ## Decrypt and upload Aiven credentials to Credhub
 	$(if $(wildcard ${PAAS_HIGH_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_HIGH_PASSWORD_STORE_DIR} (PAAS_HIGH_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_HIGH_PASSWORD_STORE_DIR})
-	@scripts/upload-aiven-secrets.rb
+	@scripts/upload-secrets/upload-aiven-secrets.rb
 
 .PHONY: upload-cyber-secrets
 upload-cyber-secrets: check-env ## Decrypt and upload Cyber credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-cyber-secrets.rb
+	@scripts/upload-secrets/upload-cyber-secrets.rb
 
 .PHONY: upload-logit-secrets
 upload-logit-secrets: check-env ## Decrypt and upload Logit credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-logit-secrets.rb
+	@scripts/upload-secrets/upload-logit-secrets.rb
 
 .PHONY: upload-pagerduty-secrets
 upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-pagerduty-secrets.rb
+	@scripts/upload-secrets/upload-pagerduty-secrets.rb
 
 .PHONY: upload-paas-trusted-people
 upload-paas-trusted-people: check-env
-	@scripts/upload-paas-trusted-people.sh
+	@scripts/upload-secrets/upload-paas-trusted-people.sh
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
