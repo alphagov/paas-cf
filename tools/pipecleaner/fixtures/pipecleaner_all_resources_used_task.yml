@@ -1,0 +1,12 @@
+---
+resources:
+  - name: my-git-repo
+    type: git
+
+jobs:
+  - name: use-resource-with-task-file
+    plan:
+      - get: my-git-repo
+
+      - task: not-using-git-repo-as-input
+        file: my-git-repo/task.yml

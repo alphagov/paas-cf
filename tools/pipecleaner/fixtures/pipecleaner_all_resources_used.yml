@@ -1,0 +1,24 @@
+---
+resources:
+  - name: my-git-repo
+    type: git
+
+jobs:
+  - name: forget-to-use-resource
+    plan:
+      - get: my-git-repo
+
+      - task: not-using-git-repo-as-input
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/is-the-best
+          inputs:
+            - name: my-git-repo
+          run:
+            path: sh
+            args:
+              - -c
+              - 'echo'

@@ -1,0 +1,23 @@
+---
+resources:
+  - name: my-git-repo
+    type: git
+
+jobs:
+  - name: resource-to-trigger-is-a-variable
+    plan:
+      - get: my-git-repo
+        trigger: ((should-we-trigger))
+
+      - task: do-a-thing
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/is-the-best
+          run:
+            path: sh
+            args:
+              - -c
+              - 'echo'

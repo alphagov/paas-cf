@@ -1,0 +1,24 @@
+---
+jobs:
+  - name: shellcheck
+    plan:
+      - task: refers-to-params
+        params:
+          OTHER_pie: "apple"
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/is-the-best
+          params:
+            BEST_pie: "meat"
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                echo "best pie is ${BEST_pie} pie"
+                echo "other pie is ${OTHER_pie} pie"

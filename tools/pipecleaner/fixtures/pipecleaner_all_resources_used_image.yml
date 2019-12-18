@@ -1,0 +1,19 @@
+---
+resources:
+  - name: my-docker-image
+    type: docker-image
+
+jobs:
+  - name: use-resource-for-image
+    plan:
+      - get: my-docker-image
+
+      - task: not-using-git-repo-as-input
+        image: my-docker-image
+        config:
+          platform: linux
+          run:
+            path: sh
+            args:
+              - -c
+              - 'echo'
