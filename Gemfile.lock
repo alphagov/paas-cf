@@ -141,6 +141,7 @@ DEPENDENCIES
   mail (~> 2.6.4)
   rest-client (~> 2.1.0)
   rspec (~> 3.3)
+  rubocop (~> 0.52.1)
   simplecov
   webmock (~> 2.3.1)
 

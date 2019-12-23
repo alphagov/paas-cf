@@ -11,5 +11,6 @@ gem 'json-minify', '~> 0.0.2'
 gem 'mail', '~> 2.6.4'
 gem 'rest-client', '~> 2.1.0'
 gem 'rspec', '~> 3.3'
+gem 'rubocop', '~> 0.52.1'
 gem 'simplecov', require: false, group: :test
 gem 'webmock', '~> 2.3.1'

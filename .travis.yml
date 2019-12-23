@@ -67,6 +67,7 @@ before_install:
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/alphagov/paas-cf
   - cd $HOME/gopath/src/github.com/alphagov/paas-cf
   - (cd tools/pipecleaner && go install -mod=vendor)
+  - bundle install
 
 script:
   - make test
