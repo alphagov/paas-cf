@@ -1,0 +1,19 @@
+---
+jobs:
+  - name: rubocop
+    plan:
+      - task: do-some-ruby
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/is-the-best
+          run:
+            path: ruby
+            args:
+              - -e
+              - |
+                # frozen_string_literal: true
+
+                puts 'this ruby is perfect'

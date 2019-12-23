@@ -1,0 +1,11 @@
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/is-the-best
+run:
+  path: ruby
+  args:
+    - -e
+    - |
+      def too_much; something; something_else; end

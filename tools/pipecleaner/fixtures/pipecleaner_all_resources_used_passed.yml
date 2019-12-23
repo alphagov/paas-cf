@@ -1,0 +1,30 @@
+---
+resources:
+  - name: my-git-repo
+    type: git
+
+jobs:
+  - name: trigger-on-resource
+    plan:
+      - get: my-git-repo
+        trigger: true
+
+  - name: resource-gate-passed
+    plan:
+      - get: my-git-repo
+        passed: [trigger-on-resource]
+
+      - task: using-git-repo-as-input-with-passed-gate
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: governmentpaas/is-the-best
+          inputs:
+            - name: my-git-repo
+          run:
+            path: sh
+            args:
+              - -c
+              - 'echo'

@@ -12,6 +12,14 @@ run:
   args:
     - -e
     - |
+      # frozen_string_literal: true
+
+      # rubocop:disable Lint/MissingCopEnableDirective
+      # rubocop:disable Layout/MultilineMethodCallIndentation
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/BlockLength
+      # rubocop:disable Metrics/AbcSize
+
       require 'json'
       require 'net/http'
       require 'openssl'
@@ -21,18 +29,14 @@ run:
       require 'yaml'
 
       def grafana_api(method:, url:, password:, body: nil)
-        klass = Net::HTTP.const_get(method.capitalize)
-
+        klass = Net::HTTP.const_get method.capitalize
         uri = URI(url)
-        resp = Net::HTTP.start(
-          uri.host, uri.port, use_ssl: true
-        ) do |http|
 
+        resp = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
           req = klass.new(uri)
           req.basic_auth 'admin', password
           req['Content-Type'] = 'application/json'
           req.body = body.to_json unless body.nil?
-
           http.request(req)
         end
 
@@ -43,30 +47,25 @@ run:
       end
 
       system_domain = ENV.fetch('SYSTEM_DNS_ZONE_NAME')
-      deploy_env    = ENV.fetch('DEPLOY_ENV')
       slim          = ENV.fetch('SLIM_DEV_DEPLOYMENT')
-      azs           = (slim == 'true') ? 1 : 2
+      azs           = slim == 'true' ? 1 : 2
       grafana_pass  = ENV.fetch('GRAFANA_PASS')
 
-      users_that_should_exist = YAML.load_file(
-        "#{Dir.pwd}/paas-cf/config/users.yml"
-      ).reject do |u|
-        u.dig('email').nil?
-      end.map do |u|
-        u.fetch('email')
-      end
+      users_that_should_exist = YAML.load_file("#{Dir.pwd}/paas-cf/config/users.yml")
+      .reject { |u| u.dig('email').nil? }
+      .map { |u| u.fetch('email') }
 
       puts 'Users that should exist:'
       pp users_that_should_exist
 
       azs.times do |az|
-        base_url  = "https://grafana-#{az + 1}.#{system_domain}/"
+        base_url = "https://grafana-#{az + 1}.#{system_domain}/"
         puts "Configuring #{base_url}"
 
-        grafana_users  = grafana_api(
+        grafana_users = grafana_api(
           method: 'get',
           url: "#{base_url}/api/users",
-          password: grafana_pass,
+          password: grafana_pass
         )
         .reject { |u| %w[admin mon].include? u.dig('login') }
 
@@ -109,7 +108,7 @@ run:
           grafana_api(
             method: 'delete',
             url: "#{base_url}/api/admin/users/#{user_id}",
-            password: grafana_pass,
+            password: grafana_pass
           )
           puts "Deleted user #{user_id} / #{user.dig('email')}"
         end
@@ -117,7 +116,7 @@ run:
         grafana_api(
           method: 'get',
           url: "#{base_url}/api/users",
-          password: grafana_pass,
+          password: grafana_pass
         )
         .reject { |u| %w[admin mon].include? u.dig('login') }
         .each do |user|
@@ -127,7 +126,7 @@ run:
             method: 'put',
             url: "#{base_url}/api/admin/users/#{user_id}/permissions",
             password: grafana_pass,
-            body: { isGrafanaAdmin: true },
+            body: { isGrafanaAdmin: true }
           )
           puts "Elevated user #{user_id} / #{user.dig('email')}"
         end
@@ -135,9 +134,9 @@ run:
         users_in_org = grafana_api(
           method: 'get',
           url: "#{base_url}/api/orgs/1/users",
-          password: grafana_pass,
+          password: grafana_pass
         )
-        .reject { |u| %w(admin mon).include? u.dig('login') }
+        .reject { |u| %w[admin mon].include? u.dig('login') }
         .map { |u| u.dig('email') }
 
         users_to_add_to_org = (
@@ -150,10 +149,7 @@ run:
             method: 'post',
             url: "#{base_url}/api/orgs/1/users",
             password: grafana_pass,
-            body: {
-              role: 'Admin',
-              loginOrEmail: email,
-            },
+            body: { role: 'Admin', loginOrEmail: email }
           )
           puts "Added #{email} to main org"
         end
@@ -161,9 +157,9 @@ run:
         grafana_api(
           method: 'get',
           url: "#{base_url}/api/orgs/1/users",
-          password: grafana_pass,
+          password: grafana_pass
         )
-        .reject { |u| %w(admin mon).include? u.dig('login') }
+        .reject { |u| %w[admin mon].include? u.dig('login') }
         .each do |user|
           user_id = user.fetch('userId')
           puts "Promoting #{user_id} / #{user.dig('email')} to Admin in main org"
@@ -171,17 +167,17 @@ run:
             method: 'patch',
             url: "#{base_url}/api/orgs/1/users/#{user_id}",
             password: grafana_pass,
-            body: { role: 'Admin' },
+            body: { role: 'Admin' }
           )
           puts "Promoted #{user_id} / #{user.dig('email')} to Admin in main org"
         end
 
-        puts "Updating name of main org"
+        puts 'Updating name of main org'
         grafana_api(
           method: 'put',
           url: "#{base_url}/api/orgs/1",
           password: grafana_pass,
-          body: { 'name' => 'PaaS' },
+          body: { 'name' => 'PaaS' }
         )
-        puts "Updated name of main org"
+        puts 'Updated name of main org'
       end

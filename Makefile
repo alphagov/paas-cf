@@ -30,6 +30,8 @@ tools_spec:
 		go test -v $(go list ./... | grep -v acceptance)
 	cd tools/user_emails &&\
 		go test -v ./...
+	cd tools/pipecleaner &&\
+		go test -v ./...
 	cd tools/user_management &&\
 		bundle exec rspec --format documentation
 
@@ -83,7 +85,7 @@ compile_platform_tests:
 		platform/availability/monitor
 
 lint_yaml:
-	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' -not -path './manifests/cf-deployment/ci/template/*' | xargs yamllint -c yamllint.yml
+	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' -not -path './manifests/cf-deployment/ci/template/*' | grep -v pipecleaner_invalid.yml | xargs yamllint -c yamllint.yml
 
 .PHONY: lint_terraform
 lint_terraform: dev ## Lint the terraform files.
@@ -95,7 +97,7 @@ lint_shellcheck:
 	find . -name '*.sh' -not -path './.git/*' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' -not -path './manifests/prometheus/upstream/*' | xargs shellcheck
 
 lint_concourse:
-	cd .. && SHELLCHECK_OPTS="-e SC1091" python paas-cf/concourse/scripts/pipecleaner.py --fatal-warnings paas-cf/concourse/pipelines/*.yml
+	pipecleaner concourse/pipelines/* concourse/tasks/*
 
 .PHONY: lint_ruby
 lint_ruby:
