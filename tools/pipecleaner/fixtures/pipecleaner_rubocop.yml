@@ -2,7 +2,7 @@
 jobs:
   - name: rubocop
     plan:
-      - task: 💎
+      - task: do-some-ruby
         config:
           platform: linux
           image_resource:
