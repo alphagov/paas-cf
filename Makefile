@@ -30,6 +30,8 @@ tools_spec:
 		go test -v $(go list ./... | grep -v acceptance)
 	cd tools/user_emails &&\
 		go test -v ./...
+	cd tools/pipecleaner &&\
+		go test -v ./...
 	cd tools/user_management &&\
 		bundle exec rspec --format documentation
 
