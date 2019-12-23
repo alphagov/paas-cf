@@ -85,7 +85,7 @@ compile_platform_tests:
 		platform/availability/monitor
 
 lint_yaml:
-	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' -not -path './manifests/cf-deployment/ci/template/*' | xargs yamllint -c yamllint.yml
+	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' -not -path './manifests/cf-deployment/ci/template/*' | grep -v pipecleaner_invalid.yml | xargs yamllint -c yamllint.yml
 
 .PHONY: lint_terraform
 lint_terraform: dev ## Lint the terraform files.
