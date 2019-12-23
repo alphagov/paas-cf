@@ -3552,7 +3552,7 @@ jobs:
             GIT_REPO_SSH: git@github.com:alphagov/paas-admin.git
             GIT_EMAIL: the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk
             GIT_USER: gov-paas-((deploy_env))
-            GIT_KEYS: paas-admin-git-keys
+            GIT_KEYS: ./paas-admin-git-keys
           run:
             path: sh
             args:
