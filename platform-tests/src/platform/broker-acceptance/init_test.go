@@ -28,6 +28,10 @@ var (
 	testConfig  config.CatsConfig
 	httpClient  *http.Client
 	testContext *workflowhelpers.ReproducibleTestSuiteSetup
+
+	prometheusBasicAuthUsername = os.Getenv("PROMETHEUS_BASIC_AUTH_USERNAME")
+	prometheusBasicAuthPassword = os.Getenv("PROMETHEUS_BASIC_AUTH_PASSWORD")
+	systemDomain                = os.Getenv("SYSTEM_DNS_ZONE_NAME")
 )
 
 func TestSuite(t *testing.T) {
@@ -49,6 +53,10 @@ func TestSuite(t *testing.T) {
 
 	BeforeSuite(func() {
 		testContext.Setup()
+
+		Expect(prometheusBasicAuthUsername).NotTo(Equal(""))
+		Expect(prometheusBasicAuthPassword).NotTo(Equal(""))
+		Expect(systemDomain).NotTo(Equal(""))
 
 		// FIXME remove InfluxDB once it is GA
 		for _, svc := range []string{"influxdb"} {
@@ -121,4 +129,14 @@ func pollForServiceDeletionCompletion(dbInstanceName string) {
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
 	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+type basicAuthRoundTripper struct {
+	username string
+	password string
+}
+
+func (r basicAuthRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.SetBasicAuth(r.username, r.password)
+	return http.DefaultTransport.RoundTrip(req)
 }
