@@ -19,7 +19,6 @@ aiven_prometheus_endpoint_id = ENV['AIVEN_PROMETHEUS_PASSWORD'] || `pass "aiven.
 upload_secrets(
   credhub_namespaces,
   'aiven_api_token' => aiven_api_token,
-
   'aiven_prometheus_username'    => aiven_prometheus_username,
   'aiven_prometheus_password'    => aiven_prometheus_password,
   'aiven_prometheus_endpoint_id' => aiven_prometheus_endpoint_id,

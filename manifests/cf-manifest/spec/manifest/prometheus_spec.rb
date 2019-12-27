@@ -9,7 +9,7 @@ RSpec.describe 'prometheus' do
     manifest.fetch('instance_groups.prometheus.jobs.prometheus2.properties.prometheus')
   end
 
-  let(:route_registrar_routes)  do
+  let(:route_registrar_routes) do
     manifest.fetch('instance_groups.prometheus.jobs.route_registrar.properties.route_registrar.routes')
   end
 
@@ -73,7 +73,7 @@ RSpec.describe 'prometheus' do
 
       expect(prom_scrape_config).not_to be_nil
       expect(prom_scrape_config['static_configs']).to eq(
-        [{ 'targets' => ['localhost:9090']}]
+        [{ 'targets' => ['localhost:9090'] }]
       )
     end
 
@@ -122,7 +122,7 @@ RSpec.describe 'prometheus' do
     end
 
     context 'caddyfile' do
-      let(:caddyfile) {caddy_config['caddyfile']}
+      let(:caddyfile) { caddy_config['caddyfile'] }
 
       it 'should listen on all interfaces' do
         # Caddy cannot just listen on localhost,
