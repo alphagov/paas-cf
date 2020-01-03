@@ -1,16 +1,25 @@
 package acceptance_test
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
+	"log"
+	"strings"
+	"time"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
+
+	prom "github.com/prometheus/client_golang/api"
+	promv1 "github.com/prometheus/client_golang/api/prometheus/v1"
+	prommodel "github.com/prometheus/common/model"
 )
 
 var _ = Describe("Elasticsearch backing service", func() {
@@ -42,11 +51,16 @@ var _ = Describe("Elasticsearch backing service", func() {
 		var (
 			appName        string
 			dbInstanceName string
+			dbInstanceGUID string
 		)
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 			dbInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-es")
 			Expect(cf.Cf("create-service", serviceName, testPlanName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+
+			serviceGUIDSession := cf.Cf("service", dbInstanceName, "--guid")
+			Expect(serviceGUIDSession.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+			dbInstanceGUID = strings.TrimSpace(string(serviceGUIDSession.Out.Contents()))
 
 			pollForServiceCreationCompletion(dbInstanceName)
 
@@ -92,6 +106,39 @@ var _ = Describe("Elasticsearch backing service", func() {
 			resp.Body.Close()
 			Expect(resp.StatusCode).To(Equal(500), "Expected 500, got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 			Expect(string(body)).To(ContainSubstring("EOF"), "Connection without TLS did not report a connection error")
+
+			By("checking that metrics are being scraped")
+			prometheusURL := fmt.Sprintf("https://prometheus.%s", systemDomain)
+			promClient, err := prom.NewClient(prom.Config{
+				Address: prometheusURL,
+				RoundTripper: basicAuthRoundTripper{
+					username: prometheusBasicAuthUsername,
+					password: prometheusBasicAuthPassword,
+				},
+			})
+			Expect(err).NotTo(HaveOccurred())
+			promv1API := promv1.NewAPI(promClient)
+			By("querying prometheus")
+			Eventually(func() int {
+				ctx, cancelP := context.WithTimeout(context.Background(), 10*time.Second)
+				defer cancelP()
+				query := fmt.Sprintf(`up{aiven_service_name=~".*-%s"}`, dbInstanceGUID)
+				result, warnings, err := promv1API.Query(ctx, query, time.Now())
+				if err != nil {
+					log.Printf("Encountered error querying prometheus: %s", err)
+					return -1
+				}
+				if len(warnings) > 0 {
+					log.Printf("Encountered warnings querying prometheus: %s", warnings)
+					return -1
+				}
+				vector := result.(prommodel.Vector)
+				if len(vector) == 0 {
+					log.Printf("No results from Prometheus")
+					return -1
+				}
+				return int(vector[0].Value)
+			}, "5m", "10s").Should(BeNumerically(">=", 1))
 		})
 	})
 })
