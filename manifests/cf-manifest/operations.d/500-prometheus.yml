@@ -10,9 +10,9 @@
   path: /releases/-
   value:
     name: observability
-    version: 0.1.7
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/observability-0.1.7.tgz
-    sha1: a066c69960410764cf0a2eb8bfb20ea22eec0250
+    version: 0.1.8
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/observability-0.1.8.tgz
+    sha1: f5488f128cbc0cd906519ced14a8ddfd863af9aa
 
 - type: replace
   path: /variables/-
@@ -74,6 +74,11 @@
                     target_label: __address__
                     replacement: ${1}:9273
                     action: replace
+
+                  - source_labels: [aiven_cloud]
+                    separator: ;
+                    regex: 'aws-((terraform_outputs_region))'
+                    action: keep
 
       - name: route_registrar
         release: routing
