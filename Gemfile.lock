@@ -36,6 +36,7 @@ GEM
       http_parser.rb (>= 0.6.0)
     em-socksify (0.3.2)
       eventmachine (>= 1.0.0.beta.4)
+    equatable (0.6.1)
     eventmachine (1.2.7)
     ffi (1.9.25)
     github_merge_sign (1.0.0)
@@ -43,6 +44,8 @@ GEM
       rubocop (~> 0.52.0)
       rubocop-rspec (~> 1.19.0)
       scss_lint
+    govuk-registers-api-client (2.0.0)
+      rest-client (~> 2)
     hashdiff (1.0.0)
     hcl-checker (1.1.1)
     highline (1.7.10)
@@ -58,16 +61,21 @@ GEM
     json_pure (1.8.6)
     launchy (2.4.3)
       addressable (~> 2.3)
+    levenshtein (0.2.2)
     mail (2.6.6)
       mime-types (>= 1.16, < 4)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     multi_json (1.12.2)
+    necromancer (0.5.1)
     netrc (0.11.0)
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
+    pastel (0.7.3)
+      equatable (~> 0.6)
+      tty-color (~> 0.5)
     powerpack (0.1.1)
     rack (1.6.12)
     rainbow (3.0.0)
@@ -117,6 +125,17 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
+    tty-color (0.5.0)
+    tty-cursor (0.7.0)
+    tty-prompt (0.20.0)
+      necromancer (~> 0.5.0)
+      pastel (~> 0.7.0)
+      tty-reader (~> 0.7.0)
+    tty-reader (0.7.0)
+      tty-cursor (~> 0.7)
+      tty-screen (~> 0.7)
+      wisper (~> 2.0.0)
+    tty-screen (0.7.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
@@ -125,6 +144,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
+    wisper (2.0.1)
 
 PLATFORMS
   ruby
@@ -136,13 +156,16 @@ DEPENDENCIES
   colorize (~> 0.8.1)
   github_merge_sign (= 1.0.0)
   govuk-lint (~> 3.8.0)
+  govuk-registers-api-client
   hcl-checker (~> 1.1.1)
   json-minify (~> 0.0.2)
+  levenshtein (= 0.2.2)
   mail (~> 2.6.4)
   rest-client (~> 2.1.0)
   rspec (~> 3.3)
   rubocop (~> 0.52.1)
   simplecov
+  tty-prompt
   webmock (~> 2.3.1)
 
 BUNDLED WITH

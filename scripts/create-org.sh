@@ -64,6 +64,16 @@ check_params_and_environment() {
   fi
 }
 
+check_owner_name() {
+  OWNER_FULL_NAME="$(ruby ./scripts/find-gov-department-name.rb "${OWNER}")"
+
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
+
+  OWNER="${OWNER_FULL_NAME}"
+}
+
 create_org_space() {
   if cf org "${ORG}" 2&> /dev/null; then
     >&2 echo "The organisation ${ORG} already exists. Aborting."
@@ -174,6 +184,7 @@ done
 
 load_colors
 check_params_and_environment
+check_owner_name
 create_org_space
 prompt_to_invite_user
 prompt_to_add_user_to_mailing_list
