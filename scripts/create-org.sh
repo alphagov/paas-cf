@@ -65,9 +65,7 @@ check_params_and_environment() {
 }
 
 check_owner_name() {
-  OWNER_FULL_NAME="$(ruby ./scripts/find-gov-department-name.rb "${OWNER}")"
-
-  if [ $? -ne 0 ]; then
+  if ! OWNER_FULL_NAME="$(ruby ./scripts/find-gov-department-name.rb "${OWNER}")"; then
     exit 1
   fi
 
