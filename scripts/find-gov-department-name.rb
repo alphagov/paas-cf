@@ -5,6 +5,7 @@ require 'fuzzy_match'
 require 'tty-prompt'
 
 OPT_NONE_OF_THE_ABOVE = "None of the above"
+OVERRIDE_MSG = '(ONLY PICK THIS IF YOU CANNOT FIND IT BELOW)'
 
 client_mgr = RegistersClient::RegisterClientManager.new({
   page_size: 5000
@@ -23,8 +24,11 @@ def sorted_matches(matchset, search_term)
     .map { |dept, _pair_dist, _lev_dist| dept }
 end
 
-def opts_or_none(opts)
-  [OPT_NONE_OF_THE_ABOVE].concat(opts)
+def opts_or_none(initial, opts)
+  [
+    OPT_NONE_OF_THE_ABOVE,
+    "#{initial} #{OVERRIDE_MSG}",
+  ].concat(opts)
 end
 
 client = client_mgr.get_register('government-organisation', 'beta')
@@ -37,7 +41,7 @@ loop do
 
   choice = prompt.enum_select(
     'Did you mean?',
-    opts_or_none(sorted_matches(dept_names, input))
+    opts_or_none(input, sorted_matches(dept_names, input))
   )
   if choice != OPT_NONE_OF_THE_ABOVE
     selected_name = choice
@@ -54,4 +58,4 @@ loop do
   input = choice
 end
 
-puts selected_name
+puts selected_name.gsub(OVERRIDE_MSG, '').strip
