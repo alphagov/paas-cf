@@ -4,12 +4,12 @@ require 'register_client_manager'
 require 'fuzzy_match'
 require 'tty-prompt'
 
-OPT_NONE_OF_THE_ABOVE = "None of the above"
-OVERRIDE_MSG = '(ONLY PICK THIS IF YOU CANNOT FIND IT BELOW)'
+OPT_NONE_OF_THE_ABOVE = "None of the above".freeze
+OVERRIDE_MSG = '(ONLY PICK THIS IF YOU CANNOT FIND IT BELOW)'.freeze
 
-client_mgr = RegistersClient::RegisterClientManager.new({
+client_mgr = RegistersClient::RegisterClientManager.new(
   page_size: 5000
-})
+)
 
 initial_input = ARGV.join(' ')
 
