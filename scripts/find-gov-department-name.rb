@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'register_client_manager'
 require 'levenshtein'
 require 'tty-prompt'
@@ -9,6 +11,9 @@ client_mgr = RegistersClient::RegisterClientManager.new({
 })
 
 initial_input = ARGV[0]
+
+abort "Usage: #{$0} gov-dept-search-substring" if ARGV.empty?
+
 prompt = TTY::Prompt.new({
 	"output":  STDERR
 })
