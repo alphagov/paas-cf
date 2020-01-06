@@ -74,7 +74,7 @@ while selected_name == nil do
     end
 	end
 
-  choice = prompt.ask("Couldn't find a department wit a name close enough to '#{input}'. Try another name (or leave empty to quit)")
+  choice = prompt.ask("Couldn't find a department with a name close enough to '#{input}'. Try another name (or leave empty to quit)")
   if choice == nil
     prompt.say("Stopping")
     exit(1)
