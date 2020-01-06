@@ -44,3 +44,7 @@
 - type: replace
   path: /instance_groups/name=router/vm_type
   value: slim_router
+
+- type: replace
+  path: /instance_groups/name=prometheus/vm_type
+  value: small

@@ -30,12 +30,12 @@
   path: /instance_groups/-
   value:
     name: prometheus
-    instances: 1
+    instances: 2
     azs: [z1, z2, z3]
     stemcell: default
 
     persistent_disk_type: 100GB
-    vm_type: small
+    vm_type: medium
 
     networks:
       - name: cf

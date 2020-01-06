@@ -49,9 +49,9 @@ RSpec.describe 'prometheus' do
       expect(disk_type).to eq('100GB')
     end
 
-    it 'should have more than one instance' do
+    it 'shoudl be highly available' do
       disk_type = prometheus_instance_group.dig('instances')
-      expect(disk_type).to be > 0
+      expect(disk_type).to be > 1
     end
 
     it 'should have access to the CF network ' do
