@@ -99,6 +99,15 @@ RSpec.describe 'prometheus' do
       expect(targets).to eq(
         aiven_sd_config['target_path'] + '/' + aiven_sd_config['target_filename']
       )
+
+      relabel_configs = aiven_scrape_config['relabel_configs']
+
+      expect(relabel_configs).to include(
+        'source_labels' => ['aiven_cloud'],
+        'separator' => ';',
+        'regex' => 'aws-sealand-1',
+        'action' => 'keep',
+      )
     end
   end
 
