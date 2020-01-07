@@ -58,6 +58,51 @@
             "metadata": {
               "displayName": "Large, highly available Elasticsearch 6 cluster"
             }
+          },
+
+          {
+            "id": "dbe2fd8c-30e8-4b36-9473-81dfbd8ff560",
+            "name": "tiny-7.x",
+            "aiven_plan": "startup-4",
+            "elasticsearch_version": "7",
+            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "free": true,
+            "metadata": {
+              "displayName": "Tiny, NOT Highly Available single-node Elasticsearch 7 cluster"
+            }
+          },
+          {
+            "id": "28095b16-7324-429a-99bf-75c0b88d58a7",
+            "name": "small-ha-7.x",
+            "aiven_plan": "business-4",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Small, highly available Elasticsearch 7 cluster"
+            }
+          },
+          {
+            "id": "5705d8e7-0374-48c4-8a2e-f28395c61302",
+            "name": "medium-ha-7.x",
+            "aiven_plan": "business-8",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Medium, highly available Elasticsearch 7 cluster"
+            }
+          },
+          {
+            "id": "18b45371-ed22-4d6c-93f3-166ed32cc08a",
+            "name": "large-ha-7.x",
+            "aiven_plan": "business-16",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 2 CPU per VM, 15GB RAM per VM, 1050GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Large, highly available Elasticsearch 7 cluster"
+            }
           }
         ]
       },
