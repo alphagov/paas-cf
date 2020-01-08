@@ -2,6 +2,8 @@
 
 set -eo pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 ensure_env_vars() {
   if [ -z "${AWS_ACCOUNT}" ] || [ -z "${AWS_ACCESS_KEY_ID}" ] || [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
     echo "Must set AWS_ACCOUNT, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY"

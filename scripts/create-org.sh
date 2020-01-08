@@ -1,5 +1,8 @@
 #!/bin/bash
 set -euo pipefail
+
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 SCRIPT=$0
 

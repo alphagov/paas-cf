@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
+
+echo "${0#$PWD}" >> ~/.paas-script-usage
 
 if [ $# -lt 1 ]; then
   echo "Usage $0 <target>" 1>&2

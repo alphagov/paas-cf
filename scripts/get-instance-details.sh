@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+echo "${0#$PWD}" >> ~/.paas-script-usage
 
 SCRIPT=$0
 RDS_INSTANCE_ID=$1

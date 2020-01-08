@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 vars_store=$1
 shift
 requested_secrets="$*"

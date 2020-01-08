@@ -2,6 +2,8 @@
 
 set -eu
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 tunnel_mux='/tmp/bosh-ssh-tunnel.mux'
 
 function cleanup () {

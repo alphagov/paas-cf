@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 RET_CODE=0
+
+echo "${0#$PWD}" >> ~/.paas-script-usage
 
 test_posix_newline() {
   if [ -L "$1" ]; then

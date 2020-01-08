@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+echo "${0#$PWD}" >> ~/.paas-script-usage
 
 if [ -z "${AWS_ACCESS_KEY_ID:-}" ]; then
   >&2 echo "Must be run with AWS dev account creds"
