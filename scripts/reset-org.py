@@ -5,6 +5,11 @@ import re
 import subprocess
 import sys
 import time
+import os
+
+script_path = os.path.relpath(__file__)
+with open(os.path.expanduser('~/.paas-script-usage'), 'a') as f:
+  f.write(script_path + "\n")
 
 # python2 compatibility
 try: input = raw_input
