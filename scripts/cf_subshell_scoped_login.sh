@@ -31,6 +31,26 @@ esac
 
 TMPDIR=${TMPDIR:-/tmp}
 CF_HOME=$(mktemp -d "${TMPDIR}/cf_home.XXXXXX")
+
+cat <<EOF > "$CF_HOME/.bashrc"
+__cf_target_env ()
+{
+  echo "$TARGET"
+}
+
+__cf_target_org ()
+{
+  jq -r '.OrganizationFields.Name' "${CF_HOME}/.cf/config.json"
+}
+
+__cf_target_space ()
+{
+  jq -r '.SpaceFields.Name' "${CF_HOME}/.cf/config.json"
+}
+
+source ~/.bashrc
+EOF
+
 cleanup() {
   echo "Cleaning up temporary CF_HOME..."
   cf logout || true
@@ -51,4 +71,5 @@ echo
 echo "You are now in a subshell with CF_HOME set to ${CF_HOME}"
 echo "This will be cleaned up when this shell is closed."
 echo
-${SHELL:-bash} -il
+set -x
+${SHELL:-bash} --rcfile "${CF_HOME}/.bashrc" -i
