@@ -28,6 +28,6 @@ RSpec.describe 'dev environment scaling' do
     expect(dev_manifest.fetch('instance_groups.rds_broker.instances')).not_to eq(1)
     expect(dev_manifest.fetch('instance_groups.s3_broker.instances')).not_to eq(1)
 
-    expect(dev_manifest.fetch('instance_groups.prometheus.vm_type')).to eq('medium')
+    expect(dev_manifest.fetch('instance_groups.prometheus.vm_type')).to eq('large')
   end
 end
