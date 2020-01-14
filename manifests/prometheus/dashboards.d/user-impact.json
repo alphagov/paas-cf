@@ -700,7 +700,7 @@
                 },
                 "tableColumn": "",
                 "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\"}) or vector(0)",
+                    "expr": "(count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\"}) - sum(alertmanager_alerts{state=\"suppressed\"} or vector(0))) or vector(0)",
                     "format": "time_series",
                     "instant": true,
                     "intervalFactor": 1,
