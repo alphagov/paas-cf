@@ -90,9 +90,11 @@ var _ = Describe("Elasticache Gauges", func() {
 	It("returns the number of nodes", func() {
 		cacheClusters = []*awsec.CacheCluster{
 			{
+				CacheClusterId: aws.String("cf-hash1-0001-001"),
 				NumCacheNodes: aws.Int64(2),
 			},
 			{
+				CacheClusterId: aws.String("cf-hash2-001"),
 				NumCacheNodes: aws.Int64(1),
 			},
 		}
@@ -215,4 +217,49 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(MatchError(awsErr))
 	})
 
+	It("returns the number of nodes per cache cluster", func(){
+		cacheClusters = []*awsec.CacheCluster{
+			{
+				// The AWS API produces cache cluster id's which
+				// contain the user-supplied name, and then some
+				// extra information
+				CacheClusterId: aws.String("cf-hash1-0001-001"),
+				NumCacheNodes: aws.Int64(2),
+			},
+			{
+				CacheClusterId: aws.String("cf-2hsah-001"),
+				NumCacheNodes: aws.Int64(1),
+			},
+		}
+
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, 1*time.Second)
+		defer gauge.Close()
+
+		var metrics []m.Metric
+		Eventually(func() int {
+			var err error
+			metric, err := gauge.ReadMetric()
+			Expect(err).NotTo(HaveOccurred())
+
+			if metric.Name == "aws.elasticache.cluster.nodes.count" {
+				metrics = append(metrics, metric)
+			}
+
+			return len(metrics)
+		}, 3*time.Second).Should(Equal(2))
+
+		Expect(metrics[0].Value).To(Equal(float64(2)))
+		Expect(metrics[0].Kind).To(Equal(m.Gauge))
+		Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+			Label: "cluster_id",
+			Value: "cf-hash1-0001-001",
+		}))
+
+		Expect(metrics[1].Value).To(Equal(float64(1)))
+		Expect(metrics[1].Kind).To(Equal(m.Gauge))
+		Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+			Label: "cluster_id",
+			Value: "cf-2hsah-001",
+		}))
+	})
 })

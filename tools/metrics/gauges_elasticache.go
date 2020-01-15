@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface"
 	"strings"
 	"time"
 
@@ -21,17 +23,15 @@ func ElasticCacheInstancesGauge(
 		metrics := []m.Metric{}
 
 		cacheParameterGroupCount := 0
-		err := ecs.Client.DescribeCacheParameterGroupsPages(
-			&awsec.DescribeCacheParameterGroupsInput{},
-			func(page *awsec.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
-				for _, cacheParameterGroup := range page.CacheParameterGroups {
-					if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
-						cacheParameterGroupCount++
-					}
+		err := iterateCacheParameterGroups(
+			ecs.Client,
+			func(cacheParameterGroup *awsec.CacheParameterGroup) {
+				if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
+					cacheParameterGroupCount++
 				}
-				return true
 			},
 		)
+
 		if err != nil {
 			return err
 		}
@@ -45,13 +45,21 @@ func ElasticCacheInstancesGauge(
 		})
 
 		nodeCount := int64(0)
-		err = ecs.Client.DescribeCacheClustersPages(
-			&awsec.DescribeCacheClustersInput{},
-			func(page *awsec.DescribeCacheClustersOutput, lastPage bool) bool {
-				for _, cacheCluster := range page.CacheClusters {
-					nodeCount = nodeCount + *cacheCluster.NumCacheNodes
-				}
-				return true
+		err = iterateCacheClusterPages(
+			ecs.Client,
+			func(cacheCluster *awsec.CacheCluster){
+				nodeCount = nodeCount + *cacheCluster.NumCacheNodes
+
+				metrics = append(metrics, m.Metric{
+					Kind: m.Gauge,
+					Time: time.Now(),
+					Name: "aws.elasticache.cluster.nodes.count",
+					Value: float64(*cacheCluster.NumCacheNodes),
+					Unit: "count",
+					Tags: m.MetricTags{
+						{ Label: "cluster_id", Value: cacheCluster.CacheClusterId },
+					},
+				})
 			},
 		)
 		if err != nil {
@@ -68,4 +76,28 @@ func ElasticCacheInstancesGauge(
 
 		return w.WriteMetrics(metrics)
 	})
+}
+
+func iterateCacheParameterGroups(client elasticacheiface.ElastiCacheAPI, fn func(*awsec.CacheParameterGroup)) error {
+	return client.DescribeCacheParameterGroupsPages(
+		&awsec.DescribeCacheParameterGroupsInput{},
+		func(page *awsec.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
+			for _, cacheParameterGroup := range page.CacheParameterGroups {
+				fn(cacheParameterGroup)
+			}
+			return true
+		},
+	)
+}
+
+func iterateCacheClusterPages(client elasticacheiface.ElastiCacheAPI, fn func(cluster *awsec.CacheCluster)) error {
+	return client.DescribeCacheClustersPages(
+		&awsec.DescribeCacheClustersInput{},
+		func(page *awsec.DescribeCacheClustersOutput, lastPage bool) bool {
+			for _, cacheCluster := range page.CacheClusters {
+				fn(cacheCluster)
+			}
+			return true
+		},
+	)
 }
