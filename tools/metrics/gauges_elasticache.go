@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface"
+	"regexp"
 	"strings"
 	"time"
 
@@ -13,6 +14,9 @@ import (
 
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
+
+const NonClusteredIdPattern = "[a-z0-9]+-\\d+"
+const ClusteredIdPattern = "[a-z0-9]+-\\d+-\\d+"
 
 func ElasticCacheInstancesGauge(
 	logger lager.Logger,
@@ -57,7 +61,7 @@ func ElasticCacheInstancesGauge(
 					Value: float64(*cacheCluster.NumCacheNodes),
 					Unit: "count",
 					Tags: m.MetricTags{
-						{ Label: "cluster_id", Value: cacheCluster.CacheClusterId },
+						{ Label: "cluster_id", Value: cleanClusterId(cacheCluster) },
 					},
 				})
 			},
@@ -76,6 +80,43 @@ func ElasticCacheInstancesGauge(
 
 		return w.WriteMetrics(metrics)
 	})
+}
+
+// The AWS API documentation says that
+// CacheClusterId is the user-supplied name
+// of the cache cluster. However, in reality,
+// it returns that value, plus some extra
+// information.
+//
+// It is in the format {user-supplied}-{n}[-{m}].
+// Typically, our cache cluster names have the
+// format "cf-{FNV hash of guid}", but that's
+// not guaranteed, so this method only strips
+// the last one/two parts.
+func cleanClusterId(cluster *awsec.CacheCluster) string {
+	clusteredRegex := regexp.MustCompile(ClusteredIdPattern)
+	unclusteredRegex := regexp.MustCompile(NonClusteredIdPattern)
+
+	strBytes := []byte(aws.StringValue(cluster.CacheClusterId))
+
+	parts := strings.Split(
+		aws.StringValue(cluster.CacheClusterId),
+		"-",
+	)
+
+	var topIndex int
+	if clusteredRegex.Match(strBytes) {
+		topIndex = len(parts)-2 // Minus two because we want to stop before the second-to-last part
+		return strings.Join(parts[:topIndex], "-")
+
+	} else if unclusteredRegex.Match(strBytes) {
+		topIndex = len(parts)-1 // Minus one because we want to stop before the last part
+		return strings.Join(parts[:topIndex], "-")
+
+	} else {
+		// Return the original value if it doesn't match either pattern
+		return aws.StringValue(cluster.CacheClusterId)
+	}
 }
 
 func iterateCacheParameterGroups(client elasticacheiface.ElastiCacheAPI, fn func(*awsec.CacheParameterGroup)) error {
