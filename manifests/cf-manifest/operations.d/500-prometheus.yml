@@ -45,6 +45,12 @@
         release: prometheus
         properties:
           prometheus:
+            storage:
+              tsdb:
+                retention:
+                  time: 370d
+                  size: 90GB
+
             rule_files: []
 
             scrape_configs:

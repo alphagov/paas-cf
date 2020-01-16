@@ -49,7 +49,7 @@ RSpec.describe 'prometheus' do
       expect(disk_type).to eq('100GB')
     end
 
-    it 'shoudl be highly available' do
+    it 'should be highly available' do
       disk_type = prometheus_instance_group.dig('instances')
       expect(disk_type).to be > 1
     end
@@ -108,6 +108,33 @@ RSpec.describe 'prometheus' do
         'regex' => 'aws-sealand-1',
         'action' => 'keep',
       )
+    end
+
+    it 'should have retention configured' do
+      retention_time = prometheus_config.dig('storage', 'tsdb', 'retention', 'time')
+      retention_size = prometheus_config.dig('storage', 'tsdb', 'retention', 'size')
+
+      expect(retention_time).not_to be_nil
+      expect(retention_size).not_to be_nil
+    end
+
+    it 'should have retention size less than the disk size' do
+      disk_size_gb = prometheus_instance_group.dig('persistent_disk_type').gsub(/GB/, '').to_i
+      retention_size = prometheus_config.dig('storage', 'tsdb', 'retention', 'size')
+
+      expect(retention_size.match?(/GB/)).to eq(true)
+      retention_size_gb = retention_size.gsub(/GB/, '').to_i
+
+      expect(retention_size_gb).to be < disk_size_gb
+    end
+
+    it 'should have retention time greater than one year' do
+      retention_time = prometheus_config.dig('storage', 'tsdb', 'retention', 'time')
+
+      expect(retention_time.match?(/\d+d$/)).to eq(true)
+      retention_time_days = retention_time.gsub(/d$/, '').to_i
+
+      expect(retention_time_days).to be > 365
     end
   end
 
