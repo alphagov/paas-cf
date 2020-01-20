@@ -4,6 +4,7 @@ nano_vm_instance_type: t3.nano
 small_vm_instance_type: t3.small
 medium_vm_instance_type: t3.medium
 large_vm_instance_type: m5.large
+xlarge_vm_instance_type: m5.xlarge
 router_instance_type: c5.large
 cell_instance_type: r5.xlarge
 
