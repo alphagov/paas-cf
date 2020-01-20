@@ -35,7 +35,7 @@
     stemcell: default
 
     persistent_disk_type: 100GB
-    vm_type: large
+    vm_type: xlarge
 
     networks:
       - name: cf

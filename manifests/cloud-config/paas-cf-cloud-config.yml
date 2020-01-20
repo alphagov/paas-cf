@@ -168,6 +168,13 @@ vm_types:
       size: 10240
       type: gp2
 
+- name: xlarge
+  cloud_properties:
+    instance_type: ((xlarge_vm_instance_type))
+    ephemeral_disk:
+      size: 10240
+      type: gp2
+
 - name: router
   cloud_properties:
     instance_type: ((router_instance_type))
