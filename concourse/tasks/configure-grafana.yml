@@ -67,17 +67,17 @@ run:
           url: "#{base_url}/api/users",
           password: grafana_pass
         )
-        .reject { |u| %w[admin mon].include? u.dig('login') }
+        .reject { |u| %w[admin mon].include? u['login'] }
 
         puts 'Existing grafana_users:'
         pp grafana_users
 
         users_to_create = users_that_should_exist.reject do |email|
-          grafana_users.any? { |u| u.dig('email') == email }
+          grafana_users.any? { |u| u['email'] == email }
         end
 
         users_to_delete = grafana_users.reject do |user|
-          users_that_should_exist.include? user.dig('email')
+          users_that_should_exist.include? user['email']
         end
 
         puts 'Users to create:'
@@ -104,13 +104,13 @@ run:
 
         users_to_delete.each do |user|
           user_id = user.fetch('id')
-          puts "Deleting user #{user_id} / #{user.dig('email')}"
+          puts "Deleting user #{user_id} / #{user['email']}"
           grafana_api(
             method: 'delete',
             url: "#{base_url}/api/admin/users/#{user_id}",
             password: grafana_pass
           )
-          puts "Deleted user #{user_id} / #{user.dig('email')}"
+          puts "Deleted user #{user_id} / #{user['email']}"
         end
 
         grafana_api(
@@ -118,17 +118,17 @@ run:
           url: "#{base_url}/api/users",
           password: grafana_pass
         )
-        .reject { |u| %w[admin mon].include? u.dig('login') }
+        .reject { |u| %w[admin mon].include? u['login'] }
         .each do |user|
           user_id = user.fetch('id')
-          puts "Elevating #{user_id} / #{user.dig('email')}"
+          puts "Elevating #{user_id} / #{user['email']}"
           grafana_api(
             method: 'put',
             url: "#{base_url}/api/admin/users/#{user_id}/permissions",
             password: grafana_pass,
             body: { isGrafanaAdmin: true }
           )
-          puts "Elevated user #{user_id} / #{user.dig('email')}"
+          puts "Elevated user #{user_id} / #{user['email']}"
         end
 
         users_in_org = grafana_api(
@@ -136,8 +136,8 @@ run:
           url: "#{base_url}/api/orgs/1/users",
           password: grafana_pass
         )
-        .reject { |u| %w[admin mon].include? u.dig('login') }
-        .map { |u| u.dig('email') }
+        .reject { |u| %w[admin mon].include? u['login'] }
+        .map { |u| u['email'] }
 
         users_to_add_to_org = (
           Set.new(users_that_should_exist) - Set.new(users_in_org)
@@ -159,17 +159,17 @@ run:
           url: "#{base_url}/api/orgs/1/users",
           password: grafana_pass
         )
-        .reject { |u| %w[admin mon].include? u.dig('login') }
+        .reject { |u| %w[admin mon].include? u['login'] }
         .each do |user|
           user_id = user.fetch('userId')
-          puts "Promoting #{user_id} / #{user.dig('email')} to Admin in main org"
+          puts "Promoting #{user_id} / #{user['email']} to Admin in main org"
           grafana_api(
             method: 'patch',
             url: "#{base_url}/api/orgs/1/users/#{user_id}",
             password: grafana_pass,
             body: { role: 'Admin' }
           )
-          puts "Promoted #{user_id} / #{user.dig('email')} to Admin in main org"
+          puts "Promoted #{user_id} / #{user['email']} to Admin in main org"
         end
 
         puts 'Updating name of main org'
