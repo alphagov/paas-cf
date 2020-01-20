@@ -1747,6 +1747,7 @@ jobs:
             passed: ['cf-deploy']
           - get: cf-tfstate
           - get: paas-yet-another-cloudwatch-exporter
+          - get: paas-trusted-people
 
       - task: extract-terraform-outputs
         tags: [colocated-with-web]
@@ -1989,9 +1990,9 @@ jobs:
           file: paas-cf/concourse/tasks/configure-grafana.yml
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             GRAFANA_PASS: ((grafana_password))
+            AWS_ACCOUNT: ((aws_account))
 
       - *end-grafana-job-annotation
 

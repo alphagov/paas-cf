@@ -6,7 +6,7 @@ image_resource:
     repository: ruby
     tag: 2.5-slim
 inputs:
-  - name: paas-cf
+  - name: paas-trusted-people
 run:
   path: ruby
   args:
@@ -19,6 +19,7 @@ run:
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/BlockLength
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Style/Documentation
 
       require 'json'
       require 'net/http'
@@ -27,6 +28,20 @@ run:
       require 'set'
       require 'uri'
       require 'yaml'
+
+      class String
+        def colour(colour_code)
+          "\e[#{colour_code}m#{self}\e[0m"
+        end
+
+        def yellow
+          colour(33)
+        end
+
+        def green
+          colour(32)
+        end
+      end
 
       def grafana_api(method:, url:, password:, body: nil)
         klass = Net::HTTP.const_get method.capitalize
@@ -41,26 +56,44 @@ run:
         end
 
         abort "Error #{resp.body}" unless resp.code == '200'
-        STDERR.puts resp.body
+        puts resp.body
 
         JSON.parse(resp.body)
+      end
+
+      def grafana_role(roles)
+        role_names = roles.map { |r| r['role'] }
+        return 'Admin'  if role_names.include? 'grafana-admin'
+        return 'Editor' if role_names.include? 'grafana-editor'
+        return 'Viewer' if role_names.include? 'grafana-viewer'
       end
 
       system_domain = ENV.fetch('SYSTEM_DNS_ZONE_NAME')
       slim          = ENV.fetch('SLIM_DEV_DEPLOYMENT')
       azs           = slim == 'true' ? 1 : 2
       grafana_pass  = ENV.fetch('GRAFANA_PASS')
+      aws_account   = ENV.fetch('AWS_ACCOUNT')
+      grafana_roles = %w[viewer editor admin'].map { |r| "grafana-#{r}" }
 
-      users_that_should_exist = YAML.load_file("#{Dir.pwd}/paas-cf/config/users.yml")
-      .reject { |u| u.dig('email').nil? }
-      .map { |u| u.fetch('email') }
+      users = YAML
+        .load_file("#{Dir.pwd}/paas-trusted-people/users.yml")
+        .fetch('users')
 
-      puts 'Users that should exist:'
+      user_roles = users
+        .reject { |u| u['email'].nil? }
+        .reject { |u| u.dig('roles', aws_account).nil? }
+        .select { |u| u.dig('roles', aws_account) & grafana_roles }
+        .map { |u| [u['email'], grafana_role(u.dig('roles', aws_account))] }
+        .to_h
+
+      users_that_should_exist = user_roles.keys
+
+      puts 'Users that should exist:'.yellow
       pp users_that_should_exist
 
       azs.times do |az|
         base_url = "https://grafana-#{az + 1}.#{system_domain}/"
-        puts "Configuring #{base_url}"
+        puts "Configuring #{base_url}".yellow
 
         grafana_users = grafana_api(
           method: 'get',
@@ -69,7 +102,7 @@ run:
         )
         .reject { |u| %w[admin mon].include? u['login'] }
 
-        puts 'Existing grafana_users:'
+        puts 'Existing grafana_users:'.yellow
         pp grafana_users
 
         users_to_create = users_that_should_exist.reject do |email|
@@ -80,14 +113,14 @@ run:
           users_that_should_exist.include? user['email']
         end
 
-        puts 'Users to create:'
+        puts 'Users to create:'.yellow
         pp users_to_create
 
-        puts 'Users to delete:'
+        puts 'Users to delete:'.yellow
         pp users_to_delete
 
         users_to_create.each do |email|
-          puts "Creating user #{email}"
+          puts "Creating user #{email}".yellow
           grafana_api(
             method: 'post',
             url: "#{base_url}/api/admin/users",
@@ -99,38 +132,21 @@ run:
               password: SecureRandom.hex(32)
             }
           )
-          puts "Created user #{email}"
+          puts "Created user #{email}".green
         end
 
         users_to_delete.each do |user|
           user_id = user.fetch('id')
-          puts "Deleting user #{user_id} / #{user['email']}"
+          puts "Deleting user #{user_id} / #{user['email']}".yellow
           grafana_api(
             method: 'delete',
             url: "#{base_url}/api/admin/users/#{user_id}",
             password: grafana_pass
           )
-          puts "Deleted user #{user_id} / #{user['email']}"
+          puts "Deleted user #{user_id} / #{user['email']}".green
         end
 
-        grafana_api(
-          method: 'get',
-          url: "#{base_url}/api/users",
-          password: grafana_pass
-        )
-        .reject { |u| %w[admin mon].include? u['login'] }
-        .each do |user|
-          user_id = user.fetch('id')
-          puts "Elevating #{user_id} / #{user['email']}"
-          grafana_api(
-            method: 'put',
-            url: "#{base_url}/api/admin/users/#{user_id}/permissions",
-            password: grafana_pass,
-            body: { isGrafanaAdmin: true }
-          )
-          puts "Elevated user #{user_id} / #{user['email']}"
-        end
-
+        puts 'Retrieving users in org'.yellow
         users_in_org = grafana_api(
           method: 'get',
           url: "#{base_url}/api/orgs/1/users",
@@ -138,46 +154,62 @@ run:
         )
         .reject { |u| %w[admin mon].include? u['login'] }
         .map { |u| u['email'] }
+        puts 'Retrieved users in org'.green
 
         users_to_add_to_org = (
           Set.new(users_that_should_exist) - Set.new(users_in_org)
         )
 
         users_to_add_to_org.each do |email|
-          puts "Adding #{email} to main org"
+          puts "Adding #{email} to main org".yellow
           grafana_api(
             method: 'post',
             url: "#{base_url}/api/orgs/1/users",
             password: grafana_pass,
-            body: { role: 'Admin', loginOrEmail: email }
+            body: { role: 'Viewer', loginOrEmail: email }
           )
-          puts "Added #{email} to main org"
+          puts "Added #{email} to main org".green
         end
 
+        puts 'Ensuring users have the correct roles'.yellow
         grafana_api(
           method: 'get',
           url: "#{base_url}/api/orgs/1/users",
           password: grafana_pass
         )
-        .reject { |u| %w[admin mon].include? u['login'] }
+        .select { |u| users_that_should_exist.include? u['login'] }
         .each do |user|
-          user_id = user.fetch('userId')
-          puts "Promoting #{user_id} / #{user['email']} to Admin in main org"
+          user_id = user['userId']
+          email = user['login']
+          role = user_roles[email]
+          is_admin = role == 'Admin'
+
+          puts "Promoting #{user_id} / #{email} to #{role} in main org".yellow
           grafana_api(
             method: 'patch',
             url: "#{base_url}/api/orgs/1/users/#{user_id}",
             password: grafana_pass,
-            body: { role: 'Admin' }
+            body: { role: role }
           )
-          puts "Promoted #{user_id} / #{user['email']} to Admin in main org"
-        end
+          puts "Promoted #{user_id} / #{email} to #{role} in main org".green
 
-        puts 'Updating name of main org'
+          puts "Assigning #{user_id} / #{email} to admin=#{is_admin} globally".yellow
+          grafana_api(
+            method: 'put',
+            url: "#{base_url}/api/admin/users/#{user_id}/permissions",
+            password: grafana_pass,
+            body: { isGrafanaAdmin: is_admin }
+          )
+          puts "Assigned #{user_id} / #{email} to admin=#{is_admin} globally".green
+        end
+        puts 'Ensured users have the correct roles'.green
+
+        puts 'Updating name of main org'.yellow
         grafana_api(
           method: 'put',
           url: "#{base_url}/api/orgs/1",
           password: grafana_pass,
           body: { 'name' => 'PaaS' }
         )
-        puts 'Updated name of main org'
+        puts 'Updated name of main org'.green
       end
