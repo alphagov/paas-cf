@@ -25,6 +25,26 @@ RSpec.describe 'isolation_segments' do
             .dig('properties', 'diego', 'rep', 'placement_tags')
         ).to eq(['dev-1'])
       end
+
+      it 'has an override for vxlan-policy-agent provider' do
+        expect(
+          instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'vxlan-policy-agent' }
+            .dig('provides')
+        ).to eq('vpa' => { 'as' => 'vpa-dev-1' })
+      end
+
+      %w[silk-cni silk-daemon].each do |consumer|
+        it "has an override for #{consumer} consumer" do
+          expect(
+            instance_group
+              .dig('jobs')
+              .find { |j| j['name'] == consumer }
+              .dig('consumes')
+          ).to eq('vpa' => { 'from' => 'vpa-dev-1' })
+        end
+      end
     end
 
     context 'dev-2' do
@@ -49,6 +69,26 @@ RSpec.describe 'isolation_segments' do
             .find { |j| j['name'] == 'rep' }
             .dig('properties', 'diego', 'rep', 'placement_tags')
         ).to eq(['dev-2'])
+      end
+
+      it 'has an override for vxlan-policy-agent provider' do
+        expect(
+          instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'vxlan-policy-agent' }
+            .dig('provides')
+        ).to eq('vpa' => { 'as' => 'vpa-dev-2' })
+      end
+
+      %w[silk-cni silk-daemon].each do |consumer|
+        it "has an override for #{consumer} consumer" do
+          expect(
+            instance_group
+              .dig('jobs')
+              .find { |j| j['name'] == consumer }
+              .dig('consumes')
+          ).to eq('vpa' => { 'from' => 'vpa-dev-2' })
+        end
       end
     end
   end

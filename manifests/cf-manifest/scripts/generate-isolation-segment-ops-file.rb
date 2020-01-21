@@ -40,6 +40,22 @@ isolation_segment
     seg_def['isolation_segment_name']
   ]
 
+# We need to override bosh links to specify which the name of the
+# VXLAN policy agent provided by this instance-group
+isolation_segment
+  .fetch('jobs')
+  .find { |job| job['name'] == 'vxlan-policy-agent' }['provides'] = {
+    'vpa' => { 'as' => "vpa-#{seg_def['isolation_segment_name']}" }
+  }
+
+%w[silk-daemon silk-cni].each do |consumer|
+isolation_segment
+  .fetch('jobs')
+  .find { |job| job['name'] == consumer }['consumes'] = {
+    'vpa' => { 'from' => "vpa-#{seg_def['isolation_segment_name']}" }
+  }
+end
+
 puts [{
   'type'  => 'replace',
   'path'  => '/instance_groups/-',
