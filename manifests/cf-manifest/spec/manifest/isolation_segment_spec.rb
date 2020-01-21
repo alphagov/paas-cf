@@ -2,6 +2,13 @@ RSpec.describe 'isolation_segments' do
   context 'default' do
     let(:manifest) { manifest_with_defaults }
 
+    let(:bosh_dns_cell_aliases) do
+      manifest
+        .fetch('addons.bosh-dns-aliases.jobs.bosh-dns-aliases.properties.aliases')
+        .find { |a| a['domain'] == '_.cell.service.cf.internal' }
+        .fetch('targets')
+    end
+
     context 'dev-1' do
       let(:instance_group) { manifest.fetch('instance_groups.diego-cell-iso-seg-dev-1') }
 
@@ -44,6 +51,16 @@ RSpec.describe 'isolation_segments' do
               .dig('consumes')
           ).to eq('vpa' => { 'from' => 'vpa-dev-1' })
         end
+      end
+
+      it 'is added to bosh-dns-aliases for cells' do
+        expect(bosh_dns_cell_aliases).to include(
+          'query' => '_',
+          'instance_group' => 'diego-cell-iso-seg-dev-1',
+          'network' => 'cell',
+          'deployment' => 'unit-test',
+          'domain' => 'bosh'
+        )
       end
     end
 
@@ -89,6 +106,16 @@ RSpec.describe 'isolation_segments' do
               .dig('consumes')
           ).to eq('vpa' => { 'from' => 'vpa-dev-2' })
         end
+      end
+
+      it 'is added to bosh-dns-aliases for cells' do
+        expect(bosh_dns_cell_aliases).to include(
+          'query' => '_',
+          'instance_group' => 'diego-cell-iso-seg-dev-2',
+          'network' => 'cell',
+          'deployment' => 'unit-test',
+          'domain' => 'bosh'
+        )
       end
     end
   end

@@ -46,6 +46,9 @@ for isolation_segment_definition in "${ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR}"/*.y
 
   manifest_with_isolation_segments="$(
     bosh interpolate \
+      --ops-file "${CF_MANIFEST_DIR}/operations/add-isolation-segment-bosh-dns-alias.yml" \
+      --vars-file "$isolation_segment_definition" \
+      --vars-file="${WORKDIR}/environment-variables.yml" \
       --ops-file <(
         ruby "${CF_MANIFEST_DIR}/scripts/generate-isolation-segment-ops-file.rb" \
           --isolation-segment-definition "${isolation_segment_definition}" \
