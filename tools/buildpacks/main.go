@@ -87,14 +87,14 @@ func getAssetSha(assetDetails AssetDetails) (sha string) {
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func readManifest(ctx context.Context, githubClient *github.Client, buildpack Buildpack) (manifest Manifest) {
-	fileContent, _, _, err := githubClient.Repositories.GetContents(
+func readManifest(ctx context.Context, githubClient *github.Client, buildpack Buildpack, latestRelease *github.RepositoryRelease) (manifest Manifest) {
+  fileContent, _, _, err := githubClient.Repositories.GetContents(
 		ctx,
 		"cloudfoundry",
 		buildpack.RepoName,
 		"manifest.yml",
 		&github.RepositoryContentGetOptions{
-			Ref: buildpack.Version,
+			Ref: *latestRelease.TagName,
 		},
 	)
 	if err != nil {
@@ -165,22 +165,22 @@ func main() {
 	buildpackConfig := Buildpacks{}
 	for _, buildpack := range result.Buildpacks {
 		log.Printf("Processing %s (%s)\n", buildpack.Name, buildpack.Stack)
-		release, _, err := githubClient.Repositories.GetLatestRelease(ctx, "cloudfoundry", buildpack.RepoName)
+		latestRelease, _, err := githubClient.Repositories.GetLatestRelease(ctx, "cloudfoundry", buildpack.RepoName)
 		if err != nil {
 			log.Fatalf("could not get latest release for %s, %v", buildpack.RepoName, err)
 		}
 
-		assetDetails, ok := getAssetDetails(release.Assets, buildpack.RepoName, buildpack.Stack)
+		assetDetails, ok := getAssetDetails(latestRelease.Assets, buildpack.RepoName, buildpack.Stack)
 		if !ok {
-			assetDetails, ok = getAssetDetails(release.Assets, buildpack.RepoName, "")
+			assetDetails, ok = getAssetDetails(latestRelease.Assets, buildpack.RepoName, "")
 			if !ok {
-				log.Fatalf("could not find assets for release %s", *release.URL)
+				log.Fatalf("could not find assets for release %s", *latestRelease.URL)
 			}
 		}
 
-		manifest := readManifest(ctx, githubClient, buildpack)
+		manifest := readManifest(ctx, githubClient, buildpack, latestRelease)
 		if assetDetails.Sha == "" {
-			log.Printf("SHA for %s %s could not be read. Downloading %s to determine correct SHA for buildpack config.\n", buildpack.Name, *release.TagName, assetDetails.Url)
+			log.Printf("SHA for %s %s could not be read. Downloading %s to determine correct SHA for buildpack config.\n", buildpack.Name, *latestRelease.TagName, assetDetails.Url)
 			assetDetails.Sha = getAssetSha(assetDetails)
 
 		}
@@ -191,7 +191,7 @@ func main() {
 			Filename:     assetDetails.Filename,
 			Sha:          assetDetails.Sha,
 			Url:          assetDetails.Url,
-			Version:      *release.TagName,
+			Version:      *latestRelease.TagName,
 			Dependencies: manifest.Dependencies,
 		}
 
