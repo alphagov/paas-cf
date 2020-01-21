@@ -83,6 +83,7 @@ branch_name: ${BRANCH:-master}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
 env_specific_bosh_vars_file: ${ENV_SPECIFIC_BOSH_VARS_FILE}
+env_specific_isolation_segments_dir: ${ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR}
 INPUT_TAG_PREFIX: ${INPUT_TAG_PREFIX:-}
 OUTPUT_TAG_PREFIX: ${OUTPUT_TAG_PREFIX:-}
 paas_cf_tag_filter: ${INPUT_TAG_PREFIX:+${INPUT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*}

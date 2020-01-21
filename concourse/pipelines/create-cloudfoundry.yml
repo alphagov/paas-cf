@@ -1562,6 +1562,7 @@ jobs:
               - name: cf-manifest-pre-vars
             params:
               ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
+              ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR: paas-cf/manifests/cf-manifest/isolation-segments/((env_specific_isolation_segments_dir))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
               VCAP_PASSWORD: ((vcap-password))
             run:
