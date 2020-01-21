@@ -1,4 +1,3 @@
 ---
 number_of_cells: 1
-vm_type: large
 isolation_segment_name: dev-1

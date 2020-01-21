@@ -13,8 +13,8 @@ RSpec.describe 'isolation_segments' do
         expect(instance_group['instances']).to eq(1)
       end
 
-      it 'correctly gets the vm_type' do
-        expect(instance_group['vm_type']).to eq('large')
+      it 'does not override the default vm_type if it is not set' do
+        expect(instance_group['vm_type']).to eq('cell')
       end
 
       it 'has the correct placement tag' do
@@ -58,7 +58,7 @@ RSpec.describe 'isolation_segments' do
         expect(instance_group['instances']).to eq(0)
       end
 
-      it 'correctly gets the vm_type' do
+      it 'correctly sets the vm_type' do
         expect(instance_group['vm_type']).to eq('small')
       end
 
