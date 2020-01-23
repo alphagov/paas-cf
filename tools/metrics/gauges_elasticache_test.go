@@ -78,11 +78,18 @@ var _ = Describe("Elasticache Gauges", func() {
 			return cfServicePlans, nil
 		}
 
-		cfServiceInstances        []cf.ServiceInstance
-		cfServiceInstancesByQuery = func(
+		cfServiceInstances            []cf.ServiceInstance
+		cfServiceInstancesByQueryStub = func(
 			query url.Values,
 		) ([]cf.ServiceInstance, error) {
 			return cfServiceInstances, nil
+		}
+
+		cfSpaces             map[string]cf.Space
+		cfGetSpaceByGuidStub = func(
+			id string,
+		) (cf.Space, error) {
+			return cfSpaces[id], nil
 		}
 	)
 
@@ -98,8 +105,9 @@ var _ = Describe("Elasticache Gauges", func() {
 
 		cfAPI = &cffakes.FakeCloudFoundryClient{}
 		cfAPI.ListServicesByQueryStub = cfServicesByQueryStub
-		cfAPI.ListServiceInstancesByQueryStub = cfServiceInstancesByQuery
+		cfAPI.ListServiceInstancesByQueryStub = cfServiceInstancesByQueryStub
 		cfAPI.ListServicePlansByQueryStub = cfServicePlansByQueryStub
+		cfAPI.GetSpaceByGuidStub = cfGetSpaceByGuidStub
 
 		hashingFunction = func(value string) string {
 			return serviceGuidToHash[value]
@@ -310,16 +318,29 @@ var _ = Describe("Elasticache Gauges", func() {
 				{
 					ServiceGuid: "redis-service-guid",
 					Guid:        "svc-instance-1-guid",
+					SpaceGuid:   "space-guid-1",
 				},
 				{
 					ServiceGuid: "redis-service-guid",
 					Guid:        "svc-instance-2-guid",
+					SpaceGuid:   "space-guid-2",
 				},
 			}
 
 			serviceGuidToHash = map[string]string{
 				"svc-instance-1-guid": "cf-hash1-0001-001",
 				"svc-instance-2-guid": "cf-2hsah-001",
+			}
+
+			cfSpaces = map[string]cf.Space {
+				"space-guid-1": {
+					Guid: "space-guid-1",
+					Name: "Space 1",
+				},
+				"space-guid-2": {
+					Guid: "space-guid-2",
+					Name: "Space 2",
+				},
 			}
 		})
 
@@ -352,6 +373,20 @@ var _ = Describe("Elasticache Gauges", func() {
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
 				Value: "svc-instance-2-guid",
+			}))
+		})
+
+		It("labels the metrics with the space name", func() {
+			metrics := getMetrics()
+
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "space",
+				Value: "Space 1",
+			}))
+
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "space",
+				Value: "Space 2",
 			}))
 		})
 	})

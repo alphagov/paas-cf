@@ -21,6 +21,11 @@ import (
 const NonClusteredIdPattern = "[a-z0-9]+-\\d+"
 const ClusteredIdPattern = "[a-z0-9]+-\\d+-\\d+"
 
+type RedisServiceDetails struct {
+	ServiceInstance cfclient.ServiceInstance
+	Space           cfclient.Space
+}
+
 func ElasticCacheInstancesGauge(
 	logger lager.Logger,
 	ecs *elasticache.ElasticacheService,
@@ -29,11 +34,13 @@ func ElasticCacheInstancesGauge(
 	interval time.Duration,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
-		redisServiceInstances, err := fetchRedisServiceInstances(cfAPI)
+		redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
 
+		svcGuidToDetails := map[string]RedisServiceDetails {}
 		clusterIdToSvcGuid := map[string]string{}
-		for _, instance := range redisServiceInstances {
-			clusterIdToSvcGuid[clusterIdHashingFunction(instance.Guid)] = instance.Guid
+		for _, details := range redisServiceDetails {
+			svcGuidToDetails[details.ServiceInstance.Guid] = details
+			clusterIdToSvcGuid[clusterIdHashingFunction(details.ServiceInstance.Guid)] = details.ServiceInstance.Guid
 		}
 
 		metrics := []m.Metric{}
@@ -67,6 +74,7 @@ func ElasticCacheInstancesGauge(
 				nodeCount = nodeCount + *cacheCluster.NumCacheNodes
 				userSuppliedClusterId := cleanClusterId(cacheCluster)
 				realClusterId := aws.StringValue(cacheCluster.CacheClusterId)
+				details := svcGuidToDetails[clusterIdToSvcGuid[realClusterId]]
 
 				metrics = append(metrics, m.Metric{
 					Kind:  m.Gauge,
@@ -77,6 +85,7 @@ func ElasticCacheInstancesGauge(
 					Tags: m.MetricTags{
 						{Label: "cluster_id", Value: userSuppliedClusterId},
 						{Label: "service_instance_guid", Value: clusterIdToSvcGuid[realClusterId]},
+						{Label: "space", Value: details.Space.Name},
 					},
 				})
 			},
@@ -97,13 +106,15 @@ func ElasticCacheInstancesGauge(
 	})
 }
 
-func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]cfclient.ServiceInstance, error) {
+func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServiceDetails, error) {
+	spacesCache := map[string]cfclient.Space{}
+
 	servicesWithRedisLabel, err := cfAPI.ListServicesByQuery(url.Values{
 		"q": []string{"label:redis"},
 	})
 
 	if err != nil {
-		return []cfclient.ServiceInstance{}, err
+		return []RedisServiceDetails{}, err
 	}
 
 	if len(servicesWithRedisLabel) == 0 {
@@ -116,25 +127,40 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]cfclient.S
 	})
 
 	if err != nil {
-		return []cfclient.ServiceInstance{}, err
+		return []RedisServiceDetails{}, err
 	}
 
-	var serviceInstances []cfclient.ServiceInstance
+	var serviceDetails []RedisServiceDetails
 	for _, plan := range redisServicePlans {
 		planInstances, err := cfAPI.ListServiceInstancesByQuery(url.Values{
 			"q": []string{"service_plan_guid:" + plan.Guid},
 		})
 
 		if err != nil {
-			return []cfclient.ServiceInstance{}, err
+			return []RedisServiceDetails{}, err
 		}
 
 		for _, instance := range planInstances {
-			serviceInstances = append(serviceInstances, instance)
+			var space cfclient.Space
+			if s, ok := spacesCache[instance.SpaceGuid]; ok {
+				space = s
+			} else {
+				space, err = cfAPI.GetSpaceByGuid(instance.SpaceGuid)
+				if err != nil {
+					return []RedisServiceDetails{}, err
+				}
+
+				spacesCache[space.Guid] = space
+			}
+
+			serviceDetails = append(serviceDetails, RedisServiceDetails{
+				ServiceInstance: instance,
+				Space:           space,
+			})
 		}
 	}
 
-	return serviceInstances, nil
+	return serviceDetails, nil
 }
 
 // The AWS API documentation says that
