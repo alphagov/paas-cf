@@ -380,13 +380,27 @@ var _ = Describe("Elasticache Gauges", func() {
 			metrics := getMetrics()
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
-				Label: "space",
+				Label: "space_name",
 				Value: "Space 1",
 			}))
 
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
-				Label: "space",
+				Label: "space_name",
 				Value: "Space 2",
+			}))
+		})
+
+		It("labels the metrics with the space guid", func(){
+			metrics := getMetrics()
+
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "space_guid",
+				Value: "space-guid-1",
+			}))
+
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "space_guid",
+				Value: "space-guid-2",
 			}))
 		})
 	})
