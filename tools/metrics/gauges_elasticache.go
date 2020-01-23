@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface"
+	"github.com/cloudfoundry-community/go-cfclient"
+	"net/url"
 	"regexp"
 	"strings"
 	"time"
@@ -21,13 +24,22 @@ const ClusteredIdPattern = "[a-z0-9]+-\\d+-\\d+"
 func ElasticCacheInstancesGauge(
 	logger lager.Logger,
 	ecs *elasticache.ElasticacheService,
+	cfAPI cfclient.CloudFoundryClient,
+	clusterIdHashingFunction elasticache.ElasticacheClusterIdHashingFunction,
 	interval time.Duration,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		redisServiceInstances, err := fetchRedisServiceInstances(cfAPI)
+
+		clusterIdToSvcGuid := map[string]string{}
+		for _, instance := range redisServiceInstances {
+			clusterIdToSvcGuid[clusterIdHashingFunction(instance.Guid)] = instance.Guid
+		}
+
 		metrics := []m.Metric{}
 
 		cacheParameterGroupCount := 0
-		err := iterateCacheParameterGroups(
+		err = iterateCacheParameterGroups(
 			ecs.Client,
 			func(cacheParameterGroup *awsec.CacheParameterGroup) {
 				if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
@@ -51,17 +63,20 @@ func ElasticCacheInstancesGauge(
 		nodeCount := int64(0)
 		err = iterateCacheClusterPages(
 			ecs.Client,
-			func(cacheCluster *awsec.CacheCluster){
+			func(cacheCluster *awsec.CacheCluster) {
 				nodeCount = nodeCount + *cacheCluster.NumCacheNodes
+				userSuppliedClusterId := cleanClusterId(cacheCluster)
+				realClusterId := aws.StringValue(cacheCluster.CacheClusterId)
 
 				metrics = append(metrics, m.Metric{
-					Kind: m.Gauge,
-					Time: time.Now(),
-					Name: "aws.elasticache.cluster.nodes.count",
+					Kind:  m.Gauge,
+					Time:  time.Now(),
+					Name:  "aws.elasticache.cluster.nodes.count",
 					Value: float64(*cacheCluster.NumCacheNodes),
-					Unit: "count",
+					Unit:  "count",
 					Tags: m.MetricTags{
-						{ Label: "cluster_id", Value: cleanClusterId(cacheCluster) },
+						{Label: "cluster_id", Value: userSuppliedClusterId},
+						{Label: "service_instance_guid", Value: clusterIdToSvcGuid[realClusterId]},
 					},
 				})
 			},
@@ -80,6 +95,46 @@ func ElasticCacheInstancesGauge(
 
 		return w.WriteMetrics(metrics)
 	})
+}
+
+func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]cfclient.ServiceInstance, error) {
+	servicesWithRedisLabel, err := cfAPI.ListServicesByQuery(url.Values{
+		"q": []string{"label:redis"},
+	})
+
+	if err != nil {
+		return []cfclient.ServiceInstance{}, err
+	}
+
+	if len(servicesWithRedisLabel) == 0 {
+		return nil, fmt.Errorf("could not find service with label=redis")
+	}
+
+	redisServiceGuid := servicesWithRedisLabel[0].Guid
+	redisServicePlans, err := cfAPI.ListServicePlansByQuery(url.Values{
+		"q": []string{"service_guid:" + redisServiceGuid},
+	})
+
+	if err != nil {
+		return []cfclient.ServiceInstance{}, err
+	}
+
+	var serviceInstances []cfclient.ServiceInstance
+	for _, plan := range redisServicePlans {
+		planInstances, err := cfAPI.ListServiceInstancesByQuery(url.Values{
+			"q": []string{"service_plan_guid:" + plan.Guid},
+		})
+
+		if err != nil {
+			return []cfclient.ServiceInstance{}, err
+		}
+
+		for _, instance := range planInstances {
+			serviceInstances = append(serviceInstances, instance)
+		}
+	}
+
+	return serviceInstances, nil
 }
 
 // The AWS API documentation says that
@@ -106,11 +161,11 @@ func cleanClusterId(cluster *awsec.CacheCluster) string {
 
 	var topIndex int
 	if clusteredRegex.Match(strBytes) {
-		topIndex = len(parts)-2 // Minus two because we want to stop before the second-to-last part
+		topIndex = len(parts) - 2 // Minus two because we want to stop before the second-to-last part
 		return strings.Join(parts[:topIndex], "-")
 
 	} else if unclusteredRegex.Match(strBytes) {
-		topIndex = len(parts)-1 // Minus one because we want to stop before the last part
+		topIndex = len(parts) - 1 // Minus one because we want to stop before the last part
 		return strings.Join(parts[:topIndex], "-")
 
 	} else {

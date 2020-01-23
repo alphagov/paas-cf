@@ -31,6 +31,8 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 
+	paasElasticacheBrokerRedis "github.com/alphagov/paas-elasticache-broker/providers/redis"
+
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	promrep "github.com/alphagov/paas-cf/tools/metrics/pkg/prometheus_reporter"
 )
@@ -84,13 +86,20 @@ func Main() error {
 	}
 	logger.RegisterSink(lager.NewWriterSink(os.Stdout, logLevel))
 
-	// create a client
-	c, err := NewClient(ClientConfig{
+	// create a client ("github.com/alphagov/paas-cf/tools/metrics/client.go Client")
+	cfConfig := ClientConfig{
 		ApiAddress:   os.Getenv("CF_API_ADDRESS"),
 		ClientID:     os.Getenv("CF_CLIENT_ID"),
 		ClientSecret: os.Getenv("CF_CLIENT_SECRET"),
 		Logger:       logger,
-	})
+	}
+	c, err := NewClient(cfConfig)
+	if err != nil {
+		return errors.Wrap(err, "failed to connect to cloud foundry api")
+	}
+
+	// create a CloudFoundry client instance
+	cfAPI, err := NewCFClient(cfConfig)
 	if err != nil {
 		return errors.Wrap(err, "failed to connect to cloud foundry api")
 	}
@@ -156,7 +165,7 @@ func Main() error {
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
-		ElasticCacheInstancesGauge(logger, ecs, 5*time.Minute),
+		ElasticCacheInstancesGauge(logger, ecs, cfAPI, paasElasticacheBrokerRedis.GenerateReplicationGroupName , 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
