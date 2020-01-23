@@ -24,6 +24,7 @@ const ClusteredIdPattern = "[a-z0-9]+-\\d+-\\d+"
 type RedisServiceDetails struct {
 	ServiceInstance cfclient.ServiceInstance
 	Space           cfclient.Space
+	Org             cfclient.Org
 }
 
 func ElasticCacheInstancesGauge(
@@ -36,14 +37,18 @@ func ElasticCacheInstancesGauge(
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
 
-		svcGuidToDetails := map[string]RedisServiceDetails {}
+		if err != nil {
+			return err
+		}
+
+		svcGuidToDetails := map[string]RedisServiceDetails{}
 		clusterIdToSvcGuid := map[string]string{}
 		for _, details := range redisServiceDetails {
 			svcGuidToDetails[details.ServiceInstance.Guid] = details
 			clusterIdToSvcGuid[clusterIdHashingFunction(details.ServiceInstance.Guid)] = details.ServiceInstance.Guid
 		}
 
-		metrics := []m.Metric{}
+		var metrics []m.Metric
 
 		cacheParameterGroupCount := 0
 		err = iterateCacheParameterGroups(
@@ -87,6 +92,8 @@ func ElasticCacheInstancesGauge(
 						{Label: "service_instance_guid", Value: clusterIdToSvcGuid[realClusterId]},
 						{Label: "space_name", Value: details.Space.Name},
 						{Label: "space_guid", Value: details.Space.Guid},
+						{Label: "org_name", Value: details.Org.Name},
+						{Label: "org_guid", Value: details.Org.Guid},
 					},
 				})
 			},
@@ -109,6 +116,7 @@ func ElasticCacheInstancesGauge(
 
 func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServiceDetails, error) {
 	spacesCache := map[string]cfclient.Space{}
+	orgsCache := map[string]cfclient.Org{}
 
 	servicesWithRedisLabel, err := cfAPI.ListServicesByQuery(url.Values{
 		"q": []string{"label:redis"},
@@ -154,9 +162,22 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServi
 				spacesCache[space.Guid] = space
 			}
 
+			var org cfclient.Org
+			if o, ok := orgsCache[space.OrganizationGuid]; ok {
+				org = o
+			} else {
+				org, err = cfAPI.GetOrgByGuid(space.OrganizationGuid)
+				if err != nil {
+					return []RedisServiceDetails{}, err
+				}
+
+				orgsCache[org.Guid] = org
+			}
+
 			serviceDetails = append(serviceDetails, RedisServiceDetails{
 				ServiceInstance: instance,
 				Space:           space,
+				Org:             org,
 			})
 		}
 	}

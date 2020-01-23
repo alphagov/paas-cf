@@ -78,11 +78,12 @@ var _ = Describe("Elasticache Gauges", func() {
 			return cfServicePlans, nil
 		}
 
-		cfServiceInstances            []cf.ServiceInstance
+		// Map key is the content of the "q" query param
+		cfServiceInstancesByQuery     map[string][]cf.ServiceInstance
 		cfServiceInstancesByQueryStub = func(
 			query url.Values,
 		) ([]cf.ServiceInstance, error) {
-			return cfServiceInstances, nil
+			return cfServiceInstancesByQuery[query.Get("q")], nil
 		}
 
 		cfSpaces             map[string]cf.Space
@@ -90,6 +91,13 @@ var _ = Describe("Elasticache Gauges", func() {
 			id string,
 		) (cf.Space, error) {
 			return cfSpaces[id], nil
+		}
+
+		cfOrgs             map[string]cf.Org
+		cfGetOrgByGuidStub = func(
+			id string,
+		) (cf.Org, error) {
+			return cfOrgs[id], nil
 		}
 	)
 
@@ -108,13 +116,92 @@ var _ = Describe("Elasticache Gauges", func() {
 		cfAPI.ListServiceInstancesByQueryStub = cfServiceInstancesByQueryStub
 		cfAPI.ListServicePlansByQueryStub = cfServicePlansByQueryStub
 		cfAPI.GetSpaceByGuidStub = cfGetSpaceByGuidStub
+		cfAPI.GetOrgByGuidStub = cfGetOrgByGuidStub
 
 		hashingFunction = func(value string) string {
 			return serviceGuidToHash[value]
 		}
+
+		cacheClusters = []*awsec.CacheCluster{
+			{
+				// The AWS API produces cache cluster id's which
+				// contain the user-supplied name, and then some
+				// extra information
+				CacheClusterId: aws.String("cf-hash1-0001-001"),
+				NumCacheNodes:  aws.Int64(2),
+			},
+			{
+				CacheClusterId: aws.String("cf-2hsah-001"),
+				NumCacheNodes:  aws.Int64(1),
+			},
+		}
+
+		cfServices = []cf.Service{
+			{
+				Guid:  "redis-service-guid",
+				Label: "redis",
+			},
+		}
+
+		cfServicePlans = []cf.ServicePlan{
+			{
+				Name: "plan-1",
+				Guid: "svc-plan-1",
+			},
+			{
+				Name: "plan-2",
+				Guid: "svc-plan-2",
+			},
+		}
+
+		cfServiceInstancesByQuery = map[string][]cf.ServiceInstance{
+			"service_plan_guid:svc-plan-1": []cf.ServiceInstance{{
+				ServiceGuid:     "redis-service-guid",
+				Guid:            "svc-instance-1-guid",
+				SpaceGuid:       "space-guid-1",
+				ServicePlanGuid: "svc-plan-1",
+			}},
+			"service_plan_guid:svc-plan-2": []cf.ServiceInstance{{
+				ServiceGuid:     "redis-service-guid",
+				Guid:            "svc-instance-2-guid",
+				SpaceGuid:       "space-guid-2",
+				ServicePlanGuid: "svc-plan-1",
+			}},
+		}
+
+		serviceGuidToHash = map[string]string{
+			"svc-instance-1-guid": "cf-hash1-0001-001",
+			"svc-instance-2-guid": "cf-2hsah-001",
+		}
+
+		cfSpaces = map[string]cf.Space{
+			"space-guid-1": {
+				Guid:             "space-guid-1",
+				Name:             "Space 1",
+				OrganizationGuid: "org-guid-1",
+			},
+			"space-guid-2": {
+				Guid:             "space-guid-2",
+				Name:             "Space 2",
+				OrganizationGuid: "org-guid-2",
+			},
+		}
+
+		cfOrgs = map[string]cf.Org{
+			"org-guid-1": {
+				Guid: "org-guid-1",
+				Name: "Org 1",
+			},
+			"org-guid-2": {
+				Guid: "org-guid-2",
+				Name: "Org 2",
+			},
+		}
 	})
 
 	It("returns zero if there are no clusters", func() {
+		cacheClusters = []*awsec.CacheCluster{}
+
 		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
@@ -137,7 +224,7 @@ var _ = Describe("Elasticache Gauges", func() {
 				NumCacheNodes:  aws.Int64(2),
 			},
 			{
-				CacheClusterId: aws.String("cf-hash2-001"),
+				CacheClusterId: aws.String("cf-2hsah-001"),
 				NumCacheNodes:  aws.Int64(1),
 			},
 		}
@@ -281,69 +368,6 @@ var _ = Describe("Elasticache Gauges", func() {
 			return metrics
 		}
 
-		BeforeEach(func() {
-			cacheClusters = []*awsec.CacheCluster{
-				{
-					// The AWS API produces cache cluster id's which
-					// contain the user-supplied name, and then some
-					// extra information
-					CacheClusterId: aws.String("cf-hash1-0001-001"),
-					NumCacheNodes:  aws.Int64(2),
-				},
-				{
-					CacheClusterId: aws.String("cf-2hsah-001"),
-					NumCacheNodes:  aws.Int64(1),
-				},
-			}
-
-			cfServices = []cf.Service{
-				{
-					Guid:  "redis-service-guid",
-					Label: "redis",
-				},
-			}
-
-			cfServicePlans = []cf.ServicePlan{
-				{
-					Name: "plan-1",
-					Guid: "svc-plan-1",
-				},
-				{
-					Name: "plan-2",
-					Guid: "svc-plan-2",
-				},
-			}
-
-			cfServiceInstances = []cf.ServiceInstance{
-				{
-					ServiceGuid: "redis-service-guid",
-					Guid:        "svc-instance-1-guid",
-					SpaceGuid:   "space-guid-1",
-				},
-				{
-					ServiceGuid: "redis-service-guid",
-					Guid:        "svc-instance-2-guid",
-					SpaceGuid:   "space-guid-2",
-				},
-			}
-
-			serviceGuidToHash = map[string]string{
-				"svc-instance-1-guid": "cf-hash1-0001-001",
-				"svc-instance-2-guid": "cf-2hsah-001",
-			}
-
-			cfSpaces = map[string]cf.Space {
-				"space-guid-1": {
-					Guid: "space-guid-1",
-					Name: "Space 1",
-				},
-				"space-guid-2": {
-					Guid: "space-guid-2",
-					Name: "Space 2",
-				},
-			}
-		})
-
 		It("returns the number of nodes per cache cluster", func() {
 			metrics := getMetrics()
 
@@ -390,7 +414,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			}))
 		})
 
-		It("labels the metrics with the space guid", func(){
+		It("labels the metrics with the space guid", func() {
 			metrics := getMetrics()
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
@@ -401,6 +425,34 @@ var _ = Describe("Elasticache Gauges", func() {
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_guid",
 				Value: "space-guid-2",
+			}))
+		})
+
+		It("labels the metrics with the org name", func() {
+			metrics := getMetrics()
+
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_name",
+				Value: "Org 1",
+			}))
+
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_name",
+				Value: "Org 2",
+			}))
+		})
+
+		It("labels the metrics with the org guid", func() {
+			metrics := getMetrics()
+
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_guid",
+				Value: "org-guid-1",
+			}))
+
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_guid",
+				Value: "org-guid-2",
 			}))
 		})
 	})
