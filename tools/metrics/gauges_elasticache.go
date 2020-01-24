@@ -100,7 +100,7 @@ func cacheClusterMetrics(
 		func(cacheCluster *awsec.CacheCluster) error {
 			nodeCount = nodeCount + *cacheCluster.NumCacheNodes
 			elasticacheClusterId := aws.StringValue(cacheCluster.CacheClusterId)
-			userSuppliedClusterId := cleanClusterId(cacheCluster)
+			userSuppliedClusterId := extractUserSuppliedClusterID(cacheCluster)
 
 			details, ok := userSuppliedClusterIdToDetail[userSuppliedClusterId]
 			if !ok {
@@ -227,7 +227,7 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServi
 // format "cf-{FNV hash of guid}", but that's
 // not guaranteed, so this method only strips
 // the last one/two parts.
-func cleanClusterId(cluster *awsec.CacheCluster) string {
+func extractUserSuppliedClusterID(cluster *awsec.CacheCluster) string {
 	clusteredRegex := regexp.MustCompile(ClusteredIdPattern)
 	unclusteredRegex := regexp.MustCompile(NonClusteredIdPattern)
 
