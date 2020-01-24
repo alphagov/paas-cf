@@ -13,4 +13,4 @@
           severity: warning
         annotations:
           summary: "Number of elasticache nodes is close to the limit"
-          description: "We are using {{ $value | printf \"%.0f\" }} of 100 Elasticache nodes. We might have to contact AWS support to raise the limit."
+          description: "We are using {{ $value | printf \"%.0f\" }} of ((aws_limits_elasticache_nodes)) Elasticache nodes. We might have to contact AWS support to raise the limit."
