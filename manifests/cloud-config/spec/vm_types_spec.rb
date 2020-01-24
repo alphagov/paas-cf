@@ -25,7 +25,7 @@ RSpec.describe "vm_types" do
     it "all VM type should have a ephemeral disk of at least 10GB" do
       vm_types.each do |pool|
         ephemeral_disk = pool["cloud_properties"]["ephemeral_disk"]
-        expect(ephemeral_disk).to be_a_kind_of(Hash), "expected #{pool['name']} to have a ephemeral_disk definition"
+        expect(ephemeral_disk).to be_a_kind_of(Hash), "expected #{pool["name"]} to have a ephemeral_disk definition"
         expect(ephemeral_disk).to include("size", "type")
         expect(ephemeral_disk["size"].to_i).to be >= 10_240
         expect(ephemeral_disk["type"]).to eq("gp2")

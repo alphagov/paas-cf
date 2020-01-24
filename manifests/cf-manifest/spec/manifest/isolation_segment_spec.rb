@@ -20,8 +20,15 @@ RSpec.describe 'isolation_segments' do
         expect(instance_group['instances']).to eq(1)
       end
 
-      it 'does not override the default vm_type if it is not set' do
-        expect(instance_group['vm_type']).to eq('cell')
+      it 'correctly sets the vm_type when the size is changed' do
+        expect(instance_group['vm_type']).to eq('small_cell')
+
+        expect(
+          instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'rep' }
+            .dig('properties', 'diego', 'executor', 'memory_capacity_mb')
+        ).to eq(27197)
       end
 
       it 'has the correct placement tag' do
@@ -75,8 +82,8 @@ RSpec.describe 'isolation_segments' do
         expect(instance_group['instances']).to eq(0)
       end
 
-      it 'correctly sets the vm_type' do
-        expect(instance_group['vm_type']).to eq('small')
+      it 'does not override the default vm_type if it is not set' do
+        expect(instance_group['vm_type']).to eq('cell')
       end
 
       it 'has the correct placement tag' do

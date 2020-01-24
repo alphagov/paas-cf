@@ -1,3 +1,4 @@
 ---
 number_of_cells: 1
 isolation_segment_name: dev-1
+isolation_segment_size: small

@@ -31,13 +31,41 @@ name = "diego-cell-iso-seg-#{seg_def['isolation_segment_name']}"
 isolation_segment['name'] = name
 
 isolation_segment['instances'] = seg_def['number_of_cells']
-isolation_segment['vm_type'] = seg_def['vm_type'] unless seg_def['vm_type'].nil?
+
+unless seg_def['isolation_segment_size'].nil?
+  vm_type = isolation_segment['vm_type']
+
+  memory_capacity = isolation_segment
+    .fetch('jobs')
+    .find { |job| job['name'] == 'rep' }
+    .dig('properties', 'diego', 'executor', 'memory_capacity_mb')
+
+  case seg_def['isolation_segment_size']
+  when 'small'
+    memory_capacity /= 2.0
+    vm_type = 'small_cell'
+  else
+    raise "Unknown isolation_segment_size #{seg_def['isolation_segment_size']}"
+  end
+
+  isolation_segment['vm_type'] = vm_type
+
+  isolation_segment
+    .fetch('jobs')
+    .find { |job| job['name'] == 'rep' }[
+    'properties'][
+    'diego'][
+    'executor'][
+    'memory_capacity_mb'] = memory_capacity
+end
 
 isolation_segment
   .fetch('jobs')
-  .find { |job| job['name'] == 'rep' }['properties']['diego']['rep']['placement_tags'] = [
-    seg_def['isolation_segment_name']
-  ]
+  .find { |job| job['name'] == 'rep' }[
+  'properties'][
+  'diego'][
+  'rep'][
+  'placement_tags'] = [seg_def['isolation_segment_name']]
 
 # We need to override bosh links to specify which the name of the
 # VXLAN policy agent provided by this instance-group

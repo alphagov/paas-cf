@@ -61,3 +61,11 @@
 - type: replace
   path: /vm_types/name=cell/cloud_properties/spot_bid_price?
   value: ((cell_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=small_cell/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=small_cell/cloud_properties/spot_bid_price?
+  value: ((small_cell_vm_spot_bid_price))
