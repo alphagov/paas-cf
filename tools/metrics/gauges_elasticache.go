@@ -35,17 +35,11 @@ func ElasticCacheInstancesGauge(
 	interval time.Duration,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		lsess := logger.Session("elasticache-gauges")
 		redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
 
 		if err != nil {
 			return err
-		}
-
-		svcGuidToDetails := map[string]RedisServiceDetails{}
-		clusterIdToSvcGuid := map[string]string{}
-		for _, details := range redisServiceDetails {
-			svcGuidToDetails[details.ServiceInstance.Guid] = details
-			clusterIdToSvcGuid[clusterIdHashingFunction(details.ServiceInstance.Guid)] = details.ServiceInstance.Guid
 		}
 
 		var metrics []m.Metric
@@ -71,6 +65,16 @@ func ElasticCacheInstancesGauge(
 			Value: float64(cacheParameterGroupCount),
 			Unit:  "count",
 		})
+		lsess.Info("metric-exported", lager.Data{"metric": metrics[len(metrics)-1]})
+
+		svcGuidToDetails := map[string]RedisServiceDetails{}
+		clusterIdToSvcGuid := map[string]string{}
+		for _, details := range redisServiceDetails {
+			svcGuidToDetails[details.ServiceInstance.Guid] = details
+			clusterIdToSvcGuid[clusterIdHashingFunction(details.ServiceInstance.Guid)] = details.ServiceInstance.Guid
+		}
+
+		lsess.Info("svgguid-to-details", lager.Data{"map": svcGuidToDetails})
 
 		nodeCount := int64(0)
 		err = iterateCacheClusterPages(
@@ -79,7 +83,24 @@ func ElasticCacheInstancesGauge(
 				nodeCount = nodeCount + *cacheCluster.NumCacheNodes
 				userSuppliedClusterId := cleanClusterId(cacheCluster)
 				realClusterId := aws.StringValue(cacheCluster.CacheClusterId)
-				details := svcGuidToDetails[clusterIdToSvcGuid[realClusterId]]
+
+				svcGuid, ok := clusterIdToSvcGuid[userSuppliedClusterId]
+				if !ok {
+					e := fmt.Errorf("unable to find service guid for cluster with user supplied name of %s", userSuppliedClusterId)
+					lsess.Error("service-guid-not-found", e, lager.Data{
+						"real_cluster_id":          realClusterId,
+						"user_supplied_cluster_id": userSuppliedClusterId,
+					})
+					return e
+				}
+				details, ok := svcGuidToDetails[svcGuid]
+				if !ok {
+					e := fmt.Errorf("unable to find details of service %s", svcGuid)
+					lsess.Error("details-not-found", e, lager.Data{"real_cluster_id": realClusterId, "service_guid": svcGuid})
+					return e
+				}
+
+				lsess.Info("redis-service-details-found", lager.Data{"details": details})
 
 				metrics = append(metrics, m.Metric{
 					Kind:  m.Gauge,
@@ -90,13 +111,15 @@ func ElasticCacheInstancesGauge(
 					Tags: m.MetricTags{
 						{Label: "cluster_id", Value: userSuppliedClusterId},
 						{Label: "elasticache_cluster_id", Value: realClusterId},
-						{Label: "service_instance_guid", Value: clusterIdToSvcGuid[realClusterId]},
+						{Label: "service_instance_guid", Value: details.ServiceInstance.Guid},
 						{Label: "space_name", Value: details.Space.Name},
 						{Label: "space_guid", Value: details.Space.Guid},
 						{Label: "org_name", Value: details.Org.Name},
 						{Label: "org_guid", Value: details.Org.Guid},
 					},
 				})
+
+				lsess.Info("metric-exported", lager.Data{"metric": metrics[len(metrics)-1]})
 			},
 		)
 		if err != nil {
@@ -110,6 +133,7 @@ func ElasticCacheInstancesGauge(
 			Value: float64(nodeCount),
 			Unit:  "count",
 		})
+		lsess.Info("metric-exported", lager.Data{"metric": metrics[len(metrics)-1]})
 
 		return w.WriteMetrics(metrics)
 	})
@@ -223,26 +247,48 @@ func cleanClusterId(cluster *awsec.CacheCluster) string {
 	}
 }
 
-func iterateCacheParameterGroups(client elasticacheiface.ElastiCacheAPI, fn func(*awsec.CacheParameterGroup)) error {
-	return client.DescribeCacheParameterGroupsPages(
+func iterateCacheParameterGroups(client elasticacheiface.ElastiCacheAPI, fn func(*awsec.CacheParameterGroup) error) error {
+	errs := []error{}
+	err := client.DescribeCacheParameterGroupsPages(
 		&awsec.DescribeCacheParameterGroupsInput{},
 		func(page *awsec.DescribeCacheParameterGroupsOutput, lastPage bool) bool {
 			for _, cacheParameterGroup := range page.CacheParameterGroups {
-				fn(cacheParameterGroup)
+				err := fn(cacheParameterGroup)
+				if err != nil {
+					errs = append(errs, err)
+				}
 			}
 			return true
 		},
 	)
+	if err != nil {
+		return err
+	}
+	if len(errs) > 0 {
+		return errs[0]
+	}
+	return nil
 }
 
-func iterateCacheClusterPages(client elasticacheiface.ElastiCacheAPI, fn func(cluster *awsec.CacheCluster)) error {
-	return client.DescribeCacheClustersPages(
+func iterateCacheClusterPages(client elasticacheiface.ElastiCacheAPI, fn func(cluster *awsec.CacheCluster) error) error {
+	errs := []error{}
+	err := client.DescribeCacheClustersPages(
 		&awsec.DescribeCacheClustersInput{},
 		func(page *awsec.DescribeCacheClustersOutput, lastPage bool) bool {
 			for _, cacheCluster := range page.CacheClusters {
-				fn(cacheCluster)
+				err := fn(cacheCluster)
+				if err != nil {
+					errs = append(errs, err)
+				}
 			}
 			return true
 		},
 	)
+	if err != nil {
+		return err
+	}
+	if len(errs) > 0 {
+		return errs[0]
+	}
+	return nil
 }
