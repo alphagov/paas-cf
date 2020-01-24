@@ -170,8 +170,8 @@ var _ = Describe("Elasticache Gauges", func() {
 		}
 
 		serviceGuidToHash = map[string]string{
-			"svc-instance-1-guid": "cf-hash1-0001-001",
-			"svc-instance-2-guid": "cf-2hsah-001",
+			"svc-instance-1-guid": "cf-hash1",
+			"svc-instance-2-guid": "cf-2hsah",
 		}
 
 		cfSpaces = map[string]cf.Space{
