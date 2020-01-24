@@ -386,6 +386,24 @@ var _ = Describe("Elasticache Gauges", func() {
 			}))
 		})
 
+		It("labels the metrics with what ElastiCache says the cluster id is", func() {
+			metrics := getMetrics()
+
+			Expect(metrics[0].Value).To(Equal(float64(2)))
+			Expect(metrics[0].Kind).To(Equal(m.Gauge))
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_cluster_id",
+				Value: "cf-hash1-0001-001",
+			}))
+
+			Expect(metrics[1].Value).To(Equal(float64(1)))
+			Expect(metrics[1].Kind).To(Equal(m.Gauge))
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_cluster_id",
+				Value: "cf-2hsah-001",
+			}))
+		})
+
 		It("labels the metrics with the service guid", func() {
 			metrics := getMetrics()
 

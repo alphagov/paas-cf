@@ -89,6 +89,7 @@ func ElasticCacheInstancesGauge(
 					Unit:  "count",
 					Tags: m.MetricTags{
 						{Label: "cluster_id", Value: userSuppliedClusterId},
+						{Label: "elasticache_cluster_id", Value: realClusterId},
 						{Label: "service_instance_guid", Value: clusterIdToSvcGuid[realClusterId]},
 						{Label: "space_name", Value: details.Space.Name},
 						{Label: "space_guid", Value: details.Space.Guid},
