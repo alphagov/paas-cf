@@ -36,107 +36,113 @@ func ElasticCacheInstancesGauge(
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
 		lsess := logger.Session("elasticache-gauges")
-		redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
 
+		metrics, err := cacheParameterMetrics(ecs)
 		if err != nil {
 			return err
 		}
 
-		var metrics []m.Metric
-
-		cacheParameterGroupCount := 0
-		err = iterateCacheParameterGroups(
-			ecs.Client,
-			func(cacheParameterGroup *awsec.CacheParameterGroup) {
-				if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
-					cacheParameterGroupCount++
-				}
-			},
-		)
-
+		clusterMetrics, err := cacheClusterMetrics(lsess, ecs, cfAPI, clusterIdHashingFunction)
 		if err != nil {
 			return err
 		}
-
-		metrics = append(metrics, m.Metric{
-			Kind:  m.Gauge,
-			Time:  time.Now(),
-			Name:  "aws.elasticache.cache_parameter_group.count",
-			Value: float64(cacheParameterGroupCount),
-			Unit:  "count",
-		})
-		lsess.Info("metric-exported", lager.Data{"metric": metrics[len(metrics)-1]})
-
-		svcGuidToDetails := map[string]RedisServiceDetails{}
-		clusterIdToSvcGuid := map[string]string{}
-		for _, details := range redisServiceDetails {
-			svcGuidToDetails[details.ServiceInstance.Guid] = details
-			clusterIdToSvcGuid[clusterIdHashingFunction(details.ServiceInstance.Guid)] = details.ServiceInstance.Guid
-		}
-
-		lsess.Info("svgguid-to-details", lager.Data{"map": svcGuidToDetails})
-
-		nodeCount := int64(0)
-		err = iterateCacheClusterPages(
-			ecs.Client,
-			func(cacheCluster *awsec.CacheCluster) {
-				nodeCount = nodeCount + *cacheCluster.NumCacheNodes
-				userSuppliedClusterId := cleanClusterId(cacheCluster)
-				realClusterId := aws.StringValue(cacheCluster.CacheClusterId)
-
-				svcGuid, ok := clusterIdToSvcGuid[userSuppliedClusterId]
-				if !ok {
-					e := fmt.Errorf("unable to find service guid for cluster with user supplied name of %s", userSuppliedClusterId)
-					lsess.Error("service-guid-not-found", e, lager.Data{
-						"real_cluster_id":          realClusterId,
-						"user_supplied_cluster_id": userSuppliedClusterId,
-					})
-					return e
-				}
-				details, ok := svcGuidToDetails[svcGuid]
-				if !ok {
-					e := fmt.Errorf("unable to find details of service %s", svcGuid)
-					lsess.Error("details-not-found", e, lager.Data{"real_cluster_id": realClusterId, "service_guid": svcGuid})
-					return e
-				}
-
-				lsess.Info("redis-service-details-found", lager.Data{"details": details})
-
-				metrics = append(metrics, m.Metric{
-					Kind:  m.Gauge,
-					Time:  time.Now(),
-					Name:  "aws.elasticache.cluster.nodes.count",
-					Value: float64(*cacheCluster.NumCacheNodes),
-					Unit:  "count",
-					Tags: m.MetricTags{
-						{Label: "cluster_id", Value: userSuppliedClusterId},
-						{Label: "elasticache_cluster_id", Value: realClusterId},
-						{Label: "service_instance_guid", Value: details.ServiceInstance.Guid},
-						{Label: "space_name", Value: details.Space.Name},
-						{Label: "space_guid", Value: details.Space.Guid},
-						{Label: "org_name", Value: details.Org.Name},
-						{Label: "org_guid", Value: details.Org.Guid},
-					},
-				})
-
-				lsess.Info("metric-exported", lager.Data{"metric": metrics[len(metrics)-1]})
-			},
-		)
-		if err != nil {
-			return err
-		}
-
-		metrics = append(metrics, m.Metric{
-			Kind:  m.Gauge,
-			Time:  time.Now(),
-			Name:  "aws.elasticache.node.count",
-			Value: float64(nodeCount),
-			Unit:  "count",
-		})
-		lsess.Info("metric-exported", lager.Data{"metric": metrics[len(metrics)-1]})
+		metrics = append(metrics, clusterMetrics...)
 
 		return w.WriteMetrics(metrics)
 	})
+}
+
+func cacheParameterMetrics(ecs *elasticache.ElasticacheService) ([]m.Metric, error) {
+	cacheParameterGroupCount := 0
+	err := iterateCacheParameterGroups(
+		ecs.Client,
+		func(cacheParameterGroup *awsec.CacheParameterGroup) error {
+			if !strings.HasPrefix(*cacheParameterGroup.CacheParameterGroupName, "default.") {
+				cacheParameterGroupCount++
+			}
+			return nil
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return []m.Metric{{
+		Kind:  m.Gauge,
+		Time:  time.Now(),
+		Name:  "aws.elasticache.cache_parameter_group.count",
+		Value: float64(cacheParameterGroupCount),
+		Unit:  "count",
+	}}, nil
+}
+
+func cacheClusterMetrics(
+	logger lager.Logger,
+	ecs *elasticache.ElasticacheService,
+	cfAPI cfclient.CloudFoundryClient,
+	clusterIdHashingFunction elasticache.ElasticacheClusterIdHashingFunction,
+) ([]m.Metric, error) {
+	redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
+	if err != nil {
+		return nil, err
+	}
+
+	userSuppliedClusterIdToDetail := map[string]RedisServiceDetails{}
+	for _, details := range redisServiceDetails {
+		userSuppliedClusterId := clusterIdHashingFunction(details.ServiceInstance.Guid)
+		userSuppliedClusterIdToDetail[userSuppliedClusterId] = details
+	}
+
+	metrics := []m.Metric{}
+	nodeCount := int64(0)
+	err = iterateCacheClusterPages(
+		ecs.Client,
+		func(cacheCluster *awsec.CacheCluster) error {
+			nodeCount = nodeCount + *cacheCluster.NumCacheNodes
+			elasticacheClusterId := aws.StringValue(cacheCluster.CacheClusterId)
+			userSuppliedClusterId := cleanClusterId(cacheCluster)
+
+			details, ok := userSuppliedClusterIdToDetail[userSuppliedClusterId]
+			if !ok {
+				e := fmt.Errorf("unable to find details of cluster with user supplied cluster id of %s", userSuppliedClusterId)
+				logger.Error("details-not-found", e, lager.Data{
+					"cluster_id":               elasticacheClusterId,
+					"user_supplied_cluster_id": userSuppliedClusterId,
+				})
+				return e
+			}
+
+			metrics = append(metrics, m.Metric{
+				Kind:  m.Gauge,
+				Time:  time.Now(),
+				Name:  "aws.elasticache.cluster.nodes.count",
+				Value: float64(*cacheCluster.NumCacheNodes),
+				Unit:  "count",
+				Tags: m.MetricTags{
+					{Label: "cluster_id", Value: userSuppliedClusterId},
+					{Label: "elasticache_cluster_id", Value: elasticacheClusterId},
+					{Label: "service_instance_guid", Value: details.ServiceInstance.Guid},
+					{Label: "space_name", Value: details.Space.Name},
+					{Label: "space_guid", Value: details.Space.Guid},
+					{Label: "org_name", Value: details.Org.Name},
+					{Label: "org_guid", Value: details.Org.Guid},
+				},
+			})
+			return nil
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	metrics = append(metrics, m.Metric{
+		Kind:  m.Gauge,
+		Time:  time.Now(),
+		Name:  "aws.elasticache.node.count",
+		Value: float64(nodeCount),
+		Unit:  "count",
+	})
+	return metrics, nil
 }
 
 func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServiceDetails, error) {
