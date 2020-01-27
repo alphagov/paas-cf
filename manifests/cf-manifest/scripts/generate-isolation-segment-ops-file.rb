@@ -65,16 +65,23 @@ if seg_def['restricted_egress']
     'release' => 'observability',
     'properties' => { 'corefile' =>
       <<~COREFILE
-        .:10053 {
-          health :10054
-          ready
-          log
-          prometheus 0.0.0.0:9153
-          forward apps.internal 169.254.0.2:53
-        }
+      .:53 {
+        health :8054
+        ready
+        log
+        prometheus :9153
+        forward apps.internal 169.254.0.2:53
+        bind 169.254.0.3
+      }
       COREFILE
     }
   }
+
+  isolation_segment
+    .fetch('jobs')
+    .find { |job| job['name'] == 'silk-cni' }[
+    'properties'][
+    'dns_servers'] = ['169.254.0.3']
 end
 
 isolation_segment

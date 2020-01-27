@@ -79,15 +79,25 @@ RSpec.describe 'isolation_segments' do
         expect(coredns_job['release']).to eq('observability')
         expect(coredns_job.dig('properties', 'corefile')).to match(
         <<~COREFILE
-          .:10053 {
-            health :10054
-            ready
-            log
-            prometheus 0.0.0.0:9153
-            forward apps.internal 169.254.0.2:53
-          }
+        .:53 {
+          health :8054
+          ready
+          log
+          prometheus :9153
+          forward apps.internal 169.254.0.2:53
+          bind 169.254.0.3
+        }
         COREFILE
         )
+      end
+
+      it 'should set silk-cni dns_servers to be the local coredns resolver' do
+        expect(
+          instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'silk-cni' }
+            .dig('properties', 'dns_servers')
+        ).to eq(['127.0.0.1'])
       end
     end
 
@@ -129,6 +139,15 @@ RSpec.describe 'isolation_segments' do
           instance_group
             .dig('jobs')
             .find { |j| j['name'] == 'coredns' }
+        ).to be_nil
+      end
+
+      it 'should not set any silk-cni dns_servers' do
+        expect(
+          instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'silk-cni' }
+            .dig('properties', 'dns_servers')
         ).to be_nil
       end
 
