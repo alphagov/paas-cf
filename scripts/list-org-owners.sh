@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 if ! cf orgs >/dev/null 2>&1; then
   abort "You need to be logged into CF CLI"
 fi

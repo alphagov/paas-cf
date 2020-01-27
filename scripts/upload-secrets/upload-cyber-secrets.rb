@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
+File.open(File.expand_path('~/.paas-script-usage'), 'a') { |f| f.puts script_path }
+
 require_relative 'upload_secrets.rb'
 
 credhub_namespaces = [

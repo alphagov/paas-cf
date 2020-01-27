@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 if [ "${SKIP_AWS_CREDENTIAL_VALIDATION:-}" == "true" ]  ; then

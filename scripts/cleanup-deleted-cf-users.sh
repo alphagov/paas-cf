@@ -2,6 +2,8 @@
 
 set -e -u -o pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 delete=no
 
 for i in "$@"

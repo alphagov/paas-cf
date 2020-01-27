@@ -2,6 +2,12 @@
 import argparse
 from github import Github
 
+import os
+
+script_path = os.path.relpath(__file__)
+with open(os.path.expanduser('~/.paas-script-usage'), 'a') as f:
+  f.write(script_path + "\n")
+
 BOLD = '\033[1m'
 ENDC = '\033[0m'
 

@@ -2,6 +2,8 @@
 
 set -ueo pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 R=0
 while read -r LINK; do
   if [ ! -r "$LINK" ]; then

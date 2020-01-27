@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 load_colors() {
   if [ -t 1 ] ; then
     export ESC_SEQ="\\x1b["

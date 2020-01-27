@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 set -euo pipefail
 
 cd "$(mktemp -d -t paas-trusted-people-XXXXX)"

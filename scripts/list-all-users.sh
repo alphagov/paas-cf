@@ -2,6 +2,8 @@
 
 set -e -u -o pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 uaac_endpoint=$(cf curl /v2/info | jq -r '.authorization_endpoint')
 oauth_token=$(cf oauth-token)
 

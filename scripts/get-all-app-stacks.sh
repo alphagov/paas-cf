@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 cflinuxfs3_uuid=$(cf stack cflinuxfs3 --guid)
 all_orgs_next_url="/v2/organizations?order-by=name"
 echo "org,space,appname,stack,"

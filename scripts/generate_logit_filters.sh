@@ -5,6 +5,8 @@
 
 set -eo pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 logsearch_boshrelease_tag=$1
 logsearch_for_cloudfoundry_tag=$2
 

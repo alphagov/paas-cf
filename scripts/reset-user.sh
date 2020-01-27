@@ -2,6 +2,8 @@
 
 set -e -u -o pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 if [[ $# -lt 2 ]]; then
   >&2 echo "Usage: $0 <organisation> <email of user to reset>"
   exit 1

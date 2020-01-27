@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 cat <<EOF
 == FOR SECRETS, SEE "make [ENV] credhub" ==
 

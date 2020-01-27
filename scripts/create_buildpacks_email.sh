@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e -u -o pipefail
 
+echo "${0#$PWD}" >> ~/.paas-script-usage
+
 MIN_GO_VERSION=1.11
 
 GORAWVERSION=$(go version)
