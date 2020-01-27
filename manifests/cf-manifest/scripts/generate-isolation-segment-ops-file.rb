@@ -59,6 +59,24 @@ unless seg_def['isolation_segment_size'].nil?
     'memory_capacity_mb'] = memory_capacity
 end
 
+if seg_def['restricted_egress']
+  isolation_segment['jobs'] << {
+    'name' => 'coredns',
+    'release' => 'observability',
+    'properties' => { 'corefile' =>
+      <<~COREFILE
+        .:10053 {
+          health :10054
+          ready
+          log
+          prometheus 0.0.0.0:9153
+          forward apps.internal 169.254.0.2:53
+        }
+      COREFILE
+    }
+  }
+end
+
 isolation_segment
   .fetch('jobs')
   .find { |job| job['name'] == 'rep' }[

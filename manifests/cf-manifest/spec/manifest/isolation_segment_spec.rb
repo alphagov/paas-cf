@@ -69,6 +69,26 @@ RSpec.describe 'isolation_segments' do
           'domain' => 'bosh'
         )
       end
+
+      it 'should include the coredns job' do
+        coredns_job = instance_group
+          .dig('jobs')
+          .find { |j| j['name'] == 'coredns' }
+
+        expect(coredns_job).not_to be_nil
+        expect(coredns_job['release']).to eq('observability')
+        expect(coredns_job.dig('properties', 'corefile')).to match(
+        <<~COREFILE
+          .:10053 {
+            health :10054
+            ready
+            log
+            prometheus 0.0.0.0:9153
+            forward apps.internal 169.254.0.2:53
+          }
+        COREFILE
+        )
+      end
     end
 
     context 'dev-2' do
@@ -102,6 +122,14 @@ RSpec.describe 'isolation_segments' do
             .find { |j| j['name'] == 'vxlan-policy-agent' }
             .dig('provides')
         ).to eq('vpa' => { 'as' => 'vpa-dev-2' })
+      end
+
+      it 'should not include the coredns job' do
+        expect(
+          instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'coredns' }
+        ).to be_nil
       end
 
       %w[silk-cni silk-daemon].each do |consumer|
