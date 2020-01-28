@@ -92,6 +92,21 @@
                     regex: 'aws-((terraform_outputs_region))'
                     action: keep
 
+                  - source_labels: [__name__]
+                    separator: ;
+                    regex: 'elasticsearch_(breakers|thread|fs|indices|os)_.*'
+                    action: drop
+
+                  - source_labels: [__name__]
+                    separator: ;
+                    regex: 'net_(icmp|udplite)_.*'
+                    action: drop
+
+                  - source_labels: [__name__]
+                    separator: ;
+                    regex: 'prometheus_sd_(consul|kubernetes)_.*'
+                    action: drop
+
       - name: route_registrar
         release: routing
         properties:
