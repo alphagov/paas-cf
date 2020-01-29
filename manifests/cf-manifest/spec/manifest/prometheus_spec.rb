@@ -118,6 +118,57 @@ RSpec.describe 'prometheus' do
       expect(retention_size).not_to be_nil
     end
 
+    context 'dropping metrics' do
+      let(:dropped_metrics_regexps) do
+        prometheus_config
+          .dig('scrape_configs')
+          .find { |sc| sc['job_name'] == 'aiven' }
+          .dig('relabel_configs')
+          .select { |rlc| rlc['action'] == 'drop' }
+          .select { |rlc| rlc['source_labels'].include? '__name__' }
+          .map { |rlc| rlc['regex'] }
+          .reject(&:nil?)
+          .map { |r| Regexp.new r }
+      end
+
+      it 'should drop metrics that we do not need' do
+        %w[
+          elasticsearch_breakers_parent_estimated_size_in_bytes
+          elasticsearch_fs_io_stats_devices_0_write_operations
+          elasticsearch_indices_indexing_delete_time_in_millis
+          elasticsearch_os_cgroup_cpuacct_usage_nanos
+          elasticsearch_thread_pool_warmer_threads
+          net_icmp_inmsgs
+          net_udplite_ignoredmulti
+          prometheus_sd_consul_rpc_duration_seconds
+          prometheus_sd_kubernetes_cache_watch_duration_seconds_sum
+        ].each do |metric_to_drop|
+          dropped_by = dropped_metrics_regexps.select { |r| r.match? metric_to_drop }
+          expect(dropped_by).not_to(
+            be_empty, "#{metric_to_drop} should not be kept"
+          )
+        end
+      end
+
+      it 'should not drop metrics that we do not need' do
+        %w[
+          system_load1
+          disk_used_percent
+          diskio_reads
+          diskio_writes
+          mem_used_percent
+          net_bytes_recv
+          net_bytes_sent
+          elasticsearch_clusterstats_indices_count
+        ].each do |metric_to_keep|
+          dropped_by = dropped_metrics_regexps.select { |r| r.match? metric_to_keep }
+          expect(dropped_by).to(
+            be_empty, "#{metric_to_keep} must not be dropped"
+          )
+        end
+      end
+    end
+
     it 'should have retention size less than the disk size' do
       disk_size_gb = prometheus_instance_group.dig('persistent_disk_type').gsub(/GB/, '').to_i
       retention_size = prometheus_config.dig('storage', 'tsdb', 'retention', 'size')
