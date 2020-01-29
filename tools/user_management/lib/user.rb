@@ -3,12 +3,13 @@ require 'json'
 require_relative 'uaa_resource'
 
 class User < UAAResource
-  attr_reader :email, :google_id
+  attr_reader :email, :google_id, :origin
 
   def initialize(obj)
     @email = obj.fetch('email')
     @google_id = obj.fetch('google_id')
-    @roles_by_env = obj.fetch("roles", {})
+    @roles_by_env = obj.fetch('roles', {})
+    @origin = obj.fetch('origin', 'google')
   end
 
   def exists?(uaa_client)
@@ -27,7 +28,7 @@ class User < UAAResource
   def create(uaa_client)
     resp = uaa_client['/Users'].post({
       emails: [{ value: @email }],
-      origin: 'google',
+      origin: @origin,
       userName: @google_id
     }.to_json)
     resp.code == 201
@@ -35,7 +36,7 @@ class User < UAAResource
 
   def get_user(uaa_client)
     scim_filter = [
-      'origin+eq+"google"',
+      "origin+eq+\"#{@origin}\"",
       "userName+eq+\"#{@google_id}\""
     ].join('+and+')
     get_resource("/Users?filter=#{scim_filter}", uaa_client)

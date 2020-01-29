@@ -79,12 +79,16 @@ run:
         .load_file("#{Dir.pwd}/paas-trusted-people/users.yml")
         .fetch('users')
 
+      # a user might be an admin user and an auditor for different uaa origins
+      # we should union the roles with group_by
       user_roles = users
         .reject { |u| u['email'].nil? }
         .reject { |u| u.dig('roles', aws_account).nil? }
         .select { |u| u.dig('roles', aws_account) & grafana_roles }
-        .map { |u| [u['email'], grafana_role(u.dig('roles', aws_account))] }
-        .to_h
+        .group_by { |u| u['email'] }
+        .transform_values { |usrs| usrs.map { |u| u.dig('roles', aws_account) } }
+        .transform_values(&:flatten)
+        .transform_values { |roles| grafana_role(roles) }
 
       users_that_should_exist = user_roles.keys
 

@@ -17,7 +17,7 @@ class Group < UAAResource
     unexpected_member_users = get_member_users(uaa_client).select do |member_user|
       if member_user['origin'] == 'uaa' && member_user['userName'] == 'admin'
         false
-      elsif member_user['origin'] == 'google' && desired_user_guids.include?(member_user['id'])
+      elsif (member_user['origin'] == 'google' || member_user['origin'] == 'admin-google') && desired_user_guids.include?(member_user['id'])
         false
       else
         true
@@ -64,7 +64,7 @@ class Group < UAAResource
     new_users_to_add.each do |user|
       puts "* guid=#{user.guid}".green
       puts "  email='#{user.email}'".green
-      puts "  origin=google".green
+      puts "  origin='#{user.origin}'".green
       puts "  userName='#{user.google_id}'".green
       add_member(user.guid, uaa_client)
       puts "  USER GIVEN MEMBERSHIP OF GROUP".green
