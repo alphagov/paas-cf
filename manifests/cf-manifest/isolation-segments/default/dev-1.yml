@@ -1,5 +1,5 @@
 ---
-number_of_cells: 1
+number_of_cells: 0
 isolation_segment_name: dev-1
 isolation_segment_size: small
 restricted_egress: true
