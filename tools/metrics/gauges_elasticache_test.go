@@ -2,7 +2,6 @@ package main_test
 
 import (
 	"errors"
-	"net/url"
 	"time"
 
 	"code.cloudfoundry.org/lager"
@@ -15,7 +14,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 
-	cffakes "github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfoundry/fakes"
+	cftest "github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfoundry/test"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 	esfakes "github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache/fakes"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
@@ -28,7 +27,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		log                *gbytes.Buffer
 		elasticacheAPI     *esfakes.FakeElastiCacheAPI
 		elasticacheService *elasticache.ElasticacheService
-		cfAPI              *cffakes.FakeCloudFoundryClient
+		cfAPI              *cftest.CloudFoundryAPIStub
 		hashingFunction    elasticache.ElasticacheClusterIdHashingFunction
 		serviceGuidToHash  map[string]string
 
@@ -63,42 +62,6 @@ var _ = Describe("Elasticache Gauges", func() {
 			}
 			return nil
 		}
-
-		cfServices            []cf.Service
-		cfServicesByQueryStub = func(
-			query url.Values,
-		) ([]cf.Service, error) {
-			return cfServices, nil
-		}
-
-		cfServicePlans            []cf.ServicePlan
-		cfServicePlansByQueryStub = func(
-			query url.Values,
-		) ([]cf.ServicePlan, error) {
-			return cfServicePlans, nil
-		}
-
-		// Map key is the content of the "q" query param
-		cfServiceInstancesByQuery     map[string][]cf.ServiceInstance
-		cfServiceInstancesByQueryStub = func(
-			query url.Values,
-		) ([]cf.ServiceInstance, error) {
-			return cfServiceInstancesByQuery[query.Get("q")], nil
-		}
-
-		cfSpaces             map[string]cf.Space
-		cfGetSpaceByGuidStub = func(
-			id string,
-		) (cf.Space, error) {
-			return cfSpaces[id], nil
-		}
-
-		cfOrgs             map[string]cf.Org
-		cfGetOrgByGuidStub = func(
-			id string,
-		) (cf.Org, error) {
-			return cfOrgs[id], nil
-		}
 	)
 
 	BeforeEach(func() {
@@ -111,12 +74,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		elasticacheAPI.DescribeCacheClustersPagesStub = describeCacheClustersPagesStub
 		elasticacheService = &elasticache.ElasticacheService{Client: elasticacheAPI}
 
-		cfAPI = &cffakes.FakeCloudFoundryClient{}
-		cfAPI.ListServicesByQueryStub = cfServicesByQueryStub
-		cfAPI.ListServiceInstancesByQueryStub = cfServiceInstancesByQueryStub
-		cfAPI.ListServicePlansByQueryStub = cfServicePlansByQueryStub
-		cfAPI.GetSpaceByGuidStub = cfGetSpaceByGuidStub
-		cfAPI.GetOrgByGuidStub = cfGetOrgByGuidStub
+		cfAPI = cftest.NewCloudFoundryAPIStub()
 
 		hashingFunction = func(value string) string {
 			return serviceGuidToHash[value]
@@ -136,25 +94,29 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		cfServices = []cf.Service{
-			{
-				Guid:  "redis-service-guid",
-				Label: "redis",
+		cfAPI.Services = map[string][]cf.Service{
+			"label:redis": []cf.Service{
+				{
+					Guid:  "redis-service-guid",
+					Label: "redis",
+				},
 			},
 		}
 
-		cfServicePlans = []cf.ServicePlan{
-			{
-				Name: "plan-1",
-				Guid: "svc-plan-1",
-			},
-			{
-				Name: "plan-2",
-				Guid: "svc-plan-2",
+		cfAPI.ServicePlans = map[string][]cf.ServicePlan{
+			"service_guid:redis-service-guid": []cf.ServicePlan{
+				{
+					Name: "plan-1",
+					Guid: "svc-plan-1",
+				},
+				{
+					Name: "plan-2",
+					Guid: "svc-plan-2",
+				},
 			},
 		}
 
-		cfServiceInstancesByQuery = map[string][]cf.ServiceInstance{
+		cfAPI.ServiceInstances = map[string][]cf.ServiceInstance{
 			"service_plan_guid:svc-plan-1": []cf.ServiceInstance{{
 				ServiceGuid:     "redis-service-guid",
 				Guid:            "svc-instance-1-guid",
@@ -174,7 +136,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			"svc-instance-2-guid": "cf-2hsah",
 		}
 
-		cfSpaces = map[string]cf.Space{
+		cfAPI.Spaces = map[string]cf.Space{
 			"space-guid-1": {
 				Guid:             "space-guid-1",
 				Name:             "Space 1",
@@ -187,7 +149,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		cfOrgs = map[string]cf.Org{
+		cfAPI.Orgs = map[string]cf.Org{
 			"org-guid-1": {
 				Guid: "org-guid-1",
 				Name: "Org 1",
@@ -202,7 +164,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	It("returns zero if there are no clusters", func() {
 		cacheClusters = []*awsec.CacheCluster{}
 
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -229,7 +191,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -245,7 +207,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("handles AWS API errors when getting the number of nodes", func() {
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
@@ -264,7 +226,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns zero if there are no cache parameter groups", func() {
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -285,7 +247,7 @@ var _ = Describe("Elasticache Gauges", func() {
 				CacheParameterGroupName: aws.String("default.redis3.2"),
 			},
 		}
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -313,7 +275,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -329,7 +291,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("handles AWS API errors when getting the number of cache parameter groups", func() {
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
@@ -349,7 +311,7 @@ var _ = Describe("Elasticache Gauges", func() {
 
 	Describe("aws.elasticache.cluster.nodes.count", func() {
 		getMetrics := func() []m.Metric {
-			gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI, hashingFunction, 1*time.Second)
+			gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 			defer gauge.Close()
 
 			var metrics []m.Metric
