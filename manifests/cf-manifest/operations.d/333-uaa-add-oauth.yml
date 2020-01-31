@@ -49,14 +49,27 @@
     relyingPartySecret: ((admin_google_oauth_client_secret))
     skipSslValidation: false
     attributeMappings:
-      # UAA will attempt to find an existing user with a username matching the
-      # attribute from Google named below (e.g., `sub`.) If that fails it will
-      # attempt to find an existing UAA user whose email matches the email
-      # attribute from Google.
+      # See commit 1e9fb2176a721600f20149914d83b1374450da56 for some history
       #
-      # This is secure because Google verifies email addresses and appears to
-      # forbid multiple accounts from having the same email address.
-      user_name: sub
+      # We have two separate roles for administrators:
+      # - global auditor
+      # - global administrator
+      #
+      # We use the same identity provider (Google) for both
+      # We use the same email identity (our Google accounts) for both
+      #
+      # Various CF CLI operations which interact with the Cloud Controller API
+      # make some assumptions about the uniqueness of usernames, when they
+      # should instead be using the GUID
+      #
+      # As a result, many operations will error unless our usernames are unique
+      #
+      # In order to get unique usernames we cannot use the same attribute
+      # mappings for both Google IDP configurations.
+      #
+      # We are happy with Google's security to enforce that the email we get
+      # back from Google OAuth is in fact our email address
+      user_name: email
 
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/oauth?/providers/microsoft

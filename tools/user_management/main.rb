@@ -19,9 +19,19 @@ uaa_client = RestClient::Resource.new(
 )
 
 users_config = YAML.safe_load(File.read(USERS_CONFIG_PATH), aliases: true)
-users = users_config.fetch('users').map { |uo| User.new(uo) }
-cf_admin_users = users.select { |user| user.has_role_for_env?(ENV_TARGET, 'cf-admin') }
-cf_auditor_users = users.select { |user| user.has_role_for_env?(ENV_TARGET, 'cf-auditor') }
+raw_users = users_config.fetch('users')
+
+cf_admin_users = raw_users
+  .select { |ru| ru['origin'] == 'admin-google' }
+  .map { |ru| ru.update('username' => ru['email']) }
+  .map { |ru| User.new(ru) }
+  .select { |user| user.has_role_for_env?(ENV_TARGET, 'cf-admin') }
+
+cf_auditor_users = raw_users
+  .reject { |ru| ru['origin'] == 'admin-google' }
+  .map { |ru| ru.update('username' => ru['google_id']) }
+  .map { |ru| User.new(ru) }
+  .select { |user| user.has_role_for_env?(ENV_TARGET, 'cf-auditor') }
 
 ensure_users_exist_in_uaa(cf_admin_users + cf_auditor_users, uaa_client)
 

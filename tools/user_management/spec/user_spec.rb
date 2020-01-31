@@ -14,7 +14,7 @@ RSpec.describe User do
   it 'checks if a role for a user exists in an environment' do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000',
+      'username' => '000000000000000000000',
       'roles' => {
         'dev' => [{ 'role' => 'some_role' }],
         'prod' => [{ 'role' => 'some_other_role' }],
@@ -30,7 +30,7 @@ RSpec.describe User do
   it 'does not give any roles to users without roles' do
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000',
+      'username' => '000000000000000000000',
       'roles' => {},
     )
     expect(u.has_role_for_env?('dev', 'some_role')).to be(false)
@@ -51,7 +51,7 @@ RSpec.describe User do
 
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000',
+      'username' => '000000000000000000000',
       'roles' => { 'dev' => [{ 'role' => 'some_role' }] },
     )
 
@@ -63,7 +63,7 @@ RSpec.describe User do
 
     u2 = User.new(
       'email' => 'rich.richardson@example.com',
-      'google_id' => '999999999999999999999'
+      'username' => '999999999999999999999'
     )
 
     expect(u2.exists?(@fake_uaa_client)).to be false
@@ -74,7 +74,7 @@ RSpec.describe User do
 
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000',
+      'username' => '000000000000000000000',
       'roles' => { 'dev' => [{ 'role' => 'some_role' }] },
     )
 
@@ -88,7 +88,7 @@ RSpec.describe User do
 
     u2 = User.new(
       'email' => 'rich.richardson',
-      'google_id' => '999999999999999999999'
+      'username' => '999999999999999999999'
     )
 
     expect { u2.create(@fake_uaa_client) }.to raise_error(Exception, /Bad Request/)
@@ -98,7 +98,7 @@ RSpec.describe User do
 
     u3 = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000'
+      'username' => '000000000000000000000'
     )
 
     expect(u3.create(@fake_uaa_client)).to be false
@@ -118,7 +118,7 @@ RSpec.describe User do
 
     u = User.new(
       'email' => 'jeff.jefferson@example.com',
-      'google_id' => '000000000000000000000',
+      'username' => '000000000000000000000',
       'roles' => { 'dev' => [{ 'role' => 'some_role' }] },
     )
 
