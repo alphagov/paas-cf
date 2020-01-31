@@ -65,7 +65,7 @@ class Group < UAAResource
       puts "* guid=#{user.guid}".green
       puts "  email='#{user.email}'".green
       puts "  origin='#{user.origin}'".green
-      puts "  userName='#{user.google_id}'".green
+      puts "  userName='#{user.username}'".green
       add_member(user.guid, uaa_client)
       puts "  USER GIVEN MEMBERSHIP OF GROUP".green
     end

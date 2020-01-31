@@ -17,7 +17,7 @@ RSpec.describe Group do
       stub_searching_for_group(200, '__test__', 'guid-of-__test__-group')
 
       stub_searching_for_user(200, 'google', '11111111111111', 'user-guid')
-      @user = User.new('email' => 'user-one@na.me', 'google_id' => '11111111111111')
+      @user = User.new('email' => 'user-one@na.me', 'username' => '11111111111111')
       @user.get_user(@fake_uaa_client)
     end
 
@@ -68,12 +68,12 @@ RSpec.describe Group do
     before do
       stub_searching_for_user(200, 'google', '11111111111111', 'user-1-guid')
       stub_getting_user_by_id(200, 'user-1-guid', 'google', '11111111111111', Time.now)
-      @u1 = User.new('email' => 'user-one@na.me', 'google_id' => '11111111111111')
+      @u1 = User.new('email' => 'user-one@na.me', 'username' => '11111111111111')
       @u1.get_user(@fake_uaa_client)
 
       stub_searching_for_user(200, 'google', '22222222222222', 'user-2-guid')
       stub_getting_user_by_id(200, 'user-2-guid', 'google', '22222222222222', Time.now)
-      @u2 = User.new('email' => 'user-two@na.me', 'google_id' => '22222222222222')
+      @u2 = User.new('email' => 'user-two@na.me', 'username' => '22222222222222')
       @u2.get_user(@fake_uaa_client)
     end
 
@@ -100,7 +100,7 @@ RSpec.describe Group do
 
       stub_searching_for_user(200, 'google', '11111111111111', 'desired-user-guid')
       stub_getting_user_by_id(200, 'desired-user-guid', 'google', '11111111111111', Time.now)
-      @u1 = User.new('email' => 'user-one@na.me', 'google_id' => '11111111111111')
+      @u1 = User.new('email' => 'user-one@na.me', 'username' => '11111111111111')
 
       stub_getting_user_by_id(200, 'unwanted-google-user-guid', 'google', '22222222222222', Time.now - 86400)
       stub_searching_for_user(200, 'google', '22222222222222', 'unwanted-google-user-guid')
