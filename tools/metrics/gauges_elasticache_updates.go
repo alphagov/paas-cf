@@ -100,8 +100,9 @@ func serviceInstanceLevelMetrics(redisServiceUpdateNames []string, cfAPI cfclien
 				Name:  "aws.elasticache.cluster.update_applied",
 				Value: float64(applied),
 				Tags: m.MetricTags{
-					{Label: "elasticache_service_update", Value: updateName},
+					{Label: "elasticache_service_update", 	Value: updateName},
 					{Label: "elasticache_cache_cluster_id", Value: clusterId},
+					{Label: "service_instance_guid", 		Value: instance.ServiceInstance.Guid},
 				},
 			})
 		}

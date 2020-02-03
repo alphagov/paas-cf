@@ -139,7 +139,7 @@ var _ = Describe("Elasticache Updates", func() {
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
-						Guid:            "instance-1",
+						Guid:            "instance-2",
 						SpaceGuid:       "space-2",
 					},
 				},
@@ -211,6 +211,21 @@ var _ = Describe("Elasticache Updates", func() {
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "elasticache_service_update",
 				Value: "redis20200303",
+			}))
+		})
+
+		It("labels each redis service metric with the service guid", func(){
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 4)
+
+			// There are 2 instances, with 2 service update metrics each
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_guid",
+				Value: "instance-1",
+			}))
+
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_guid",
+				Value: "instance-2",
 			}))
 		})
 	})
