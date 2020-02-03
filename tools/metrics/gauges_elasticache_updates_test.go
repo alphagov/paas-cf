@@ -79,11 +79,12 @@ var _ = Describe("Elasticache Updates", func() {
 
 		cfAPI.Spaces = map[string]cf.Space{
 			"space-1": cf.Space{Guid: "space-1", Name: "Space 1", OrganizationGuid: "org-1"},
-			"space-2": cf.Space{Guid: "space-2", Name: "Space 2", OrganizationGuid: "org-1"},
+			"space-2": cf.Space{Guid: "space-2", Name: "Space 2", OrganizationGuid: "org-2"},
 		}
 
 		cfAPI.Orgs = map[string]cf.Org{
 			"org-1": cf.Org{Guid: "org-1", Name: "Org 1"},
+			"org-2": cf.Org{Guid: "org-2", Name: "Org 2"},
 		}
 
 		hashingFunction = func(value string) string {
@@ -249,6 +250,29 @@ var _ = Describe("Elasticache Updates", func() {
 			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_name",
 				Value: "Space 2",
+			}))
+		})
+
+		It("labels each redis service metric with the service's org name and guid", func(){
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 4)
+
+			// There are 2 instances, with 2 service update metrics each
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_guid",
+				Value: "org-1",
+			}))
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_name",
+				Value: "Org 1",
+			}))
+
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_guid",
+				Value: "org-2",
+			}))
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "org_name",
+				Value: "Org 2",
 			}))
 		})
 	})

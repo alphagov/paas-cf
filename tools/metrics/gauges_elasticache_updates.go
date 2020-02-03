@@ -105,6 +105,8 @@ func serviceInstanceLevelMetrics(redisServiceUpdateNames []string, cfAPI cfclien
 					{Label: "service_instance_guid", 		Value: instance.ServiceInstance.Guid},
 					{Label: "space_guid",					Value: instance.Space.Guid},
 					{Label: "space_name",					Value: instance.Space.Name},
+					{Label: "org_guid",						Value: instance.Org.Guid},
+					{Label: "org_name",						Value: instance.Org.Name},
 				},
 			})
 		}
