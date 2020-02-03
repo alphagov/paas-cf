@@ -228,6 +228,29 @@ var _ = Describe("Elasticache Updates", func() {
 				Value: "instance-2",
 			}))
 		})
+
+		It("labels each redis service metric with the service's space name and guid", func(){
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 4)
+
+			// There are 2 instances, with 2 service update metrics each
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "space_guid",
+				Value: "space-1",
+			}))
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "space_name",
+				Value: "Space 1",
+			}))
+
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "space_guid",
+				Value: "space-2",
+			}))
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "space_name",
+				Value: "Space 2",
+			}))
+		})
 	})
 
 	Describe("ListAvailableRedisServiceUpdates", func() {

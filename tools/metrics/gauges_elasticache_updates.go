@@ -103,6 +103,8 @@ func serviceInstanceLevelMetrics(redisServiceUpdateNames []string, cfAPI cfclien
 					{Label: "elasticache_service_update", 	Value: updateName},
 					{Label: "elasticache_cache_cluster_id", Value: clusterId},
 					{Label: "service_instance_guid", 		Value: instance.ServiceInstance.Guid},
+					{Label: "space_guid",					Value: instance.Space.Guid},
+					{Label: "space_name",					Value: instance.Space.Name},
 				},
 			})
 		}
