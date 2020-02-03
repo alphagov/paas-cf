@@ -40,7 +40,7 @@
     azs: [z1, z2, z3]
     stemcell: default
 
-    persistent_disk_type: 100GB
+    persistent_disk_type: 500GB
     vm_type: xlarge
 
     networks:
@@ -55,7 +55,7 @@
               tsdb:
                 retention:
                   time: 370d
-                  size: 90GB
+                  size: 475GB
 
             rule_files: []
 

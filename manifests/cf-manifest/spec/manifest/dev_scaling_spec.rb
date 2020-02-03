@@ -19,6 +19,8 @@ RSpec.describe 'dev environment scaling' do
     # It scales back cf-prometheus to 1
     expect(dev_manifest.fetch('instance_groups.prometheus.instances')).to eq(1)
     expect(dev_manifest.fetch('instance_groups.prometheus.vm_type')).to eq('small')
+    expect(dev_manifest.fetch('instance_groups.prometheus.persistent_disk_type')).to eq('100GB')
+    expect(dev_manifest.fetch('instance_groups.prometheus.jobs.prometheus2.properties.prometheus.storage.tsdb.retention.size')).to eq('90GB')
   end
 
   it 'does not scale back dev otherwise' do
@@ -29,5 +31,7 @@ RSpec.describe 'dev environment scaling' do
     expect(dev_manifest.fetch('instance_groups.s3_broker.instances')).not_to eq(1)
 
     expect(dev_manifest.fetch('instance_groups.prometheus.vm_type')).to eq('xlarge')
+    expect(dev_manifest.fetch('instance_groups.prometheus.persistent_disk_type')).to eq('500GB')
+    expect(dev_manifest.fetch('instance_groups.prometheus.jobs.prometheus2.properties.prometheus.storage.tsdb.retention.size')).to eq('475GB')
   end
 end
