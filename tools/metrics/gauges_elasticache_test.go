@@ -164,7 +164,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	It("returns zero if there are no clusters", func() {
 		cacheClusters = []*awsec.CacheCluster{}
 
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -191,7 +191,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -207,7 +207,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("handles AWS API errors when getting the number of nodes", func() {
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
@@ -226,7 +226,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns zero if there are no cache parameter groups", func() {
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -247,7 +247,7 @@ var _ = Describe("Elasticache Gauges", func() {
 				CacheParameterGroupName: aws.String("default.redis3.2"),
 			},
 		}
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -275,7 +275,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -291,7 +291,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("handles AWS API errors when getting the number of cache parameter groups", func() {
-		gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
@@ -311,7 +311,7 @@ var _ = Describe("Elasticache Gauges", func() {
 
 	Describe("aws.elasticache.cluster.nodes.count", func() {
 		getMetrics := func() []m.Metric {
-			gauge := ElasticCacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+			gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
 			defer gauge.Close()
 
 			var metrics []m.Metric

@@ -27,7 +27,7 @@ type CFRedisService struct {
 	Org             cfclient.Org
 }
 
-func ElasticCacheInstancesGauge(
+func ElasticacheInstancesGauge(
 	logger lager.Logger,
 	ecs *elasticache.ElasticacheService,
 	cfAPI cfclient.CloudFoundryClient,
