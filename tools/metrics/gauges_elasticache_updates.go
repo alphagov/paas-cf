@@ -1,6 +1,7 @@
 package main
 
 import (
+	"code.cloudfoundry.org/lager"
 	"fmt"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
@@ -12,33 +13,41 @@ import (
 )
 
 func ElasticacheUpdatesGauge(
+	logger lager.Logger,
 	ecs *elasticache.ElasticacheService,
 	cfAPI cfclient.CloudFoundryClient,
 	interval time.Duration,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		logSess := logger.Session("metric-poller")
 		elasticacheUpdateNames, err := ListAvailableRedisServiceUpdates(ecs)
 		if err != nil {
+			logSess.Error("list-available-redis-service-updates", err)
 			return err
 		}
 
-		metrics, err := serviceUpdateNotAppliedCount(elasticacheUpdateNames, ecs)
+		metrics, err := serviceUpdateNotAppliedCount(logSess, elasticacheUpdateNames, ecs)
 		if err != nil {
 			return err
 		}
 
 		redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
 		if err != nil {
+			logSess.Error("fetch-redis-service-instances", err)
 			return err
 		}
 
 		for _, elasticacheUpdateName := range elasticacheUpdateNames {
 			metrics2, err := serviceUpdateRequiredInstances(
+				logSess,
 				redisServiceDetails,
 				elasticacheUpdateName,
 				ecs,
 			)
 			if err != nil {
+				logSess.Error("service-update-level-metrics", err, lager.Data{
+					"elasticache_update_name": elasticacheUpdateName,
+				})
 				return err
 			}
 			metrics = append(metrics, metrics2...)
@@ -49,11 +58,16 @@ func ElasticacheUpdatesGauge(
 	})
 }
 
-func serviceUpdateNotAppliedCount(elasticacheUpdateNames []string, ecs *elasticache.ElasticacheService) ([]m.Metric, error) {
+func serviceUpdateNotAppliedCount(logger lager.Logger, elasticacheUpdateNames []string, ecs *elasticache.ElasticacheService) ([]m.Metric, error) {
 	metrics := []m.Metric{}
 	for _, elasticacheUpdateName := range elasticacheUpdateNames {
 		replicationGroupIds, err := ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate(elasticacheUpdateName, ecs)
 		if err != nil {
+			logger.Error(
+				"list-replication-group-ids-with-available-update-actions-for-service-update",
+				err,
+				lager.Data{"service_update": elasticacheUpdateName},
+			)
 			return nil, fmt.Errorf("error fetching replication group ids for service update '%s': %s", elasticacheUpdateName, err)
 		}
 
@@ -72,12 +86,18 @@ func serviceUpdateNotAppliedCount(elasticacheUpdateNames []string, ecs *elastica
 }
 
 func serviceUpdateRequiredInstances(
+	logger lager.Logger,
 	cfRedisServiceInstances []CFRedisService,
 	elasticacheUpdateName string,
 	ecs *elasticache.ElasticacheService,
 ) ([]m.Metric, error) {
 	replicationGroupIdsAwaitingUpdate, err := ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate(elasticacheUpdateName, ecs)
 	if err != nil {
+		logger.Error(
+			"list-replication-group-ids-with-available-update-actions-for-service-update",
+			err,
+			lager.Data{"service_update": elasticacheUpdateName},
+		)
 		return nil, err
 	}
 

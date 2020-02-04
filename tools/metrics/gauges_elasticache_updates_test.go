@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"code.cloudfoundry.org/lager"
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	cftest "github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfoundry/test"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
@@ -19,6 +20,7 @@ var generateReplicationGroupName = paasElasticacheBrokerRedis.GenerateReplicatio
 
 var _ = Describe("Elasticache Updates", func() {
 	var (
+		logger             lager.Logger
 		fakeElasticache    *esfakes.FakeElastiCacheAPI
 		elasticacheService *elasticache.ElasticacheService
 		cfAPI              *cftest.CloudFoundryAPIStub
@@ -58,6 +60,9 @@ var _ = Describe("Elasticache Updates", func() {
 	)
 
 	BeforeEach(func() {
+		logger = lager.NewLogger("gauge-elasticache-updates-test")
+		logger.RegisterSink(lager.NewWriterSink(GinkgoWriter, lager.DEBUG))
+
 		fakeElasticache = &esfakes.FakeElastiCacheAPI{}
 		fakeElasticache.DescribeServiceUpdatesPagesStub = describeServiceUpdatesPagesStub
 		fakeElasticache.DescribeUpdateActionsPagesStub = describeUpdateActionsPagesStub
@@ -93,7 +98,7 @@ var _ = Describe("Elasticache Updates", func() {
 	Describe("ElasticacheUpdatesGauge", func() {
 		var (
 			getFilteredMetrics = func(metricName string, expectedCount int) []m.Metric {
-				gauge := ElasticacheUpdatesGauge(elasticacheService, cfAPI.APIFake, 1*time.Second)
+				gauge := ElasticacheUpdatesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 				defer gauge.Close()
 
 				var metrics []m.Metric
