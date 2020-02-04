@@ -21,7 +21,7 @@ import (
 const NonClusteredIdPattern = "[a-z0-9]+-\\d+"
 const ClusteredIdPattern = "[a-z0-9]+-\\d+-\\d+"
 
-type RedisServiceDetails struct {
+type CFRedisService struct {
 	ServiceInstance cfclient.ServiceInstance
 	Space           cfclient.Space
 	Org             cfclient.Org
@@ -87,7 +87,7 @@ func cacheClusterMetrics(
 		return nil, err
 	}
 
-	userSuppliedClusterIdToDetail := map[string]RedisServiceDetails{}
+	userSuppliedClusterIdToDetail := map[string]CFRedisService{}
 	for _, details := range redisServiceDetails {
 		userSuppliedClusterId := clusterIdHashingFunction(details.ServiceInstance.Guid)
 		userSuppliedClusterIdToDetail[userSuppliedClusterId] = details
@@ -145,7 +145,7 @@ func cacheClusterMetrics(
 	return metrics, nil
 }
 
-func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServiceDetails, error) {
+func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]CFRedisService, error) {
 	spacesCache := map[string]cfclient.Space{}
 	orgsCache := map[string]cfclient.Org{}
 
@@ -154,7 +154,7 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServi
 	})
 
 	if err != nil {
-		return []RedisServiceDetails{}, err
+		return []CFRedisService{}, err
 	}
 
 	if len(servicesWithRedisLabel) == 0 {
@@ -167,17 +167,17 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServi
 	})
 
 	if err != nil {
-		return []RedisServiceDetails{}, err
+		return []CFRedisService{}, err
 	}
 
-	var serviceDetails []RedisServiceDetails
+	var serviceDetails []CFRedisService
 	for _, plan := range redisServicePlans {
 		planInstances, err := cfAPI.ListServiceInstancesByQuery(url.Values{
 			"q": []string{"service_plan_guid:" + plan.Guid},
 		})
 
 		if err != nil {
-			return []RedisServiceDetails{}, err
+			return []CFRedisService{}, err
 		}
 
 		for _, instance := range planInstances {
@@ -187,7 +187,7 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServi
 			} else {
 				space, err = cfAPI.GetSpaceByGuid(instance.SpaceGuid)
 				if err != nil {
-					return []RedisServiceDetails{}, err
+					return []CFRedisService{}, err
 				}
 
 				spacesCache[space.Guid] = space
@@ -199,13 +199,13 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]RedisServi
 			} else {
 				org, err = cfAPI.GetOrgByGuid(space.OrganizationGuid)
 				if err != nil {
-					return []RedisServiceDetails{}, err
+					return []CFRedisService{}, err
 				}
 
 				orgsCache[org.Guid] = org
 			}
 
-			serviceDetails = append(serviceDetails, RedisServiceDetails{
+			serviceDetails = append(serviceDetails, CFRedisService{
 				ServiceInstance: instance,
 				Space:           space,
 				Org:             org,

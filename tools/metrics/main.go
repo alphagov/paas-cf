@@ -30,7 +30,6 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
-
 	paasElasticacheBrokerRedis "github.com/alphagov/paas-elasticache-broker/providers/redis"
 
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
@@ -165,7 +164,8 @@ func Main() error {
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
-		ElasticCacheInstancesGauge(logger, ecs, cfAPI, paasElasticacheBrokerRedis.GenerateReplicationGroupName , 5*time.Minute),
+		ElasticCacheInstancesGauge(logger, ecs, cfAPI, paasElasticacheBrokerRedis.GenerateReplicationGroupName, 5*time.Minute),
+		ElasticacheUpdatesGauge(ecs, cfAPI, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),

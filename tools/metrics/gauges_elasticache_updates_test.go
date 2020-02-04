@@ -6,6 +6,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
 	esfakes "github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache/fakes"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
+	paasElasticacheBrokerRedis "github.com/alphagov/paas-elasticache-broker/providers/redis"
 	"github.com/aws/aws-sdk-go/aws"
 	awsec "github.com/aws/aws-sdk-go/service/elasticache"
 	cf "github.com/cloudfoundry-community/go-cfclient"
@@ -14,13 +15,13 @@ import (
 	"time"
 )
 
+var generateReplicationGroupName = paasElasticacheBrokerRedis.GenerateReplicationGroupName
+
 var _ = Describe("Elasticache Updates", func() {
 	var (
 		fakeElasticache    *esfakes.FakeElastiCacheAPI
 		elasticacheService *elasticache.ElasticacheService
 		cfAPI              *cftest.CloudFoundryAPIStub
-		hashingFunction    elasticache.ElasticacheClusterIdHashingFunction
-		serviceGuidToHash  map[string]string
 
 		serviceUpdates                  []*awsec.ServiceUpdate
 		describeServiceUpdatesPagesStub = func(
@@ -80,22 +81,19 @@ var _ = Describe("Elasticache Updates", func() {
 		cfAPI.Spaces = map[string]cf.Space{
 			"space-1": cf.Space{Guid: "space-1", Name: "Space 1", OrganizationGuid: "org-1"},
 			"space-2": cf.Space{Guid: "space-2", Name: "Space 2", OrganizationGuid: "org-2"},
+			"space-3": cf.Space{Guid: "space-3", Name: "Space 3", OrganizationGuid: "org-2"},
 		}
 
 		cfAPI.Orgs = map[string]cf.Org{
 			"org-1": cf.Org{Guid: "org-1", Name: "Org 1"},
 			"org-2": cf.Org{Guid: "org-2", Name: "Org 2"},
 		}
-
-		hashingFunction = func(value string) string {
-			return serviceGuidToHash[value]
-		}
 	})
 
 	Describe("ElasticacheUpdatesGauge", func() {
 		var (
 			getFilteredMetrics = func(metricName string, expectedCount int) []m.Metric {
-				gauge := ElasticacheUpdatesGauge(elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+				gauge := ElasticacheUpdatesGauge(elasticacheService, cfAPI.APIFake, 1*time.Second)
 				defer gauge.Close()
 
 				var metrics []m.Metric
@@ -134,14 +132,20 @@ var _ = Describe("Elasticache Updates", func() {
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
-						Guid:            "instance-1",
+						Guid:            "instance-guid-1",
 						SpaceGuid:       "space-1",
 					},
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
-						Guid:            "instance-2",
+						Guid:            "instance-guid-2",
 						SpaceGuid:       "space-2",
+					},
+					{
+						ServiceGuid:     "redis-svc",
+						ServicePlanGuid: "svc-plan-1",
+						Guid:            "instance-guid-3",
+						SpaceGuid:       "space-3",
 					},
 				},
 			}
@@ -149,91 +153,114 @@ var _ = Describe("Elasticache Updates", func() {
 			updateActions = map[string][]*awsec.UpdateAction{
 				"redis20200101": []*awsec.UpdateAction{
 					{
-						ReplicationGroupId: aws.String("cluster-1"),
+						ReplicationGroupId: aws.String(generateReplicationGroupName("instance-guid-1")),
+						ServiceUpdateName:  aws.String("redis20200101"),
+					},
+					{
+						ReplicationGroupId: aws.String(generateReplicationGroupName("instance-guid-3")),
 						ServiceUpdateName:  aws.String("redis20200101"),
 					},
 				},
 				"redis20200303": []*awsec.UpdateAction{
 					{
-						ReplicationGroupId: aws.String("cluster-2"),
+						ReplicationGroupId: aws.String(generateReplicationGroupName("instance-guid-2")),
 						ServiceUpdateName:  aws.String("redis20200303"),
 					}, {
-						ReplicationGroupId: aws.String("cluster-3"),
+						ReplicationGroupId: aws.String(generateReplicationGroupName("instance-guid-3")),
+						ServiceUpdateName:  aws.String("redis20200303"),
+					}, {
+						ReplicationGroupId: aws.String("unexpected-replication-group"),
 						ServiceUpdateName:  aws.String("redis20200303"),
 					},
 				},
 			}
-
-			serviceGuidToHash = map[string]string {
-				"instance-1": "cluster-1",
-				"instance-2": "cluster-2",
-				"instance-3": "cluster-3",
-			}
 		})
 
-		It("for each service update, exposes a metric counting the number of cache clusters to which the update HASN'T been applied", func() {
+		It("for each service update, exposes a metric counting the number of replication groups to which the update HASN'T been applied", func() {
 			metrics := getFilteredMetrics("aws.elasticache.service_update.not_applied.count", 2)
 
 			Expect(metrics[0].Name).To(Equal("aws.elasticache.service_update.not_applied.count"))
-			Expect(metrics[0].Value).To(Equal(float64(1)))
+			Expect(metrics[0].Value).To(Equal(float64(2)))
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "elasticache_service_update",
 				Value: "redis20200101",
 			}))
 
 			Expect(metrics[1].Name).To(Equal("aws.elasticache.service_update.not_applied.count"))
-			Expect(metrics[1].Value).To(Equal(float64(2)))
+			Expect(metrics[1].Value).To(Equal(float64(3)))
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "elasticache_service_update",
 				Value: "redis20200303",
 			}))
 		})
 
-		It("for each redis service instance, exposes a metric to show whether each service update has been applied", func() {
-			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 5)
+		It("for each redis service instance, exposes a metric for each service update that has not been applied", func() {
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_required", 4)
 
-			// Update redis20200101 has NOT been applied
-			Expect(metrics[0].Value).To(Equal(float64(0)))
-			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
-				Label: "elasticache_cache_cluster_id",
-				Value: "cluster-1",
-			}))
+			Expect(metrics[0].Value).To(Equal(float64(1)))
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "elasticache_service_update",
 				Value: "redis20200101",
 			}))
-
-			// Update redis20200303 HAS been applied
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_replication_group_id",
+				Value: generateReplicationGroupName("instance-guid-1"),
+			}))
 			Expect(metrics[1].Value).To(Equal(float64(1)))
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
-				Label: "elasticache_cache_cluster_id",
-				Value: "cluster-1",
+				Label: "elasticache_service_update",
+				Value: "redis20200101",
 			}))
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_replication_group_id",
+				Value: generateReplicationGroupName("instance-guid-3"),
+			}))
+
+			Expect(metrics[2].Value).To(Equal(float64(1)))
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
 				Label: "elasticache_service_update",
 				Value: "redis20200303",
 			}))
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_replication_group_id",
+				Value: generateReplicationGroupName("instance-guid-2"),
+			}))
+			Expect(metrics[3].Value).To(Equal(float64(1)))
+			Expect(metrics[3].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_service_update",
+				Value: "redis20200303",
+			}))
+			Expect(metrics[3].Tags).To(ContainElement(m.MetricTag{
+				Label: "elasticache_replication_group_id",
+				Value: generateReplicationGroupName("instance-guid-3"),
+			}))
 		})
 
-		It("labels each redis service metric with the service guid", func(){
-			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 4)
+		It("labels each redis service metric with the service guid", func() {
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_required", 4)
 
 			// There are 2 instances, with 2 service update metrics each
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
-				Value: "instance-1",
+				Value: "instance-guid-1",
 			}))
-
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_guid",
+				Value: "instance-guid-3",
+			}))
 			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
-				Value: "instance-2",
+				Value: "instance-guid-2",
+			}))
+			Expect(metrics[3].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_guid",
+				Value: "instance-guid-3",
 			}))
 		})
 
-		It("labels each redis service metric with the service's space name and guid", func(){
-			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 4)
+		It("labels each redis service metric with the service's space name and guid", func() {
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_required", 4)
 
-			// There are 2 instances, with 2 service update metrics each
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_guid",
 				Value: "space-1",
@@ -243,20 +270,19 @@ var _ = Describe("Elasticache Updates", func() {
 				Value: "Space 1",
 			}))
 
-			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_guid",
-				Value: "space-2",
+				Value: "space-3",
 			}))
-			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_name",
-				Value: "Space 2",
+				Value: "Space 3",
 			}))
 		})
 
-		It("labels each redis service metric with the service's org name and guid", func(){
-			metrics := getFilteredMetrics("aws.elasticache.cluster.update_applied", 4)
+		It("labels each redis service metric with the service's org name and guid", func() {
+			metrics := getFilteredMetrics("aws.elasticache.cluster.update_required", 4)
 
-			// There are 2 instances, with 2 service update metrics each
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "org_guid",
 				Value: "org-1",
@@ -266,11 +292,11 @@ var _ = Describe("Elasticache Updates", func() {
 				Value: "Org 1",
 			}))
 
-			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "org_guid",
 				Value: "org-2",
 			}))
-			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "org_name",
 				Value: "Org 2",
 			}))
