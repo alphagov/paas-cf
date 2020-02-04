@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	awsec "github.com/aws/aws-sdk-go/service/elasticache"
 	"github.com/cloudfoundry-community/go-cfclient"
+	"strings"
 	"time"
 )
 
@@ -138,7 +139,7 @@ func ListAvailableRedisServiceUpdates(ecs *elasticache.ElasticacheService) ([]st
 		},
 		func(output *awsec.DescribeServiceUpdatesOutput, lastPage bool) bool {
 			for _, describedServiceUpdate := range output.ServiceUpdates {
-				if aws.StringValue(describedServiceUpdate.Engine) != "redis" {
+				if !strings.Contains(aws.StringValue(describedServiceUpdate.Engine), "redis") {
 					continue
 				}
 

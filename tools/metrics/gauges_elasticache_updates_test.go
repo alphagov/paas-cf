@@ -319,6 +319,10 @@ var _ = Describe("Elasticache Updates", func() {
 					Engine:            aws.String("redis"),
 					ServiceUpdateName: aws.String("redis20200101"),
 				},
+				{
+					Engine:            aws.String("redis, memcached"),
+					ServiceUpdateName: aws.String("update20200101"),
+				},
 			}
 		})
 
@@ -349,8 +353,9 @@ var _ = Describe("Elasticache Updates", func() {
 			updates, err := ListAvailableRedisServiceUpdates(elasticacheService)
 			Expect(err).ToNot(HaveOccurred())
 
-			Expect(len(updates)).To(Equal(1))
+			Expect(len(updates)).To(Equal(2))
 			Expect(updates[0]).To(Equal("redis20200101"))
+			Expect(updates[1]).To(Equal("update20200101"))
 		})
 
 		It("requests only 'available' service updates", func() {
@@ -364,7 +369,7 @@ var _ = Describe("Elasticache Updates", func() {
 		})
 	})
 
-	Describe("ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate", func() {
+	Describe("ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate ", func() {
 		BeforeEach(func() {
 			updateActions = map[string][]*awsec.UpdateAction{
 				"redis1": []*awsec.UpdateAction{
