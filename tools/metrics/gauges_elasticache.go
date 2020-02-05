@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	paasElasticacheBrokerRedis "github.com/alphagov/paas-elasticache-broker/providers/redis"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface"
 	"github.com/cloudfoundry-community/go-cfclient"
 	"net/url"
-	"regexp"
 	"strings"
 	"time"
 
@@ -18,9 +18,6 @@ import (
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-const NonClusteredIdPattern = "[a-z0-9]+-\\d+"
-const ClusteredIdPattern = "[a-z0-9]+-\\d+-\\d+"
-
 type CFRedisService struct {
 	ServiceInstance cfclient.ServiceInstance
 	Space           cfclient.Space
@@ -31,7 +28,6 @@ func ElasticacheInstancesGauge(
 	logger lager.Logger,
 	ecs *elasticache.ElasticacheService,
 	cfAPI cfclient.CloudFoundryClient,
-	clusterIdHashingFunction elasticache.ElasticacheClusterIdHashingFunction,
 	interval time.Duration,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
@@ -42,7 +38,7 @@ func ElasticacheInstancesGauge(
 			return err
 		}
 
-		clusterMetrics, err := cacheClusterMetrics(lsess, ecs, cfAPI, clusterIdHashingFunction)
+		clusterMetrics, err := cacheClusterMetrics(lsess, ecs, cfAPI)
 		if err != nil {
 			return err
 		}
@@ -76,58 +72,34 @@ func cacheParameterMetrics(ecs *elasticache.ElasticacheService) ([]m.Metric, err
 	}}, nil
 }
 
-func cacheClusterMetrics(
-	logger lager.Logger,
-	ecs *elasticache.ElasticacheService,
-	cfAPI cfclient.CloudFoundryClient,
-	clusterIdHashingFunction elasticache.ElasticacheClusterIdHashingFunction,
-) ([]m.Metric, error) {
+func cacheClusterMetrics(logger lager.Logger, ecs *elasticache.ElasticacheService, cfAPI cfclient.CloudFoundryClient, ) ([]m.Metric, error) {
 	redisServiceDetails, err := fetchRedisServiceInstances(cfAPI)
 	if err != nil {
 		return nil, err
 	}
 
-	userSuppliedClusterIdToDetail := map[string]CFRedisService{}
+	replicationGroupIdToServiceDetail := map[string]CFRedisService{}
 	for _, details := range redisServiceDetails {
-		userSuppliedClusterId := clusterIdHashingFunction(details.ServiceInstance.Guid)
-		userSuppliedClusterIdToDetail[userSuppliedClusterId] = details
+		replicationGroupId := paasElasticacheBrokerRedis.GenerateReplicationGroupName(details.ServiceInstance.Guid)
+		replicationGroupIdToServiceDetail[replicationGroupId] = details
 	}
 
 	metrics := []m.Metric{}
-	nodeCount := int64(0)
+	totalNodeCount := int64(0)
+
+	replicationGroupIdToNodeCount := map[string]int{}
 	err = iterateCacheClusterPages(
 		ecs.Client,
 		func(cacheCluster *awsec.CacheCluster) error {
-			nodeCount = nodeCount + *cacheCluster.NumCacheNodes
-			elasticacheClusterId := aws.StringValue(cacheCluster.CacheClusterId)
-			userSuppliedClusterId := extractUserSuppliedClusterID(cacheCluster)
+			totalNodeCount = totalNodeCount + *cacheCluster.NumCacheNodes
 
-			details, ok := userSuppliedClusterIdToDetail[userSuppliedClusterId]
-			if !ok {
-				e := fmt.Errorf("unable to find details of cluster with user supplied cluster id of %s", userSuppliedClusterId)
-				logger.Error("details-not-found", e, lager.Data{
-					"cluster_id":               elasticacheClusterId,
-					"user_supplied_cluster_id": userSuppliedClusterId,
-				})
-				return e
+			replicationGroupId := aws.StringValue(cacheCluster.ReplicationGroupId)
+			if _, ok := replicationGroupIdToNodeCount[replicationGroupId]; !ok {
+				replicationGroupIdToNodeCount[replicationGroupId] = 0
 			}
 
-			metrics = append(metrics, m.Metric{
-				Kind:  m.Gauge,
-				Time:  time.Now(),
-				Name:  "aws.elasticache.cluster.nodes.count",
-				Value: float64(*cacheCluster.NumCacheNodes),
-				Unit:  "count",
-				Tags: m.MetricTags{
-					{Label: "cluster_id", Value: userSuppliedClusterId},
-					{Label: "elasticache_cluster_id", Value: elasticacheClusterId},
-					{Label: "service_instance_guid", Value: details.ServiceInstance.Guid},
-					{Label: "space_name", Value: details.Space.Name},
-					{Label: "space_guid", Value: details.Space.Guid},
-					{Label: "org_name", Value: details.Org.Name},
-					{Label: "org_guid", Value: details.Org.Guid},
-				},
-			})
+			replicationGroupIdToNodeCount[replicationGroupId] =
+				replicationGroupIdToNodeCount[replicationGroupId] + int(*cacheCluster.NumCacheNodes)
 			return nil
 		},
 	)
@@ -135,11 +107,32 @@ func cacheClusterMetrics(
 		return nil, err
 	}
 
+	for _, details := range redisServiceDetails {
+		replicationGroupId := paasElasticacheBrokerRedis.GenerateReplicationGroupName(details.ServiceInstance.Guid)
+		count := replicationGroupIdToNodeCount[replicationGroupId]
+
+		metrics = append(metrics, m.Metric{
+			Kind:  m.Gauge,
+			Time:  time.Now(),
+			Name:  "aws.elasticache.replication_group.nodes.count",
+			Value: float64(count),
+			Unit:  "count",
+			Tags: m.MetricTags{
+				{Label: "replication_group_id", Value: replicationGroupId},
+				{Label: "service_instance_guid", Value: details.ServiceInstance.Guid},
+				{Label: "space_name", Value: details.Space.Name},
+				{Label: "space_guid", Value: details.Space.Guid},
+				{Label: "org_name", Value: details.Org.Name},
+				{Label: "org_guid", Value: details.Org.Guid},
+			},
+		})
+	}
+
 	metrics = append(metrics, m.Metric{
 		Kind:  m.Gauge,
 		Time:  time.Now(),
 		Name:  "aws.elasticache.node.count",
-		Value: float64(nodeCount),
+		Value: float64(totalNodeCount),
 		Unit:  "count",
 	})
 	return metrics, nil
@@ -214,43 +207,6 @@ func fetchRedisServiceInstances(cfAPI cfclient.CloudFoundryClient) ([]CFRedisSer
 	}
 
 	return serviceDetails, nil
-}
-
-// The AWS API documentation says that
-// CacheClusterId is the user-supplied name
-// of the cache cluster. However, in reality,
-// it returns that value, plus some extra
-// information.
-//
-// It is in the format {user-supplied}-{n}[-{m}].
-// Typically, our cache cluster names have the
-// format "cf-{FNV hash of guid}", but that's
-// not guaranteed, so this method only strips
-// the last one/two parts.
-func extractUserSuppliedClusterID(cluster *awsec.CacheCluster) string {
-	clusteredRegex := regexp.MustCompile(ClusteredIdPattern)
-	unclusteredRegex := regexp.MustCompile(NonClusteredIdPattern)
-
-	strBytes := []byte(aws.StringValue(cluster.CacheClusterId))
-
-	parts := strings.Split(
-		aws.StringValue(cluster.CacheClusterId),
-		"-",
-	)
-
-	var topIndex int
-	if clusteredRegex.Match(strBytes) {
-		topIndex = len(parts) - 2 // Minus two because we want to stop before the second-to-last part
-		return strings.Join(parts[:topIndex], "-")
-
-	} else if unclusteredRegex.Match(strBytes) {
-		topIndex = len(parts) - 1 // Minus one because we want to stop before the last part
-		return strings.Join(parts[:topIndex], "-")
-
-	} else {
-		// Return the original value if it doesn't match either pattern
-		return aws.StringValue(cluster.CacheClusterId)
-	}
 }
 
 func iterateCacheParameterGroups(client elasticacheiface.ElastiCacheAPI, fn func(*awsec.CacheParameterGroup) error) error {

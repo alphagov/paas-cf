@@ -28,12 +28,10 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/debug"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
-	paasElasticacheBrokerRedis "github.com/alphagov/paas-elasticache-broker/providers/redis"
-
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	promrep "github.com/alphagov/paas-cf/tools/metrics/pkg/prometheus_reporter"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 )
 
 func getHTTPPort() int {
@@ -164,7 +162,7 @@ func Main() error {
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
-		ElasticacheInstancesGauge(logger, ecs, cfAPI, paasElasticacheBrokerRedis.GenerateReplicationGroupName, 5*time.Minute),
+		ElasticacheInstancesGauge(logger, ecs, cfAPI, 5*time.Minute),
 		ElasticacheUpdatesGauge(logger, ecs, cfAPI, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),

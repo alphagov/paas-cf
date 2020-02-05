@@ -2,6 +2,7 @@ package main_test
 
 import (
 	"errors"
+	paasElasticacheBrokerRedis "github.com/alphagov/paas-elasticache-broker/providers/redis"
 	"time"
 
 	"code.cloudfoundry.org/lager"
@@ -23,13 +24,13 @@ import (
 var _ = Describe("Elasticache Gauges", func() {
 
 	var (
+		generateReplicationGroupId = paasElasticacheBrokerRedis.GenerateReplicationGroupName
+
 		logger             lager.Logger
 		log                *gbytes.Buffer
 		elasticacheAPI     *esfakes.FakeElastiCacheAPI
 		elasticacheService *elasticache.ElasticacheService
 		cfAPI              *cftest.CloudFoundryAPIStub
-		hashingFunction    elasticache.ElasticacheClusterIdHashingFunction
-		serviceGuidToHash  map[string]string
 
 		cacheParameterGroups                  []*awsec.CacheParameterGroup
 		describeCacheParameterGroupsPagesStub = func(
@@ -75,20 +76,14 @@ var _ = Describe("Elasticache Gauges", func() {
 		elasticacheService = &elasticache.ElasticacheService{Client: elasticacheAPI}
 
 		cfAPI = cftest.NewCloudFoundryAPIStub()
-
-		hashingFunction = func(value string) string {
-			return serviceGuidToHash[value]
-		}
-
 		cacheClusters = []*awsec.CacheCluster{
 			{
-				// The AWS API produces cache cluster id's which
-				// contain the user-supplied name, and then some
-				// extra information
+				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
 				CacheClusterId: aws.String("cf-hash1-0001-001"),
 				NumCacheNodes:  aws.Int64(2),
 			},
 			{
+				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-2-guid")),
 				CacheClusterId: aws.String("cf-2hsah-001"),
 				NumCacheNodes:  aws.Int64(1),
 			},
@@ -131,11 +126,6 @@ var _ = Describe("Elasticache Gauges", func() {
 			}},
 		}
 
-		serviceGuidToHash = map[string]string{
-			"svc-instance-1-guid": "cf-hash1",
-			"svc-instance-2-guid": "cf-2hsah",
-		}
-
 		cfAPI.Spaces = map[string]cf.Space{
 			"space-guid-1": {
 				Guid:             "space-guid-1",
@@ -164,7 +154,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	It("returns zero if there are no clusters", func() {
 		cacheClusters = []*awsec.CacheCluster{}
 
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -179,19 +169,21 @@ var _ = Describe("Elasticache Gauges", func() {
 		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
-	It("returns the number of nodes", func() {
+	It("returns the total number of nodes across all clusters", func() {
 		cacheClusters = []*awsec.CacheCluster{
 			{
+				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
 				CacheClusterId: aws.String("cf-hash1-0001-001"),
 				NumCacheNodes:  aws.Int64(2),
 			},
 			{
+				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-2-guid")),
 				CacheClusterId: aws.String("cf-2hsah-001"),
 				NumCacheNodes:  aws.Int64(1),
 			},
 		}
 
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -207,7 +199,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("handles AWS API errors when getting the number of nodes", func() {
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
@@ -226,7 +218,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("returns zero if there are no cache parameter groups", func() {
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -247,7 +239,7 @@ var _ = Describe("Elasticache Gauges", func() {
 				CacheParameterGroupName: aws.String("default.redis3.2"),
 			},
 		}
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -262,7 +254,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		Expect(metric.Kind).To(Equal(m.Gauge))
 	})
 
-	It("returns the number of cache parameter groups exluding the default ones", func() {
+	It("returns the number of cache parameter groups excluding the default ones", func() {
 		cacheParameterGroups = []*awsec.CacheParameterGroup{
 			&awsec.CacheParameterGroup{
 				CacheParameterGroupName: aws.String("default.redis3.2"),
@@ -275,7 +267,7 @@ var _ = Describe("Elasticache Gauges", func() {
 			},
 		}
 
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		var metric m.Metric
@@ -291,7 +283,7 @@ var _ = Describe("Elasticache Gauges", func() {
 	})
 
 	It("handles AWS API errors when getting the number of cache parameter groups", func() {
-		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
+		gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Second)
 		defer gauge.Close()
 
 		awsErr := errors.New("some error")
@@ -309,65 +301,72 @@ var _ = Describe("Elasticache Gauges", func() {
 		}, 3*time.Second).Should(MatchError(awsErr))
 	})
 
-	Describe("aws.elasticache.cluster.nodes.count", func() {
-		getMetrics := func() []m.Metric {
-			gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, hashingFunction, 1*time.Second)
-			defer gauge.Close()
+	Describe("aws.elasticache.replication_group.nodes.count", func() {
+		var (
+			getMetrics = func(metricName string, expectedCount int) []m.Metric {
+				gauge := ElasticacheInstancesGauge(logger, elasticacheService, cfAPI.APIFake, 1*time.Minute)
+				defer gauge.Close()
 
-			var metrics []m.Metric
-			Eventually(func() int {
-				var err error
-				metric, err := gauge.ReadMetric()
-				Expect(err).NotTo(HaveOccurred())
+				var metrics []m.Metric
+				Eventually(func() int {
+					metric, err := gauge.ReadMetric()
+					Expect(err).NotTo(HaveOccurred())
 
-				if metric.Name == "aws.elasticache.cluster.nodes.count" {
-					metrics = append(metrics, metric)
-				}
+					// Empty name suggests empty struct.
+					// The empty struct is returned when
+					// there are no more metrics.
+					if metric.Name == metricName {
+						metrics = append(metrics, metric)
+					}
 
-				return len(metrics)
-			}, 3*time.Second).Should(Equal(2))
+					return len(metrics)
+				}, 3*time.Second).Should(Equal(expectedCount))
 
-			return metrics
-		}
+				return metrics
+			}
+		)
 
-		It("returns the number of nodes per cache cluster", func() {
-			metrics := getMetrics()
-
-			Expect(metrics[0].Value).To(Equal(float64(2)))
-			Expect(metrics[0].Kind).To(Equal(m.Gauge))
-			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
-				Label: "cluster_id",
-				Value: "cf-hash1",
-			}))
-
-			Expect(metrics[1].Value).To(Equal(float64(1)))
-			Expect(metrics[1].Kind).To(Equal(m.Gauge))
-			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
-				Label: "cluster_id",
-				Value: "cf-2hsah",
-			}))
+		BeforeEach(func(){
+			cacheClusters = []*awsec.CacheCluster{
+				// The first two cache clusters belong to the same replication group
+				{
+					ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
+					CacheClusterId: aws.String(generateReplicationGroupId("svc-instance-1-guid")+"001-0001"),
+					NumCacheNodes:  aws.Int64(2),
+				},
+				{
+					ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
+					CacheClusterId: aws.String(generateReplicationGroupId("svc-instance-1-guid")+"001-0002"),
+					NumCacheNodes:  aws.Int64(1),
+				},
+				{
+					ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-2-guid")),
+					CacheClusterId: aws.String(generateReplicationGroupId("svc-instance-2-guid")+"001"),
+					NumCacheNodes:  aws.Int64(1),
+				},
+			}
 		})
 
-		It("labels the metrics with what ElastiCache says the cluster id is", func() {
-			metrics := getMetrics()
+		It("returns the number of nodes per replication group, summing the number of cache nodes across replication groups", func() {
+			metrics := getMetrics("aws.elasticache.replication_group.nodes.count", 2)
 
-			Expect(metrics[0].Value).To(Equal(float64(2)))
+			Expect(metrics[0].Value).To(Equal(float64(3)))
 			Expect(metrics[0].Kind).To(Equal(m.Gauge))
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
-				Label: "elasticache_cluster_id",
-				Value: "cf-hash1-0001-001",
+				Label: "replication_group_id",
+				Value: generateReplicationGroupId("svc-instance-1-guid"),
 			}))
 
 			Expect(metrics[1].Value).To(Equal(float64(1)))
 			Expect(metrics[1].Kind).To(Equal(m.Gauge))
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
-				Label: "elasticache_cluster_id",
-				Value: "cf-2hsah-001",
+				Label: "replication_group_id",
+				Value: generateReplicationGroupId("svc-instance-2-guid"),
 			}))
 		})
 
 		It("labels the metrics with the service guid", func() {
-			metrics := getMetrics()
+			metrics := getMetrics("aws.elasticache.replication_group.nodes.count", 2)
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
@@ -381,7 +380,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		})
 
 		It("labels the metrics with the space name", func() {
-			metrics := getMetrics()
+			metrics := getMetrics("aws.elasticache.replication_group.nodes.count", 2)
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_name",
@@ -395,7 +394,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		})
 
 		It("labels the metrics with the space guid", func() {
-			metrics := getMetrics()
+			metrics := getMetrics("aws.elasticache.replication_group.nodes.count", 2)
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "space_guid",
@@ -409,7 +408,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		})
 
 		It("labels the metrics with the org name", func() {
-			metrics := getMetrics()
+			metrics := getMetrics("aws.elasticache.replication_group.nodes.count", 2)
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "org_name",
@@ -423,7 +422,7 @@ var _ = Describe("Elasticache Gauges", func() {
 		})
 
 		It("labels the metrics with the org guid", func() {
-			metrics := getMetrics()
+			metrics := getMetrics("aws.elasticache.replication_group.nodes.count", 2)
 
 			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
 				Label: "org_guid",
