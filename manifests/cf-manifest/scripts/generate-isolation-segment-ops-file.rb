@@ -82,6 +82,17 @@ if seg_def['restricted_egress']
     .find { |job| job['name'] == 'silk-cni' }[
     'properties'][
     'dns_servers'] = ['169.254.0.3']
+
+  isolation_segment
+    .fetch('jobs')
+    .find { |job| job['name'] == 'silk-cni' }[
+    'properties'][
+    'deny_networks'] = {
+      'running' => %w[
+        0.0.0.0/5 8.0.0.0/7
+        11.0.0.0/8 12.0.0.0/6 16.0.0.0/4 32.0.0.0/3 64.0.0.0/2 128.0.0.0/1
+      ],
+    }
 end
 
 isolation_segment

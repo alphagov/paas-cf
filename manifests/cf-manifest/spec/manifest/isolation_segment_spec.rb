@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 RSpec.describe 'isolation_segments' do
   context 'default' do
     let(:manifest) { manifest_with_defaults }
@@ -97,7 +99,61 @@ RSpec.describe 'isolation_segments' do
             .dig('jobs')
             .find { |j| j['name'] == 'silk-cni' }
             .dig('properties', 'dns_servers')
-        ).to eq(['127.0.0.1'])
+        ).to eq(['169.254.0.3'])
+      end
+
+      it 'should set silk-cni deny_networks to allow the vpc' do
+        vpc_examples = %w[
+          10.0.0.1 10.10.0.1
+          10.10.0.1 10.10.0.255
+          10.255.0.1 10.255.0.255
+        ]
+
+        denied_ranges = instance_group
+          .dig('jobs')
+          .find { |j| j['name'] == 'silk-cni' }
+          .dig('properties', 'deny_networks', 'running')
+          .map(&IPAddr.method(:new))
+
+        denied_ranges.each do |denied_range|
+          vpc_examples.each do |a_vpc_address|
+            expect(denied_range.include?(a_vpc_address)).to(
+              eq(false),
+              "silk-cni deny_networks #{denied_range} denies #{a_vpc_address}"
+            )
+          end
+        end
+      end
+
+      it 'should set silk-cni deny_networks to deny any except the vpc' do
+        example_addresses = (1..255)
+          .reject { |n| n == 10 }
+          .map do |first_group|
+            last_three_groups = Array.new(3).fill { rand(1..255) }
+            [first_group].concat(last_three_groups).map(&:to_s).join('.')
+          end
+          .concat(%w[9.255.255.255 11.0.0.0])
+
+        denied_ranges = instance_group
+          .dig('jobs')
+          .find { |j| j['name'] == 'silk-cni' }
+          .dig('properties', 'deny_networks', 'running')
+          .map(&IPAddr.method(:new))
+
+        allowed_ips = example_addresses.reject { |a| denied_ranges.any? { |r| r.include? a } }
+
+        expect(allowed_ips).to eq([])
+      end
+
+      it 'should not set silk-cni deny_networks for staging or always' do
+        %w[always staging].each do |workload|
+          denied_ranges = instance_group
+            .dig('jobs')
+            .find { |j| j['name'] == 'silk-cni' }
+            .dig('properties', 'deny_networks', workload)
+
+          expect(denied_ranges).to be_nil
+        end
       end
     end
 
@@ -142,13 +198,13 @@ RSpec.describe 'isolation_segments' do
         ).to be_nil
       end
 
-      it 'should not set any silk-cni dns_servers' do
+      it 'should not override the default bosh-dns silk-cni dns_servers' do
         expect(
           instance_group
             .dig('jobs')
             .find { |j| j['name'] == 'silk-cni' }
             .dig('properties', 'dns_servers')
-        ).to be_nil
+        ).to eq(['169.254.0.2'])
       end
 
       %w[silk-cni silk-daemon].each do |consumer|
