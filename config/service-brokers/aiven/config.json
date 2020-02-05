@@ -11,8 +11,17 @@
         "plan_updateable": true,
         "metadata": {
           "displayName": "Elasticsearch",
-          "providerDisplayName": "GOV.UK PaaS",
-          "supportUrl": "https://www.cloud.service.gov.uk/support"
+          "providerDisplayName": "Aiven",
+          "longDescription": "Elasticsearch is a search engine based on the Lucene library. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.",
+          "documentationUrl": "https://docs.cloud.service.gov.uk/deploying_services/elasticsearch/",
+          "supportUrl": "https://www.cloud.service.gov.uk/support",
+          "AdditionalMetadata": {
+            "otherDocumentation": [
+              "https://www.elastic.co/guide/en/elasticsearch/",
+              "https://help.aiven.io/en/"
+            ],
+            "usecase": ["Search engines"]
+          }
         },
         "plans": [
           {
@@ -23,7 +32,17 @@
             "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
             "free": true,
             "metadata": {
-              "displayName": "Tiny, NOT Highly Available single-node Elasticsearch 6 cluster"
+              "displayName": "Tiny",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 1,
+                "memory": {"amount": 4, "unit": "GB"},
+                "storage": {"amount": 80, "unit": "GB"},
+                "version": "6"
+              }
             }
           },
           {
@@ -34,7 +53,17 @@
             "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
             "free": false,
             "metadata": {
-              "displayName": "Small, highly available Elasticsearch 6 cluster"
+              "displayName": "Small",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 1,
+                "memory": {"amount": 4, "unit": "GB"},
+                "storage": {"amount": 240, "unit": "GB"},
+                "version": "6"
+              }
             }
           },
           {
@@ -45,7 +74,17 @@
             "description": "3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
             "free": false,
             "metadata": {
-              "displayName": "Medium, highly available Elasticsearch 6 cluster"
+              "displayName": "Medium",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 2,
+                "memory": {"amount": 8, "unit": "GB"},
+                "storage": {"amount": 525, "unit": "GB"},
+                "version": "6"
+              }
             }
           },
           {
@@ -56,7 +95,17 @@
             "description": "3 dedicated VMs, 2 CPU per VM, 15GB RAM per VM, 1050GB disk space.",
             "free": false,
             "metadata": {
-              "displayName": "Large, highly available Elasticsearch 6 cluster"
+              "displayName": "Large",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 2,
+                "memory": {"amount": 15, "unit": "GB"},
+                "storage": {"amount": 1050, "unit": "GB"},
+                "version": "6"
+              }
             }
           }
         ]
@@ -69,8 +118,21 @@
         "plan_updateable": true,
         "metadata": {
           "displayName": "InfluxDB",
-          "providerDisplayName": "GOV.UK PaaS",
-          "supportUrl": "https://www.cloud.service.gov.uk/support"
+          "providerDisplayName": "Aiven",
+          "longDescription": "InfluxDB is optimized for fast, high-availability storage and retrieval of time series data in fields such as operations monitoring, application metrics, Internet of Things sensor data, and real-time analytics. It also has support for processing data from Graphite.",
+          "documentationUrl": "https://docs.cloud.service.gov.uk/deploying_services/influxdb/",
+          "supportUrl": "https://www.cloud.service.gov.uk/support",
+          "AdditionalMetadata": {
+            "otherDocumentation": [
+              "https://docs.influxdata.com/influxdb/v1.7/",
+              "https://help.aiven.io/en/"
+            ],
+            "usecase": [
+              "Metrics",
+              "Prometheus",
+              "Grafana"
+            ]
+          }
         },
         "plans": [
           {
@@ -80,7 +142,17 @@
             "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 4GB RAM per VM, 16GB disk space.",
             "free": true,
             "metadata": {
-              "displayName": "Tiny, single InfluxDB instance"
+              "displayName": "Tiny",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 2,
+                "memory": {"amount": 4, "unit": "GB"},
+                "storage": {"amount": 16, "unit": "GB"},
+                "version": "1"
+              }
             }
           }
         ]

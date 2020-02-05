@@ -52,10 +52,18 @@
                   description: Object storage with AWS S3
                   metadata:
                     displayName: AWS S3 Object Store
-                    longDescription: AWS S3 Object Store
-                    providerDisplayName: GOV.UK PaaS
-                    documentationUrl: https://docs.cloud.service.gov.uk/#s3
-                    supportUrl: https://www.cloud.service.gov.uk/support.html
+                    longDescription: |
+                      Amazon Simple Storage Service (AWS S3) is a service offered by Amazon Web Services (AWS) that 
+                      provides object storage through a web service interface.
+                    providerDisplayName: Amazon Web Services
+                    documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/s3/
+                    supportUrl: https://www.cloud.service.gov.uk/support
+                    AdditionalMetadata:
+                      otherDocumentation:
+                        - https://docs.aws.amazon.com/s3
+                      usecase:
+                        - Assets storage
+                        - File Uploads persistance
                   tags:
                     - s3
                   bindable: true
@@ -66,7 +74,12 @@
                       description: A single S3 bucket
                       free: true
                       metadata:
-                        displayName: A single S3 bucket
+                        displayName: Default
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          version: standard
 
 - type: replace
   path: /variables/-

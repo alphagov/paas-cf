@@ -106,10 +106,18 @@
     description: "25GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.micro."
     free: true
     metadata:
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
+      AdditionalMetadata:
+        backups: false
+        concurrentConnections: 50
+        encrypted: false
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.t3.micro
+        storage:
+          amount: 25
+          unit: GB
+        version: 11
+      displayName: Tiny high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
         - "AWS RDS"
@@ -125,9 +133,21 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: 11
+      displayName: Small high-IOPS
       costs:
         - amount:
-            usd: 0.078
+            usd: 0.039
           unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
@@ -146,6 +166,22 @@
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: 11
+      displayName: Small highly-available high-IOPS
+      costs:
+        - amount:
+            usd: 0.078
+          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "AWS RDS"
@@ -163,6 +199,18 @@
     description: "500GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 500
+          unit: GB
+        version: 11
+      displayName: Medium high-IOPS
       costs:
         - amount:
             usd: 0.197
@@ -184,6 +232,18 @@
     description: "500GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 500
+          unit: GB
+        version: 11
+      displayName: Medium highly-available high-IOPS
       costs:
         - amount:
             usd: 0.394
@@ -206,6 +266,18 @@
     description: "2.5TB Storage Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 2.5
+          unit: TB
+        version: 11
+      displayName: Large high-IOPS
       costs:
         - amount:
             usd: 0.788
@@ -227,6 +299,18 @@
     description: "2.5TB Storage Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 2.5
+          unit: TB
+        version: 11
+      displayName: Large highly-available high-IOPS
       costs:
         - amount:
             usd: 1.576
@@ -249,6 +333,18 @@
     description: "10TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 10
+          unit: TB
+        version: 11
+      displayName: Extra Large high-IOPS
       costs:
         - amount:
             usd: 1.576
@@ -270,6 +366,18 @@
     description: "10TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 10
+          unit: TB
+        version: 11
+      displayName: Extra Large highly-available high-IOPS
       costs:
         - amount:
             usd: 3.152

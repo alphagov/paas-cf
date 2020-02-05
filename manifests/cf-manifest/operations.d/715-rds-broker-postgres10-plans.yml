@@ -106,6 +106,17 @@
     description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.micro."
     free: true
     metadata:
+      AdditionalMetadata:
+        backups: false
+        concurrentConnections: 50
+        encrypted: false
+        highlyAvailable: false
+        instanceClass: db.t2.micro
+        storage:
+          amount: 5
+          unit: GB
+        version: 10
+      displayName: Tiny
       bullets:
         - "Dedicated Postgres 10 server"
         - "AWS RDS"
@@ -121,6 +132,17 @@
     description: "20GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.t2.small
+        storage:
+          amount: 20
+          unit: GB
+        version: 10
+      displayName: Small
       costs:
         - amount:
             usd: 0.039
@@ -142,6 +164,17 @@
     description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t2.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.t2.small
+        storage:
+          amount: 20
+          unit: GB
+        version: 10
+      displayName: Small highly-available
       costs:
         - amount:
             usd: 0.078
@@ -163,6 +196,17 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 10
+      displayName: Medium
       costs:
         - amount:
             usd: 0.201
@@ -184,6 +228,17 @@
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 10
+      displayName: Medium highly-available
       costs:
         - amount:
             usd: 0.402
@@ -206,6 +261,17 @@
     description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 10
+      displayName: Large
       costs:
         - amount:
             usd: 0.806
@@ -227,6 +293,17 @@
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 10
+      displayName: Large highly-available
       costs:
         - amount:
             usd: 1.612
@@ -249,6 +326,17 @@
     description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 10
+      displayName: Extra Large
       costs:
         - amount:
             usd: 1.612
@@ -270,6 +358,17 @@
     description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 10
+      displayName: Extra Large highly-available
       costs:
         - amount:
             usd: 3.224

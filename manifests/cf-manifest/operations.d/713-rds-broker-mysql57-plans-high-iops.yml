@@ -44,6 +44,17 @@
     description: "25GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t3.micro."
     free: true
     metadata:
+      AdditionalMetadata:
+        backups: false
+        encrypted: false
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.t3.micro
+        storage:
+          amount: 25
+          unit: GB
+        version: 5.7
+      displayName: Tiny high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -59,6 +70,17 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t3.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: 5.7
+      displayName: Small high-IOPS
       costs:
         - amount:
             usd: 0.038
@@ -80,6 +102,17 @@
     description: "100GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t3.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: 5.7
+      displayName: Small highly-available high-IOPS
       costs:
         - amount:
             usd: 0.076
@@ -101,6 +134,17 @@
     description: "500GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 500
+          unit: GB
+        version: 5.7
+      displayName: Medium high-IOPS
       costs:
         - amount:
             usd: 0.198
@@ -122,6 +166,17 @@
     description: "500GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 500
+          unit: GB
+        version: 5.7
+      displayName: Medium highly-available high-IOPS
       costs:
         - amount:
             usd: 0.396
@@ -144,6 +199,17 @@
     description: "2.5TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 2.5
+          unit: TB
+        version: 5.7
+      displayName: Large high-IOPS
       costs:
         - amount:
             usd: 0.792
@@ -165,6 +231,17 @@
     description: "2.5TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 2.5
+          unit: TB
+        version: 5.7
+      displayName: Large highly-available high-IOPS
       costs:
         - amount:
             usd: 1.584
@@ -187,6 +264,17 @@
     description: "10TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 10
+          unit: TB
+        version: 5.7
+      displayName: Extra Large high-IOPS
       costs:
         - amount:
             usd: 1.584
@@ -208,6 +296,17 @@
     description: "10TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 10
+          unit: TB
+        version: 5.7
+      displayName: Extra Large highly-available high-IOPS
       costs:
         - amount:
             usd: 3.168
