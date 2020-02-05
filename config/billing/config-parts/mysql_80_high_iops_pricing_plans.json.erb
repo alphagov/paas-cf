@@ -1,0 +1,189 @@
+{
+	"name": "mysql tiny-unencrypted-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "ccaaa0db-ca47-41ec-a2f6-3230544987f5",
+	"storage_in_mb": 25600,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_t3_micro") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql small-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "35337107-78ea-49a7-8c63-a169a30de822",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_t3_small") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql small-ha-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "35223bf0-3828-4e47-9836-bf9c34c72956",
+	"storage_in_mb": 102400,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_t3_small_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql medium-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "48360933-0227-43b3-bd6a-005fa0a32b79",
+	"storage_in_mb": 512000,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_large") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql medium-ha-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "e3c9ebd8-f220-4bc8-895e-13297f37c069",
+	"storage_in_mb": 512000,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_large_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql large-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "e424e7dd-f64b-4e91-a4f8-cf440e925809",
+	"storage_in_mb": 2621440,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_2xlarge") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql large-ha-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "ee16ec79-375c-444b-9138-30b3f76caedf",
+	"storage_in_mb": 2621440,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_2xlarge_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql xlarge-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "fd423c5e-5d7d-4477-8013-b64b9f5c753c",
+	"storage_in_mb": 10485760,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_4xlarge") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "mysql xlarge-ha-8.0 high-iops",
+	"valid_from": "2020-02-01",
+	"plan_guid": "91660ee0-c0a0-40be-b800-cf2fa49161c0",
+	"storage_in_mb": 10485760,
+	"memory_in_mb": 0,
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_4xlarge_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		},
+		{
+			"name": "storage",
+			"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},

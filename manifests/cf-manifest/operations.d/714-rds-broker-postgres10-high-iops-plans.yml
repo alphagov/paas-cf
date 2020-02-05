@@ -1,0 +1,285 @@
+---
+- type: replace
+  path: /meta?/rds_broker
+  value:
+    default_postgres_rds_properties: &default_postgres_rds_properties
+      storage_type: "gp2"
+      auto_minor_version_upgrade: true
+      multi_az: false
+      storage_encrypted: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: ((terraform_outputs_rds_broker_dbs_subnet_group))
+      vpc_security_group_ids:
+        - ((terraform_outputs_rds_broker_dbs_security_group_id))
+      engine: "postgres"
+      engine_version: "10"
+      engine_family: "postgres10"
+      default_extensions: ["uuid-ossp", "postgis", "citext"]
+      allowed_extensions: [
+        "address_standardizer",
+        "address_standardizer_data_us",
+        "bloom",
+        "btree_gin",
+        "btree_gist",
+        "chkpass",
+        "citext",
+        "cube",
+        "dblink",
+        "dict_int",
+        "dict_xsyn",
+        "earthdistance",
+        "fuzzystrmatch",
+        "hstore",
+        "hstore_plperl",
+        "intagg",
+        "intarray",
+        "ip4r",
+        "isn",
+        "log_fdw",
+        "libprotobuf",
+        "ltree",
+        "orafce",
+        "pgaudit",
+        "pg_buffercache",
+        "pg_freespacemap",
+        "pg_hint_plan",
+        "pg_prewarm",
+        "pg_repack",
+        "pg_similarity",
+        "pg_stat_statements",
+        "pg_trgm",
+        "pg_visibility",
+        "pgcrypto",
+        "pageinspect",
+        "pglogical",
+        "pgrowlocks",
+        "pgrouting",
+        "pgstattuple",
+        "plcoffee",
+        "plls",
+        "plperl",
+        "plpgsql",
+        "pltcl",
+        "plv8",
+        "postgis",
+        "postgis_tiger_geocoder",
+        "postgis_topology",
+        "postgres_fdw",
+        "postgresql-hll",
+        "prefix",
+        "sslinfo",
+        "tablefunc",
+        "test_parser",
+        "tsearch2",
+        "tsm_system_rows",
+        "tsm_system_time",
+        "unaccent",
+        "uuid-ossp"
+    ] 
+
+    tiny_plan_rds_properties: &tiny_plan_rds_properties
+      db_instance_class: "db.t3.micro"
+      allocated_storage: 25
+      backup_retention_period: 0
+      skip_final_snapshot: true
+    small_plan_rds_properties: &small_plan_rds_properties
+      db_instance_class: "db.t3.small"
+      allocated_storage: 100
+    medium_plan_rds_properties: &medium_plan_rds_properties
+      db_instance_class: "db.m5.large"
+      allocated_storage: 500
+    large_plan_rds_properties: &large_plan_rds_properties
+      db_instance_class: "db.m5.2xlarge"
+      allocated_storage: 2560
+    xlarge_plan_rds_properties: &xlarge_plan_rds_properties
+      db_instance_class: "db.m5.4xlarge"
+      allocated_storage: 10240
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "c07ac6bb-8b26-4a08-b8db-9618d9f5f852"
+    name: "tiny-unencrypted-10-high-iops"
+    description: "25GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t3.micro."
+    free: true
+    metadata:
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *tiny_plan_rds_properties # yamllint disable-line
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "01f559b0-54f5-4758-80b8-3dea3487b831"
+    name: "small-10-high-iops"
+    description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t3.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.039
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "2bc01d88-2f26-42e5-9e6c-d5f4a3a6667c"
+    name: "small-ha-10-high-iops"
+    description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 10. DB Instance Class: db.t3.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.078
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "d15f92ac4-b289-4f62-bc06-1f33bd0de632"
+    name: "medium-10-high-iops"
+    description: "500GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m5.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.197
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "a3519b09-4fb3-4edc-acd2-e56c1b65dfdc"
+    name: "medium-ha-10-high-iops"
+    description: "500GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m5.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.394
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "804512b7-c949-4d46-82da-ee6fc3c1cb51"
+    name: "large-10-high-iops"
+    description: "2.5TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.788
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "f3c0792c-b672-42fe-882b-a5685224bedf"
+    name: "large-ha-10-high-iops"
+    description: "2.5TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.576
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "55f9887c-d7bc-4900-9d92-3fd24de9528c"
+    name: "xlarge-10-high-iops"
+    description: "10TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m5.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.576
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "f2873408-7354-46cc-a0f3-e68764de6d98"
+    name: "xlarge-ha-10-high-iops"
+    description: "10TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m5.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 3.152
+          unit: "HOUR"
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true

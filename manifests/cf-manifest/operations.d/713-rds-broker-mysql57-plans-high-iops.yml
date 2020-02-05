@@ -1,0 +1,223 @@
+---
+- type: replace
+  path: /meta?/rds_broker
+  value:
+    default_mysql_rds_properties: &default_mysql_rds_properties
+      storage_type: "gp2"
+      auto_minor_version_upgrade: true
+      multi_az: false
+      storage_encrypted: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: ((terraform_outputs_rds_broker_dbs_subnet_group))
+      vpc_security_group_ids:
+        - ((terraform_outputs_rds_broker_dbs_security_group_id))
+      engine: "mysql"
+      engine_version: "5.7"
+      engine_family: "mysql5.7"
+
+    tiny_plan_rds_properties: &tiny_plan_rds_properties
+      db_instance_class: "db.t3.micro"
+      allocated_storage: 25
+      backup_retention_period: 0
+      skip_final_snapshot: true
+    small_plan_rds_properties: &small_plan_rds_properties
+      db_instance_class: "db.t3.small"
+      allocated_storage: 100
+    medium_plan_rds_properties: &medium_plan_rds_properties
+      db_instance_class: "db.m5.large"
+      allocated_storage: 500
+    large_plan_rds_properties: &large_plan_rds_properties
+      db_instance_class: "db.m5.2xlarge"
+      allocated_storage: 2560
+    xlarge_plan_rds_properties: &xlarge_plan_rds_properties
+      db_instance_class: "db.m5.4xlarge"
+      allocated_storage: 10240
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "6edc74d2-7eec-41bc-a0be-ae69c4e1cebb"
+    name: "tiny-unencrypted-5.7-high-iops"
+    description: "25GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t3.micro."
+    free: true
+    metadata:
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *tiny_plan_rds_properties # yamllint disable-line
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "a9c81264-a07b-43a2-9dc4-35485389994e"
+    name: "small-5.7-high-iops"
+    description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t3.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.038
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "99e811bc-0caf-4495-a81d-c79112d6c115"
+    name: "small-ha-5.7-high-iops"
+    description: "100GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t3.small."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.076
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "60666938-23e5-4bbc-acaa-3bc978ee5dff"
+    name: "medium-5.7-high-iops"
+    description: "500GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.198
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "a8a849e5-adbf-4641-bddb-8d0ba73a8880"
+    name: "medium-ha-5.7-high-iops"
+    description: "500GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.large."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.396
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "d995966f-5921-49fa-bc94-8c0742cdef84"
+    name: "large-5.7-high-iops"
+    description: "2.5TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 0.792
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "2c641609-f47c-4304-8344-ad34598fd17a"
+    name: "large-ha-5.7-high-iops"
+    description: "2.5TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.584
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "ce60d896-6762-478f-af2d-d761a7fe92b4"
+    name: "xlarge-5.7-high-iops"
+    description: "10TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 1.584
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
+  value:
+    id: "0b2bab59-b43f-4653-b563-a321430f00f3"
+    name: "xlarge-ha-5.7-high-iops"
+    description: "10TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m5.4xlarge."
+    free: false
+    metadata:
+      costs:
+        - amount:
+            usd: 3.168
+          unit: "HOUR"
+      bullets:
+        - "Dedicated MySQL 5.7 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_mysql_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
