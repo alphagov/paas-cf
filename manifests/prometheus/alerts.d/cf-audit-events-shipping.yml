@@ -1,0 +1,15 @@
+# Source: paas-auditor
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: CFAuditEventsShippingStopped
+    rules:
+      - alert: CFAuditEventsShippingStopped
+        expr: sum(increase(cf_audit_events_to_splunk_shipper_events_shipped_total[10m])) < 2000
+        labels:
+          severity: warning
+        annotations:
+          summary: "CF Audit Events shipped count"
+          description: "Amount of CF Audit Events shipped has decreased considerably over the last 10 minutes: {{ $value | printf \"%.0f\" }}"
