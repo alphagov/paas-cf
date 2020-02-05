@@ -416,16 +416,6 @@ var _ = Describe("Elasticache Updates", func() {
 			))
 		})
 
-		It("requests only 'available' service updates", func() {
-			_, err := ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate("redis1", elasticacheService)
-			Expect(err).ToNot(HaveOccurred())
-
-			input, _ := fakeElasticache.DescribeUpdateActionsPagesArgsForCall(0)
-			Expect(input.ServiceUpdateStatus).To(ConsistOf(
-				aws.String("available"),
-			))
-		})
-
 		It("requests only 'not-applied' service update actions", func() {
 			_, err := ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate("redis1", elasticacheService)
 			Expect(err).ToNot(HaveOccurred())

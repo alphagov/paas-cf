@@ -163,9 +163,6 @@ func ListReplicationGroupIdsWithAvailableUpdateActionsForServiceUpdate(serviceUp
 	err := ecs.Client.DescribeUpdateActionsPages(
 		&awsec.DescribeUpdateActionsInput{
 			ServiceUpdateName: aws.String(serviceUpdateName),
-			ServiceUpdateStatus: []*string{
-				aws.String("available"),
-			},
 			UpdateActionStatus: []*string{
 				aws.String("not-applied"),
 			},
