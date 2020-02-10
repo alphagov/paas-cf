@@ -2179,6 +2179,18 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
+                tiny-unencrypted-5.7-high-iops
+                small-5.7-high-iops
+                small-ha-5.7-high-iops
+                medium-ha-5.7-high-iops
+                medium-5.7-high-iops
+                large-ha-5.7-high-iops
+                large-5.7-high-iops
+                xlarge-ha-5.7-high-iops
+                xlarge-5.7-high-iops
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
                 tiny-unencrypted-8.0
                 small-8.0
                 small-ha-8.0
@@ -2188,6 +2200,18 @@ jobs:
                 large-8.0
                 xlarge-ha-8.0
                 xlarge-8.0
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
+                tiny-unencrypted-8.0-high-iops
+                small-8.0-high-iops
+                small-ha-8.0-high-iops
+                medium-ha-8.0-high-iops
+                medium-8.0-high-iops
+                large-ha-8.0-high-iops
+                large-8.0-high-iops
+                xlarge-ha-8.0-high-iops
+                xlarge-8.0-high-iops
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
@@ -2215,6 +2239,18 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-10-high-iops
+                small-10-high-iops
+                small-ha-10-high-iops
+                medium-10-high-iops
+                medium-ha-10-high-iops
+                large-10-high-iops
+                large-ha-10-high-iops
+                xlarge-10-high-iops
+                xlarge-ha-10-high-iops
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
                 tiny-unencrypted-11
                 small-11
                 small-ha-11
@@ -2224,6 +2260,18 @@ jobs:
                 large-ha-11
                 xlarge-11
                 xlarge-ha-11
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-11-high-iops
+                small-11-high-iops
+                small-ha-11-high-iops
+                medium-11-high-iops
+                medium-ha-11-high-iops
+                large-11-high-iops
+                large-ha-11-high-iops
+                xlarge-11-high-iops
+                xlarge-ha-11-high-iops
                 EOF
 
                 # Disable deprecated plans
