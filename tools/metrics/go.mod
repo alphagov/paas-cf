@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	code.cloudfoundry.org/lager v1.0.0
+	github.com/alphagov/paas-elasticache-broker v0.18.0
 	github.com/aws/aws-sdk-go v1.21.8
 	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 // indirect
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20190808214049-35bcce23fc5f

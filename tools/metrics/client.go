@@ -99,14 +99,18 @@ func NewClient(cfg ClientConfig) (*Client, error) {
 	if cfg.Logger == nil {
 		cfg.Logger = lager.NewLogger("client")
 	}
-	cf, err := cfclient.NewClient(&cfclient.Config{
+	cf, err := NewCFClient(cfg)
+	if err != nil {
+		return nil, err
+	}
+	return &Client{cf: cf, logger: cfg.Logger}, nil
+}
+
+func NewCFClient(cfg ClientConfig) (*cfclient.Client, error) {
+	return cfclient.NewClient(&cfclient.Config{
 		ApiAddress:        cfg.ApiAddress,
 		ClientID:          cfg.ClientID,
 		ClientSecret:      cfg.ClientSecret,
 		SkipSslValidation: cfg.SkipSslValidation,
 	})
-	if err != nil {
-		return nil, err
-	}
-	return &Client{cf: cf, logger: cfg.Logger}, nil
 }
