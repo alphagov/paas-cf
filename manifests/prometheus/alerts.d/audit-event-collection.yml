@@ -8,6 +8,7 @@
     rules:
       - alert: AuditEventCollectionSlow
         expr: (time() - informer_latest_cf_audit_event_timestamp) > 3600
+        for: 10m
         labels:
           severity: warning
         annotations:
