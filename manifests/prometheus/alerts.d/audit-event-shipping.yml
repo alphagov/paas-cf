@@ -1,0 +1,20 @@
+# Source: paas-auditor
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AuditEventShippingSlow
+    rules:
+      - alert: AuditEventShippingSlow
+        expr: (time() - cf_audit_events_to_splunk_shipper_latest_event_timestamp) > 3600
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Audit event shipping is too slow
+          description: >
+            The most recent event shipped to Splunk by the auditor is
+            {{ $value | printf "%.0f" }} seconds in the past,
+            but it should be less than 1 hour (3600 seconds) in the past.
+            Check that the paas-auditor microservice is shipping events.
