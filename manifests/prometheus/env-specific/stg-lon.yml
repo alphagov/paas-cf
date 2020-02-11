@@ -4,3 +4,4 @@
 aws_limits_elasticache_cache_parameter_groups: 20
 aws_limits_elasticache_nodes: 100
 aws_limits_s3_buckets: 100
+aws_limits_rds_instances: 40
