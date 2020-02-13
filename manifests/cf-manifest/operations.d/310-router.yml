@@ -35,8 +35,8 @@
   # When this is non-zero, gorouter maintains the configured value idle
   # connections
   #
-  # 2500 was picked arbitrarily
-  value: 2500
+  # Enabling this will introduce some base unreliability due to keepalives
+  value: 0
 
 - type: replace
   path: /instance_groups/name=router/networks/0/name
