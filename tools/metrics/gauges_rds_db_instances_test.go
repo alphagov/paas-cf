@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"code.cloudfoundry.org/lager"
 	"fmt"
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
@@ -18,6 +19,7 @@ var _ = Describe("RDS DB Instances Gauge", func() {
 	var (
 		rdsSvc *rds.RDSService
 		rdsAPI *rdsfakes.FakeRDSAPI
+		logger lager.Logger
 
 		rdsDatabaseInstances []*awsrds.DBInstance
 		describeDatabaseInstancesPagesStub = func(
@@ -41,6 +43,9 @@ var _ = Describe("RDS DB Instances Gauge", func() {
 		rdsSvc = &rds.RDSService{Client: rdsAPI}
 
 		rdsAPI.DescribeDBInstancesPagesStub = describeDatabaseInstancesPagesStub
+
+		logger = lager.NewLogger("rds-db-instances-gauge-test")
+		logger.RegisterSink(lager.NewWriterSink(GinkgoWriter, lager.DEBUG))
 	})
 
 	It("exposes a metric which counts the number of AWS RDS db instances", func() {
@@ -49,7 +54,7 @@ var _ = Describe("RDS DB Instances Gauge", func() {
 			{ DBInstanceIdentifier: aws.String("db2")},
 		}
 
-		gauge := RDSDBInstancesGauge(rdsSvc, 1*time.Second)
+		gauge := RDSDBInstancesGauge(logger, rdsSvc, 1*time.Second)
 
 		var metric m.Metric
 		Eventually(func() string {
@@ -71,7 +76,7 @@ var _ = Describe("RDS DB Instances Gauge", func() {
 			return fmt.Errorf("error on purpose")
 		}
 
-		gauge := RDSDBInstancesGauge(rdsSvc, 1*time.Second)
+		gauge := RDSDBInstancesGauge(logger, rdsSvc, 1*time.Second)
 		Eventually(func() error {
 			_, err := gauge.ReadMetric()
 			return err

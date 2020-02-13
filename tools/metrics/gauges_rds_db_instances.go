@@ -1,6 +1,7 @@
 package main
 
 import (
+	"code.cloudfoundry.org/lager"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
 	awsrds "github.com/aws/aws-sdk-go/service/rds"
@@ -8,12 +9,15 @@ import (
 )
 
 func RDSDBInstancesGauge(
+	logger lager.Logger,
 	rds *rds.RDSService,
 	interval time.Duration,
 ) m.MetricReadCloser {
 	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		lsess := logger.Session("rds-db-instances-gauge")
 		count, err := countRDSDBInstance(rds)
 		if err != nil {
+			lsess.Error("count-db-instances", err)
 			return err
 		}
 		metrics := []m.Metric{

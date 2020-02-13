@@ -28,6 +28,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/debug"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	promrep "github.com/alphagov/paas-cf/tools/metrics/pkg/prometheus_reporter"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
@@ -138,6 +139,8 @@ func Main() error {
 
 	costExplorer := costexplorer.New(sess)
 
+	rdsService := rds.NewService(sess)
+
 	logitClient, err := logit.NewService(
 		logger,
 		os.Getenv("LOGIT_ELASTICSEARCH_URL"),
@@ -172,6 +175,7 @@ func Main() error {
 		CurrencyGauges(logger, 5*time.Minute),
 		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
 		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
+		RDSDBInstancesGauge(logger, rdsService, 15*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))
