@@ -175,6 +175,47 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.BatchStopUpdateActionOutput
 		result2 error
 	}
+	CompleteMigrationStub        func(*elasticache.CompleteMigrationInput) (*elasticache.CompleteMigrationOutput, error)
+	completeMigrationMutex       sync.RWMutex
+	completeMigrationArgsForCall []struct {
+		arg1 *elasticache.CompleteMigrationInput
+	}
+	completeMigrationReturns struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}
+	completeMigrationReturnsOnCall map[int]struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}
+	CompleteMigrationRequestStub        func(*elasticache.CompleteMigrationInput) (*request.Request, *elasticache.CompleteMigrationOutput)
+	completeMigrationRequestMutex       sync.RWMutex
+	completeMigrationRequestArgsForCall []struct {
+		arg1 *elasticache.CompleteMigrationInput
+	}
+	completeMigrationRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.CompleteMigrationOutput
+	}
+	completeMigrationRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.CompleteMigrationOutput
+	}
+	CompleteMigrationWithContextStub        func(context.Context, *elasticache.CompleteMigrationInput, ...request.Option) (*elasticache.CompleteMigrationOutput, error)
+	completeMigrationWithContextMutex       sync.RWMutex
+	completeMigrationWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.CompleteMigrationInput
+		arg3 []request.Option
+	}
+	completeMigrationWithContextReturns struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}
+	completeMigrationWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}
 	CopySnapshotStub        func(*elasticache.CopySnapshotInput) (*elasticache.CopySnapshotOutput, error)
 	copySnapshotMutex       sync.RWMutex
 	copySnapshotArgsForCall []struct {
@@ -2220,6 +2261,47 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.RevokeCacheSecurityGroupIngressOutput
 		result2 error
 	}
+	StartMigrationStub        func(*elasticache.StartMigrationInput) (*elasticache.StartMigrationOutput, error)
+	startMigrationMutex       sync.RWMutex
+	startMigrationArgsForCall []struct {
+		arg1 *elasticache.StartMigrationInput
+	}
+	startMigrationReturns struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}
+	startMigrationReturnsOnCall map[int]struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}
+	StartMigrationRequestStub        func(*elasticache.StartMigrationInput) (*request.Request, *elasticache.StartMigrationOutput)
+	startMigrationRequestMutex       sync.RWMutex
+	startMigrationRequestArgsForCall []struct {
+		arg1 *elasticache.StartMigrationInput
+	}
+	startMigrationRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.StartMigrationOutput
+	}
+	startMigrationRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.StartMigrationOutput
+	}
+	StartMigrationWithContextStub        func(context.Context, *elasticache.StartMigrationInput, ...request.Option) (*elasticache.StartMigrationOutput, error)
+	startMigrationWithContextMutex       sync.RWMutex
+	startMigrationWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.StartMigrationInput
+		arg3 []request.Option
+	}
+	startMigrationWithContextReturns struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}
+	startMigrationWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}
 	TestFailoverStub        func(*elasticache.TestFailoverInput) (*elasticache.TestFailoverOutput, error)
 	testFailoverMutex       sync.RWMutex
 	testFailoverArgsForCall []struct {
@@ -3121,6 +3203,197 @@ func (fake *FakeElastiCacheAPI) BatchStopUpdateActionWithContextReturnsOnCall(i 
 	}
 	fake.batchStopUpdateActionWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.BatchStopUpdateActionOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigration(arg1 *elasticache.CompleteMigrationInput) (*elasticache.CompleteMigrationOutput, error) {
+	fake.completeMigrationMutex.Lock()
+	ret, specificReturn := fake.completeMigrationReturnsOnCall[len(fake.completeMigrationArgsForCall)]
+	fake.completeMigrationArgsForCall = append(fake.completeMigrationArgsForCall, struct {
+		arg1 *elasticache.CompleteMigrationInput
+	}{arg1})
+	fake.recordInvocation("CompleteMigration", []interface{}{arg1})
+	fake.completeMigrationMutex.Unlock()
+	if fake.CompleteMigrationStub != nil {
+		return fake.CompleteMigrationStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.completeMigrationReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationCallCount() int {
+	fake.completeMigrationMutex.RLock()
+	defer fake.completeMigrationMutex.RUnlock()
+	return len(fake.completeMigrationArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationCalls(stub func(*elasticache.CompleteMigrationInput) (*elasticache.CompleteMigrationOutput, error)) {
+	fake.completeMigrationMutex.Lock()
+	defer fake.completeMigrationMutex.Unlock()
+	fake.CompleteMigrationStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationArgsForCall(i int) *elasticache.CompleteMigrationInput {
+	fake.completeMigrationMutex.RLock()
+	defer fake.completeMigrationMutex.RUnlock()
+	argsForCall := fake.completeMigrationArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationReturns(result1 *elasticache.CompleteMigrationOutput, result2 error) {
+	fake.completeMigrationMutex.Lock()
+	defer fake.completeMigrationMutex.Unlock()
+	fake.CompleteMigrationStub = nil
+	fake.completeMigrationReturns = struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationReturnsOnCall(i int, result1 *elasticache.CompleteMigrationOutput, result2 error) {
+	fake.completeMigrationMutex.Lock()
+	defer fake.completeMigrationMutex.Unlock()
+	fake.CompleteMigrationStub = nil
+	if fake.completeMigrationReturnsOnCall == nil {
+		fake.completeMigrationReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.CompleteMigrationOutput
+			result2 error
+		})
+	}
+	fake.completeMigrationReturnsOnCall[i] = struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationRequest(arg1 *elasticache.CompleteMigrationInput) (*request.Request, *elasticache.CompleteMigrationOutput) {
+	fake.completeMigrationRequestMutex.Lock()
+	ret, specificReturn := fake.completeMigrationRequestReturnsOnCall[len(fake.completeMigrationRequestArgsForCall)]
+	fake.completeMigrationRequestArgsForCall = append(fake.completeMigrationRequestArgsForCall, struct {
+		arg1 *elasticache.CompleteMigrationInput
+	}{arg1})
+	fake.recordInvocation("CompleteMigrationRequest", []interface{}{arg1})
+	fake.completeMigrationRequestMutex.Unlock()
+	if fake.CompleteMigrationRequestStub != nil {
+		return fake.CompleteMigrationRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.completeMigrationRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationRequestCallCount() int {
+	fake.completeMigrationRequestMutex.RLock()
+	defer fake.completeMigrationRequestMutex.RUnlock()
+	return len(fake.completeMigrationRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationRequestCalls(stub func(*elasticache.CompleteMigrationInput) (*request.Request, *elasticache.CompleteMigrationOutput)) {
+	fake.completeMigrationRequestMutex.Lock()
+	defer fake.completeMigrationRequestMutex.Unlock()
+	fake.CompleteMigrationRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationRequestArgsForCall(i int) *elasticache.CompleteMigrationInput {
+	fake.completeMigrationRequestMutex.RLock()
+	defer fake.completeMigrationRequestMutex.RUnlock()
+	argsForCall := fake.completeMigrationRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationRequestReturns(result1 *request.Request, result2 *elasticache.CompleteMigrationOutput) {
+	fake.completeMigrationRequestMutex.Lock()
+	defer fake.completeMigrationRequestMutex.Unlock()
+	fake.CompleteMigrationRequestStub = nil
+	fake.completeMigrationRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.CompleteMigrationOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.CompleteMigrationOutput) {
+	fake.completeMigrationRequestMutex.Lock()
+	defer fake.completeMigrationRequestMutex.Unlock()
+	fake.CompleteMigrationRequestStub = nil
+	if fake.completeMigrationRequestReturnsOnCall == nil {
+		fake.completeMigrationRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.CompleteMigrationOutput
+		})
+	}
+	fake.completeMigrationRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.CompleteMigrationOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationWithContext(arg1 context.Context, arg2 *elasticache.CompleteMigrationInput, arg3 ...request.Option) (*elasticache.CompleteMigrationOutput, error) {
+	fake.completeMigrationWithContextMutex.Lock()
+	ret, specificReturn := fake.completeMigrationWithContextReturnsOnCall[len(fake.completeMigrationWithContextArgsForCall)]
+	fake.completeMigrationWithContextArgsForCall = append(fake.completeMigrationWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.CompleteMigrationInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("CompleteMigrationWithContext", []interface{}{arg1, arg2, arg3})
+	fake.completeMigrationWithContextMutex.Unlock()
+	if fake.CompleteMigrationWithContextStub != nil {
+		return fake.CompleteMigrationWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.completeMigrationWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationWithContextCallCount() int {
+	fake.completeMigrationWithContextMutex.RLock()
+	defer fake.completeMigrationWithContextMutex.RUnlock()
+	return len(fake.completeMigrationWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationWithContextCalls(stub func(context.Context, *elasticache.CompleteMigrationInput, ...request.Option) (*elasticache.CompleteMigrationOutput, error)) {
+	fake.completeMigrationWithContextMutex.Lock()
+	defer fake.completeMigrationWithContextMutex.Unlock()
+	fake.CompleteMigrationWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationWithContextArgsForCall(i int) (context.Context, *elasticache.CompleteMigrationInput, []request.Option) {
+	fake.completeMigrationWithContextMutex.RLock()
+	defer fake.completeMigrationWithContextMutex.RUnlock()
+	argsForCall := fake.completeMigrationWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationWithContextReturns(result1 *elasticache.CompleteMigrationOutput, result2 error) {
+	fake.completeMigrationWithContextMutex.Lock()
+	defer fake.completeMigrationWithContextMutex.Unlock()
+	fake.CompleteMigrationWithContextStub = nil
+	fake.completeMigrationWithContextReturns = struct {
+		result1 *elasticache.CompleteMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CompleteMigrationWithContextReturnsOnCall(i int, result1 *elasticache.CompleteMigrationOutput, result2 error) {
+	fake.completeMigrationWithContextMutex.Lock()
+	defer fake.completeMigrationWithContextMutex.Unlock()
+	fake.CompleteMigrationWithContextStub = nil
+	if fake.completeMigrationWithContextReturnsOnCall == nil {
+		fake.completeMigrationWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.CompleteMigrationOutput
+			result2 error
+		})
+	}
+	fake.completeMigrationWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.CompleteMigrationOutput
 		result2 error
 	}{result1, result2}
 }
@@ -12692,6 +12965,197 @@ func (fake *FakeElastiCacheAPI) RevokeCacheSecurityGroupIngressWithContextReturn
 	}{result1, result2}
 }
 
+func (fake *FakeElastiCacheAPI) StartMigration(arg1 *elasticache.StartMigrationInput) (*elasticache.StartMigrationOutput, error) {
+	fake.startMigrationMutex.Lock()
+	ret, specificReturn := fake.startMigrationReturnsOnCall[len(fake.startMigrationArgsForCall)]
+	fake.startMigrationArgsForCall = append(fake.startMigrationArgsForCall, struct {
+		arg1 *elasticache.StartMigrationInput
+	}{arg1})
+	fake.recordInvocation("StartMigration", []interface{}{arg1})
+	fake.startMigrationMutex.Unlock()
+	if fake.StartMigrationStub != nil {
+		return fake.StartMigrationStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.startMigrationReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationCallCount() int {
+	fake.startMigrationMutex.RLock()
+	defer fake.startMigrationMutex.RUnlock()
+	return len(fake.startMigrationArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationCalls(stub func(*elasticache.StartMigrationInput) (*elasticache.StartMigrationOutput, error)) {
+	fake.startMigrationMutex.Lock()
+	defer fake.startMigrationMutex.Unlock()
+	fake.StartMigrationStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationArgsForCall(i int) *elasticache.StartMigrationInput {
+	fake.startMigrationMutex.RLock()
+	defer fake.startMigrationMutex.RUnlock()
+	argsForCall := fake.startMigrationArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationReturns(result1 *elasticache.StartMigrationOutput, result2 error) {
+	fake.startMigrationMutex.Lock()
+	defer fake.startMigrationMutex.Unlock()
+	fake.StartMigrationStub = nil
+	fake.startMigrationReturns = struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationReturnsOnCall(i int, result1 *elasticache.StartMigrationOutput, result2 error) {
+	fake.startMigrationMutex.Lock()
+	defer fake.startMigrationMutex.Unlock()
+	fake.StartMigrationStub = nil
+	if fake.startMigrationReturnsOnCall == nil {
+		fake.startMigrationReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.StartMigrationOutput
+			result2 error
+		})
+	}
+	fake.startMigrationReturnsOnCall[i] = struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationRequest(arg1 *elasticache.StartMigrationInput) (*request.Request, *elasticache.StartMigrationOutput) {
+	fake.startMigrationRequestMutex.Lock()
+	ret, specificReturn := fake.startMigrationRequestReturnsOnCall[len(fake.startMigrationRequestArgsForCall)]
+	fake.startMigrationRequestArgsForCall = append(fake.startMigrationRequestArgsForCall, struct {
+		arg1 *elasticache.StartMigrationInput
+	}{arg1})
+	fake.recordInvocation("StartMigrationRequest", []interface{}{arg1})
+	fake.startMigrationRequestMutex.Unlock()
+	if fake.StartMigrationRequestStub != nil {
+		return fake.StartMigrationRequestStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.startMigrationRequestReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationRequestCallCount() int {
+	fake.startMigrationRequestMutex.RLock()
+	defer fake.startMigrationRequestMutex.RUnlock()
+	return len(fake.startMigrationRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationRequestCalls(stub func(*elasticache.StartMigrationInput) (*request.Request, *elasticache.StartMigrationOutput)) {
+	fake.startMigrationRequestMutex.Lock()
+	defer fake.startMigrationRequestMutex.Unlock()
+	fake.StartMigrationRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationRequestArgsForCall(i int) *elasticache.StartMigrationInput {
+	fake.startMigrationRequestMutex.RLock()
+	defer fake.startMigrationRequestMutex.RUnlock()
+	argsForCall := fake.startMigrationRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationRequestReturns(result1 *request.Request, result2 *elasticache.StartMigrationOutput) {
+	fake.startMigrationRequestMutex.Lock()
+	defer fake.startMigrationRequestMutex.Unlock()
+	fake.StartMigrationRequestStub = nil
+	fake.startMigrationRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.StartMigrationOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.StartMigrationOutput) {
+	fake.startMigrationRequestMutex.Lock()
+	defer fake.startMigrationRequestMutex.Unlock()
+	fake.StartMigrationRequestStub = nil
+	if fake.startMigrationRequestReturnsOnCall == nil {
+		fake.startMigrationRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.StartMigrationOutput
+		})
+	}
+	fake.startMigrationRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.StartMigrationOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationWithContext(arg1 context.Context, arg2 *elasticache.StartMigrationInput, arg3 ...request.Option) (*elasticache.StartMigrationOutput, error) {
+	fake.startMigrationWithContextMutex.Lock()
+	ret, specificReturn := fake.startMigrationWithContextReturnsOnCall[len(fake.startMigrationWithContextArgsForCall)]
+	fake.startMigrationWithContextArgsForCall = append(fake.startMigrationWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.StartMigrationInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("StartMigrationWithContext", []interface{}{arg1, arg2, arg3})
+	fake.startMigrationWithContextMutex.Unlock()
+	if fake.StartMigrationWithContextStub != nil {
+		return fake.StartMigrationWithContextStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.startMigrationWithContextReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationWithContextCallCount() int {
+	fake.startMigrationWithContextMutex.RLock()
+	defer fake.startMigrationWithContextMutex.RUnlock()
+	return len(fake.startMigrationWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationWithContextCalls(stub func(context.Context, *elasticache.StartMigrationInput, ...request.Option) (*elasticache.StartMigrationOutput, error)) {
+	fake.startMigrationWithContextMutex.Lock()
+	defer fake.startMigrationWithContextMutex.Unlock()
+	fake.StartMigrationWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationWithContextArgsForCall(i int) (context.Context, *elasticache.StartMigrationInput, []request.Option) {
+	fake.startMigrationWithContextMutex.RLock()
+	defer fake.startMigrationWithContextMutex.RUnlock()
+	argsForCall := fake.startMigrationWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationWithContextReturns(result1 *elasticache.StartMigrationOutput, result2 error) {
+	fake.startMigrationWithContextMutex.Lock()
+	defer fake.startMigrationWithContextMutex.Unlock()
+	fake.StartMigrationWithContextStub = nil
+	fake.startMigrationWithContextReturns = struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) StartMigrationWithContextReturnsOnCall(i int, result1 *elasticache.StartMigrationOutput, result2 error) {
+	fake.startMigrationWithContextMutex.Lock()
+	defer fake.startMigrationWithContextMutex.Unlock()
+	fake.StartMigrationWithContextStub = nil
+	if fake.startMigrationWithContextReturnsOnCall == nil {
+		fake.startMigrationWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.StartMigrationOutput
+			result2 error
+		})
+	}
+	fake.startMigrationWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.StartMigrationOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeElastiCacheAPI) TestFailover(arg1 *elasticache.TestFailoverInput) (*elasticache.TestFailoverOutput, error) {
 	fake.testFailoverMutex.Lock()
 	ret, specificReturn := fake.testFailoverReturnsOnCall[len(fake.testFailoverArgsForCall)]
@@ -13398,6 +13862,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.batchStopUpdateActionRequestMutex.RUnlock()
 	fake.batchStopUpdateActionWithContextMutex.RLock()
 	defer fake.batchStopUpdateActionWithContextMutex.RUnlock()
+	fake.completeMigrationMutex.RLock()
+	defer fake.completeMigrationMutex.RUnlock()
+	fake.completeMigrationRequestMutex.RLock()
+	defer fake.completeMigrationRequestMutex.RUnlock()
+	fake.completeMigrationWithContextMutex.RLock()
+	defer fake.completeMigrationWithContextMutex.RUnlock()
 	fake.copySnapshotMutex.RLock()
 	defer fake.copySnapshotMutex.RUnlock()
 	fake.copySnapshotRequestMutex.RLock()
@@ -13700,6 +14170,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.revokeCacheSecurityGroupIngressRequestMutex.RUnlock()
 	fake.revokeCacheSecurityGroupIngressWithContextMutex.RLock()
 	defer fake.revokeCacheSecurityGroupIngressWithContextMutex.RUnlock()
+	fake.startMigrationMutex.RLock()
+	defer fake.startMigrationMutex.RUnlock()
+	fake.startMigrationRequestMutex.RLock()
+	defer fake.startMigrationRequestMutex.RUnlock()
+	fake.startMigrationWithContextMutex.RLock()
+	defer fake.startMigrationWithContextMutex.RUnlock()
 	fake.testFailoverMutex.RLock()
 	defer fake.testFailoverMutex.RUnlock()
 	fake.testFailoverRequestMutex.RLock()
