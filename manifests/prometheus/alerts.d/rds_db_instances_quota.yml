@@ -1,0 +1,16 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: RDSDBInstancesCountCloseToLimit
+    rules:
+      - alert: RDSDBInstancesCountCloseToLimit
+        expr: paas_aws_rds_dbinstances_count > ((aws_limits_rds_instances)) / 100 * 80
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Number of AWS RDS DB instances is close to the limit"
+          description: "We are using {{ $value | printf \"%.0f\" }} of ((aws_limits_rds_instances)) RDS DB instances. We might have to contact AWS support to raise the limit."
