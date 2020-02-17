@@ -12,6 +12,7 @@ function cleanup () {
 }
 trap cleanup EXIT
 
+BOSH_CA_CERT="$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-CA.crt" -)"
 BOSH_IP="$(
   host -T4 "bosh-external.${SYSTEM_DNS_ZONE_NAME}" \
     | grep 'has address' \
