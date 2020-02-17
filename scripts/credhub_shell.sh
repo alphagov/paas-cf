@@ -12,10 +12,11 @@ function cleanup () {
 }
 trap cleanup EXIT
 
+BOSH_CA_CERT="$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-CA.crt" -)"
 BOSH_IP=$(aws ec2 describe-instances \
     --filters "Name=tag:deploy_env,Values=${DEPLOY_ENV}" 'Name=tag:instance_group,Values=bosh' \
     --query 'Reservations[].Instances[].PublicIpAddress' --output text)
-export BOSH_IP
+export BOSH_CA_CERT BOSH_IP
 
 ssh -qfNC -4 -D 25555 \
   -o ExitOnForwardFailure=yes \
@@ -27,9 +28,6 @@ ssh -qfNC -4 -D 25555 \
   "$BOSH_IP"
 
 # Setup Credhub variables
-CREDHUB_CLIENT='credhub-admin'
-CREDHUB_SECRET=$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-secrets.yml" - | \
-    ruby -ryaml -e 'print YAML.load(STDIN).dig("secrets", "bosh_credhub_admin_client_password")')
 CREDHUB_CA_CERT="$(cat <<EOCERTS
 $(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-vars-store.yml" - | \
   ruby -ryaml -e 'print YAML.load(STDIN).dig("credhub_tls", "ca")')
@@ -37,9 +35,8 @@ $(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-vars-store.yml" - | \
   ruby -ryaml -e 'print YAML.load(STDIN).dig("uaa_ssl", "ca")')
 EOCERTS
 )"
-export CREDHUB_CLIENT CREDHUB_SECRET CREDHUB_CA_CERT
+export CREDHUB_CA_CERT
 
-export CREDHUB_SERVER="https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
 export CREDHUB_PROXY="socks5://localhost:25555"
 
 cat <<EOF
@@ -49,6 +46,9 @@ cat <<EOF
  / ___/ ___/ _ \\/ __  / __ \\/ / / / __ \\
 / /__/ /  /  __/ /_/ / / / / /_/ / /_/ /
 \\___/_/   \\___/\\____/_/ /_/\\____/_____/
+
+1. Run 'credhub login --sso'
+2. Enter the passcode from https://bosh-external.${SYSTEM_DNS_ZONE_NAME}:8443/passcode
 
 From this shell, you can access credhub using the credhub cli.
 Basic usage:
@@ -72,5 +72,7 @@ PATHS
 -------
 EOF
 
-PS1="CREDHUB ($DEPLOY_ENV) $ " bash --login --norc --noprofile
+unset CREDHUB_SERVER # otherwise CLI does not recognise SSO logins
+credhub api "https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
 
+PS1="CREDHUB ($DEPLOY_ENV) $ " bash --login --norc --noprofile
