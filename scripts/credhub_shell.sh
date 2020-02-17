@@ -12,10 +12,11 @@ function cleanup () {
 }
 trap cleanup EXIT
 
-BOSH_CA_CERT="$(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-CA.crt" -)"
-BOSH_IP=$(aws ec2 describe-instances \
-    --filters "Name=tag:deploy_env,Values=${DEPLOY_ENV}" 'Name=tag:instance_group,Values=bosh' \
-    --query 'Reservations[].Instances[].PublicIpAddress' --output text)
+BOSH_IP="$(
+  host -T4 "bosh-external.${SYSTEM_DNS_ZONE_NAME}" \
+    | grep 'has address' \
+    | awk '{print $4}'
+)"
 export BOSH_CA_CERT BOSH_IP
 
 ssh -qfNC -4 -D 25555 \
