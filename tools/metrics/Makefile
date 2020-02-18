@@ -43,6 +43,10 @@ generate-fakes:
 		vendor/github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface/interface.go \
 		ElastiCacheAPI
 
+	counterfeiter -o pkg/rds/fakes/fake_rds_client.go \
+		vendor/github.com/aws/aws-sdk-go/service/rds/rdsiface/interface.go \
+		RDSAPI
+
 	counterfeiter -o pkg/s3/fakes/fake_s3_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go \
 		S3API
