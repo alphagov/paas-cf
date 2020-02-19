@@ -14,3 +14,9 @@
             log_stream_name: "{{instance_id}}"
             initial_position: start_of_file
             datetime_format: "%Y-%m-%dT%H:%M:%S"
+          - name: /var/log/auth.log
+            file: /var/log/auth.log
+            log_group_name: auth_logs_((deployment_name))
+            log_stream_name: "{{instance_id}}"
+            initial_position: start_of_file
+            datetime_format: "%Y-%m-%dT%H:%M:%S"
