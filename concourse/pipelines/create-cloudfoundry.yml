@@ -362,6 +362,7 @@ groups:
     jobs:
       - set-smoke-test-creds
       - rotate-cloudfoundry-credentials
+      - rotate-broker-credentials
       - rotate-database-encryption-keys
       - rotate-prometheus-credentials
       - expire-aws-keys
@@ -4219,6 +4220,39 @@ jobs:
         put: cf-tfstate
         params:
           file: updated-tfstate/cf.tfstate
+
+  - name: rotate-broker-credentials
+    serial: true
+    serial_groups: [smoke-tests]
+    plan:
+    - task: rotate-broker-credentials
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *gov-paas-bosh-cli-v2-image-resource
+        params:
+          CREDHUB_CLIENT: credhub-admin
+          CREDHUB_SECRET: ((bosh-credhub-admin))
+          CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          DEPLOY_ENV: ((deploy_env))
+        run:
+          path: sh
+          args:
+            - -e
+            - -c
+            - |
+              BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
+              credhub login
+
+              credhub generate -n "${BOSH_NS}/secrets_rds_broker_admin_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_cdn_broker_admin_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_aiven_broker_admin_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_elasticache_broker_admin_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_s3_broker_admin_password" -t password
+
+              echo "Broker credentials will be updated on the next deployment pipeline run."
+              echo "WARNING: Broker users will experience some downtime during the deploy. Our brokers do not support hot-swapping of credentials."
 
   - name: rotate-database-encryption-keys
     serial: true
