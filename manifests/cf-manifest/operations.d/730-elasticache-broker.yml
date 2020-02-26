@@ -27,6 +27,21 @@
     medium_plan: &elasticache_medium_plan
       instance_type: cache.m5.large
 
+    redis_3_2: &elasticache_redis_3_2
+      engine: redis
+      engine_version: 3.2.6
+      cache_parameter_group_family: redis3.2
+
+    redis_4_x: &elasticache_redis_4_x
+      engine: redis
+      engine_version: 4.0.10
+      cache_parameter_group_family: redis4.0
+
+    redis_5_x: &elasticache_redis_5_x
+      engine: redis
+      engine_version: 5.0.6
+      cache_parameter_group_family: redis5.0
+
 - type: replace
   path: /releases/-
   value:
@@ -86,65 +101,173 @@
                   bindable: true
                   plan_updateable: true
                   plans:
+                    # Deprecated
                     - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
                       name: tiny-clustered-3.2
                       description: DEPRECATED - do not use, 568MB RAM, clustered (1 shard), single node, no failover, daily backups
                       free: true
                       metadata:
                         displayName: Redis 3.2 Clustered Tiny
+
+                    # 3.2
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
                       name: tiny-3.2
                       description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
                       free: true
                       metadata:
                         displayName: Redis 3.2 tiny
-                    - id: b6949ea7-5c98-4c69-b981-4b5318ea8b7c
-                      name: medium-ha-3.2
-                      description: 6.37GB RAM, highly-available, daily backups
-                      free: false
-                      metadata:
-                        displayName: Redis 3.2 medium highly-available
                     - id: ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d
                       name: tiny-ha-3.2
                       description: 1.5GB RAM, highly-available, daily backups
                       free: false
                       metadata:
-                        displayName: Redis tiny highly-available
+                        displayName: Redis 3.2 tiny highly-available
                     - id: 9162ed5b-0c88-4f43-bcaf-c6d4a45dd243
                       name: small-ha-3.2
                       description: 3GB RAM, highly-available, daily backups
                       free: false
                       metadata:
                         displayName: Redis 3.2 small highly-available
+                    - id: b6949ea7-5c98-4c69-b981-4b5318ea8b7c
+                      name: medium-ha-3.2
+                      description: 6.37GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 3.2 medium highly-available
+
+                    # 4.x
+                    - id: b78c9d07-a031-495f-937c-28613905431c
+                      name: tiny-4.x
+                      description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
+                      free: true
+                      metadata:
+                        displayName: Redis 4.x tiny
+                    - id: e31d1a05-4f75-4bca-93a0-661bc233d25c
+                      name: tiny-ha-4.x
+                      description: 1.5GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 4.x tiny highly-available
+                    - id: 09e7088e-125e-4805-9eff-02bf61ee0146
+                      name: small-ha-4.x
+                      description: 3GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 4.x small highly-available
+                    - id: f210be07-8ea3-4295-a929-2dec0ae4cd30
+                      name: medium-ha-4.x
+                      description: 6.37GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 4.x medium highly-available
+
+                    # 5.x
+                    - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
+                      name: tiny-5.x
+                      description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
+                      free: true
+                      metadata:
+                        displayName: Redis 5.x tiny
+                    - id: c12a6a40-fb53-4e1e-b0a9-ba5e3180e3b7
+                      name: tiny-ha-5.x
+                      description: 1.5GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 5.x tiny highly-available
+                    - id: 07479e46-0169-4395-91d8-e125efb17e2c
+                      name: small-ha-5.x
+                      description: 3GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 5.x small highly-available
+                    - id: a5ee300e-9c75-45f3-939b-d74ca4c178e7
+                      name: medium-ha-5.x
+                      description: 6.37GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 5.x medium highly-available
 
             plan_configs:
-              3a51701c-eef3-447c-882b-907ad2bcb7ab:
+              3a51701c-eef3-447c-882b-907ad2bcb7ab: #tiny-clustered-3.2
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_3_2 # yamllint disable-line
                 <<: *elasticache_non_ha_plan # yamllint disable-line
                 instance_type: cache.t2.micro
                 parameters:
                   cluster-enabled: 'yes'
 
-              c84d1bef-9500-4ce9-88b2-c0bd421bbf8a:
+              c84d1bef-9500-4ce9-88b2-c0bd421bbf8a: #tiny-3.2
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_3_2 # yamllint disable-line
                 <<: *elasticache_non_ha_plan # yamllint disable-line
                 instance_type: cache.t2.micro
                 automatic_failover_enabled: false
 
-              b6949ea7-5c98-4c69-b981-4b5318ea8b7c:
+              ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d: #tiny-ha-3.2
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
-                <<: *elasticache_ha_plan # yamllint disable-line
-                <<: *elasticache_medium_plan # yamllint disable-line
-
-              ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d:
-                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_3_2 # yamllint disable-line
                 <<: *elasticache_ha_plan # yamllint disable-line
                 <<: *elasticache_tiny_plan # yamllint disable-line
 
-              9162ed5b-0c88-4f43-bcaf-c6d4a45dd243:
+              9162ed5b-0c88-4f43-bcaf-c6d4a45dd243: #small-ha-3.2
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_3_2 # yamllint disable-line
                 <<: *elasticache_ha_plan # yamllint disable-line
                 <<: *elasticache_small_plan # yamllint disable-line
+
+              b6949ea7-5c98-4c69-b981-4b5318ea8b7c: #medium-ha-3.2
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_3_2 # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_medium_plan # yamllint disable-line
+
+              b78c9d07-a031-495f-937c-28613905431c: #tiny-4.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_4_x # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
+              e31d1a05-4f75-4bca-93a0-661bc233d25c: #tiny-ha-4.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_4_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
+              09e7088e-125e-4805-9eff-02bf61ee0146: #small-ha-4.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_4_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_small_plan # yamllint disable-line
+
+              f210be07-8ea3-4295-a929-2dec0ae4cd30: #medium-ha-4.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_4_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_medium_plan # yamllint disable-line
+
+              1f2cccd7-d9a9-4b9a-b517-73b381848b73: #tiny-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
+              c12a6a40-fb53-4e1e-b0a9-ba5e3180e3b7: #tiny-ha-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
+              07479e46-0169-4395-91d8-e125efb17e2c: #small-ha-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_small_plan # yamllint disable-line
+
+              a5ee300e-9c75-45f3-939b-d74ca4c178e7: #medium-ha-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_medium_plan # yamllint disable-line
 
 
 - type: replace
