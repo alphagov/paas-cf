@@ -1,4 +1,31 @@
 ---
+- type: replace
+  path: /meta?/elasticache_broker
+  value:
+    cache_cluster_config: &elasticache_cache_cluster_config
+      shard_count: 1
+      snapshot_retention_limit: 7
+      parameters:
+        cluster-enabled: 'no'
+        maxmemory-policy: volatile-lru
+        reserved-memory: '0'
+
+    non_ha_plan: &elasticache_non_ha_plan
+      replicas_per_node_group: 0
+      automatic_failover_enabled: false
+
+    ha_plan: &elasticache_ha_plan
+      replicas_per_node_group: 1
+      automatic_failover_enabled: true
+
+    tiny_plan: &elasticache_tiny_plan
+      instance_type: cache.t2.small
+
+    small_plan: &elasticache_small_plan
+      instance_type: cache.t2.medium
+
+    medium_plan: &elasticache_medium_plan
+      instance_type: cache.m5.large
 
 - type: replace
   path: /releases/-
@@ -64,19 +91,19 @@
                       description: DEPRECATED - do not use, 568MB RAM, clustered (1 shard), single node, no failover, daily backups
                       free: true
                       metadata:
-                        displayName: Redis Clustered Tiny
+                        displayName: Redis 3.2 Clustered Tiny
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
                       name: tiny-3.2
                       description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
                       free: true
                       metadata:
-                        displayName: Redis tiny
+                        displayName: Redis 3.2 tiny
                     - id: b6949ea7-5c98-4c69-b981-4b5318ea8b7c
                       name: medium-ha-3.2
                       description: 6.37GB RAM, highly-available, daily backups
                       free: false
                       metadata:
-                        displayName: Redis medium highly-available
+                        displayName: Redis 3.2 medium highly-available
                     - id: ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d
                       name: tiny-ha-3.2
                       description: 1.5GB RAM, highly-available, daily backups
@@ -88,59 +115,36 @@
                       description: 3GB RAM, highly-available, daily backups
                       free: false
                       metadata:
-                        displayName: Redis small highly-available
+                        displayName: Redis 3.2 small highly-available
 
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab:
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
                 instance_type: cache.t2.micro
-                replicas_per_node_group: 0
-                shard_count: 1
-                snapshot_retention_limit: 7
-                automatic_failover_enabled: true
                 parameters:
                   cluster-enabled: 'yes'
-                  maxmemory-policy: volatile-lru
-                  reserved-memory: '0'
+
               c84d1bef-9500-4ce9-88b2-c0bd421bbf8a:
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
                 instance_type: cache.t2.micro
-                replicas_per_node_group: 0
-                shard_count: 1
-                snapshot_retention_limit: 7
                 automatic_failover_enabled: false
-                parameters:
-                  cluster-enabled: 'no'
-                  maxmemory-policy: volatile-lru
-                  reserved-memory: '0'
+
               b6949ea7-5c98-4c69-b981-4b5318ea8b7c:
-                instance_type: cache.m5.large
-                replicas_per_node_group: 1
-                shard_count: 1
-                snapshot_retention_limit: 7
-                automatic_failover_enabled: true
-                parameters:
-                  cluster-enabled: 'no'
-                  maxmemory-policy: volatile-lru
-                  reserved-memory: '0'
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_medium_plan # yamllint disable-line
+
               ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d:
-                instance_type: cache.t2.small
-                replicas_per_node_group: 1
-                shard_count: 1
-                snapshot_retention_limit: 7
-                automatic_failover_enabled: true
-                parameters:
-                  cluster-enabled: 'no'
-                  maxmemory-policy: volatile-lru
-                  reserved-memory: '0'
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
               9162ed5b-0c88-4f43-bcaf-c6d4a45dd243:
-                instance_type: cache.t2.medium
-                replicas_per_node_group: 1
-                shard_count: 1
-                snapshot_retention_limit: 7
-                automatic_failover_enabled: true
-                parameters:
-                  cluster-enabled: 'no'
-                  maxmemory-policy: volatile-lru
-                  reserved-memory: '0'
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_small_plan # yamllint disable-line
 
 
 - type: replace
