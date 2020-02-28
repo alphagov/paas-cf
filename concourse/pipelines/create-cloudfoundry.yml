@@ -2793,7 +2793,7 @@ jobs:
 
                 cf enable-service-access elasticsearch -b aiven-broker
 
-                cf enable-service-access influxdb -o admin -b aiven-broker
+                cf enable-service-access influxdb -b aiven-broker
 
       - task: register-elasticache-broker
         tags: [colocated-with-web]
