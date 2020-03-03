@@ -2275,20 +2275,6 @@
 			]
 		},
 		{
-			"name": "redis medium-ha-3.2",
-			"valid_from": "2019-01-01",
-			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
-			"number_of_nodes": 2,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
 			"name": "redis tiny-ha-3.2",
 			"valid_from": "2019-08-01",
 			"plan_guid": "ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d",
@@ -2311,6 +2297,20 @@
 				{
 					"name": "instance",
 					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.077",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis medium-ha-3.2",
+			"valid_from": "2019-08-01",
+			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
 					"currency_code": "USD",
 					"vat_code": "Standard"
 				}
