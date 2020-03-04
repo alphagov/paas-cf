@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.1.12
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.12.tgz
-    sha1: 07d3d7d89e0381f4b337f2d24abf9c8b37e3e561
+    version: 0.1.13
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.13.tgz
+    sha1: 987580a4f67544139baddf3e55f2782fea20d675
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
