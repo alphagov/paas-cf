@@ -2275,20 +2275,6 @@
 			]
 		},
 		{
-			"name": "redis medium-ha-3.2",
-			"valid_from": "2019-01-01",
-			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
-			"number_of_nodes": 2,
-			"components": [
-				{
-					"name": "instance",
-					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
-					"currency_code": "USD",
-					"vat_code": "Standard"
-				}
-			]
-		},
-		{
 			"name": "redis tiny-ha-3.2",
 			"valid_from": "2019-08-01",
 			"plan_guid": "ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d",
@@ -2311,6 +2297,132 @@
 				{
 					"name": "instance",
 					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.077",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis medium-ha-3.2",
+			"valid_from": "2019-08-01",
+			"plan_guid": "b6949ea7-5c98-4c69-b981-4b5318ea8b7c",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis tiny-4.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "b78c9d07-a031-495f-937c-28613905431c",
+			"number_of_nodes": 1,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.038",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis tiny-ha-4.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "e31d1a05-4f75-4bca-93a0-661bc233d25c",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.038",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis small-ha-4.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "09e7088e-125e-4805-9eff-02bf61ee0146",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.077",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis medium-ha-4.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "f210be07-8ea3-4295-a929-2dec0ae4cd30",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis tiny-5.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "1f2cccd7-d9a9-4b9a-b517-73b381848b73",
+			"number_of_nodes": 1,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.038",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis tiny-ha-5.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "c12a6a40-fb53-4e1e-b0a9-ba5e3180e3b7",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.038",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis small-ha-5.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "07479e46-0169-4395-91d8-e125efb17e2c",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.077",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis medium-ha-5.x",
+			"valid_from": "2020-03-01",
+			"plan_guid": "a5ee300e-9c75-45f3-939b-d74ca4c178e7",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.18",
 					"currency_code": "USD",
 					"vat_code": "Standard"
 				}
