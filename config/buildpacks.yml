@@ -138,37 +138,37 @@ buildpacks:
 - name: nodejs_buildpack
   repo_name: nodejs-buildpack
   stack: cflinuxfs3
-  version: v1.7.9
-  sha: 363aa8816d7172c537de60f4e9971d7f7b0684633f9648bd1420e64f860f1520
-  filename: nodejs-buildpack-cflinuxfs3-v1.7.9.zip
-  url: https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.7.9/nodejs-buildpack-cflinuxfs3-v1.7.9.zip
+  version: v1.7.13
+  sha: d31c98b6d81dc007f8ad875982276d7cdf91bb3bf01e7e417819766efd0ac14f
+  filename: nodejs-buildpack-cflinuxfs3-v1.7.13.zip
+  url: https://github.com/cloudfoundry/nodejs-buildpack/releases/download/v1.7.13/nodejs-buildpack-cflinuxfs3-v1.7.13.zip
   dependencies:
-  - name: node
-    version: 10.18.0
-    cf_stacks:
-    - cflinuxfs3
   - name: node
     version: 10.18.1
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 12.14.0
+    version: 10.19.0
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 12.14.1
+    version: 12.16.0
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 13.5.0
+    version: 12.16.1
     cf_stacks:
     - cflinuxfs3
   - name: node
-    version: 13.6.0
+    version: 13.7.0
+    cf_stacks:
+    - cflinuxfs3
+  - name: node
+    version: 13.8.0
     cf_stacks:
     - cflinuxfs3
   - name: yarn
-    version: 1.21.1
+    version: 1.22.0
     cf_stacks:
     - cflinuxfs3
 - name: php_buildpack
