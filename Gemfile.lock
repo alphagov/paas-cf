@@ -161,6 +161,7 @@ DEPENDENCIES
   hcl-checker (~> 1.1.1)
   json-minify (~> 0.0.2)
   mail (~> 2.6.4)
+  rake (~> 12.3.3)
   rest-client (~> 2.1.0)
   rspec (~> 3.3)
   rubocop (~> 0.52.1)
