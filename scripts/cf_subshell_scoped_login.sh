@@ -32,7 +32,7 @@ case $TARGET in
 esac
 
 TMPDIR=${TMPDIR:-/tmp}
-CF_HOME=$(mktemp -d "${TMPDIR}/cf_home.XXXXXX")
+CF_HOME=$(mktemp -d "${TMPDIR}cf_home.XXXXXX")
 cleanup() {
   echo "Cleaning up temporary CF_HOME..."
   cf logout || true
