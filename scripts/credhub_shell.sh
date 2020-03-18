@@ -45,7 +45,7 @@ cat <<EOF
 \\___/_/   \\___/\\____/_/ /_/\\____/_____/
 
 1. Run 'credhub login --sso'
-2. Enter the passcode from https://bosh-external.${SYSTEM_DNS_ZONE_NAME}:8443/passcode
+2. Enter the passcode from https://bosh-uaa-external.${SYSTEM_DNS_ZONE_NAME}/passcode
 
 From this shell, you can access credhub using the credhub cli.
 Basic usage:
