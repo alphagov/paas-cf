@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: ipsec
-    version: 0.1.4
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/ipsec-0.1.4.tgz
-    sha1: 37358e942d1507d31d2080e94ba376510fc8ce76
+    version: "3"
+    url: "https://bosh.io/d/github.com/SAP/ipsec-release?v=3"
+    sha1: "382e16ecbb5f38d378fc36de061c515b66d9a8ca"
 
 - type: replace
   path: /instance_groups/name=router/jobs/-
