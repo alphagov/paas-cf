@@ -11,8 +11,11 @@ require (
 	github.com/jszwec/csvutil v1.2.1
 	github.com/mattn/go-colorable v0.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
-	github.com/onsi/ginkgo v1.6.0
-	github.com/onsi/gomega v1.4.3
+	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.3 // indirect
+	github.com/onsi/ginkgo v1.8.0
+	github.com/onsi/gomega v1.9.0
 	github.com/xenolf/lego v2.5.0+incompatible
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
+
+go 1.13

@@ -14,6 +14,7 @@ var (
 	apiEndpoint = kingpin.Flag("api-endpoint", "API endpoint").Default("").Envar("API_ENDPOINT").String()
 	apiToken = kingpin.Flag("api-token", "CF OAuth API token").Default("").Envar("API_TOKEN").String()
 	critical = kingpin.Flag("critical", "Print the contact list for a critical message").Default("false").Envar("CRITICAL").Bool()
+	management = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
 )
 
 type Csv struct {
@@ -45,7 +46,7 @@ func main(){
 	}
 
 	data := []Csv{}
-	addresses := emails.FetchEmails(client, *critical)
+	addresses := emails.FetchEmails(client, *critical, *management)
 
 	for _, usr := range addresses {
 		record := Csv{ Email: usr}

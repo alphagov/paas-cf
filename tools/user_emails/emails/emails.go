@@ -10,7 +10,7 @@ import (
 
 var email_regex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-func FetchEmails(client Client, isCritical bool) []string {
+func FetchEmails(client Client, isCritical bool, isManagement bool) []string {
 	orgs, err := client.ListOrgs()
 
 	if err != nil {
@@ -24,19 +24,31 @@ func FetchEmails(client Client, isCritical bool) []string {
 	status := utils.NewStatus(os.Stderr, false)
 	for _, org := range orgs {
 		status.Text(org.Name)
-		switch isCritical {
+		switch isManagement {
 		case false:
-			u := normal(client, org.Guid)
-			for _, usr := range u {
-				if _, ok := usersIdentity[usr]; !ok{
-					users = append(users, usr)
-					usersIdentity[usr] = true
+			switch isCritical {
+			case false:
+				u := normal(client, org.Guid)
+				for _, usr := range u {
+					if _, ok := usersIdentity[usr]; !ok {
+						users = append(users, usr)
+						usersIdentity[usr] = true
+					}
+				}
+			case true:
+				u := critical(client, org.Guid)
+				for _, usr := range u {
+					if _, ok := usersIdentity[usr]; !ok {
+						users = append(users, usr)
+						usersIdentity[usr] = true
+					}
 				}
 			}
+			status.Done()
 		case true:
-			u := critical(client, org.Guid)
+			u := management(client, org.Guid)
 			for _, usr := range u {
-				if _, ok := usersIdentity[usr]; !ok{
+				if _, ok := usersIdentity[usr]; !ok {
 					users = append(users, usr)
 					usersIdentity[usr] = true
 				}
@@ -143,6 +155,45 @@ func critical(client Client, orgs string ) []string  {
 		}
 	}
 
+	return users
+}
+
+func management(client Client, orgs string) []string {
+
+	var users []string
+
+
+	orgManagers, err := client.ListOrgManagers(orgs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, orgManager := range orgManagers {
+		if validEmail(orgManager.Username) {
+			users = append(users, orgManager.Username)
+		}
+	}
+	orgAuditors, err := client.ListOrgAuditors(orgs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, orgAuditor := range orgAuditors {
+		if validEmail(orgAuditor.Username) {
+			users = append(users, orgAuditor.Username)
+		}
+	}
+
+	orgBillingManagers, err := client.ListOrgBillingManagers(orgs)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, orgBillingManager := range orgBillingManagers {
+		if validEmail(orgBillingManager.Username) {
+			users = append(users, orgBillingManager.Username)
+		}
+	}
 	return users
 
 }

@@ -22,6 +22,7 @@ func CreateFakeWithStubData() (StubCF, fakes.FakeClient) {
 	fake.ListOrgUsersCalls(stub.ListOrgUsers)
 	fake.ListOrgManagersCalls(stub.ListOrgManagers)
 	fake.ListOrgAuditorsCalls(stub.ListOrgAuditors)
+	fake.ListOrgBillingManagersCalls(stub.ListOrgBillingManagers)
 
 	return stub, fake
 }
@@ -173,4 +174,23 @@ func (cf *StubCF) ListOrgAuditors(orgGUID string) ([]cfclient.User, error) {
 	return nil, errors.New("unknown org guid")
 }
 
+func (cf *StubCF) ListOrgBillingManagers(orgGUID string) ([]cfclient.User, error) {
+	billingManagers := map[string][]cfclient.User{
+		"org-1": []cfclient.User{
+			cfclient.User{Username: "org-1-billing-manager-1@paas.gov"},
+			cfclient.User{Username: "org-1-billing-manager-2@paas.gov"},
+		},
+		"org-2": []cfclient.User{
+			cfclient.User{Username: "org-2-billing-manager-1@paas.gov"},
+		},
+		"org-3": []cfclient.User{
+			cfclient.User{Username: "org-3-billing-manager-1@paas.gov"},
+		},
+	}
 
+	if value, ok := billingManagers[orgGUID]; ok {
+		return value, nil
+	}
+
+	return nil, errors.New("unknown org guid")
+}
