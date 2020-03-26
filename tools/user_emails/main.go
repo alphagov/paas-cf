@@ -45,15 +45,10 @@ func main(){
 		os.Exit(1)
 	}
 
-	data := []Csv{}
 	addresses := emails.FetchEmails(client, *critical, *management)
 
-	for _, usr := range addresses {
-		record := Csv{ Email: usr}
-		data = append(data, record)
-	}
 
-	b, err := csvutil.Marshal(data)
+	b, err := csvutil.Marshal(addresses)
 	if err != nil {
 		fmt.Println("error:", err)
 	}

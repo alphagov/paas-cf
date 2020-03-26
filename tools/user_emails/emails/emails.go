@@ -7,10 +7,14 @@ import (
 	"regexp"
 )
 
+type Csv struct {
+	Email string `csv:"email"`
+	Org string `csv:"org"`
+}
 
 var email_regex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-func FetchEmails(client Client, isCritical bool, isManagement bool) []string {
+func FetchEmails(client Client, isCritical bool, isManagement bool) []Csv {
 	orgs, err := client.ListOrgs()
 
 	if err != nil {
@@ -20,6 +24,8 @@ func FetchEmails(client Client, isCritical bool, isManagement bool) []string {
 
 	var users []string
 	var usersIdentity map[string]bool = map[string]bool{}
+	var userOrg []string
+	data := []Csv{}
 
 	status := utils.NewStatus(os.Stderr, false)
 	for _, org := range orgs {
@@ -33,6 +39,9 @@ func FetchEmails(client Client, isCritical bool, isManagement bool) []string {
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
+						userOrg = append(userOrg, org.Name)
+						record := Csv{ Email: usr, Org: org.Name}
+						data = append(data, record)
 					}
 				}
 			case true:
@@ -41,6 +50,9 @@ func FetchEmails(client Client, isCritical bool, isManagement bool) []string {
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
+						userOrg = append(userOrg, org.Name)
+						record := Csv{ Email: usr, Org: org.Name}
+						data = append(data, record)
 					}
 				}
 			}
@@ -51,13 +63,16 @@ func FetchEmails(client Client, isCritical bool, isManagement bool) []string {
 				if _, ok := usersIdentity[usr]; !ok {
 					users = append(users, usr)
 					usersIdentity[usr] = true
+					userOrg = append(userOrg, org.Name)
+					record := Csv{ Email: usr, Org: org.Name}
+					data = append(data, record)
 				}
 			}
 		}
 		status.Done()
 	}
 
-	return users
+	return data
 }
 
 func validEmail(address string) bool {
