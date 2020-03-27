@@ -17,10 +17,6 @@ var (
 	management = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
 )
 
-type Csv struct {
-	Email string `csv:"email"`
-}
-
 
 func main(){
 	kingpin.Parse()
