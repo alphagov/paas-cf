@@ -33,7 +33,6 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 
 	var users []userInfo
 	var usersIdentity map[userInfo]bool = map[userInfo]bool{}
-	var userOrg []string
 	data := []Csv{}
 
 	status := utils.NewStatus(os.Stderr, false)
@@ -48,7 +47,6 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						userOrg = append(userOrg, org.Name)
 						record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin}
 						data = append(data, record)
 					}
@@ -59,7 +57,6 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						userOrg = append(userOrg, org.Name)
 						record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin}
 						data = append(data, record)
 					}
@@ -72,7 +69,6 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 				if _, ok := usersIdentity[usr]; !ok {
 					users = append(users, usr)
 					usersIdentity[usr] = true
-					userOrg = append(userOrg, org.Name)
 					record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin}
 					data = append(data, record)
 				}
@@ -93,7 +89,7 @@ func normal(client Client, orgs string, adminEndpoint string ) []userInfo {
 	var devs []userInfo
 
 	targetOrg := map[string] []string {
-		"organization_guid": []string{ orgs },
+		"organization_guid": { orgs },
 	}
 	spaces, err := client.ListSpacesByQuery(targetOrg)
 	if err != nil {
@@ -122,7 +118,7 @@ func critical(client Client, orgs string, adminEndpoint string ) []userInfo {
 	var users []userInfo
 
 	targetOrg := map[string] []string {
-		"organization_guid": []string{ orgs },
+		"organization_guid": { orgs },
 	}
 	spaces, err := client.ListSpacesByQuery(targetOrg)
 	if err != nil {
