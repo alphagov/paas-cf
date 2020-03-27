@@ -358,7 +358,8 @@ logit-filters:
 show-tenant-comms-addresses:
 	$(eval export API_TOKEN=`cf oauth-token | cut -f 2 -d ' '`)
 	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
-	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ./user_emails
+	$(eval export ADMIN_ENDPOINT=https://admin.${SYSTEM_DNS_ZONE_NAME}/organisations/)
+	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ADMIN_ENDPOINT=$(ADMIN_ENDPOINT) ./user_emails
 
 .PHONY: credhub
 credhub:

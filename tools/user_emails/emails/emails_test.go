@@ -10,6 +10,12 @@ import (
 type Csv struct {
 	Email string `csv:"email"`
 	Org string `csv:"org"`
+	Role string `csv:"role"`
+}
+
+type userInfo struct {
+	Username string
+	Role string
 }
 
 var _ = Describe("Emails", func() {
