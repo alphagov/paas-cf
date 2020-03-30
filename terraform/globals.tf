@@ -25,16 +25,6 @@ variable "zones" {
   type        = "map"
 }
 
-variable "zone_index" {
-  description = "AWS availability zone indices"
-  type        = "map"
-}
-
-variable "zone_labels" {
-  description = "AWS availability zone labels as used in BOSH manifests (z1-z3)"
-  type        = "map"
-}
-
 variable "zone_count" {
   description = "Number of zones to use"
 }

@@ -6,18 +6,12 @@ zones = {
   zone0 = "eu-west-1a"
   zone1 = "eu-west-1b"
   zone2 = "eu-west-1c"
-}
-
-zone_index = {
-  eu-west-1a = "0"
-  eu-west-1b = "1"
-  eu-west-1c = "2"
-}
-
-zone_labels = {
-  eu-west-1a = "z1"
-  eu-west-1b = "z2"
-  eu-west-1c = "z3"
+  zone3 = "eu-west-1a"
+  zone4 = "eu-west-1b"
+  zone5 = "eu-west-1c"
+  zone6 = "eu-west-1a"
+  zone7 = "eu-west-1b"
+  zone8 = "eu-west-1c"
 }
 
 microbosh_ips = {

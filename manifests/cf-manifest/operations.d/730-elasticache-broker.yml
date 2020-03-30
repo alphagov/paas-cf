@@ -276,7 +276,7 @@
     name: elasticache_broker_instances
     rules:
       - protocol: tcp
-        destination: ((terraform_outputs_aws_backing_service_cidr_all))
+        destination: ((terraform_outputs_aws_backing_service_ip_range_start))-((terraform_outputs_aws_backing_service_ip_range_stop))
         ports: '6379'
 
 - type: replace
