@@ -23,6 +23,19 @@ type FakeClient struct {
 		result1 []cfclient.User
 		result2 error
 	}
+	ListOrgBillingManagersStub        func(string) ([]cfclient.User, error)
+	listOrgBillingManagersMutex       sync.RWMutex
+	listOrgBillingManagersArgsForCall []struct {
+		arg1 string
+	}
+	listOrgBillingManagersReturns struct {
+		result1 []cfclient.User
+		result2 error
+	}
+	listOrgBillingManagersReturnsOnCall map[int]struct {
+		result1 []cfclient.User
+		result2 error
+	}
 	ListOrgManagersStub        func(string) ([]cfclient.User, error)
 	listOrgManagersMutex       sync.RWMutex
 	listOrgManagersArgsForCall []struct {
@@ -175,6 +188,69 @@ func (fake *FakeClient) ListOrgAuditorsReturnsOnCall(i int, result1 []cfclient.U
 		})
 	}
 	fake.listOrgAuditorsReturnsOnCall[i] = struct {
+		result1 []cfclient.User
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeClient) ListOrgBillingManagers(arg1 string) ([]cfclient.User, error) {
+	fake.listOrgBillingManagersMutex.Lock()
+	ret, specificReturn := fake.listOrgBillingManagersReturnsOnCall[len(fake.listOrgBillingManagersArgsForCall)]
+	fake.listOrgBillingManagersArgsForCall = append(fake.listOrgBillingManagersArgsForCall, struct {
+		arg1 string
+	}{arg1})
+	fake.recordInvocation("ListOrgBillingManagers", []interface{}{arg1})
+	fake.listOrgBillingManagersMutex.Unlock()
+	if fake.ListOrgBillingManagersStub != nil {
+		return fake.ListOrgBillingManagersStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.listOrgBillingManagersReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeClient) ListOrgBillingManagersCallCount() int {
+	fake.listOrgBillingManagersMutex.RLock()
+	defer fake.listOrgBillingManagersMutex.RUnlock()
+	return len(fake.listOrgBillingManagersArgsForCall)
+}
+
+func (fake *FakeClient) ListOrgBillingManagersCalls(stub func(string) ([]cfclient.User, error)) {
+	fake.listOrgBillingManagersMutex.Lock()
+	defer fake.listOrgBillingManagersMutex.Unlock()
+	fake.ListOrgBillingManagersStub = stub
+}
+
+func (fake *FakeClient) ListOrgBillingManagersArgsForCall(i int) string {
+	fake.listOrgBillingManagersMutex.RLock()
+	defer fake.listOrgBillingManagersMutex.RUnlock()
+	argsForCall := fake.listOrgBillingManagersArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeClient) ListOrgBillingManagersReturns(result1 []cfclient.User, result2 error) {
+	fake.listOrgBillingManagersMutex.Lock()
+	defer fake.listOrgBillingManagersMutex.Unlock()
+	fake.ListOrgBillingManagersStub = nil
+	fake.listOrgBillingManagersReturns = struct {
+		result1 []cfclient.User
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeClient) ListOrgBillingManagersReturnsOnCall(i int, result1 []cfclient.User, result2 error) {
+	fake.listOrgBillingManagersMutex.Lock()
+	defer fake.listOrgBillingManagersMutex.Unlock()
+	fake.ListOrgBillingManagersStub = nil
+	if fake.listOrgBillingManagersReturnsOnCall == nil {
+		fake.listOrgBillingManagersReturnsOnCall = make(map[int]struct {
+			result1 []cfclient.User
+			result2 error
+		})
+	}
+	fake.listOrgBillingManagersReturnsOnCall[i] = struct {
 		result1 []cfclient.User
 		result2 error
 	}{result1, result2}
@@ -618,6 +694,8 @@ func (fake *FakeClient) Invocations() map[string][][]interface{} {
 	defer fake.invocationsMutex.RUnlock()
 	fake.listOrgAuditorsMutex.RLock()
 	defer fake.listOrgAuditorsMutex.RUnlock()
+	fake.listOrgBillingManagersMutex.RLock()
+	defer fake.listOrgBillingManagersMutex.RUnlock()
 	fake.listOrgManagersMutex.RLock()
 	defer fake.listOrgManagersMutex.RUnlock()
 	fake.listOrgUsersMutex.RLock()

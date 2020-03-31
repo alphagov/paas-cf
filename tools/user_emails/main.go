@@ -13,12 +13,11 @@ import (
 var (
 	apiEndpoint = kingpin.Flag("api-endpoint", "API endpoint").Default("").Envar("API_ENDPOINT").String()
 	apiToken = kingpin.Flag("api-token", "CF OAuth API token").Default("").Envar("API_TOKEN").String()
+	adminEndpoint = kingpin.Flag("admin-endpoint", "PaaS Admin base URI").Default("").Envar("ADMIN_ENDPOINT").String()
 	critical = kingpin.Flag("critical", "Print the contact list for a critical message").Default("false").Envar("CRITICAL").Bool()
+	management = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
+	region = kingpin.Flag("region-info", "PaaS region targeted").Default("").Envar("MAKEFILE_ENV_TARGET").String()
 )
-
-type Csv struct {
-	Email string `csv:"email"`
-}
 
 
 func main(){
@@ -44,19 +43,28 @@ func main(){
 		os.Exit(1)
 	}
 
-	data := []Csv{}
-	addresses := emails.FetchEmails(client, *critical)
+	addresses := emails.FetchEmails(client, *critical, *management, *adminEndpoint, location(*region))
 
-	for _, usr := range addresses {
-		record := Csv{ Email: usr}
-		data = append(data, record)
-	}
 
-	b, err := csvutil.Marshal(data)
+	b, err := csvutil.Marshal(addresses)
 	if err != nil {
 		fmt.Println("error:", err)
 	}
 	fmt.Println(string(b))
+}
+
+func location(location string) string {
+	switch location {
+	case "prod":
+		foundry := "Ireland"
+		return foundry
+	case "prod-lon":
+		foundry := "London"
+		return foundry
+	default:
+		foundry := "Not Prod"
+		return foundry
+	}
 }
 
 func apiEndpointPresent(apiEndpoint *string) bool {

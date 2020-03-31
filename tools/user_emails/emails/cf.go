@@ -19,4 +19,5 @@ type Client interface {
 	ListOrgUsers(orgGUID string) ([]cfclient.User, error)
 	ListOrgManagers(orgGUID string) ([]cfclient.User, error)
 	ListOrgAuditors(orgGUID string) ([]cfclient.User, error)
+	ListOrgBillingManagers(orgGUID string) ([]cfclient.User, error)
 }
