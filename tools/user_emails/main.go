@@ -16,6 +16,7 @@ var (
 	adminEndpoint = kingpin.Flag("admin-endpoint", "PaaS Admin base URI").Default("").Envar("ADMIN_ENDPOINT").String()
 	critical = kingpin.Flag("critical", "Print the contact list for a critical message").Default("false").Envar("CRITICAL").Bool()
 	management = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
+	region = kingpin.Flag("region-info", "PaaS region targeted").Default("").Envar("MAKEFILE_ENV_TARGET").String()
 )
 
 
@@ -42,7 +43,7 @@ func main(){
 		os.Exit(1)
 	}
 
-	addresses := emails.FetchEmails(client, *critical, *management, *adminEndpoint)
+	addresses := emails.FetchEmails(client, *critical, *management, *adminEndpoint, location(*region))
 
 
 	b, err := csvutil.Marshal(addresses)
@@ -50,6 +51,20 @@ func main(){
 		fmt.Println("error:", err)
 	}
 	fmt.Println(string(b))
+}
+
+func location(location string) string {
+	switch location {
+	case "prod":
+		foundry := "Ireland"
+		return foundry
+	case "prod-lon":
+		foundry := "London"
+		return foundry
+	default:
+		foundry := "Not Prod"
+		return foundry
+	}
 }
 
 func apiEndpointPresent(apiEndpoint *string) bool {
