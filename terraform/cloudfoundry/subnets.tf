@@ -35,7 +35,7 @@ resource "aws_subnet" "cell" {
 }
 
 resource "aws_subnet" "aws_backing_services" {
-  count                   = "${var.zone_count}"
+  count                   = "${length(var.aws_backing_service_cidrs)}"
   vpc_id                  = "${var.vpc_id}"
   cidr_block              = "${lookup(var.aws_backing_service_cidrs, format("zone%d", count.index))}"
   availability_zone       = "${lookup(var.zones, format("zone%d", count.index))}"

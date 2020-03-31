@@ -6,14 +6,19 @@ RSpec.describe "RDS broker properties" do
       defs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.security_group_definitions")
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
       rds_sg = defs.find { |d| d["name"] == "rds_broker_instances" }
+
+      dest_ip_range_start = terraform_fixture_value('aws_backing_service_ip_range_start')
+      dest_ip_range_stop = terraform_fixture_value('aws_backing_service_ip_range_stop')
+      dest_ip_range = "#{dest_ip_range_start}-#{dest_ip_range_stop}"
+
       expect(rds_sg).to be
       expect(rds_sg["rules"]).to eq([{
         "protocol" => "tcp",
-        "destination" => terraform_fixture_value("aws_backing_service_cidr_all"),
+        "destination" => dest_ip_range,
         "ports" => "5432",
       }, {
         "protocol" => "tcp",
-        "destination" => terraform_fixture_value("aws_backing_service_cidr_all"),
+        "destination" => dest_ip_range,
         "ports" => "3306",
       }])
     end

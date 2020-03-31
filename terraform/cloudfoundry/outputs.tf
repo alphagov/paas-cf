@@ -63,8 +63,12 @@ output "cf_ssh_proxy_elb_name" {
   value = "${aws_elb.ssh_proxy.name}"
 }
 
-output "aws_backing_service_cidr_all" {
-  value = "${var.aws_backing_service_cidr_all}"
+output "aws_backing_service_ip_range_start" {
+  value = "${cidrhost(lookup(var.aws_backing_service_cidrs, "zone0"), 0)}"
+}
+
+output "aws_backing_service_ip_range_stop" {
+  value = "${cidrhost(lookup(var.aws_backing_service_cidrs, "zone8"), -1)}"
 }
 
 output "rds_broker_db_clients_security_group" {
