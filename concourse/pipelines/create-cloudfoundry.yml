@@ -2430,6 +2430,29 @@ jobs:
 
                 cf enable-feature-flag diego_docker
 
+      - task: enable-service_instance_sharing-feature-flag
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+          params:
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          image_resource: *cf-cli-image-resource
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+
+                cf enable-feature-flag service_instance_sharing
+
+
       - task: ensure-internal-apps-domain-created
         tags: [colocated-with-web]
         config:
