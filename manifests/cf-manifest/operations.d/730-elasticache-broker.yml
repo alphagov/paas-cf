@@ -27,6 +27,12 @@
     medium_plan: &elasticache_medium_plan
       instance_type: cache.m5.large
 
+    large_plan: &elasticache_large_plan
+      instance_type: cache.m5.xlarge
+
+    xlarge_plan: &elasticache_xlarge_plan
+      instance_type: cache.m5.2xlarge
+
     redis_3_2: &elasticache_redis_3_2
       engine: redis
       engine_version: 3.2.6
@@ -46,7 +52,7 @@
   path: /releases/-
   value:
     name: elasticache-broker
-    version: 0.1.13 
+    version: 0.1.13
     url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.13.tgz
     sha1: 09efc6337cd4ef2d56632807d8bab622d522393e
 
@@ -160,6 +166,18 @@
                       free: false
                       metadata:
                         displayName: Redis 4.x medium highly-available
+                    - id: 4b5913cd-c39b-457c-8f77-eb9a95d63ba8
+                      name: large-ha-4.x
+                      description: 12.93GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 4.x large highly-available
+                    - id: e6e8e4c4-5f2e-4add-89d6-ce417f145c19
+                      name: xlarge-ha-4.x
+                      description: 26.04GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 4.x xlarge highly-available
 
                     # 5.x
                     - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
@@ -186,6 +204,18 @@
                       free: false
                       metadata:
                         displayName: Redis 5.x medium highly-available
+                    - id: 883c0549-cacd-4d73-adf8-85096a3c39a4
+                      name: large-ha-5.x
+                      description: 12.93GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 5.x large highly-available
+                    - id: f60443d9-3e9f-4c9b-8653-c83b6418292e
+                      name: xlarge-ha-5.x
+                      description: 26.04GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Redis 5.x xlarge highly-available
 
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab: #tiny-clustered-3.2
@@ -245,6 +275,18 @@
                 <<: *elasticache_ha_plan # yamllint disable-line
                 <<: *elasticache_medium_plan # yamllint disable-line
 
+              4b5913cd-c39b-457c-8f77-eb9a95d63ba8: #large-ha-4.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_4_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_large_plan # yamllint disable-line
+
+              e6e8e4c4-5f2e-4add-89d6-ce417f145c19: #xlarge-ha-4.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_4_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_xlarge_plan # yamllint disable-line
+
               1f2cccd7-d9a9-4b9a-b517-73b381848b73: #tiny-5.x
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
                 <<: *elasticache_redis_5_x # yamllint disable-line
@@ -268,6 +310,18 @@
                 <<: *elasticache_redis_5_x # yamllint disable-line
                 <<: *elasticache_ha_plan # yamllint disable-line
                 <<: *elasticache_medium_plan # yamllint disable-line
+
+              883c0549-cacd-4d73-adf8-85096a3c39a4: #large-ha-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_large_plan # yamllint disable-line
+
+              f60443d9-3e9f-4c9b-8653-c83b6418292e: #xlarge-ha-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_xlarge_plan # yamllint disable-line
 
 
 - type: replace
