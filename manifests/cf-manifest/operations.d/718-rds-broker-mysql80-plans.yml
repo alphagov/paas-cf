@@ -44,6 +44,16 @@
     description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 8.0. DB Instance Class: db.t3.micro."
     free: true
     metadata:
+      AdditionalMetadata:
+        backups: false
+        encrypted: false
+        highlyAvailable: false
+        instanceClass: db.t3.micro
+        storage:
+          amount: 5
+          unit: GB
+        version: 8.0
+      displayName: Tiny
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "AWS RDS"
@@ -59,6 +69,16 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.t3.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: 8.0
+      displayName: Small
       costs:
         - amount:
             usd: 0.036
@@ -80,6 +100,16 @@
     description: "100GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.t3.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: 8.0
+      displayName: Small highly-available
       costs:
         - amount:
             usd: 0.072
@@ -101,6 +131,16 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.m5.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m5.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 8.0
+      displayName: Medium
       costs:
         - amount:
             usd: 0.193
@@ -122,6 +162,16 @@
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.m5.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 8.0
+      displayName: Medium highly-available
       costs:
         - amount:
             usd: 0.386
@@ -144,6 +194,16 @@
     description: "512GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 8.0
+      displayName: Large
       costs:
         - amount:
             usd: 0.772
@@ -165,6 +225,16 @@
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 8.0
+      displayName: Large highly-available
       costs:
         - amount:
             usd: 1.544
@@ -187,6 +257,16 @@
     description: "2TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 8.0
+      displayName: Extra Large
       costs:
         - amount:
             usd: 1.545
@@ -208,6 +288,16 @@
     description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 8.0. DB Instance Class: db.m5.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 8.0
+      displayName: Extra Large highly-available
       costs:
         - amount:
             usd: 3.090

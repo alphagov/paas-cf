@@ -40,19 +40,22 @@
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog?/services?/-
   value:
     id: 4b888513-1dc3-4b9b-bdcd-51f4c03675a4
-    name: "mysql"
     description: "AWS RDS MySQL service"
+    name: mysql
     bindable: true
     tags:
-      - "mysql"
-      - "relational"
+      - mysql
+      - relational
     metadata:
-      displayName: "AWS RDS MySQL"
-      imageUrl: ""
-      longDescription: "AWS RDS MySQL service"
-      providerDisplayName: "Amazon Web Services"
-      documentationUrl: "https://aws.amazon.com/documentation/rds/"
-      supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
+      displayName: AWS RDS MySQL
+      longDescription: MySQL is an open-source relational database management system (RDBMS).
+      providerDisplayName: Amazon Web Services
+      documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/mysql/
+      supportUrl: https://www.cloud.service.gov.uk/support
+      AdditionalMetadata:
+        otherDocumentation:
+          - https://dev.mysql.com/doc/
+          - https://aws.amazon.com/documentation/rds/
     plan_updateable: true
 
 - type: replace
@@ -63,6 +66,16 @@
     description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.micro."
     free: true
     metadata:
+      AdditionalMetadata:
+        backups: false
+        encrypted: false
+        highlyAvailable: false
+        instanceClass: db.t2.micro
+        storage:
+          amount: 5
+          unit: GB
+        version: 5.7
+      displayName: Tiny
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -78,6 +91,16 @@
     description: "20GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.t2.small
+        storage:
+          amount: 20
+          unit: GB
+        version: 5.7
+      displayName: Small
       costs:
         - amount:
             usd: 0.036
@@ -99,6 +122,16 @@
     description: "20GB Storage, Dedicated Instance, Highly Available. Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.t2.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.t2.small
+        storage:
+          amount: 20
+          unit: GB
+        version: 5.7
+      displayName: Small highly-available
       costs:
         - amount:
             usd: 0.072
@@ -120,6 +153,16 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 5.7
+      displayName: Medium
       costs:
         - amount:
             usd: 0.193
@@ -141,6 +184,16 @@
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 5.7
+      displayName: Medium highly-available
       costs:
         - amount:
             usd: 0.386
@@ -163,6 +216,16 @@
     description: "512GB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 5.7
+      displayName: Large
       costs:
         - amount:
             usd: 0.772
@@ -184,6 +247,16 @@
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 5.7
+      displayName: Large highly-available
       costs:
         - amount:
             usd: 1.544
@@ -206,6 +279,16 @@
     description: "2TB Storage, Dedicated Instance, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 5.7
+      displayName: Extra Large
       costs:
         - amount:
             usd: 1.545
@@ -227,6 +310,16 @@
     description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 5.7
+      displayName: Extra Large highly-available
       costs:
         - amount:
             usd: 3.090
@@ -250,6 +343,7 @@
     name: "small-ha-unencrypted-5.7"
     description: "20GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.t2.small."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -271,6 +365,7 @@
     name: "medium-unencrypted-5.7"
     description: "100GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.large."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -291,6 +386,7 @@
     name: "medium-ha-unencrypted-5.7"
     description: "100GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.large."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -312,6 +408,7 @@
     name: "large-unencrypted-5.7"
     description: "512GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -332,6 +429,7 @@
     name: "large-ha-unencrypted-5.7"
     description: "512GB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.2xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -353,6 +451,7 @@
     name: "xlarge-unencrypted-5.7"
     description: "2TB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -373,6 +472,7 @@
     name: "xlarge-ha-unencrypted-5.7"
     description: "2TB Storage, Dedicated Instance, Highly Available. MySQL Version 5.7. DB Instance Class: db.m4.4xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -394,6 +494,7 @@
     name: "small-unencrypted-5.7"
     description: "20GB Storage, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t2.small."
     free: false
+    active: false
     metadata:
       costs:
         - amount:

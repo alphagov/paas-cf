@@ -92,20 +92,26 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog?/services?/-
   value:
-    id: "ce71b484-d542-40f7-9dd4-5526e38c81ba"
-    name: "postgres"
     description: "AWS RDS PostgreSQL service"
+    id: ce71b484-d542-40f7-9dd4-5526e38c81ba
+    name: postgres
     bindable: true
     tags:
-      - "postgres"
-      - "relational"
+      - postgres
+      - relational
     metadata:
-      displayName: "AWS RDS Postgres"
-      imageUrl: ""
-      longDescription: "AWS RDS postgres service"
-      providerDisplayName: "Amazon Web Services"
-      documentationUrl: "https://aws.amazon.com/documentation/rds/"
-      supportUrl: "https://forums.aws.amazon.com/forum.jspa?forumID=60"
+      displayName: AWS RDS Postgres
+      longDescription: |
+        Postgres, is a free and open-source relational database management system (RDBMS) emphasizing extensibility and
+        technical standards compliance. It is designed to handle a range of workloads, from single machines to data
+        warehouses or Web services with many concurrent users.
+      providerDisplayName: Amazon Web Services
+      documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/postgres/
+      supportUrl: https://www.cloud.service.gov.uk/support
+      AdditionalMetadata:
+        otherDocumentation:
+          - https://www.postgresql.org/docs/
+          - https://aws.amazon.com/documentation/rds/
     plan_updateable: true
 
 - type: replace
@@ -116,6 +122,17 @@
     description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.micro."
     free: true
     metadata:
+      AdditionalMetadata:
+        backups: false
+        concurrentConnections: 50
+        encrypted: false
+        highlyAvailable: false
+        instanceClass: db.t2.micro
+        storage:
+          amount: 5
+          unit: GB
+        version: 9.5
+      displayName: Tiny
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -131,6 +148,17 @@
     description: "20GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.t2.small
+        storage:
+          amount: 20
+          unit: GB
+        version: 9.5
+      displayName: Small
       costs:
         - amount:
             usd: 0.039
@@ -152,6 +180,17 @@
     description: "20GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.t2.small
+        storage:
+          amount: 20
+          unit: GB
+        version: 9.5
+      displayName: Small highly-available
       costs:
         - amount:
             usd: 0.078
@@ -173,6 +212,17 @@
     description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 9.5
+      displayName: Medium
       costs:
         - amount:
             usd: 0.201
@@ -194,6 +244,17 @@
     description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.large
+        storage:
+          amount: 100
+          unit: GB
+        version: 9.5
+      displayName: Medium highly-available
       costs:
         - amount:
             usd: 0.402
@@ -216,6 +277,17 @@
     description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 9.5
+      displayName: Large
       costs:
         - amount:
             usd: 0.806
@@ -237,6 +309,17 @@
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 512
+          unit: GB
+        version: 9.5
+      displayName: Large highly-available
       costs:
         - amount:
             usd: 1.612
@@ -259,6 +342,17 @@
     description: "2TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 9.5
+      displayName: Extra Large
       costs:
         - amount:
             usd: 1.612
@@ -280,6 +374,17 @@
     description: "2TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
     free: false
     metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.4xlarge
+        storage:
+          amount: 2
+          unit: TB
+        version: 9.5
+      displayName: Extra Large highly-available
       costs:
         - amount:
             usd: 3.224
@@ -303,6 +408,7 @@
     name: "small-unencrypted-9.5"
     description: "20GB Storage, Dedicated Instance, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -322,6 +428,7 @@
     name: "small-ha-unencrypted-9.5"
     description: "20GB Storage, Dedicated Instance, Highly Available, Max 200 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.t2.small."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -342,6 +449,7 @@
     name: "medium-unencrypted-9.5"
     description: "100GB Storage, Dedicated Instance, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -361,6 +469,7 @@
     name: "medium-ha-unencrypted-9.5"
     description: "100GB Storage, Dedicated Instance, Highly Available, Max 500 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.large."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -381,6 +490,7 @@
     name: "large-unencrypted-9.5"
     description: "512GB Storage, Dedicated Instance, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -400,6 +510,7 @@
     name: "large-ha-unencrypted-9.5"
     description: "512GB Storage, Dedicated Instance, Highly Available, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.2xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -420,6 +531,7 @@
     name: "xlarge-unencrypted-9.5"
     description: "2TB Storage, Dedicated Instance, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
@@ -439,6 +551,7 @@
     name: "xlarge-ha-unencrypted-9.5"
     description: "2TB Storage, Dedicated Instance, Highly Available, Max 5000 Concurrent Connections. Postgres Version 9.5. DB Instance Class: db.m4.4xlarge."
     free: false
+    active: false
     metadata:
       costs:
         - amount:
