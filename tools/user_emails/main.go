@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/alphagov/paas-cf/tools/user_emails/emails"
 	"github.com/cloudfoundry-community/go-cfclient"
@@ -17,6 +18,13 @@ var (
 	critical = kingpin.Flag("critical", "Print the contact list for a critical message").Default("false").Envar("CRITICAL").Bool()
 	management = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
 	region = kingpin.Flag("region-info", "PaaS region targeted").Default("").Envar("MAKEFILE_ENV_TARGET").String()
+	format = kingpin.Flag("format", "Output format. Defaults to CSV. Options: csv, json").Default("csv").Envar("FORMAT").String()
+)
+
+var (
+	FORMAT_CSV = "csv"
+	FORMAT_JSON = "json"
+	VALID_FORMATS = []string{FORMAT_CSV, FORMAT_JSON}
 )
 
 
@@ -33,6 +41,10 @@ func main(){
 		os.Exit(1)
 	}
 
+	if !validFormat(format) {
+		log.Fatalf("Invalid format '%s'", format)
+	}
+
 	client, err := cfclient.NewClient(&cfclient.Config{
 		ApiAddress: *apiEndpoint,
 		Token:      *apiToken,
@@ -45,12 +57,45 @@ func main(){
 
 	addresses := emails.FetchEmails(client, *critical, *management, *adminEndpoint, location(*region))
 
+	if *format == FORMAT_CSV {
+		outputCsv(addresses)
+	}
 
+	if *format == FORMAT_JSON {
+		outputJson(addresses)
+	}
+}
+
+func outputJson(addresses []emails.UserDetails) {
+	b, err := json.Marshal(addresses)
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
+func outputCsv(addresses []emails.UserDetails) {
 	b, err := csvutil.Marshal(addresses)
 	if err != nil {
 		fmt.Println("error:", err)
+		return
 	}
 	fmt.Println(string(b))
+}
+
+func validFormat(format *string) bool {
+	if format == nil {
+		return false
+	}
+
+	for _, valid := range VALID_FORMATS {
+		if valid == *format {
+			return true
+		}
+	}
+
+	return false
 }
 
 func location(location string) string {

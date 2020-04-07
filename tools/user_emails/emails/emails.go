@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type Csv struct {
+type UserDetails struct {
 	Email string `csv:"email"`
 	Org string `csv:"org"`
 	Role string `csv:"role"`
@@ -25,7 +25,7 @@ type userInfo struct {
 
 var email_regex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoint string, region string) []Csv {
+func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoint string, region string) []UserDetails {
 	orgs, err := client.ListOrgs()
 
 	if err != nil {
@@ -35,7 +35,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 
 	var users []userInfo
 	var usersIdentity map[userInfo]bool = map[userInfo]bool{}
-	data := []Csv{}
+	data := []UserDetails{}
 
 	status := utils.NewStatus(os.Stderr, false)
 	for _, org := range orgs {
@@ -49,7 +49,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+						record := UserDetails{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 						data = append(data, record)
 					}
 				}
@@ -59,7 +59,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+						record := UserDetails{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 						data = append(data, record)
 					}
 				}
@@ -71,7 +71,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 				if _, ok := usersIdentity[usr]; !ok {
 					users = append(users, usr)
 					usersIdentity[usr] = true
-					record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+					record := UserDetails{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 					data = append(data, record)
 				}
 			}
