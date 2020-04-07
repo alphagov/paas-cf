@@ -2,13 +2,12 @@ package utils
 
 import (
 	"fmt"
+	"github.com/briandowns/spinner"
+	"github.com/fatih/color"
 	"io"
 	"os"
 	"time"
-	"github.com/briandowns/spinner"
-	"github.com/fatih/color"
 )
-
 
 // This file was taken as a copy from
 // https://github.com/alphagov/paas-cf-conduit/blob/a20379de044ee452ef054c08af08e1567008b402/util/status.go

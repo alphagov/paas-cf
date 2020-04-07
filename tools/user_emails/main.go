@@ -12,23 +12,22 @@ import (
 )
 
 var (
-	apiEndpoint = kingpin.Flag("api-endpoint", "API endpoint").Default("").Envar("API_ENDPOINT").String()
-	apiToken = kingpin.Flag("api-token", "CF OAuth API token").Default("").Envar("API_TOKEN").String()
+	apiEndpoint   = kingpin.Flag("api-endpoint", "API endpoint").Default("").Envar("API_ENDPOINT").String()
+	apiToken      = kingpin.Flag("api-token", "CF OAuth API token").Default("").Envar("API_TOKEN").String()
 	adminEndpoint = kingpin.Flag("admin-endpoint", "PaaS Admin base URI").Default("").Envar("ADMIN_ENDPOINT").String()
-	critical = kingpin.Flag("critical", "Print the contact list for a critical message").Default("false").Envar("CRITICAL").Bool()
-	management = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
-	region = kingpin.Flag("region-info", "PaaS region targeted").Default("").Envar("MAKEFILE_ENV_TARGET").String()
-	format = kingpin.Flag("format", "Output format. Defaults to CSV. Options: csv, json").Default("csv").Envar("FORMAT").String()
+	critical      = kingpin.Flag("critical", "Print the contact list for a critical message").Default("false").Envar("CRITICAL").Bool()
+	management    = kingpin.Flag("management", "Print the contact list for a message to org management").Default("false").Envar("MANAGEMENT").Bool()
+	region        = kingpin.Flag("region-info", "PaaS region targeted").Default("").Envar("MAKEFILE_ENV_TARGET").String()
+	format        = kingpin.Flag("format", "Output format. Defaults to CSV. Options: csv, json").Default("csv").Envar("FORMAT").String()
 )
 
 var (
-	FORMAT_CSV = "csv"
-	FORMAT_JSON = "json"
+	FORMAT_CSV    = "csv"
+	FORMAT_JSON   = "json"
 	VALID_FORMATS = []string{FORMAT_CSV, FORMAT_JSON}
 )
 
-
-func main(){
+func main() {
 	kingpin.Parse()
 
 	if !apiTokenPresent(apiToken) {
@@ -113,7 +112,7 @@ func location(location string) string {
 }
 
 func apiEndpointPresent(apiEndpoint *string) bool {
-	if apiEndpoint == nil ||*apiEndpoint == "" {
+	if apiEndpoint == nil || *apiEndpoint == "" {
 		return false
 	}
 

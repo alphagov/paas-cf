@@ -8,8 +8,8 @@ import (
 )
 
 var _ = Describe("Emails", func() {
-	Context("with 'normal' urgency", func(){
-		It("gets the spaces for each organisation", func(){
+	Context("with 'normal' urgency", func() {
+		It("gets the spaces for each organisation", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			emails.FetchEmails(&cfFake, false, false, "https://admin.example.com/organisations/", "prod")
@@ -30,14 +30,14 @@ var _ = Describe("Emails", func() {
 			}
 		})
 
-		It("only returns usernames which are valid email addresses", func(){
+		It("only returns usernames which are valid email addresses", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, false, false, "https://admin.example.com/organisations/", "prod")
 			Expect(names).ToNot(ContainElement("admin"))
 		})
 
-		It("catches addresses that are known to be problematic", func(){
+		It("catches addresses that are known to be problematic", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, false, false, "https://admin.example.com/organisations/", "prod")
@@ -50,11 +50,11 @@ var _ = Describe("Emails", func() {
 		})
 	})
 
-	Context("with 'critical' urgency", func(){
-		It("includes the username of each org manager", func(){
+	Context("with 'critical' urgency", func() {
+		It("includes the username of each org manager", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
-			names := emails.FetchEmails(&cfFake, true,false, "https://admin.example.com/organisations/", "prod")
+			names := emails.FetchEmails(&cfFake, true, false, "https://admin.example.com/organisations/", "prod")
 			Expect(names[6].Email).To(ContainSubstring("org-1-manager-1@paas.gov"))
 			Expect(names[6].Org).To(ContainSubstring("Org 1"))
 			Expect(names[6].Role).To(ContainSubstring("Org Manager"))
@@ -77,7 +77,7 @@ var _ = Describe("Emails", func() {
 			Expect(names[19].Region).To(ContainSubstring("prod"))
 		})
 
-		It("includes the username of each org auditor", func(){
+		It("includes the username of each org auditor", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, true, false, "https://admin.example.com/organisations/", "prod")
@@ -103,7 +103,7 @@ var _ = Describe("Emails", func() {
 			Expect(names[20].Region).To(ContainSubstring("prod"))
 		})
 
-		It("includes the username of each space manager in each space", func(){
+		It("includes the username of each space manager in each space", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, true, false, "https://admin.example.com/organisations/", "prod")
@@ -129,10 +129,10 @@ var _ = Describe("Emails", func() {
 			Expect(names[17].Region).To(ContainSubstring("prod"))
 		})
 
-		It("includes the username of each space auditor in each space", func(){
+		It("includes the username of each space auditor in each space", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
-			names := emails.FetchEmails(&cfFake, true,false, "https://admin.example.com/organisations/", "prod")
+			names := emails.FetchEmails(&cfFake, true, false, "https://admin.example.com/organisations/", "prod")
 			Expect(names[4].Email).To(ContainSubstring("org-1-space-1-auditor-1@paas.gov"))
 			Expect(names[4].Org).To(ContainSubstring("Org 1"))
 			Expect(names[4].Role).To(ContainSubstring("Space Auditor"))
@@ -177,8 +177,8 @@ var _ = Describe("Emails", func() {
 		})
 	})
 
-	Context("with 'management' message", func(){
-		It("includes the username of each org manager", func(){
+	Context("with 'management' message", func() {
+		It("includes the username of each org manager", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, false, true, "https://admin.example.com/organisations/", "prod")
@@ -204,7 +204,7 @@ var _ = Describe("Emails", func() {
 			Expect(names[9].Region).To(ContainSubstring("prod"))
 		})
 
-		It("includes the username of each org auditor", func(){
+		It("includes the username of each org auditor", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, false, true, "https://admin.example.com/organisations/", "prod")
@@ -230,7 +230,7 @@ var _ = Describe("Emails", func() {
 			Expect(names[10].Region).To(ContainSubstring("prod"))
 		})
 
-		It("includes the username of each org auditor", func(){
+		It("includes the username of each org auditor", func() {
 			_, cfFake := stubs.CreateFakeWithStubData()
 
 			names := emails.FetchEmails(&cfFake, false, true, "https://admin.example.com/organisations/", "prod")

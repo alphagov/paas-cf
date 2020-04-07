@@ -29,15 +29,15 @@ func CreateFakeWithStubData() (StubCF, fakes.FakeClient) {
 
 func (cf *StubCF) ListSpaceManagers(spaceGUID string) ([]cfclient.User, error) {
 	spaceManagers := map[string][]cfclient.User{
-		"org-1-space-1": []cfclient.User{
-			cfclient.User{Username: "org-1-space-1-manager-1@paas.gov"},
-			cfclient.User{Username: "org-1-space-1-manager-2@paas.gov"},
+		"org-1-space-1": {
+			{Username: "org-1-space-1-manager-1@paas.gov"},
+			{Username: "org-1-space-1-manager-2@paas.gov"},
 		},
-		"org-2-space-1": []cfclient.User{
-			cfclient.User{Username: "org-2-space-1-manager-1@paas.gov"},
+		"org-2-space-1": {
+			{Username: "org-2-space-1-manager-1@paas.gov"},
 		},
-		"org-3-space-1": []cfclient.User{
-			cfclient.User{Username: "org-3-space-1-manager-1@paas.gov"},
+		"org-3-space-1": {
+			{Username: "org-3-space-1-manager-1@paas.gov"},
 		},
 	}
 
@@ -50,15 +50,15 @@ func (cf *StubCF) ListSpaceManagers(spaceGUID string) ([]cfclient.User, error) {
 
 func (cf *StubCF) ListSpaceAuditors(spaceGUID string) ([]cfclient.User, error) {
 	spaceAuditors := map[string][]cfclient.User{
-		"org-1-space-1": []cfclient.User{
-			cfclient.User{Username: "org-1-space-1-auditor-1@paas.gov"},
-			cfclient.User{Username: "org-1-space-1-auditor-2@paas.gov"},
+		"org-1-space-1": {
+			{Username: "org-1-space-1-auditor-1@paas.gov"},
+			{Username: "org-1-space-1-auditor-2@paas.gov"},
 		},
-		"org-2-space-1": []cfclient.User{
-			cfclient.User{Username: "org-2-space-1-auditor-1@paas.gov"},
+		"org-2-space-1": {
+			{Username: "org-2-space-1-auditor-1@paas.gov"},
 		},
-		"org-3-space-1": []cfclient.User{
-			cfclient.User{Username: "org-3-space-1-auditor-1@paas.gov"},
+		"org-3-space-1": {
+			{Username: "org-3-space-1-auditor-1@paas.gov"},
 		},
 	}
 
@@ -71,17 +71,17 @@ func (cf *StubCF) ListSpaceAuditors(spaceGUID string) ([]cfclient.User, error) {
 
 func (cf *StubCF) ListSpaceDevelopers(spaceGUID string) ([]cfclient.User, error) {
 	spaceDevs := map[string][]cfclient.User{
-		"org-1-space-1": []cfclient.User{
-			cfclient.User{Username: "user-1@paas.gov"},
-			cfclient.User{Username: "user-2@paas.gov"},
+		"org-1-space-1": {
+			{Username: "user-1@paas.gov"},
+			{Username: "user-2@paas.gov"},
 		},
-		"org-2-space-1": []cfclient.User{
-			cfclient.User{Username: "user-1@paas.gov"},
-			cfclient.User{Username: "test@homeoffice.x.gsi.gov.uk"},
+		"org-2-space-1": {
+			{Username: "user-1@paas.gov"},
+			{Username: "test@homeoffice.x.gsi.gov.uk"},
 		},
-		"org-3-space-1": []cfclient.User{
-			cfclient.User{Username: "user-3@paas.gov"},
-			cfclient.User{Username: "admin"},
+		"org-3-space-1": {
+			{Username: "user-3@paas.gov"},
+			{Username: "admin"},
 		},
 	}
 
@@ -98,16 +98,16 @@ func (cf *StubCF) ListSpacesByQuery(query url.Values) ([]cfclient.Space, error) 
 	}
 
 	spaces := map[string][]cfclient.Space{
-		"org-1": []cfclient.Space{
-			cfclient.Space{Guid: "org-1-space-1"},
+		"org-1": {
+			{Guid: "org-1-space-1"},
 		},
 
-		"org-2": []cfclient.Space{
-			cfclient.Space{Guid: "org-2-space-1"},
+		"org-2": {
+			{Guid: "org-2-space-1"},
 		},
 
-		"org-3": []cfclient.Space{
-			cfclient.Space{Guid: "org-3-space-1"},
+		"org-3": {
+			{Guid: "org-3-space-1"},
 		},
 	}
 
@@ -122,9 +122,9 @@ func (cf *StubCF) ListSpacesByQuery(query url.Values) ([]cfclient.Space, error) 
 
 func (cf *StubCF) ListOrgs() ([]cfclient.Org, error) {
 	return []cfclient.Org{
-		cfclient.Org{Guid: "org-1", Name: "Org 1"},
-		cfclient.Org{Guid: "org-2", Name: "Org 2"},
-		cfclient.Org{Guid: "org-3", Name: "Org 3"},
+		{Guid: "org-1", Name: "Org 1"},
+		{Guid: "org-2", Name: "Org 2"},
+		{Guid: "org-3", Name: "Org 3"},
 	}, nil
 }
 
@@ -134,15 +134,15 @@ func (cf *StubCF) ListOrgUsers(orgGUID string) ([]cfclient.User, error) {
 
 func (cf *StubCF) ListOrgManagers(orgGUID string) ([]cfclient.User, error) {
 	managers := map[string][]cfclient.User{
-		"org-1": []cfclient.User{
-			cfclient.User{Username: "org-1-manager-1@paas.gov"},
-			cfclient.User{Username: "org-1-manager-2@paas.gov"},
+		"org-1": {
+			{Username: "org-1-manager-1@paas.gov"},
+			{Username: "org-1-manager-2@paas.gov"},
 		},
-		"org-2": []cfclient.User{
-			cfclient.User{Username: "org-2-manager-1@paas.gov"},
+		"org-2": {
+			{Username: "org-2-manager-1@paas.gov"},
 		},
-		"org-3": []cfclient.User{
-			cfclient.User{Username: "org-3-manager-1@paas.gov"},
+		"org-3": {
+			{Username: "org-3-manager-1@paas.gov"},
 		},
 	}
 
@@ -155,15 +155,15 @@ func (cf *StubCF) ListOrgManagers(orgGUID string) ([]cfclient.User, error) {
 
 func (cf *StubCF) ListOrgAuditors(orgGUID string) ([]cfclient.User, error) {
 	auditors := map[string][]cfclient.User{
-		"org-1": []cfclient.User{
-			cfclient.User{Username: "org-1-auditor-1@paas.gov"},
-			cfclient.User{Username: "org-1-auditor-2@paas.gov"},
+		"org-1": {
+			{Username: "org-1-auditor-1@paas.gov"},
+			{Username: "org-1-auditor-2@paas.gov"},
 		},
-		"org-2": []cfclient.User{
-			cfclient.User{Username: "org-2-auditor-1@paas.gov"},
+		"org-2": {
+			{Username: "org-2-auditor-1@paas.gov"},
 		},
-		"org-3": []cfclient.User{
-			cfclient.User{Username: "org-3-auditor-1@paas.gov"},
+		"org-3": {
+			{Username: "org-3-auditor-1@paas.gov"},
 		},
 	}
 
@@ -176,15 +176,15 @@ func (cf *StubCF) ListOrgAuditors(orgGUID string) ([]cfclient.User, error) {
 
 func (cf *StubCF) ListOrgBillingManagers(orgGUID string) ([]cfclient.User, error) {
 	billingManagers := map[string][]cfclient.User{
-		"org-1": []cfclient.User{
-			cfclient.User{Username: "org-1-billing-manager-1@paas.gov"},
-			cfclient.User{Username: "org-1-billing-manager-2@paas.gov"},
+		"org-1": {
+			{Username: "org-1-billing-manager-1@paas.gov"},
+			{Username: "org-1-billing-manager-2@paas.gov"},
 		},
-		"org-2": []cfclient.User{
-			cfclient.User{Username: "org-2-billing-manager-1@paas.gov"},
+		"org-2": {
+			{Username: "org-2-billing-manager-1@paas.gov"},
 		},
-		"org-3": []cfclient.User{
-			cfclient.User{Username: "org-3-billing-manager-1@paas.gov"},
+		"org-3": {
+			{Username: "org-3-billing-manager-1@paas.gov"},
 		},
 	}
 
