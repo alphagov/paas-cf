@@ -8,24 +8,25 @@ import (
 	"strings"
 )
 
-type Csv struct {
-	Email string `csv:"email"`
-	Org string `csv:"org"`
-	Role string `csv:"role"`
-	Admin string `csv:"admin"`
+type UserDetails struct {
+	Email  string `csv:"email"`
+	Org    string `csv:"org"`
+	OrgId  string `csv:"org_id"`
+	Role   string `csv:"role"`
+	Admin  string `csv:"admin"`
 	Region string `csv:"region"`
 }
 
 type userInfo struct {
 	Username string
-	Role string
-	Admin string
-	Region string
+	Role     string
+	Admin    string
+	Region   string
 }
 
 var email_regex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoint string, region string) []Csv {
+func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoint string, region string) []UserDetails {
 	orgs, err := client.ListOrgs()
 
 	if err != nil {
@@ -34,8 +35,8 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 	}
 
 	var users []userInfo
-	var usersIdentity map[userInfo]bool = map[userInfo]bool{}
-	data := []Csv{}
+	var usersIdentity = map[userInfo]bool{}
+	data := []UserDetails{}
 
 	status := utils.NewStatus(os.Stderr, false)
 	for _, org := range orgs {
@@ -49,7 +50,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+						record := UserDetails{Email: usr.Username, Org: org.Name, OrgId: org.Guid, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 						data = append(data, record)
 					}
 				}
@@ -59,7 +60,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+						record := UserDetails{Email: usr.Username, Org: org.Name, OrgId: org.Guid, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 						data = append(data, record)
 					}
 				}
@@ -71,7 +72,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 				if _, ok := usersIdentity[usr]; !ok {
 					users = append(users, usr)
 					usersIdentity[usr] = true
-					record := Csv{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+					record := UserDetails{Email: usr.Username, Org: org.Name, OrgId: org.Guid, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 					data = append(data, record)
 				}
 			}
@@ -87,11 +88,11 @@ func validEmail(address string) bool {
 	return valid
 }
 
-func normal(client Client, orgs string, adminEndpoint string, region string ) []userInfo {
+func normal(client Client, orgs string, adminEndpoint string, region string) []userInfo {
 	var devs []userInfo
 
-	targetOrg := map[string] []string {
-		"organization_guid": { orgs },
+	targetOrg := map[string][]string{
+		"organization_guid": {orgs},
 	}
 	spaces, err := client.ListSpacesByQuery(targetOrg)
 	if err != nil {
@@ -105,8 +106,8 @@ func normal(client Client, orgs string, adminEndpoint string, region string ) []
 
 		for _, dev := range spaceDevs {
 			if validEmail(dev.Username) {
-				pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-				data := userInfo{ Username: dev.Username, Role: "Developer", Admin: pazmin, Region: region}
+				pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+				data := userInfo{Username: dev.Username, Role: "Developer", Admin: pazmin, Region: region}
 				devs = append(devs, data)
 			}
 		}
@@ -115,12 +116,12 @@ func normal(client Client, orgs string, adminEndpoint string, region string ) []
 	return devs
 }
 
-func critical(client Client, orgs string, adminEndpoint string, region string ) []userInfo {
+func critical(client Client, orgs string, adminEndpoint string, region string) []userInfo {
 
 	var users []userInfo
 
-	targetOrg := map[string] []string {
-		"organization_guid": { orgs },
+	targetOrg := map[string][]string{
+		"organization_guid": {orgs},
 	}
 	spaces, err := client.ListSpacesByQuery(targetOrg)
 	if err != nil {
@@ -134,8 +135,8 @@ func critical(client Client, orgs string, adminEndpoint string, region string ) 
 
 		for _, dev := range spaceDevs {
 			if validEmail(dev.Username) {
-				pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-				data := userInfo{ Username: dev.Username, Role: "Developer", Admin: pazmin, Region: region}
+				pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+				data := userInfo{Username: dev.Username, Role: "Developer", Admin: pazmin, Region: region}
 				users = append(users, data)
 			}
 		}
@@ -146,8 +147,8 @@ func critical(client Client, orgs string, adminEndpoint string, region string ) 
 
 		for _, manager := range spaceManagers {
 			if validEmail(manager.Username) {
-				pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-				data := userInfo{ Username: manager.Username, Role: "Space Manager", Admin: pazmin, Region: region}
+				pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+				data := userInfo{Username: manager.Username, Role: "Space Manager", Admin: pazmin, Region: region}
 				users = append(users, data)
 			}
 		}
@@ -158,8 +159,8 @@ func critical(client Client, orgs string, adminEndpoint string, region string ) 
 
 		for _, auditor := range spaceAuditors {
 			if validEmail(auditor.Username) {
-				pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-				data := userInfo{ Username: auditor.Username, Role: "Space Auditor", Admin: pazmin, Region: region}
+				pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+				data := userInfo{Username: auditor.Username, Role: "Space Auditor", Admin: pazmin, Region: region}
 				users = append(users, data)
 			}
 		}
@@ -170,8 +171,8 @@ func critical(client Client, orgs string, adminEndpoint string, region string ) 
 
 		for _, orgManager := range orgManagers {
 			if validEmail(orgManager.Username) {
-				pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-				data := userInfo{ Username: orgManager.Username, Role: "Org Manager", Admin: pazmin, Region: region}
+				pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+				data := userInfo{Username: orgManager.Username, Role: "Org Manager", Admin: pazmin, Region: region}
 				users = append(users, data)
 			}
 		}
@@ -182,8 +183,8 @@ func critical(client Client, orgs string, adminEndpoint string, region string ) 
 
 		for _, orgAuditor := range orgAuditors {
 			if validEmail(orgAuditor.Username) {
-				pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-				data := userInfo{ Username: orgAuditor.Username, Role: "Org Auditor", Admin: pazmin, Region: region}
+				pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+				data := userInfo{Username: orgAuditor.Username, Role: "Org Auditor", Admin: pazmin, Region: region}
 				users = append(users, data)
 			}
 		}
@@ -203,8 +204,8 @@ func management(client Client, orgs string, adminEndpoint string, region string)
 
 	for _, orgManager := range orgManagers {
 		if validEmail(orgManager.Username) {
-			pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-			data := userInfo{ Username: orgManager.Username, Role: "Org Manager", Admin: pazmin, Region: region}
+			pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+			data := userInfo{Username: orgManager.Username, Role: "Org Manager", Admin: pazmin, Region: region}
 			users = append(users, data)
 		}
 	}
@@ -215,8 +216,8 @@ func management(client Client, orgs string, adminEndpoint string, region string)
 
 	for _, orgAuditor := range orgAuditors {
 		if validEmail(orgAuditor.Username) {
-			pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-			data := userInfo{ Username: orgAuditor.Username, Role: "Org Auditor", Admin: pazmin, Region: region}
+			pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+			data := userInfo{Username: orgAuditor.Username, Role: "Org Auditor", Admin: pazmin, Region: region}
 			users = append(users, data)
 		}
 	}
@@ -228,8 +229,8 @@ func management(client Client, orgs string, adminEndpoint string, region string)
 
 	for _, orgBillingManager := range orgBillingManagers {
 		if validEmail(orgBillingManager.Username) {
-			pazmin := strings.Join([]string{adminEndpoint, orgs},"")
-			data := userInfo{ Username: orgBillingManager.Username, Role: "Billing Manager", Admin: pazmin, Region: region}
+			pazmin := strings.Join([]string{adminEndpoint, orgs}, "")
+			data := userInfo{Username: orgBillingManager.Username, Role: "Billing Manager", Admin: pazmin, Region: region}
 			users = append(users, data)
 		}
 	}
