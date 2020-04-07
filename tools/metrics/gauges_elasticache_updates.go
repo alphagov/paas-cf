@@ -117,6 +117,7 @@ func serviceUpdateRequiredInstances(
 				{Label: "elasticache_service_update", Value: elasticacheUpdateName},
 				{Label: "elasticache_replication_group_id", Value: replicationGroupId},
 				{Label: "service_instance_guid", Value: instance.ServiceInstance.Guid},
+				{Label: "service_instance_name", Value: instance.ServiceInstance.Name},
 				{Label: "space_guid", Value: instance.Space.Guid},
 				{Label: "space_name", Value: instance.Space.Name},
 				{Label: "org_guid", Value: instance.Org.Guid},
