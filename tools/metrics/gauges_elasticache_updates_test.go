@@ -139,18 +139,21 @@ var _ = Describe("Elasticache Updates", func() {
 						ServicePlanGuid: "svc-plan-1",
 						Guid:            "instance-guid-1",
 						SpaceGuid:       "space-1",
+						Name:			 "instance-1",
 					},
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
 						Guid:            "instance-guid-2",
 						SpaceGuid:       "space-2",
+						Name:			 "instance-2",
 					},
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
 						Guid:            "instance-guid-3",
 						SpaceGuid:       "space-3",
+						Name:			 "instance-3",
 					},
 				},
 			}
@@ -241,7 +244,7 @@ var _ = Describe("Elasticache Updates", func() {
 			}))
 		})
 
-		It("labels each redis service metric with the service guid", func() {
+		It("labels each redis service metric with the service guid and name", func() {
 			metrics := getFilteredMetrics("aws.elasticache.cluster.update_required", 4)
 
 			// There are 2 instances, with 2 service update metrics each
@@ -249,17 +252,36 @@ var _ = Describe("Elasticache Updates", func() {
 				Label: "service_instance_guid",
 				Value: "instance-guid-1",
 			}))
+			Expect(metrics[0].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_name",
+				Value: "instance-1",
+			}))
+
 			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
 				Value: "instance-guid-3",
 			}))
+			Expect(metrics[1].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_name",
+				Value: "instance-3",
+			}))
+
 			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
 				Value: "instance-guid-2",
 			}))
+			Expect(metrics[2].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_name",
+				Value: "instance-2",
+			}))
+
 			Expect(metrics[3].Tags).To(ContainElement(m.MetricTag{
 				Label: "service_instance_guid",
 				Value: "instance-guid-3",
+			}))
+			Expect(metrics[3].Tags).To(ContainElement(m.MetricTag{
+				Label: "service_instance_name",
+				Value: "instance-3",
 			}))
 		})
 
