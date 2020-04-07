@@ -11,6 +11,7 @@ import (
 type UserDetails struct {
 	Email string `csv:"email"`
 	Org string `csv:"org"`
+	OrgId string `csv:"org_id"`
 	Role string `csv:"role"`
 	Admin string `csv:"admin"`
 	Region string `csv:"region"`
@@ -49,7 +50,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						record := UserDetails{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+						record := UserDetails{ Email: usr.Username, Org: org.Name, OrgId: org.Guid, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 						data = append(data, record)
 					}
 				}
@@ -59,7 +60,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 					if _, ok := usersIdentity[usr]; !ok {
 						users = append(users, usr)
 						usersIdentity[usr] = true
-						record := UserDetails{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+						record := UserDetails{ Email: usr.Username, Org: org.Name, OrgId: org.Guid, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 						data = append(data, record)
 					}
 				}
@@ -71,7 +72,7 @@ func FetchEmails(client Client, isCritical bool, isManagement bool, adminEndpoin
 				if _, ok := usersIdentity[usr]; !ok {
 					users = append(users, usr)
 					usersIdentity[usr] = true
-					record := UserDetails{ Email: usr.Username, Org: org.Name, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
+					record := UserDetails{ Email: usr.Username, Org: org.Name, OrgId: org.Guid, Role: usr.Role, Admin: usr.Admin, Region: usr.Region}
 					data = append(data, record)
 				}
 			}
