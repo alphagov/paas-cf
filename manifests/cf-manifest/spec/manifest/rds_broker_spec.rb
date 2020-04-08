@@ -277,6 +277,8 @@ RSpec.describe "RDS broker properties" do
       describe "plan rds_properties" do
         shared_examples "all postgres plans" do
           let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:metadata) { subject.fetch("metadata") }
+          let(:additional_metadata) { metadata.fetch("AdditionalMetadata") }
 
           it "uses solid state storage" do
             expect(rds_properties).to include("storage_type" => "gp2")
@@ -287,6 +289,10 @@ RSpec.describe "RDS broker properties" do
               "db_subnet_group_name" => terraform_fixture_value("rds_broker_dbs_subnet_group"),
               "vpc_security_group_ids" => [terraform_fixture_value("rds_broker_dbs_security_group_id")],
             )
+          end
+
+          it "has a version" do
+            expect(additional_metadata["version"]).to be_a(String)
           end
         end
 
