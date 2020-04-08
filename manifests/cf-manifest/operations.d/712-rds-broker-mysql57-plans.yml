@@ -74,7 +74,7 @@
         storage:
           amount: 5
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Tiny
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -99,7 +99,7 @@
         storage:
           amount: 20
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Small
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -126,7 +126,7 @@
         storage:
           amount: 20
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Small highly-available
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -153,7 +153,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Medium
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -180,7 +180,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Medium highly-available
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -208,7 +208,7 @@
         storage:
           amount: 512
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Large
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -235,7 +235,7 @@
         storage:
           amount: 512
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Large highly-available
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -263,7 +263,7 @@
         storage:
           amount: 2
           unit: TB
-        version: 5.7
+        version: '5.7'
       displayName: Extra Large
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -290,7 +290,7 @@
         storage:
           amount: 2
           unit: TB
-        version: 5.7
+        version: '5.7'
       displayName: Extra Large highly-available
       bullets:
         - "Dedicated MySQL 5.7 server"

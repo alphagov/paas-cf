@@ -115,7 +115,7 @@
         storage:
           amount: 5
           unit: GB
-        version: 11
+        version: '11'
       displayName: Tiny
       bullets:
         - "Dedicated Postgres 11 server"
@@ -141,7 +141,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Small
       bullets:
         - "Dedicated Postgres 11 server"
@@ -169,7 +169,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Small highly-available
       bullets:
         - "Dedicated Postgres 11 server"
@@ -197,7 +197,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Medium
       bullets:
         - "Dedicated Postgres 11 server"
@@ -225,7 +225,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Medium highly-available
       bullets:
         - "Dedicated Postgres 11 server"
@@ -254,7 +254,7 @@
         storage:
           amount: 512
           unit: GB
-        version: 11
+        version: '11'
       displayName: Large
       bullets:
         - "Dedicated Postgres 11 server"
@@ -282,7 +282,7 @@
         storage:
           amount: 512
           unit: GB
-        version: 11
+        version: '11'
       displayName: Large highly-available
       bullets:
         - "Dedicated Postgres 11 server"
@@ -311,7 +311,7 @@
         storage:
           amount: 2
           unit: TB
-        version: 11
+        version: '11'
       displayName: Extra Large
       bullets:
         - "Dedicated Postgres 11 server"
@@ -339,7 +339,7 @@
         storage:
           amount: 2
           unit: TB
-        version: 11
+        version: '11'
       displayName: Extra Large highly-available
       bullets:
         - "Dedicated Postgres 11 server"

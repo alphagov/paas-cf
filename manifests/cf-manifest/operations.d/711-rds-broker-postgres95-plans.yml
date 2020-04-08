@@ -131,7 +131,7 @@
         storage:
           amount: 5
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Tiny
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -157,7 +157,7 @@
         storage:
           amount: 20
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Small
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -185,7 +185,7 @@
         storage:
           amount: 20
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Small highly-available
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -213,7 +213,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Medium
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -241,7 +241,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Medium highly-available
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -270,7 +270,7 @@
         storage:
           amount: 512
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Large
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -298,7 +298,7 @@
         storage:
           amount: 512
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Large highly-available
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -327,7 +327,7 @@
         storage:
           amount: 2
           unit: TB
-        version: 9.5
+        version: '9.5'
       displayName: Extra Large
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -355,7 +355,7 @@
         storage:
           amount: 2
           unit: TB
-        version: 9.5
+        version: '9.5'
       displayName: Extra Large highly-available
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -381,6 +381,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *small_plan_rds_properties # yamllint disable-line
@@ -397,6 +399,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *small_plan_rds_properties # yamllint disable-line
@@ -414,6 +418,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *medium_plan_rds_properties # yamllint disable-line
@@ -430,6 +436,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *medium_plan_rds_properties # yamllint disable-line
@@ -447,6 +455,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *large_plan_rds_properties # yamllint disable-line
@@ -463,6 +473,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *large_plan_rds_properties # yamllint disable-line
@@ -480,6 +492,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *xlarge_plan_rds_properties # yamllint disable-line
@@ -496,6 +510,8 @@
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *xlarge_plan_rds_properties # yamllint disable-line

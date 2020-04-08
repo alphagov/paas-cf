@@ -53,7 +53,7 @@
         storage:
           amount: 25
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Tiny high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -79,7 +79,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Small high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -107,7 +107,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Small highly-available high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -135,7 +135,7 @@
         storage:
           amount: 500
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Medium high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -163,7 +163,7 @@
         storage:
           amount: 500
           unit: GB
-        version: 5.7
+        version: '5.7'
       displayName: Medium highly-available high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -192,7 +192,7 @@
         storage:
           amount: 2.5
           unit: TB
-        version: 5.7
+        version: '5.7'
       displayName: Large high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -220,7 +220,7 @@
         storage:
           amount: 2.5
           unit: TB
-        version: 5.7
+        version: '5.7'
       displayName: Large highly-available high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"
@@ -249,7 +249,7 @@
         storage:
           amount: 10
           unit: TB
-        version: 5.7
+        version: '5.7'
       displayName: Extra Large high-IOPS
       bullets:
         - "Dedicated MySQL 5.7 server"

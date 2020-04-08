@@ -116,7 +116,7 @@
         storage:
           amount: 25
           unit: GB
-        version: 11
+        version: '11'
       displayName: Tiny high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -143,7 +143,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Small high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -172,7 +172,7 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Small highly-available high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -201,7 +201,7 @@
         storage:
           amount: 500
           unit: GB
-        version: 11
+        version: '11'
       displayName: Medium high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -230,7 +230,7 @@
         storage:
           amount: 500
           unit: GB
-        version: 11
+        version: '11'
       displayName: Medium highly-available high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -260,7 +260,7 @@
         storage:
           amount: 2.5
           unit: TB
-        version: 11
+        version: '11'
       displayName: Large high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -289,7 +289,7 @@
         storage:
           amount: 2.5
           unit: TB
-        version: 11
+        version: '11'
       displayName: Large highly-available high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -319,7 +319,7 @@
         storage:
           amount: 10
           unit: TB
-        version: 11
+        version: '11'
       displayName: Extra Large high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
@@ -348,7 +348,7 @@
         storage:
           amount: 10
           unit: TB
-        version: 11
+        version: '11'
       displayName: Extra Large highly-available high-IOPS
       bullets:
         - "Dedicated Postgres 11 server"
