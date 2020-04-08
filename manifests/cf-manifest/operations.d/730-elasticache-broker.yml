@@ -95,7 +95,7 @@
                   name: redis
                   description: AWS ElastiCache Redis service
                   metadata:
-                    displayName: Redis
+                    displayName: AWS ElastiCache Redis
                     longDescription: |
                       Redis is an in-memory data structure project implementing a distributed, in-memory key-value 
                       database with optional durability. Redis supports different kinds of abstract data structures,
