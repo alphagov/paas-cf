@@ -159,10 +159,6 @@
           unit: GB
         version: 9.5
       displayName: Small
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -191,10 +187,6 @@
           unit: GB
         version: 9.5
       displayName: Small highly-available
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -223,10 +215,6 @@
           unit: GB
         version: 9.5
       displayName: Medium
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -255,10 +243,6 @@
           unit: GB
         version: 9.5
       displayName: Medium highly-available
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -288,10 +272,6 @@
           unit: GB
         version: 9.5
       displayName: Large
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -320,10 +300,6 @@
           unit: GB
         version: 9.5
       displayName: Large highly-available
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -353,10 +329,6 @@
           unit: TB
         version: 9.5
       displayName: Extra Large
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -385,10 +357,6 @@
           unit: TB
         version: 9.5
       displayName: Extra Large highly-available
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -410,10 +378,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -430,10 +394,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -451,10 +411,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -471,10 +427,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -492,10 +444,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -512,10 +460,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -533,10 +477,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -553,10 +493,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"

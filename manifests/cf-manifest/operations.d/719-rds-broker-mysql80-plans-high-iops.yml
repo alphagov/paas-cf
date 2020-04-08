@@ -81,10 +81,6 @@
           unit: GB
         version: 8.0
       displayName: Small high-IOPS
-      costs:
-        - amount:
-            usd: 0.038
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"
@@ -113,10 +109,6 @@
           unit: GB
         version: 8.0
       displayName: Small highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 0.076
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "AWS RDS"
@@ -145,10 +137,6 @@
           unit: GB
         version: 8.0
       displayName: Medium high-IOPS
-      costs:
-        - amount:
-            usd: 0.198
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"
@@ -177,10 +165,6 @@
           unit: GB
         version: 8.0
       displayName: Medium highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 0.396
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"
@@ -210,10 +194,6 @@
           unit: TB
         version: 8.0
       displayName: Large high-IOPS
-      costs:
-        - amount:
-            usd: 0.792
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"
@@ -242,10 +222,6 @@
           unit: TB
         version: 8.0
       displayName: Large highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 1.584
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"
@@ -275,10 +251,6 @@
           unit: TB
         version: 8.0
       displayName: Extra Large high-IOPS
-      costs:
-        - amount:
-            usd: 1.584
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"
@@ -307,10 +279,6 @@
           unit: TB
         version: 8.0
       displayName: Extra Large highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 3.168
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 8.0 server"
         - "Storage Encrypted"

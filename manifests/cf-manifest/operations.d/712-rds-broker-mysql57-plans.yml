@@ -101,10 +101,6 @@
           unit: GB
         version: 5.7
       displayName: Small
-      costs:
-        - amount:
-            usd: 0.036
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -132,10 +128,6 @@
           unit: GB
         version: 5.7
       displayName: Small highly-available
-      costs:
-        - amount:
-            usd: 0.072
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -163,10 +155,6 @@
           unit: GB
         version: 5.7
       displayName: Medium
-      costs:
-        - amount:
-            usd: 0.193
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -194,10 +182,6 @@
           unit: GB
         version: 5.7
       displayName: Medium highly-available
-      costs:
-        - amount:
-            usd: 0.386
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -226,10 +210,6 @@
           unit: GB
         version: 5.7
       displayName: Large
-      costs:
-        - amount:
-            usd: 0.772
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -257,10 +237,6 @@
           unit: GB
         version: 5.7
       displayName: Large highly-available
-      costs:
-        - amount:
-            usd: 1.544
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -289,10 +265,6 @@
           unit: TB
         version: 5.7
       displayName: Extra Large
-      costs:
-        - amount:
-            usd: 1.545
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -320,10 +292,6 @@
           unit: TB
         version: 5.7
       displayName: Extra Large highly-available
-      costs:
-        - amount:
-            usd: 3.090
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "Storage Encrypted"
@@ -345,10 +313,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.072
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -367,10 +331,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.193
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -388,10 +348,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.386
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -410,10 +366,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.772
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -431,10 +383,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.544
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -453,10 +401,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.545
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -474,10 +418,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 3.090
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"
@@ -496,10 +436,6 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.036
-          unit: "HOUR"
       bullets:
         - "Dedicated MySQL 5.7 server"
         - "AWS RDS"

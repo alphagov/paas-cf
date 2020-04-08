@@ -145,10 +145,6 @@
           unit: GB
         version: 11
       displayName: Small high-IOPS
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -178,10 +174,6 @@
           unit: GB
         version: 11
       displayName: Small highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "AWS RDS"
@@ -211,10 +203,6 @@
           unit: GB
         version: 11
       displayName: Medium high-IOPS
-      costs:
-        - amount:
-            usd: 0.197
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -244,10 +232,6 @@
           unit: GB
         version: 11
       displayName: Medium highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 0.394
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -278,10 +262,6 @@
           unit: TB
         version: 11
       displayName: Large high-IOPS
-      costs:
-        - amount:
-            usd: 0.788
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -311,10 +291,6 @@
           unit: TB
         version: 11
       displayName: Large highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 1.576
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -345,10 +321,6 @@
           unit: TB
         version: 11
       displayName: Extra Large high-IOPS
-      costs:
-        - amount:
-            usd: 1.576
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -378,10 +350,6 @@
           unit: TB
         version: 11
       displayName: Extra Large highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 3.152
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"

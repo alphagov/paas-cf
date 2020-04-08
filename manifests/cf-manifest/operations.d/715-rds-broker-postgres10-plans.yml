@@ -143,10 +143,6 @@
           unit: GB
         version: 10
       displayName: Small
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -175,10 +171,6 @@
           unit: GB
         version: 10
       displayName: Small highly-available
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "AWS RDS"
@@ -207,10 +199,6 @@
           unit: GB
         version: 10
       displayName: Medium
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -239,10 +227,6 @@
           unit: GB
         version: 10
       displayName: Medium highly-available
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -272,10 +256,6 @@
           unit: GB
         version: 10
       displayName: Large
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -304,10 +284,6 @@
           unit: GB
         version: 10
       displayName: Large highly-available
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -337,10 +313,6 @@
           unit: TB
         version: 10
       displayName: Extra Large
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -369,10 +341,6 @@
           unit: TB
         version: 10
       displayName: Extra Large highly-available
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
