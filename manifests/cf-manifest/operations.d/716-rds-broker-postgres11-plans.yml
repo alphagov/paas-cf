@@ -115,7 +115,7 @@
         storage:
           amount: 5
           unit: GB
-        version: 11
+        version: '11'
       displayName: Tiny
       bullets:
         - "Dedicated Postgres 11 server"
@@ -141,12 +141,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Small
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -173,12 +169,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Small highly-available
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "AWS RDS"
@@ -205,12 +197,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Medium
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -237,12 +225,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 11
+        version: '11'
       displayName: Medium highly-available
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -270,12 +254,8 @@
         storage:
           amount: 512
           unit: GB
-        version: 11
+        version: '11'
       displayName: Large
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -302,12 +282,8 @@
         storage:
           amount: 512
           unit: GB
-        version: 11
+        version: '11'
       displayName: Large highly-available
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -335,12 +311,8 @@
         storage:
           amount: 2
           unit: TB
-        version: 11
+        version: '11'
       displayName: Extra Large
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"
@@ -367,12 +339,8 @@
         storage:
           amount: 2
           unit: TB
-        version: 11
+        version: '11'
       displayName: Extra Large highly-available
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 11 server"
         - "Storage Encrypted"

@@ -106,7 +106,7 @@
         technical standards compliance. It is designed to handle a range of workloads, from single machines to data
         warehouses or Web services with many concurrent users.
       providerDisplayName: Amazon Web Services
-      documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/postgres/
+      documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/postgresql/
       supportUrl: https://www.cloud.service.gov.uk/support
       AdditionalMetadata:
         otherDocumentation:
@@ -131,7 +131,7 @@
         storage:
           amount: 5
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Tiny
       bullets:
         - "Dedicated Postgres 9.5 server"
@@ -157,12 +157,8 @@
         storage:
           amount: 20
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Small
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -189,12 +185,8 @@
         storage:
           amount: 20
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Small highly-available
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
@@ -221,12 +213,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Medium
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -253,12 +241,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Medium highly-available
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -286,12 +270,8 @@
         storage:
           amount: 512
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Large
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -318,12 +298,8 @@
         storage:
           amount: 512
           unit: GB
-        version: 9.5
+        version: '9.5'
       displayName: Large highly-available
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -351,12 +327,8 @@
         storage:
           amount: 2
           unit: TB
-        version: 9.5
+        version: '9.5'
       displayName: Extra Large
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -383,12 +355,8 @@
         storage:
           amount: 2
           unit: TB
-        version: 9.5
+        version: '9.5'
       displayName: Extra Large highly-available
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "Storage Encrypted"
@@ -410,13 +378,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *small_plan_rds_properties # yamllint disable-line
@@ -430,13 +396,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *small_plan_rds_properties # yamllint disable-line
@@ -451,13 +415,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.201
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *medium_plan_rds_properties # yamllint disable-line
@@ -471,13 +433,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.402
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *medium_plan_rds_properties # yamllint disable-line
@@ -492,13 +452,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 0.806
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *large_plan_rds_properties # yamllint disable-line
@@ -512,13 +470,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *large_plan_rds_properties # yamllint disable-line
@@ -533,13 +489,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 1.612
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *xlarge_plan_rds_properties # yamllint disable-line
@@ -553,13 +507,11 @@
     free: false
     active: false
     metadata:
-      costs:
-        - amount:
-            usd: 3.224
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 9.5 server"
         - "AWS RDS"
+      AdditionalMetadata:
+        version: '9.5'
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *xlarge_plan_rds_properties # yamllint disable-line

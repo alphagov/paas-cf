@@ -116,7 +116,7 @@
         storage:
           amount: 25
           unit: GB
-        version: 10
+        version: '10'
       displayName: Tiny high-IOPS
       bullets:
         - "Dedicated Postgres 10 server"
@@ -143,12 +143,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 10
+        version: '10'
       displayName: Small high-IOPS
-      costs:
-        - amount:
-            usd: 0.039
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -176,12 +172,8 @@
         storage:
           amount: 100
           unit: GB
-        version: 10
+        version: '10'
       displayName: Small highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 0.078
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "AWS RDS"
@@ -209,12 +201,8 @@
         storage:
           amount: 500
           unit: GB
-        version: 10
+        version: '10'
       displayName: Medium high-IOPS
-      costs:
-        - amount:
-            usd: 0.197
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -242,12 +230,8 @@
         storage:
           amount: 500
           unit: GB
-        version: 10
+        version: '10'
       displayName: Medium highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 0.394
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -276,12 +260,8 @@
         storage:
           amount: 2.5
           unit: TB
-        version: 10
+        version: '10'
       displayName: Large high-IOPS
-      costs:
-        - amount:
-            usd: 0.788
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -309,12 +289,8 @@
         storage:
           amount: 2.5
           unit: TB
-        version: 10
+        version: '10'
       displayName: Large highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 1.576
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -343,12 +319,8 @@
         storage:
           amount: 10
           unit: TB
-        version: 10
+        version: '10'
       displayName: Extra Large high-IOPS
-      costs:
-        - amount:
-            usd: 1.576
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"
@@ -376,12 +348,8 @@
         storage:
           amount: 10
           unit: TB
-        version: 10
+        version: '10'
       displayName: Extra Large highly-available high-IOPS
-      costs:
-        - amount:
-            usd: 3.152
-          unit: "HOUR"
       bullets:
         - "Dedicated Postgres 10 server"
         - "Storage Encrypted"

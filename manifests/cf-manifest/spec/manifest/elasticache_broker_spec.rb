@@ -84,6 +84,13 @@ RSpec.describe "ElastiCache broker properties" do
       }
     end
 
+    specify "all plans have a version" do
+      all_plans.each do |p|
+        version = p.dig('metadata', 'AdditionalMetadata', 'version')
+        expect(version).to be_a(String), "plan #{p['id']} doesn't have a version"
+      end
+    end
+
     specify "all plan configs belong to a plan" do
       all_plan_ids = all_plans.map { |p| p["id"] }
       plan_configs.each { |pc_id, _|

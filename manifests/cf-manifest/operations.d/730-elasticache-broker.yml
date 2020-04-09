@@ -95,7 +95,7 @@
                   name: redis
                   description: AWS ElastiCache Redis service
                   metadata:
-                    displayName: Redis
+                    displayName: AWS ElastiCache Redis
                     longDescription: |
                       Redis is an in-memory data structure project implementing a distributed, in-memory key-value 
                       database with optional durability. Redis supports different kinds of abstract data structures,
@@ -126,6 +126,8 @@
                       free: true
                       metadata:
                         displayName: Clustered Tiny
+                        AdditionalMetadata:
+                          version: '3.2'
 
                     # 3.2
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
@@ -141,7 +143,7 @@
                           memory:
                             amount: 568
                             unit: MB
-                          version: 3.2
+                          version: '3.2'
                     - id: ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d
                       name: tiny-ha-3.2
                       description: 1.5GB RAM, highly-available, daily backups
@@ -155,7 +157,7 @@
                           memory:
                             amount: 1.5
                             unit: GB
-                          version: 3.2
+                          version: '3.2'
                     - id: 9162ed5b-0c88-4f43-bcaf-c6d4a45dd243
                       name: small-ha-3.2
                       description: 3GB RAM, highly-available, daily backups
@@ -169,7 +171,7 @@
                           memory:
                             amount: 3
                             unit: GB
-                          version: 3.2
+                          version: '3.2'
                     - id: b6949ea7-5c98-4c69-b981-4b5318ea8b7c
                       name: medium-ha-3.2
                       description: 6.37GB RAM, highly-available, daily backups
@@ -183,7 +185,7 @@
                           memory:
                             amount: 6.37
                             unit: GB
-                          version: 3.2
+                          version: '3.2'
 
                     # 4.x
                     - id: b78c9d07-a031-495f-937c-28613905431c
@@ -199,7 +201,7 @@
                           memory:
                             amount: 568
                             unit: MB
-                          version: 4
+                          version: '4'
                     - id: e31d1a05-4f75-4bca-93a0-661bc233d25c
                       name: tiny-ha-4.x
                       description: 1.5GB RAM, highly-available, daily backups
@@ -213,7 +215,7 @@
                           memory:
                             amount: 1.5
                             unit: GB
-                          version: 4
+                          version: '4'
                     - id: 09e7088e-125e-4805-9eff-02bf61ee0146
                       name: small-ha-4.x
                       description: 3GB RAM, highly-available, daily backups
@@ -227,7 +229,7 @@
                           memory:
                             amount: 3
                             unit: GB
-                          version: 4
+                          version: '4'
                     - id: f210be07-8ea3-4295-a929-2dec0ae4cd30
                       name: medium-ha-4.x
                       description: 6.37GB RAM, highly-available, daily backups
@@ -241,7 +243,7 @@
                           memory:
                             amount: 6.37
                             unit: GB
-                          version: 4
+                          version: '4'
                     - id: 4b5913cd-c39b-457c-8f77-eb9a95d63ba8
                       name: large-ha-4.x
                       description: 12.93GB RAM, highly-available, daily backups
@@ -255,7 +257,7 @@
                           memory:
                             amount: 12.93
                             unit: GB
-                          version: 4
+                          version: '4'
                     - id: e6e8e4c4-5f2e-4add-89d6-ce417f145c19
                       name: xlarge-ha-4.x
                       description: 26.04GB RAM, highly-available, daily backups
@@ -269,7 +271,7 @@
                           memory:
                             amount: 26.04
                             unit: GB
-                          version: 4
+                          version: '4'
 
                     # 5.x
                     - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
@@ -285,7 +287,7 @@
                           memory:
                             amount: 568
                             unit: MB
-                          version: 5
+                          version: '5'
                     - id: c12a6a40-fb53-4e1e-b0a9-ba5e3180e3b7
                       name: tiny-ha-5.x
                       description: 1.5GB RAM, highly-available, daily backups
@@ -299,7 +301,7 @@
                           memory:
                             amount: 1.5
                             unit: GB
-                          version: 5
+                          version: '5'
                     - id: 07479e46-0169-4395-91d8-e125efb17e2c
                       name: small-ha-5.x
                       description: 3GB RAM, highly-available, daily backups
@@ -313,7 +315,7 @@
                           memory:
                             amount: 3
                             unit: GB
-                          version: 5
+                          version: '5'
                     - id: a5ee300e-9c75-45f3-939b-d74ca4c178e7
                       name: medium-ha-5.x
                       description: 6.37GB RAM, highly-available, daily backups
@@ -327,7 +329,7 @@
                           memory:
                             amount: 6.37
                             unit: GB
-                          version: 5
+                          version: '5'
                     - id: 883c0549-cacd-4d73-adf8-85096a3c39a4
                       name: large-ha-5.x
                       description: 12.93GB RAM, highly-available, daily backups
@@ -341,7 +343,7 @@
                           memory:
                             amount: 12.93
                             unit: GB
-                          version: 5
+                          version: '5'
                     - id: f60443d9-3e9f-4c9b-8653-c83b6418292e
                       name: xlarge-ha-5.x
                       description: 26.04GB RAM, highly-available, daily backups
@@ -355,7 +357,7 @@
                           memory:
                             amount: 26.04
                             unit: GB
-                          version: 5
+                          version: '5'
 
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab: #tiny-clustered-3.2
