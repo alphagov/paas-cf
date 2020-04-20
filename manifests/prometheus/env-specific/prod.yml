@@ -5,3 +5,4 @@ aws_limits_elasticache_cache_parameter_groups: 400
 aws_limits_elasticache_nodes: 400
 aws_limits_s3_buckets: 250
 aws_limits_rds_instances: 550
+prometheus_disk_size: 100GB
