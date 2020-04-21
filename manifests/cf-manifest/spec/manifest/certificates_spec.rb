@@ -3,9 +3,11 @@ RSpec.describe "certificates" do
     return o.flat_map { |v| get_all_cas_usages(v) } if o.is_a? Array
 
     if o.is_a? Hash
-      return o.values.flat_map { |v| get_all_cas_usages(v) } unless o.key? 'ca'
       # Match checks if it is a usage ("name.value") or a variable ("name")
-      return [o['ca']] if o['ca'].match?(/[.]/)
+      return [o['ca']] if o['ca']&.match?(/[.]/)
+      return [o['ca_cert']] if o['ca_cert']&.match?(/[.]/)
+
+      return o.values.flat_map { |v| get_all_cas_usages(v) }
     end
 
     []
@@ -18,6 +20,10 @@ RSpec.describe "certificates" do
       get_all_cas_usages(manifest.fetch('.')).map do |usage|
         usage.gsub(/[()]/, '') # delete surrounding parens
       end
+    end
+
+    it "should detect some ca certificate usages" do
+      expect(ca_usages).not_to eq([])
     end
 
     it "should use .ca for every usage of a ca certificate" do
