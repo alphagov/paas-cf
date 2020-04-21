@@ -19,12 +19,12 @@
         api:
           client:
             tls:
-              ca: ((dns_api_tls_ca.certificate))
+              ca: ((dns_api_client_tls.ca))
               certificate: ((dns_api_client_tls.certificate))
               private_key: ((dns_api_client_tls.private_key))
           server:
             tls:
-              ca: ((dns_api_tls_ca.certificate))
+              ca: ((dns_api_server_tls.ca))
               certificate: ((dns_api_server_tls.certificate))
               private_key: ((dns_api_server_tls.private_key))
         cache:
@@ -32,13 +32,13 @@
         health:
           client:
             tls:
-              ca: ((dns_healthcheck_tls_ca.certificate))
+              ca: ((dns_healthcheck_client_tls.ca))
               certificate: ((dns_healthcheck_client_tls.certificate))
               private_key: ((dns_healthcheck_client_tls.private_key))
           enabled: true
           server:
             tls:
-              ca: ((dns_healthcheck_tls_ca.certificate))
+              ca: ((dns_healthcheck_server_tls.ca))
               certificate: ((dns_healthcheck_server_tls.certificate))
               private_key: ((dns_healthcheck_server_tls.private_key))
 

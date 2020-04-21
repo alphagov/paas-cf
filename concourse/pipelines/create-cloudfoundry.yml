@@ -343,6 +343,8 @@ groups:
       - bump-patch-version
       - pipeline-check-lock
       - pipeline-release-lock
+      - healthcheck-check-state
+      - healthcheck-disable
       - cleanup-deleted-cf-users
   - name: tests
     jobs:
@@ -4683,3 +4685,45 @@ jobs:
               echo | cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}"
 
               ./paas-cf/scripts/cleanup-deleted-cf-users.sh --delete
+
+  - name: healthcheck-check-state
+    serial: true
+    plan:
+      - get: deployed-healthcheck
+
+      - task: show-state
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: deployed-healthcheck
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'healthcheck is currently set to'
+                cat deployed-healthcheck/healthcheck-deployed
+
+  - name: healthcheck-disable
+    serial: true
+    plan:
+      - task: set-state
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          outputs:
+            - name: deployed-healthcheck
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'setting healthcheck to no'
+                echo "no" > deployed-healthcheck/healthcheck-deployed
+
+      - put: deployed-healthcheck
+        params:
+          file: deployed-healthcheck/healthcheck-deployed
