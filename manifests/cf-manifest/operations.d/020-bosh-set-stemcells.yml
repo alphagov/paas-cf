@@ -4,4 +4,4 @@
   value:
     - alias: default
       os: ubuntu-xenial
-      version: "621.69"
+      version: "621.71"
