@@ -1,7 +1,7 @@
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/maximum_app_disk_in_mb?
-  value: 4096
+  value: 6144
 
 - type: replace
   path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/maximum_app_disk_in_mb?
-  value: 4096
+  value: 6144
