@@ -93,6 +93,22 @@ if seg_def['restricted_egress']
         11.0.0.0/8 12.0.0.0/6 16.0.0.0/4 32.0.0.0/3 64.0.0.0/2 128.0.0.0/1
       ],
     }
+
+  isolation_segment['jobs'] << {
+    'name' => 'scripting',
+    'release' => 'generic-scripting',
+    'properties' => { 'scripting' => { 'pre-start-script' =>
+      <<~PRESTART
+      if ip addr show dev lo | grep -qF 169.254.0.3; then
+        echo "IP Address 169.254.0.3/32 is already bound to dev lo...nothing to do"
+      else
+        echo "IP Address 169.254.0.3/32 is not bound to dev lo...binding"
+        sudo ip addr add dev lo 169.254.0.3/32
+        exit $?
+      fi
+      PRESTART
+    } }
+  }
 end
 
 isolation_segment

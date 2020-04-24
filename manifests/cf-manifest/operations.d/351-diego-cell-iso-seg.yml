@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /releases/-
+  value:
+    name: "generic-scripting"
+    version: "3"
+    url: "https://bosh.io/d/github.com/orange-cloudfoundry/generic-scripting-release?v=3"
+    sha1: "3198161324c49c670282f5c64b471204a3c510bb"
