@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /instance_groups/name=cc-worker/instances
+  value: ((cc_worker_instances))

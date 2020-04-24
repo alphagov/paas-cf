@@ -5,5 +5,6 @@ api_instances: 2
 doppler_instances: 3
 log_api_instances: 3
 adapter_instances: 2
+cc_worker_instances: 2
 cc_hourly_rate_limit: 100000
 paas_region_name: staging
