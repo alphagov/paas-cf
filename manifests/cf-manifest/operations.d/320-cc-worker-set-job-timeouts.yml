@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/jobs?
+  value:
+    global:
+      timeout_in_seconds: 3600 # 1 hour
+    blobstore_delete:
+      timeout_in_seconds: 3600 # 1 hour
