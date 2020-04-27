@@ -1,4 +1,18 @@
 RSpec.describe "cloud controller" do
+  context "limits" do
+    let(:manifest) { manifest_with_defaults }
+    let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
+    let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
+
+    it "should be the same maximum app disk for worker and api" do
+      expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_worker_props['maximum_app_disk_in_mb']
+    end
+
+    it "should be the same maximum app healthcheck timeout for worker and api" do
+      expect(cc_ng_props['maximum_health_check_timeout']).to be == cc_worker_props['maximum_health_check_timeout']
+    end
+  end
+
   context "worker" do
     context("dev") do
       let(:manifest) { manifest_for_dev }
