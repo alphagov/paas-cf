@@ -1,66 +1,137 @@
 #!/usr/bin/env ruby
+require 'English'
 require 'openssl'
 require 'json'
 require 'date'
 
-ALERT_DAYS = (ARGV[0] || "15").to_i
+def separator
+  puts('-' * 80)
+end
 
-credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
+class String
+  def red
+    "\e[31m#{self}\e[0m"
+  end
 
-api_url = "#{credhub_server}/v1"
+  def green
+    "\e[32m#{self}\e[0m"
+  end
 
-certs = JSON.parse `credhub curl -p '#{api_url}/certificates'`
+  def yellow
+    "\e[33m#{self}\e[0m"
+  end
 
+  def blue;
+    "\e[34m#{self}\e[0m"
+  end
+end
+
+class CredHubClient
+  attr_reader :api_url
+
+  def initialize(api_url)
+    @api_url = api_url
+  end
+
+  def certificates
+    body = `credhub curl -p '#{api_url}/certificates'`
+    raise body unless $CHILD_STATUS.success?
+    JSON.parse(body).fetch('certificates')
+  end
+
+  def current_certificate(name)
+    body = `credhub curl -p '#{api_url}/data?name=#{name}&current=true'`
+    raise body unless $CHILD_STATUS.success?
+    JSON.parse(body).fetch('data').first
+  end
+
+  def transitional_certificates(name)
+    body = `credhub curl -p '#{api_url}/certificates?name=#{name}'`
+    raise body unless $CHILD_STATUS.success?
+    JSON
+      .parse(body)
+      .fetch('certificates').first.fetch('versions')
+      .select { |c| c.fetch('transitional', false) }
+  end
+
+  def live_certificates(name)
+    current = current_certificate(name)
+    transitional = transitional_certificates(name)
+    transitional.concat([current]).uniq { |c| c.fetch('id') }
+  end
+
+  def credential(credential_id)
+    body = `credhub curl -p '#{api_url}/data/#{credential_id}'`
+    raise body unless $CHILD_STATUS.success?
+    JSON.parse(body)
+  end
+end
+
+ALERT_DAYS = (ARGV[0] || '15').to_i
+CREDHUB_SERVER = ENV.fetch('CREDHUB_SERVER')
 alert = false
+api_url = "#{CREDHUB_SERVER}/v1"
 
-def compare_ca_cert_versions(active_certs)
-  if active_certs[0]['expiry_date'] == active_certs[1]['expiry_date']
-    c = active_certs.sort_by { |version| version['version_created_at'] }
-    if c[0]['version_created_at'] < c[1]['version_created_at']
-      old_ca = c[0]
-      new_ca = c[1]
-    else
-      old_ca = c[1]
-      new_ca = c[0]
-    end
-  elsif active_certs[0]['expiry_date'] < active_certs[1]['expiry_date']
-    old_ca = active_certs[0]
-    new_ca = active_certs[1]
-  else
-    old_ca = active_certs[1]
-    new_ca = active_certs[0]
-  end
+separator
 
-  [old_ca, new_ca]
-end
+client = CredHubClient.new(api_url)
+certs = client.certificates.reject { |c| c['name'].match?(/_old$/) }
 
-unless certs['certificates'].empty?
-  certs['certificates'].each do |cert|
-    next if cert['name'].include? "_old"
+transitional_certificate_names = []
+expiring_certificate_names = []
 
-    active_certs = JSON.parse `credhub curl -p '#{api_url}/data?name=#{cert['name']}&current=true'`
+certs.each do |cert|
+  live_certs = client.live_certificates(cert['name'])
 
-    if (cert['name'] == cert['signed_by']) && (active_certs['data'].length > 1)
-      _, current_cert = compare_ca_cert_versions(active_certs['data'])
-      certificate = OpenSSL::X509::Certificate.new current_cert['value']['certificate']
-    else
-      certificate = OpenSSL::X509::Certificate.new active_certs['data'][0]['value']['certificate']
-    end
+  live_certs.each do |live_cert|
+    cred = client.credential(live_cert['id'])
 
-    days_to_expire = ((certificate.not_after - Time.now) / (24 * 3600)).floor
+    xcert = OpenSSL::X509::Certificate.new cred.dig('value', 'certificate')
 
-    if days_to_expire > ALERT_DAYS
-      puts "#{cert['name']}: #{days_to_expire} days to expire. OK."
-    else
-      puts "#{cert['name']}: #{days_to_expire} days to expire. ERROR! less than #{ALERT_DAYS} days."
+    days_to_expire = ((xcert.not_after - Time.now) / (24 * 3600)).floor
+
+    alert = true unless days_to_expire > ALERT_DAYS
+
+    transitional_status = live_cert['transitional'] ? 'transitional'.yellow : 'non-transitional'.blue
+    danger_status = days_to_expire > ALERT_DAYS ? 'OK'.green : 'DANGER'.red
+
+    puts "#{live_cert['name'].yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{danger_status})"
+
+    unless xcert.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
+      puts "#{live_cert['name']}: ERROR! Missing Subject Key Identifier".red
       alert = true
     end
 
-    unless certificate.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
-      puts "#{cert['name']}: ERROR! Missing Subject Key Identifier"
-      alert = true
+    unless days_to_expire > ALERT_DAYS
+      expiring_certificate_names << live_cert['name']
+    end
+
+    if live_cert['transitional']
+      transitional_certificate_names << live_cert['name']
     end
   end
 end
+
+unless transitional_certificate_names.empty?
+  separator
+
+  puts 'The following certificates are transitional and are going to update instances:'
+
+  transitional_certificate_names.each do |cert|
+    puts cert.yellow
+  end
+end
+
+unless expiring_certificate_names.empty?
+  separator
+
+  puts 'The following certificates are expiring and require operator intervention:'
+
+  expiring_certificate_names.each do |cert|
+    puts cert.red
+  end
+end
+
+separator
 
 exit 1 if alert
