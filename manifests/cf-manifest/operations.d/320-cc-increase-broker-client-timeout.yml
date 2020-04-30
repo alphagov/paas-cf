@@ -1,0 +1,11 @@
+---
+# Increase the timeout duration for brokers
+# Specifically it can take a long time to create cloudfront CDN distributions
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/broker_client_timeout_seconds?
+  value: 300
+
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/broker_client_timeout_seconds?
+  value: 300
