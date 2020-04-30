@@ -16,6 +16,17 @@ RSpec.describe "cloud controller" do
     end
   end
 
+  context "broker" do
+    let(:manifest) { manifest_with_defaults }
+    let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
+    let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
+
+    it "should be the same broker client timeout for worker and api" do
+      # clock does not have this property
+      expect(cc_ng_props['broker_client_timeout_seconds']).to be == cc_worker_props['broker_client_timeout_seconds']
+    end
+  end
+
   context "worker" do
     context("dev") do
       let(:manifest) { manifest_for_dev }
