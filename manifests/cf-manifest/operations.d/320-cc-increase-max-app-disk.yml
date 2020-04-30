@@ -5,3 +5,7 @@
 - type: replace
   path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/maximum_app_disk_in_mb?
   value: 6144
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/maximum_app_disk_in_mb?
+  value: 6144
