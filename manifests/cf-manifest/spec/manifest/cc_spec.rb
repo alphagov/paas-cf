@@ -4,10 +4,12 @@ RSpec.describe "cloud controller" do
     let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
     let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
     let(:cc_clock_props) { manifest.fetch("instance_groups.scheduler.jobs.cloud_controller_clock.properties.cc") }
+    let(:cc_deployment_updater_props) { manifest.fetch("instance_groups.scheduler.jobs.cc_deployment_updater.properties.cc") }
 
-    it "should be the same maximum app disk for clock and worker and api" do
+    it "should be the same maximum app disk for clock and worker and api and deployment updater" do
       expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_worker_props['maximum_app_disk_in_mb']
       expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_clock_props['maximum_app_disk_in_mb']
+      expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_deployment_updater_props['maximum_app_disk_in_mb']
     end
 
     it "should be the same maximum app healthcheck timeout for clock and worker and api" do
