@@ -306,6 +306,7 @@ groups:
       - custom-broker-acceptance-tests
       - bosh-tests
       - rotate-certs
+      - check-certificates-after-rotation
       - tag-release
       - pipeline-unlock
   - name: platform-core
@@ -4013,14 +4014,53 @@ jobs:
                 credhub login
                 ./paas-cf/concourse/scripts/ca-rotation-set-transitional.rb
 
+  - name: check-certificates-after-rotation
+    build_logs_to_retain: 50
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: [rotate-certs]
+            trigger: true
+          - get: paas-cf
+            passed: [rotate-certs]
+          - get: ipsec-CA
+            passed: [generate-cf-config]
+
+      - task: check-certificates
+        tags: [colocated-with-web]
+        config: &check-certificates-config
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          inputs:
+            - name: paas-cf
+            - name: ipsec-CA
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                credhub login
+                ./paas-cf/concourse/scripts/check-certificates.rb 15
+
+                tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
+
+                echo "Checking if ipsec-CA.crt expires in the next 30 days"
+                openssl x509 -checkend 2592000 -noout -in ipsec-CA/ipsec-CA.crt
+
   - name: tag-release
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['rotate-certs']
+            passed: [check-certificates-after-rotation]
             trigger: true
           - get: paas-cf
-            passed: ['rotate-certs']
+            passed: [check-certificates-after-rotation]
           - get: git-keys
 
       - put: release-version
@@ -4633,30 +4673,7 @@ jobs:
 
       - task: check-certificates
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            CREDHUB_CLIENT: credhub-admin
-            CREDHUB_SECRET: ((bosh-credhub-admin))
-            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
-            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
-          inputs:
-            - name: paas-cf
-            - name: ipsec-CA
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                credhub login
-                ./paas-cf/concourse/scripts/check-certificates.rb 15
-
-                tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
-
-                echo "Checking if ipsec-CA.crt expires in the next 30 days"
-                openssl x509 -checkend 2592000 -noout -in ipsec-CA/ipsec-CA.crt
+        config: *check-certificates-config
 
   - name: cleanup-deleted-cf-users
     serial: true
