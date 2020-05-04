@@ -86,31 +86,23 @@ certs.each do |cert|
 
   live_certs.each do |live_cert|
     cred = client.credential(live_cert['id'])
-
     xcert = OpenSSL::X509::Certificate.new cred.dig('value', 'certificate')
-    xca = OpenSSL::X509::Certificate.new cred.dig('value', 'ca')
 
     days_to_expire = ((xcert.not_after - Time.now) / (24 * 3600)).floor
-
     alert = true unless days_to_expire > ALERT_DAYS
 
     transitional_status = live_cert['transitional'] ? 'transitional'.yellow : 'non-transitional'.blue
     expiring_status = days_to_expire > ALERT_DAYS ? 'not expiring soon'.green : 'expiring soon'.red
 
     cert_store = OpenSSL::X509::Store.new
-    cert_store.add_cert(xca)
+    cert_store.add_cert(OpenSSL::X509::Certificate.new(cred.dig('value', 'ca')))
     cert_is_valid = cert_store.verify(xcert)
     valid_status = cert_is_valid ? 'valid'.green : 'invalid'.red
 
     puts "#{live_cert['name'].yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{expiring_status}) (#{valid_status})"
 
-    unless days_to_expire > ALERT_DAYS
-      expiring_certificate_names << live_cert['name']
-    end
-
-    if live_cert['transitional']
-      transitional_certificate_names << live_cert['name']
-    end
+    expiring_certificate_names << live_cert['name'] unless days_to_expire > ALERT_DAYS
+    transitional_certificate_names << live_cert['name'] if live_cert['transitional']
 
     unless xcert.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
       puts "#{live_cert['name']}: ERROR! Missing Subject Key Identifier".red
