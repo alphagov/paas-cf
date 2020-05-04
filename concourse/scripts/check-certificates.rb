@@ -79,6 +79,7 @@ certs = client.certificates.reject { |c| c['name'].match?(/_old$/) }
 
 transitional_certificate_names = []
 expiring_certificate_names = []
+invalid_certificate_names = []
 
 certs.each do |cert|
   live_certs = client.live_certificates(cert['name'])
@@ -87,20 +88,21 @@ certs.each do |cert|
     cred = client.credential(live_cert['id'])
 
     xcert = OpenSSL::X509::Certificate.new cred.dig('value', 'certificate')
+    xca = OpenSSL::X509::Certificate.new cred.dig('value', 'ca')
 
     days_to_expire = ((xcert.not_after - Time.now) / (24 * 3600)).floor
 
     alert = true unless days_to_expire > ALERT_DAYS
 
     transitional_status = live_cert['transitional'] ? 'transitional'.yellow : 'non-transitional'.blue
-    danger_status = days_to_expire > ALERT_DAYS ? 'OK'.green : 'DANGER'.red
+    expiring_status = days_to_expire > ALERT_DAYS ? 'not expiring soon'.green : 'expiring soon'.red
 
-    puts "#{live_cert['name'].yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{danger_status})"
+    cert_store = OpenSSL::X509::Store.new
+    cert_store.add_cert(xca)
+    cert_is_valid = cert_store.verify(xcert)
+    valid_status = cert_is_valid ? 'valid'.green : 'invalid'.red
 
-    unless xcert.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
-      puts "#{live_cert['name']}: ERROR! Missing Subject Key Identifier".red
-      alert = true
-    end
+    puts "#{live_cert['name'].yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{expiring_status}) (#{valid_status})"
 
     unless days_to_expire > ALERT_DAYS
       expiring_certificate_names << live_cert['name']
@@ -108,6 +110,16 @@ certs.each do |cert|
 
     if live_cert['transitional']
       transitional_certificate_names << live_cert['name']
+    end
+
+    unless xcert.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
+      puts "#{live_cert['name']}: ERROR! Missing Subject Key Identifier".red
+      alert = true
+    end
+
+    unless cert_is_valid
+      invalid_certificate_names << live_cert['name']
+      alert = true
     end
   end
 end
@@ -128,6 +140,16 @@ unless expiring_certificate_names.empty?
   puts 'The following certificates are expiring and require operator intervention:'
 
   expiring_certificate_names.each do |cert|
+    puts cert.red
+  end
+end
+
+unless invalid_certificate_names.empty?
+  separator
+
+  puts 'The following certificates are invalid and require operator intervention:'
+
+  invalid_certificate_names.each do |cert|
     puts cert.red
   end
 end
