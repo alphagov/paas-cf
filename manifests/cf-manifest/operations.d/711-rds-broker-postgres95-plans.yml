@@ -17,7 +17,7 @@
       engine: "postgres"
       engine_version: "9.5"
       engine_family: "postgres9.5"
-      default_extensions: ["uuid-ossp", "postgis"]
+      default_extensions: ["uuid-ossp"]
       allowed_extensions: [
         "address_standardizer",
         "address_standardizer_data_us",
