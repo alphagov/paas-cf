@@ -40,7 +40,7 @@ meta:
       type: docker-image
       source:
         repository: golang
-        tag: '1.12'
+        tag: '1.14'
     terraform: &terraform-image-resource
       type: docker-image
       source:
