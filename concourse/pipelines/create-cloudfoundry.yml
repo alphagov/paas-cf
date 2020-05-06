@@ -3932,11 +3932,12 @@ jobs:
               - -e
               - -c
               - |
-                cd paas-cf/tools/metrics/acceptance
                 go get github.com/onsi/ginkgo/ginkgo
+
+                cd paas-cf/tools/metrics
                 echo 'Waiting 2 minutes before running the acceptance tests'
                 sleep 120
-                ginkgo
+                ginkgo acceptance
       - *end-grafana-job-annotation
 
   - name: rotate-certs
