@@ -33,7 +33,7 @@ prepare_environment() {
 
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
-  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-cloudfoundry deployment-kick-off destroy-cloudfoundry autodelete-cloudfoundry}"
+  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-cloudfoundry deployment-kick-off destroy-cloudfoundry autodelete-cloudfoundry test-certificate-rotation}"
   bosh_az=${BOSH_AZ:-${AWS_DEFAULT_REGION}a}
 
   state_bucket=gds-paas-${DEPLOY_ENV}-state
@@ -123,6 +123,13 @@ update_pipeline() {
     ;;
     deployment-kick-off)
       if [ "${ENABLE_MORNING_DEPLOYMENT:-}" = "true" ]; then
+        upload_pipeline
+      else
+        remove_pipeline
+      fi
+    ;;
+    test-*)
+      if [ "${ENABLE_TEST_PIPELINES:-}" = "true" ]; then
         upload_pipeline
       else
         remove_pipeline

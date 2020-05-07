@@ -1,0 +1,513 @@
+---
+meta:
+  containers:
+    awscli: &awscli-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/awscli
+        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+    bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/bosh-cli-v2
+        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+    cf-acceptance-tests: &cf-acceptance-tests-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/cf-acceptance-tests
+        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+    cf-cli: &cf-cli-image-resource
+      type: docker-image
+      source:
+        repository: governmentpaas/cf-cli
+        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+
+resource_types:
+  - name: metadata
+    type: docker-image
+    source:
+      repository: olhtbr/metadata-resource
+      tag: 2.0.1
+
+  - name: s3-iam
+    type: docker-image
+    source:
+      repository: governmentpaas/s3-resource
+      tag: 97e441efbfb06ac7fb09786fd74c64b05f9cc907
+
+  - name: semver-iam
+    type: docker-image
+    source:
+      repository: governmentpaas/semver-resource
+      tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
+
+resources:
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: ((branch_name))
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_keys: ((gpg_public_keys))
+
+  - name: pipeline-trigger
+    type: semver-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      key: ((pipeline_trigger_file))
+
+jobs:
+  - name: begin
+    serial: true
+    plan:
+      - get: paas-cf
+
+      - put: pipeline-trigger
+        params: {bump: patch}
+
+  - name: wait-for-tests
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        passed: [begin]
+        trigger: true
+
+      - get: paas-cf
+        passed: [begin]
+
+      - in_parallel:
+          - task: wait-for-app-availability-tests
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              inputs:
+                - name: paas-cf
+                - name: pipeline-trigger
+              params:
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                CF_ADMIN: admin
+                CF_PASS: ((cf_pass))
+              image_resource: *cf-cli-image-resource
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+
+                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+                    cf target -o admin -s healthchecks > /dev/null
+
+                    echo "Waiting for ~2mins for app-availability-tests job to start:"
+                    for _ in $(seq 24); do
+                      if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
+                        echo "Request detected"
+                        exit 0
+                      fi
+                      printf "."
+                      sleep 5
+                    done
+
+                    echo "timeout waiting for app-availability-tests job to start"
+                    exit 1
+
+          - task: wait-for-api-availability-tests
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              inputs:
+                - name: paas-cf
+                - name: pipeline-trigger
+              params:
+                AWS_DEFAULT_REGION: ((aws_region))
+              image_resource: *awscli-image-resource
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -c
+                  - |
+                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                    JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+                    bucket=((state_bucket))
+
+                    echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
+                    for _ in $(seq 24); do
+                      if aws s3 ls "s3://${bucket}/${JOB_FILE}" ; then
+                        echo "$JOB_FILE detected"
+                        exit 0
+                      fi
+                      printf "."
+                      sleep 5
+                    done
+
+                    echo "timeout waiting for api-availability-tests job to start"
+                    exit 1
+
+  - name: app-availability-tests
+    serial: true
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: [begin]
+            trigger: true
+
+          - get: paas-cf
+            passed: [begin]
+
+      - task: run-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+          params:
+            SKIP_SSL_VALIDATION: true
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CONCOURSE_WEB_USERNAME: admin
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                export CONCOURSE_WEB_URL
+                CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="test-certificate-rotation"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="done"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
+                echo "Running app-availability-tests"
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+
+  - name: api-availability-tests
+    serial: true
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: [begin]
+            trigger: true
+
+          - get: paas-cf
+            passed: [begin]
+
+      - task: upload-job-file
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *awscli-image-resource
+          inputs:
+            - name: pipeline-trigger
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+                echo "Writing $JOB_FILE to S3 to signal job start"
+                echo 'started' | aws s3 cp - "s3://((state_bucket))/$JOB_FILE"
+
+      - task: run-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+          params:
+            SKIP_SSL_VALIDATION: true
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CONCOURSE_WEB_USERNAME: admin
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            AWS_DEFAULT_REGION: ((aws_region))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            CF_PASS: ((cf_pass))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                export CONCOURSE_WEB_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
+                export CF_USER="admin"
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="test-certificate-rotation"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="done"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
+                export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+
+                cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
+
+                echo "Running api-availability-tests"
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+        ensure:
+          task: delete-job-file
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *awscli-image-resource
+            inputs:
+              - name: pipeline-trigger
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                  JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
+                  aws s3 rm "s3://((state_bucket))/${JOB_FILE}"
+
+  - name: deploy-before
+    serial: true
+    serial_groups: [deploy-and-rotate]
+    plan:
+      - get: pipeline-trigger
+        passed: [wait-for-tests]
+        trigger: true
+
+      - get: paas-cf
+        passed: [wait-for-tests]
+
+      - &bosh-deploy
+        task: bosh-deploy
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin'
+                export BOSH_CLIENT
+
+                bosh -n manifest > manifest.yml
+                bosh -n deploy manifest.yml
+
+  - name: rotate-1
+    serial: true
+    serial_groups: [deploy-and-rotate]
+    plan:
+      - get: pipeline-trigger
+        passed: [deploy-before]
+        trigger: true
+
+      - get: paas-cf
+        passed: [deploy-before]
+
+      - &do-step
+        do:
+          - task: remove-transitional-flag-for-ca
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              image_resource: *gov-paas-bosh-cli-v2-image-resource
+              params:
+                CREDHUB_CLIENT: credhub-admin
+                CREDHUB_SECRET: ((bosh-credhub-admin))
+                CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+                CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+              inputs:
+                - name: paas-cf
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    credhub login
+                    ./paas-cf/concourse/scripts/ca-rotation-remove-transitional.rb
+
+          - task: move-transitional-flag-for-ca
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              image_resource: *gov-paas-bosh-cli-v2-image-resource
+              params:
+                CREDHUB_CLIENT: credhub-admin
+                CREDHUB_SECRET: ((bosh-credhub-admin))
+                CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+                CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+                EXPIRY_DAYS: ((ca_rotation_expiry_days))
+              inputs:
+                - name: paas-cf
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    credhub login
+                    ./paas-cf/concourse/scripts/ca-rotation-move-transitional.rb
+
+          - task: set-transitional-flag-for-ca
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              image_resource: *gov-paas-bosh-cli-v2-image-resource
+              params:
+                CREDHUB_CLIENT: credhub-admin
+                CREDHUB_SECRET: ((bosh-credhub-admin))
+                CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+                CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+                EXPIRY_DAYS: ((ca_rotation_expiry_days))
+              inputs:
+                - name: paas-cf
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    credhub login
+                    ./paas-cf/concourse/scripts/ca-rotation-set-transitional.rb
+
+          - task: check-certificates
+            tags: [colocated-with-web]
+            config: &check-certificates-config
+              platform: linux
+              image_resource: *gov-paas-bosh-cli-v2-image-resource
+              params:
+                CREDHUB_CLIENT: credhub-admin
+                CREDHUB_SECRET: ((bosh-credhub-admin))
+                CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+                CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+              inputs:
+                - name: paas-cf
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -c
+                  - |
+                    credhub login
+                    ./paas-cf/concourse/scripts/check-certificates.rb 15
+
+          - *bosh-deploy
+
+  - name: rotate-2
+    serial: true
+    serial_groups: [deploy-and-rotate]
+    plan:
+      - get: pipeline-trigger
+        passed: [rotate-1]
+        trigger: true
+
+      - get: paas-cf
+        passed: [rotate-1]
+
+      - *do-step
+
+  - name: rotate-3
+    serial: true
+    serial_groups: [deploy-and-rotate]
+    plan:
+      - get: pipeline-trigger
+        passed: [rotate-2]
+        trigger: true
+
+      - get: paas-cf
+        passed: [rotate-2]
+
+      - *do-step
+
+  - name: deploy-after
+    serial: true
+    serial_groups: [deploy-and-rotate]
+    plan:
+      - get: pipeline-trigger
+        passed: [rotate-3]
+        trigger: true
+
+      - get: paas-cf
+        passed: [rotate-3]
+
+      - &bosh-deploy
+        task: bosh-deploy
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin'
+                export BOSH_CLIENT
+
+                bosh -n manifest > manifest.yml
+                bosh -n deploy manifest.yml
+
+  - name: done
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        passed: [deploy-after]
+        trigger: true
+
+      - get: paas-cf
+        passed: [deploy-after]
+
+  - name: end
+    serial: true
+    plan:
+      - get: pipeline-trigger
+        passed: [done, api-availability-tests, app-availability-tests]
+        trigger: true
+
+      - get: paas-cf
+        passed: [done]
