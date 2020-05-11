@@ -97,6 +97,7 @@ monitored_aws_region: ${MONITORED_AWS_REGION:-}
 monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}
 deploy_env_tag_prefix: "${deploy_env_tag_prefix}"
 skip_autodelete_await: "${SKIP_AUTODELETE_AWAIT:-false}"
+ca_rotation_expiry_days: "${CA_ROTATION_EXPIRY_DAYS}"
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }

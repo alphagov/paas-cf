@@ -5,6 +5,10 @@ require 'date'
 
 credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
 
+expiry_days = ENV['EXPIRY_DAYS'].to_i
+raise 'EXPIRY_DAYS must be set' if expiry_days.nil? || expiry_days.zero?
+date_of_expiry = Date.today + expiry_days
+
 api_url = "#{credhub_server}/v1"
 
 puts "Fetching the certificates"
@@ -20,8 +24,6 @@ certs['certificates'].each { |cert|
   end
 }
 
-months_time = Date.today >> 1
-
 ca_certs.select do |cert|
   puts "Getting active ca certs for #{cert['name']}"
   resp = JSON.parse `credhub curl -p "#{api_url}/data?name=#{cert['name']}&current=true"`
@@ -31,7 +33,7 @@ ca_certs.select do |cert|
     puts "Skipping #{cert['name']} as it's in the middle of a rotation"
     next
   end
-  if expiry_date < months_time
+  if expiry_date <= date_of_expiry
     puts "#{cert['name']} expires on #{expiry_date}. Expires in #{expires_in} days time. Regenerating #{cert['name']}."
     `credhub curl -p "#{api_url}/certificates/#{cert['id']}/regenerate" -d '{\"set_as_transitional\": true}' -X POST`
   else

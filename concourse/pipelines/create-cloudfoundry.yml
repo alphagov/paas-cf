@@ -3981,6 +3981,7 @@ jobs:
             CREDHUB_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
             CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+            EXPIRY_DAYS: ((ca_rotation_expiry_days))
           inputs:
             - name: paas-cf
           run:
@@ -4003,6 +4004,7 @@ jobs:
             CREDHUB_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
             CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+            EXPIRY_DAYS: ((ca_rotation_expiry_days))
           inputs:
             - name: paas-cf
           run:

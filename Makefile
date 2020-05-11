@@ -162,6 +162,7 @@ dev: ## Set Environment to DEV
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export ENABLE_MORNING_DEPLOYMENT=true)
 	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
+	$(eval export CA_ROTATION_EXPIRY_DAYS ?= 360)
 	@true
 
 .PHONY: stg-lon
@@ -182,6 +183,7 @@ stg-lon: ## Set Environment to stg-lon
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	$(eval export AWS_REGION=eu-west-2)
+	$(eval export CA_ROTATION_EXPIRY_DAYS=180)
 	@true
 
 .PHONY: prod
@@ -202,6 +204,7 @@ prod: ## Set Environment to Production
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)
 	$(eval export AWS_REGION=eu-west-1)
+	$(eval export CA_ROTATION_EXPIRY_DAYS=30)
 	@true
 
 .PHONY: prod-lon
@@ -222,6 +225,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	$(eval export AWS_REGION=eu-west-2)
+	$(eval export CA_ROTATION_EXPIRY_DAYS=30)
 	@true
 
 .PHONY: bosh-cli

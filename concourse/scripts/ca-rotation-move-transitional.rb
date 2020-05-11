@@ -5,6 +5,10 @@ require 'date'
 
 credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
 
+expiry_days = ENV['EXPIRY_DAYS'].to_i
+raise 'EXPIRY_DAYS must be set' if expiry_days.nil? || expiry_days.zero?
+date_of_expiry = Date.today + expiry_days
+
 api_url = "#{credhub_server}/v1"
 
 puts "Getting certificates"
@@ -75,8 +79,6 @@ leaf_certs = certs['certificates'].reject do |cert|
   ca_certs.include? cert
 end
 
-months_time = Date.today >> 1
-
 puts "Checking leaf certs"
 
 leaf_certs.select do |cert|
@@ -88,7 +90,7 @@ leaf_certs.select do |cert|
     puts "Skipping #{cert['name']} as it has more than one active cert"
     next
   end
-  if expiry_date < months_time
+  if expiry_date <= date_of_expiry
     puts "#{cert['name']} expires on #{expiry_date}. Expires in #{expires_in} days time. Regenerating #{cert['name']}."
     `credhub regenerate -n "#{cert['name']}"`
   else
