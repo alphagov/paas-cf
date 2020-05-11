@@ -82,7 +82,8 @@ expiring_certificate_names = []
 invalid_certificate_names = []
 
 certs.each do |cert|
-  live_certs = client.live_certificates(cert['name'])
+  cert_name = cert['name']
+  live_certs = client.live_certificates(cert_name)
 
   live_certs.each do |live_cert|
     cred = client.credential(live_cert['id'])
@@ -99,18 +100,18 @@ certs.each do |cert|
     cert_is_valid = cert_store.verify(xcert)
     valid_status = cert_is_valid ? 'valid'.green : 'invalid'.red
 
-    puts "#{live_cert['name'].yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{expiring_status}) (#{valid_status})"
+    puts "#{cert_name.yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{expiring_status}) (#{valid_status})"
 
-    expiring_certificate_names << live_cert['name'] unless days_to_expire > ALERT_DAYS
-    transitional_certificate_names << live_cert['name'] if live_cert['transitional']
+    expiring_certificate_names << cert_name unless days_to_expire > ALERT_DAYS
+    transitional_certificate_names << cert_name if live_cert['transitional']
 
     unless xcert.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
-      puts "#{live_cert['name']}: ERROR! Missing Subject Key Identifier".red
+      puts "#{cert_name}: ERROR! Missing Subject Key Identifier".red
       alert = true
     end
 
     unless cert_is_valid
-      invalid_certificate_names << live_cert['name']
+      invalid_certificate_names << cert_name
       alert = true
     end
   end
