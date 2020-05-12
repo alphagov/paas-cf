@@ -13,13 +13,6 @@ import (
 	"github.com/concourse/go-concourse/concourse"
 )
 
-const (
-	teamName     = "main"
-	pipelineName = "create-cloudfoundry"
-	jobName      = "post-deploy"
-	resourceName = "pipeline-trigger"
-)
-
 type byStartTime []atc.Build
 
 func (a byStartTime) Len() int           { return len(a) }
@@ -64,20 +57,36 @@ func newConcourseClient() concourse.Client {
 
 // Deployment represents a full run of a concourse pipeline.
 type Deployment struct {
-	Version string
-	client  concourse.Client
+	TeamName     string
+	PipelineName string
+	JobName      string
+	ResourceName string
+	Version      string
+	client       concourse.Client
 }
 
 func ConcourseDeployment() *Deployment {
 	return &Deployment{
-		Version: mustGetenv(1, "PIPELINE_TRIGGER_VERSION"),
-		client:  newConcourseClient(),
+		TeamName:     mustGetenv(1, "CONCOURSE_TEAM_NAME"),
+		PipelineName: mustGetenv(1, "CONCOURSE_PIPELINE_NAME"),
+		JobName:      mustGetenv(1, "CONCOURSE_JOB_NAME"),
+		ResourceName: mustGetenv(1, "CONCOURSE_RESOURCE_NAME"),
+		Version:      mustGetenv(1, "PIPELINE_TRIGGER_VERSION"),
+		client:       newConcourseClient(),
 	}
 }
 
 func (d *Deployment) Complete() (bool, error) {
-	team := d.client.Team(teamName)
-	builds, err := buildsWithVersion(team, pipelineName, resourceName, d.Version)
+	team := d.client.Team(d.TeamName)
+
+	builds, err := buildsWithVersion(
+		team,
+		d.PipelineName,
+		d.JobName,
+		d.ResourceName,
+		d.Version,
+	)
+
 	if err != nil {
 		return false, err
 	}
@@ -87,7 +96,7 @@ func (d *Deployment) Complete() (bool, error) {
 	return false, nil
 }
 
-func buildsWithVersion(team concourse.Team, pipelineName, resourceName, resourceVersion string) ([]atc.Build, error) {
+func buildsWithVersion(team concourse.Team, pipelineName, jobName, resourceName, resourceVersion string) ([]atc.Build, error) {
 	var resourceVersionID int
 
 	page := concourse.Page{
