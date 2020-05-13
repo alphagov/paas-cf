@@ -2,6 +2,8 @@
 
 require 'json'
 
+require_relative './lib/formatting'
+
 credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
 
 api_url = "#{credhub_server}/v1"
