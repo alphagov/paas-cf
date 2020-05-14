@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'json'
 require 'date'
+require 'json'
 
 require_relative './lib/credhub'
 require_relative './lib/formatting'
@@ -14,31 +14,43 @@ date_of_expiry = Date.today + expiry_days
 
 api_url = "#{credhub_server}/v1"
 
-puts "Getting certificates"
 client = CredHubClient.new(api_url)
-certs = client.certificates.reject { |c| c['name'].match?(/_old$/) }
+ca_certs = client
+  .certificates
+  .reject { |c| c['name'].match?(/_old$/) }
+  .select { |c| c['name'] == c['signed_by'] }
 
-puts "Finding CA certs"
-ca_certs = certs.select { |c| c['name'] == c['signed_by'] }
+regenerated_certificate_names = []
 
 ca_certs.select do |cert|
   cert_name = cert['name']
 
-  puts "Getting active ca certs for #{cert_name}"
   versions = client.current_certificates(cert_name)
 
   if versions.length > 1
-    puts "Skipping #{cert_name} as it's in the middle of a rotation"
+    puts "#{cert_name.yellow} has multiple versions...#{'skipped'.green}"
     next
   end
 
   expiry_date = Date.parse(versions.first['expiry_date'])
   expires_in = (expiry_date - Date.today).to_i
 
-  if expiry_date <= date_of_expiry
-    puts "#{cert_name} expires on #{expiry_date}. Expires in #{expires_in} days time. Regenerating #{cert_name}."
-    `credhub curl -p "#{api_url}/certificates/#{cert['id']}/regenerate" -d '{\"set_as_transitional\": true}' -X POST`
-  else
-    puts "#{cert_name} expires on #{expiry_date}. Expires in #{expires_in} days time. Does not need rotating."
+  if expiry_date > date_of_expiry
+    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipped'.green}"
+    next
+  end
+
+  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerated'.yellow}"
+  `credhub curl -p "#{api_url}/certificates/#{cert['id']}/regenerate" -d '{\"set_as_transitional\": true}' -X POST`
+  regenerated_certificate_names << cert_name
+end
+
+unless regenerated_certificate_names.empty?
+  separator
+
+  puts 'The following certificates have been regenerated and marked as transitional:'
+
+  regenerated_certificate_names.each do |cert|
+    puts cert.yellow
   end
 end
