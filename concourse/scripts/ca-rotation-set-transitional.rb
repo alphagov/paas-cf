@@ -50,7 +50,7 @@ unless regenerated_certificate_names.empty?
 
   puts 'The following certificates have been regenerated and marked as transitional:'
 
-  regenerated_certificate_names.each do |cert|
+  regenerated_certificate_names.sort.each do |cert|
     puts cert.yellow
   end
 end

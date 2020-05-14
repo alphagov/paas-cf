@@ -98,7 +98,7 @@ unless transitional_certificate_names.empty?
   separator
 
   puts 'The following certificates have been transitioned:'
-  transitional_certificate_names.each do |cert|
+  transitional_certificate_names.sort.each do |cert|
     puts cert.yellow
   end
 end
@@ -108,7 +108,7 @@ unless regenerated_certificate_names.empty?
 
   puts 'The following certificates have been regenerated:'
 
-  regenerated_certificate_names.each do |cert|
+  regenerated_certificate_names.sort.each do |cert|
     puts cert.yellow
   end
 end
