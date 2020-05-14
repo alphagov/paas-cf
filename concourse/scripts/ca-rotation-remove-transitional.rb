@@ -22,7 +22,7 @@ updated_certificate_names = []
 puts "Checking CA certs"
 ca_certs.each do |cert|
   cert_name = cert['name']
-  puts "Getting active ca certs for #{cert_name}"
+
   versions = client.current_certificates(cert_name)
 
   if versions.length <= 1

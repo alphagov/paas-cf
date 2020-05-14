@@ -73,7 +73,6 @@ puts "Checking leaf certs"
 leaf_certs.select do |cert|
   cert_name = cert['name']
 
-  puts "Getting active certs for #{cert_name}"
   versions = client.current_certificates(cert_name)
 
   if versions.length > 1
