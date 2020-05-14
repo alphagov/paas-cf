@@ -31,7 +31,7 @@ ca_certs.each do |cert|
   versions = client.current_certificates(cert_name)
 
   if versions.length <= 1
-    puts "#{cert_name.yellow} does not have multiple versions...#{'skipped'.green}"
+    puts "#{cert_name.yellow} does not have multiple versions...#{'skipping'.green}"
     next
   end
 
@@ -42,7 +42,7 @@ ca_certs.each do |cert|
   new_ca, old_ca, *_other_cas = sorted_cas
 
   unless !old_ca['transitional'] && new_ca['transitional']
-    puts "#{cert_name.yellow} does not need transitioning...#{'skipped'.green}"
+    puts "#{cert_name.yellow} does not need transitioning...#{'skipping'.green}"
     next
   end
 
@@ -61,7 +61,7 @@ ca_certs.each do |cert|
       next
     end
 
-    puts "#{leaf.yellow} signed by #{cert_name.yellow}...#{'regenerated'.yellow}"
+    puts "#{leaf.yellow} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
     `credhub regenerate -n '#{leaf}'`
     regenerated_certificate_names << leaf
   end
@@ -77,7 +77,7 @@ leaf_certs.select do |cert|
   versions = client.current_certificates(cert_name)
 
   if versions.length > 1
-    puts "#{cert_name.yellow} has more than one active cert...#{'skipped'.green}"
+    puts "#{cert_name.yellow} has more than one active cert...#{'skipping'.green}"
     next
   end
 
@@ -85,11 +85,11 @@ leaf_certs.select do |cert|
   expires_in = (expiry_date - Date.today).to_i
 
   if expiry_date > date_of_expiry
-    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipped'.green}"
+    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipping'.green}"
     next
   end
 
-  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerated'.yellow}"
+  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
   `credhub regenerate -n "#{cert_name}"`
   regenerated_certificate_names << cert_name
 end

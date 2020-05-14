@@ -26,7 +26,7 @@ ca_certs.each do |cert|
   versions = client.current_certificates(cert_name)
 
   if versions.length <= 1
-    puts "#{cert_name.yellow} does not have multiple versions...#{'skipped'.green}"
+    puts "#{cert_name.yellow} does not have multiple versions...#{'skipping'.green}"
     next
   end
 
@@ -37,13 +37,13 @@ ca_certs.each do |cert|
   new_ca, old_ca, *_other_cas = sorted_cas
 
   unless old_ca['transitional'] && !new_ca['transitional']
-    puts "#{cert_name.yellow} does not need transitioning...#{'skipped'.green}"
+    puts "#{cert_name.yellow} does not need transitioning...#{'skipping'.green}"
     next
   end
 
   puts "Version #{old_ca['id']} has an expiry date of #{old_ca['expiry_date']} and the transitional flag is set to #{old_ca['transitional']}"
   puts "Version #{new_ca['id']} has an expiry date of #{new_ca['expiry_date']} and the transitional flag is set to #{new_ca['transitional']}"
-  puts "#{cert_name.yellow} should not be transitional...#{'updated'.yellow}"
+  puts "#{cert_name.yellow} should not be transitional...#{'updating'.yellow}"
   `credhub curl -p '#{api_url}/certificates/#{cert['id']}/update_transitional_version' -d '{\"version\": null}' -X PUT`
   updated_certificate_names << cert_name
 end

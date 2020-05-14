@@ -28,7 +28,7 @@ ca_certs.select do |cert|
   versions = client.current_certificates(cert_name)
 
   if versions.length > 1
-    puts "#{cert_name.yellow} has multiple versions...#{'skipped'.green}"
+    puts "#{cert_name.yellow} has multiple versions...#{'skipping'.green}"
     next
   end
 
@@ -36,11 +36,11 @@ ca_certs.select do |cert|
   expires_in = (expiry_date - Date.today).to_i
 
   if expiry_date > date_of_expiry
-    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipped'.green}"
+    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipping'.green}"
     next
   end
 
-  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerated'.yellow}"
+  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
   `credhub curl -p "#{api_url}/certificates/#{cert['id']}/regenerate" -d '{\"set_as_transitional\": true}' -X POST`
   regenerated_certificate_names << cert_name
 end
