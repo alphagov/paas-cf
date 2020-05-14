@@ -19,7 +19,6 @@ ca_certs = client
 
 updated_certificate_names = []
 
-puts "Checking CA certs"
 ca_certs.each do |cert|
   cert_name = cert['name']
 

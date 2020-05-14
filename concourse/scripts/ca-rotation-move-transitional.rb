@@ -24,7 +24,7 @@ ca_certs, leaf_certs = certs.partition { |c| c['name'] == c['signed_by'] }
 transitional_certificate_names = []
 regenerated_certificate_names = []
 
-puts "Checking CA certs"
+puts 'Checking CA certs'
 ca_certs.each do |cert|
   cert_name = cert['name']
 
@@ -64,7 +64,7 @@ end
 
 separator
 
-puts "Checking leaf certs"
+puts 'Checking leaf certs'
 leaf_certs.select do |cert|
   cert_name = cert['name']
 
