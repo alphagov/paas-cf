@@ -88,6 +88,11 @@ leaf_certs.select do |cert|
     next
   end
 
+  if regenerated_certificate_names.include? cert_name
+    puts "#{cert_name.yellow} already regenerated in this job...#{'skipping'.green}"
+    next
+  end
+
   puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
   `credhub regenerate -n "#{cert_name}"`
   regenerated_certificate_names << cert_name
