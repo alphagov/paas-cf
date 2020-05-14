@@ -46,22 +46,17 @@ ca_certs.each do |cert|
     next
   end
 
-  puts "Version #{old_ca['id']} has an expiry date of #{old_ca['expiry_date']} and the transitional flag is set to #{old_ca['transitional']}"
-  puts "Version #{new_ca['id']} has an expiry date of #{new_ca['expiry_date']} and the transitional flag is set to #{new_ca['transitional']}"
-  puts "#{cert_name} has been regenerated"
-
-  puts "Moving the transitional flag to the old CA certificate: #{old_ca['id']}"
+  puts "#{cert_name.yellow} needs transitioning...#{'transitioning'.yellow}"
   `credhub curl -p '#{api_url}/certificates/#{cert['id']}/update_transitional_version' -d '{\"version\": "#{old_ca['id']}"}' -X PUT`
   transitional_certificate_names << cert_name
 
-  puts "Regenerating leaf certs"
   cert['signs'].each do |leaf|
     unless leaf['signs'].nil?
-      puts "Can't regenerate #{leaf['name'].red} as it signs #{leaf['signs'].red}"
+      puts "  Can't regenerate #{leaf['name'].red} as it signs #{leaf['signs'].red}"
       next
     end
 
-    puts "#{leaf.yellow} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
+    puts "  #{leaf.blue} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
     `credhub regenerate -n '#{leaf}'`
     regenerated_certificate_names << leaf
   end
