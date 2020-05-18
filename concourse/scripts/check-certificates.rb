@@ -90,7 +90,7 @@ unless invalid_certificate_names.empty?
     This is a problem and must be remedied manually
 
     You should:
-    1. use the credhub CLI to get the relevat certificates
+    1. use the credhub CLI to get the relevant certificates
     2. debug why they are invalid using "openssl verify -verbose -issuer_checks -CAfile /path/to/ca /path/to/cert"
     3. confer with your pair about what to do
     4. delete/rotate/replace (possibly manually) them depending on the result of (3)
