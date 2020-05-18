@@ -50,6 +50,12 @@ class CredHubClient
     raise body unless $CHILD_STATUS.success?
   end
 
+  def regenerate_certificate_as_transitional(cert_id)
+    payload = { 'set_as_transitional' => true }
+    body = `credhub curl -p "#{api_url}/certificates/#{cert_id}/regenerate" -d '#{payload.to_json}' -X POST`
+    raise body unless $CHILD_STATUS.success?
+  end
+
   def update_certificate_transitional_version(cert_id, optional_version_id)
     payload = { 'version' => optional_version_id }
     body = `credhub curl -p '#{api_url}/certificates/#{cert_id}/update_transitional_version' -d '#{payload.to_json}' -X PUT`

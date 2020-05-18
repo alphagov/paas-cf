@@ -41,7 +41,7 @@ ca_certs.select do |cert|
   end
 
   puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
-  `credhub curl -p "#{api_url}/certificates/#{cert['id']}/regenerate" -d '{\"set_as_transitional\": true}' -X POST`
+  client.regenerate_certificate_as_transitional(cert['id'])
   regenerated_certificate_names << cert_name
 end
 
