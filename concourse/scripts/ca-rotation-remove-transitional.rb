@@ -35,8 +35,13 @@ ca_certs.each do |cert|
 
   new_ca, old_ca, *_other_cas = sorted_cas
 
-  unless old_ca['transitional'] && !new_ca['transitional']
-    puts "#{cert_name.yellow} does not need transitioning...#{'skipping'.green}"
+  unless sorted_cas.any? { |ca| ca['transitional'] }
+    puts "#{cert_name.yellow} is not in transition...#{'skipping'.green}"
+    next
+  end
+
+  if new_ca['transitional']
+    puts "#{cert_name.yellow} is in another transition step...#{'skipping'.green}"
     next
   end
 
