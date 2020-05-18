@@ -52,11 +52,11 @@ ca_certs.each do |cert|
 
   cert['signs'].each do |leaf|
     unless leaf['signs'].nil?
-      puts "  Can't regenerate #{leaf['name'].red} as it signs #{leaf['signs'].red}"
+      puts "Can't regenerate #{leaf['name'].red} as it signs #{leaf['signs'].red}"
       next
     end
 
-    puts "  #{leaf.blue} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
+    puts "#{leaf.blue} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
     client.regenerate_certificate(leaf)
     regenerated_certificate_names << leaf
   end
