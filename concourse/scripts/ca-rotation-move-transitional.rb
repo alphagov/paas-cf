@@ -57,7 +57,7 @@ ca_certs.each do |cert|
     end
 
     puts "  #{leaf.blue} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
-    `credhub regenerate -n '#{leaf}'`
+    client.regenerate_certificate(leaf)
     regenerated_certificate_names << leaf
   end
 end
@@ -89,7 +89,7 @@ leaf_certs.select do |cert|
   end
 
   puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
-  `credhub regenerate -n "#{cert_name}"`
+  client.regenerate_certificate(cert_name)
   regenerated_certificate_names << cert_name
 end
 

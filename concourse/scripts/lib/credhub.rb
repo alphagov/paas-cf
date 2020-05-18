@@ -44,4 +44,9 @@ class CredHubClient
     raise body unless $CHILD_STATUS.success?
     JSON.parse(body)
   end
+
+  def regenerate_certificate(cert_name)
+    body = `credhub regenerate -n "#{cert_name}"`
+    raise body unless $CHILD_STATUS.success?
+  end
 end
