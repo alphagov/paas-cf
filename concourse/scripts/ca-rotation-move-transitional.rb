@@ -47,7 +47,7 @@ ca_certs.each do |cert|
   end
 
   puts "#{cert_name.yellow} needs transitioning...#{'transitioning'.yellow}"
-  `credhub curl -p '#{api_url}/certificates/#{cert['id']}/update_transitional_version' -d '{\"version\": "#{old_ca['id']}"}' -X PUT`
+  client.update_certificate_transitional_version(cert['id'], old_ca['id'])
   transitional_certificate_names << cert_name
 
   cert['signs'].each do |leaf|

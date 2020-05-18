@@ -43,7 +43,7 @@ ca_certs.each do |cert|
   puts "Version #{old_ca['id']} has an expiry date of #{old_ca['expiry_date']} and the transitional flag is set to #{old_ca['transitional']}"
   puts "Version #{new_ca['id']} has an expiry date of #{new_ca['expiry_date']} and the transitional flag is set to #{new_ca['transitional']}"
   puts "#{cert_name.yellow} should not be transitional...#{'updating'.yellow}"
-  `credhub curl -p '#{api_url}/certificates/#{cert['id']}/update_transitional_version' -d '{\"version\": null}' -X PUT`
+  client.update_certificate_transitional_version(cert['id'], nil)
   updated_certificate_names << cert_name
 end
 
