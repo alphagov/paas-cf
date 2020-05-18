@@ -4,7 +4,6 @@ router_instances: 12
 api_instances: 6
 doppler_instances: 33
 log_api_instances: 6
-adapter_instances: 2
 cc_worker_instances: 4
 cc_hourly_rate_limit: 20000
 paas_region_name: ireland

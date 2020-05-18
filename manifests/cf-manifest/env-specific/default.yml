@@ -4,7 +4,6 @@ router_instances: 2
 api_instances: 2
 doppler_instances: 6
 log_api_instances: 2
-adapter_instances: 2
 cc_worker_instances: 2
 cc_hourly_rate_limit: 15000
 paas_region_name: dev
