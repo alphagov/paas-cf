@@ -2,6 +2,7 @@
 
 require 'date'
 require 'json'
+require 'time'
 
 require_relative './lib/credhub'
 require_relative './lib/formatting'
@@ -36,7 +37,7 @@ ca_certs.each do |cert|
   end
 
   sorted_cas = versions
-    .sort_by { |version| Date.parse(version['expiry_date']) }
+    .sort_by { |version| Time.parse(version['expiry_date']) }
     .reverse
 
   new_ca, old_ca, *_other_cas = sorted_cas
