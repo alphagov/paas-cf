@@ -4075,6 +4075,27 @@ jobs:
                 echo "Checking if ipsec-CA.crt expires in the next 30 days"
                 openssl x509 -checkend 2592000 -noout -in ipsec-CA/ipsec-CA.crt
 
+      - task: check-certificate-hierarchy
+        tags: [colocated-with-web]
+        config: &check-certificate-hierarchy-config
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                credhub login
+                ./paas-cf/concourse/scripts/check-certificate-hierarchy.rb
+
   - name: tag-release
     plan:
       - in_parallel:
@@ -4696,6 +4717,10 @@ jobs:
       - task: check-certificates
         tags: [colocated-with-web]
         config: *check-certificates-config
+
+      - task: check-certificate-hierarchy
+        tags: [colocated-with-web]
+        config: *check-certificate-hierarchy-config
 
   - name: cleanup-deleted-cf-users
     serial: true
