@@ -63,6 +63,17 @@ jobs:
     plan:
       - get: paas-cf
 
+      # This task is just to consume paas-cf to stop pipecleaner from whining
+      - task: consume-paas-cf
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+          image_resource: *cf-cli-image-resource
+          run:
+            path: echo
+
       - put: pipeline-trigger
         params: {bump: patch}
 
