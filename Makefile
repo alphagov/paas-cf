@@ -183,7 +183,7 @@ stg-lon: ## Set Environment to stg-lon
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-2)
 	$(eval export AWS_REGION=eu-west-2)
-	$(eval export CA_ROTATION_EXPIRY_DAYS=180)
+	$(eval export CA_ROTATION_EXPIRY_DAYS=335)
 	@true
 
 .PHONY: prod
