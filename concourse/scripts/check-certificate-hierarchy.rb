@@ -34,7 +34,7 @@ class CertificateHierarchy
     root_certs.each { |root| print_cert(root, 0) }
   end
 
-  private
+private
 
   def root_certs
     @cert_names.select { |c| @signed_by[c].nil? }
@@ -50,9 +50,9 @@ class CertificateHierarchy
     signed_certs = @signs[cert] || []
 
     if signed_certs.empty?
-      puts (' ' * indent) + cert.green
+      puts((' ' * indent) + cert.green)
     else
-      puts (' ' * indent) + cert.blue
+      puts((' ' * indent) + cert.blue)
     end
 
     signed_certs.each { |c| print_cert(c, indent + 2) }
