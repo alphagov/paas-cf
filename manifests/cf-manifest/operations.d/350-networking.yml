@@ -1,0 +1,17 @@
+---
+
+- type: replace
+  path: /releases/name=silk
+  value:
+    name: "silk"
+    version: "2.30.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/silk-release?v=2.30.0"
+    sha1: "277e8ec42a58a4e08814a697c762d87366761a4c"
+
+- type: replace
+  path: /releases/name=cf-networking
+  value:
+    name: "cf-networking"
+    version: "2.30.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cf-networking-release?v=2.30.0"
+    sha1: "41116681554ee548c261625134a43048d93da498"
