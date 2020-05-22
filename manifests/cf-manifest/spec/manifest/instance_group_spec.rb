@@ -38,10 +38,6 @@ RSpec.describe "the instance_groups definitions block" do
     it "has diego-api before the cells" do
       expect("diego-api").to be_ordered_before("diego-cell")
     end
-
-    it "has diego-api serial" do
-      expect("diego-api").to be_updated_serially
-    end
   end
 
   describe "in order to match the upstream Diego instance_group ordering" do
