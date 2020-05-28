@@ -1,97 +1,117 @@
 #!/usr/bin/env ruby
+# rubocop:disable Metrics/BlockLength
 
-require 'json'
 require 'date'
+require 'json'
+require 'time'
+
+require_relative './lib/credhub'
+require_relative './lib/formatting'
 
 credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
 
+expiry_days = ENV['EXPIRY_DAYS'].to_i
+raise 'EXPIRY_DAYS must be set' if expiry_days.nil? || expiry_days.zero?
+date_of_expiry = Date.today + expiry_days
+
 api_url = "#{credhub_server}/v1"
 
-puts "Getting certificates"
+client = CredHubClient.new(api_url)
+certs = client
+  .certificates
+  .reject { |c| c['name'].match?(/_old$/) }
 
-certs = JSON.parse `credhub curl -p '#{api_url}/certificates'`
+ca_certs, leaf_certs = certs.partition { |c| c['name'] == c['signed_by'] }
 
-ca_certs = []
+transitional_certificate_names = []
+regenerated_certificate_names = []
 
-puts "Finding CA certs"
+puts 'Checking CA certs'
+ca_certs.each do |cert|
+  cert_name = cert['name']
 
-certs['certificates'].each { |cert|
-  if cert['name'] == cert['signed_by']
-    puts "Adding #{cert['name']} to the list of CA certs"
-    ca_certs.push(cert)
-  end
-}
+  versions = client.current_certificates(cert_name)
 
-def compare_ca_cert_versions(active_certs)
-  if active_certs[0]['expiry_date'] == active_certs[1]['expiry_date']
-    c = active_certs.sort_by { |version| version['version_created_at'] }
-    if c[0]['version_created_at'] < c[1]['version_created_at']
-      old_ca = c[0]
-      new_ca = c[1]
-    else
-      old_ca = c[1]
-      new_ca = c[0]
-    end
-  elsif active_certs[0]['expiry_date'] < active_certs[1]['expiry_date']
-    old_ca = active_certs[0]
-    new_ca = active_certs[1]
-  else
-    old_ca = active_certs[1]
-    new_ca = active_certs[0]
-  end
-
-  [old_ca, new_ca]
-end
-
-ca_certs.each { |cert|
-  puts "Getting active ca certs for #{cert['name']}"
-  versions = JSON.parse `credhub curl -p '#{api_url}/data?name=#{cert['name']}&current=true'`
-  if versions['data'].length > 1
-    puts "#{cert['name']} has more than one active version"
-    v = versions['data'].sort_by { |version| version['expiry_date'] }
-
-    old_ca, new_ca = compare_ca_cert_versions(v)
-
-    if !old_ca['transitional'] && new_ca['transitional']
-      puts "Version #{old_ca['id']} has an expiry date of #{old_ca['expiry_date']} and the transitional flag is set to #{old_ca['transitional']}"
-      puts "Version #{new_ca['id']} has an expiry date of #{new_ca['expiry_date']} and the transitional flag is set to #{new_ca['transitional']}"
-      puts "#{cert['name']} has been regenerated"
-      puts "Moving the transitional flag to the old CA certificate: #{old_ca['id']}"
-      `credhub curl -p '#{api_url}/certificates/#{cert['id']}/update_transitional_version' -d '{\"version\": "#{old_ca['id']}"}' -X PUT`
-      puts "Regenerating leaf certs"
-      cert['signs'].each { |leaf|
-        if !leaf['signs'].nil?
-          puts "Can't regenerate #{leaf['name']} as it signs #{leaf['signs']}"
-        else
-          puts "Regenerating #{leaf} signed by the #{cert['name']}"
-          `credhub regenerate -n '#{leaf}'`
-        end
-      }
-    end
-  end
-}
-
-leaf_certs = certs['certificates'].reject do |cert|
-  ca_certs.include? cert
-end
-
-months_time = Date.today >> 1
-
-puts "Checking leaf certs"
-
-leaf_certs.select do |cert|
-  puts "Getting active certs for #{cert['name']}"
-  resp = JSON.parse `credhub curl -p "#{api_url}/data?name=#{cert['name']}&current=true"`
-  expiry_date = Date.parse(resp['data'][0]['expiry_date'])
-  expires_in = (expiry_date - Date.today).to_i
-  if resp['data'].length > 1
-    puts "Skipping #{cert['name']} as it has more than one active cert"
+  if versions.length <= 1
+    puts "#{cert_name.yellow} does not have multiple versions...#{'skipping'.green}"
     next
   end
-  if expiry_date < months_time
-    puts "#{cert['name']} expires on #{expiry_date}. Expires in #{expires_in} days time. Regenerating #{cert['name']}."
-    `credhub regenerate -n "#{cert['name']}"`
-  else
-    puts "#{cert['name']} expires on #{expiry_date}. Expires in #{expires_in} days time. Doesn't need to be rotated."
+
+  sorted_cas = versions
+    .sort_by { |version| Time.parse(version['expiry_date']) }
+    .reverse
+
+  new_ca, old_ca, *_other_cas = sorted_cas
+
+  unless new_ca['transitional']
+    puts "#{cert_name.yellow} does not need transitioning...#{'skipping'.green}"
+    next
+  end
+
+  puts "#{cert_name.yellow} needs transitioning...#{'transitioning'.yellow}"
+  client.update_certificate_transitional_version(cert['id'], old_ca['id'])
+  transitional_certificate_names << cert_name
+
+  cert['signs'].each do |leaf|
+    unless leaf['signs'].nil?
+      puts "Can't regenerate #{leaf['name'].red} as it signs #{leaf['signs'].red}"
+      next
+    end
+
+    puts "#{leaf.blue} signed by #{cert_name.yellow}...#{'regenerating'.yellow}"
+    client.regenerate_certificate(leaf)
+    regenerated_certificate_names << leaf
   end
 end
+
+separator
+
+puts 'Checking leaf certs'
+leaf_certs.select do |cert|
+  cert_name = cert['name']
+
+  versions = client.current_certificates(cert_name)
+
+  if versions.length > 1
+    puts "#{cert_name.yellow} has more than one active cert...#{'skipping'.green}"
+    next
+  end
+
+  expiry_date = Date.parse(versions.first['expiry_date'])
+  expires_in = (expiry_date - Date.today).to_i
+
+  if expiry_date > date_of_expiry
+    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipping'.green}"
+    next
+  end
+
+  if regenerated_certificate_names.include? cert_name
+    puts "#{cert_name.yellow} already regenerated in this job...#{'skipping'.green}"
+    next
+  end
+
+  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
+  client.regenerate_certificate(cert_name)
+  regenerated_certificate_names << cert_name
+end
+
+unless transitional_certificate_names.empty?
+  separator
+
+  puts 'The following certificates have been transitioned:'
+  transitional_certificate_names.sort.each do |cert|
+    puts cert.yellow
+  end
+end
+
+unless regenerated_certificate_names.empty?
+  separator
+
+  puts 'The following certificates have been regenerated:'
+
+  regenerated_certificate_names.sort.each do |cert|
+    puts cert.yellow
+  end
+end
+
+# rubocop:enable Metrics/BlockLength

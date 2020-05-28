@@ -1032,8 +1032,17 @@ jobs:
 
                 export CONCOURSE_WEB_URL
                 CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
-                export PIPELINE_TRIGGER_VERSION
+
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running app-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
@@ -1108,8 +1117,18 @@ jobs:
 
                 export CONCOURSE_WEB_URL="https://deployer.${SYSTEM_DNS_ZONE_NAME}"
                 export CF_USER="admin"
-                export PIPELINE_TRIGGER_VERSION
+
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
@@ -3981,6 +4000,7 @@ jobs:
             CREDHUB_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
             CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+            EXPIRY_DAYS: ((ca_rotation_expiry_days))
           inputs:
             - name: paas-cf
           run:
@@ -4003,6 +4023,7 @@ jobs:
             CREDHUB_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
             CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+            EXPIRY_DAYS: ((ca_rotation_expiry_days))
           inputs:
             - name: paas-cf
           run:
@@ -4053,6 +4074,27 @@ jobs:
 
                 echo "Checking if ipsec-CA.crt expires in the next 30 days"
                 openssl x509 -checkend 2592000 -noout -in ipsec-CA/ipsec-CA.crt
+
+      - task: check-certificate-hierarchy
+        tags: [colocated-with-web]
+        config: &check-certificate-hierarchy-config
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                credhub login
+                ./paas-cf/concourse/scripts/check-certificate-hierarchy.rb
 
   - name: tag-release
     plan:
@@ -4675,6 +4717,10 @@ jobs:
       - task: check-certificates
         tags: [colocated-with-web]
         config: *check-certificates-config
+
+      - task: check-certificate-hierarchy
+        tags: [colocated-with-web]
+        config: *check-certificate-hierarchy-config
 
   - name: cleanup-deleted-cf-users
     serial: true

@@ -1,61 +1,64 @@
 #!/usr/bin/env ruby
 
+require 'date'
 require 'json'
+require 'time'
+
+require_relative './lib/credhub'
+require_relative './lib/formatting'
 
 credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
 
 api_url = "#{credhub_server}/v1"
 
-puts "Getting certificates"
+client = CredHubClient.new(api_url)
 
-certs = JSON.parse `credhub curl -p '#{api_url}/certificates'`
+ca_certs = client
+  .certificates
+  .reject { |c| c['name'].match?(/_old$/) }
+  .select { |c| c['name'] == c['signed_by'] }
 
-ca_certs = []
+updated_certificate_names = []
 
-puts "Finding CA certs"
+ca_certs.each do |cert|
+  cert_name = cert['name']
 
-certs['certificates'].each { |cert|
-  if cert['name'] == cert['signed_by']
-    puts "Adding #{cert['name']} to the list of CA certs"
-    ca_certs.push(cert)
-  end
-}
+  versions = client.current_certificates(cert_name)
 
-def compare_ca_cert_versions(active_certs)
-  if active_certs[0]['expiry_date'] == active_certs[1]['expiry_date']
-    c = active_certs.sort_by { |version| version['version_created_at'] }
-    if c[0]['version_created_at'] < c[1]['version_created_at']
-      old_ca = c[0]
-      new_ca = c[1]
-    else
-      old_ca = c[1]
-      new_ca = c[0]
-    end
-  elsif active_certs[0]['expiry_date'] < active_certs[1]['expiry_date']
-    old_ca = active_certs[0]
-    new_ca = active_certs[1]
-  else
-    old_ca = active_certs[1]
-    new_ca = active_certs[0]
+  if versions.length <= 1
+    puts "#{cert_name.yellow} does not have multiple versions...#{'skipping'.green}"
+    next
   end
 
-  [old_ca, new_ca]
+  sorted_cas = versions
+    .sort_by { |version| Time.parse(version['expiry_date']) }
+    .reverse
+
+  new_ca, old_ca, *_other_cas = sorted_cas
+
+  unless sorted_cas.any? { |ca| ca['transitional'] }
+    puts "#{cert_name.yellow} is not in transition...#{'skipping'.green}"
+    next
+  end
+
+  if new_ca['transitional']
+    puts "#{cert_name.yellow} is in another transition step...#{'skipping'.green}"
+    next
+  end
+
+  puts "Version #{old_ca['id']} has an expiry date of #{old_ca['expiry_date']} and the transitional flag is set to #{old_ca['transitional']}"
+  puts "Version #{new_ca['id']} has an expiry date of #{new_ca['expiry_date']} and the transitional flag is set to #{new_ca['transitional']}"
+  puts "#{cert_name.yellow} should not be transitional...#{'updating'.yellow}"
+  client.update_certificate_transitional_version(cert['id'], nil)
+  updated_certificate_names << cert_name
 end
 
-ca_certs.each { |cert|
-  puts "Getting active ca certs for #{cert['name']}"
-  versions = JSON.parse `credhub curl -p '#{api_url}/data?name=#{cert['name']}&current=true'`
-  if versions['data'].length > 1
-    puts "#{cert['name']} has more than one active version"
-    v = versions['data'].sort_by { |version| version['expiry_date'] }
+unless updated_certificate_names.empty?
+  separator
 
-    old_ca, new_ca = compare_ca_cert_versions(v)
+  puts 'The following certificates have been updated as non-transitional:'
 
-    if old_ca['transitional'] && !new_ca['transitional']
-      puts "Version #{old_ca['id']} has an expiry date of #{old_ca['expiry_date']} and the transitional flag is set to #{old_ca['transitional']}"
-      puts "Version #{new_ca['id']} has an expiry date of #{new_ca['expiry_date']} and the transitional flag is set to #{new_ca['transitional']}"
-      puts "Setting transitional flag for #{cert['name']} to null"
-      `credhub curl -p '#{api_url}/certificates/#{cert['id']}/update_transitional_version' -d '{\"version\": null}' -X PUT`
-    end
+  updated_certificate_names.sort.each do |cert|
+    puts cert.yellow
   end
-}
+end

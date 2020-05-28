@@ -1,71 +1,9 @@
 #!/usr/bin/env ruby
-require 'English'
 require 'openssl'
-require 'json'
 require 'date'
 
-def separator
-  puts('-' * 80)
-end
-
-class String
-  def red
-    "\e[31m#{self}\e[0m"
-  end
-
-  def green
-    "\e[32m#{self}\e[0m"
-  end
-
-  def yellow
-    "\e[33m#{self}\e[0m"
-  end
-
-  def blue;
-    "\e[34m#{self}\e[0m"
-  end
-end
-
-class CredHubClient
-  attr_reader :api_url
-
-  def initialize(api_url)
-    @api_url = api_url
-  end
-
-  def certificates
-    body = `credhub curl -p '#{api_url}/certificates'`
-    raise body unless $CHILD_STATUS.success?
-    JSON.parse(body).fetch('certificates')
-  end
-
-  def current_certificate(name)
-    body = `credhub curl -p '#{api_url}/data?name=#{name}&current=true'`
-    raise body unless $CHILD_STATUS.success?
-    JSON.parse(body).fetch('data').first
-  end
-
-  def transitional_certificates(name)
-    body = `credhub curl -p '#{api_url}/certificates?name=#{name}'`
-    raise body unless $CHILD_STATUS.success?
-    JSON
-      .parse(body)
-      .fetch('certificates').first.fetch('versions')
-      .select { |c| c.fetch('transitional', false) }
-  end
-
-  def live_certificates(name)
-    current = current_certificate(name)
-    transitional = transitional_certificates(name)
-    transitional.concat([current]).uniq { |c| c.fetch('id') }
-  end
-
-  def credential(credential_id)
-    body = `credhub curl -p '#{api_url}/data/#{credential_id}'`
-    raise body unless $CHILD_STATUS.success?
-    JSON.parse(body)
-  end
-end
+require_relative './lib/credhub'
+require_relative './lib/formatting'
 
 ALERT_DAYS = (ARGV[0] || '15').to_i
 CREDHUB_SERVER = ENV.fetch('CREDHUB_SERVER')
@@ -82,7 +20,8 @@ expiring_certificate_names = []
 invalid_certificate_names = []
 
 certs.each do |cert|
-  live_certs = client.live_certificates(cert['name'])
+  cert_name = cert['name']
+  live_certs = client.live_certificates(cert_name)
 
   live_certs.each do |live_cert|
     cred = client.credential(live_cert['id'])
@@ -99,18 +38,18 @@ certs.each do |cert|
     cert_is_valid = cert_store.verify(xcert)
     valid_status = cert_is_valid ? 'valid'.green : 'invalid'.red
 
-    puts "#{live_cert['name'].yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{expiring_status}) (#{valid_status})"
+    puts "#{cert_name.yellow} has #{days_to_expire} days to expire (#{transitional_status}) (#{expiring_status}) (#{valid_status})"
 
-    expiring_certificate_names << live_cert['name'] unless days_to_expire > ALERT_DAYS
-    transitional_certificate_names << live_cert['name'] if live_cert['transitional']
+    expiring_certificate_names << cert_name unless days_to_expire > ALERT_DAYS
+    transitional_certificate_names << cert_name if live_cert['transitional']
 
     unless xcert.extensions.find { |e| e.oid == 'subjectKeyIdentifier' }
-      puts "#{live_cert['name']}: ERROR! Missing Subject Key Identifier".red
+      puts "#{cert_name}: ERROR! Missing Subject Key Identifier".red
       alert = true
     end
 
     unless cert_is_valid
-      invalid_certificate_names << live_cert['name']
+      invalid_certificate_names << cert_name
       alert = true
     end
   end
@@ -151,7 +90,7 @@ unless invalid_certificate_names.empty?
     This is a problem and must be remedied manually
 
     You should:
-    1. use the credhub CLI to get the relevat certificates
+    1. use the credhub CLI to get the relevant certificates
     2. debug why they are invalid using "openssl verify -verbose -issuer_checks -CAfile /path/to/ca /path/to/cert"
     3. confer with your pair about what to do
     4. delete/rotate/replace (possibly manually) them depending on the result of (3)

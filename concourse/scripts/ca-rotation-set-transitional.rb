@@ -1,40 +1,56 @@
 #!/usr/bin/env ruby
 
-require 'json'
 require 'date'
+require 'json'
+
+require_relative './lib/credhub'
+require_relative './lib/formatting'
 
 credhub_server = ENV['CREDHUB_SERVER'] || raise("Must set $CREDHUB_SERVER env var")
 
+expiry_days = ENV['EXPIRY_DAYS'].to_i
+raise 'EXPIRY_DAYS must be set' if expiry_days.nil? || expiry_days.zero?
+date_of_expiry = Date.today + expiry_days
+
 api_url = "#{credhub_server}/v1"
 
-puts "Fetching the certificates"
+client = CredHubClient.new(api_url)
+ca_certs = client
+  .certificates
+  .reject { |c| c['name'].match?(/_old$/) }
+  .select { |c| c['name'] == c['signed_by'] }
 
-certs = JSON.parse `credhub curl -p '#{api_url}/certificates'`
-
-ca_certs = []
-
-certs['certificates'].each { |cert|
-  if cert['name'] == cert['signed_by']
-    puts "Adding #{cert['name']} to list of ca certs"
-    ca_certs.push(cert)
-  end
-}
-
-months_time = Date.today >> 1
+regenerated_certificate_names = []
 
 ca_certs.select do |cert|
-  puts "Getting active ca certs for #{cert['name']}"
-  resp = JSON.parse `credhub curl -p "#{api_url}/data?name=#{cert['name']}&current=true"`
-  expiry_date = Date.parse(resp['data'][0]['expiry_date'])
-  expires_in = (expiry_date - Date.today).to_i
-  if resp['data'].length > 1
-    puts "Skipping #{cert['name']} as it's in the middle of a rotation"
+  cert_name = cert['name']
+
+  versions = client.current_certificates(cert_name)
+
+  if versions.length > 1
+    puts "#{cert_name.yellow} has multiple versions...#{'skipping'.green}"
     next
   end
-  if expiry_date < months_time
-    puts "#{cert['name']} expires on #{expiry_date}. Expires in #{expires_in} days time. Regenerating #{cert['name']}."
-    `credhub curl -p "#{api_url}/certificates/#{cert['id']}/regenerate" -d '{\"set_as_transitional\": true}' -X POST`
-  else
-    puts "#{cert['name']} expires on #{expiry_date}. Expires in #{expires_in} days time. Does not need rotating."
+
+  expiry_date = Date.parse(versions.first['expiry_date'])
+  expires_in = (expiry_date - Date.today).to_i
+
+  if expiry_date > date_of_expiry
+    puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'skipping'.green}"
+    next
+  end
+
+  puts "#{cert_name.yellow} expires on #{expiry_date} (in #{expires_in} days)...#{'regenerating'.yellow}"
+  client.regenerate_certificate_as_transitional(cert['id'])
+  regenerated_certificate_names << cert_name
+end
+
+unless regenerated_certificate_names.empty?
+  separator
+
+  puts 'The following certificates have been regenerated and marked as transitional:'
+
+  regenerated_certificate_names.sort.each do |cert|
+    puts cert.yellow
   end
 end
