@@ -21,9 +21,12 @@ class TenantNotifier
 
   This will help you avoid unnecessary downtime for your users.
 
-  We will be upgrading these Redis instances in two weeks time, on <%= maintenance_window_date %>, between <%= maintenance_window_time_range %>:
+  ^ We will be upgrading your Redis instances in two weeks time, on <%= maintenance_window_date %>, between <%= maintenance_window_time_range %>
+
+  The following instances will be affected:
 
   ( Org / Space / Service )
+
   <% service_instances.each do |si| %>
   - <%= si.org_name %> / <%= si.space_name %> / <%= si.instance_name %>
   <% end %>
