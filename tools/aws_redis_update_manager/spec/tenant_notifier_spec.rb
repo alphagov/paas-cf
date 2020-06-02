@@ -36,7 +36,8 @@ RSpec.describe TenantNotifier do
         maintenance_window_date: maintenance_window_date,
         maintenance_window_time_range: maintenance_window_time_range,
         alt_maintenance_window_date: alt_maintenance_window_date,
-        alt_maintenance_window_time_range: alt_maintenance_window_time_range
+        alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+        region: 'London'
       )
     end
 
@@ -67,6 +68,12 @@ RSpec.describe TenantNotifier do
         "on #{alt_maintenance_window_date}, between #{alt_maintenance_window_time_range}",
       )
     end
+
+    it 'should include the region' do
+      expect(contents).to match(
+        "(London)",
+      )
+    end
   end
 
   context 'when notifying a tenant' do
@@ -85,7 +92,8 @@ RSpec.describe TenantNotifier do
         maintenance_window_date: maintenance_window_date,
         maintenance_window_time_range: maintenance_window_time_range,
         alt_maintenance_window_date: alt_maintenance_window_date,
-        alt_maintenance_window_time_range: alt_maintenance_window_time_range
+        alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+        region: 'London'
       )
     end
 
@@ -98,7 +106,8 @@ RSpec.describe TenantNotifier do
             maintenance_window_date: maintenance_window_date,
             maintenance_window_time_range: maintenance_window_time_range,
             alt_maintenance_window_date: alt_maintenance_window_date,
-            alt_maintenance_window_time_range: alt_maintenance_window_time_range
+            alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+            region: 'London'
           )
         ))
       )

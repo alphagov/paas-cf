@@ -56,6 +56,10 @@ parser = OptionParser.new do |opts|
   opts.on('--alt-maintenance-window-time-range RANGE', 'Alternative maintenance window time range') do |r|
     options[:alt_maintenance_window_time_range] = r
   end
+
+  opts.on('--region REGION', 'Region: ["London", "Ireland"]') do |r|
+    options[:region] = r
+  end
 end
 
 if ARGV.empty?
@@ -88,6 +92,8 @@ when 'email', 'preview'
   abort 'Please specify --maintenance-window-time-range' if options[:maintenance_window_time_range].nil?
   abort 'Please specify --alt-maintenance-window-date' if options[:alt_maintenance_window_date].nil?
   abort 'Please specify --alt-maintenance-window-time-range' if options[:alt_maintenance_window_time_range].nil?
+
+  abort 'Please specify --region' if options[:region].nil?
 end
 
 manager = AwsRedisUpdateManager.new(
@@ -103,7 +109,8 @@ when 'email'
     maintenance_window_date: options[:maintenance_window_date],
     maintenance_window_time_range: options[:maintenance_window_time_range],
     alt_maintenance_window_date: options[:alt_maintenance_window_date],
-    alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range]
+    alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
+    region: options[:region]
   )
 when 'preview'
   abort 'Please specify --preview-email' if options[:preview_email].nil?
@@ -114,7 +121,8 @@ when 'preview'
     maintenance_window_date: options[:maintenance_window_date],
     maintenance_window_time_range: options[:maintenance_window_time_range],
     alt_maintenance_window_date: options[:alt_maintenance_window_date],
-    alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range]
+    alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
+    region: options[:region]
   )
 when 'print'
   manager.print_updateable_service_instances

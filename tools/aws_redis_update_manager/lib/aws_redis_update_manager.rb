@@ -74,7 +74,8 @@ class AwsRedisUpdateManager
     maintenance_window_date:,
     maintenance_window_time_range:,
     alt_maintenance_window_date:,
-    alt_maintenance_window_time_range:
+    alt_maintenance_window_time_range:,
+    region:
   )
     example_service_instance = OpenStruct.new(
       instance_guid: '00000000-1111-2222-3333-444444444444',
@@ -98,6 +99,7 @@ class AwsRedisUpdateManager
       maintenance_window_time_range: maintenance_window_time_range,
       alt_maintenance_window_date: alt_maintenance_window_date,
       alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+      region: region
     )
 
     puts "  Sent email to #{preview_email}"
@@ -108,7 +110,8 @@ class AwsRedisUpdateManager
     maintenance_window_date:,
     maintenance_window_time_range:,
     alt_maintenance_window_date:,
-    alt_maintenance_window_time_range:
+    alt_maintenance_window_time_range:,
+    region:
   )
     cf_org_finder = CloudFoundryOrgFinder.new
     notifier = TenantNotifier.new(notify_api_key)
@@ -134,6 +137,7 @@ class AwsRedisUpdateManager
             maintenance_window_time_range: maintenance_window_time_range,
             alt_maintenance_window_date: alt_maintenance_window_date,
             alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+            region: region
           )
 
           puts "    Sent email to #{org_manager.email}"

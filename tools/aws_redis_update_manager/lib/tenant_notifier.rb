@@ -17,7 +17,7 @@ class TenantNotifier
   TEMPLATE = <<~MESSAGE
   Dear GOV.UK PaaS tenant,
 
-  We are contacting you, as a manager of the <%= org_name %> org, to ask you to review your choice of Redis plans.
+  We are contacting you, as a manager of the <%= org_name %> org (<%= region %>), to ask you to review your choice of Redis plans.
 
   This will help you avoid unnecessary downtime for your users.
 
@@ -43,7 +43,7 @@ class TenantNotifier
 
   # How to review your Redis plans
 
-  - Log into your PaaS account: https://www.cloud.service.gov.uk/sign-in
+  - Log into your PaaS account and select your region: https://www.cloud.service.gov.uk/sign-in
   - Click on your organisation
   - Click “Explore your costs and usage”
   - Click the dropdown “Services and apps”
@@ -73,7 +73,8 @@ class TenantNotifier
     org_name:,
     service_instances:,
     maintenance_window_date:, maintenance_window_time_range:,
-    alt_maintenance_window_date:, alt_maintenance_window_time_range:
+    alt_maintenance_window_date:, alt_maintenance_window_time_range:,
+    region:
   )
     ERB.new(TEMPLATE).result_with_hash(
       org_name: org_name,
@@ -81,7 +82,8 @@ class TenantNotifier
       maintenance_window_date: maintenance_window_date,
       maintenance_window_time_range: maintenance_window_time_range,
       alt_maintenance_window_date: alt_maintenance_window_date,
-      alt_maintenance_window_time_range: alt_maintenance_window_time_range
+      alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+      region: region
     )
   end
 
@@ -90,7 +92,8 @@ class TenantNotifier
     org_name:,
     service_instances:,
     maintenance_window_date:, maintenance_window_time_range:,
-    alt_maintenance_window_date:, alt_maintenance_window_time_range:
+    alt_maintenance_window_date:, alt_maintenance_window_time_range:,
+    region:
   )
     contents = generate_email_contents(
       org_name: org_name,
@@ -98,7 +101,8 @@ class TenantNotifier
       maintenance_window_date: maintenance_window_date,
       maintenance_window_time_range: maintenance_window_time_range,
       alt_maintenance_window_date: alt_maintenance_window_date,
-      alt_maintenance_window_time_range: alt_maintenance_window_time_range
+      alt_maintenance_window_time_range: alt_maintenance_window_time_range,
+      region: region
     )
 
     resp = client.send_email(
