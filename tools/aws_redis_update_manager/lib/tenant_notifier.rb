@@ -43,7 +43,7 @@ class TenantNotifier
 
   # How to review your Redis plans
 
-  - Log into your PaaS account and select your region: https://www.cloud.service.gov.uk/sign-in
+  - Log into your GOV.UK PaaS account and select your region: https://www.cloud.service.gov.uk/sign-in
   - Click on your organisation
   - Click “Explore your costs and usage”
   - Click the dropdown “Services and apps”
