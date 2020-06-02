@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'aws-sdk', '~> 2.3.8'
+gem 'aws-sdk', '~> 3'
 gem 'cf-uaa-lib', '~> 3.11.0'
 gem 'cf-uaac', '~> 4.2.0'
 gem 'colorize', '~> 0.8.1'
