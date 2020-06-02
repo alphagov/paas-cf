@@ -27,7 +27,7 @@ class CloudFoundryOrgFinder
     )
   end
 
-  private
+private
 
   def cf_curl_path(url)
     url.sub(%r{^.*/(v[23])/}, '/\1/')

@@ -1,3 +1,4 @@
+# rubocop:disable Style/MultilineBlockChain
 require 'English'
 require 'json'
 require 'ostruct'
@@ -20,10 +21,8 @@ class CloudFoundryServiceFinder
       service_instance = OpenStruct.new(
         instance_guid: service_instance_guid,
         instance_name: service_instance.dig('entity', 'name'),
-
         org_guid: org_guid,
         org_name: org.fetch('name'),
-
         space_guid: space_guid,
         space_name: space.fetch('name'),
       )
@@ -37,7 +36,7 @@ class CloudFoundryServiceFinder
     end
   end
 
-  private
+private
 
   def cf_curl_path(url)
     url.sub(%r{^.*/(v[23])/}, '/\1/')
@@ -114,3 +113,4 @@ class CloudFoundryServiceFinder
       .transform_values(&:first)
   end
 end
+# rubocop:enable Style/MultilineBlockChain

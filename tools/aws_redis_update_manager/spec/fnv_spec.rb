@@ -22,4 +22,3 @@ RSpec.describe 'fnv' do
     end
   end
 end
-

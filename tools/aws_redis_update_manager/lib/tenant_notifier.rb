@@ -11,10 +11,10 @@ class TenantNotifier
     @client ||= Notifications::Client.new(@notify_api_key)
   end
 
-  AWS_REDIS_UPGRADE_TEMPLATE_ID = '9d0f232b-187c-49b1-8cd1-91e83e347f68'
-  PAAS_SUPPORT_REPLY_TO_ID = '76d63d5f-e140-6a37-92ae-fc0d0d136f6f'
+  AWS_REDIS_UPGRADE_TEMPLATE_ID = '9d0f232b-187c-49b1-8cd1-91e83e347f68'.freeze
+  PAAS_SUPPORT_REPLY_TO_ID = '76d63d5f-e140-6a37-92ae-fc0d0d136f6f'.freeze
 
-  TEMPLATE = <<~MESSAGE
+  TEMPLATE = <<~MESSAGE.freeze
   Dear GOV.UK PaaS tenant,
 
   We are contacting you, as a manager of the <%= org_name %> org (<%= region %>), to ask you to review your choice of Redis plans.
@@ -104,16 +104,13 @@ class TenantNotifier
       region: region
     )
 
-    resp = client.send_email(
+    client.send_email(
       email_address: tenant_email_address,
-
       template_id: AWS_REDIS_UPGRADE_TEMPLATE_ID,
       email_reply_to_id: PAAS_SUPPORT_REPLY_TO_ID,
-
       personalisation: {
         # Template the whole body because we have a list
         contents: contents,
-
         # Required for templating subject line
         maintenance_window_date: maintenance_window_date,
       }

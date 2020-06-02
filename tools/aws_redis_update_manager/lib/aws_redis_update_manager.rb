@@ -80,10 +80,8 @@ class AwsRedisUpdateManager
     example_service_instance = OpenStruct.new(
       instance_guid: '00000000-1111-2222-3333-444444444444',
       instance_name: 'example-service-instance',
-
       org_guid: 'aaaaaaaa-1111-2222-3333-444444444444',
       org_name: 'example-org',
-
       space_guid: 'bbbbbbbb-1111-2222-3333-444444444444',
       space_name: 'example-space',
     )

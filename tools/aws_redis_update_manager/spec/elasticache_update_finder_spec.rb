@@ -3,7 +3,7 @@ require 'ostruct'
 RSpec.describe ElastiCacheUpdateFinder do
   def self.when_elasticache_returns(update_actions)
     let(:elasticache_client) do
-      Class.new do
+      c = Class.new do
         def initialize(update_actions)
           @update_actions = update_actions
         end
@@ -14,7 +14,8 @@ RSpec.describe ElastiCacheUpdateFinder do
             update_actions: @update_actions.map { |h| OpenStruct.new(h) },
           )
         end
-      end.new(update_actions)
+      end
+      c.new(update_actions)
     end
   end
 
@@ -52,9 +53,9 @@ RSpec.describe ElastiCacheUpdateFinder do
 
     it 'should find a single instance to update' do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
-      expect(finder.find_replication_groups_to_update).to eq({
+      expect(finder.find_replication_groups_to_update).to eq(
         'an-update-to-apply' => ['replication-group-id'],
-      })
+      )
     end
   end
 
@@ -74,10 +75,10 @@ RSpec.describe ElastiCacheUpdateFinder do
 
     it 'should find a both instance to update' do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
-      expect(finder.find_replication_groups_to_update).to eq({
+      expect(finder.find_replication_groups_to_update).to eq(
         'an-update-to-apply' => ['replication-group-id'],
         'another-update-to-apply' => ['another-replication-group-id'],
-      })
+      )
     end
   end
 
@@ -97,12 +98,12 @@ RSpec.describe ElastiCacheUpdateFinder do
 
     it 'should find a both instance to update' do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
-      expect(finder.find_replication_groups_to_update).to eq({
+      expect(finder.find_replication_groups_to_update).to eq(
         'an-update-to-apply' => [
           'replication-group-id',
           'another-replication-group-id',
         ],
-      })
+      )
     end
   end
 

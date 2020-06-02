@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
+# rubocop:disable Metrics/BlockLength
 
 require 'English'
 require 'optparse'
 
 require_relative 'lib/aws_redis_update_manager'
 
-ACTIONS = %w[email print preview]
+ACTIONS = %w[email print preview].freeze
 
 options = {}
 parser = OptionParser.new do |opts|
@@ -127,3 +128,4 @@ when 'preview'
 when 'print'
   manager.print_updateable_service_instances
 end
+# rubocop:enable Metrics/BlockLength
