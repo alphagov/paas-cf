@@ -100,7 +100,7 @@ class AwsRedisUpdateManager
       alt_maintenance_window_time_range: alt_maintenance_window_time_range,
     )
 
-    puts "Sent email to #{preview_email}"
+    puts "  Sent email to #{preview_email}"
   end
 
   def notify_org_managers_about_updateable_service_instances(
