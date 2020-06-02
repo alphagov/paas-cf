@@ -48,7 +48,6 @@ class TenantNotifier
   - Click “Explore your costs and usage”
   - Click the dropdown “Services and apps”
   - Look for any “tiny” Redis plans without “ha” in the name, e.g. “redis tiny-4.x”
-  - Repeat for any other organisations you manage
 
   # How to upgrade your Redis tiny plans to highly available plans
 
