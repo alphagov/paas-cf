@@ -17,7 +17,7 @@ class TenantNotifier
   TEMPLATE = <<~MESSAGE
   Dear GOV.UK PaaS tenant,
 
-  We are contacting you, as the managers of the <%= org_name %> org, to ask you to review your choice of Redis plans ahead of an upgrade.
+  We are contacting you, as a manager of the <%= org_name %> org, to ask you to review your choice of Redis plans.
 
   This will help you avoid unnecessary downtime for your users.
 
