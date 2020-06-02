@@ -64,6 +64,7 @@ GRAFANA MONITOR PASSWORD|/$DEPLOY_ENV/prometheus/grafana_mon_password|Username: 
 CF ADMIN PASSWORD|/$DEPLOY_ENV/$DEPLOY_ENV/cf_admin_password
 UAA ADMIN CLIENT SECRET|/concourse/main/create-cloudfoundry/uaa_admin_client_secret
 CONCOURSE ADMIN USER PASSWORD|/concourse/main/concourse_web_password
+PAAS ACCOUNTS PASSWORD|/concourse/main/create-cloudfoundry/paas_accounts_password|Username: admin
 PATHS
 )
 -------
