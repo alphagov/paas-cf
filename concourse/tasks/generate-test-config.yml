@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/bosh-cli-v2
-    tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+    tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
 inputs:
   - name: paas-cf
   - name: admin-creds
