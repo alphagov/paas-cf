@@ -1,3 +1,12 @@
+inherit_gem:
+  rubocop-govuk:
+    - config/default.yml
+    - config/rspec.yml
+
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
   Exclude:
     - 'vendor/**/*'
@@ -5,14 +14,16 @@ AllCops:
     - 'platform-tests/src/platform/vendor/**/*'
     - 'platform-tests/example-apps/healthcheck/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
-  TargetRubyVersion: 2.5
-Layout/IndentHeredoc:
+
+Layout/HeredocIndentation:
   Enabled: false
+Layout/HashAlignment:
+  Enabled: false
+
 Naming/HeredocDelimiterNaming:
   Enabled: false
-Performance/RegexpMatch:
-  Enabled: false
-Performance/HashEachMethods:
+
+Style/HashEachMethods:
   Enabled: false
 Style/NumericPredicate:
   Enabled: false

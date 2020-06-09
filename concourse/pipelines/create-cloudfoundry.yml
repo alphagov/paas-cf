@@ -35,7 +35,7 @@ meta:
       type: docker-image
       source:
         repository: ruby
-        tag: 2.5-slim
+        tag: 2.7-slim
     golang: &golang-image-resource
       type: docker-image
       source:

@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ruby
-    tag: 2.5-slim
+    tag: 2.7-slim
 inputs:
   - name: paas-trusted-people
 run:
@@ -16,6 +16,7 @@ run:
 
       # rubocop:disable Lint/MissingCopEnableDirective
       # rubocop:disable Layout/MultilineMethodCallIndentation
+      # rubocop:disable Layout/HashAlignment
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/BlockLength
       # rubocop:disable Metrics/AbcSize

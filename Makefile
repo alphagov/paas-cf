@@ -101,7 +101,7 @@ lint_concourse:
 
 .PHONY: lint_ruby
 lint_ruby:
-	bundle exec govuk-lint-ruby
+	bundle exec rubocop
 
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
