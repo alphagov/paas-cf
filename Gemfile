@@ -18,3 +18,7 @@ gem 'rubocop', '~> 0.52.1'
 gem 'simplecov', require: false, group: :test
 gem 'tty-prompt'
 gem 'webmock', '~> 2.3.1'
+
+gem "notifications-ruby-client", "~> 5.1"
+
+gem "http", "~> 4.4"
