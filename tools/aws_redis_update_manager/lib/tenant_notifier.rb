@@ -21,7 +21,7 @@ class TenantNotifier
 
   This will help you avoid unnecessary downtime for your users.
 
-  ^ We will be upgrading your Redis instances in two weeks time, on <%= maintenance_window_date %>, between <%= maintenance_window_time_range %>
+  ^ We will be upgrading your Redis instances on <%= maintenance_window_date %>, between <%= maintenance_window_time_range %>
 
   The following instances will be affected:
 
@@ -37,7 +37,7 @@ class TenantNotifier
 
   However, if you are using any “tiny” Redis plans that are not “highly available”, your users may experience up to 30 minutes of downtime.
 
-  If you want to minimise this downtime, we recommend that you upgrade these tiny instances to “highly available” plans, ahead of the upgrade on <%= maintenance_window_date %>.
+  If you want to minimise this downtime, we recommend that you upgrade these tiny instances to “highly available” plans, ahead of the update on <%= maintenance_window_date %>.
 
   Note that this will double your monthly charge for each Redis instance: from roughly £25 to £50 per month.
 
@@ -54,7 +54,7 @@ class TenantNotifier
   - Follow these instructions for every tiny Redis instance you want to upgrade: https://docs.cloud.service.gov.uk/deploying_services/redis/#upgrade-redis-service-plan
   - Upgrade to the “ha” version of your plan, e.g. from “redis tiny-4.x” to “redis tiny-ha-4.x”
 
-  # If the timing of the upgrade doesn’t work for you
+  # If the timing of the update doesn’t work for you
 
   We can offer you the alternative time slot of <%= alt_maintenance_window_date %> between <%= alt_maintenance_window_time_range %>.
 
@@ -62,7 +62,7 @@ class TenantNotifier
 
   If you have any further questions, please contact GOV.UK PaaS support on gov-uk-paas-support@digital.cabinet-office.gov.uk.
 
-  Please note that if we do not hear from you, we will upgrade your Redis instances on <%= maintenance_window_date %> between <%= maintenance_window_time_range %>, to keep your services secure.
+  Please note that if we do not hear from you, we will update your Redis instances on <%= maintenance_window_date %> between <%= maintenance_window_time_range %>, to keep your services secure.
 
   Kind regards,
   The GOV.UK PaaS Team
