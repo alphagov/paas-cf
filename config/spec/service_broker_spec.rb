@@ -23,8 +23,8 @@ describe 'service broker' do
 
   describe 'aiven' do
     let(:services) { JSON.parse(AIVEN_JSON).dig('catalog', 'services') }
-    let(:plans) { services.flat_map { |s| s['plans'] } }  
-    let(:serviceIdMap) { services.flat_map { |s| s['id'] } }
+    let(:plans) { services.flat_map { |s| s['plans'] } }
+    let(:service_id_map) { services.flat_map { |s| s['id'] } }
 
     it 'should have description' do
       plans.each do |plan|
@@ -41,16 +41,15 @@ describe 'service broker' do
     end
 
     it 'should be shareable between spaces and/or orgs' do
-      serviceIdMap.each_with_index do |value, index|
-        serviceID = services[index]['id']
-        serviceName = services[index]['name']
+      service_id_map.each_with_index do |value, index|
+        service_id = services[index]['id']
+        service_name = services[index]['name']
         shareable = services[index]['metadata']['shareable']
 
-        expect(serviceID).to eq(value), "The service IDs do not match #{serviceID} != #{value}"
-        expect(shareable).not_to be(nil), "Service '#{serviceName}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
-        expect(shareable).to be(true) , "Service '#{serviceName}' has to be shareable, but the value of the parameter is #{shareable}"
+        expect(service_id).to eq(value), "The service IDs do not match #{service_id} != #{value}"
+        expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
+        expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"
       end
     end
-
   end
 end
