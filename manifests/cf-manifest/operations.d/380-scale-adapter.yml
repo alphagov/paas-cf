@@ -1,5 +1,0 @@
----
-- type: replace
-  path: /instance_groups/name=adapter/instances
-  value: ((adapter_instances))
-

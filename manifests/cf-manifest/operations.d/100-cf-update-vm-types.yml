@@ -1,8 +1,5 @@
 # TODO: Review instance sizes that are different to cf-deployment
 - type: replace
-  path: /instance_groups/name=adapter/vm_type
-  value: small
-- type: replace
   path: /instance_groups/name=api/vm_type
   value: large
 - type: replace

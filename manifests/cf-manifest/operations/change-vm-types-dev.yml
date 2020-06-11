@@ -6,10 +6,6 @@
 # small  => nano
 
 - type: replace
-  path: /instance_groups/name=adapter/vm_type
-  value: nano
-
-- type: replace
   path: /instance_groups/name=api/vm_type
   value: medium
 
