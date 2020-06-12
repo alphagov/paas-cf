@@ -1,5 +1,4 @@
 require 'json'
-require 'pp'
 
 CONFIG_FILES = Dir.glob(
   File.join(
@@ -24,7 +23,6 @@ describe 'service broker' do
   describe 'aiven' do
     let(:services) { JSON.parse(AIVEN_JSON).dig('catalog', 'services') }
     let(:plans) { services.flat_map { |s| s['plans'] } }
-    let(:service_id_map) { services.flat_map { |s| s['id'] } }
 
     it 'should have description' do
       plans.each do |plan|
@@ -41,12 +39,10 @@ describe 'service broker' do
     end
 
     it 'should be shareable between spaces and/or orgs' do
-      service_id_map.each_with_index do |value, index|
-        service_id = services[index]['id']
-        service_name = services[index]['name']
-        shareable = services[index]['metadata']['shareable']
+      services.each do |service|
+        service_name = service['name']
+        shareable = service.dig('metadata', 'shareable')
 
-        expect(service_id).to eq(value), "The service IDs do not match #{service_id} != #{value}"
         expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
         expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"
       end
