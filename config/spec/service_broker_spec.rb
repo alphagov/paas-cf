@@ -37,5 +37,15 @@ describe 'service broker' do
         expect(version).to be_a(String), "#{plan} needs a version, got #{version}"
       end
     end
+
+    it 'should be shareable between spaces and/or orgs' do
+      services.each do |service|
+        service_name = service['name']
+        shareable = service.dig('metadata', 'shareable')
+
+        expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
+        expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"
+      end
+    end
   end
 end

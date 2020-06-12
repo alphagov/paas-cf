@@ -79,7 +79,7 @@ var _ = Describe("uaa_lock_user.rb", func() {
 		})
 
 		It("returns an error", func() {
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, "5s").Should(gexec.Exit(1))
 			Expect(session.Err).To(gbytes.Say("Username not found"))
 		})
 	})
@@ -91,7 +91,7 @@ var _ = Describe("uaa_lock_user.rb", func() {
 		})
 
 		It("returns an error", func() {
-			Eventually(session).Should(gexec.Exit(1))
+			Eventually(session, "5s").Should(gexec.Exit(1))
 			Expect(session.Err).To(gbytes.Say("Username is not unique"))
 		})
 	})
@@ -105,7 +105,7 @@ var _ = Describe("uaa_lock_user.rb", func() {
 			})
 
 			It("prints success message", func() {
-				Eventually(session).Should(gexec.Exit(0))
+				Eventually(session, "5s").Should(gexec.Exit(0))
 				Expect(session.Out).To(gbytes.Say("locked jane.smith@gov.uk"))
 			})
 		})
@@ -116,7 +116,7 @@ var _ = Describe("uaa_lock_user.rb", func() {
 			})
 
 			It("prints success message", func() {
-				Eventually(session).Should(gexec.Exit(0))
+				Eventually(session, "5s").Should(gexec.Exit(0))
 				Expect(session.Out).To(gbytes.Say("locked jane.smith@gov.uk"))
 			})
 		})
@@ -133,7 +133,7 @@ var _ = Describe("uaa_lock_user.rb", func() {
 			})
 
 			It("prints success message", func() {
-				Eventually(session).Should(gexec.Exit(0))
+				Eventually(session, "5s").Should(gexec.Exit(0))
 				Expect(session.Out).To(gbytes.Say("unlocked jane.smith@gov.uk"))
 			})
 		})
@@ -146,7 +146,7 @@ var _ = Describe("uaa_lock_user.rb", func() {
 			})
 
 			It("prints success message", func() {
-				Eventually(session).Should(gexec.Exit(0))
+				Eventually(session, "5s").Should(gexec.Exit(0))
 				Expect(session.Out).To(gbytes.Say("unlocked jane.smith@gov.uk"))
 			})
 		})
