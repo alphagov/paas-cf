@@ -1525,4 +1525,20 @@ RSpec.describe "RDS broker properties" do
       end
     end
   end
+
+  describe "service broker is set to be shareable" do
+    let(:services) {
+      manifest.fetch("instance_groups.rds_broker.jobs.rds-broker.properties.rds-broker.catalog.services")
+    }
+
+    it "each service of the rds-broker service broker is shareable" do
+      services.each do |service|
+        service_name = service['name']
+        shareable = service.dig('metadata', 'shareable')
+
+        expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
+        expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"
+      end
+    end
+  end
 end

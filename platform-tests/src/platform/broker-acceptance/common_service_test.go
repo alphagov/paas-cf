@@ -18,8 +18,8 @@ var _ = Describe("Common service tests", func() {
 		shareableServices := map[string]bool{
 			"elasticsearch": true,
 			"influxdb":      true,
-			"mysql":         false,
-			"postgres":      false,
+			"mysql":         true,
+			"postgres":      true,
 			"redis":         true,
 			"aws-s3-bucket": false,
 			"cdn-route":     false,
