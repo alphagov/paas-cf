@@ -98,4 +98,20 @@ RSpec.describe "ElastiCache broker properties" do
       }
     end
   end
+
+  describe "service broker is set to be shareable" do
+    let(:services) {
+      properties.fetch("catalog").fetch("services")
+    }
+
+    it "each service of the elasticache service broker is shareable" do
+      services.each do |service|
+        service_name = service['name']
+        shareable = service.dig('metadata', 'shareable')
+
+        expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
+        expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"
+      end
+    end
+  end
 end

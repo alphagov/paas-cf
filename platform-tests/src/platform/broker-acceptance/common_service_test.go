@@ -20,7 +20,7 @@ var _ = Describe("Common service tests", func() {
 			"influxdb":      true,
 			"mysql":         false,
 			"postgres":      false,
-			"redis":         false,
+			"redis":         true,
 			"aws-s3-bucket": false,
 			"cdn-route":     false,
 		}
