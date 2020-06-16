@@ -18,8 +18,8 @@ var _ = Describe("Common service tests", func() {
 		shareableServices := map[string]bool{
 			"elasticsearch": true,
 			"influxdb":      true,
-			"mysql":         false,
-			"postgres":      false,
+			"mysql":         true,
+			"postgres":      true,
 			"redis":         true,
 			"aws-s3-bucket": false,
 			"cdn-route":     false,
@@ -27,18 +27,22 @@ var _ = Describe("Common service tests", func() {
 
 		It("is service shareable", func() {
 
-			retrieveServicesCommand := cf.Cf("curl", "/v2/services")
+			retrieveServicesCommand := cf.Cf("curl", "/v3/service_offerings")
 
 			Expect(retrieveServicesCommand.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 
 			var servicesCommandResp struct {
-				TotalResults int `json:"total_results"`
-				Resources    []struct {
-					Entity struct {
-						Label       string `json:"label"`
-						Description string `json:"description"`
-						Extra       string `json:"extra"`
-					}
+				Pagination struct {
+					TotalResults int `json:"total_results"`
+				}
+				Resources []struct {
+					Name          string `json:"name"`
+					Description   string `json:"description"`
+					BrokerCatalog struct {
+						Metadata struct {
+							Shareable bool `json:"shareable"`
+						}
+					} `json:"broker_catalog"`
 				}
 			}
 
@@ -54,25 +58,26 @@ var _ = Describe("Common service tests", func() {
 			fakeServicesCount := 0
 			for _, service := range servicesCommandResp.Resources {
 
-				if service.Entity.Description == "fake service" {
+				if service.Description == "fake service" {
 					fakeServicesCount++
 					continue
 				}
 
-				message = fmt.Sprintf("verifying that %s backing service is shareable", service.Entity.Label)
+				message = fmt.Sprintf("verifying that %s backing service is shareable", service.Name)
 				By(message)
-				if shareableServices[service.Entity.Label] {
-					Expect(service.Entity.Extra).To(ContainSubstring("\"shareable\":"),
-						"Expected %s to have 'shareable' parameter", service.Entity.Label)
-					Expect(service.Entity.Extra).To(ContainSubstring("\"shareable\": true"),
-						"Expected %s to be shareable - i.e.: 'shareable' parameter set to 'true'", service.Entity.Label)
+				if shareableServices[service.Name] {
+					Expect(service.BrokerCatalog.Metadata.Shareable).NotTo(BeNil(),
+						"Expected %s to have 'shareable' parameter", service.Name)
+
+					Expect(service.BrokerCatalog.Metadata.Shareable).To(BeTrue(),
+						"Expected %s to be shareable - i.e.: 'shareable' parameter set to 'true'", service.Name)
 				} else {
-					Expect(service.Entity.Extra).ToNot(ContainSubstring("\"shareable\": false"),
-						"Expected %s NOT to have 'shareable' parameter or to be set to 'false'", service.Entity.Label)
+					Expect(service.BrokerCatalog.Metadata.Shareable).To(BeFalse(),
+						"Expected %s NOT to have 'shareable' parameter or to be set to 'false'", service.Name)
 				}
 			}
 
-			Expect(servicesCommandResp.TotalResults-fakeServicesCount).To(BeNumerically("==", len(shareableServices)), "the amount of services doesn't match")
+			Expect(servicesCommandResp.Pagination.TotalResults-fakeServicesCount).To(BeNumerically("==", len(shareableServices)), "the amount of services doesn't match")
 		})
 	})
 })

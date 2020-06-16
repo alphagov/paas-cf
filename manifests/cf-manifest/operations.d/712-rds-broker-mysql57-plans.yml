@@ -52,6 +52,7 @@
       providerDisplayName: Amazon Web Services
       documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/mysql/
       supportUrl: https://www.cloud.service.gov.uk/support
+      shareable: true
       AdditionalMetadata:
         otherDocumentation:
           - https://dev.mysql.com/doc/
