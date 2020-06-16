@@ -58,6 +58,7 @@
                     providerDisplayName: Amazon Web Services
                     documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/s3/
                     supportUrl: https://www.cloud.service.gov.uk/support
+                    shareable: true
                     AdditionalMetadata:
                       otherDocumentation:
                         - https://docs.aws.amazon.com/s3

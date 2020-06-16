@@ -21,7 +21,7 @@ var _ = Describe("Common service tests", func() {
 			"mysql":         true,
 			"postgres":      true,
 			"redis":         true,
-			"aws-s3-bucket": false,
+			"aws-s3-bucket": true,
 			"cdn-route":     false,
 		}
 
