@@ -371,6 +371,12 @@ groups:
       - expire-aws-keys
       - rotate-cf-admin-password
 resource_types:
+- name: pinned-pool
+  type: docker-image
+  source:
+    repository: concourse/pool-resource
+    tag: 1.1.1
+
 - name: metadata
   type: docker-image
   source:
@@ -591,7 +597,7 @@ resources:
       initial_version: 0.0.0
 
   - name: pipeline-pool
-    type: pool
+    type: pinned-pool
     source:
       uri: ((git_concourse_pool_clone_full_url_ssh))
       branch: master
