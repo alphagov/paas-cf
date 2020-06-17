@@ -3507,6 +3507,7 @@ jobs:
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             NOTIFY_API_KEY: ((notify_api_key))
+            NOTIFY_PWD_RESET_TEMPLATE_ID: d1b440c0-7c45-4c6a-a7cb-10feaa491e52
             NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
             AWS_REGION: ((aws_region))
             UAA_CLIENTS_PAAS_ADMIN_SECRET: ((uaa_clients_paas_admin_secret))
@@ -3532,6 +3533,7 @@ jobs:
                     ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_SECRET: ((paas_accounts_password))
                     NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
+                    NOTIFY_PASSWORD_RESET_TEMPLATE_ID: "${NOTIFY_PWD_RESET_TEMPLATE_ID}"
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
                     SESSION_SECRET: (( concat "session-" "${UAA_CLIENTS_PAAS_ADMIN_SECRET}" ))
                     AWS_REGION: "$AWS_REGION"

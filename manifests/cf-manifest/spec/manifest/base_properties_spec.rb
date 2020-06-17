@@ -143,7 +143,7 @@ RSpec.describe "base properties" do
     describe "links" do
       subject(:links) { login.fetch("links") }
 
-      it { is_expected.to include("passwd" => "https://login.#{terraform_fixture_value(:cf_root_domain)}/forgot_password") }
+      it { is_expected.to include("passwd" => "https://admin.#{terraform_fixture_value(:cf_root_domain)}/password/request-reset") }
       it { is_expected.to include("signup" => "https://www.cloud.service.gov.uk/signup") }
       it { is_expected.to include("homeRedirect" => "https://admin.#{terraform_fixture_value(:cf_root_domain)}/") }
     end
