@@ -943,7 +943,6 @@ GEM
       ffi (>= 1.0.0)
       rake
     fuzzy_match (2.1.0)
-    github_merge_sign (1.0.0)
     govuk-lint (3.8.0)
       rubocop (~> 0.52.0)
       rubocop-rspec (~> 1.19.0)
@@ -1069,7 +1068,6 @@ DEPENDENCIES
   cf-uaac (~> 4.2.0)
   colorize (~> 0.8.1)
   fuzzy_match
-  github_merge_sign (= 1.0.0)
   govuk-lint (~> 3.8.0)
   govuk-registers-api-client
   hcl-checker (~> 1.1.1)
