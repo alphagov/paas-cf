@@ -2,6 +2,12 @@
 
 # paas-cf
 
+⚠️
+When merging pull requests,
+please use the [gds-cli](https://github.com/alphagov/gds-cli)
+or [github_merge_sign](https://rubygems.org/gems/github_merge_sign)
+⚠️
+
 This repository contains [Concourse][] pipelines and related [Terraform][]
 and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
 

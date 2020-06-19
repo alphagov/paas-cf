@@ -327,10 +327,6 @@ pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
-merge_pr: ## Merge a PR. Must specify number in a PR=<number> form.
-	$(if ${PR},,$(error Must pass PR=<number>))
-	bundle exec github_merge_sign --pr ${PR}
-
 find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
 	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))
 	./scripts/find_diverged_forks.py alphagov --prefix=paas --github-token=${GITHUB_TOKEN}
