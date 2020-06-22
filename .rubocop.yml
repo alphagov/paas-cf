@@ -25,6 +25,9 @@ Layout/HashAlignment:
 Naming/HeredocDelimiterNaming:
   Enabled: false
 
+RSpec/DescribedClass:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: false
 Style/NumericPredicate:
