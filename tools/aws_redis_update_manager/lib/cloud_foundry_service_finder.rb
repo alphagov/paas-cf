@@ -81,7 +81,7 @@ private
   end
 
   def service_offering
-    @service_offerings ||= paginate_v3("v3/service_offerings").find do |o|
+    @service_offering ||= paginate_v3("v3/service_offerings").find do |o|
       o.fetch("name") == @service_offering_name
     end
   end
