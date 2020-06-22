@@ -22,7 +22,7 @@ RSpec.describe ElastiCacheUpdateFinder do
   context "with no update actions available" do
     when_elasticache_returns []
 
-    it "should find no instances to update" do
+    it "finds no instances to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to have_attributes(length: 0)
     end
@@ -36,7 +36,7 @@ RSpec.describe ElastiCacheUpdateFinder do
       },
     ]
 
-    it "should find no instances to update" do
+    it "finds no instances to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to have_attributes(length: 0)
     end
@@ -51,7 +51,7 @@ RSpec.describe ElastiCacheUpdateFinder do
       }
     ]
 
-    it "should find a single instance to update" do
+    it "finds a single instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to eq(
         "an-update-to-apply" => ["replication-group-id"],
@@ -73,7 +73,7 @@ RSpec.describe ElastiCacheUpdateFinder do
       },
     ]
 
-    it "should find a both instance to update" do
+    it "finds a both instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to eq(
         "an-update-to-apply" => ["replication-group-id"],
@@ -96,7 +96,7 @@ RSpec.describe ElastiCacheUpdateFinder do
       },
     ]
 
-    it "should find a both instance to update" do
+    it "finds a both instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to eq(
         "an-update-to-apply" => [
@@ -116,7 +116,7 @@ RSpec.describe ElastiCacheUpdateFinder do
       },
     ]
 
-    it "should find a single instance to update" do
+    it "finds a single instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to have_attributes(length: 0)
     end

@@ -17,7 +17,7 @@ describe "billing" do
       .to_h
   end
 
-  it "should be valid json" do
+  it "is valid json" do
     billing_config_by_region.each do |region, config|
       expect { JSON.parse(config) }.not_to raise_exception,
         "#{region} is invalid JSON"
@@ -25,7 +25,7 @@ describe "billing" do
   end
 
   describe "pricing_plans" do
-    it "should be valid from the start of the month" do
+    it "is valid from the start of the month" do
       pricing_plans_by_region.each do |region, plans|
         plans.each do |plan|
           plan_name = plan.dig("name")

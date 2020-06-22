@@ -4,28 +4,28 @@
 require "yaml"
 
 RSpec.describe "concourse tasks" do
-  it "should find the task files" do
+  it "finds the task files" do
     expect(concourse_tasks).not_to be_empty
   end
 
   concourse_tasks.each do |filename, contents|
-    it "should be safe, valid yaml (#{filename})" do
+    it "is safe, valid yaml (#{filename})" do
       expect { YAML.load(contents) }.not_to raise_error
     end
   end
 end
 
 RSpec.describe "concourse pipelines" do
-  it "should find the pipeline files" do
+  it "finds the pipeline files" do
     expect(concourse_pipelines).not_to be_empty
   end
 
   concourse_pipelines.each do |filename, contents|
-    it "should be safe, valid yaml (#{filename})" do
+    it "is safe, valid yaml (#{filename})" do
       expect { YAML.load(contents) }.not_to raise_error
     end
 
-    it "should add matching grafana-job-annotations (#{filename})" do
+    it "adds matching grafana-job-annotations (#{filename})" do
       grafana_add_annotations = contents.scan(/[&]add-[-a-z]*grafana[-a-z]+/)
 
       grafana_add_annotations

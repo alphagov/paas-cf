@@ -64,6 +64,14 @@ OK
     end
 
     context "when some security groups exist" do
+      let(:dns_rules) do
+        [{ "protocol" => "tcp", "destination" => "10.0.0.2", "port" => "udp" }]
+      end
+
+      let(:smtp_rules) do
+        [{ "protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25 }]
+      end
+
       before :each do
         allow(subject).to receive(:`).with("cf security-groups") do
           system("exit 0") # setup $?
@@ -77,20 +85,17 @@ OK
 #2   rds_broker_instances
           EOT
         end
-
-        @dns_rules = [{ "protocol" => "tcp", "destination" => "10.0.0.2", "port" => "udp" }]
-        @smtp_rules = [{ "protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25 }]
-        security_group_definitions << { "name" => "dns", "rules" => @dns_rules }
-        security_group_definitions << { "name" => "smtp", "rules" => @smtp_rules }
+        security_group_definitions << { "name" => "dns", "rules" => dns_rules }
+        security_group_definitions << { "name" => "smtp", "rules" => smtp_rules }
       end
 
       it "updates an existing group" do
-        expect_cf_sg_update("dns", @dns_rules)
+        expect_cf_sg_update("dns", dns_rules)
         subject.apply!
       end
 
       it "creates a group that doesn't already exist" do
-        expect_cf_sg_create("smtp", @smtp_rules)
+        expect_cf_sg_create("smtp", smtp_rules)
         subject.apply!
       end
     end

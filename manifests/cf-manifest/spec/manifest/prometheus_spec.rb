@@ -22,39 +22,39 @@ RSpec.describe "prometheus" do
   end
 
   context "manifest" do
-    it "should have prometheus as a release" do
+    it "has prometheus as a release" do
       release_names = releases.map { |r| r["name"] }
       expect(release_names).to include("prometheus")
     end
 
-    it "should have caddy as a release" do
+    it "has caddy as a release" do
       release_names = releases.map { |r| r["name"] }
       expect(release_names).to include("caddy")
     end
 
-    it "should have observability as a release" do
+    it "has observability as a release" do
       release_names = releases.map { |r| r["name"] }
       expect(release_names).to include("observability")
     end
 
-    it "should have a prometheus instance group" do
+    it "has a prometheus instance group" do
       instance_group_names = instance_groups.map { |g| g["name"] }
       expect(instance_group_names).to include("prometheus")
     end
   end
 
   context "instance_group" do
-    it "should have a persistent disk" do
+    it "has a persistent disk" do
       disk_type = prometheus_instance_group.dig("persistent_disk_type")
       expect(disk_type).to eq("500GB")
     end
 
-    it "should be highly available" do
+    it "is highly available" do
       disk_type = prometheus_instance_group.dig("instances")
       expect(disk_type).to be > 1
     end
 
-    it "should have access to the CF network " do
+    it "has access to the CF network" do
       network_names = prometheus_instance_group
         .dig("networks")
         .map { |n| n["name"] }
@@ -63,11 +63,11 @@ RSpec.describe "prometheus" do
   end
 
   context "prometheus2 job" do
-    it "should not have any rule_files configured" do
+    it "does not have any rule_files configured" do
       expect(prometheus_config["rule_files"]).to eq([])
     end
 
-    it "should scrape itself" do
+    it "scrapes itself" do
       scrape_configs = prometheus_config["scrape_configs"]
       prom_scrape_config = scrape_configs.find { |c| c["job_name"] == "prometheus" }
 
@@ -77,7 +77,7 @@ RSpec.describe "prometheus" do
       )
     end
 
-    it "should scrape aiven" do
+    it "scrapes aiven" do
       scrape_configs = prometheus_config["scrape_configs"]
       aiven_scrape_config = scrape_configs.find { |c| c["job_name"] == "aiven" }
 
@@ -110,7 +110,7 @@ RSpec.describe "prometheus" do
       )
     end
 
-    it "should have retention configured" do
+    it "has retention configured" do
       retention_time = prometheus_config.dig("storage", "tsdb", "retention", "time")
       retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
 
@@ -131,7 +131,7 @@ RSpec.describe "prometheus" do
           .map { |r| Regexp.new r }
       end
 
-      it "should drop metrics that we do not need" do
+      it "drops metrics that we do not need" do
         %w[
           elasticsearch_breakers_parent_estimated_size_in_bytes
           elasticsearch_fs_io_stats_devices_0_write_operations
@@ -150,7 +150,7 @@ RSpec.describe "prometheus" do
         end
       end
 
-      it "should not drop metrics that we do not need" do
+      it "does not drop metrics that we do not need" do
         %w[
           system_load1
           disk_used_percent
@@ -169,7 +169,7 @@ RSpec.describe "prometheus" do
       end
     end
 
-    it "should have retention size less than the disk size" do
+    it "has retention size less than the disk size" do
       disk_size_gb = prometheus_instance_group.dig("persistent_disk_type").gsub(/GB/, "").to_i
       retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
 
@@ -180,7 +180,7 @@ RSpec.describe "prometheus" do
       expect(retention_size_gb).to be >= (disk_size_gb * 0.75)
     end
 
-    it "should have retention time greater than one year" do
+    it "has retention time greater than one year" do
       retention_time = prometheus_config.dig("storage", "tsdb", "retention", "time")
 
       expect(retention_time.match?(/\d+d$/)).to eq(true)
@@ -191,7 +191,7 @@ RSpec.describe "prometheus" do
   end
 
   context "route_registrar job" do
-    it "should register prometheus under the system domain" do
+    it "registers prometheus under the system domain" do
       prometheus_route = route_registrar_routes.find { |r| r["name"] == "prometheus" }
 
       expect(prometheus_route).not_to be_nil
@@ -204,7 +204,7 @@ RSpec.describe "prometheus" do
   end
 
   context "caddy job" do
-    it "should listen on port 8080" do
+    it "listens on port 8080" do
       http_port = caddy_config["http_port"]
       expect(http_port).to eq(8080)
     end
@@ -212,7 +212,7 @@ RSpec.describe "prometheus" do
     context "caddyfile" do
       let(:caddyfile) { caddy_config["caddyfile"] }
 
-      it "should listen on all interfaces" do
+      it "listens on all interfaces" do
         # Caddy cannot just listen on localhost,
         # otherwise it will not proxy traffic from gorouter
 
@@ -220,14 +220,14 @@ RSpec.describe "prometheus" do
         expect(vhosts).to eq(["http://:8080"])
       end
 
-      it "should be configured without TLS" do
+      it "is configured without TLS" do
         # Caddy tries to infer what it should get a self-signed certificate
         # We want to disable this feature explicitly
 
         expect(caddyfile.lines.grep(/^\s+tls off/).first&.strip).to eq("tls off")
       end
 
-      it "should be configured for HA" do
+      it "is configured for HA" do
         proxy_config = caddyfile
           .lines.grep(/^\s+proxy/).first
           .strip.sub(/^proxy/, "").sub(" {", "")
@@ -242,11 +242,11 @@ RSpec.describe "prometheus" do
   end
 
   context "aiven-service-discovery job" do
-    it "should have a project" do
+    it "has a project" do
       expect(aiven_sd_config.dig("aiven", "project")).to eq("paas-cf-dev")
     end
 
-    it "should have an api token" do
+    it "has an api token" do
       expect(aiven_sd_config.dig("aiven", "api_token")).to eq("((aiven_api_token))")
     end
   end

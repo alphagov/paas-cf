@@ -4,7 +4,7 @@ require "webmock/rspec"
 require_relative "../lib/user"
 
 RSpec.describe User do
-  before do
+  let(:fake_uaa_client) do
     @fake_uaa_client = RestClient::Resource.new("http://fake-uaa.internal", headers: {
       "Authorization" => "fake-token",
       "Content-Type" => "application/json"
@@ -55,7 +55,7 @@ RSpec.describe User do
       "roles" => { "dev" => [{ "role" => "some_role" }] },
     )
 
-    expect(u.exists?(@fake_uaa_client)).to be true
+    expect(u.exists?(fake_uaa_client)).to be true
     assert_requested(:get, "http://fake-uaa.internal/Users?filter=origin%20eq%20%22google%22%20and%20userName%20eq%20%22000000000000000000000%22")
 
     stub_request(:get, "http://fake-uaa.internal/Users?filter=origin%20eq%20%22google%22%20and%20userName%20eq%20%22999999999999999999999%22")
@@ -66,7 +66,7 @@ RSpec.describe User do
       "username" => "999999999999999999999"
     )
 
-    expect(u2.exists?(@fake_uaa_client)).to be false
+    expect(u2.exists?(fake_uaa_client)).to be false
   end
 
   it "creates the entity" do
@@ -78,7 +78,7 @@ RSpec.describe User do
       "roles" => { "dev" => [{ "role" => "some_role" }] },
     )
 
-    expect(u.create(@fake_uaa_client)).to be true
+    expect(u.create(fake_uaa_client)).to be true
     assert_requested(:post, "http://fake-uaa.internal/Users", times: 1) { |req|
       JSON.parse(req.body)["userName"] == "000000000000000000000"
     }
@@ -91,7 +91,7 @@ RSpec.describe User do
       "username" => "999999999999999999999"
     )
 
-    expect { u2.create(@fake_uaa_client) }.to raise_error(Exception, /Bad Request/)
+    expect { u2.create(fake_uaa_client) }.to raise_error(Exception, /Bad Request/)
 
     stub_request(:post, "http://fake-uaa.internal/Users")
       .to_return(status: 206, body: JSON.generate({}))
@@ -101,7 +101,7 @@ RSpec.describe User do
       "username" => "000000000000000000000"
     )
 
-    expect(u3.create(@fake_uaa_client)).to be false
+    expect(u3.create(fake_uaa_client)).to be false
   end
 
   it "throw errors when UAA API returns >=400 response" do
@@ -122,6 +122,6 @@ RSpec.describe User do
       "roles" => { "dev" => [{ "role" => "some_role" }] },
     )
 
-    expect { u.get_user(@fake_uaa_client) }.to raise_error(Exception)
+    expect { u.get_user(fake_uaa_client) }.to raise_error(Exception)
   end
 end

@@ -12,7 +12,7 @@ CONFIG_FILES = Dir.glob(
 AIVEN_JSON = File.read(CONFIG_FILES.grep(/aiven/).first)
 
 describe "service broker" do
-  it "should be valid json" do
+  it "is valid json" do
     CONFIG_FILES.each do |f|
       contents = File.read(f)
       expect { JSON.parse(contents) }.not_to raise_exception,
@@ -24,21 +24,21 @@ describe "service broker" do
     let(:services) { JSON.parse(AIVEN_JSON).dig("catalog", "services") }
     let(:plans) { services.flat_map { |s| s["plans"] } }
 
-    it "should have description" do
+    it "has description" do
       plans.each do |plan|
         expect(plan["description"]).to be_a(String),
           "#{plan} needs a description"
       end
     end
 
-    it "should have version" do
+    it "has version" do
       plans.each do |plan|
         version = plan.dig("metadata", "AdditionalMetadata", "version")
         expect(version).to be_a(String), "#{plan} needs a version, got #{version}"
       end
     end
 
-    it "should be shareable between spaces and/or orgs" do
+    it "is shareable between spaces and/or orgs" do
       services.each do |service|
         service_name = service["name"]
         shareable = service.dig("metadata", "shareable")

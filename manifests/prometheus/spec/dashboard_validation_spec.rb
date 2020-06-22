@@ -2,15 +2,15 @@ require "json"
 
 RSpec.describe "grafana dashboards" do
   grafana_dashboards.each do |dashboard_name, dashboard_contents|
-    it "should end in .json" do
+    it "ends in .json" do
       expect(dashboard_name).to match(/[.]json$/)
     end
 
-    it "should be valid json" do
+    it "is valid json" do
       expect { JSON.parse dashboard_contents }.to_not raise_error
     end
 
-    it "should be overwritable" do
+    it "is overwritable" do
       dashboard = JSON.parse(dashboard_contents)
 
       overwrite = dashboard.dig("overwrite")
@@ -18,7 +18,7 @@ RSpec.describe "grafana dashboards" do
       expect(overwrite).to eq(true)
     end
 
-    it "should have folderId 0" do
+    it "has folderId 0" do
       dashboard = JSON.parse(dashboard_contents)
 
       folder_id = dashboard.dig("folderId")
@@ -26,7 +26,7 @@ RSpec.describe "grafana dashboards" do
       expect(folder_id).to eq(0)
     end
 
-    it "should have a title and uid" do
+    it "has a title and uid" do
       dashboard = JSON.parse(dashboard_contents)
 
       title = dashboard.dig("dashboard", "title")

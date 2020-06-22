@@ -24,7 +24,7 @@ RSpec.describe "adding VMs to the load balancer" do
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.properties")).to eq(z1_nginx_props)
   end
 
-  it "should disable the nginx bosh link on the second instance group" do
+  it "disables the nginx bosh link on the second instance group" do
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.provider.nginx")).to be_nil
   end
 

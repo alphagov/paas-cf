@@ -18,7 +18,7 @@ RSpec.describe "database encryption keys" do
         expect(keys[current_key_label]).to eq("((cc_db_encryption_key))")
       end
 
-      it "it keeps the _old key as key" do
+      it "keeps the _old key as key" do
         properties = manifest.fetch(job_properties_path)
 
         keys = properties.fetch("cc").fetch("database_encryption").fetch("keys")
@@ -62,7 +62,7 @@ RSpec.describe "database encryption keys" do
       )
     end
 
-    it "it keeps the _old key as key" do
+    it "keeps the _old key as key" do
       properties = manifest.fetch("instance_groups.uaa.jobs.uaa.properties")
 
       keys = properties.fetch("encryption").fetch("encryption_keys")

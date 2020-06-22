@@ -5,7 +5,7 @@ RSpec.describe "vm_types" do
   describe "compilation" do
     let(:pool) { vm_types.find { |p| p["name"] == "router" } }
 
-    it "should not exist" do
+    it "does not exist" do
       expect(vm_types.find { |p| p["name"] == "compilation" }).to be_nil
     end
   end
@@ -13,7 +13,7 @@ RSpec.describe "vm_types" do
   describe "the cell pool" do
     let(:pool) { vm_types.find { |p| p["name"] == "cell" } }
 
-    it "should have a gp2 ephemeral disk of at least 100G" do
+    it "has a gp2 ephemeral disk of at least 100G" do
       ephemeral_disk = pool["cloud_properties"]["ephemeral_disk"]
       expect(ephemeral_disk).to be_a_kind_of(Hash)
       expect(ephemeral_disk).to include("size", "type")

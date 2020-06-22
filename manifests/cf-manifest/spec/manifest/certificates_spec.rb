@@ -22,11 +22,11 @@ RSpec.describe "certificates" do
       end
     end
 
-    it "should detect some ca certificate usages" do
+    it "detects some ca certificate usages" do
       expect(ca_usages).not_to eq([])
     end
 
-    it "should use .ca for every usage of a ca certificate" do
+    it "uses .ca for every usage of a ca certificate" do
       ca_usages.each do |ca_usage|
         expect(ca_usage).to match(/[.]ca$/),
           "Usage of CA #{ca_usage} should be cert_name.ca not ca_name.certificate, otherwise credhub rotation will fail"

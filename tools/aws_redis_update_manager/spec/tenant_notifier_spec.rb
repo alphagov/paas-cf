@@ -41,7 +41,7 @@ RSpec.describe TenantNotifier do
       )
     end
 
-    it "should list the service instances to be updated" do
+    it "lists the service instances to be updated" do
       expect(contents).to match("( Org / Space / Service )")
 
       expect(contents).to match([
@@ -57,19 +57,19 @@ RSpec.describe TenantNotifier do
       ].join(" / "))
     end
 
-    it "should include the maintenance window" do
+    it "includes the maintenance window" do
       expect(contents).to match(
         "on #{maintenance_window_date}, between #{maintenance_window_time_range}",
       )
     end
 
-    it "should include the alternative maintenance window" do
+    it "includes the alternative maintenance window" do
       expect(contents).to match(
         "on #{alt_maintenance_window_date}, between #{alt_maintenance_window_time_range}",
       )
     end
 
-    it "should include the region" do
+    it "includes the region" do
       expect(contents).to match(
         "(London)",
       )
@@ -97,7 +97,7 @@ RSpec.describe TenantNotifier do
       )
     end
 
-    it 'should personalise the Notify "contents" field ' do
+    it 'personalises the Notify "contents" field' do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(personalisation: hash_including(
           contents: TenantNotifier.new(notify_api_key).generate_email_contents(
@@ -115,7 +115,7 @@ RSpec.describe TenantNotifier do
       send_email
     end
 
-    it 'should personalise the Notify "maintenance_window_date" field ' do
+    it 'personalises the Notify "maintenance_window_date" field' do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(personalisation: hash_including(
           maintenance_window_date: maintenance_window_date
@@ -125,7 +125,7 @@ RSpec.describe TenantNotifier do
       send_email
     end
 
-    it "should set the reply to adress" do
+    it "sets the reply to adress" do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(
           email_reply_to_id: eq("76d63d5f-e140-6a37-92ae-fc0d0d136f6f")

@@ -7,7 +7,7 @@ def get_tgs(tf)
 end
 
 describe "alb helpers" do
-  it "should get lbs correctly" do
+  it "gets lbs correctly" do
     terraform = {
       "resource" => {
         "aws_lb" => {
@@ -24,7 +24,7 @@ describe "alb helpers" do
     expect(lbs.last.dig("name")).to eq("my-network-load-balancer")
   end
 
-  it "should get lb tgs correctly" do
+  it "gets lb tgs correctly" do
     terraform = {
       "resource" => {
         "aws_lb_target_group" => {
@@ -52,22 +52,22 @@ describe "alb" do
 
   terraform = HCL::Checker.parse(terraform_contents)
 
-  it "should not contain any aws_alb resources" do
+  it "does not contain any aws_alb resources" do
     expect(
       TERRAFORM_FILES
         .map { |f| File.read(f) }.join("\n").lines .grep(/"aws_alb"/)
     ).to be_empty
   end
 
-  it "should be have terraform files describing albs" do
+  it "is have terraform files describing albs" do
     expect(terraform_files).not_to be_empty
   end
 
-  it "should be valid terraform" do
+  it "is valid terraform" do
     expect(terraform).not_to be(false)
   end
 
-  it "should have names less than 32 characters" do
+  it "has names less than 32 characters" do
     lb_names = get_lbs(terraform)
       .map { |r| r.dig("name") }
       .map { |val| val.gsub("${var.env}", "prod-lon") }
@@ -78,7 +78,7 @@ describe "alb" do
     expect(lb_names).not_to include(match("var.env"))
   end
 
-  it "should have access_logs configured" do
+  it "has access_logs configured" do
     access_logs = get_lbs(terraform)
       .map { |r| r.dig("access_logs") }
 
@@ -86,7 +86,7 @@ describe "alb" do
     expect(access_logs).not_to include(nil)
   end
 
-  it "should not have deletion protection enabled" do
+  it "does not have deletion protection enabled" do
     deletion_protection = get_lbs(terraform)
       .map { |r| r.dig("enable_deletion_protection") }
 
@@ -105,15 +105,15 @@ describe "alb_tgs" do
 
   terraform = HCL::Checker.parse(terraform_contents)
 
-  it "should be have terraform files describing albs" do
+  it "is have terraform files describing albs" do
     expect(terraform_files).not_to be_empty
   end
 
-  it "should be valid terraform" do
+  it "is valid terraform" do
     expect(terraform).not_to be(false)
   end
 
-  it "should have deregistration configured" do
+  it "has deregistration configured" do
     deregistration_delay = get_tgs(terraform)
       .reject { |r| r.dig("name").match?(/broker|alertmanager|prometheus/) }
       .reject { |r| r.dig("port") == 83 } # This is temporary port
@@ -123,7 +123,7 @@ describe "alb_tgs" do
     expect(deregistration_delay).to all(be < 120)
   end
 
-  it "should have slow_start configured if it is a router" do
+  it "has slow_start configured if it is a router" do
     router_tgs = get_tgs(terraform)
       .reject { |r| r.dig("name").match?(/broker|alertmanager|prometheus|rlp|doppler/) }
       .reject { |r| r.dig("port") == 83 } # This is temporary port
