@@ -3,10 +3,10 @@ require "json"
 CONFIG_FILES = Dir.glob(
   File.join(
     File.expand_path(
-      File.join(__dir__, "..", "service-brokers")
+      File.join(__dir__, "..", "service-brokers"),
     ),
     "**", "*.json"
-  )
+  ),
 )
 
 AIVEN_JSON = File.read(CONFIG_FILES.grep(/aiven/).first)

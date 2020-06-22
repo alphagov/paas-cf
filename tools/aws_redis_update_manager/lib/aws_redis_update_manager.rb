@@ -97,7 +97,7 @@ class AwsRedisUpdateManager
       maintenance_window_time_range: maintenance_window_time_range,
       alt_maintenance_window_date: alt_maintenance_window_date,
       alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-      region: region
+      region: region,
     )
 
     puts "  Sent email to #{preview_email}"
@@ -135,7 +135,7 @@ class AwsRedisUpdateManager
             maintenance_window_time_range: maintenance_window_time_range,
             alt_maintenance_window_date: alt_maintenance_window_date,
             alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-            region: region
+            region: region,
           )
 
           puts "    Sent email to #{org_manager.email}"

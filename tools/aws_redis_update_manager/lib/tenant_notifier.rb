@@ -82,7 +82,7 @@ class TenantNotifier
       maintenance_window_time_range: maintenance_window_time_range,
       alt_maintenance_window_date: alt_maintenance_window_date,
       alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-      region: region
+      region: region,
     )
   end
 
@@ -101,7 +101,7 @@ class TenantNotifier
       maintenance_window_time_range: maintenance_window_time_range,
       alt_maintenance_window_date: alt_maintenance_window_date,
       alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-      region: region
+      region: region,
     )
 
     client.send_email(
@@ -113,7 +113,7 @@ class TenantNotifier
         contents: contents,
         # Required for templating subject line
         maintenance_window_date: maintenance_window_date,
-      }
+      },
     )
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe "dev deployment speed up" do
     dev_manifest = manifest_for_dev
 
     expect(
-      dev_manifest.fetch("update.initial_deploy_az_update_strategy")
+      dev_manifest.fetch("update.initial_deploy_az_update_strategy"),
     ).to eq("parallel")
   end
 
@@ -25,7 +25,7 @@ RSpec.describe "dev deployment speed up" do
     dev_manifest = manifest_for_dev
 
     expect(
-      dev_manifest.fetch("update.vm_strategy")
+      dev_manifest.fetch("update.vm_strategy"),
     ).to eq("create-swap-delete")
   end
 end

@@ -37,7 +37,7 @@ RSpec.describe TenantNotifier do
         maintenance_window_time_range: maintenance_window_time_range,
         alt_maintenance_window_date: alt_maintenance_window_date,
         alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-        region: "London"
+        region: "London",
       )
     end
 
@@ -93,7 +93,7 @@ RSpec.describe TenantNotifier do
         maintenance_window_time_range: maintenance_window_time_range,
         alt_maintenance_window_date: alt_maintenance_window_date,
         alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-        region: "London"
+        region: "London",
       )
     end
 
@@ -107,9 +107,9 @@ RSpec.describe TenantNotifier do
             maintenance_window_time_range: maintenance_window_time_range,
             alt_maintenance_window_date: alt_maintenance_window_date,
             alt_maintenance_window_time_range: alt_maintenance_window_time_range,
-            region: "London"
-          )
-        ))
+            region: "London",
+          ),
+        )),
       )
 
       send_email
@@ -118,8 +118,8 @@ RSpec.describe TenantNotifier do
     it 'personalises the Notify "maintenance_window_date" field' do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(personalisation: hash_including(
-          maintenance_window_date: maintenance_window_date
-        ))
+          maintenance_window_date: maintenance_window_date,
+        )),
       )
 
       send_email
@@ -128,8 +128,8 @@ RSpec.describe TenantNotifier do
     it "sets the reply to adress" do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(
-          email_reply_to_id: eq("76d63d5f-e140-6a37-92ae-fc0d0d136f6f")
-        )
+          email_reply_to_id: eq("76d63d5f-e140-6a37-92ae-fc0d0d136f6f"),
+        ),
       )
 
       send_email

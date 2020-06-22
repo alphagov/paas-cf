@@ -55,7 +55,7 @@ describe "alb" do
   it "does not contain any aws_alb resources" do
     expect(
       TERRAFORM_FILES
-        .map { |f| File.read(f) }.join("\n").lines .grep(/"aws_alb"/)
+        .map { |f| File.read(f) }.join("\n").lines .grep(/"aws_alb"/),
     ).to be_empty
   end
 

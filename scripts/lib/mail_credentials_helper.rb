@@ -54,7 +54,7 @@ Regards,
 The Government PaaS Team.
 
 ... We are building a World Class Goverment PaaS based on OpenSource... that's the best!!!
-      }
+      },
     )
   end
   # rubocop:enable Layout/EmptyLinesAroundArguments

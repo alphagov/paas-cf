@@ -155,7 +155,7 @@ RSpec.describe "generic manifest validations" do
             static_ranges = network_static_ranges.fetch(job_network["name"])
             job_network["static_ips"].each do |ip|
               expect(
-                static_ranges.any? { |r| r.is_a?(Range) ? r.include?(ip) : r == ip }
+                static_ranges.any? { |r| r.is_a?(Range) ? r.include?(ip) : r == ip },
               ).to be_truthy, "IP #{ip} not in static range for network #{job_network['name']} in job #{job['name']}"
             end
           end

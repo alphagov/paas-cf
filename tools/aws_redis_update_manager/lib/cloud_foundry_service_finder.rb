@@ -84,7 +84,7 @@ private
 
   def service_plans
     @service_plans ||= paginate_v3(
-      service_offering.dig("links", "service_plans", "href")
+      service_offering.dig("links", "service_plans", "href"),
     )
   end
 

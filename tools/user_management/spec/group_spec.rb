@@ -238,7 +238,7 @@ RSpec.describe Group do
       expect(members).to include(
         "id" => "guid-of-member-2",
         "origin" => "*** UNUSUAL MEMBER WITH ORIGIN 'uaa' AND TYPE 'GROUP' ***",
-        "userName" => "*** UNUSUAL MEMBER WITH ORIGIN 'uaa' AND TYPE 'GROUP' ***"
+        "userName" => "*** UNUSUAL MEMBER WITH ORIGIN 'uaa' AND TYPE 'GROUP' ***",
       )
     end
 
@@ -252,7 +252,7 @@ RSpec.describe Group do
       expect(members).to include(
         "id" => "guid-of-member-2",
         "origin" => "*** UNUSUAL MEMBER WITH ORIGIN 'something-that-is-not-uaa' AND TYPE 'USER' ***",
-        "userName" => "*** UNUSUAL MEMBER WITH ORIGIN 'something-that-is-not-uaa' AND TYPE 'USER' ***"
+        "userName" => "*** UNUSUAL MEMBER WITH ORIGIN 'something-that-is-not-uaa' AND TYPE 'USER' ***",
       )
     end
   end

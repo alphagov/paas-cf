@@ -111,7 +111,7 @@ when "email"
     maintenance_window_time_range: options[:maintenance_window_time_range],
     alt_maintenance_window_date: options[:alt_maintenance_window_date],
     alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
-    region: options[:region]
+    region: options[:region],
   )
 when "preview"
   abort "Please specify --preview-email" if options[:preview_email].nil?
@@ -123,7 +123,7 @@ when "preview"
     maintenance_window_time_range: options[:maintenance_window_time_range],
     alt_maintenance_window_date: options[:alt_maintenance_window_date],
     alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
-    region: options[:region]
+    region: options[:region],
   )
 when "print"
   manager.print_updateable_service_instances

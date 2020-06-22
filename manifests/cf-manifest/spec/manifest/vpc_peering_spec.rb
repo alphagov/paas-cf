@@ -18,7 +18,7 @@ RSpec.describe "VPC peering" do
         "rules" => [{
             "protocol" => "all",
             "destination" => "172.16.1.0/24",
-        }]
+        }],
       )
     end
   end

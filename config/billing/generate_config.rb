@@ -23,7 +23,7 @@ class Generator
   def include(file)
     fp = File.join(__dir__, file)
     ERB.new(
-      File.read(File.expand_path(fp))
+      File.read(File.expand_path(fp)),
     ).result(binding)
   end
 end

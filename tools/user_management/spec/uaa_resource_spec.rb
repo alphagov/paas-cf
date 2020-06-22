@@ -54,7 +54,7 @@ RSpec.describe UAAResource do
     it "raises an error when UAA returns zero resources" do
       stub_request(:get, "http://fake-uaa.internal/Resource/a-faked-resource")
         .to_return(body: JSON.generate(
-          totalResults: 2
+          totalResults: 2,
         ))
 
       expect { uaa_resource.get_resource("/Resource/a-faked-resource", fake_uaa_client) }
@@ -64,7 +64,7 @@ RSpec.describe UAAResource do
     it "raises an error when UAA returns more than one resource" do
       stub_request(:get, "http://fake-uaa.internal/Resource/a-faked-resource")
         .to_return(body: JSON.generate(
-          totalResults: 0
+          totalResults: 0,
         ))
 
       expect { uaa_resource.get_resource("/Resource/a-faked-resource", fake_uaa_client) }

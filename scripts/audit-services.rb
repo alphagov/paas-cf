@@ -24,7 +24,7 @@ Filter = Struct.new(
   :space_regex,
   :plan_regex,
   :org_guid,
-  :space_guid
+  :space_guid,
 ) do
   def unmarshal(input)
     data = JSON.parse(input)
@@ -87,7 +87,7 @@ def do_paginated_capi_request(uri) # rubocop:disable Metrics/MethodLength, Lint/
   until uri.nil?
     req = HTTParty.get(
       "#{API_ENDPOINT}#{uri}",
-      headers: HEADERS
+      headers: HEADERS,
     )
     resp = req.parsed_response
     uri = resp["next_url"]
@@ -100,7 +100,7 @@ def do_paginated_capi_request(uri) # rubocop:disable Metrics/MethodLength, Lint/
   resources
 end
 es_plans_req = do_paginated_capi_request(
-  "/v2/service_plans?q=service_guid:#{service_plan_guid}"
+  "/v2/service_plans?q=service_guid:#{service_plan_guid}",
 )
 
 plans = {}
@@ -110,7 +110,7 @@ es_plans_req.each do |plan| # rubocop:disable Metrics/BlockLength
   next unless plan_name \
       =~ Regexp.new(/#{filters.plan_regex}/)
   plan_instances_req = do_paginated_capi_request(
-    plan["entity"]["service_instances_url"]
+    plan["entity"]["service_instances_url"],
   )
   next if plan_instances_req.length.zero?
 
@@ -120,7 +120,7 @@ es_plans_req.each do |plan| # rubocop:disable Metrics/BlockLength
       =~ Regexp.new(/#{filters.space_guid}/)
 
     owning_space_req = do_paginated_capi_request(
-      instance["entity"]["space_url"]
+      instance["entity"]["space_url"],
     )
     owning_space_name = owning_space_req["name"]
     next unless owning_space_name \
@@ -131,7 +131,7 @@ es_plans_req.each do |plan| # rubocop:disable Metrics/BlockLength
 
     owning_org_url = owning_space_req["organization_url"]
     owning_guid_req = do_paginated_capi_request(
-      owning_org_url
+      owning_org_url,
     )
     owning_org_name = owning_guid_req["name"]
     next unless owning_org_name =~ Regexp.new(/#{filters.org_regex}/)

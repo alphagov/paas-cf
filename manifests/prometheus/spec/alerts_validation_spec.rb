@@ -11,7 +11,7 @@ RSpec.describe "prometheus alerts" do
           .select { |ig| ig["name"] == "prometheus2" }
           .first["jobs"]
           .select { |j| j["name"] == "prometheus2" }
-          .first.dig("properties", "prometheus", "custom_rules")
+          .first.dig("properties", "prometheus", "custom_rules"),
     )
 
     open(rules_file_location, "w+") { |f|

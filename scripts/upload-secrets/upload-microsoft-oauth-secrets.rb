@@ -27,5 +27,5 @@ upload_secrets(
   "microsoft_oauth_client_secret" => microsoft_oauth_client_secret,
   "microsoft_adminoidc_tenant_id" => microsoft_adminoidc_tenant_id,
   "microsoft_adminoidc_client_id" => microsoft_adminoidc_client_id,
-  "microsoft_adminoidc_client_secret" => microsoft_adminoidc_client_secret
+  "microsoft_adminoidc_client_secret" => microsoft_adminoidc_client_secret,
 )

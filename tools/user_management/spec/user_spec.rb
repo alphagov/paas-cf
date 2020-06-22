@@ -46,7 +46,7 @@ RSpec.describe User do
         resources: [{
           id: "00000000-0000-0000-0000-000000000000-user",
         }],
-        totalResults: 1
+        totalResults: 1,
       ))
 
     u = User.new(
@@ -63,7 +63,7 @@ RSpec.describe User do
 
     u2 = User.new(
       "email" => "rich.richardson@example.com",
-      "username" => "999999999999999999999"
+      "username" => "999999999999999999999",
     )
 
     expect(u2.exists?(fake_uaa_client)).to be false
@@ -88,7 +88,7 @@ RSpec.describe User do
 
     u2 = User.new(
       "email" => "rich.richardson",
-      "username" => "999999999999999999999"
+      "username" => "999999999999999999999",
     )
 
     expect { u2.create(fake_uaa_client) }.to raise_error(Exception, /Bad Request/)
@@ -98,7 +98,7 @@ RSpec.describe User do
 
     u3 = User.new(
       "email" => "jeff.jefferson@example.com",
-      "username" => "000000000000000000000"
+      "username" => "000000000000000000000",
     )
 
     expect(u3.create(fake_uaa_client)).to be false
@@ -110,7 +110,7 @@ RSpec.describe User do
         resources: [{
           id: "00000000-0000-0000-0000-000000000000-user"
         }],
-        totalResults: 1
+        totalResults: 1,
       ))
 
     stub_request(:get, "http://fake-uaa.internal/Users?filter=origin%20eq%20%22google%22%20and%20userName%20eq%20%22000000000000000000000%22")

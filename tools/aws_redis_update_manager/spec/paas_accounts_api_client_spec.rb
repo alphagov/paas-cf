@@ -66,7 +66,7 @@ RSpec.describe PaaSAccountsAPIClient do
           body: {
             username: "a-username",
             user_email: "email@domain.tld"
-          }.to_json
+          }.to_json,
         )
 
       client = PaaSAccountsAPIClient.new(url: accounts_url)
@@ -75,7 +75,7 @@ RSpec.describe PaaSAccountsAPIClient do
       expect(user).to have_attributes(
         guid: "a-guid",
         username: "a-username",
-        email: "email@domain.tld"
+        email: "email@domain.tld",
       )
     end
   end

@@ -73,7 +73,7 @@ RSpec.describe "prometheus" do
 
       expect(prom_scrape_config).not_to be_nil
       expect(prom_scrape_config["static_configs"]).to eq(
-        [{ "targets" => ["localhost:9090"] }]
+        [{ "targets" => ["localhost:9090"] }],
       )
     end
 
@@ -86,18 +86,18 @@ RSpec.describe "prometheus" do
       expect(aiven_scrape_config["scheme"]).to eq("https")
 
       expect(aiven_scrape_config["tls_config"]).to eq(
-        "insecure_skip_verify" => true # We do IP based service discovery
+        "insecure_skip_verify" => true, # We do IP based service discovery
       )
 
       expect(aiven_scrape_config["basic_auth"]).to eq(
         "username" => "((aiven_prometheus_username))",
-        "password" => "((aiven_prometheus_password))"
+        "password" => "((aiven_prometheus_password))",
       )
 
       targets = aiven_scrape_config["file_sd_configs"].first["files"].first
 
       expect(targets).to eq(
-        aiven_sd_config["target_path"] + "/" + aiven_sd_config["target_filename"]
+        aiven_sd_config["target_path"] + "/" + aiven_sd_config["target_filename"],
       )
 
       relabel_configs = aiven_scrape_config["relabel_configs"]

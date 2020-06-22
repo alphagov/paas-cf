@@ -34,5 +34,5 @@ upload_secrets(
   "logit_syslog_port" => logit_syslog_port,
   "logit_ca_cert" => logit_ca_cert,
   "logit_elasticsearch_url" => logit_elasticsearch_url,
-  "logit_elasticsearch_api_key" => logit_elasticsearch_api_key
+  "logit_elasticsearch_api_key" => logit_elasticsearch_api_key,
 )

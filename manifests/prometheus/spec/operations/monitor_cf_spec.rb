@@ -8,7 +8,7 @@ RSpec.describe "Monitor CF" do
 
   it "adds the cf_exporter job" do
     cf_exporter_config = manifest_with_defaults.get(
-      "instance_groups.prometheus2.jobs.cf_exporter"
+      "instance_groups.prometheus2.jobs.cf_exporter",
     )
 
     expect(cf_exporter_config).to_not be_nil
@@ -16,7 +16,7 @@ RSpec.describe "Monitor CF" do
 
   it "adds the cloudfoundry_dashboards job" do
     cf_dashboards_config = manifest_with_defaults.get(
-      "instance_groups.grafana.jobs.cloudfoundry_dashboards"
+      "instance_groups.grafana.jobs.cloudfoundry_dashboards",
     )
 
     expect(cf_dashboards_config).to_not be_nil

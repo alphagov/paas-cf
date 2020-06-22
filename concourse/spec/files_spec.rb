@@ -33,7 +33,7 @@ RSpec.describe "concourse pipelines" do
         .each do |a, matched|
           expect(matched).to(
             be > 0,
-            "Could not find use of #{a}"
+            "Could not find use of #{a}",
           )
         end
 
@@ -42,7 +42,7 @@ RSpec.describe "concourse pipelines" do
         .each do |a, matched|
           expect(matched).to(
             eq(true),
-            "Could not finding matching #{a.sub('&add', '&end')} anchor"
+            "Could not finding matching #{a.sub('&add', '&end')} anchor",
           )
         end
 
@@ -53,7 +53,7 @@ RSpec.describe "concourse pipelines" do
         .each do |a, add_count, end_count|
           expect(add_count).to(
             eq(end_count),
-            "#{a} (#{add_count}) != #{a.sub('*add', '*end')} (#{end_count})"
+            "#{a} (#{add_count}) != #{a.sub('*add', '*end')} (#{end_count})",
           )
         end
     end

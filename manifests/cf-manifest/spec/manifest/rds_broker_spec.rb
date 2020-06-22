@@ -171,7 +171,7 @@ RSpec.describe "RDS broker properties" do
 
       it "has a backup retention period of 7 days" do
         expect(rds_properties).to include(
-          "backup_retention_period" => 7
+          "backup_retention_period" => 7,
         )
       end
     end

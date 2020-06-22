@@ -15,7 +15,7 @@ uaa_client = RestClient::Resource.new(
   headers: {
     "Authorization" => CF_TOKEN,
     "Content-Type" => "application/json"
-  }
+  },
 )
 
 users_config = YAML.safe_load(File.read(USERS_CONFIG_PATH), aliases: true)
