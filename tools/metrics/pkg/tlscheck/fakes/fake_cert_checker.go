@@ -9,6 +9,20 @@ import (
 )
 
 type FakeCertChecker struct {
+	CertificateAuthorityStub        func(string, *tls.Config) (string, error)
+	certificateAuthorityMutex       sync.RWMutex
+	certificateAuthorityArgsForCall []struct {
+		arg1 string
+		arg2 *tls.Config
+	}
+	certificateAuthorityReturns struct {
+		result1 string
+		result2 error
+	}
+	certificateAuthorityReturnsOnCall map[int]struct {
+		result1 string
+		result2 error
+	}
 	DaysUntilExpiryStub        func(string, *tls.Config) (float64, error)
 	daysUntilExpiryMutex       sync.RWMutex
 	daysUntilExpiryArgsForCall []struct {
@@ -25,6 +39,70 @@ type FakeCertChecker struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeCertChecker) CertificateAuthority(arg1 string, arg2 *tls.Config) (string, error) {
+	fake.certificateAuthorityMutex.Lock()
+	ret, specificReturn := fake.certificateAuthorityReturnsOnCall[len(fake.certificateAuthorityArgsForCall)]
+	fake.certificateAuthorityArgsForCall = append(fake.certificateAuthorityArgsForCall, struct {
+		arg1 string
+		arg2 *tls.Config
+	}{arg1, arg2})
+	fake.recordInvocation("CertificateAuthority", []interface{}{arg1, arg2})
+	fake.certificateAuthorityMutex.Unlock()
+	if fake.CertificateAuthorityStub != nil {
+		return fake.CertificateAuthorityStub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.certificateAuthorityReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCertChecker) CertificateAuthorityCallCount() int {
+	fake.certificateAuthorityMutex.RLock()
+	defer fake.certificateAuthorityMutex.RUnlock()
+	return len(fake.certificateAuthorityArgsForCall)
+}
+
+func (fake *FakeCertChecker) CertificateAuthorityCalls(stub func(string, *tls.Config) (string, error)) {
+	fake.certificateAuthorityMutex.Lock()
+	defer fake.certificateAuthorityMutex.Unlock()
+	fake.CertificateAuthorityStub = stub
+}
+
+func (fake *FakeCertChecker) CertificateAuthorityArgsForCall(i int) (string, *tls.Config) {
+	fake.certificateAuthorityMutex.RLock()
+	defer fake.certificateAuthorityMutex.RUnlock()
+	argsForCall := fake.certificateAuthorityArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeCertChecker) CertificateAuthorityReturns(result1 string, result2 error) {
+	fake.certificateAuthorityMutex.Lock()
+	defer fake.certificateAuthorityMutex.Unlock()
+	fake.CertificateAuthorityStub = nil
+	fake.certificateAuthorityReturns = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCertChecker) CertificateAuthorityReturnsOnCall(i int, result1 string, result2 error) {
+	fake.certificateAuthorityMutex.Lock()
+	defer fake.certificateAuthorityMutex.Unlock()
+	fake.CertificateAuthorityStub = nil
+	if fake.certificateAuthorityReturnsOnCall == nil {
+		fake.certificateAuthorityReturnsOnCall = make(map[int]struct {
+			result1 string
+			result2 error
+		})
+	}
+	fake.certificateAuthorityReturnsOnCall[i] = struct {
+		result1 string
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeCertChecker) DaysUntilExpiry(arg1 string, arg2 *tls.Config) (float64, error) {
@@ -94,6 +172,8 @@ func (fake *FakeCertChecker) DaysUntilExpiryReturnsOnCall(i int, result1 float64
 func (fake *FakeCertChecker) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.certificateAuthorityMutex.RLock()
+	defer fake.certificateAuthorityMutex.RUnlock()
 	fake.daysUntilExpiryMutex.RLock()
 	defer fake.daysUntilExpiryMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
