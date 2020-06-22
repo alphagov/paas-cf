@@ -138,7 +138,7 @@ lint_symlinks:
 	| ./scripts/test_symlinks.sh
 
 .PHONY: lint
-lint: lint_yaml lint_terraform lint_shellcheck lint_concourse lint_posix_newlines lint_symlinks ## Run linting tests
+lint: lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines lint_symlinks ## Run linting tests
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 
