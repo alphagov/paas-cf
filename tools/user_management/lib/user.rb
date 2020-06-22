@@ -37,7 +37,7 @@ class User < UAAResource
   def get_user(uaa_client)
     scim_filter = [
       "origin+eq+\"#{@origin}\"",
-      "userName+eq+\"#{@username}\""
+      "userName+eq+\"#{@username}\"",
     ].join("+and+")
     get_resource("/Users?filter=#{scim_filter}", uaa_client)
   end

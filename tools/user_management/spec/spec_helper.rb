@@ -118,7 +118,7 @@ def stub_searching_for_group(status, display_name, id = nil, members = [])
           "origin" => member.fetch("origin", "uaa"),
           "value" => member.fetch("id"),
         }
-      end
+      end,
     ]
 end
 

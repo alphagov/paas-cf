@@ -1,10 +1,10 @@
 
 RSpec.describe "networks" do
-  CF_NETWORK_NAMES = %w(
+  CF_NETWORK_NAMES = %w[
     cf
     cell
     router
-  ).freeze
+  ].freeze
 
   let(:networks) { cloud_config_with_defaults.fetch("networks") }
 

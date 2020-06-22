@@ -4,7 +4,7 @@ require "yaml"
 require "json"
 require "erb"
 
-REGIONS = %w(eu-west-1 eu-west-2).freeze
+REGIONS = %w[eu-west-1 eu-west-2].freeze
 
 class Generator
   def initialize(region, pricing_data)

@@ -2,11 +2,11 @@ RSpec.describe "database encryption keys" do
   let(:manifest) { manifest_without_vars_store }
 
   describe "CC database encryption key" do
-    %w{
+    %w[
       instance_groups.api.jobs.cloud_controller_ng.properties
       instance_groups.cc-worker.jobs.cloud_controller_worker.properties
       instance_groups.scheduler.jobs.cloud_controller_clock.properties
-    }.each do |job_properties_path|
+    ].each do |job_properties_path|
 
       it "has a default encryption key configured" do
         properties = manifest.fetch(job_properties_path)
@@ -34,7 +34,7 @@ RSpec.describe "database encryption keys" do
         new_acum << path if v.is_a?(String) && v.include?("((cc_db_encryption_key))")
         new_acum
       end
-      expected_locations = %w{
+      expected_locations = %w[
         /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/database_encryption/keys/((cc_db_encryption_key_id))
         /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/db_encryption_key
         /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/database_encryption/keys/((cc_db_encryption_key_id))
@@ -42,7 +42,7 @@ RSpec.describe "database encryption keys" do
         /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/database_encryption/keys/((cc_db_encryption_key_id))
         /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/db_encryption_key
         /instance_groups/name=scheduler/jobs/name=cc_deployment_updater/properties/cc/db_encryption_key
-      }
+      ]
       expect(found_locations).to contain_exactly(*expected_locations)
     end
   end

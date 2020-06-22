@@ -170,13 +170,13 @@ FIXTURE
   end
 
   let(:vars_to_preserve) do
-    %w{
+    %w[
       ca_to_keep
       leaf_to_keep
       passwords_to_keep
       rsa_to_keep
       ssh_to_keep
-    }
+    ]
   end
 
   describe "no variables" do
@@ -191,13 +191,13 @@ FIXTURE
     end
   end
 
-  %w{
+  %w[
     ca
     leaf
     passwords
     rsa
     ssh
-  }.each do |type|
+  ].each do |type|
 
     describe "#{type} type secrets" do
       it "does not change if #{type}: false" do

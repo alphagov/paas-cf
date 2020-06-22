@@ -48,7 +48,7 @@ RSpec.describe ElastiCacheUpdateFinder do
         service_update_name: "an-update-to-apply",
         replication_group_id: "replication-group-id",
         update_action_status: "not-applied",
-      }
+      },
     ]
 
     it "finds a single instance to update" do

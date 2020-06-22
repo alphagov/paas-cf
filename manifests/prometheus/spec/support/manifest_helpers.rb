@@ -40,7 +40,7 @@ private
     workdir = Dir.mktmpdir("workdir")
 
     vars_store = Tempfile.new(["vars-store", ".yml"])
-    copy_terraform_fixtures("#{workdir}/terraform-outputs", %w(cf))
+    copy_terraform_fixtures("#{workdir}/terraform-outputs", %w[cf])
     copy_fixture_file("bosh-vars-store.yml", "#{workdir}/bosh-vars-store")
     copy_fixture_file("cf-vars-store.yml", "#{workdir}/cf-vars-store")
     copy_fixture_file("bosh-CA.crt", "#{workdir}/bosh-CA-crt")

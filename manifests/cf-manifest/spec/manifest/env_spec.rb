@@ -28,7 +28,7 @@ RSpec.describe "Environment specific configuration" do
     expect(default_doppler_instances).to be < prod_doppler_instances
   end
 
-  %w(prod prod-lon stg-lon).each do |env|
+  %w[prod prod-lon stg-lon].each do |env|
     context "for the #{env} environment" do
       let(:env_manifest) { manifest_for_env(env) }
 

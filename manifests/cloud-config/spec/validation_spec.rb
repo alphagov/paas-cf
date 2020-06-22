@@ -1,11 +1,11 @@
 
 RSpec.describe "generic validations" do
   describe "name uniqueness" do
-    %w(
+    %w[
       disk_types
       networks
       vm_types
-    ).each do |resource_type|
+    ].each do |resource_type|
       specify "all #{resource_type} have a unique name" do
         all_resource_names = cloud_config_with_defaults.fetch(resource_type).map { |r| r["name"] }
 

@@ -16,10 +16,10 @@ RSpec.describe "generic manifest validations" do
   end
 
   describe "name uniqueness" do
-    %w(
+    %w[
       instance_groups
       releases
-    ).each do |resource_type|
+    ].each do |resource_type|
       specify "all #{resource_type} have a unique name" do
         all_resource_names = manifest.fetch(resource_type).map { |r| r["name"] }
 

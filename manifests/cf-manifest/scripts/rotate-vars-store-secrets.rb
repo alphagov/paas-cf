@@ -37,15 +37,15 @@ def parse_args
 end
 
 def rotate_secret(vars, vars_store, type, is_ca = false)
-  STDERR.puts "########################################################"
-  STDERR.puts "ROTATING VARS STORE SECRETS"
-  STDERR.puts "ONLY VARS OF TYPE '#{type}'"
+  warn "########################################################"
+  warn "ROTATING VARS STORE SECRETS"
+  warn "ONLY VARS OF TYPE '#{type}'"
   if is_ca
-    STDERR.puts "ONLY VARS WHICH ARE CERTIFICATE AUTHORITIES"
+    warn "ONLY VARS WHICH ARE CERTIFICATE AUTHORITIES"
   else
-    STDERR.puts "ONLY VARS WHICH ARE NOT CERTIFICATE AUTHORITIES"
+    warn "ONLY VARS WHICH ARE NOT CERTIFICATE AUTHORITIES"
   end
-  STDERR.puts ""
+  warn ""
 
   vars_store = vars_store.clone
   var_names = vars.map { |v| v["name"] }
@@ -58,23 +58,23 @@ def rotate_secret(vars, vars_store, type, is_ca = false)
 
     if var_names.include? "#{name}_old"
       new_name = "#{name}_old"
-      STDERR.puts "Moved '#{name}' to '#{new_name}'"
+      warn "Moved '#{name}' to '#{new_name}'"
       vars_store[new_name] = vars_store.delete(name)
     else
-      STDERR.puts "Deleted '#{name}'"
+      warn "Deleted '#{name}'"
       vars_store.delete(name)
     end
   end
 
-  STDERR.puts "########################################################"
+  warn "########################################################"
   vars_store
 end
 
 def delete_old(vars, vars_store)
-  STDERR.puts "########################################################"
-  STDERR.puts "DELETING OLD VARS STORE SECRETS"
-  STDERR.puts "ONLY VARS WHOSE NAMES END WITH '_old'"
-  STDERR.puts ""
+  warn "########################################################"
+  warn "DELETING OLD VARS STORE SECRETS"
+  warn "ONLY VARS WHOSE NAMES END WITH '_old'"
+  warn ""
 
   vars_store = vars_store.clone
   vars.each do |var|
@@ -82,15 +82,15 @@ def delete_old(vars, vars_store)
     next unless name.end_with?("_old")
 
     if var["type"] == "certificate"
-      STDERR.puts "Replaced '#{name}' with a blank certificate"
+      warn "Replaced '#{name}' with a blank certificate"
       vars_store[name] = BLANK_CERT
     else
-      STDERR.puts "Deleted '#{name}'"
+      warn "Deleted '#{name}'"
       vars_store.delete(name)
     end
   end
 
-  STDERR.puts "########################################################"
+  warn "########################################################"
   vars_store
 end
 

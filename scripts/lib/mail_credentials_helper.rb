@@ -37,7 +37,7 @@ module EmailCredentialsHelper
       from: source_address,
       to: user.fetch(:email),
       subject: "PaaS admin account creation",
-      message: %{
+      message: %(
 Hello,
 
 A CF admin user has been created for you with the following details:
@@ -54,7 +54,7 @@ Regards,
 The Government PaaS Team.
 
 ... We are building a World Class Goverment PaaS based on OpenSource... that's the best!!!
-      },
+      ),
     )
   end
   # rubocop:enable Layout/EmptyLinesAroundArguments

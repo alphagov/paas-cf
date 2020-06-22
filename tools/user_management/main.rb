@@ -44,7 +44,7 @@ groups = [
   Group.new("scim.invite", cf_admin_users),
   Group.new("doppler.firehose", cf_admin_users),
   Group.new("network.admin", cf_admin_users),
-  Group.new("cloud_controller.global_auditor", cf_auditor_users)
+  Group.new("cloud_controller.global_auditor", cf_auditor_users),
 ]
 
 ensure_uaa_groups_have_correct_members(groups, uaa_client)

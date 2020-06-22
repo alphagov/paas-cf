@@ -45,7 +45,7 @@ RSpec.describe Group do
   describe "#remove_member" do
     before do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "guid-of-existing-member" }
+        { "id" => "guid-of-existing-member" },
       ])
     end
 
@@ -88,7 +88,7 @@ RSpec.describe Group do
 
     it "adds its desired users" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "user-1-guid" }
+        { "id" => "user-1-guid" },
       ])
 
       g = Group.new("__test__", [u1, u2])
@@ -108,7 +108,7 @@ RSpec.describe Group do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "desired-user-guid" },
         { "id" => "unwanted-google-user-guid" },
-        { "id" => "unwanted-uaa-user-guid" }
+        { "id" => "unwanted-uaa-user-guid" },
       ])
 
       stub_searching_for_user(200, "google", "11111111111111", "desired-user-guid")
@@ -142,7 +142,7 @@ RSpec.describe Group do
 
     it "preserves our admin uaa user" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "guid-of-user-who-is-the-uaa-admin" }
+        { "id" => "guid-of-user-who-is-the-uaa-admin" },
       ])
       stub_getting_user_by_id(200, "guid-of-user-who-is-the-uaa-admin", "uaa", "admin", Time.now - 86400)
 
@@ -153,7 +153,7 @@ RSpec.describe Group do
 
     it "removes non-admin uaa users created more than one hour ago" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "guid-of-day-old-uaa-user" }
+        { "id" => "guid-of-day-old-uaa-user" },
       ])
       stub_getting_user_by_id(200, "guid-of-day-old-uaa-user", "uaa", "day-old-uaa-user", Time.now - 86400)
       stub_removing_user_from_group(200, "guid-of-__test__-group", "guid-of-day-old-uaa-user")
@@ -165,7 +165,7 @@ RSpec.describe Group do
 
     it "preserves non-admin uaa users created less than an hour ago" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "guid-of-minute-old-uaa-user" }
+        { "id" => "guid-of-minute-old-uaa-user" },
       ])
       stub_getting_user_by_id(200, "guid-of-minute-old-uaa-user", "uaa", "minute-old-uaa-user", Time.now - 60)
       stub_removing_user_from_group(200, "guid-of-__test__-group", "guid-of-minute-old-uaa-user")
@@ -177,7 +177,7 @@ RSpec.describe Group do
 
     it "removes members with an unusual origin" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "guid-of-unusual-member", "origin" => "something-that-is-not-uaa" }
+        { "id" => "guid-of-unusual-member", "origin" => "something-that-is-not-uaa" },
       ])
       stub_removing_user_from_group(200, "guid-of-__test__-group", "guid-of-unusual-member")
 
@@ -187,7 +187,7 @@ RSpec.describe Group do
 
     it "removes members with an unusual type" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
-        { "id" => "guid-of-unusual-member", "type" => "GROUP" }
+        { "id" => "guid-of-unusual-member", "type" => "GROUP" },
       ])
       stub_removing_user_from_group(200, "guid-of-__test__-group", "guid-of-unusual-member")
 
@@ -210,7 +210,7 @@ RSpec.describe Group do
     before do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-member-1" },
-        { "id" => "guid-of-member-2" }
+        { "id" => "guid-of-member-2" },
       ])
       stub_getting_user_by_id(200, "guid-of-member-1", "origin-of-member-1", "username-of-member-1", Time.now)
       stub_getting_user_by_id(200, "guid-of-member-2", "origin-of-member-2", "username-of-member-2", Time.now)
@@ -231,7 +231,7 @@ RSpec.describe Group do
     it "does not error if the group has a non-user member" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-member-1" },
-        { "id" => "guid-of-member-2", "type" => "GROUP" }
+        { "id" => "guid-of-member-2", "type" => "GROUP" },
       ])
       group = Group.new("__test__", [])
       members = group.get_member_users(fake_uaa_client)
@@ -245,7 +245,7 @@ RSpec.describe Group do
     it "does not error if the group has a member not managed by UAA" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-member-1" },
-        { "id" => "guid-of-member-2", "origin" => "something-that-is-not-uaa" }
+        { "id" => "guid-of-member-2", "origin" => "something-that-is-not-uaa" },
       ])
       group = Group.new("__test__", [])
       members = group.get_member_users(fake_uaa_client)

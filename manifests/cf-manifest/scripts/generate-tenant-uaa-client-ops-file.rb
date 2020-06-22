@@ -32,7 +32,7 @@ if File.file?(config_file)
           "name" => client["secret_name"],
           "type" => "password",
         },
-      }
+      },
     ]
   end
   puts YAML.dump(ops)

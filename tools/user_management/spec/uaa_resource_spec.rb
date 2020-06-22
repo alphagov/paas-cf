@@ -8,7 +8,7 @@ RSpec.describe UAAResource do
     {
       totalResults: 1,
       resources: [
-        { id: "a-faked-guid" }
+        { id: "a-faked-guid" },
       ],
     }
   end

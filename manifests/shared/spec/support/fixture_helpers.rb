@@ -3,7 +3,7 @@ module FixtureHelpers
     YAML.load_file(fixtures_dir.join("terraform/#{fixture}.yml")).fetch("terraform_outputs_#{key}")
   end
 
-  def copy_terraform_fixtures(target_dir, fixtures = %w(vpc bosh cf))
+  def copy_terraform_fixtures(target_dir, fixtures = %w[vpc bosh cf])
     fixtures.each do |file|
       copy_fixture_file("terraform/#{file}.yml", target_dir, "#{file}.yml")
     end
