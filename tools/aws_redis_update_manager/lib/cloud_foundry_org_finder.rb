@@ -7,7 +7,7 @@ class CloudFoundryOrgFinder
   end
 
   def find_org(org_guid)
-    @orgs[org_guid] if @orgs[org_guid]
+    @orgs[org_guid]
 
     org = get_org(org_guid)
 

@@ -67,7 +67,7 @@ private
 
   def render_vpc_peering_opsfile(dir, environment = "dev")
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
-    file = File::open("#{dir}/vpc-peers.yml", "w")
+    file = File.open("#{dir}/vpc-peers.yml", "w")
     output, error, status =
       Open3.capture3(root.join("terraform/scripts/generate_vpc_peering_opsfile.rb").to_s,
                      root.join("terraform/#{environment}.vpc_peering.json").to_s)
@@ -84,7 +84,7 @@ private
   def render_tenant_uaa_clients_opsfile(dir, config_file, environment = "dev")
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
 
-    file = File::open("#{dir}/tenant-uaa-opsfile.yml", "w+")
+    file = File.open("#{dir}/tenant-uaa-opsfile.yml", "w+")
     output, error, status =
       Open3.capture3(root.join("manifests/cf-manifest/scripts/generate-tenant-uaa-client-ops-file.rb").to_s,
                     root.join(config_file).to_s,

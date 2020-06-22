@@ -61,7 +61,7 @@ RSpec.describe "generic manifest validations" do
     specify "all jobs reference stemcells that exist" do
       stemcell_names = manifest["stemcells"].map { |r| r["alias"] }
       manifest["instance_groups"].each do |job|
-        expect(job.has_key?("stemcell")).to be(true),
+        expect(job.key?("stemcell")).to be(true),
           "No stemcell defined for job #{job['name']}. You must add a stemcell to this job."
         expect(stemcell_names).to include(job["stemcell"]),
           "stemcell #{job['stemcell']} not found for job #{job['name']}. This value should correspond to `stemcells.*.alias`."
@@ -71,7 +71,7 @@ RSpec.describe "generic manifest validations" do
     specify "all jobs reference availability zones that exist" do
       azs_names = cloud_config["azs"].map { |r| r["name"] }
       manifest["instance_groups"].each do |job|
-        expect(job.has_key?("azs")).to be(true),
+        expect(job.key?("azs")).to be(true),
           "No azs key defined for job #{job['name']}. You must add some availability zones."
         job["azs"].each do |az|
           expect(azs_names).to include(az),

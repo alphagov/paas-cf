@@ -32,7 +32,7 @@ pricing_data = YAML.load_file("#{__dir__}/pricing_data.yml")
 template = File.read("#{__dir__}/config.json.erb")
 
 REGIONS.each do |region|
-  begin
+  
     g = Generator.new(region, pricing_data)
     json_content = g.generate(template)
 
@@ -54,5 +54,5 @@ REGIONS.each do |region|
 
     puts `jq '.' #{__dir__}/output/#{region}.err.json`
     exit 1
-  end
+  
 end

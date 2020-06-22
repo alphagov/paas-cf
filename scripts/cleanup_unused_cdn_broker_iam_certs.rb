@@ -11,7 +11,7 @@ end
 
 all_cdn_certs = JSON.parse %x(aws iam list-server-certificates --query 'ServerCertificateMetadataList[?Path == `/cloudfront/prod-letsencrypt/`]')
 
-cloudfront_used_certs = JSON.parse %x(aws cloudfront list-distributions --query 'DistributionList.Items[].ViewerCertificate.Certificate')
+cloudfront_used_certs = JSON.parse `aws cloudfront list-distributions --query 'DistributionList.Items[].ViewerCertificate.Certificate'`
 
 all_cdn_certs.each do |cert|
   if cloudfront_used_certs.include?(cert["ServerCertificateId"])

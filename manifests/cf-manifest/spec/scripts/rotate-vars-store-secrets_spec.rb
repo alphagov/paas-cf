@@ -257,13 +257,12 @@ FIXTURE
       rotated_vars_store = rotate(manifest, vars_store, delete: true)
 
       rotated_vars_store.each do |k, v|
-        if (k.start_with? "ca_", "leaf_") && k.end_with?("_old")
-          expect(v).to include(
-            "ca" => "",
-            "certificate" => "",
-            "private_key" => "",
-          )
-        end
+        next unless (k.start_with? "ca_", "leaf_") && k.end_with?("_old")
+        expect(v).to include(
+          "ca" => "",
+          "certificate" => "",
+          "private_key" => "",
+        )
       end
     end
 

@@ -99,7 +99,7 @@ class Group < UAAResource
   end
 
   def get_uaa_user(user_guid, uaa_client)
-    begin
+    
       get("/Users/#{user_guid}", uaa_client)
     rescue RestClient::NotFound
       # When we first ran this script, some of our Groups had members without
@@ -110,6 +110,6 @@ class Group < UAAResource
         "origin" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
         "userName" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
       }
-    end
+    
   end
 end

@@ -42,6 +42,6 @@ class PaaSAccountsAPIClient
         .new(guid, p["username"], p["user_email"])
     end
 
-    raise UnhandledResponseError.new(response)
+    raise UnhandledResponseError, response
   end
 end

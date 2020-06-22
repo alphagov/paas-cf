@@ -24,25 +24,25 @@ class PropertyTree
                      tree.select { |x| x.is_a?(Hash) && x["name"] == current_key }.first
                    end
                  end
-    if not next_level.nil?
+    unless next_level.nil?
       recursive_get(next_level, next_keys)
     end
   end
 
   def get(key)
     key_array = key.split(".")
-    self.recursive_get(@tree, key_array)
+    recursive_get(@tree, key_array)
   end
 
   def [](key)
-    self.get(key)
+    get(key)
   end
 
   def fetch(key, default_value = nil)
-    ret = self.get(key)
+    ret = get(key)
     if ret.nil?
       if default_value.nil?
-        raise KeyError.new(key)
+        raise KeyError, key
       else
         return default_value
       end
@@ -64,7 +64,7 @@ class PropertyTree
       end
     elsif x.is_a? Array
       x.each_with_index.inject(acum) do |acum2, (x2, index)|
-        new_path = if x2.is_a?(Hash) && x2.has_key?("name")
+        new_path = if x2.is_a?(Hash) && x2.key?("name")
                      path + "/name=" + x2["name"]
                    else
                      path + "/" + index.to_s
@@ -79,7 +79,7 @@ class PropertyTree
   end
 
   def inject(acum)
-    self.recursive_inject(acum, @tree, "") do |acum2, x, path|
+    recursive_inject(acum, @tree, "") do |acum2, x, path|
       yield(acum2, x, path)
     end
   end

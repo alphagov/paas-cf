@@ -50,7 +50,7 @@ private
     groups = []
     `cf security-groups`.each_line do |line|
       if line =~ /\A#\d+\s+(\S+)\s*/
-        groups << $1
+        groups << Regexp.last_match(1)
       end
     end
     groups

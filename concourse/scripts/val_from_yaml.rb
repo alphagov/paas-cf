@@ -26,18 +26,18 @@ class PropertyTree
                      tree.select { |x| x.is_a?(Hash) && x["name"] == current_key }.first
                    end
                  end
-    if not next_level.nil?
+    unless next_level.nil?
       recursive_get(next_level, next_keys)
     end
   end
 
   def get(key)
     key_array = key.split(".")
-    self.recursive_get(@tree, key_array)
+    recursive_get(@tree, key_array)
   end
 
   def [](key)
-    self.get(key)
+    get(key)
   end
 end
 

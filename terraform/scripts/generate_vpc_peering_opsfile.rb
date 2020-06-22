@@ -6,7 +6,7 @@ require "yaml"
 
 peering_file = ARGV[0]
 
-operations = Array.new
+operations = []
 
 if File.file?(ARGV[0])
   operations = JSON.parse(File.read(peering_file)).map do |peer|

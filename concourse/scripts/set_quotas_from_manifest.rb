@@ -52,7 +52,7 @@ private
         next
       end
       if line =~ /\A(\S+)\s+/
-        quotas << $1
+        quotas << Regexp.last_match(1)
       end
     end
     quotas

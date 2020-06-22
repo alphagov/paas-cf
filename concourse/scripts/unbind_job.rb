@@ -7,7 +7,7 @@ def remove_passed(obj)
   when Array
     obj.each { |v| remove_passed(v) }
   when Hash
-    if obj.has_key?("get") && obj["get"] == "paas-cf"
+    if obj.key?("get") && obj["get"] == "paas-cf"
       obj.delete("passed")
     else
       obj.each { |k, v| remove_passed(v) if %w[do aggregate in_parallel].include?(k) }

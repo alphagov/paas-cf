@@ -31,7 +31,7 @@ def parse_args
   parser.parse!
 
   if options[:vars_store].nil? || options[:manifest].nil?
-    fail "--manifest and --vars-store arguments are mandatory"
+    raise "--manifest and --vars-store arguments are mandatory"
   end
 
   options
@@ -55,7 +55,7 @@ def rotate_secret(vars, vars_store, type, is_ca = false)
     next if name.end_with?("_old")
     next unless var["type"] == type
     next unless var.fetch("options", {}).fetch("is_ca", false) == is_ca
-    next unless vars_store.is_a?(Hash) && vars_store.has_key?(name)
+    next unless vars_store.is_a?(Hash) && vars_store.key?(name)
 
     if var_names.include? "#{name}_old"
       new_name = "#{name}_old"

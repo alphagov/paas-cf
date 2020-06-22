@@ -3,10 +3,10 @@
 require "rubygems"
 require "json"
 
-names = Array.new
-vpc_ids = Array.new
-account_ids = Array.new
-cidrs = Array.new
+names = []
+vpc_ids = []
+account_ids = []
+cidrs = []
 
 if File.file?(ARGV[0])
   peers = JSON.parse(File.read(ARGV[0]))

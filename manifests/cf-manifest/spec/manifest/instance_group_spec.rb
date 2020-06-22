@@ -5,7 +5,7 @@ RSpec.describe "the instance_groups definitions block" do
 
   def get_instance_group(instance_group_name)
     instance_group = instance_groups.select { |i| i["name"] == instance_group_name }.first
-    if instance_group == nil
+    if instance_group.nil?
       raise "No instance_group named '#{instance_group_name}' known. Known instance_groups are #{instance_groups.collect { |ig_hash| ig_hash['name'] }}"
     else
       instance_group

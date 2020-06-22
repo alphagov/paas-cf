@@ -4,9 +4,9 @@ RSpec.describe "release versions" do
   matcher :match_version_from_url do |url|
     match do |version|
       if url =~ %r{\?v=(.+)\z}
-        url_version = $1
+        url_version = Regexp.last_match(1)
       elsif url =~ %r{-([\d.]+)\.tgz\z}
-        url_version = $1
+        url_version = Regexp.last_match(1)
       else
         raise "Failed to extract version from URL '#{url}'"
       end
@@ -43,12 +43,12 @@ RSpec.describe "release versions" do
     }.to_h
 
     unpinned_cf_deployment_releases = cf_deployment_releases.reject { |name, _version|
-      pinned_releases.has_key? name
+      pinned_releases.key? name
     }.to_h
 
     unpinned_cf_deployment_releases.each do |name, version|
       next if name.end_with? "-buildpack"
-      next unless manifest_releases.has_key? name
+      next unless manifest_releases.key? name
 
       expect(normalise_version(manifest_releases[name])).to be >= normalise_version(version),
         "expected #{name} release version #{manifest_releases[name]} to be older than #{version} as defined in cf-deployment. Maybe you need to pin it?"
