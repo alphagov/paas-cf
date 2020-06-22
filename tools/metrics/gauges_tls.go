@@ -106,3 +106,55 @@ func CDNTLSValidityGauge(
 		return w.WriteMetrics(metrics)
 	})
 }
+
+func CDNTLSCertificateAuthorityGauge(
+	logger lager.Logger,
+	certChecker tlscheck.CertChecker,
+	cfs *cloudfront.CloudFrontService,
+	interval time.Duration,
+) m.MetricReadCloser {
+	return m.NewMetricPoller(interval, func(w m.MetricWriter) error {
+		customDomains, err := cfs.CustomDomains()
+		if err != nil {
+			logger.Error("cloudfront-list-distributions-failure", err, lager.Data{})
+			return err
+		}
+
+		certAuthorityCounter := map[string]int{}
+		for _, customDomain := range customDomains {
+			authority, err := certChecker.CertificateAuthority(
+				customDomain.CloudFrontDomain+":443",
+				&tls.Config{ServerName: customDomain.AliasDomain},
+			)
+
+			if err != nil {
+				logger.Error("cdn-tls-certificate-authorities-failure", err, lager.Data{
+					"alias_domain":      customDomain.AliasDomain,
+					"cloudfront_domain": customDomain.CloudFrontDomain,
+				})
+			}
+
+			if _, ok := certAuthorityCounter[authority]; !ok {
+				certAuthorityCounter[authority] = 0
+			}
+
+			certAuthorityCounter[authority]++
+		}
+
+		metrics := []m.Metric{}
+		for authority, count := range certAuthorityCounter {
+			metrics = append(metrics, m.Metric{
+				Kind:  m.Gauge,
+				Time:  time.Now(),
+				Name:  "cdn.tls.certificates.authority",
+				Value: float64(count),
+				Tags: m.MetricTags{
+					{Label: "certificate_authority", Value: authority},
+				},
+				Unit: "",
+			})
+		}
+
+		return w.WriteMetrics(metrics)
+	})
+}

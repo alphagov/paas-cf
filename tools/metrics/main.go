@@ -165,6 +165,7 @@ func Main() error {
 			Timeout: 5 * time.Second,
 		}, 30*time.Second),
 		CDNTLSValidityGauge(logger, tlsChecker, cfs, 1*time.Hour),
+		CDNTLSCertificateAuthorityGauge(logger, tlsChecker, cfs, 1*time.Hour),
 		ElasticacheInstancesGauge(logger, ecs, cfAPI, 5*time.Minute),
 		ElasticacheUpdatesGauge(logger, ecs, cfAPI, 5*time.Minute),
 		S3BucketsGauge(logger, s3, 1*time.Hour),

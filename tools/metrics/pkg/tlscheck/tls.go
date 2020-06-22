@@ -12,6 +12,7 @@ type TLSChecker struct{}
 //go:generate counterfeiter -o fakes/fake_cert_checker.go . CertChecker
 type CertChecker interface {
 	DaysUntilExpiry(string, *tls.Config) (float64, error)
+	CertificateAuthority(string, *tls.Config) (string, error)
 }
 
 func (tc *TLSChecker) DaysUntilExpiry(addr string, tlsConfig *tls.Config) (float64, error) {
@@ -28,6 +29,24 @@ func (tc *TLSChecker) DaysUntilExpiry(addr string, tlsConfig *tls.Config) (float
 	}
 
 	return 0, err
+}
+
+func (tc *TLSChecker) CertificateAuthority(addr string, tlsConfig *tls.Config) (string, error) {
+	cert, err := GetCertificate(addr, tlsConfig)
+
+	if err == nil {
+		return cert.Issuer.CommonName, nil
+	}
+
+	switch e := err.(type) {
+	case x509.CertificateInvalidError:
+		if e.Reason == x509.Expired {
+			return cert.Issuer.CommonName, nil
+		}
+	}
+
+	return "", err
+
 }
 
 func GetCertificate(addr string, tlsConfig *tls.Config) (*x509.Certificate, error) {

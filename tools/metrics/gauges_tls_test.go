@@ -280,4 +280,53 @@ var _ = Describe("TLS gauges", func() {
 
 	})
 
+	Describe("CDN TLS certificate authority gauge", func(){
+		It("counts the number of certificates per certificate authority", func() {
+			cloudFrontClient.ListDistributionsPagesStub = listDistributionsPageStub
+			tlsChecker.CertificateAuthorityCalls(func(_ string, tlsConfig *tls.Config) (string, error){
+				switch tlsConfig.ServerName {
+				case "s1.service.gov.uk":
+					return "Amazon", nil
+
+				case "s2.service.gov.uk", "s3.service.gov.uk":
+					return "Let's Encrypt", nil
+
+				default:
+					return "", fmt.Errorf("unexpected domain: %s", tlsConfig.ServerName)
+				}
+			})
+
+			gauge := CDNTLSCertificateAuthorityGauge(logger, tlsChecker, cloudFrontService, 1*time.Second)
+			defer gauge.Close()
+
+			var metrics []m.Metric
+			Eventually(func() int {
+				metric, _ := gauge.ReadMetric()
+				metrics = append(metrics, metric)
+				return len(metrics)
+			}, 3*time.Second).Should(Equal(2))
+
+			var amazonMetric *m.Metric
+			var letsEncryptMetric *m.Metric
+
+			for i, metric := range metrics {
+				for _, tag := range metric.Tags {
+					if tag.Label == "certificate_authority" {
+						switch tag.Value {
+						case "Amazon":
+							amazonMetric = &metrics[i]
+						case "Let's Encrypt":
+							letsEncryptMetric = &metrics[i]
+						}
+					}
+				}
+			}
+
+			Expect(amazonMetric).ToNot(BeNil(), "Amazon CA metric was not found")
+			Expect(letsEncryptMetric).ToNot(BeNil(), "Let's Encrypt CA metric was not found")
+			Expect(amazonMetric.Value).To(Equal(float64(1)))
+			Expect(letsEncryptMetric.Value).To(Equal(float64(2)))
+		})
+	})
+
 })

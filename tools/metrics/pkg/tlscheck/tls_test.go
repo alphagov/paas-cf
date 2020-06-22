@@ -68,4 +68,12 @@ var _ = Describe("TLSCheck", func() {
 			Expect(err).To(HaveOccurred())
 		})
 	})
+
+	Context("CertificateAuthority", func(){
+		It("returns the root certificate authority which signed the certificate", func() {
+			authority, err := checker.CertificateAuthority("healthcheck.london.cloudapps.digital:443", &tls.Config{})
+			Expect(err).ToNot(HaveOccurred())
+			Expect(authority).To(Equal("Amazon"))
+		})
+	})
 })
