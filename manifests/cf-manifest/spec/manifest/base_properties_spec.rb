@@ -171,7 +171,7 @@ RSpec.describe "base properties" do
         subject(:client) { clients.fetch("login") }
 
         it {
-          expect(subject).to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
+          expect(client).to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
         }
       end
     end
