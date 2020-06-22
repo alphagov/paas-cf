@@ -14,7 +14,7 @@ CF_OAUTH_TOKEN = `cf oauth-token`.freeze
 API_ENDPOINT = `cf api`[/https.*$/].freeze
 
 HEADERS = {
-  Authorization: CF_OAUTH_TOKEN
+  Authorization: CF_OAUTH_TOKEN,
 }.freeze
 
 service_plan_guid = ARGV[0]
@@ -140,7 +140,7 @@ es_plans_req.each do |plan| # rubocop:disable Metrics/BlockLength
     plans[plan_name] << {
       "name" => name,
       "org_name" => owning_org_name,
-      "space_name" => owning_space_name
+      "space_name" => owning_space_name,
     }
   end
 end

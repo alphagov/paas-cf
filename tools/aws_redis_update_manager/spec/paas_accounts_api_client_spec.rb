@@ -65,7 +65,7 @@ RSpec.describe PaaSAccountsAPIClient do
           status: 200,
           body: {
             username: "a-username",
-            user_email: "email@domain.tld"
+            user_email: "email@domain.tld",
           }.to_json,
         )
 

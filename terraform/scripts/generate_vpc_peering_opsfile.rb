@@ -18,8 +18,8 @@ if File.file?(ARGV[0])
         "rules" => [{
             "protocol" => "all",
             "destination" => peer["subnet_cidr"],
-        }]
-      }
+        }],
+      },
     }
   end
 end

@@ -30,7 +30,7 @@ RSpec.describe "release versions" do
       "uaa" => {
         local: "0.1.23",
         upstream: "74.18.0",
-      }
+      },
     }
 
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|

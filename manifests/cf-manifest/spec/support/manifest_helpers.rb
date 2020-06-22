@@ -116,7 +116,7 @@ private
     env = {
       "PAAS_CF_DIR" => root.to_s,
       "WORKDIR" => workdir,
-      "ENV_SPECIFIC_BOSH_VARS_FILE" => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s
+      "ENV_SPECIFIC_BOSH_VARS_FILE" => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s,
     }
 
     if vars_store_file

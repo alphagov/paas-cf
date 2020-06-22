@@ -7,7 +7,7 @@ RSpec.describe User do
   let(:fake_uaa_client) do
     @fake_uaa_client = RestClient::Resource.new("http://fake-uaa.internal", headers: {
       "Authorization" => "fake-token",
-      "Content-Type" => "application/json"
+      "Content-Type" => "application/json",
     })
   end
 
@@ -108,7 +108,7 @@ RSpec.describe User do
     stub_request(:post, "http://fake-uaa.internal/Users")
       .to_return(status: 201, body: JSON.generate(
         resources: [{
-          id: "00000000-0000-0000-0000-000000000000-user"
+          id: "00000000-0000-0000-0000-000000000000-user",
         }],
         totalResults: 1,
       ))

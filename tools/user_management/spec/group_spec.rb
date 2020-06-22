@@ -8,7 +8,7 @@ RSpec.describe Group do
   let(:fake_uaa_client) do
     RestClient::Resource.new("http://fake-uaa.internal", headers: {
       "Authorization" => "fake-token",
-      "Content-Type" => "application/json"
+      "Content-Type" => "application/json",
     })
   end
 

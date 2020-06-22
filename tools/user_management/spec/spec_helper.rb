@@ -116,7 +116,7 @@ def stub_searching_for_group(status, display_name, id = nil, members = [])
         {
           "type" => member.fetch("type", "USER"),
           "origin" => member.fetch("origin", "uaa"),
-          "value" => member.fetch("id")
+          "value" => member.fetch("id"),
         }
       end
     ]
@@ -136,7 +136,7 @@ def stub_getting_user_by_id(status, id, origin = nil, username = nil, created = 
     "origin" => origin,
     "userName" => username,
     "meta" => {
-      "created" => created.nil? ? nil : created.iso8601
+      "created" => created.nil? ? nil : created.iso8601,
     }
 end
 

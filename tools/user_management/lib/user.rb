@@ -29,7 +29,7 @@ class User < UAAResource
     resp = uaa_client["/Users"].post({
       emails: [{ value: @email }],
       origin: @origin,
-      userName: @username
+      userName: @username,
     }.to_json)
     resp.code == 201
   end

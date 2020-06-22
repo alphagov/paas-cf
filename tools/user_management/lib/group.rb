@@ -92,7 +92,7 @@ class Group < UAAResource
         {
           "id" => member["value"],
           "origin" => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***",
-          "userName" => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***"
+          "userName" => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***",
         }
       end
     end
@@ -108,7 +108,7 @@ class Group < UAAResource
       {
         "id" => user_guid,
         "origin" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
-        "userName" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***"
+        "userName" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
       }
     end
   end

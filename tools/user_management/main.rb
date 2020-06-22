@@ -14,7 +14,7 @@ uaa_client = RestClient::Resource.new(
   UAA_API_URL,
   headers: {
     "Authorization" => CF_TOKEN,
-    "Content-Type" => "application/json"
+    "Content-Type" => "application/json",
   },
 )
 

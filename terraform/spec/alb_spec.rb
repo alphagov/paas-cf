@@ -13,8 +13,8 @@ describe "alb helpers" do
         "aws_lb" => {
           "my_alb_resource" => { "name" => "my-application-load-balancer" },
           "my_nlb_resource" => { "name" => "my-network-load-balancer" },
-        }
-      }
+        },
+      },
     }
 
     lbs = get_lbs(terraform)
@@ -30,8 +30,8 @@ describe "alb helpers" do
         "aws_lb_target_group" => {
           "my_alb_target_group" => { "port" => "443" },
           "my_nlb_target_group" => { "port" => "8443" },
-        }
-      }
+        },
+      },
     }
 
     tgs = get_tgs(terraform)

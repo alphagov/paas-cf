@@ -23,15 +23,15 @@ if File.file?(config_file)
       {
         "type" => "replace",
         "path" => "/instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/#{client['name']}?",
-        "value" => client["uaa_client"]
+        "value" => client["uaa_client"],
       },
       {
         "type" => "replace",
         "path" => "/variables/-",
         "value" => {
           "name" => client["secret_name"],
-          "type" => "password"
-        }
+          "type" => "password",
+        },
       }
     ]
   end
