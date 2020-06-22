@@ -95,9 +95,9 @@ RSpec.configure do |config|
 =end
 end
 
-Dir[File.expand_path("../../shared/spec/support/**/*.rb", __dir__)].each { |f| require f }
-Dir[File.expand_path("../../cloud-config/spec/support/**/*.rb", __dir__)].each { |f| require f }
-Dir[File.expand_path("support/**/*.rb", __dir__)].each { |f| require f }
+Dir[File.expand_path("../../shared/spec/support/**/*.rb", __dir__)].sort.each { |f| require f }
+Dir[File.expand_path("../../cloud-config/spec/support/**/*.rb", __dir__)].sort.each { |f| require f }
+Dir[File.expand_path("support/**/*.rb", __dir__)].sort.each { |f| require f }
 
 def grafana_dashboards
   Dir.glob(
