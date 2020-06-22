@@ -53,7 +53,9 @@ class PropertyTree
   # Recursive perform an inject as in Ennumerable::inject, but
   # passing the path of the element with the syntax used
   # in BOSH opsfiles.
-  def recursive_inject(acum, x, path)
+  def recursive_inject(acum, yaml_value, path)
+    x = yaml_value
+
     if x.is_a? Hash
       x.inject(acum) do |acum2, (key, x2)|
         recursive_inject(acum2, x2, path + "/" + key) do |acum3, x3, path3|

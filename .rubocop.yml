@@ -25,6 +25,13 @@ Layout/HashAlignment:
 Naming/HeredocDelimiterNaming:
   Enabled: false
 
+Naming/MethodParameterName:
+  AllowedNames:
+    - ca
+    - id
+    - sg
+    - tf
+
 RSpec/DescribedClass:
   Enabled: false
 

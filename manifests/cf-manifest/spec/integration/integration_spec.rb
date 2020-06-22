@@ -15,18 +15,18 @@ RSpec.describe "generic manifest validations" do
   end
 
   describe "there are no leftover variable substitutions" do
-    def no_values_contain c, s
-      case c
+    def no_values_contain(enumerable_or_str, str)
+      case enumerable_or_str
       when Hash
-        c.each do |_, v|
-          no_values_contain v, s
+        enumerable_or_str.each do |_, v|
+          no_values_contain v, str
         end
       when Array
-        c.each do |v|
-          no_values_contain v, s
+        enumerable_or_str.each do |v|
+          no_values_contain v, str
         end
       when String
-        expect(c).not_to include(s)
+        expect(enumerable_or_str).not_to include(str)
       end
     end
 

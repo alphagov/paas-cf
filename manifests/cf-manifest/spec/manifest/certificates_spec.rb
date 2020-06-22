@@ -1,13 +1,13 @@
 RSpec.describe "certificates" do
-  def get_all_cas_usages(o)
-    return o.flat_map { |v| get_all_cas_usages(v) } if o.is_a? Array
+  def get_all_cas_usages(enumerable)
+    return enumerable.flat_map { |v| get_all_cas_usages(v) } if enumerable.is_a? Array
 
-    if o.is_a? Hash
+    if enumerable.is_a? Hash
       # Match checks if it is a usage ("name.value") or a variable ("name")
-      return [o["ca"]] if o["ca"]&.match?(/[.]/)
-      return [o["ca_cert"]] if o["ca_cert"]&.match?(/[.]/)
+      return [enumerable["ca"]] if enumerable["ca"]&.match?(/[.]/)
+      return [enumerable["ca_cert"]] if enumerable["ca_cert"]&.match?(/[.]/)
 
-      return o.values.flat_map { |v| get_all_cas_usages(v) }
+      return enumerable.values.flat_map { |v| get_all_cas_usages(v) }
     end
 
     []
