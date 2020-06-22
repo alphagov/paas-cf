@@ -20,7 +20,7 @@ RSpec.describe UAAResource do
     expect(uaa_resource.guid).to be_nil
   end
 
-  context "get" do
+  describe "#get" do
     it "raises an error when UAA returns unexpected status code" do
       stub_request(:get, "http://fake-uaa.internal/Resource/a-faked-resource")
         .to_return(status: 206, body: JSON.generate({}))
@@ -42,7 +42,7 @@ RSpec.describe UAAResource do
     end
   end
 
-  context "get_resource" do
+  describe "#get_resource" do
     it "sets @guid when getting the resource" do
       stub_request(:get, "http://fake-uaa.internal/Resource/a-faked-resource")
         .to_return(body: JSON.generate(valid_resource))

@@ -18,11 +18,11 @@ RSpec.describe QuotasSetter do
       ],
     } end
 
-  subject { described_class.new(manifest) }
+  subject(:quota_setter) { described_class.new(manifest) }
 
   describe "creating/updating quotas" do
     before :each do
-      allow(subject).to receive(:system).with("cf", /^(create|update)-quota$/, any_args) do
+      allow(quota_setter).to receive(:system).with("cf", /^(create|update)-quota$/, any_args) do
         system("exit 0")
       end
 
@@ -42,7 +42,7 @@ RSpec.describe QuotasSetter do
 
     context "with no extant quotas" do
       before :each do
-        allow(subject).to receive(:`).with("cf quotas") do
+        allow(quota_setter).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
 Getting quotas as admin...
@@ -57,13 +57,13 @@ name                                    total memory   instance memory   routes 
         expect_cf_quota_create("default", "-m", "2048M", "-s", "10", "-r", "1000", "--disallow-paid-service-plans")
         expect_cf_quota_create("large", "-m", "10240M", "-s", "100", "-r", "10000", "--allow-paid-service-plans")
 
-        subject.apply!
+        quota_setter.apply!
       end
     end
 
     context "when some quotas exist" do
       before :each do
-        allow(subject).to receive(:`).with("cf quotas") do
+        allow(quota_setter).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
 Getting quotas as admin...
@@ -77,18 +77,18 @@ default                                 2G             unlimited         1000   
 
       it "updates an existing quota" do
         expect_cf_quota_update("default", "-m", "2048M", "-s", "10", "-r", "1000", "--disallow-paid-service-plans")
-        subject.apply!
+        quota_setter.apply!
       end
 
       it "creates a quota that doesn't already exist" do
         expect_cf_quota_create("large", "-m", "10240M", "-s", "100", "-r", "10000", "--allow-paid-service-plans")
-        subject.apply!
+        quota_setter.apply!
       end
     end
   end
 
   def expect_cf_quota_write(name, action, *args)
-    expect(subject).to receive(:system).with("cf", action, name, *args) do
+    expect(quota_setter).to receive(:system).with("cf", action, name, *args) do
       system("exit 0") # setup $?
     end
   end

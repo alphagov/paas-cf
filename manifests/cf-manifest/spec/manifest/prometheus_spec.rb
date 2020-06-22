@@ -21,7 +21,7 @@ RSpec.describe "prometheus" do
     manifest.fetch("instance_groups.prometheus.jobs.aiven-service-discovery.properties")
   end
 
-  context "manifest" do
+  describe "manifest" do
     it "has prometheus as a release" do
       release_names = releases.map { |r| r["name"] }
       expect(release_names).to include("prometheus")
@@ -43,7 +43,7 @@ RSpec.describe "prometheus" do
     end
   end
 
-  context "instance_group" do
+  describe "instance_group" do
     it "has a persistent disk" do
       disk_type = prometheus_instance_group.dig("persistent_disk_type")
       expect(disk_type).to eq("500GB")
@@ -62,7 +62,7 @@ RSpec.describe "prometheus" do
     end
   end
 
-  context "prometheus2 job" do
+  describe "prometheus2 job" do
     it "does not have any rule_files configured" do
       expect(prometheus_config["rule_files"]).to eq([])
     end
@@ -118,7 +118,7 @@ RSpec.describe "prometheus" do
       expect(retention_size).not_to be_nil
     end
 
-    context "dropping metrics" do
+    describe "dropping metrics" do
       let(:dropped_metrics_regexps) do
         prometheus_config
           .dig("scrape_configs")
@@ -190,7 +190,7 @@ RSpec.describe "prometheus" do
     end
   end
 
-  context "route_registrar job" do
+  describe "route_registrar job" do
     it "registers prometheus under the system domain" do
       prometheus_route = route_registrar_routes.find { |r| r["name"] == "prometheus" }
 
@@ -203,13 +203,13 @@ RSpec.describe "prometheus" do
     end
   end
 
-  context "caddy job" do
+  describe "caddy job" do
     it "listens on port 8080" do
       http_port = caddy_config["http_port"]
       expect(http_port).to eq(8080)
     end
 
-    context "caddyfile" do
+    describe "caddyfile" do
       let(:caddyfile) { caddy_config["caddyfile"] }
 
       it "listens on all interfaces" do
@@ -241,7 +241,7 @@ RSpec.describe "prometheus" do
     end
   end
 
-  context "aiven-service-discovery job" do
+  describe "aiven-service-discovery job" do
     it "has a project" do
       expect(aiven_sd_config.dig("aiven", "project")).to eq("paas-cf-dev")
     end

@@ -17,9 +17,9 @@ RSpec.describe "image resources" do
     expect(image_tags_by_repo).not_to be_empty
   end
 
-  context "tag checking" do
+  describe "tag checking" do
     image_tags_by_repo.each do |repo, tags|
-      it "nevers be 'latest' (#{repo})" do
+      it "never is 'latest' (#{repo})" do
         tags.each do |tag|
           expect(tag).not_to eq("latest")
         end
@@ -27,7 +27,7 @@ RSpec.describe "image resources" do
     end
   end
 
-  context "governmentpaas" do
+  describe "governmentpaas docker images" do
     image_tags_by_repo
       .select { |repo, _| repo.match?(%r{^governmentpaas/}) }
       .each do |repo, tags|
@@ -43,7 +43,7 @@ RSpec.describe "image resources" do
       end
     end
 
-    context "things that are not resources" do
+    describe "things that are not resource types" do
       image_tags_by_repo
         .select { |repo, _| repo.match?(%r{^governmentpaas/}) }
         .reject { |repo, _| repo.match?(/-resource$/) }

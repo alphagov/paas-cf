@@ -12,7 +12,7 @@ RSpec.describe Group do
     })
   end
 
-  context "add_member" do
+  describe "#add_member" do
     let(:user) do
       User.new("email" => "user-one@na.me", "username" => "11111111111111")
     end
@@ -42,7 +42,7 @@ RSpec.describe Group do
     end
   end
 
-  context "remove_member" do
+  describe "#remove_member" do
     before do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-existing-member" }
@@ -67,7 +67,7 @@ RSpec.describe Group do
     end
   end
 
-  context "add_desired_users" do
+  describe "#add_desired_users" do
     let(:u1) do
       User.new("email" => "user-one@na.me", "username" => "11111111111111")
     end
@@ -99,7 +99,7 @@ RSpec.describe Group do
     end
   end
 
-  context "remove_unexpected_members" do
+  describe "#remove_unexpected_members" do
     let(:u1) do
       User.new("email" => "user-one@na.me", "username" => "11111111111111")
     end
@@ -196,7 +196,7 @@ RSpec.describe Group do
     end
   end
 
-  context "get_group" do
+  describe "#get_group" do
     it "retrieves the group from UAA" do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group")
 
@@ -206,7 +206,7 @@ RSpec.describe Group do
     end
   end
 
-  context "get_member_users" do
+  describe "#get_member_users" do
     before do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-member-1" },
@@ -257,7 +257,7 @@ RSpec.describe Group do
     end
   end
 
-  context "get_uaa_user" do
+  describe "#get_uaa_user" do
     it "gets users by their id" do
       stub_getting_user_by_id(200, "guid-of-member", "origin-of-member", "username-of-member", Time.now)
 

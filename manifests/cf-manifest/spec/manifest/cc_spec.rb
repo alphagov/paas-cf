@@ -1,5 +1,5 @@
 RSpec.describe "cloud controller" do
-  context "limits" do
+  describe "limits" do
     let(:manifest) { manifest_with_defaults }
     let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
     let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
@@ -18,7 +18,7 @@ RSpec.describe "cloud controller" do
     end
   end
 
-  context "broker" do
+  describe "broker" do
     let(:manifest) { manifest_with_defaults }
     let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
     let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
@@ -29,8 +29,8 @@ RSpec.describe "cloud controller" do
     end
   end
 
-  context "worker" do
-    context("dev") do
+  describe "worker" do
+    context("when the environment is dev") do
       let(:manifest) { manifest_for_dev }
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 
@@ -39,7 +39,7 @@ RSpec.describe "cloud controller" do
       end
     end
 
-    context("prod") do
+    context("when the environment is prod") do
       let(:manifest) { manifest_for_env("prod") }
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 
@@ -48,7 +48,7 @@ RSpec.describe "cloud controller" do
       end
     end
 
-    context("prod-lon") do
+    context("when the environment is prod-lon") do
       let(:manifest) { manifest_for_env("prod-lon") }
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 

@@ -13,7 +13,7 @@ RSpec.describe "certificates" do
     []
   end
 
-  context "ca certificates" do
+  describe "ca certificates" do
     let(:manifest) { manifest_with_defaults }
 
     let(:ca_usages) do
