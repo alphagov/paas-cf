@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "English"
 require "tempfile"
 require "json"
 require "yaml"
@@ -57,13 +58,13 @@ private
 
   def cf(*args)
     unless system("cf", *args)
-      raise "Error: 'cf #{args.join(' ')}' exited #{$?.exitstatus}"
+      raise "Error: 'cf #{args.join(' ')}' exited #{$CHILD_STATUS.exitstatus}"
     end
   end
 end
 
-if $0 == __FILE__
-  abort "Usage: #{$0} /path/to/manifest.yml" unless ARGV.size == 1
+if $PROGRAM_NAME == __FILE__
+  abort "Usage: #{$PROGRAM_NAME} /path/to/manifest.yml" unless ARGV.size == 1
   manifest = YAML.load_file(ARGV[0])
   SecurityGroupsSetter.new(manifest).apply!
 end

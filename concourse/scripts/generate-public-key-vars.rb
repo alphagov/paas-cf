@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "English"
 require "yaml"
 
 gpg_public_keys = { "gpg_public_keys" => [] }
@@ -8,12 +9,12 @@ public_key_ids = File.read("./.gpg-id")
 public_key_ids.each_line do |id|
   # Assert key can be found locally
   `gpg -k #{id}`
-  if $?.exitstatus != 0
+  if $CHILD_STATUS.exitstatus != 0
     puts "This key needs to be imported: #{id}"
     puts """Try running
     gpg --recv #{id}
     """
-    exit $?.exitstatus
+    exit $CHILD_STATUS.exitstatus
   end
   public_key = `gpg --armor --export-options export-minimal --export #{id}`
   gpg_public_keys["gpg_public_keys"] << public_key

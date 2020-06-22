@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require "English"
 
 script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
 File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
@@ -7,9 +8,9 @@ require "json"
 
 def usage
   <<~USAGE
-    Usage: #{$0} user-guid desired-origin
+    Usage: #{$PROGRAM_NAME} user-guid desired-origin
 
-    e.g. #{$0} 00000000-0000-0000-0000-000000000000 google
+    e.g. #{$PROGRAM_NAME} 00000000-0000-0000-0000-000000000000 google
 
     This script requires:
     - uaac to be installed
@@ -54,7 +55,7 @@ COMMAND
 
 puts "Updating user: #{user_guid} with origin #{desired_origin}"
 puts `#{command}`
-abort unless $?.success?
+abort unless $CHILD_STATUS.success?
 
 resp = `uaac curl '/Users/#{user_guid}' | awk '/RESPONSE BODY/,0'`
 user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(" "))

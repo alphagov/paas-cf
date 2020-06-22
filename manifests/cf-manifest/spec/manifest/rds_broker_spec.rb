@@ -162,7 +162,7 @@ RSpec.describe "RDS broker properties" do
     shared_examples "xlarge sized high iops plans" do
       let(:rds_properties) { plan.fetch("rds_properties") }
 
-      it { expect(rds_properties).to include("allocated_storage" => 10240) }
+      it { expect(rds_properties).to include("allocated_storage" => 10_240) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.4xlarge$/) }
     end
 

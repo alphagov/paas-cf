@@ -36,9 +36,9 @@ RSpec.describe QuotasSetter do
         "non_basic_services_allowed" => false,
       }
       quota_definitions["large"] = {
-        "memory_limit" => 10240,
+        "memory_limit" => 10_240,
         "total_services" => 100,
-        "total_routes" => 10000,
+        "total_routes" => 10_000,
         "non_basic_services_allowed" => true,
       }
     end

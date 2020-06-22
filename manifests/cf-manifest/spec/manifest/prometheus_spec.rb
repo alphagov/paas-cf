@@ -103,7 +103,7 @@ RSpec.describe "prometheus" do
       relabel_configs = aiven_scrape_config["relabel_configs"]
 
       expect(relabel_configs).to include(
-        "source_labels" => ["aiven_cloud"],
+        "source_labels" => %w[aiven_cloud],
         "separator" => ";",
         "regex" => "aws-sealand-1",
         "action" => "keep",

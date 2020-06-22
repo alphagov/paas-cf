@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
-require "yaml"
 require "English"
+require "yaml"
 
 unless ARGV[0]
   puts "USAGE: #{$PROGRAM_NAME} /path/to/buildpacks.yml"

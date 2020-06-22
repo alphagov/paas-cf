@@ -114,10 +114,10 @@ RSpec.describe Group do
       stub_searching_for_user(200, "google", "11111111111111", "desired-user-guid")
       stub_getting_user_by_id(200, "desired-user-guid", "google", "11111111111111", Time.now)
 
-      stub_getting_user_by_id(200, "unwanted-google-user-guid", "google", "22222222222222", Time.now - 86400)
+      stub_getting_user_by_id(200, "unwanted-google-user-guid", "google", "22222222222222", Time.now - 86_400)
       stub_searching_for_user(200, "google", "22222222222222", "unwanted-google-user-guid")
 
-      stub_getting_user_by_id(200, "unwanted-uaa-user-guid", "uaa", "user@unexpected.in.group", Time.now - 86400)
+      stub_getting_user_by_id(200, "unwanted-uaa-user-guid", "uaa", "user@unexpected.in.group", Time.now - 86_400)
       stub_searching_for_user(200, "uaa", "user@unexpected.in.group", "unwanted-uaa-user-guid")
     end
 
@@ -144,7 +144,7 @@ RSpec.describe Group do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-user-who-is-the-uaa-admin" },
       ])
-      stub_getting_user_by_id(200, "guid-of-user-who-is-the-uaa-admin", "uaa", "admin", Time.now - 86400)
+      stub_getting_user_by_id(200, "guid-of-user-who-is-the-uaa-admin", "uaa", "admin", Time.now - 86_400)
 
       g = Group.new("__test__", [])
       g.remove_unexpected_members(fake_uaa_client)
@@ -155,7 +155,7 @@ RSpec.describe Group do
       stub_searching_for_group(200, "__test__", "guid-of-__test__-group", [
         { "id" => "guid-of-day-old-uaa-user" },
       ])
-      stub_getting_user_by_id(200, "guid-of-day-old-uaa-user", "uaa", "day-old-uaa-user", Time.now - 86400)
+      stub_getting_user_by_id(200, "guid-of-day-old-uaa-user", "uaa", "day-old-uaa-user", Time.now - 86_400)
       stub_removing_user_from_group(200, "guid-of-__test__-group", "guid-of-day-old-uaa-user")
 
       g = Group.new("__test__", [])

@@ -54,7 +54,7 @@ RSpec.describe ElastiCacheUpdateFinder do
     it "finds a single instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to eq(
-        "an-update-to-apply" => ["replication-group-id"],
+        "an-update-to-apply" => %w[replication-group-id],
       )
     end
   end
@@ -76,8 +76,8 @@ RSpec.describe ElastiCacheUpdateFinder do
     it "finds a both instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to eq(
-        "an-update-to-apply" => ["replication-group-id"],
-        "another-update-to-apply" => ["another-replication-group-id"],
+        "an-update-to-apply" => %w[replication-group-id],
+        "another-update-to-apply" => %w[another-replication-group-id],
       )
     end
   end
@@ -99,9 +99,9 @@ RSpec.describe ElastiCacheUpdateFinder do
     it "finds a both instance to update" do
       finder = ElastiCacheUpdateFinder.new(elasticache_client)
       expect(finder.find_replication_groups_to_update).to eq(
-        "an-update-to-apply" => [
-          "replication-group-id",
-          "another-replication-group-id",
+        "an-update-to-apply" => %w[
+          replication-group-id
+          another-replication-group-id
         ],
       )
     end

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require "English"
 require "yaml"
 
 class PropertyTree
@@ -40,7 +41,7 @@ class PropertyTree
   end
 end
 
-if $0 == __FILE__ # Only execute if called directly as command
+if $PROGRAM_NAME == __FILE__ # Only execute if called directly as command
   key = ARGV[0] || abort("Usage: #{$PROGRAM_NAME} <key.dot.delimited> [input.yml]")
 
   property_tree = if ARGV[1]

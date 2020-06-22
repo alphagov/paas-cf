@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "English"
 require "net/http"
 require "yaml"
 require "json"
@@ -8,7 +9,7 @@ if ARGV.length != 1
   abort <<-EOT
 Usage:
 
-   #{$0} <pipeline_order>
+   #{$PROGRAM_NAME} <pipeline_order>
 
 Being:
 

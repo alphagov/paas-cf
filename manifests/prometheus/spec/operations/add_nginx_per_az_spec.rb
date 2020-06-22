@@ -2,11 +2,11 @@ RSpec.describe "adding VMs to the load balancer" do
   it "adds two nginx instance groups to separate azs" do
     expect(manifest_with_defaults.get("instance_groups.nginx_z1")).not_to be_empty
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.name")).to eq("nginx_z1")
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.azs")).to eq(["z1"])
+    expect(manifest_with_defaults.get("instance_groups.nginx_z1.azs")).to eq(%w[z1])
 
     expect(manifest_with_defaults.get("instance_groups.nginx_z2")).not_to be_empty
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.name")).to eq("nginx_z2")
-    expect(manifest_with_defaults.get("instance_groups.nginx_z2.azs")).to eq(["z2"])
+    expect(manifest_with_defaults.get("instance_groups.nginx_z2.azs")).to eq(%w[z2])
   end
 
   it "sets the same jobs and properties for both instance groups" do
@@ -28,7 +28,7 @@ RSpec.describe "adding VMs to the load balancer" do
   end
 
   it "sets the az-specific prometheus_lb vm_extension to the nginx VMs" do
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.vm_extensions")).to eq(["prometheus_lb_z1"])
-    expect(manifest_with_defaults.get("instance_groups.nginx_z2.vm_extensions")).to eq(["prometheus_lb_z2"])
+    expect(manifest_with_defaults.get("instance_groups.nginx_z1.vm_extensions")).to eq(%w[prometheus_lb_z1])
+    expect(manifest_with_defaults.get("instance_groups.nginx_z2.vm_extensions")).to eq(%w[prometheus_lb_z2])
   end
 end
