@@ -122,6 +122,10 @@ func CDNTLSCertificateAuthorityGauge(
 
 		certAuthorityCounter := map[string]int{}
 		for _, customDomain := range customDomains {
+			logger.Info("get-certificate-authority", lager.Data{
+				"cloudfront-domain": customDomain.CloudFrontDomain,
+				"alias-domain": customDomain.AliasDomain,
+			})
 			authority, err := certChecker.CertificateAuthority(
 				customDomain.CloudFrontDomain+":443",
 				&tls.Config{ServerName: customDomain.AliasDomain},
@@ -132,6 +136,7 @@ func CDNTLSCertificateAuthorityGauge(
 					"alias_domain":      customDomain.AliasDomain,
 					"cloudfront_domain": customDomain.CloudFrontDomain,
 				})
+				continue
 			}
 
 			if _, ok := certAuthorityCounter[authority]; !ok {

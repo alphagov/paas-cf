@@ -34,19 +34,11 @@ func (tc *TLSChecker) DaysUntilExpiry(addr string, tlsConfig *tls.Config) (float
 func (tc *TLSChecker) CertificateAuthority(addr string, tlsConfig *tls.Config) (string, error) {
 	cert, err := GetCertificate(addr, tlsConfig)
 
-	if err == nil {
-		return cert.Issuer.CommonName, nil
+	if err != nil {
+		return "", err
 	}
 
-	switch e := err.(type) {
-	case x509.CertificateInvalidError:
-		if e.Reason == x509.Expired {
-			return cert.Issuer.CommonName, nil
-		}
-	}
-
-	return "", err
-
+	return cert.Issuer.CommonName, err
 }
 
 func GetCertificate(addr string, tlsConfig *tls.Config) (*x509.Certificate, error) {
