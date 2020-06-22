@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# rubocop:disable Metrics/BlockLength
 
 require "English"
 require "optparse"
@@ -128,4 +127,3 @@ when "preview"
 when "print"
   manager.print_updateable_service_instances
 end
-# rubocop:enable Metrics/BlockLength

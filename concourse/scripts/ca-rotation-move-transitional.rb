@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# rubocop:disable Metrics/BlockLength
 
 require "date"
 require "json"
@@ -114,5 +113,3 @@ unless regenerated_certificate_names.empty?
     puts cert.yellow
   end
 end
-
-# rubocop:enable Metrics/BlockLength

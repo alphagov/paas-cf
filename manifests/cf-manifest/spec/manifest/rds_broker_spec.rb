@@ -17,11 +17,11 @@ RSpec.describe "RDS broker properties" do
         "destination" => dest_ip_range,
         "ports" => "5432",
       },
-{
-  "protocol" => "tcp",
-        "destination" => dest_ip_range,
-        "ports" => "3306",
-}])
+                                     {
+                                       "protocol" => "tcp",
+                                             "destination" => dest_ip_range,
+                                             "ports" => "3306",
+                                     }])
     end
 
     it "adds to default_running_security_groups" do

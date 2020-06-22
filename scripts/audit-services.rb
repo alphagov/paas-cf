@@ -82,7 +82,7 @@ if service_plan_guid.nil?
   exit 1
 end
 
-def do_paginated_capi_request(uri) # rubocop:disable Metrics/MethodLength, Lint/UnneededDisable, Metrics/LineLength
+def do_paginated_capi_request(uri)
   resources = []
   until uri.nil?
     req = HTTParty.get(
@@ -105,7 +105,7 @@ es_plans_req = do_paginated_capi_request(
 
 plans = {}
 
-es_plans_req.each do |plan| # rubocop:disable Metrics/BlockLength
+es_plans_req.each do |plan|
   plan_name = plan["entity"]["name"]
   next unless plan_name \
       =~ Regexp.new(/#{filters.plan_regex}/)
