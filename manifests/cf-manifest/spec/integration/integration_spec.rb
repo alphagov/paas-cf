@@ -1,4 +1,4 @@
-require 'ipaddr'
+require "ipaddr"
 
 RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }

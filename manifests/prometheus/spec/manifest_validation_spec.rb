@@ -1,4 +1,4 @@
-require 'ipaddr'
+require "ipaddr"
 
 RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }
@@ -32,9 +32,9 @@ RSpec.describe "generic manifest validations" do
 
   specify "all instance_groups have a bosh password set" do
     missing = []
-    manifest.fetch('instance_groups').each do |ig|
+    manifest.fetch("instance_groups").each do |ig|
       pw = ig.dig("env", "bosh", "password")
-      missing << ig['name'] if pw.nil? || pw.empty?
+      missing << ig["name"] if pw.nil? || pw.empty?
     end
     expect(missing).to be_empty,
       "Expected instance_groups #{missing.inspect} to have env.bosh.password set"

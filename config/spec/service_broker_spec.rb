@@ -1,18 +1,18 @@
-require 'json'
+require "json"
 
 CONFIG_FILES = Dir.glob(
   File.join(
     File.expand_path(
-      File.join(__dir__, '..', 'service-brokers')
+      File.join(__dir__, "..", "service-brokers")
     ),
-    '**', '*.json'
+    "**", "*.json"
   )
 )
 
 AIVEN_JSON = File.read(CONFIG_FILES.grep(/aiven/).first)
 
-describe 'service broker' do
-  it 'should be valid json' do
+describe "service broker" do
+  it "should be valid json" do
     CONFIG_FILES.each do |f|
       contents = File.read(f)
       expect { JSON.parse(contents) }.not_to raise_exception,
@@ -20,28 +20,28 @@ describe 'service broker' do
     end
   end
 
-  describe 'aiven' do
-    let(:services) { JSON.parse(AIVEN_JSON).dig('catalog', 'services') }
-    let(:plans) { services.flat_map { |s| s['plans'] } }
+  describe "aiven" do
+    let(:services) { JSON.parse(AIVEN_JSON).dig("catalog", "services") }
+    let(:plans) { services.flat_map { |s| s["plans"] } }
 
-    it 'should have description' do
+    it "should have description" do
       plans.each do |plan|
-        expect(plan['description']).to be_a(String),
+        expect(plan["description"]).to be_a(String),
           "#{plan} needs a description"
       end
     end
 
-    it 'should have version' do
+    it "should have version" do
       plans.each do |plan|
-        version = plan.dig('metadata', 'AdditionalMetadata', 'version')
+        version = plan.dig("metadata", "AdditionalMetadata", "version")
         expect(version).to be_a(String), "#{plan} needs a version, got #{version}"
       end
     end
 
-    it 'should be shareable between spaces and/or orgs' do
+    it "should be shareable between spaces and/or orgs" do
       services.each do |service|
-        service_name = service['name']
-        shareable = service.dig('metadata', 'shareable')
+        service_name = service["name"]
+        shareable = service.dig("metadata", "shareable")
 
         expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
         expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"

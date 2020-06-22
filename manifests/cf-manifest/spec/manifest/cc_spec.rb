@@ -7,14 +7,14 @@ RSpec.describe "cloud controller" do
     let(:cc_deployment_updater_props) { manifest.fetch("instance_groups.scheduler.jobs.cc_deployment_updater.properties.cc") }
 
     it "should be the same maximum app disk for clock and worker and api and deployment updater" do
-      expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_worker_props['maximum_app_disk_in_mb']
-      expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_clock_props['maximum_app_disk_in_mb']
-      expect(cc_ng_props['maximum_app_disk_in_mb']).to be == cc_deployment_updater_props['maximum_app_disk_in_mb']
+      expect(cc_ng_props["maximum_app_disk_in_mb"]).to be == cc_worker_props["maximum_app_disk_in_mb"]
+      expect(cc_ng_props["maximum_app_disk_in_mb"]).to be == cc_clock_props["maximum_app_disk_in_mb"]
+      expect(cc_ng_props["maximum_app_disk_in_mb"]).to be == cc_deployment_updater_props["maximum_app_disk_in_mb"]
     end
 
     it "should be the same maximum app healthcheck timeout for clock and worker and api" do
-      expect(cc_ng_props['maximum_health_check_timeout']).to be == cc_worker_props['maximum_health_check_timeout']
-      expect(cc_ng_props['maximum_health_check_timeout']).to be == cc_clock_props['maximum_health_check_timeout']
+      expect(cc_ng_props["maximum_health_check_timeout"]).to be == cc_worker_props["maximum_health_check_timeout"]
+      expect(cc_ng_props["maximum_health_check_timeout"]).to be == cc_clock_props["maximum_health_check_timeout"]
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe "cloud controller" do
 
     it "should be the same broker client timeout for worker and api" do
       # clock does not have this property
-      expect(cc_ng_props['broker_client_timeout_seconds']).to be == cc_worker_props['broker_client_timeout_seconds']
+      expect(cc_ng_props["broker_client_timeout_seconds"]).to be == cc_worker_props["broker_client_timeout_seconds"]
     end
   end
 
@@ -35,7 +35,7 @@ RSpec.describe "cloud controller" do
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 
       it "has 2 instances" do
-        expect(cc_worker['instances']).to be == 2
+        expect(cc_worker["instances"]).to be == 2
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe "cloud controller" do
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 
       it "has more instances" do
-        expect(cc_worker['instances']).to be > 2
+        expect(cc_worker["instances"]).to be > 2
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe "cloud controller" do
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 
       it "has more instances" do
-        expect(cc_worker['instances']).to be > 2
+        expect(cc_worker["instances"]).to be > 2
       end
     end
   end

@@ -42,7 +42,7 @@ RSpec.describe QuotasSetter do
 
     context "with no extant quotas" do
       before :each do
-        allow(subject).to receive(:`).with('cf quotas') do
+        allow(subject).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
 Getting quotas as admin...
@@ -54,8 +54,8 @@ name                                    total memory   instance memory   routes 
       end
 
       it "creates the quotas" do
-        expect_cf_quota_create("default", '-m', '2048M', '-s', '10', '-r', '1000', '--disallow-paid-service-plans')
-        expect_cf_quota_create("large", '-m', '10240M', '-s', '100', '-r', '10000', '--allow-paid-service-plans')
+        expect_cf_quota_create("default", "-m", "2048M", "-s", "10", "-r", "1000", "--disallow-paid-service-plans")
+        expect_cf_quota_create("large", "-m", "10240M", "-s", "100", "-r", "10000", "--allow-paid-service-plans")
 
         subject.apply!
       end
@@ -63,7 +63,7 @@ name                                    total memory   instance memory   routes 
 
     context "when some quotas exist" do
       before :each do
-        allow(subject).to receive(:`).with('cf quotas') do
+        allow(subject).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
 Getting quotas as admin...
@@ -76,12 +76,12 @@ default                                 2G             unlimited         1000   
       end
 
       it "updates an existing quota" do
-        expect_cf_quota_update("default", '-m', '2048M', '-s', '10', '-r', '1000', '--disallow-paid-service-plans')
+        expect_cf_quota_update("default", "-m", "2048M", "-s", "10", "-r", "1000", "--disallow-paid-service-plans")
         subject.apply!
       end
 
       it "creates a quota that doesn't already exist" do
-        expect_cf_quota_create("large", '-m', '10240M', '-s', '100', '-r', '10000', '--allow-paid-service-plans')
+        expect_cf_quota_create("large", "-m", "10240M", "-s", "100", "-r", "10000", "--allow-paid-service-plans")
         subject.apply!
       end
     end
@@ -94,10 +94,10 @@ default                                 2G             unlimited         1000   
   end
 
   def expect_cf_quota_create(name, *args)
-    expect_cf_quota_write(name, 'create-quota', *args)
+    expect_cf_quota_write(name, "create-quota", *args)
   end
 
   def expect_cf_quota_update(name, *args)
-    expect_cf_quota_write(name, 'update-quota', *args)
+    expect_cf_quota_write(name, "update-quota", *args)
   end
 end

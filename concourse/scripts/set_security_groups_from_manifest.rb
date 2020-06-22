@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'tempfile'
-require 'json'
-require 'yaml'
-require_relative './val_from_yaml.rb'
+require "tempfile"
+require "json"
+require "yaml"
+require_relative "./val_from_yaml.rb"
 
 class SecurityGroupsSetter
   def initialize(manifest)

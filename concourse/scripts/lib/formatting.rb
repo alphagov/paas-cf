@@ -1,5 +1,5 @@
 def separator
-  puts('-' * 80)
+  puts("-" * 80)
 end
 
 class String

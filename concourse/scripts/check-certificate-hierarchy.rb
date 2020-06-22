@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
-require 'openssl'
-require 'date'
+require "openssl"
+require "date"
 
-require_relative './lib/credhub'
-require_relative './lib/formatting'
+require_relative "./lib/credhub"
+require_relative "./lib/formatting"
 
 alert = false
-CREDHUB_SERVER = ENV.fetch('CREDHUB_SERVER')
+CREDHUB_SERVER = ENV.fetch("CREDHUB_SERVER")
 api_url = "#{CREDHUB_SERVER}/v1"
 
 class CertificateHierarchy
@@ -50,9 +50,9 @@ private
     signed_certs = @signs[cert] || []
 
     if signed_certs.empty?
-      puts((' ' * indent) + cert.green)
+      puts((" " * indent) + cert.green)
     else
-      puts((' ' * indent) + cert.blue)
+      puts((" " * indent) + cert.blue)
     end
 
     signed_certs.each { |c| print_cert(c, indent + 2) }
@@ -66,7 +66,7 @@ certs = client.certificates
 hierarchy = CertificateHierarchy.new
 
 certs.each do |cert|
-  hierarchy.add_edge(cert['signed_by'], cert['name'])
+  hierarchy.add_edge(cert["signed_by"], cert["name"])
 end
 
 hierarchy.print

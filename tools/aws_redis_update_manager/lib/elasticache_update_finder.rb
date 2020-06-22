@@ -9,7 +9,7 @@ class ElastiCacheUpdateFinder
     marker = nil
     loop do
       response = @elasticache_client.describe_update_actions(
-        service_update_status: ['available'],
+        service_update_status: ["available"],
         marker: marker,
       )
 
@@ -17,7 +17,7 @@ class ElastiCacheUpdateFinder
 
       response
         .update_actions
-        .select { |update| update.update_action_status == 'not-applied' }
+        .select { |update| update.update_action_status == "not-applied" }
         .reject { |update| update.replication_group_id.nil? }
         .each do |update|
           replication_group_ids[update.service_update_name] ||= []

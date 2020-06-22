@@ -1,5 +1,5 @@
 module FixtureHelpers
-  def terraform_fixture_value(key, fixture = 'cf')
+  def terraform_fixture_value(key, fixture = "cf")
     YAML.load_file(fixtures_dir.join("terraform/#{fixture}.yml")).fetch("terraform_outputs_#{key}")
   end
 
@@ -10,8 +10,8 @@ module FixtureHelpers
   end
 
   def copy_ipsec_cert_fixtures(target_dir)
-    copy_fixture_file('ipsec-CA.crt', target_dir)
-    copy_fixture_file('ipsec-CA.key', target_dir)
+    copy_fixture_file("ipsec-CA.crt", target_dir)
+    copy_fixture_file("ipsec-CA.key", target_dir)
   end
 
   def copy_fixture_file(file, target_dir, target_file = file)
@@ -22,7 +22,7 @@ module FixtureHelpers
 private
 
   def fixtures_dir
-    Pathname.new(File.expand_path('../fixtures', __dir__))
+    Pathname.new(File.expand_path("../fixtures", __dir__))
   end
 end
 

@@ -1,137 +1,137 @@
-RSpec.describe 'prometheus' do
+RSpec.describe "prometheus" do
   let(:manifest) { manifest_with_defaults }
 
-  let(:releases) { manifest.fetch('releases') }
-  let(:instance_groups) { manifest.fetch('instance_groups') }
+  let(:releases) { manifest.fetch("releases") }
+  let(:instance_groups) { manifest.fetch("instance_groups") }
 
-  let(:prometheus_instance_group) { manifest.fetch('instance_groups.prometheus') }
+  let(:prometheus_instance_group) { manifest.fetch("instance_groups.prometheus") }
   let(:prometheus_config) do
-    manifest.fetch('instance_groups.prometheus.jobs.prometheus2.properties.prometheus')
+    manifest.fetch("instance_groups.prometheus.jobs.prometheus2.properties.prometheus")
   end
 
   let(:route_registrar_routes) do
-    manifest.fetch('instance_groups.prometheus.jobs.route_registrar.properties.route_registrar.routes')
+    manifest.fetch("instance_groups.prometheus.jobs.route_registrar.properties.route_registrar.routes")
   end
 
   let(:caddy_config) do
-    manifest.fetch('instance_groups.prometheus.jobs.caddy.properties')
+    manifest.fetch("instance_groups.prometheus.jobs.caddy.properties")
   end
 
   let(:aiven_sd_config) do
-    manifest.fetch('instance_groups.prometheus.jobs.aiven-service-discovery.properties')
+    manifest.fetch("instance_groups.prometheus.jobs.aiven-service-discovery.properties")
   end
 
-  context 'manifest' do
-    it 'should have prometheus as a release' do
-      release_names = releases.map { |r| r['name'] }
-      expect(release_names).to include('prometheus')
+  context "manifest" do
+    it "should have prometheus as a release" do
+      release_names = releases.map { |r| r["name"] }
+      expect(release_names).to include("prometheus")
     end
 
-    it 'should have caddy as a release' do
-      release_names = releases.map { |r| r['name'] }
-      expect(release_names).to include('caddy')
+    it "should have caddy as a release" do
+      release_names = releases.map { |r| r["name"] }
+      expect(release_names).to include("caddy")
     end
 
-    it 'should have observability as a release' do
-      release_names = releases.map { |r| r['name'] }
-      expect(release_names).to include('observability')
+    it "should have observability as a release" do
+      release_names = releases.map { |r| r["name"] }
+      expect(release_names).to include("observability")
     end
 
-    it 'should have a prometheus instance group' do
-      instance_group_names = instance_groups.map { |g| g['name'] }
-      expect(instance_group_names).to include('prometheus')
+    it "should have a prometheus instance group" do
+      instance_group_names = instance_groups.map { |g| g["name"] }
+      expect(instance_group_names).to include("prometheus")
     end
   end
 
-  context 'instance_group' do
-    it 'should have a persistent disk' do
-      disk_type = prometheus_instance_group.dig('persistent_disk_type')
-      expect(disk_type).to eq('500GB')
+  context "instance_group" do
+    it "should have a persistent disk" do
+      disk_type = prometheus_instance_group.dig("persistent_disk_type")
+      expect(disk_type).to eq("500GB")
     end
 
-    it 'should be highly available' do
-      disk_type = prometheus_instance_group.dig('instances')
+    it "should be highly available" do
+      disk_type = prometheus_instance_group.dig("instances")
       expect(disk_type).to be > 1
     end
 
-    it 'should have access to the CF network ' do
+    it "should have access to the CF network " do
       network_names = prometheus_instance_group
-        .dig('networks')
-        .map { |n| n['name'] }
-      expect(network_names).to include('cf')
+        .dig("networks")
+        .map { |n| n["name"] }
+      expect(network_names).to include("cf")
     end
   end
 
-  context 'prometheus2 job' do
-    it 'should not have any rule_files configured' do
-      expect(prometheus_config['rule_files']).to eq([])
+  context "prometheus2 job" do
+    it "should not have any rule_files configured" do
+      expect(prometheus_config["rule_files"]).to eq([])
     end
 
-    it 'should scrape itself' do
-      scrape_configs = prometheus_config['scrape_configs']
-      prom_scrape_config = scrape_configs.find { |c| c['job_name'] == 'prometheus' }
+    it "should scrape itself" do
+      scrape_configs = prometheus_config["scrape_configs"]
+      prom_scrape_config = scrape_configs.find { |c| c["job_name"] == "prometheus" }
 
       expect(prom_scrape_config).not_to be_nil
-      expect(prom_scrape_config['static_configs']).to eq(
-        [{ 'targets' => ['localhost:9090'] }]
+      expect(prom_scrape_config["static_configs"]).to eq(
+        [{ "targets" => ["localhost:9090"] }]
       )
     end
 
-    it 'should scrape aiven' do
-      scrape_configs = prometheus_config['scrape_configs']
-      aiven_scrape_config = scrape_configs.find { |c| c['job_name'] == 'aiven' }
+    it "should scrape aiven" do
+      scrape_configs = prometheus_config["scrape_configs"]
+      aiven_scrape_config = scrape_configs.find { |c| c["job_name"] == "aiven" }
 
       expect(aiven_scrape_config).not_to be_nil
 
-      expect(aiven_scrape_config['scheme']).to eq('https')
+      expect(aiven_scrape_config["scheme"]).to eq("https")
 
-      expect(aiven_scrape_config['tls_config']).to eq(
-        'insecure_skip_verify' => true # We do IP based service discovery
+      expect(aiven_scrape_config["tls_config"]).to eq(
+        "insecure_skip_verify" => true # We do IP based service discovery
       )
 
-      expect(aiven_scrape_config['basic_auth']).to eq(
-        'username' => '((aiven_prometheus_username))',
-        'password' => '((aiven_prometheus_password))'
+      expect(aiven_scrape_config["basic_auth"]).to eq(
+        "username" => "((aiven_prometheus_username))",
+        "password" => "((aiven_prometheus_password))"
       )
 
-      targets = aiven_scrape_config['file_sd_configs'].first['files'].first
+      targets = aiven_scrape_config["file_sd_configs"].first["files"].first
 
       expect(targets).to eq(
-        aiven_sd_config['target_path'] + '/' + aiven_sd_config['target_filename']
+        aiven_sd_config["target_path"] + "/" + aiven_sd_config["target_filename"]
       )
 
-      relabel_configs = aiven_scrape_config['relabel_configs']
+      relabel_configs = aiven_scrape_config["relabel_configs"]
 
       expect(relabel_configs).to include(
-        'source_labels' => ['aiven_cloud'],
-        'separator' => ';',
-        'regex' => 'aws-sealand-1',
-        'action' => 'keep',
+        "source_labels" => ["aiven_cloud"],
+        "separator" => ";",
+        "regex" => "aws-sealand-1",
+        "action" => "keep",
       )
     end
 
-    it 'should have retention configured' do
-      retention_time = prometheus_config.dig('storage', 'tsdb', 'retention', 'time')
-      retention_size = prometheus_config.dig('storage', 'tsdb', 'retention', 'size')
+    it "should have retention configured" do
+      retention_time = prometheus_config.dig("storage", "tsdb", "retention", "time")
+      retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
 
       expect(retention_time).not_to be_nil
       expect(retention_size).not_to be_nil
     end
 
-    context 'dropping metrics' do
+    context "dropping metrics" do
       let(:dropped_metrics_regexps) do
         prometheus_config
-          .dig('scrape_configs')
-          .find { |sc| sc['job_name'] == 'aiven' }
-          .dig('relabel_configs')
-          .select { |rlc| rlc['action'] == 'drop' }
-          .select { |rlc| rlc['source_labels'].include? '__name__' }
-          .map { |rlc| rlc['regex'] }
+          .dig("scrape_configs")
+          .find { |sc| sc["job_name"] == "aiven" }
+          .dig("relabel_configs")
+          .select { |rlc| rlc["action"] == "drop" }
+          .select { |rlc| rlc["source_labels"].include? "__name__" }
+          .map { |rlc| rlc["regex"] }
           .reject(&:nil?)
           .map { |r| Regexp.new r }
       end
 
-      it 'should drop metrics that we do not need' do
+      it "should drop metrics that we do not need" do
         %w[
           elasticsearch_breakers_parent_estimated_size_in_bytes
           elasticsearch_fs_io_stats_devices_0_write_operations
@@ -150,7 +150,7 @@ RSpec.describe 'prometheus' do
         end
       end
 
-      it 'should not drop metrics that we do not need' do
+      it "should not drop metrics that we do not need" do
         %w[
           system_load1
           disk_used_percent
@@ -169,85 +169,85 @@ RSpec.describe 'prometheus' do
       end
     end
 
-    it 'should have retention size less than the disk size' do
-      disk_size_gb = prometheus_instance_group.dig('persistent_disk_type').gsub(/GB/, '').to_i
-      retention_size = prometheus_config.dig('storage', 'tsdb', 'retention', 'size')
+    it "should have retention size less than the disk size" do
+      disk_size_gb = prometheus_instance_group.dig("persistent_disk_type").gsub(/GB/, "").to_i
+      retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
 
       expect(retention_size.match?(/GB/)).to eq(true)
-      retention_size_gb = retention_size.gsub(/GB/, '').to_i
+      retention_size_gb = retention_size.gsub(/GB/, "").to_i
 
       expect(retention_size_gb).to be < disk_size_gb
       expect(retention_size_gb).to be >= (disk_size_gb * 0.75)
     end
 
-    it 'should have retention time greater than one year' do
-      retention_time = prometheus_config.dig('storage', 'tsdb', 'retention', 'time')
+    it "should have retention time greater than one year" do
+      retention_time = prometheus_config.dig("storage", "tsdb", "retention", "time")
 
       expect(retention_time.match?(/\d+d$/)).to eq(true)
-      retention_time_days = retention_time.gsub(/d$/, '').to_i
+      retention_time_days = retention_time.gsub(/d$/, "").to_i
 
       expect(retention_time_days).to be > 365
     end
   end
 
-  context 'route_registrar job' do
-    it 'should register prometheus under the system domain' do
-      prometheus_route = route_registrar_routes.find { |r| r['name'] == 'prometheus' }
+  context "route_registrar job" do
+    it "should register prometheus under the system domain" do
+      prometheus_route = route_registrar_routes.find { |r| r["name"] == "prometheus" }
 
       expect(prometheus_route).not_to be_nil
-      expect(prometheus_route['port']).to eq(8080)
-      expect(prometheus_route['prepend_instance_index']).to eq(false)
-      expect(prometheus_route['uris']).to eq(
+      expect(prometheus_route["port"]).to eq(8080)
+      expect(prometheus_route["prepend_instance_index"]).to eq(false)
+      expect(prometheus_route["uris"]).to eq(
         ["prometheus.#{terraform_fixture_value(:cf_root_domain)}"],
       )
     end
   end
 
-  context 'caddy job' do
-    it 'should listen on port 8080' do
-      http_port = caddy_config['http_port']
+  context "caddy job" do
+    it "should listen on port 8080" do
+      http_port = caddy_config["http_port"]
       expect(http_port).to eq(8080)
     end
 
-    context 'caddyfile' do
-      let(:caddyfile) { caddy_config['caddyfile'] }
+    context "caddyfile" do
+      let(:caddyfile) { caddy_config["caddyfile"] }
 
-      it 'should listen on all interfaces' do
+      it "should listen on all interfaces" do
         # Caddy cannot just listen on localhost,
         # otherwise it will not proxy traffic from gorouter
 
-        vhosts = caddyfile.gsub(/{.*}/m, '').lines.map(&:strip)
-        expect(vhosts).to eq(['http://:8080'])
+        vhosts = caddyfile.gsub(/{.*}/m, "").lines.map(&:strip)
+        expect(vhosts).to eq(["http://:8080"])
       end
 
-      it 'should be configured without TLS' do
+      it "should be configured without TLS" do
         # Caddy tries to infer what it should get a self-signed certificate
         # We want to disable this feature explicitly
 
-        expect(caddyfile.lines.grep(/^\s+tls off/).first&.strip).to eq('tls off')
+        expect(caddyfile.lines.grep(/^\s+tls off/).first&.strip).to eq("tls off")
       end
 
-      it 'should be configured for HA' do
+      it "should be configured for HA" do
         proxy_config = caddyfile
           .lines.grep(/^\s+proxy/).first
-          .strip.sub(/^proxy/, '').sub(' {', '')
+          .strip.sub(/^proxy/, "").sub(" {", "")
 
-        proxy_listen, *proxy_hosts = proxy_config.split(' ')
+        proxy_listen, *proxy_hosts = proxy_config.split(" ")
 
-        expect(proxy_listen).to eq('/')
-        expect(proxy_hosts.first).to eq('http://q-s3-i0.prometheus.*.unit-test.bosh:9090')
-        expect(proxy_hosts.last).to eq('http://localhost:9090')
+        expect(proxy_listen).to eq("/")
+        expect(proxy_hosts.first).to eq("http://q-s3-i0.prometheus.*.unit-test.bosh:9090")
+        expect(proxy_hosts.last).to eq("http://localhost:9090")
       end
     end
   end
 
-  context 'aiven-service-discovery job' do
-    it 'should have a project' do
-      expect(aiven_sd_config.dig('aiven', 'project')).to eq('paas-cf-dev')
+  context "aiven-service-discovery job" do
+    it "should have a project" do
+      expect(aiven_sd_config.dig("aiven", "project")).to eq("paas-cf-dev")
     end
 
-    it 'should have an api token' do
-      expect(aiven_sd_config.dig('aiven', 'api_token')).to eq('((aiven_api_token))')
+    it "should have an api token" do
+      expect(aiven_sd_config.dig("aiven", "api_token")).to eq("((aiven_api_token))")
     end
   end
 end

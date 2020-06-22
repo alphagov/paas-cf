@@ -23,6 +23,6 @@ RSpec.configure do |config|
 =end
 end
 
-require 'hcl/checker'
-TERRAFORM_PATH  = File.expand_path(File.join(__dir__, '..'))
-TERRAFORM_FILES = Dir.glob(File.join(TERRAFORM_PATH, '**', '*.tf'))
+require "hcl/checker"
+TERRAFORM_PATH  = File.expand_path(File.join(__dir__, ".."))
+TERRAFORM_FILES = Dir.glob(File.join(TERRAFORM_PATH, "**", "*.tf"))

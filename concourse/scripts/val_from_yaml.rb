@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'yaml'
+require "yaml"
 
 class PropertyTree
   def initialize(tree)
@@ -21,7 +21,7 @@ class PropertyTree
                    if current_key =~ /\A[-+]?\d+\z/ # If the key is an int, access by index
                      tree[current_key.to_i]
                    else # if not, search for a element with `name: current_key`
-                     tree.select { |x| x.is_a?(Hash) && x['name'] == current_key }.first
+                     tree.select { |x| x.is_a?(Hash) && x["name"] == current_key }.first
                    end
                  end
     if not next_level.nil?
@@ -30,7 +30,7 @@ class PropertyTree
   end
 
   def get(key)
-    key_array = key.split('.')
+    key_array = key.split(".")
     self.recursive_get(@tree, key_array)
   end
 

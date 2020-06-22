@@ -1,4 +1,4 @@
-require 'yaml'
+require "yaml"
 
 class PropertyTree
   def initialize(tree)
@@ -20,7 +20,7 @@ class PropertyTree
                    if current_key =~ /\A[-+]?\d+\z/ # If the key is an int, access by index
                      tree[current_key.to_i]
                    else # if not, search for a element with `name: current_key`
-                     tree.select { |x| x.is_a?(Hash) && x['name'] == current_key }.first
+                     tree.select { |x| x.is_a?(Hash) && x["name"] == current_key }.first
                    end
                  end
     if not next_level.nil?
@@ -29,7 +29,7 @@ class PropertyTree
   end
 
   def get(key)
-    key_array = key.split('.')
+    key_array = key.split(".")
     self.recursive_get(@tree, key_array)
   end
 
@@ -55,16 +55,16 @@ class PropertyTree
   def recursive_inject(acum, x, path)
     if x.is_a? Hash
       x.inject(acum) { |acum2, (key, x2)|
-        recursive_inject(acum2, x2, path + '/' + key) { |acum3, x3, path3|
+        recursive_inject(acum2, x2, path + "/" + key) { |acum3, x3, path3|
           yield(acum3, x3, path3)
         }
       }
     elsif x.is_a? Array
       x.each_with_index.inject(acum) { |acum2, (x2, index)|
-        new_path = if x2.is_a?(Hash) && x2.has_key?('name')
-                     path + '/name=' + x2['name']
+        new_path = if x2.is_a?(Hash) && x2.has_key?("name")
+                     path + "/name=" + x2["name"]
                    else
-                     path + '/' + index.to_s
+                     path + "/" + index.to_s
                    end
         recursive_inject(acum2, x2, new_path) { |acum3, x3, path3|
           yield(acum3, x3, path3)

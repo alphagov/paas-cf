@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-require 'yaml'
+require "yaml"
 
 gpg_public_keys = { "gpg_public_keys" => [] }
 
-public_key_ids = File.read('./.gpg-id')
+public_key_ids = File.read("./.gpg-id")
 public_key_ids.each_line do |id|
   # Assert key can be found locally
   `gpg -k #{id}`
@@ -19,7 +19,7 @@ public_key_ids.each_line do |id|
   gpg_public_keys["gpg_public_keys"] << public_key
 end
 
-output_file = './concourse/vars-files/gpg-keys.yml'
+output_file = "./concourse/vars-files/gpg-keys.yml"
 output = gpg_public_keys.to_yaml
 annotated_output = """# THIS FILE WAS GENERATED AUTOMATICALLY. DO NOT EDIT
 # See https://team-manual.cloud.service.gov.uk/team/working_practices/#merging-pull-requests

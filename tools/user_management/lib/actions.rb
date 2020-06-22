@@ -1,6 +1,6 @@
-require 'colorize'
+require "colorize"
 
-require_relative 'group'
+require_relative "group"
 
 def ensure_users_exist_in_uaa(users, uaa_client)
   users.each do |user|

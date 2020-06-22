@@ -1,13 +1,13 @@
-require 'ostruct'
+require "ostruct"
 
-require 'aws-sdk-core'
-require 'aws-sdk-elasticache'
+require "aws-sdk-core"
+require "aws-sdk-elasticache"
 
-require_relative 'cloud_foundry_org_finder'
-require_relative 'cloud_foundry_service_finder'
-require_relative 'elasticache_update_finder'
-require_relative 'paas_accounts_api_client'
-require_relative 'tenant_notifier'
+require_relative "cloud_foundry_org_finder"
+require_relative "cloud_foundry_service_finder"
+require_relative "elasticache_update_finder"
+require_relative "paas_accounts_api_client"
+require_relative "tenant_notifier"
 
 class AwsRedisUpdateManager
   def initialize(
@@ -24,7 +24,7 @@ class AwsRedisUpdateManager
   end
 
   def find_service_instances_to_update
-    cf_service_finder = CloudFoundryServiceFinder.new('redis')
+    cf_service_finder = CloudFoundryServiceFinder.new("redis")
     service_instances = cf_service_finder.find_service_instances
 
     elasticache_finder = ElastiCacheUpdateFinder.new(@elasticache_client)
@@ -49,14 +49,14 @@ class AwsRedisUpdateManager
 
         puts org.org_name
 
-        puts '  Org managers:'
+        puts "  Org managers:"
         org.org_manager_guids.each do |org_manager_guid|
           org_manager = @paas_accounts_api_client.find_user(org_manager_guid)
           next if org_manager.nil?
           puts "    #{org_manager.email}"
         end
 
-        puts '  Instances:'
+        puts "  Instances:"
         org_service_instances
           .group_by(&:space_name)
           .each do |space_name, space_service_instances|
@@ -78,12 +78,12 @@ class AwsRedisUpdateManager
     region:
   )
     example_service_instance = OpenStruct.new(
-      instance_guid: '00000000-1111-2222-3333-444444444444',
-      instance_name: 'example-service-instance',
-      org_guid: 'aaaaaaaa-1111-2222-3333-444444444444',
-      org_name: 'example-org',
-      space_guid: 'bbbbbbbb-1111-2222-3333-444444444444',
-      space_name: 'example-space',
+      instance_guid: "00000000-1111-2222-3333-444444444444",
+      instance_name: "example-service-instance",
+      org_guid: "aaaaaaaa-1111-2222-3333-444444444444",
+      org_name: "example-org",
+      space_guid: "bbbbbbbb-1111-2222-3333-444444444444",
+      space_name: "example-space",
     )
 
     puts "Sending email to #{preview_email}"
@@ -91,7 +91,7 @@ class AwsRedisUpdateManager
     notifier = TenantNotifier.new(notify_api_key)
     notifier.notify_tenant(
       tenant_email_address: preview_email,
-      org_name: 'example-org',
+      org_name: "example-org",
       service_instances: [example_service_instance],
       maintenance_window_date: maintenance_window_date,
       maintenance_window_time_range: maintenance_window_time_range,

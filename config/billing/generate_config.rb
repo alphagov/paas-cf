@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'yaml'
-require 'json'
-require 'erb'
+require "yaml"
+require "json"
+require "erb"
 
 REGIONS = %w(eu-west-1 eu-west-2).freeze
 

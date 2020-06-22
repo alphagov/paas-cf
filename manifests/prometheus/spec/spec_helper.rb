@@ -102,7 +102,7 @@ Dir[File.expand_path("support/**/*.rb", __dir__)].each { |f| require f }
 def grafana_dashboards
   Dir.glob(
     File.expand_path(
-      File.join(__dir__, '..', 'dashboards.d', '*.json')
+      File.join(__dir__, "..", "dashboards.d", "*.json")
     )
   ).map { |filepath| [File.basename(filepath), File.read(filepath)] }
 end

@@ -1,7 +1,7 @@
-require 'open3'
-require 'yaml'
-require 'singleton'
-require 'tempfile'
+require "open3"
+require "yaml"
+require "singleton"
+require "tempfile"
 
 module ManifestHelpers
   class Cache < ::Hash
@@ -44,15 +44,15 @@ module ManifestHelpers
   end
 
   def cf_deployment_manifest
-    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join('manifests/cf-deployment/cf-deployment.yml'))
+    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join("manifests/cf-deployment/cf-deployment.yml"))
   end
 
   def cf_pipeline
-    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join('concourse/pipelines/create-cloudfoundry.yml'))
+    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/create-cloudfoundry.yml"))
   end
 
   def monitor_remote_pipeline
-    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join('concourse/pipelines/monitor-remote.yml'))
+    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/monitor-remote.yml"))
   end
 
   def property_tree(tree)
@@ -67,7 +67,7 @@ private
 
   def render_vpc_peering_opsfile(dir, environment = "dev")
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
-    file = File::open("#{dir}/vpc-peers.yml", 'w')
+    file = File::open("#{dir}/vpc-peers.yml", "w")
     output, error, status =
       Open3.capture3(root.join("terraform/scripts/generate_vpc_peering_opsfile.rb").to_s,
                      root.join("terraform/#{environment}.vpc_peering.json").to_s)
@@ -104,19 +104,19 @@ private
     vars_store_file: nil,
     env_specific_bosh_vars_file: "default.yml"
   )
-    workdir = Dir.mktmpdir('paas-cf-test')
+    workdir = Dir.mktmpdir("paas-cf-test")
 
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
-    copy_fixture_file('bosh-secrets.yml', "#{workdir}/bosh-secrets")
-    copy_fixture_file('environment-variables.yml', workdir)
+    copy_fixture_file("bosh-secrets.yml", "#{workdir}/bosh-secrets")
+    copy_fixture_file("environment-variables.yml", workdir)
     copy_ipsec_cert_fixtures("#{workdir}/ipsec-CA")
     render_vpc_peering_opsfile("#{workdir}/vpc-peering-opsfile", environment)
     render_tenant_uaa_clients_opsfile("#{workdir}/tenant-uaa-clients-opsfile", "manifests/cf-manifest/spec/fixtures/tenant-uaa-client-fixtures.yml", "dev")
 
     env = {
-      'PAAS_CF_DIR' => root.to_s,
-      'WORKDIR' => workdir,
-      'ENV_SPECIFIC_BOSH_VARS_FILE' => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s
+      "PAAS_CF_DIR" => root.to_s,
+      "WORKDIR" => workdir,
+      "ENV_SPECIFIC_BOSH_VARS_FILE" => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s
     }
 
     if vars_store_file
@@ -124,7 +124,7 @@ private
     end
 
     args = ["#{root}/manifests/cf-manifest/scripts/generate-manifest.sh"]
-    output, error, status = Open3.capture3(env, args.join(' '))
+    output, error, status = Open3.capture3(env, args.join(" "))
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     DeepFreeze.freeze(PropertyTree.load_yaml(output))
@@ -137,7 +137,7 @@ private
     custom_vars_store_content: nil,
     env_specific_bosh_vars_file: "default.yml"
   )
-    Tempfile.open(['vars-store', '.yml']) { |vars_store_tempfile|
+    Tempfile.open(["vars-store", ".yml"]) { |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance[:vars_store])
       vars_store_tempfile.close
 

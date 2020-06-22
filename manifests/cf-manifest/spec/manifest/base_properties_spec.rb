@@ -6,7 +6,7 @@ RSpec.describe "base properties" do
   end
 
   it "has global max_in_flight set to 30%" do
-    expect(manifest["update"].fetch("max_in_flight")).to eq('30%')
+    expect(manifest["update"].fetch("max_in_flight")).to eq("30%")
   end
 
   it "has global canaries set to 1" do
@@ -14,15 +14,15 @@ RSpec.describe "base properties" do
   end
 
   it "does not have meta top level key" do
-    expect(manifest.fetch('meta', 'not_found')).to eq 'not_found'
+    expect(manifest.fetch("meta", "not_found")).to eq "not_found"
   end
 
   it "does not have secrets top level key" do
-    expect(manifest.fetch('secrets', 'not_found')).to eq 'not_found'
+    expect(manifest.fetch("secrets", "not_found")).to eq "not_found"
   end
 
   it "does not have terraform_outputs top level key" do
-    expect(manifest.fetch('terraform_outputs', 'not_found')).to eq 'not_found'
+    expect(manifest.fetch("terraform_outputs", "not_found")).to eq "not_found"
   end
 
   describe "stemcells" do
@@ -179,7 +179,7 @@ RSpec.describe "base properties" do
       subject(:executor) { manifest["instance_groups.diego-cell.jobs.rep.properties.diego.executor"] }
 
       it "should have a memory_capacity_mb of at least 32G" do
-        memory_capacity_mb = executor['memory_capacity_mb']
+        memory_capacity_mb = executor["memory_capacity_mb"]
         expect(memory_capacity_mb).to be_a_kind_of(Integer)
         expect(memory_capacity_mb).to be >= (32 * 1024)
       end

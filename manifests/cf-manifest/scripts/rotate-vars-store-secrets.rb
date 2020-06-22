@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'optparse'
-require 'yaml'
+require "optparse"
+require "yaml"
 
 BLANK_CERT = {
   "ca" => "",
@@ -105,7 +105,7 @@ def rotate(manifest, vars_store,
            delete: false)
 
   vars = manifest.fetch("variables")
-  vars = vars.select { |v| vars_to_rotate.include?(v["name"].gsub(/_old$/, '')) } unless vars_to_rotate.nil?
+  vars = vars.select { |v| vars_to_rotate.include?(v["name"].gsub(/_old$/, "")) } unless vars_to_rotate.nil?
   vars = vars.reject { |v| vars_to_preserve.include?(v["name"]) }
 
   if delete

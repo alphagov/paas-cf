@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
 script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
-File.open(File.expand_path('~/.paas-script-usage'), 'a') { |f| f.puts script_path }
+File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
-require 'json'
+require "json"
 
 def usage
   <<~USAGE
@@ -34,16 +34,16 @@ abort usage if desired_origin.nil? || user_guid.nil?
 abort usage unless user_guid.match?(/^\h{8}-\h{4}-\h{4}-\h{4}-\h{12}$/)
 
 resp = `uaac curl '/Users/#{user_guid}' | awk '/RESPONSE BODY/,0'`
-user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(' '))
+user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(" "))
 
-puts 'Current user:'
+puts "Current user:"
 pp user
 
 user = user.keep_if { |k, _| %w[userName name emails].include?(k) }
 user = user.update('origin': desired_origin)
 
 
-command = <<~COMMAND.lines.map(&:chomp).join(' ')
+command = <<~COMMAND.lines.map(&:chomp).join(" ")
   uaac curl '/Users/#{user_guid}'
   -X PUT
   -H 'If-Match: *'
@@ -57,7 +57,7 @@ puts `#{command}`
 abort unless $?.success?
 
 resp = `uaac curl '/Users/#{user_guid}' | awk '/RESPONSE BODY/,0'`
-user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(' '))
+user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(" "))
 
-puts 'Updated user:'
+puts "Updated user:"
 pp user

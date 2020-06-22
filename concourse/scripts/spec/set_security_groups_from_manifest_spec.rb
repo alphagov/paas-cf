@@ -24,7 +24,7 @@ RSpec.describe SecurityGroupsSetter do
   subject { SecurityGroupsSetter.new(manifest) }
 
   before :each do
-    allow(subject).to receive(:`).with('cf security-groups') do
+    allow(subject).to receive(:`).with("cf security-groups") do
       system("exit 0") # setup $?
       ""
     end
@@ -39,7 +39,7 @@ RSpec.describe SecurityGroupsSetter do
 
     context "with no extant security groups" do
       before :each do
-        allow(subject).to receive(:`).with('cf security-groups') do
+        allow(subject).to receive(:`).with("cf security-groups") do
           system("exit 0") # setup $?
           <<-EOT
 Getting security groups as admin
@@ -65,7 +65,7 @@ OK
 
     context "when some security groups exist" do
       before :each do
-        allow(subject).to receive(:`).with('cf security-groups') do
+        allow(subject).to receive(:`).with("cf security-groups") do
           system("exit 0") # setup $?
           <<-EOT
 Getting security groups as admin
@@ -123,11 +123,11 @@ OK
   end
 
   def expect_cf_sg_create(name, rules)
-    expect_cf_sg_write(name, rules, 'create-security-group')
+    expect_cf_sg_write(name, rules, "create-security-group")
   end
 
   def expect_cf_sg_update(name, rules)
-    expect_cf_sg_write(name, rules, 'update-security-group')
+    expect_cf_sg_write(name, rules, "update-security-group")
   end
 
   def expect_cf_bind_sg(type, name)

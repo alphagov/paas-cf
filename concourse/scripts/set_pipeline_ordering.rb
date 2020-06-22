@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'net/http'
-require 'yaml'
-require 'json'
+require "net/http"
+require "yaml"
+require "json"
 
 if ARGV.length != 1
   abort <<-EOT
@@ -22,11 +22,11 @@ if ENV["FLY_TARGET"].nil? || ENV["FLY_TARGET"].empty?
   abort "FLY_TARGET not set"
 end
 flyrc = YAML.load_file("#{ENV['HOME']}/.flyrc")
-if flyrc.fetch("targets")[ENV['FLY_TARGET']].nil?
+if flyrc.fetch("targets")[ENV["FLY_TARGET"]].nil?
   abort "Target '#{ENV['FLY_TARGET']}' not found in .flyrc. Use the fly command to set this target up before using this script"
 end
-concourse_url = flyrc.fetch("targets").fetch(ENV['FLY_TARGET']).fetch('api')
-bearer_token = flyrc.fetch("targets").fetch(ENV['FLY_TARGET']).fetch('token').fetch('value')
+concourse_url = flyrc.fetch("targets").fetch(ENV["FLY_TARGET"]).fetch("api")
+bearer_token = flyrc.fetch("targets").fetch(ENV["FLY_TARGET"]).fetch("token").fetch("value")
 
 uri = URI.parse("#{concourse_url}/api/v1/teams/main/pipelines/ordering")
 req = Net::HTTP::Put.new(uri.request_uri)
@@ -37,7 +37,7 @@ req.content_type = "application/json"
 req.body = JSON.dump(pipelines)
 
 resp = nil
-Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") do |http|
   resp = http.request(req)
 end
 

@@ -1,7 +1,7 @@
-require 'open3'
-require 'singleton'
-require 'tempfile'
-require 'yaml'
+require "open3"
+require "singleton"
+require "tempfile"
+require "yaml"
 
 module CloudConfigHelpers
   class Cache < ::Hash
@@ -19,15 +19,15 @@ private
   end
 
   def render_cloud_config
-    workdir = Dir.mktmpdir('paas-cf-test')
+    workdir = Dir.mktmpdir("paas-cf-test")
 
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
 
     env = {
-      'PAAS_CF_DIR' => root.to_s,
-      'WORKDIR' => workdir,
+      "PAAS_CF_DIR" => root.to_s,
+      "WORKDIR" => workdir,
     }
-    output, error, status = Open3.capture3(env, root.join('manifests/cloud-config/scripts/generate-cloud-config.sh').to_s)
+    output, error, status = Open3.capture3(env, root.join("manifests/cloud-config/scripts/generate-cloud-config.sh").to_s)
     expect(status).to be_success, "generate-cloud-config.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     DeepFreeze.freeze(PropertyTree.load_yaml(output))

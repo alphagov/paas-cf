@@ -31,7 +31,7 @@ RSpec.describe "database encryption keys" do
     it "only has ((cc_db_encryption_key)) in the expected locations" do
       found_locations = manifest.inject([]) { |acum, v, path|
         new_acum = acum
-        new_acum << path if v.is_a?(String) && v.include?('((cc_db_encryption_key))')
+        new_acum << path if v.is_a?(String) && v.include?("((cc_db_encryption_key))")
         new_acum
       }
       expected_locations = %w{

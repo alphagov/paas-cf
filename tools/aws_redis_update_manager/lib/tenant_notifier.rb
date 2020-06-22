@@ -1,6 +1,6 @@
-require 'erb'
+require "erb"
 
-require 'notifications/client'
+require "notifications/client"
 
 class TenantNotifier
   def initialize(notify_api_key)
@@ -11,8 +11,8 @@ class TenantNotifier
     @client ||= Notifications::Client.new(@notify_api_key)
   end
 
-  AWS_REDIS_UPGRADE_TEMPLATE_ID = '9d0f232b-187c-49b1-8cd1-91e83e347f68'.freeze
-  PAAS_SUPPORT_REPLY_TO_ID = '76d63d5f-e140-6a37-92ae-fc0d0d136f6f'.freeze
+  AWS_REDIS_UPGRADE_TEMPLATE_ID = "9d0f232b-187c-49b1-8cd1-91e83e347f68".freeze
+  PAAS_SUPPORT_REPLY_TO_ID = "76d63d5f-e140-6a37-92ae-fc0d0d136f6f".freeze
 
   TEMPLATE = <<~MESSAGE.freeze
   Dear GOV.UK PaaS tenant,

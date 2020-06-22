@@ -7,8 +7,8 @@ RSpec.describe "RDS broker properties" do
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
       rds_sg = defs.find { |d| d["name"] == "rds_broker_instances" }
 
-      dest_ip_range_start = terraform_fixture_value('aws_backing_service_ip_range_start')
-      dest_ip_range_stop = terraform_fixture_value('aws_backing_service_ip_range_stop')
+      dest_ip_range_start = terraform_fixture_value("aws_backing_service_ip_range_start")
+      dest_ip_range_stop = terraform_fixture_value("aws_backing_service_ip_range_stop")
       dest_ip_range = "#{dest_ip_range_start}-#{dest_ip_range_stop}"
 
       expect(rds_sg).to be
@@ -1533,8 +1533,8 @@ RSpec.describe "RDS broker properties" do
 
     it "each service of the rds-broker service broker is shareable" do
       services.each do |service|
-        service_name = service['name']
-        shareable = service.dig('metadata', 'shareable')
+        service_name = service["name"]
+        shareable = service.dig("metadata", "shareable")
 
         expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
         expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"

@@ -8,8 +8,8 @@ RSpec.describe "ElastiCache broker properties" do
       defs = manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.security_group_definitions")
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
 
-      dest_ip_range_start = terraform_fixture_value('aws_backing_service_ip_range_start')
-      dest_ip_range_stop = terraform_fixture_value('aws_backing_service_ip_range_stop')
+      dest_ip_range_start = terraform_fixture_value("aws_backing_service_ip_range_start")
+      dest_ip_range_stop = terraform_fixture_value("aws_backing_service_ip_range_stop")
       dest_ip_range = "#{dest_ip_range_start}-#{dest_ip_range_stop}"
 
       elasticache_sg = defs.find { |d| d["name"] == "elasticache_broker_instances" }
@@ -86,7 +86,7 @@ RSpec.describe "ElastiCache broker properties" do
 
     specify "all plans have a version" do
       all_plans.each do |p|
-        version = p.dig('metadata', 'AdditionalMetadata', 'version')
+        version = p.dig("metadata", "AdditionalMetadata", "version")
         expect(version).to be_a(String), "plan #{p['id']} doesn't have a version"
       end
     end
@@ -106,8 +106,8 @@ RSpec.describe "ElastiCache broker properties" do
 
     it "each service of the elasticache service broker is shareable" do
       services.each do |service|
-        service_name = service['name']
-        shareable = service.dig('metadata', 'shareable')
+        service_name = service["name"]
+        shareable = service.dig("metadata", "shareable")
 
         expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
         expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"

@@ -1,15 +1,15 @@
 def fnv_base32_encode(inp)
-  alphabet = 'abcdefghijklmnopqrstuvwxyz234567'
+  alphabet = "abcdefghijklmnopqrstuvwxyz234567"
 
   remainder = inp.bytesize.modulo 5
   padding = "\0" * (5 - remainder)
   inp += padding
 
   inp.gsub!(/.{5}/mn) do |s|
-    n32, i8 = s.unpack('NC')
+    n32, i8 = s.unpack("NC")
     n32 = (n32 << 8) | i8
 
-    8.times.reduce '' do |accumulator|
+    8.times.reduce "" do |accumulator|
       n32, i8 = n32.divmod 32
       chr = alphabet[i8]
       "#{chr}#{accumulator}"
@@ -33,6 +33,6 @@ def fnv(input)
     hash &= mask
   end
 
-  packed = [hash.to_s(16)].pack('H*')
+  packed = [hash.to_s(16)].pack("H*")
   fnv_base32_encode(packed)
 end

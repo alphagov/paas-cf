@@ -1,4 +1,4 @@
-RSpec.describe 'fnv' do
+RSpec.describe "fnv" do
   # see alphagov/paas-admin for identical tests
   [
     %w[guid-1 ux4xkdjccy5em],

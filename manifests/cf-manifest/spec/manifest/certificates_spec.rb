@@ -4,8 +4,8 @@ RSpec.describe "certificates" do
 
     if o.is_a? Hash
       # Match checks if it is a usage ("name.value") or a variable ("name")
-      return [o['ca']] if o['ca']&.match?(/[.]/)
-      return [o['ca_cert']] if o['ca_cert']&.match?(/[.]/)
+      return [o["ca"]] if o["ca"]&.match?(/[.]/)
+      return [o["ca_cert"]] if o["ca_cert"]&.match?(/[.]/)
 
       return o.values.flat_map { |v| get_all_cas_usages(v) }
     end
@@ -17,8 +17,8 @@ RSpec.describe "certificates" do
     let(:manifest) { manifest_with_defaults }
 
     let(:ca_usages) do
-      get_all_cas_usages(manifest.fetch('.')).map do |usage|
-        usage.gsub(/[()]/, '') # delete surrounding parens
+      get_all_cas_usages(manifest.fetch(".")).map do |usage|
+        usage.gsub(/[()]/, "") # delete surrounding parens
       end
     end
 

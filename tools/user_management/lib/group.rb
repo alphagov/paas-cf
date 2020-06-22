@@ -1,8 +1,8 @@
-require 'json'
-require 'time'
-require 'colorize'
+require "json"
+require "time"
+require "colorize"
 
-require_relative 'uaa_resource'
+require_relative "uaa_resource"
 
 class Group < UAAResource
   attr_reader :name, :users
@@ -15,9 +15,9 @@ class Group < UAAResource
   def remove_unexpected_members(uaa_client)
     desired_user_guids = @users.map(&:guid)
     unexpected_member_users = get_member_users(uaa_client).select do |member_user|
-      if member_user['origin'] == 'uaa' && member_user['userName'] == 'admin'
+      if member_user["origin"] == "uaa" && member_user["userName"] == "admin"
         false
-      elsif (member_user['origin'] == 'google' || member_user['origin'] == 'admin-google') && desired_user_guids.include?(member_user['id'])
+      elsif (member_user["origin"] == "google" || member_user["origin"] == "admin-google") && desired_user_guids.include?(member_user["id"])
         false
       else
         true
@@ -35,10 +35,10 @@ class Group < UAAResource
       puts "  origin=#{member_user['origin']}".red
       puts "  userName='#{member_user['userName']}'".red
 
-      if member_user['meta'] && member_user['meta']['created'] && Time.now - Time.iso8601(member_user['meta']['created']) < 3600
+      if member_user["meta"] && member_user["meta"]["created"] && Time.now - Time.iso8601(member_user["meta"]["created"]) < 3600
         puts "  NOT REMOVING USER FROM GROUP BECAUSE IT IS LESS THAN 1 HOUR OLD".yellow
       else
-        remove_member(member_user['id'], uaa_client)
+        remove_member(member_user["id"], uaa_client)
         puts "  USER REMOVED FROM GROUP".green
       end
     end
@@ -52,7 +52,7 @@ class Group < UAAResource
   end
 
   def add_desired_users(uaa_client)
-    existing_member_guids = get_member_users(uaa_client).map { |member| member['id'] }
+    existing_member_guids = get_member_users(uaa_client).map { |member| member["id"] }
     new_users_to_add = @users.reject { |user| existing_member_guids.include?(user.guid) }
 
     if new_users_to_add.empty?
@@ -73,8 +73,8 @@ class Group < UAAResource
 
   def add_member(user_guid, uaa_client)
     resp = uaa_client["/Groups/#{@guid}/members"].post({
-      origin: 'uaa',
-      type: 'USER',
+      origin: "uaa",
+      type: "USER",
       value: user_guid,
     }.to_json)
     raise "unexpected response code '#{resp.code}' when adding user '#{user_guid}' as a member of group '#{@name}'" unless resp.code == 201
@@ -85,14 +85,14 @@ class Group < UAAResource
   end
 
   def get_member_users(uaa_client)
-    get_group(uaa_client)['members'].map do |member|
-      if member['origin'] == 'uaa' && member['type'] == 'USER'
-        get_uaa_user(member['value'], uaa_client)
+    get_group(uaa_client)["members"].map do |member|
+      if member["origin"] == "uaa" && member["type"] == "USER"
+        get_uaa_user(member["value"], uaa_client)
       else
         {
-          'id' => member['value'],
-          'origin' => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***",
-          'userName' => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***"
+          "id" => member["value"],
+          "origin" => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***",
+          "userName" => "*** UNUSUAL MEMBER WITH ORIGIN '#{member['origin']}' AND TYPE '#{member['type']}' ***"
         }
       end
     end
@@ -106,9 +106,9 @@ class Group < UAAResource
       # accompanying Users. These users had been manually destroyed but their
       # memberships hadn't been cleaned up.
       {
-        'id' => user_guid,
-        'origin' => '*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***',
-        'userName' => '*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***'
+        "id" => user_guid,
+        "origin" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
+        "userName" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***"
       }
     end
   end

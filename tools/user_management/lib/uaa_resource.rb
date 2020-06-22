@@ -12,11 +12,11 @@ class UAAResource
 
   def get_resource(url, uaa_client)
     response = get(url, uaa_client)
-    unless response['totalResults'] == 1
+    unless response["totalResults"] == 1
       raise "unexpected number of results fetching '#{url}': '#{response['totalResults']}'"
     end
 
-    @guid = response['resources'][0]['id']
-    response['resources'][0]
+    @guid = response["resources"][0]["id"]
+    response["resources"][0]
   end
 end

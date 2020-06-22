@@ -6,17 +6,17 @@ RSpec.describe "OAuth" do
 
     it "enables the Google OAuth provider in UAA" do
       providers = properties.fetch("login").fetch("oauth").fetch("providers")
-      expect(providers).to have_key 'google'
+      expect(providers).to have_key "google"
     end
 
     it "enables the Microsoft OAuth provider in UAA" do
       providers = properties.fetch("login").fetch("oauth").fetch("providers")
-      expect(providers).to have_key 'microsoft'
+      expect(providers).to have_key "microsoft"
     end
 
     it "enables a Google OAuth provider for administators in UAA" do
       providers = properties.fetch("login").fetch("oauth").fetch("providers")
-      expect(providers).to have_key 'admin-google'
+      expect(providers).to have_key "admin-google"
     end
 
     it "ensures unique username attr mappings to ensure unique usernames" do
@@ -24,7 +24,7 @@ RSpec.describe "OAuth" do
 
       mappings = providers
         .values
-        .map { |p| p.dig('attributeMappings', 'user_name') }
+        .map { |p| p.dig("attributeMappings", "user_name") }
 
       expect(mappings).to eq(mappings.uniq)
     end

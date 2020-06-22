@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 # rubocop:disable Metrics/BlockLength
 
-require 'English'
-require 'optparse'
+require "English"
+require "optparse"
 
-require_relative 'lib/aws_redis_update_manager'
+require_relative "lib/aws_redis_update_manager"
 
 ACTIONS = %w[email print preview].freeze
 
@@ -12,89 +12,89 @@ options = {}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{$PROGRAM_NAME}"
 
-  opts.on('-h', '--help', 'Print usage') do
+  opts.on("-h", "--help", "Print usage") do
     puts opts
     exit
   end
 
-  opts.on('--action ACTION', "Action to perform: #{ACTIONS}", :REQUIRED) do |a|
+  opts.on("--action ACTION", "Action to perform: #{ACTIONS}", :REQUIRED) do |a|
     abort "Action must be one of #{ACTIONS}" unless ACTIONS.include? a
     options[:action] = a
   end
 
-  opts.on('--paas-accounts-url URL', 'URL for PaaS Accounts API', :REQUIRED) do |u|
+  opts.on("--paas-accounts-url URL", "URL for PaaS Accounts API", :REQUIRED) do |u|
     options[:paas_accounts_url] = u
   end
 
-  opts.on('--paas-accounts-username USERNAME', 'Username for PaaS Accounts API', :REQUIRED) do |u|
+  opts.on("--paas-accounts-username USERNAME", "Username for PaaS Accounts API", :REQUIRED) do |u|
     options[:paas_accounts_username] = u
   end
 
-  opts.on('--paas-accounts-password PASSWORD', 'User for PaaS Accounts API', :REQUIRED) do |p|
+  opts.on("--paas-accounts-password PASSWORD", "User for PaaS Accounts API", :REQUIRED) do |p|
     options[:paas_accounts_password] = p
   end
 
-  opts.on('--preview-email EMAIL', 'Email address to preview emails sent to tenant') do |e|
+  opts.on("--preview-email EMAIL", "Email address to preview emails sent to tenant") do |e|
     options[:preview_email] = e
   end
 
-  opts.on('--notify-api-key KEY', 'API key for GOV.UK Notify') do |k|
+  opts.on("--notify-api-key KEY", "API key for GOV.UK Notify") do |k|
     options[:notify_api_key] = k
   end
 
-  opts.on('--maintenance-window-date DATE', 'Maintenance window date') do |d|
+  opts.on("--maintenance-window-date DATE", "Maintenance window date") do |d|
     options[:maintenance_window_date] = d
   end
 
-  opts.on('--maintenance-window-time-range RANGE', 'Maintenance window time range') do |r|
+  opts.on("--maintenance-window-time-range RANGE", "Maintenance window time range") do |r|
     options[:maintenance_window_time_range] = r
   end
 
-  opts.on('--alt-maintenance-window-date DATE', 'Alternative maintenance window date') do |d|
+  opts.on("--alt-maintenance-window-date DATE", "Alternative maintenance window date") do |d|
     options[:alt_maintenance_window_date] = d
   end
 
-  opts.on('--alt-maintenance-window-time-range RANGE', 'Alternative maintenance window time range') do |r|
+  opts.on("--alt-maintenance-window-time-range RANGE", "Alternative maintenance window time range") do |r|
     options[:alt_maintenance_window_time_range] = r
   end
 
-  opts.on('--region REGION', 'Region: ["London", "Ireland"]') do |r|
+  opts.on("--region REGION", 'Region: ["London", "Ireland"]') do |r|
     options[:region] = r
   end
 end
 
 if ARGV.empty?
-  parser.parse ['--help']
+  parser.parse ["--help"]
   exit
 end
 
 parser.parse!
 
 case options[:action]
-when 'email', 'print'
-  if options[:paas_accounts_url].nil? && ENV['PAAS_ACCOUNTS_URL'].nil?
-    abort 'Please specify --paas-accounts-url'
+when "email", "print"
+  if options[:paas_accounts_url].nil? && ENV["PAAS_ACCOUNTS_URL"].nil?
+    abort "Please specify --paas-accounts-url"
   end
 
-  if options[:paas_accounts_username].nil? && ENV['PAAS_ACCOUNTS_USERNAME'].nil?
-    abort 'Please specify --paas-accounts-username'
+  if options[:paas_accounts_username].nil? && ENV["PAAS_ACCOUNTS_USERNAME"].nil?
+    abort "Please specify --paas-accounts-username"
   end
 
-  if options[:paas_accounts_password].nil? && ENV['PAAS_ACCOUNTS_PASSWORD'].nil?
-    abort 'Please specify --paas-accounts-password'
+  if options[:paas_accounts_password].nil? && ENV["PAAS_ACCOUNTS_PASSWORD"].nil?
+    abort "Please specify --paas-accounts-password"
   end
 end
 
 case options[:action]
-when 'email', 'preview'
-  abort 'Please specify --notify-api-key' if options[:notify_api_key].nil?
+when "email", "preview"
+  abort "Please specify --notify-api-key" if options[:notify_api_key].nil?
 
-  abort 'Please specify --maintenance-window-date' if options[:maintenance_window_date].nil?
-  abort 'Please specify --maintenance-window-time-range' if options[:maintenance_window_time_range].nil?
-  abort 'Please specify --alt-maintenance-window-date' if options[:alt_maintenance_window_date].nil?
-  abort 'Please specify --alt-maintenance-window-time-range' if options[:alt_maintenance_window_time_range].nil?
+  abort "Please specify --maintenance-window-date" if options[:maintenance_window_date].nil?
+  abort "Please specify --maintenance-window-time-range" if options[:maintenance_window_time_range].nil?
+  abort "Please specify --alt-maintenance-window-date" if options[:alt_maintenance_window_date].nil?
+  abort "Please specify --alt-maintenance-window-time-range" if options[:alt_maintenance_window_time_range].nil?
 
-  abort 'Please specify --region' if options[:region].nil?
+  abort "Please specify --region" if options[:region].nil?
 end
 
 manager = AwsRedisUpdateManager.new(
@@ -104,7 +104,7 @@ manager = AwsRedisUpdateManager.new(
 )
 
 case options[:action]
-when 'email'
+when "email"
   manager.notify_org_managers_about_updateable_service_instances(
     notify_api_key: options[:notify_api_key],
     maintenance_window_date: options[:maintenance_window_date],
@@ -113,8 +113,8 @@ when 'email'
     alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
     region: options[:region]
   )
-when 'preview'
-  abort 'Please specify --preview-email' if options[:preview_email].nil?
+when "preview"
+  abort "Please specify --preview-email" if options[:preview_email].nil?
 
   manager.preview_updateable_service_instances(
     preview_email: options[:preview_email],
@@ -125,7 +125,7 @@ when 'preview'
     alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
     region: options[:region]
   )
-when 'print'
+when "print"
   manager.print_updateable_service_instances
 end
 # rubocop:enable Metrics/BlockLength

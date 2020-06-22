@@ -102,5 +102,5 @@ RSpec.configure do |config|
 =end
 end
 
-require 'webmock/rspec'
-require_relative '../lib/aws_redis_update_manager'
+require "webmock/rspec"
+require_relative "../lib/aws_redis_update_manager"

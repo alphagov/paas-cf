@@ -1,15 +1,15 @@
-require 'json'
+require "json"
 
-require_relative 'uaa_resource'
+require_relative "uaa_resource"
 
 class User < UAAResource
   attr_reader :email, :username, :origin
 
   def initialize(obj)
-    @email = obj.fetch('email')
-    @username = obj.fetch('username')
-    @roles_by_env = obj.fetch('roles', {})
-    @origin = obj.fetch('origin', 'google')
+    @email = obj.fetch("email")
+    @username = obj.fetch("username")
+    @roles_by_env = obj.fetch("roles", {})
+    @origin = obj.fetch("origin", "google")
   end
 
   def exists?(uaa_client)
@@ -22,11 +22,11 @@ class User < UAAResource
   end
 
   def has_role_for_env?(env, role)
-    @roles_by_env.fetch(env, []).any? { |x| x['role'] == role }
+    @roles_by_env.fetch(env, []).any? { |x| x["role"] == role }
   end
 
   def create(uaa_client)
-    resp = uaa_client['/Users'].post({
+    resp = uaa_client["/Users"].post({
       emails: [{ value: @email }],
       origin: @origin,
       userName: @username
@@ -38,7 +38,7 @@ class User < UAAResource
     scim_filter = [
       "origin+eq+\"#{@origin}\"",
       "userName+eq+\"#{@username}\""
-    ].join('+and+')
+    ].join("+and+")
     get_resource("/Users?filter=#{scim_filter}", uaa_client)
   end
 end

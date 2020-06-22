@@ -1,12 +1,12 @@
-require 'net/http'
-require 'uri'
-require 'tempfile'
+require "net/http"
+require "uri"
+require "tempfile"
 
-require 'aws-sdk'
-require 'mail'
+require "aws-sdk"
+require "mail"
 
 script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
-File.open(File.expand_path('~/.paas-script-usage'), 'a') { |f| f.puts script_path }
+File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
 module EmailCredentialsHelper
   DEFAULT_REGION = "eu-west-1".freeze

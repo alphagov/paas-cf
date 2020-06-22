@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'json'
-require 'yaml'
-require_relative './val_from_yaml.rb'
+require "json"
+require "yaml"
+require_relative "./val_from_yaml.rb"
 
 class QuotasSetter
   def initialize(manifest)
@@ -22,13 +22,13 @@ private
     definition.each do |param, value|
       case param
       when "memory_limit"
-        args << '-m' << "#{value}M"
+        args << "-m" << "#{value}M"
       when "total_services"
-        args << '-s' << value.to_s
+        args << "-s" << value.to_s
       when "total_routes"
-        args << '-r' << value.to_s
+        args << "-r" << value.to_s
       when "non_basic_services_allowed"
-        args << (value ? '--allow-paid-service-plans' : '--disallow-paid-service-plans')
+        args << (value ? "--allow-paid-service-plans" : "--disallow-paid-service-plans")
       end
     end
     if existing_quotas.include?(name)

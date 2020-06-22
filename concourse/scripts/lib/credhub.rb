@@ -1,5 +1,5 @@
-require 'English'
-require 'json'
+require "English"
+require "json"
 
 class CredHubClient
   attr_reader :api_url
@@ -11,13 +11,13 @@ class CredHubClient
   def certificates
     body = `credhub curl -p '#{api_url}/certificates'`
     raise body unless $CHILD_STATUS.success?
-    JSON.parse(body).fetch('certificates')
+    JSON.parse(body).fetch("certificates")
   end
 
   def current_certificates(name)
     body = `credhub curl -p '#{api_url}/data?name=#{name}&current=true'`
     raise body unless $CHILD_STATUS.success?
-    JSON.parse(body).fetch('data')
+    JSON.parse(body).fetch("data")
   end
 
   def current_certificate(name)
@@ -29,14 +29,14 @@ class CredHubClient
     raise body unless $CHILD_STATUS.success?
     JSON
       .parse(body)
-      .fetch('certificates').first.fetch('versions')
-      .select { |c| c.fetch('transitional', false) }
+      .fetch("certificates").first.fetch("versions")
+      .select { |c| c.fetch("transitional", false) }
   end
 
   def live_certificates(name)
     current = current_certificate(name)
     transitional = transitional_certificates(name)
-    transitional.concat([current]).uniq { |c| c.fetch('id') }
+    transitional.concat([current]).uniq { |c| c.fetch("id") }
   end
 
   def credential(credential_id)
@@ -51,13 +51,13 @@ class CredHubClient
   end
 
   def regenerate_certificate_as_transitional(cert_id)
-    payload = { 'set_as_transitional' => true }
+    payload = { "set_as_transitional" => true }
     body = `credhub curl -p "#{api_url}/certificates/#{cert_id}/regenerate" -d '#{payload.to_json}' -X POST`
     raise body unless $CHILD_STATUS.success?
   end
 
   def update_certificate_transitional_version(cert_id, optional_version_id)
-    payload = { 'version' => optional_version_id }
+    payload = { "version" => optional_version_id }
     body = `credhub curl -p '#{api_url}/certificates/#{cert_id}/update_transitional_version' -d '#{payload.to_json}' -X PUT`
     raise body unless $CHILD_STATUS.success?
   end
