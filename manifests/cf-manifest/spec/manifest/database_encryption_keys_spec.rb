@@ -7,7 +7,6 @@ RSpec.describe "database encryption keys" do
       instance_groups.cc-worker.jobs.cloud_controller_worker.properties
       instance_groups.scheduler.jobs.cloud_controller_clock.properties
     ].each do |job_properties_path|
-
       it "has a default encryption key configured" do
         properties = manifest.fetch(job_properties_path)
 

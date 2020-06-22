@@ -69,7 +69,7 @@ RSpec.describe "rotate-cf-certs" do
       - name: rsa_to_keep
         type: rsa
 
-FIXTURE
+    FIXTURE
   end
 
   let(:empty_vars_store) do
@@ -166,7 +166,7 @@ FIXTURE
         private_key: Private key keep
         public_key: Public key keep
         public_key_fingerprint: Public key's MD5 fingerprint keep
-FIXTURE
+    FIXTURE
   end
 
   let(:vars_to_preserve) do
@@ -198,7 +198,6 @@ FIXTURE
     rsa
     ssh
   ].each do |type|
-
     describe "#{type} type secrets" do
       it "does not change if #{type}: false" do
         expect(rotate(manifest, vars_store)).to eq(vars_store)
@@ -258,6 +257,7 @@ FIXTURE
 
       rotated_vars_store.each do |k, v|
         next unless (k.start_with? "ca_", "leaf_") && k.end_with?("_old")
+
         expect(v).to include(
           "ca" => "",
           "certificate" => "",

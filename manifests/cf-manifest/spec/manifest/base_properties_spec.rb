@@ -62,7 +62,6 @@ RSpec.describe "base properties" do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
     end
 
-
     it "sets the system_domain from the terraform outputs" do
       expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture_value(:cf_root_domain))
     end

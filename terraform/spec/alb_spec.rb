@@ -73,7 +73,6 @@ describe "alb" do
         .map { |r| r.dig("name") }
         .map { |val| val.gsub("${var.env}", "prod-lon") }
 
-
       expect(lb_names).not_to be_empty
       expect(lb_names).to all(match(/^[-a-z]{4,32}$/))
       expect(lb_names).not_to include(match("var.env"))

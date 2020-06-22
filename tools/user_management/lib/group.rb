@@ -99,17 +99,17 @@ class Group < UAAResource
   end
 
   def get_uaa_user(user_guid, uaa_client)
-    
-      get("/Users/#{user_guid}", uaa_client)
-    rescue RestClient::NotFound
-      # When we first ran this script, some of our Groups had members without
-      # accompanying Users. These users had been manually destroyed but their
-      # memberships hadn't been cleaned up.
-      {
-        "id" => user_guid,
-        "origin" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
-        "userName" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
-      }
-    
+
+    get("/Users/#{user_guid}", uaa_client)
+  rescue RestClient::NotFound
+    # When we first ran this script, some of our Groups had members without
+    # accompanying Users. These users had been manually destroyed but their
+    # memberships hadn't been cleaned up.
+    {
+      "id" => user_guid,
+      "origin" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
+      "userName" => "*** THE USER BEHIND THIS MEMBERSHIP DOES NOT EXIST ***",
+    }
+
   end
 end

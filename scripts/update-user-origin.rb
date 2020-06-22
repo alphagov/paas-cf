@@ -43,7 +43,6 @@ pp user
 user = user.keep_if { |k, _| %w[userName name emails].include?(k) }
 user = user.update('origin': desired_origin)
 
-
 command = <<~COMMAND.lines.map(&:chomp).join(" ")
   uaac curl '/Users/#{user_guid}'
   -X PUT

@@ -14,7 +14,6 @@ RSpec.describe "adding VMs to the load balancer" do
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.0.name")).to eq("nginx")
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.0.release")).to eq("prometheus")
 
-
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs").length).to eq(1)
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.name")).to eq("nginx")
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.release")).to eq("prometheus")

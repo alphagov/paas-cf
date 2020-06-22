@@ -31,7 +31,6 @@ RSpec.describe "image resources" do
     image_tags_by_repo
       .select { |repo, _| repo.match?(%r{^governmentpaas/}) }
       .each do |repo, tags|
-
       context "repo #{repo}" do
         it "has only one tag" do
           expect(tags.length).to eq(1)

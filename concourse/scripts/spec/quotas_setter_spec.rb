@@ -7,21 +7,21 @@ RSpec.describe QuotasSetter do
 
   let(:quota_definitions) { {} }
   let(:manifest) do
-    {
-      "instance_groups" => [
-        "name" => "api",
-        "jobs" => {
-          "cloud_controller_ng" => {
-            "properties" => {
-              "cc" => {
-                "quota_definitions" => quota_definitions,
-              },
+  {
+    "instance_groups" => [
+      "name" => "api",
+      "jobs" => {
+        "cloud_controller_ng" => {
+          "properties" => {
+            "cc" => {
+              "quota_definitions" => quota_definitions,
             },
           },
         },
-      ],
-    } end
-
+      },
+    ],
+  }
+end
 
   describe "creating/updating quotas" do
     before do

@@ -5,6 +5,7 @@ require_relative "group"
 def ensure_users_exist_in_uaa(users, uaa_client)
   users.each do |user|
     next if user.exists?(uaa_client)
+
     puts "Creating new user '#{user.email}' with Google ID '#{user.username}'".green
     user.create(uaa_client)
     user.get_user(uaa_client)

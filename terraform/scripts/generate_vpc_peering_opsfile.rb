@@ -16,7 +16,7 @@ if File.file?(ARGV[0])
       "value" => {
         "name" => "vpc_peer_" + peer["peer_name"],
         "rules" => [{
-            "protocol" => "all",
+          "protocol" => "all",
             "destination" => peer["subnet_cidr"],
         }],
       },

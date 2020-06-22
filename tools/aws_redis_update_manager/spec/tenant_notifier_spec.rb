@@ -96,7 +96,6 @@ RSpec.describe TenantNotifier do
       allow(notifier.client).to receive(:send_email)
     end
 
-
     it 'personalises the Notify "contents" field' do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(personalisation: hash_including(

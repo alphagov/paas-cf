@@ -16,7 +16,7 @@ RSpec.describe "VPC peering" do
       expect(properties.fetch("cc.security_group_definitions.vpc_peer_dit")).to eq(
         "name" => "vpc_peer_dit",
         "rules" => [{
-            "protocol" => "all",
+          "protocol" => "all",
             "destination" => "172.16.1.0/24",
         }],
       )
