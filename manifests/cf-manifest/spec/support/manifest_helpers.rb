@@ -74,6 +74,7 @@ private
     unless status.success?
       raise "Error generating vpc peering opsfile, exit: #{status.exitstatus}, output:\n#{output}\n#{error}"
     end
+
     file.write(output)
     file.flush
     file.rewind

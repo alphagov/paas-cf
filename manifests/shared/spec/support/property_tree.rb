@@ -11,6 +11,7 @@ class PropertyTree
 
   def recursive_get(tree, key_array)
     return tree if key_array.empty?
+
     current_key, *next_keys = key_array
 
     next_level = case tree

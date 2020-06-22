@@ -109,6 +109,7 @@ es_plans_req.each do |plan| # rubocop:disable Metrics/BlockLength
   plan_name = plan["entity"]["name"]
   next unless plan_name \
       =~ Regexp.new(/#{filters.plan_regex}/)
+
   plan_instances_req = do_paginated_capi_request(
     plan["entity"]["service_instances_url"],
   )

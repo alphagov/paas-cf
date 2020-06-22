@@ -48,6 +48,7 @@ RSpec.describe "release versions" do
     unpinned_cf_deployment_releases.each do |name, version|
       next if name.end_with? "-buildpack"
       next unless manifest_releases.has_key? name
+
       expect(normalise_version(manifest_releases[name])).to be >= normalise_version(version),
         "expected #{name} release version #{manifest_releases[name]} to be older than #{version} as defined in cf-deployment. Maybe you need to pin it?"
     end

@@ -49,10 +49,12 @@ private
     loop do
       body = `cf curl '#{path}'`
       raise body unless $CHILD_STATUS.success?
+
       resp = JSON.parse(body)
       resources += resp.fetch("resources")
 
       break if resp.dig("pagination", "next").nil?
+
       path = cf_curl_path(resp.dig("pagination", "next", "href"))
     end
 
@@ -66,10 +68,12 @@ private
     loop do
       body = `cf curl '#{path}'`
       raise body unless $CHILD_STATUS.success?
+
       resp = JSON.parse(body)
       resources += resp.fetch("resources")
 
       break if resp.dig("next_url").nil?
+
       path = cf_curl_path(resp.dig("next_url"))
     end
 

@@ -53,6 +53,7 @@ class AwsRedisUpdateManager
         org.org_manager_guids.each do |org_manager_guid|
           org_manager = @paas_accounts_api_client.find_user(org_manager_guid)
           next if org_manager.nil?
+
           puts "    #{org_manager.email}"
         end
 

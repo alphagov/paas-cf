@@ -11,12 +11,14 @@ class CredHubClient
   def certificates
     body = `credhub curl -p '#{api_url}/certificates'`
     raise body unless $CHILD_STATUS.success?
+
     JSON.parse(body).fetch("certificates")
   end
 
   def current_certificates(name)
     body = `credhub curl -p '#{api_url}/data?name=#{name}&current=true'`
     raise body unless $CHILD_STATUS.success?
+
     JSON.parse(body).fetch("data")
   end
 
@@ -27,6 +29,7 @@ class CredHubClient
   def transitional_certificates(name)
     body = `credhub curl -p '#{api_url}/certificates?name=#{name}'`
     raise body unless $CHILD_STATUS.success?
+
     JSON
       .parse(body)
       .fetch("certificates").first.fetch("versions")
@@ -42,6 +45,7 @@ class CredHubClient
   def credential(credential_id)
     body = `credhub curl -p '#{api_url}/data/#{credential_id}'`
     raise body unless $CHILD_STATUS.success?
+
     JSON.parse(body)
   end
 

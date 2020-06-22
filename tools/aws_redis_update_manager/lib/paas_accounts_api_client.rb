@@ -27,6 +27,7 @@ class PaaSAccountsAPIClient
 
   def http_client
     return HTTP if @username.nil? || @password.nil?
+
     HTTP.basic_auth(user: @username, pass: @password)
   end
 

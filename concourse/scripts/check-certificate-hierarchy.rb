@@ -18,6 +18,7 @@ class CertificateHierarchy
 
   def add_edge(ca, cert)
     return if ca == cert
+
     @cert_names = @cert_names.push(ca).push(cert).uniq
 
     @signs[ca] ||= []
@@ -43,6 +44,7 @@ private
   def depth_for_cert(cert)
     signer = @signed_by[cert]
     return 1 if signer.nil?
+
     depth_for_cert(signer) + 1
   end
 

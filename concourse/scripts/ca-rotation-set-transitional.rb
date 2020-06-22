@@ -10,6 +10,7 @@ credhub_server = ENV["CREDHUB_SERVER"] || raise("Must set $CREDHUB_SERVER env va
 
 expiry_days = ENV["EXPIRY_DAYS"].to_i
 raise "EXPIRY_DAYS must be set" if expiry_days.nil? || expiry_days.zero?
+
 date_of_expiry = Date.today + expiry_days
 
 api_url = "#{credhub_server}/v1"
