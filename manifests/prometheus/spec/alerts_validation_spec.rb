@@ -14,9 +14,7 @@ RSpec.describe "prometheus alerts" do
           .first.dig("properties", "prometheus", "custom_rules"),
     )
 
-    open(rules_file_location, "w+") do |f|
-      f.puts prom_alerts
-    end
+    File.write(rules_file_location, prom_alerts)
   end
 
   Dir.glob("*.test.yml", base: "spec/alerts/") do |filename|
