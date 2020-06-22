@@ -1,4 +1,3 @@
-
 RSpec.describe "syslog forwarder config" do
   let(:manifest) { manifest_with_defaults }
   let(:syslog_addon) { manifest.fetch("addons").find { |a| a["name"] == "syslog_forwarder" } }

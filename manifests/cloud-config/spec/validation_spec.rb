@@ -1,4 +1,3 @@
-
 RSpec.describe "generic validations" do
   describe "name uniqueness" do
     %w[

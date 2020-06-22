@@ -1,4 +1,3 @@
-
 RSpec.describe "vm_types" do
   let(:vm_types) { cloud_config_with_defaults.fetch("vm_types") }
 

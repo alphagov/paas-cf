@@ -1,4 +1,3 @@
-
 RSpec.describe "networks" do
   let(:networks) { cloud_config_with_defaults.fetch("networks") }
 

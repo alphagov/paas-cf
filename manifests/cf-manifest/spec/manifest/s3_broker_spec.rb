@@ -1,4 +1,3 @@
-
 RSpec.describe "S3 broker properties" do
   let(:manifest) { manifest_with_defaults }
   let(:properties) { manifest.fetch("instance_groups.s3_broker.jobs.s3-broker.properties.s3-broker") }

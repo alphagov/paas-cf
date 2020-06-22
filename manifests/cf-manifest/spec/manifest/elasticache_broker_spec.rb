@@ -1,4 +1,3 @@
-
 RSpec.describe "ElastiCache broker properties" do
   let(:manifest) { manifest_with_defaults }
   let(:properties) { manifest.fetch("instance_groups.elasticache_broker.jobs.elasticache-broker.properties.elasticache-broker") }

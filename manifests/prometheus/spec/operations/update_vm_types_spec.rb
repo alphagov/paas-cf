@@ -1,4 +1,3 @@
-
 RSpec.describe "update-vm-types.yml" do
   {
     "alertmanager" => "nano",
