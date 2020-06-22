@@ -13,7 +13,7 @@ RSpec.describe "ElastiCache broker properties" do
       dest_ip_range = "#{dest_ip_range_start}-#{dest_ip_range_stop}"
 
       elasticache_sg = defs.find { |d| d["name"] == "elasticache_broker_instances" }
-      expect(elasticache_sg).to be
+      expect(elasticache_sg).not_to be_nil
       expect(elasticache_sg["rules"]).to eq([{
         "protocol" => "tcp",
         "destination" => dest_ip_range,

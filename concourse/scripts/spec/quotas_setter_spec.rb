@@ -1,6 +1,10 @@
+# rubocop:disable RSpec/SubjectStub
+
 require_relative "../set_quotas_from_manifest"
 
 RSpec.describe QuotasSetter do
+  subject(:quota_setter) { described_class.new(manifest) }
+
   let(:quota_definitions) { {} }
   let(:manifest) do
     {
@@ -18,10 +22,9 @@ RSpec.describe QuotasSetter do
       ],
     } end
 
-  subject(:quota_setter) { described_class.new(manifest) }
 
   describe "creating/updating quotas" do
-    before :each do
+    before do
       allow(quota_setter).to receive(:system).with("cf", /^(create|update)-quota$/, any_args) do
         system("exit 0")
       end
@@ -41,7 +44,7 @@ RSpec.describe QuotasSetter do
     end
 
     context "with no extant quotas" do
-      before :each do
+      before do
         allow(quota_setter).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
@@ -62,7 +65,7 @@ name                                    total memory   instance memory   routes 
     end
 
     context "when some quotas exist" do
-      before :each do
+      before do
         allow(quota_setter).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
@@ -101,3 +104,4 @@ default                                 2G             unlimited         1000   
     expect_cf_quota_write(name, "update-quota", *args)
   end
 end
+# rubocop:enable RSpec/SubjectStub

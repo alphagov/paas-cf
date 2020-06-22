@@ -7,7 +7,7 @@ RSpec.describe "grafana dashboards" do
     end
 
     it "is valid json" do
-      expect { JSON.parse dashboard_contents }.to_not raise_error
+      expect { JSON.parse dashboard_contents }.not_to raise_error
     end
 
     it "is overwritable" do

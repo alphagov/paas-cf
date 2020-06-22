@@ -1,6 +1,10 @@
+# rubocop:disable RSpec/SubjectStub
+
 require_relative "../set_security_groups_from_manifest"
 
 RSpec.describe SecurityGroupsSetter do
+  subject(:sg_setter) { SecurityGroupsSetter.new(manifest) }
+
   let(:security_group_definitions) { [] }
   let(:default_running_security_groups) { [] }
   let(:default_staging_security_groups) { [] }
@@ -22,9 +26,8 @@ RSpec.describe SecurityGroupsSetter do
       ],
     } end
 
-  subject(:sg_setter) { SecurityGroupsSetter.new(manifest) }
 
-  before :each do
+  before do
     allow(sg_setter).to receive(:`).with("cf security-groups") do
       system("exit 0") # setup $?
       ""
@@ -32,14 +35,14 @@ RSpec.describe SecurityGroupsSetter do
   end
 
   describe "creating/updating security group definitions" do
-    before :each do
+    before do
       allow(sg_setter).to receive(:system).with("cf", /^(create|update)-security-group$/, any_args) do
         system("exit 0")
       end
     end
 
     context "with no extant security groups" do
-      before :each do
+      before do
         allow(sg_setter).to receive(:`).with("cf security-groups") do
           system("exit 0") # setup $?
           <<-EOT
@@ -73,7 +76,7 @@ OK
         [{ "protocol" => "tcp", "destination" => "10.0.0.4", "port" => 25 }]
       end
 
-      before :each do
+      before do
         allow(sg_setter).to receive(:`).with("cf security-groups") do
           system("exit 0") # setup $?
           <<-EOT
@@ -142,3 +145,4 @@ OK
     end
   end
 end
+# rubocop:enable RSpec/SubjectStub

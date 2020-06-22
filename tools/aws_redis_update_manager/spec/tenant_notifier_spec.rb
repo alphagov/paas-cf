@@ -78,12 +78,6 @@ RSpec.describe TenantNotifier do
 
   context "when notifying a tenant" do
     let(:notifier) { TenantNotifier.new(notify_api_key) }
-
-    before(:each) do
-      notifier.instance_variable_set(:@client, double)
-      allow(notifier.client).to receive(:send_email)
-    end
-
     let(:send_email) do
       notifier.notify_tenant(
         tenant_email_address: tenant_email_address,
@@ -96,6 +90,12 @@ RSpec.describe TenantNotifier do
         region: "London",
       )
     end
+
+    before do
+      notifier.instance_variable_set(:@client, double)
+      allow(notifier.client).to receive(:send_email)
+    end
+
 
     it 'personalises the Notify "contents" field' do
       expect(notifier.client).to receive(:send_email).with(

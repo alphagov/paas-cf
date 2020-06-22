@@ -212,8 +212,8 @@ FIXTURE
         }
         rotated_vars_store = rotate(manifest, vars_store, **args)
 
-        expect(rotated_vars_store).to_not include("#{type}_one")
-        expect(rotated_vars_store).to_not include("#{type}_two")
+        expect(rotated_vars_store).not_to include("#{type}_one")
+        expect(rotated_vars_store).not_to include("#{type}_two")
 
         remaining_secrets = vars_store.keys.reject { |k| (k == "#{type}_one") || (k == "#{type}_two") }
         expect(rotated_vars_store.keys).to include(*remaining_secrets)
@@ -231,7 +231,7 @@ FIXTURE
         }
         rotated_vars_store = rotate(manifest, vars_store, **args)
 
-        expect(rotated_vars_store).to_not include("#{type}_one")
+        expect(rotated_vars_store).not_to include("#{type}_one")
 
         remaining_secrets = vars_store.keys.reject { |k| (k == "#{type}_one") }
         expect(rotated_vars_store.keys).to include(*remaining_secrets)
@@ -248,7 +248,7 @@ FIXTURE
 
       rotated_vars_store.each_key do |k, _v|
         unless (k.start_with? "ca_", "leaf_") && k.end_with?("_old")
-          expect(k).to_not end_with "_old"
+          expect(k).not_to end_with "_old"
         end
       end
     end
@@ -280,7 +280,7 @@ FIXTURE
             "private_key" => "",
           )
         else
-          expect(rotated_vars_store).to_not include("#{k}_old")
+          expect(rotated_vars_store).not_to include("#{k}_old")
         end
       end
     end

@@ -5,7 +5,7 @@ RSpec.describe "syslog forwarder config" do
   let(:syslog_properties) { syslog_addon.fetch("jobs").find { |j| j["name"] == "syslog_forwarder" }.fetch("properties") }
 
   it "adds the syslog_forwarder addon" do
-    expect(syslog_addon).to be
+    expect(syslog_addon).not_to be_nil
   end
 
   it "configures tls to be enabled" do

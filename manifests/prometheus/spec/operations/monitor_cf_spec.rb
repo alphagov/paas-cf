@@ -11,7 +11,7 @@ RSpec.describe "Monitor CF" do
       "instance_groups.prometheus2.jobs.cf_exporter",
     )
 
-    expect(cf_exporter_config).to_not be_nil
+    expect(cf_exporter_config).not_to be_nil
   end
 
   it "adds the cloudfoundry_dashboards job" do
@@ -19,6 +19,6 @@ RSpec.describe "Monitor CF" do
       "instance_groups.grafana.jobs.cloudfoundry_dashboards",
     )
 
-    expect(cf_dashboards_config).to_not be_nil
+    expect(cf_dashboards_config).not_to be_nil
   end
 end

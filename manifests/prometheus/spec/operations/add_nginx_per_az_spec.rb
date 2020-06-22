@@ -1,11 +1,11 @@
 
 RSpec.describe "adding VMs to the load balancer" do
   it "adds two nginx instance groups to separate azs" do
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1")).to_not be_empty
+    expect(manifest_with_defaults.get("instance_groups.nginx_z1")).not_to be_empty
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.name")).to eq("nginx_z1")
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.azs")).to eq(["z1"])
 
-    expect(manifest_with_defaults.get("instance_groups.nginx_z2")).to_not be_empty
+    expect(manifest_with_defaults.get("instance_groups.nginx_z2")).not_to be_empty
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.name")).to eq("nginx_z2")
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.azs")).to eq(["z2"])
   end

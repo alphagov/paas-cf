@@ -1,5 +1,5 @@
 RSpec.describe "dev deployment speed up" do
-  after :each do
+  after do
     ENV.delete("SLIM_DEV_DEPLOYMENT")
   end
 

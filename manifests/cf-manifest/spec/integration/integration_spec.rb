@@ -4,7 +4,7 @@ RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }
 
   specify "it must have a name" do
-    expect(manifest["name"]).to be
+    expect(manifest["name"]).not_to be_nil
     expect(manifest["name"]).to match(/\S+/)
   end
 

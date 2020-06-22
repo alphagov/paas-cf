@@ -54,16 +54,19 @@ RSpec.describe "base properties" do
   end
 
   describe "api cloud_controller_ng" do
-    subject(:cloud_controller_ng_properties) do
-      manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
-    end
     subject(:cc) do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc"]
     end
 
+    let(:cloud_controller_ng_properties) do
+      manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
+    end
+
+
     it "sets the system_domain from the terraform outputs" do
       expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture_value(:cf_root_domain))
     end
+
     it "sets the app domains" do
       expect(cloud_controller_ng_properties["app_domains"]).to match_array([
         terraform_fixture_value(:cf_apps_domain),
@@ -167,8 +170,9 @@ RSpec.describe "base properties" do
 
       describe "login" do
         subject(:client) { clients.fetch("login") }
+
         it {
-          is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
+          expect(subject).to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
         }
       end
     end

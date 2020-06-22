@@ -4,7 +4,7 @@ RSpec.describe "bosh dns addon" do
   let(:bosh_dns_properties) { bosh_dns_addon.fetch("jobs").find { |j| j["name"] == "bosh-dns" }.fetch("properties") }
 
   it "sets up bosh dns" do
-    expect(bosh_dns_addon).to_not be_nil
+    expect(bosh_dns_addon).not_to be_nil
   end
 
   it "enables caching" do

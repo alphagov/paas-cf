@@ -5,7 +5,6 @@ RSpec.describe "generic manifest validations" do
   let(:cloud_config) { cloud_config_with_defaults }
 
   specify "it must have a name" do
-    expect(manifest["name"]).to be
     expect(manifest["name"]).to match(/\S+/)
   end
 

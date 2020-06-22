@@ -1,14 +1,8 @@
 
 RSpec.describe "networks" do
-  CF_NETWORK_NAMES = %w[
-    cf
-    cell
-    router
-  ].freeze
-
   let(:networks) { cloud_config_with_defaults.fetch("networks") }
 
-  CF_NETWORK_NAMES.each do |net_name|
+  %w[cf cell router].each do |net_name|
     describe "#{net_name} network" do
       let(:network) { networks.find { |n| n["name"] == net_name } }
 

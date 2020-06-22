@@ -11,7 +11,7 @@ RSpec.describe "RDS broker properties" do
       dest_ip_range_stop = terraform_fixture_value("aws_backing_service_ip_range_stop")
       dest_ip_range = "#{dest_ip_range_start}-#{dest_ip_range_stop}"
 
-      expect(rds_sg).to be
+      expect(rds_sg).not_to be_nil
       expect(rds_sg["rules"]).to eq([{
         "protocol" => "tcp",
         "destination" => dest_ip_range,

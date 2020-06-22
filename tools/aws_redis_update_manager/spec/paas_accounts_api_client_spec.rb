@@ -1,12 +1,14 @@
+# rubocop:disable RSpec/FilePath
+
 require "base64"
 require "json"
 
 RSpec.describe PaaSAccountsAPIClient do
-  before(:all) do
+  before do
     WebMock.enable!
   end
 
-  after(:all) do
+  after do
     WebMock.disable!
   end
 
@@ -80,3 +82,4 @@ RSpec.describe PaaSAccountsAPIClient do
     end
   end
 end
+# rubocop:enable RSpec/FilePath

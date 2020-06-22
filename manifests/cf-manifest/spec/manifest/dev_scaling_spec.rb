@@ -1,5 +1,5 @@
 RSpec.describe "dev environment scaling" do
-  after :each do
+  after do
     ENV.delete("SLIM_DEV_DEPLOYMENT")
   end
 

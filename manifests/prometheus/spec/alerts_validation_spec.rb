@@ -4,7 +4,7 @@ RSpec.describe "prometheus alerts" do
   prom_alerts = nil
   rules_file_location = "spec/alerts/fixtures/rules.yml"
 
-  before(:all) do
+  before do
     prom_alerts = YAML.dump(
       "groups" =>
         manifest_with_defaults["instance_groups"]
