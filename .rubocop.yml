@@ -15,6 +15,8 @@ AllCops:
     - 'platform-tests/example-apps/healthcheck/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
 
+Layout/ArgumentAlignment:
+  Enabled: false
 Layout/HeredocIndentation:
   Enabled: false
 Layout/HashAlignment:
