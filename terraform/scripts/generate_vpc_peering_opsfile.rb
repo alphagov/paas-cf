@@ -9,7 +9,7 @@ peering_file = ARGV[0]
 operations = Array.new
 
 if File.file?(ARGV[0])
-  operations = JSON.parse(File.read(peering_file)).map { |peer|
+  operations = JSON.parse(File.read(peering_file)).map do |peer|
     {
       "type" => "replace",
       "path" => "/instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions?/-",
@@ -21,7 +21,7 @@ if File.file?(ARGV[0])
         }]
       }
     }
-  }
+  end
 end
 
 puts YAML.dump(operations)

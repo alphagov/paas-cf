@@ -137,7 +137,7 @@ private
     custom_vars_store_content: nil,
     env_specific_bosh_vars_file: "default.yml"
   )
-    Tempfile.open(["vars-store", ".yml"]) { |vars_store_tempfile|
+    Tempfile.open(["vars-store", ".yml"]) do |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance[:vars_store])
       vars_store_tempfile.close
 
@@ -150,7 +150,7 @@ private
       Cache.instance[:vars_store] = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
 
       output
-    }
+    end
   end
 end
 

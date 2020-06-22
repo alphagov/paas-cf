@@ -29,11 +29,11 @@ RSpec.describe "database encryption keys" do
     end
 
     it "only has ((cc_db_encryption_key)) in the expected locations" do
-      found_locations = manifest.inject([]) { |acum, v, path|
+      found_locations = manifest.inject([]) do |acum, v, path|
         new_acum = acum
         new_acum << path if v.is_a?(String) && v.include?("((cc_db_encryption_key))")
         new_acum
-      }
+      end
       expected_locations = %w{
         /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/database_encryption/keys/((cc_db_encryption_key_id))
         /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/db_encryption_key

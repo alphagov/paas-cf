@@ -54,30 +54,30 @@ class PropertyTree
   # in BOSH opsfiles.
   def recursive_inject(acum, x, path)
     if x.is_a? Hash
-      x.inject(acum) { |acum2, (key, x2)|
-        recursive_inject(acum2, x2, path + "/" + key) { |acum3, x3, path3|
+      x.inject(acum) do |acum2, (key, x2)|
+        recursive_inject(acum2, x2, path + "/" + key) do |acum3, x3, path3|
           yield(acum3, x3, path3)
-        }
-      }
+        end
+      end
     elsif x.is_a? Array
-      x.each_with_index.inject(acum) { |acum2, (x2, index)|
+      x.each_with_index.inject(acum) do |acum2, (x2, index)|
         new_path = if x2.is_a?(Hash) && x2.has_key?("name")
                      path + "/name=" + x2["name"]
                    else
                      path + "/" + index.to_s
                    end
-        recursive_inject(acum2, x2, new_path) { |acum3, x3, path3|
+        recursive_inject(acum2, x2, new_path) do |acum3, x3, path3|
           yield(acum3, x3, path3)
-        }
-      }
+        end
+      end
     else
       yield(acum, x, path)
     end
   end
 
   def inject(acum)
-    self.recursive_inject(acum, @tree, "") { |acum2, x, path|
+    self.recursive_inject(acum, @tree, "") do |acum2, x, path|
       yield(acum2, x, path)
-    }
+    end
   end
 end

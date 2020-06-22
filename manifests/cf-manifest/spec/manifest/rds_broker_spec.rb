@@ -37,15 +37,15 @@ RSpec.describe "RDS broker properties" do
   end
 
   describe "service plans" do
-    let(:rds_broker_instance_group) {
+    let(:rds_broker_instance_group) do
       manifest.fetch("instance_groups.rds_broker")
-    }
-    let(:services) {
+    end
+    let(:services) do
       manifest.fetch("instance_groups.rds_broker.jobs.rds-broker.properties.rds-broker.catalog.services")
-    }
-    let(:all_plans) {
+    end
+    let(:all_plans) do
       services.flat_map { |s| s["plans"] }
-    }
+    end
 
     specify "all services have a unique id" do
       all_ids = services.map { |s| s["id"] }
@@ -69,12 +69,12 @@ RSpec.describe "RDS broker properties" do
     end
 
     specify "all plans within each service have a unique name" do
-      services.each { |s|
+      services.each do |s|
         all_names = s["plans"].map { |p| p["name"] }
         duplicated_names = all_names.select { |name| all_names.count(name) > 1 }.uniq
         expect(duplicated_names).to be_empty,
           "found duplicate plan names (#{duplicated_names.join(',')})"
-      }
+      end
     end
 
     shared_examples "plans using t2 and m4 instances" do
@@ -1527,9 +1527,9 @@ RSpec.describe "RDS broker properties" do
   end
 
   describe "service broker is set to be shareable" do
-    let(:services) {
+    let(:services) do
       manifest.fetch("instance_groups.rds_broker.jobs.rds-broker.properties.rds-broker.catalog.services")
-    }
+    end
 
     it "each service of the rds-broker service broker is shareable" do
       services.each do |service|

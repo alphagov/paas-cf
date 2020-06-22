@@ -2,7 +2,7 @@ require_relative "../set_quotas_from_manifest"
 
 RSpec.describe QuotasSetter do
   let(:quota_definitions) { {} }
-  let(:manifest) {
+  let(:manifest) do
     {
       "instance_groups" => [
         "name" => "api",
@@ -16,7 +16,7 @@ RSpec.describe QuotasSetter do
           },
         },
       ],
-    }}
+    } end
 
   subject { described_class.new(manifest) }
 

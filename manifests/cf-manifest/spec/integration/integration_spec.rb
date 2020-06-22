@@ -119,9 +119,9 @@ RSpec.describe "generic manifest validations" do
     end
 
     describe "networks" do
-      let(:networks_by_name) {
+      let(:networks_by_name) do
         cloud_config_with_defaults["networks"].each_with_object({}) { |net, result| result[net["name"]] = net }
-      }
+      end
       let(:network_names) { networks_by_name.keys }
 
       specify "all jobs reference networks that exist" do

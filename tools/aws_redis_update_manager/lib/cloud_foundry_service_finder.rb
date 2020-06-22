@@ -93,10 +93,10 @@ private
 
     # our capi does not support plan_guid in service_instances
     @service_instances ||= paginate_v2("/v2/service_instances")
-      .select do |i|
+      .select { |i|
         plan_guid = i.dig("entity", "service_plan_guid")
         service_plan_guids.include? plan_guid
-      end
+      }
       .group_by { |i| i.dig("metadata", "guid") }
       .transform_values(&:first)
   end

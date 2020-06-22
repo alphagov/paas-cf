@@ -16,7 +16,7 @@ if File.file?(config_file)
     exit(0)
   end
 
-  ops = config[deploy_env].flat_map { |client|
+  ops = config[deploy_env].flat_map do |client|
     client["uaa_client"]["secret"] = "((#{client['secret_name']}))"
 
     [
@@ -34,7 +34,7 @@ if File.file?(config_file)
         }
       }
     ]
-  }
+  end
   puts YAML.dump(ops)
 else
   warn "config file not found at #{config_file}"

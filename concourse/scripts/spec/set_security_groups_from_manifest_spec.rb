@@ -4,7 +4,7 @@ RSpec.describe SecurityGroupsSetter do
   let(:security_group_definitions) { [] }
   let(:default_running_security_groups) { [] }
   let(:default_staging_security_groups) { [] }
-  let(:manifest) {
+  let(:manifest) do
     {
       "instance_groups" => [
         "name" => "api",
@@ -20,7 +20,7 @@ RSpec.describe SecurityGroupsSetter do
           },
         },
       ],
-    }}
+    } end
   subject { SecurityGroupsSetter.new(manifest) }
 
   before :each do

@@ -14,9 +14,9 @@ RSpec.describe "prometheus alerts" do
           .first.dig("properties", "prometheus", "custom_rules"),
     )
 
-    open(rules_file_location, "w+") { |f|
+    open(rules_file_location, "w+") do |f|
       f.puts prom_alerts
-    }
+    end
   end
 
   Dir.glob("*.test.yml", base: "spec/alerts/") do |filename|

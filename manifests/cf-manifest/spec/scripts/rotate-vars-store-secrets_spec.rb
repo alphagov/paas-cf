@@ -1,7 +1,7 @@
 require_relative "../../scripts/rotate-vars-store-secrets.rb"
 
 RSpec.describe "rotate-cf-certs" do
-  let(:manifest) {
+  let(:manifest) do
     YAML.safe_load <<~FIXTURE
       variables:
       - name: ca_one
@@ -70,13 +70,13 @@ RSpec.describe "rotate-cf-certs" do
         type: rsa
 
 FIXTURE
-  }
+  end
 
-  let(:empty_vars_store) {
+  let(:empty_vars_store) do
     {}
-  }
+  end
 
-  let(:vars_store) {
+  let(:vars_store) do
     YAML.safe_load <<~FIXTURE
       ca_one:
         ca: |
@@ -167,9 +167,9 @@ FIXTURE
         public_key: Public key keep
         public_key_fingerprint: Public key's MD5 fingerprint keep
 FIXTURE
-  }
+  end
 
-  let(:vars_to_preserve) {
+  let(:vars_to_preserve) do
     %w{
       ca_to_keep
       leaf_to_keep
@@ -177,7 +177,7 @@ FIXTURE
       rsa_to_keep
       ssh_to_keep
     }
-  }
+  end
 
   describe "no variables" do
     it "returns no variables without raising exceptions" do
@@ -246,17 +246,17 @@ FIXTURE
     it "deletes _old secrets that are not certs" do
       rotated_vars_store = rotate(manifest, vars_store, delete: true)
 
-      rotated_vars_store.each_key { |k, _v|
+      rotated_vars_store.each_key do |k, _v|
         unless (k.start_with? "ca_", "leaf_") && k.end_with?("_old")
           expect(k).to_not end_with "_old"
         end
-      }
+      end
     end
 
     it "blanks existing _old certs so that they are not regenerated and kept empty" do
       rotated_vars_store = rotate(manifest, vars_store, delete: true)
 
-      rotated_vars_store.each { |k, v|
+      rotated_vars_store.each do |k, v|
         if (k.start_with? "ca_", "leaf_") && k.end_with?("_old")
           expect(v).to include(
             "ca" => "",
@@ -264,7 +264,7 @@ FIXTURE
             "private_key" => "",
           )
         end
-      }
+      end
     end
 
     it "onlies delete _old secrets for secrets set to rotate" do
@@ -272,7 +272,7 @@ FIXTURE
 
       rotated_vars_store = rotate(manifest, vars_store, vars_to_rotate: vars_to_rotate, delete: true)
 
-      vars_to_rotate.each { |k|
+      vars_to_rotate.each do |k|
         if k.start_with? "ca_", "leaf_"
           expect(rotated_vars_store["#{k}_old"]).to include(
             "ca" => "",
@@ -282,7 +282,7 @@ FIXTURE
         else
           expect(rotated_vars_store).to_not include("#{k}_old")
         end
-      }
+      end
     end
 
     it "does not delete _old secrets for secrets not set to rotate" do
@@ -291,9 +291,9 @@ FIXTURE
 
       rotated_vars_store = rotate(manifest, vars_store, vars_to_rotate: vars_to_rotate, delete: true)
 
-      expected_vars_to_keep.each { |k|
+      expected_vars_to_keep.each do |k|
         expect(rotated_vars_store).to include("#{k}_old" => vars_store["#{k}_old"])
-      }
+      end
     end
   end
 end

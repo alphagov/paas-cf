@@ -45,14 +45,14 @@ RSpec.describe "release versions" do
       pinned_releases.has_key? name
     }.to_h
 
-    unpinned_cf_deployment_releases.each { |name, version|
+    unpinned_cf_deployment_releases.each do |name, version|
       next if name.end_with? "-buildpack"
       next unless manifest_releases.has_key? name
       expect(normalise_version(manifest_releases[name])).to be >= normalise_version(version),
         "expected #{name} release version #{manifest_releases[name]} to be older than #{version} as defined in cf-deployment. Maybe you need to pin it?"
-    }
+    end
 
-    pinned_releases.each { |name, pinned_versions|
+    pinned_releases.each do |name, pinned_versions|
       expect(manifest_releases).to have_key(name), "expected pinned release #{name} for found in manifest"
       expect(cf_deployment_releases).to have_key(name), "expected pinned release #{name} for found in cf-deployment"
       expect(normalise_version(manifest_releases[name])).to be(normalise_version(pinned_versions[:local])),
@@ -60,7 +60,7 @@ RSpec.describe "release versions" do
 
       expect(normalise_version(cf_deployment_releases[name])).to be(normalise_version(pinned_versions[:upstream])),
         "expected #{name} upstream to be #{pinned_versions[:upstream]} not #{cf_deployment_releases[name]}. We might need to rebase our forked #{name} release and generate a new tarball, or use the upstream version."
-    }
+    end
   end
 
   specify "cf-smoke-tests-release version is not older than in upstream" do

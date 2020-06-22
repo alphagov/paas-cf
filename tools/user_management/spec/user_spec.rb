@@ -79,9 +79,9 @@ RSpec.describe User do
     )
 
     expect(u.create(fake_uaa_client)).to be true
-    assert_requested(:post, "http://fake-uaa.internal/Users", times: 1) { |req|
+    assert_requested(:post, "http://fake-uaa.internal/Users", times: 1) do |req|
       JSON.parse(req.body)["userName"] == "000000000000000000000"
-    }
+    end
 
     stub_request(:post, "http://fake-uaa.internal/Users")
       .to_return(status: 400, body: JSON.generate({}))

@@ -66,12 +66,12 @@ RSpec.describe "the instance_groups definitions block" do
 end
 
 RSpec.describe "registration of routes for services behind GoRouter" do
-  let(:uaa_routes) {
+  let(:uaa_routes) do
     manifest_with_defaults.fetch("instance_groups.uaa.jobs.route_registrar.properties.route_registrar.routes")
-  }
-  let(:api_routes) {
+  end
+  let(:api_routes) do
     manifest_with_defaults.fetch("instance_groups.api.jobs.route_registrar.properties.route_registrar.routes")
-  }
+  end
 
   it "registers the correct uris for uaa" do
     expect(uaa_routes.length).to eq(1)

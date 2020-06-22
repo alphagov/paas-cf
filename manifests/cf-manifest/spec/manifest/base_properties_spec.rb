@@ -54,12 +54,12 @@ RSpec.describe "base properties" do
   end
 
   describe "api cloud_controller_ng" do
-    subject(:cloud_controller_ng_properties) {
+    subject(:cloud_controller_ng_properties) do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
-    }
-    subject(:cc) {
+    end
+    subject(:cc) do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc"]
-    }
+    end
 
     it "sets the system_domain from the terraform outputs" do
       expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture_value(:cf_root_domain))
@@ -112,9 +112,9 @@ RSpec.describe "base properties" do
   end
 
   describe "scheduler cloud_controller_clock" do
-    subject(:cc) {
+    subject(:cc) do
       manifest["instance_groups.scheduler.jobs.cloud_controller_clock.properties.cc"]
-    }
+    end
 
     describe "app_usage_events" do
       subject(:app_usage_events) { cc.fetch("app_usage_events") }
@@ -159,10 +159,10 @@ RSpec.describe "base properties" do
       subject(:clients) { uaa.fetch("clients") }
 
       it {
-        clients.each { |_, config|
+        clients.each do |_, config|
           expect(config).to have_key("override")
           expect(config["override"]).to be true
-        }
+        end
       }
 
       describe "login" do
@@ -187,9 +187,9 @@ RSpec.describe "base properties" do
   end
 
   describe "buildpacks" do
-    let(:install_buildpacks_property) {
+    let(:install_buildpacks_property) do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.install_buildpacks"]
-    }
+    end
 
     it "install_buildpacks does not contain buildpacks" do
       expect(install_buildpacks_property).to be_nil.or be_empty

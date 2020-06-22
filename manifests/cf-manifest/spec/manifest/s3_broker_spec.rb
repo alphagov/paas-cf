@@ -4,12 +4,12 @@ RSpec.describe "S3 broker properties" do
   let(:properties) { manifest.fetch("instance_groups.s3_broker.jobs.s3-broker.properties.s3-broker") }
 
   describe "service plans" do
-    let(:services) {
+    let(:services) do
       properties.fetch("catalog").fetch("services")
-    }
-    let(:all_plans) {
+    end
+    let(:all_plans) do
       services.flat_map { |s| s["plans"] }
-    }
+    end
 
     specify "all services have a unique id" do
       all_ids = services.map { |s| s["id"] }
@@ -33,19 +33,19 @@ RSpec.describe "S3 broker properties" do
     end
 
     specify "all plans within each service have a unique name" do
-      services.each { |s|
+      services.each do |s|
         all_names = s["plans"].map { |p| p["name"] }
         duplicated_names = all_names.select { |name| all_names.count(name) > 1 }.uniq
         expect(duplicated_names).to be_empty,
           "found duplicate plan names (#{duplicated_names.join(',')})"
-      }
+      end
     end
   end
 
   describe "service broker is set to be shareable" do
-    let(:services) {
+    let(:services) do
       properties.fetch("catalog").fetch("services")
-    }
+    end
 
     it "each service of the aws s3 service broker is shareable" do
       services.each do |service|
