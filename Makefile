@@ -11,7 +11,7 @@ DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$
 LOGSEARCH_BOSHRELEASE_TAG=v209.0.0
 LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=v207.0.0
 
-.PHONY:	check-env
+.PHONY: check-env
 check-env:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
