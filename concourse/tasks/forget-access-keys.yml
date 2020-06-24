@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/terraform
-    tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
+    tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
 inputs:
   - name: paas-cf
   - name: cf-tfstate
