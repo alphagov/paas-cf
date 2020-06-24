@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
 script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
-File.open(File.expand_path('~/.paas-script-usage'), 'a') { |f| f.puts script_path }
+File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
-require 'optparse'
-require 'uaa'
-require 'ostruct'
+require "optparse"
+require "uaa"
+require "ostruct"
 
 STATE_MAP = {
   true => "unlocked",
@@ -64,8 +64,8 @@ def update_user(username, active, uaac)
   end
   user = users.first
 
-  if user.fetch('active') != active
-    user['active'] = active
+  if user.fetch("active") != active
+    user["active"] = active
     uaac.patch(:user, user)
   end
 

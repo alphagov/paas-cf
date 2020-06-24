@@ -14,8 +14,8 @@ RSpec.describe "Tenant UAA clients" do
 
   it "creates secrets for the UAA clients it creates" do
     variables = manifest.fetch("variables")
-    expect(variables.any? { |var|
+    expect(variables.any? do |var|
       var["name"] == "secrets_dev_uaa_client"
-    }).to be true
+    end).to be true
   end
 end

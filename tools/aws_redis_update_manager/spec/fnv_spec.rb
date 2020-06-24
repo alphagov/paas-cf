@@ -1,4 +1,4 @@
-RSpec.describe 'fnv' do
+RSpec.describe "fnv" do
   # see alphagov/paas-admin for identical tests
   [
     %w[guid-1 ux4xkdjccy5em],
@@ -17,7 +17,7 @@ RSpec.describe 'fnv' do
     %w[guid-14 duofouhlyvh3m],
     %w[guid-15 duofquhlyviws],
   ].each do |input, expected_output|
-    it "should produce the base32 encoded fnv hash for '#{input}'" do
+    it "produces the base32 encoded fnv hash for '#{input}'" do
       expect(fnv(input)).to eq(expected_output)
     end
   end

@@ -1,8 +1,12 @@
+# rubocop:disable RSpec/SubjectStub
+
 require_relative "../set_quotas_from_manifest"
 
 RSpec.describe QuotasSetter do
+  subject(:quota_setter) { described_class.new(manifest) }
+
   let(:quota_definitions) { {} }
-  let(:manifest) {
+  let(:manifest) do
     {
       "instance_groups" => [
         "name" => "api",
@@ -16,13 +20,12 @@ RSpec.describe QuotasSetter do
           },
         },
       ],
-    }}
-
-  subject { described_class.new(manifest) }
+    }
+  end
 
   describe "creating/updating quotas" do
-    before :each do
-      allow(subject).to receive(:system).with("cf", /^(create|update)-quota$/, any_args) do
+    before do
+      allow(quota_setter).to receive(:system).with("cf", /^(create|update)-quota$/, any_args) do
         system("exit 0")
       end
 
@@ -33,16 +36,16 @@ RSpec.describe QuotasSetter do
         "non_basic_services_allowed" => false,
       }
       quota_definitions["large"] = {
-        "memory_limit" => 10240,
+        "memory_limit" => 10_240,
         "total_services" => 100,
-        "total_routes" => 10000,
+        "total_routes" => 10_000,
         "non_basic_services_allowed" => true,
       }
     end
 
     context "with no extant quotas" do
-      before :each do
-        allow(subject).to receive(:`).with('cf quotas') do
+      before do
+        allow(quota_setter).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
 Getting quotas as admin...
@@ -54,16 +57,16 @@ name                                    total memory   instance memory   routes 
       end
 
       it "creates the quotas" do
-        expect_cf_quota_create("default", '-m', '2048M', '-s', '10', '-r', '1000', '--disallow-paid-service-plans')
-        expect_cf_quota_create("large", '-m', '10240M', '-s', '100', '-r', '10000', '--allow-paid-service-plans')
+        expect_cf_quota_create("default", "-m", "2048M", "-s", "10", "-r", "1000", "--disallow-paid-service-plans")
+        expect_cf_quota_create("large", "-m", "10240M", "-s", "100", "-r", "10000", "--allow-paid-service-plans")
 
-        subject.apply!
+        quota_setter.apply!
       end
     end
 
     context "when some quotas exist" do
-      before :each do
-        allow(subject).to receive(:`).with('cf quotas') do
+      before do
+        allow(quota_setter).to receive(:`).with("cf quotas") do
           system("exit 0") # setup $?
           <<-EOT
 Getting quotas as admin...
@@ -76,28 +79,29 @@ default                                 2G             unlimited         1000   
       end
 
       it "updates an existing quota" do
-        expect_cf_quota_update("default", '-m', '2048M', '-s', '10', '-r', '1000', '--disallow-paid-service-plans')
-        subject.apply!
+        expect_cf_quota_update("default", "-m", "2048M", "-s", "10", "-r", "1000", "--disallow-paid-service-plans")
+        quota_setter.apply!
       end
 
       it "creates a quota that doesn't already exist" do
-        expect_cf_quota_create("large", '-m', '10240M', '-s', '100', '-r', '10000', '--allow-paid-service-plans')
-        subject.apply!
+        expect_cf_quota_create("large", "-m", "10240M", "-s", "100", "-r", "10000", "--allow-paid-service-plans")
+        quota_setter.apply!
       end
     end
   end
 
   def expect_cf_quota_write(name, action, *args)
-    expect(subject).to receive(:system).with("cf", action, name, *args) do
+    expect(quota_setter).to receive(:system).with("cf", action, name, *args) do
       system("exit 0") # setup $?
     end
   end
 
   def expect_cf_quota_create(name, *args)
-    expect_cf_quota_write(name, 'create-quota', *args)
+    expect_cf_quota_write(name, "create-quota", *args)
   end
 
   def expect_cf_quota_update(name, *args)
-    expect_cf_quota_write(name, 'update-quota', *args)
+    expect_cf_quota_write(name, "update-quota", *args)
   end
 end
+# rubocop:enable RSpec/SubjectStub

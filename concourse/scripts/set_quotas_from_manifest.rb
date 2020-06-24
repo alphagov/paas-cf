@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'json'
-require 'yaml'
-require_relative './val_from_yaml.rb'
+require "English"
+require "json"
+require "yaml"
+require_relative "./val_from_yaml.rb"
 
 class QuotasSetter
   def initialize(manifest)
@@ -22,13 +23,13 @@ private
     definition.each do |param, value|
       case param
       when "memory_limit"
-        args << '-m' << "#{value}M"
+        args << "-m" << "#{value}M"
       when "total_services"
-        args << '-s' << value.to_s
+        args << "-s" << value.to_s
       when "total_routes"
-        args << '-r' << value.to_s
+        args << "-r" << value.to_s
       when "non_basic_services_allowed"
-        args << (value ? '--allow-paid-service-plans' : '--disallow-paid-service-plans')
+        args << (value ? "--allow-paid-service-plans" : "--disallow-paid-service-plans")
       end
     end
     if existing_quotas.include?(name)
@@ -51,7 +52,7 @@ private
         next
       end
       if line =~ /\A(\S+)\s+/
-        quotas << $1
+        quotas << Regexp.last_match(1)
       end
     end
     quotas
@@ -59,13 +60,13 @@ private
 
   def cf(*args)
     unless system("cf", *args)
-      raise "Error: 'cf #{args.join(' ')}' exited #{$?.exitstatus}"
+      raise "Error: 'cf #{args.join(' ')}' exited #{$CHILD_STATUS.exitstatus}"
     end
   end
 end
 
-if $0 == __FILE__
-  abort "Usage: #{$0} /path/to/manifest.yml" unless ARGV.size == 1
+if $PROGRAM_NAME == __FILE__
+  abort "Usage: #{$PROGRAM_NAME} /path/to/manifest.yml" unless ARGV.size == 1
   manifest = YAML.load_file(ARGV[0])
   QuotasSetter.new(manifest).apply!
 end

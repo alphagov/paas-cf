@@ -7,20 +7,21 @@ RSpec.describe "RDS broker properties" do
       expect(defs.length).to be > 1 # Ensure the default ones haven't been replaced
       rds_sg = defs.find { |d| d["name"] == "rds_broker_instances" }
 
-      dest_ip_range_start = terraform_fixture_value('aws_backing_service_ip_range_start')
-      dest_ip_range_stop = terraform_fixture_value('aws_backing_service_ip_range_stop')
+      dest_ip_range_start = terraform_fixture_value("aws_backing_service_ip_range_start")
+      dest_ip_range_stop = terraform_fixture_value("aws_backing_service_ip_range_stop")
       dest_ip_range = "#{dest_ip_range_start}-#{dest_ip_range_stop}"
 
-      expect(rds_sg).to be
+      expect(rds_sg).not_to be_nil
       expect(rds_sg["rules"]).to eq([{
         "protocol" => "tcp",
         "destination" => dest_ip_range,
         "ports" => "5432",
-      }, {
-        "protocol" => "tcp",
-        "destination" => dest_ip_range,
-        "ports" => "3306",
-      }])
+      },
+                                     {
+                                       "protocol" => "tcp",
+                                             "destination" => dest_ip_range,
+                                             "ports" => "3306",
+                                     }])
     end
 
     it "adds to default_running_security_groups" do
@@ -37,15 +38,15 @@ RSpec.describe "RDS broker properties" do
   end
 
   describe "service plans" do
-    let(:rds_broker_instance_group) {
+    let(:rds_broker_instance_group) do
       manifest.fetch("instance_groups.rds_broker")
-    }
-    let(:services) {
+    end
+    let(:services) do
       manifest.fetch("instance_groups.rds_broker.jobs.rds-broker.properties.rds-broker.catalog.services")
-    }
-    let(:all_plans) {
+    end
+    let(:all_plans) do
       services.flat_map { |s| s["plans"] }
-    }
+    end
 
     specify "all services have a unique id" do
       all_ids = services.map { |s| s["id"] }
@@ -69,12 +70,12 @@ RSpec.describe "RDS broker properties" do
     end
 
     specify "all plans within each service have a unique name" do
-      services.each { |s|
+      services.each do |s|
         all_names = s["plans"].map { |p| p["name"] }
         duplicated_names = all_names.select { |name| all_names.count(name) > 1 }.uniq
         expect(duplicated_names).to be_empty,
           "found duplicate plan names (#{duplicated_names.join(',')})"
-      }
+      end
     end
 
     shared_examples "plans using t2 and m4 instances" do
@@ -88,7 +89,7 @@ RSpec.describe "RDS broker properties" do
     end
 
     shared_examples "tiny sized plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 5) }
       it { expect(rds_properties).to have_key("db_instance_class") }
@@ -96,7 +97,7 @@ RSpec.describe "RDS broker properties" do
     end
 
     shared_examples "tiny sized high iops plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 25) }
       it { expect(rds_properties).to have_key("db_instance_class") }
@@ -104,84 +105,84 @@ RSpec.describe "RDS broker properties" do
     end
 
     shared_examples "small sized plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 100) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.small$/) }
     end
 
     shared_examples "old small sized plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 20) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.small$/) }
     end
 
     shared_examples "small sized high iops plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 100) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.small$/) }
     end
 
     shared_examples "medium sized plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 100) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.large$/) }
     end
 
     shared_examples "medium sized high iops plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 500) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.large$/) }
     end
 
     shared_examples "large sized plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 512) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.2xlarge$/) }
     end
 
     shared_examples "large sized high iops plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 2560) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.2xlarge$/) }
     end
 
     shared_examples "xlarge sized plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 2048) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.4xlarge$/) }
     end
 
     shared_examples "xlarge sized high iops plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
-      it { expect(rds_properties).to include("allocated_storage" => 10240) }
+      it { expect(rds_properties).to include("allocated_storage" => 10_240) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.4xlarge$/) }
     end
 
     shared_examples "backup enabled plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it "has a backup retention period of 7 days" do
         expect(rds_properties).to include(
-          "backup_retention_period" => 7
+          "backup_retention_period" => 7,
         )
       end
     end
 
     shared_examples "backup disabled plans" do
       it "calls out that it's not backed up in the description" do
-        expect(subject.fetch("description")).to include("NOT BACKED UP")
+        expect(plan.fetch("description")).to include("NOT BACKED UP")
       end
 
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
 
       it "has all snapshots disabled" do
         expect(rds_properties).to include(
@@ -192,22 +193,22 @@ RSpec.describe "RDS broker properties" do
     end
 
     shared_examples "HA plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
       it { expect(rds_properties).to include("multi_az" => true) }
     end
 
     shared_examples "non-HA plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
       it { expect(rds_properties).to include("multi_az" => false) }
     end
 
     shared_examples "Encryption disabled plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
       it { expect(rds_properties).to include("storage_encrypted" => false) }
     end
 
     shared_examples "Encryption enabled plans" do
-      let(:rds_properties) { subject.fetch("rds_properties") }
+      let(:rds_properties) { plan.fetch("rds_properties") }
       it { expect(rds_properties).to include("storage_encrypted" => true) }
     end
 
@@ -276,8 +277,8 @@ RSpec.describe "RDS broker properties" do
 
       describe "plan rds_properties" do
         shared_examples "all postgres plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
-          let(:metadata) { subject.fetch("metadata") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
+          let(:metadata) { plan.fetch("metadata") }
           let(:additional_metadata) { metadata.fetch("AdditionalMetadata") }
 
           it "uses solid state storage" do
@@ -297,7 +298,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         shared_examples "postgres 9.5 plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses postgres 9.5" do
             expect(rds_properties["engine_version"]).to eq("9.5")
@@ -307,7 +308,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         shared_examples "postgres 10 plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses postgres 10" do
             expect(rds_properties["engine_version"]).to eq("10")
@@ -317,7 +318,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         shared_examples "postgres 10 high iops plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses postgres 10" do
             expect(rds_properties["engine_version"]).to eq("10")
@@ -327,7 +328,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         shared_examples "postgres 11 plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses postgres 11" do
             expect(rds_properties["engine_version"]).to eq("11")
@@ -337,10 +338,10 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "tiny-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-9.5" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all postgres plans"
@@ -352,7 +353,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "small-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -363,7 +364,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "small-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -374,7 +375,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "small-ha-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -385,7 +386,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "small-ha-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -396,7 +397,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "medium-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -407,7 +408,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "medium-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -418,7 +419,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "medium-ha-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -429,7 +430,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "medium-ha-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -440,7 +441,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "large-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -451,7 +452,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "large-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -462,7 +463,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "large-ha-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -473,7 +474,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "large-ha-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -484,7 +485,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -495,7 +496,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -506,7 +507,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-unencrypted-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -517,7 +518,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-9.5" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-9.5" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-9.5" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 9.5 plans"
@@ -529,10 +530,10 @@ RSpec.describe "RDS broker properties" do
 
         # Postgres 10
         describe "tiny-unencrypted-10" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-10" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all postgres plans"
@@ -544,7 +545,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-10" do
-          subject { pg_plans.find { |p| p["name"] == "small-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -555,7 +556,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-10" do
-          subject { pg_plans.find { |p| p["name"] == "small-ha-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -566,7 +567,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-10" do
-          subject { pg_plans.find { |p| p["name"] == "medium-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -577,7 +578,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-10" do
-          subject { pg_plans.find { |p| p["name"] == "medium-ha-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -588,7 +589,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-10" do
-          subject { pg_plans.find { |p| p["name"] == "large-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -599,7 +600,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-10" do
-          subject { pg_plans.find { |p| p["name"] == "large-ha-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -610,7 +611,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-10" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -621,7 +622,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-10" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-10" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -633,10 +634,10 @@ RSpec.describe "RDS broker properties" do
 
         # Postgres 10 High IOPS
         describe "tiny-unencrypted-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-10-high-iops" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all postgres plans"
@@ -648,7 +649,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "small-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -659,7 +660,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "small-ha-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -670,7 +671,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "medium-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -681,7 +682,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "medium-ha-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -692,7 +693,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "large-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -703,7 +704,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "large-ha-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -714,7 +715,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -725,7 +726,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-10-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-10-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-10-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 high iops plans"
@@ -737,10 +738,10 @@ RSpec.describe "RDS broker properties" do
 
         # Postgres 11
         describe "tiny-unencrypted-11" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-11" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all postgres plans"
@@ -752,7 +753,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-11" do
-          subject { pg_plans.find { |p| p["name"] == "small-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -763,7 +764,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-11" do
-          subject { pg_plans.find { |p| p["name"] == "small-ha-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -774,7 +775,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-11" do
-          subject { pg_plans.find { |p| p["name"] == "medium-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -785,7 +786,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-11" do
-          subject { pg_plans.find { |p| p["name"] == "medium-ha-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -796,7 +797,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-11" do
-          subject { pg_plans.find { |p| p["name"] == "large-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -807,7 +808,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-11" do
-          subject { pg_plans.find { |p| p["name"] == "large-ha-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -818,7 +819,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-11" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -829,7 +830,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-11" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-11" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -841,10 +842,10 @@ RSpec.describe "RDS broker properties" do
 
         # Postgres 11 High IOPS
         describe "tiny-unencrypted-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "tiny-unencrypted-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-11-high-iops" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all postgres plans"
@@ -856,7 +857,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "small-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -867,7 +868,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "small-ha-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -878,7 +879,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "medium-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -889,7 +890,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "medium-ha-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -900,7 +901,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "large-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -911,7 +912,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "large-ha-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -922,7 +923,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -933,7 +934,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-11-high-iops" do
-          subject { pg_plans.find { |p| p["name"] == "xlarge-ha-11-high-iops" } }
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-11-high-iops" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -1001,7 +1002,7 @@ RSpec.describe "RDS broker properties" do
 
       describe "plan rds_properties" do
         shared_examples "all mysql 5.7 plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses MySQL 5.7" do
             expect(rds_properties["engine_version"]).to start_with("5.7")
@@ -1022,7 +1023,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         shared_examples "mysql 5.7 high iops plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses MySQL 5.7" do
             expect(rds_properties["engine_version"]).to start_with("5.7")
@@ -1043,7 +1044,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         shared_examples "all mysql 8.0 plans" do
-          let(:rds_properties) { subject.fetch("rds_properties") }
+          let(:rds_properties) { plan.fetch("rds_properties") }
 
           it "uses MySQL 8.0" do
             expect(rds_properties["engine_version"]).to start_with("8.0")
@@ -1065,10 +1066,10 @@ RSpec.describe "RDS broker properties" do
 
         # MySQL 5.7
         describe "tiny-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all mysql 5.7 plans"
@@ -1079,7 +1080,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "small-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "old small sized plans"
@@ -1089,7 +1090,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-5.7" do
-          subject { my_plans.find { |p| p["name"] == "small-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "old small sized plans"
@@ -1099,7 +1100,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "small-ha-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "old small sized plans"
@@ -1109,7 +1110,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-5.7" do
-          subject { my_plans.find { |p| p["name"] == "small-ha-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "old small sized plans"
@@ -1119,7 +1120,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "medium-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "medium sized plans"
@@ -1129,7 +1130,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-5.7" do
-          subject { my_plans.find { |p| p["name"] == "medium-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "medium sized plans"
@@ -1139,7 +1140,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "medium-ha-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "medium sized plans"
@@ -1149,7 +1150,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-5.7" do
-          subject { my_plans.find { |p| p["name"] == "medium-ha-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "medium sized plans"
@@ -1159,7 +1160,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "large-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "large sized plans"
@@ -1169,7 +1170,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-5.7" do
-          subject { my_plans.find { |p| p["name"] == "large-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "large sized plans"
@@ -1179,7 +1180,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "large-ha-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "large sized plans"
@@ -1189,7 +1190,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-5.7" do
-          subject { my_plans.find { |p| p["name"] == "large-ha-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "large sized plans"
@@ -1199,7 +1200,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "xlarge sized plans"
@@ -1209,7 +1210,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-5.7" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "xlarge sized plans"
@@ -1219,7 +1220,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-unencrypted-5.7" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "xlarge sized plans"
@@ -1229,7 +1230,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-5.7" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-ha-5.7" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
           it_behaves_like "xlarge sized plans"
@@ -1240,10 +1241,10 @@ RSpec.describe "RDS broker properties" do
 
         # MySQL 5.7 High IOPS
         describe "tiny-unencrypted-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "tiny-unencrypted-5.7-high-iops" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "mysql 5.7 high iops plans"
@@ -1254,7 +1255,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "small-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "small sized high iops plans"
@@ -1264,7 +1265,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "small-ha-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-ha-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "small sized high iops plans"
@@ -1274,7 +1275,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "medium-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "medium sized high iops plans"
@@ -1284,7 +1285,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "medium-ha-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-ha-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "medium sized high iops plans"
@@ -1294,7 +1295,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "large-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "large sized high iops plans"
@@ -1304,7 +1305,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "large-ha-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "large sized high iops plans"
@@ -1314,7 +1315,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "xlarge sized high iops plans"
@@ -1324,7 +1325,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-5.7-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-ha-5.7-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-ha-5.7-high-iops" } }
 
           it_behaves_like "mysql 5.7 high iops plans"
           it_behaves_like "xlarge sized high iops plans"
@@ -1335,10 +1336,10 @@ RSpec.describe "RDS broker properties" do
 
         # MySQL 8.0
         describe "tiny-unencrypted-8.0" do
-          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "tiny-unencrypted-8.0" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all mysql 8.0 plans"
@@ -1349,7 +1350,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-8.0" do
-          subject { my_plans.find { |p| p["name"] == "small-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "small sized plans"
@@ -1359,7 +1360,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-8.0" do
-          subject { my_plans.find { |p| p["name"] == "small-ha-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "small sized plans"
@@ -1369,7 +1370,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-8.0" do
-          subject { my_plans.find { |p| p["name"] == "medium-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "medium sized plans"
@@ -1379,7 +1380,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-8.0" do
-          subject { my_plans.find { |p| p["name"] == "medium-ha-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "medium sized plans"
@@ -1389,7 +1390,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-8.0" do
-          subject { my_plans.find { |p| p["name"] == "large-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "large sized plans"
@@ -1399,7 +1400,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-8.0" do
-          subject { my_plans.find { |p| p["name"] == "large-ha-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "large sized plans"
@@ -1409,7 +1410,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-8.0" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "xlarge sized plans"
@@ -1419,7 +1420,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-8.0" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-ha-8.0" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "xlarge sized plans"
@@ -1430,10 +1431,10 @@ RSpec.describe "RDS broker properties" do
 
         # MySQL 8.0 High IOPS
         describe "tiny-unencrypted-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "tiny-unencrypted-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "tiny-unencrypted-8.0-high-iops" } }
 
           it "is marked as free" do
-            expect(subject.fetch("free")).to eq(true)
+            expect(plan.fetch("free")).to eq(true)
           end
 
           it_behaves_like "all mysql 8.0 plans"
@@ -1444,7 +1445,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "small-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "small sized high iops plans"
@@ -1454,7 +1455,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "small-ha-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "small-ha-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "small-ha-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "small sized high iops plans"
@@ -1464,7 +1465,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "medium-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "medium sized high iops plans"
@@ -1474,7 +1475,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "medium-ha-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "medium-ha-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "medium-ha-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "medium sized high iops plans"
@@ -1484,7 +1485,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "large-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "large sized high iops plans"
@@ -1494,7 +1495,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "large-ha-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "large-ha-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "large sized high iops plans"
@@ -1504,7 +1505,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "xlarge sized high iops plans"
@@ -1514,7 +1515,7 @@ RSpec.describe "RDS broker properties" do
         end
 
         describe "xlarge-ha-8.0-high-iops" do
-          subject { my_plans.find { |p| p["name"] == "xlarge-ha-8.0-high-iops" } }
+          subject(:plan) { my_plans.find { |p| p["name"] == "xlarge-ha-8.0-high-iops" } }
 
           it_behaves_like "all mysql 8.0 plans"
           it_behaves_like "xlarge sized high iops plans"
@@ -1527,14 +1528,14 @@ RSpec.describe "RDS broker properties" do
   end
 
   describe "service broker is set to be shareable" do
-    let(:services) {
+    let(:services) do
       manifest.fetch("instance_groups.rds_broker.jobs.rds-broker.properties.rds-broker.catalog.services")
-    }
+    end
 
     it "each service of the rds-broker service broker is shareable" do
       services.each do |service|
-        service_name = service['name']
-        shareable = service.dig('metadata', 'shareable')
+        service_name = service["name"]
+        shareable = service.dig("metadata", "shareable")
 
         expect(shareable).not_to be(nil), "Service '#{service_name}' has to be shareable, but the 'shareable' parameter is missing in catalog/services/metadata"
         expect(shareable).to be(true), "Service '#{service_name}' has to be shareable, but the value of the parameter is #{shareable}"

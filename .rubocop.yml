@@ -15,12 +15,24 @@ AllCops:
     - 'platform-tests/example-apps/healthcheck/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
 
+Layout/ArgumentAlignment:
+  Enabled: false
 Layout/HeredocIndentation:
   Enabled: false
 Layout/HashAlignment:
   Enabled: false
 
 Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - ca
+    - id
+    - sg
+    - tf
+
+RSpec/DescribedClass:
   Enabled: false
 
 Style/HashEachMethods:

@@ -1,5 +1,5 @@
-require 'http'
-require 'json'
+require "http"
+require "json"
 
 class PaaSAccountsAPIClient
   User = Struct.new(:guid, :username, :email)
@@ -15,7 +15,7 @@ class PaaSAccountsAPIClient
     end
 
     def req_id
-      @resp.headers['X-Vcap-Request-Id'] || 'no-request-id'
+      @resp.headers["X-Vcap-Request-Id"] || "no-request-id"
     end
   end
 
@@ -27,6 +27,7 @@ class PaaSAccountsAPIClient
 
   def http_client
     return HTTP if @username.nil? || @password.nil?
+
     HTTP.basic_auth(user: @username, pass: @password)
   end
 
@@ -38,9 +39,9 @@ class PaaSAccountsAPIClient
     if response.code == 200
       p = JSON.parse(response.to_s)
       return User
-        .new(guid, p['username'], p['user_email'])
+        .new(guid, p["username"], p["user_email"])
     end
 
-    raise UnhandledResponseError.new(response)
+    raise UnhandledResponseError, response
   end
 end

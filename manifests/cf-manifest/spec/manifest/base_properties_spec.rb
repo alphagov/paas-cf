@@ -6,7 +6,7 @@ RSpec.describe "base properties" do
   end
 
   it "has global max_in_flight set to 30%" do
-    expect(manifest["update"].fetch("max_in_flight")).to eq('30%')
+    expect(manifest["update"].fetch("max_in_flight")).to eq("30%")
   end
 
   it "has global canaries set to 1" do
@@ -14,15 +14,15 @@ RSpec.describe "base properties" do
   end
 
   it "does not have meta top level key" do
-    expect(manifest.fetch('meta', 'not_found')).to eq 'not_found'
+    expect(manifest.fetch("meta", "not_found")).to eq "not_found"
   end
 
   it "does not have secrets top level key" do
-    expect(manifest.fetch('secrets', 'not_found')).to eq 'not_found'
+    expect(manifest.fetch("secrets", "not_found")).to eq "not_found"
   end
 
   it "does not have terraform_outputs top level key" do
-    expect(manifest.fetch('terraform_outputs', 'not_found')).to eq 'not_found'
+    expect(manifest.fetch("terraform_outputs", "not_found")).to eq "not_found"
   end
 
   describe "stemcells" do
@@ -54,16 +54,18 @@ RSpec.describe "base properties" do
   end
 
   describe "api cloud_controller_ng" do
-    subject(:cloud_controller_ng_properties) {
-      manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
-    }
-    subject(:cc) {
+    subject(:cc) do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc"]
-    }
+    end
+
+    let(:cloud_controller_ng_properties) do
+      manifest["instance_groups.api.jobs.cloud_controller_ng.properties"]
+    end
 
     it "sets the system_domain from the terraform outputs" do
       expect(cloud_controller_ng_properties["system_domain"]).to eq(terraform_fixture_value(:cf_root_domain))
     end
+
     it "sets the app domains" do
       expect(cloud_controller_ng_properties["app_domains"]).to match_array([
         terraform_fixture_value(:cf_apps_domain),
@@ -112,9 +114,9 @@ RSpec.describe "base properties" do
   end
 
   describe "scheduler cloud_controller_clock" do
-    subject(:cc) {
+    subject(:cc) do
       manifest["instance_groups.scheduler.jobs.cloud_controller_clock.properties.cc"]
-    }
+    end
 
     describe "app_usage_events" do
       subject(:app_usage_events) { cc.fetch("app_usage_events") }
@@ -159,16 +161,17 @@ RSpec.describe "base properties" do
       subject(:clients) { uaa.fetch("clients") }
 
       it {
-        clients.each { |_, config|
+        clients.each do |_, config|
           expect(config).to have_key("override")
           expect(config["override"]).to be true
-        }
+        end
       }
 
       describe "login" do
         subject(:client) { clients.fetch("login") }
+
         it {
-          is_expected.to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
+          expect(client).to include("redirect-uri" => "https://login.#{terraform_fixture_value(:cf_root_domain)}")
         }
       end
     end
@@ -178,8 +181,8 @@ RSpec.describe "base properties" do
     describe "executor" do
       subject(:executor) { manifest["instance_groups.diego-cell.jobs.rep.properties.diego.executor"] }
 
-      it "should have a memory_capacity_mb of at least 32G" do
-        memory_capacity_mb = executor['memory_capacity_mb']
+      it "has a memory_capacity_mb of at least 32G" do
+        memory_capacity_mb = executor["memory_capacity_mb"]
         expect(memory_capacity_mb).to be_a_kind_of(Integer)
         expect(memory_capacity_mb).to be >= (32 * 1024)
       end
@@ -187,9 +190,9 @@ RSpec.describe "base properties" do
   end
 
   describe "buildpacks" do
-    let(:install_buildpacks_property) {
+    let(:install_buildpacks_property) do
       manifest["instance_groups.api.jobs.cloud_controller_ng.properties.cc.install_buildpacks"]
-    }
+    end
 
     it "install_buildpacks does not contain buildpacks" do
       expect(install_buildpacks_property).to be_nil.or be_empty

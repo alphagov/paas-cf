@@ -1,10 +1,10 @@
-require 'ipaddr'
+require "ipaddr"
 
 RSpec.describe "generic manifest validations" do
   let(:manifest) { manifest_with_defaults }
 
   specify "it must have a name" do
-    expect(manifest["name"]).to be
+    expect(manifest["name"]).not_to be_nil
     expect(manifest["name"]).to match(/\S+/)
   end
 
@@ -15,18 +15,18 @@ RSpec.describe "generic manifest validations" do
   end
 
   describe "there are no leftover variable substitutions" do
-    def no_values_contain c, s
-      case c
+    def no_values_contain(enumerable_or_str, str)
+      case enumerable_or_str
       when Hash
-        c.each do |_, v|
-          no_values_contain v, s
+        enumerable_or_str.each do |_, v|
+          no_values_contain v, str
         end
       when Array
-        c.each do |v|
-          no_values_contain v, s
+        enumerable_or_str.each do |v|
+          no_values_contain v, str
         end
       when String
-        expect(c).not_to include(s)
+        expect(enumerable_or_str).not_to include(str)
       end
     end
 
@@ -40,10 +40,10 @@ RSpec.describe "generic manifest validations" do
   end
 
   describe "name uniqueness" do
-    %w(
+    %w[
       instance_groups
       releases
-    ).each do |resource_type|
+    ].each do |resource_type|
       specify "all #{resource_type} have a unique name" do
         all_resource_names = manifest.fetch(resource_type).map { |r| r["name"] }
 
@@ -88,7 +88,7 @@ RSpec.describe "generic manifest validations" do
     specify "all jobs reference stemcells that exist" do
       stemcell_names = manifest["stemcells"].map { |r| r["alias"] }
       manifest["instance_groups"].each do |job|
-        expect(job.has_key?("stemcell")).to be(true),
+        expect(job.key?("stemcell")).to be(true),
           "No stemcell defined for job #{job['name']}. You must add a stemcell to this job."
         expect(stemcell_names).to include(job["stemcell"]),
           "stemcell #{job['stemcell']} not found for job #{job['name']}. This value should correspond to `stemcells.*.alias`."
@@ -98,7 +98,7 @@ RSpec.describe "generic manifest validations" do
     specify "all jobs reference availability zones that exist" do
       azs_names = cloud_config_with_defaults["azs"].map { |r| r["name"] }
       manifest["instance_groups"].each do |job|
-        expect(job.has_key?("azs")).to be(true),
+        expect(job.key?("azs")).to be(true),
           "No azs key defined for job #{job['name']}. You must add some availability zones."
         job["azs"].each do |az|
           expect(azs_names).to include(az),
@@ -119,9 +119,9 @@ RSpec.describe "generic manifest validations" do
     end
 
     describe "networks" do
-      let(:networks_by_name) {
+      let(:networks_by_name) do
         cloud_config_with_defaults["networks"].each_with_object({}) { |net, result| result[net["name"]] = net }
-      }
+      end
       let(:network_names) { networks_by_name.keys }
 
       specify "all jobs reference networks that exist" do
@@ -155,7 +155,7 @@ RSpec.describe "generic manifest validations" do
             static_ranges = network_static_ranges.fetch(job_network["name"])
             job_network["static_ips"].each do |ip|
               expect(
-                static_ranges.any? { |r| r.is_a?(Range) ? r.include?(ip) : r == ip }
+                static_ranges.any? { |r| r.is_a?(Range) ? r.include?(ip) : r == ip },
               ).to be_truthy, "IP #{ip} not in static range for network #{job_network['name']} in job #{job['name']}"
             end
           end

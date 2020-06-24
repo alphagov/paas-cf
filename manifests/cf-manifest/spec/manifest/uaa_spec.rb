@@ -19,7 +19,7 @@ RSpec.describe "uaa properties" do
     let(:access_token_validity) { cf_client.fetch("access-token-validity") }
 
     it "sets the refresh token validity to 20 hours" do
-      expect(refresh_token_validity).to equal(72000)
+      expect(refresh_token_validity).to equal(72_000)
     end
 
     it "doesn't set the access token validity to higher than the refresh validity" do

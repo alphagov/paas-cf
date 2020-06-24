@@ -1,12 +1,12 @@
-require 'net/http'
-require 'uri'
-require 'tempfile'
+require "net/http"
+require "uri"
+require "tempfile"
 
-require 'aws-sdk'
-require 'mail'
+require "aws-sdk"
+require "mail"
 
 script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
-File.open(File.expand_path('~/.paas-script-usage'), 'a') { |f| f.puts script_path }
+File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
 module EmailCredentialsHelper
   DEFAULT_REGION = "eu-west-1".freeze
@@ -31,13 +31,12 @@ module EmailCredentialsHelper
       })
   end
 
-  # rubocop:disable Layout/EmptyLinesAroundArguments
   def self.send_notification(api_url, user, source_address)
     send_email(
       from: source_address,
       to: user.fetch(:email),
       subject: "PaaS admin account creation",
-      message: %{
+      message: %(
 Hello,
 
 A CF admin user has been created for you with the following details:
@@ -54,8 +53,7 @@ Regards,
 The Government PaaS Team.
 
 ... We are building a World Class Goverment PaaS based on OpenSource... that's the best!!!
-      }
+      ),
     )
   end
-  # rubocop:enable Layout/EmptyLinesAroundArguments
 end
