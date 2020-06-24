@@ -1,6 +1,6 @@
-.PHONY: help test spec lint_yaml lint_terraform lint_shellcheck lint_concourse check-env
 .DEFAULT_GOAL := help
 
+.PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -11,6 +11,7 @@ DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$
 LOGSEARCH_BOSHRELEASE_TAG=v209.0.0
 LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=v207.0.0
 
+.PHONY: check-env
 check-env:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 	$(if ${DEPLOY_ENV_VALID_LENGTH},,$(error Sorry, DEPLOY_ENV ($(DEPLOY_ENV)) has a max length of $(DEPLOY_ENV_MAX_LENGTH), otherwise derived names will be too long))
@@ -18,13 +19,16 @@ check-env:
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	@./scripts/validate_aws_credentials.sh
 
-test: spec compile_platform_tests lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines lint_symlinks ## Run linting tests
+.PHONY: test
+test: spec compile_platform_tests lint
 
+.PHONY: scripts_spec
 scripts_spec:
 	cd scripts &&\
 		go get -d -t . &&\
 		go test
 
+.PHONY: tools_spec
 tools_spec:
 	cd tools/metrics &&\
 		go test -v $(go list ./... | grep -v acceptance)
@@ -35,6 +39,7 @@ tools_spec:
 	cd tools/user_management &&\
 		bundle exec rspec --format documentation
 
+.PHONY: concourse_spec
 concourse_spec:
 	cd concourse &&\
 		bundle exec rspec
@@ -44,20 +49,25 @@ concourse_spec:
 	cd concourse/scripts &&\
 		bundle exec rspec
 
+.PHONY: cloud_config_manifests_spec
 cloud_config_manifests_spec:
 	cd manifests/cloud-config &&\
 		bundle exec rspec
 
+.PHONY: cf_manifest_spec
 cf_manifest_spec:
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
 
+.PHONY: prometheus_manifest_spec
 prometheus_manifest_spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
 
+.PHONY: manifest_spec
 manifests_spec: cloud_config_manifests_spec cf_manifest_spec prometheus_manifest_spec
 
+.PHONY: terraform_spec
 terraform_spec:
 	cd terraform/scripts &&\
 		go get -d -t . &&\
@@ -65,16 +75,20 @@ terraform_spec:
 	cd terraform &&\
 		bundle exec rspec
 
+.PHONY: platform_tests_spec
 platform_tests_spec:
 	cd platform-tests &&\
 		./run_tests.sh src/platform/availability/monitor/
 
+.PHONY: config_spec
 config_spec:
 	cd config &&\
 		bundle exec rspec
 
+.PHONY: spec
 spec: config_spec scripts_spec tools_spec concourse_spec manifests_spec terraform_spec platform_tests_spec
 
+.PHONY: compile_platform_tests
 compile_platform_tests:
 	GOPATH="$$(pwd)/platform-tests" \
 	go test -run ^$$ \
@@ -84,6 +98,7 @@ compile_platform_tests:
 		platform/availability/helpers \
 		platform/availability/monitor
 
+.PHONY: lint_yaml
 lint_yaml:
 	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' -not -path './manifests/cf-deployment/ci/template/*' | grep -v pipecleaner_invalid.yml | xargs yamllint -c yamllint.yml
 
@@ -93,15 +108,17 @@ lint_terraform: dev ## Lint the terraform files.
 	$(eval export TF_VAR_apps_dns_zone_name=$APPS_DNS_ZONE_NAME)
 	@terraform/scripts/lint.sh
 
+.PHONY: lint_shellcheck
 lint_shellcheck:
 	find . -name '*.sh' -not -path './.git/*' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' -not -path './manifests/prometheus/upstream/*' | xargs shellcheck
 
+.PHONY: lint_concourse
 lint_concourse:
 	pipecleaner concourse/pipelines/* concourse/tasks/*
 
 .PHONY: lint_ruby
 lint_ruby:
-	bundle exec govuk-lint-ruby
+	bundle exec rubocop
 
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
@@ -119,6 +136,9 @@ lint_symlinks:
 	find . -type l -not -path '*/vendor/*' \
 	| grep -v $$(git submodule foreach 'echo -e ^./$$path' --quiet) \
 	| ./scripts/test_symlinks.sh
+
+.PHONY: lint
+lint: lint_yaml lint_terraform lint_shellcheck lint_concourse lint_posix_newlines lint_symlinks ## Run linting tests
 
 GPG = $(shell command -v gpg2 || command -v gpg)
 
@@ -327,6 +347,7 @@ pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
 	@terraform/scripts/set-up-pingdom.sh ${ACTION}
 
+.PHONY: find_diverged_forks
 find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
 	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))
 	./scripts/find_diverged_forks.py alphagov --prefix=paas --github-token=${GITHUB_TOKEN}
@@ -336,12 +357,15 @@ run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and
 	$(if ${JOB},,$(error Must pass JOB=<name>))
 	./concourse/scripts/run_job.sh ${JOB}
 
+.PHONY: ssh_concourse
 ssh_concourse: check-env ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
 	@echo "ssh_concourse has moved to paas-bootstrap 🐝"
 
+.PHONY: tunnel
 tunnel: check-env ## SSH tunnel to internal IPs
 	@echo "tunnel has moved to paas-bootstrap 🐝"
 
+.PHONY: stop-tunnel
 stop-tunnel: check-env ## Stop SSH tunnel
 	@echo "stop-tunnel has moved to paas-bootstrap 🐝"
 

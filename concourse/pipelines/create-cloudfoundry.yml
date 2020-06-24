@@ -5,37 +5,37 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-uaac
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ruby
-        tag: 2.5-slim
+        tag: 2.7-slim
     golang: &golang-image-resource
       type: docker-image
       source:
@@ -45,12 +45,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+        tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
 
   tasks:
     - &add-grafana-job-annotation
@@ -724,7 +724,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: 3.9
+                tag: 3.12
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -753,7 +753,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+              tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
           inputs:
             - name: paas-cf
           params:
@@ -797,7 +797,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+                tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -1347,7 +1347,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+              tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -3478,7 +3478,7 @@ jobs:
             type: docker-image
             source:
               repository: node
-              tag: 8-alpine
+              tag: lts-alpine
           inputs:
             - name: paas-admin
           outputs:
@@ -3504,7 +3504,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+              tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3609,7 +3609,7 @@ jobs:
               type: docker-image
               source:
                 repository: node
-                tag: 8-alpine
+                tag: lts-alpine
             params:
               DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
               DEPLOY_ENV: ((deploy_env))
@@ -4161,7 +4161,7 @@ jobs:
               type: docker-image
               source:
                 repository: alpine
-                tag: 3.9
+                tag: 3.12
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -4260,7 +4260,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 91fe1e826f39798986d95a02fb1ccab6f0e7c746
+            tag: d9a33c7a8a2f8be26c190fce97724c004e921bd5
         inputs:
           - name: passwords
         params:
@@ -4593,7 +4593,7 @@ jobs:
             type: docker-image
             source:
               repository: alpine
-              tag: 3.9
+              tag: 3.12
           inputs:
             - name: deployed-healthcheck
           params:
