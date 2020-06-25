@@ -1,0 +1,12 @@
+---
+
+# scheduler instances run auctioneer which is a single process that fails over
+# via locket, so if auctioneer is under load we should vertically scale
+#
+# scheduler instances also run service-discovery-controller which is vital for
+# internal DNS and container-to-container networking, so if
+# service-discovery-controller is under load then we should horizontally scale
+#
+- type: replace
+  path: /instance_groups/name=scheduler/instances
+  value: ((scheduler_instances))
