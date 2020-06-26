@@ -2037,7 +2037,6 @@ jobs:
         passed: ['generate-cf-config']
       - get: cf-tfstate
         passed: ['generate-cf-config']
-      - get: paas-aiven-broker
       - get: paas-trusted-people
 
     - task: retrieve-config
