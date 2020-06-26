@@ -1,4 +1,4 @@
-package acceptance_test
+package broker_acceptance_test
 
 import (
 	"context"
