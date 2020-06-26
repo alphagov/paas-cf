@@ -1,4 +1,4 @@
-package broker_acceptance_test
+package aiven_broker_acceptance_test
 
 import (
 	"context"
