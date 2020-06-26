@@ -341,6 +341,7 @@ groups:
     jobs:
       - generate-git-keys
       - generate-paas-admin-git-keys
+      - generate-paas-aiven-broker-git-keys
       - generate-paas-billing-git-keys
       - show-release-version
       - bump-minor-version
@@ -626,7 +627,9 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker.git
-      tag_filter: v0.26.0
+      branch: master
+      tag_filter: ((deploy_env_tag_prefix))
+      commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-billing
     type: git
@@ -4025,6 +4028,19 @@ jobs:
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
 
+      - task: tag-repo
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/tag-repo.yml
+        input_mapping:
+          git-repo: paas-aiven-broker
+        params:
+          DEPLOY_ENV: ((deploy_env))
+          GIT_EMAIL: the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk
+          GIT_REPO_SSH: git@github.com:alphagov/paas-aiven-broker.git
+          GIT_SSH_PRIVATE_KEY: ((paas-aiven-broker-git-keys.private_key))
+          GIT_SSH_PUBLIC_KEY: ((paas-aiven-broker-git-keys.public_key))
+          GIT_USER: gov-paas-((deploy_env))
+
       - *end-grafana-job-annotation
 
   - name: rotate-certs
@@ -4609,6 +4625,20 @@ jobs:
         file: paas-cf/concourse/tasks/generate-git-keys.yml
         params:
           DESTINATION: /concourse/main/paas-admin-git-keys
+          CREDHUB_CLIENT: credhub-admin
+          CREDHUB_SECRET: ((bosh-credhub-admin))
+          CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+          CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+          DEPLOY_ENV: ((deploy_env))
+
+  - name: generate-paas-aiven-broker-git-keys
+    plan:
+      - get: paas-cf
+      - task: generate-git-keys
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/generate-git-keys.yml
+        params:
+          DESTINATION: /concourse/main/paas-aiven-broker-git-keys
           CREDHUB_CLIENT: credhub-admin
           CREDHUB_SECRET: ((bosh-credhub-admin))
           CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
