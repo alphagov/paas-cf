@@ -304,6 +304,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - aiven-broker-acceptance-tests
       - bosh-tests
       - rotate-certs
       - check-certificates-after-rotation
@@ -325,6 +326,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - aiven-broker-acceptance-tests
       - bosh-tests
       - tag-release
       - pipeline-unlock
@@ -357,6 +359,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - aiven-broker-acceptance-tests
       - bosh-tests
   - name: health
     jobs:
@@ -3221,6 +3224,69 @@ jobs:
             CF_PASS: ((cf_pass))
       - *end-grafana-job-annotation
 
+  - name: aiven-broker-acceptance-tests
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            trigger: true
+          - get: paas-cf
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+          - get: cf-manifest
+            passed: ['post-deploy']
+          - get: cf-acceptance-tests
+
+      - do:
+        - task: create-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: aiven-broker-acceptance-test-user
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
+
+        - task: generate-test-config
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
+            APP_DOMAIN: ((apps_dns_zone_name))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
+            NAME_PREFIX: AIVENBACC
+            TEST_USER_PASSWORD: ((secrets_test_user_password))
+
+        - in_parallel:
+          - task: "Run broker custom acceptance tests"
+            tags: [colocated-with-web]
+            file: paas-cf/concourse/tasks/aiven-broker-acceptance-tests-run.yml
+            params:
+              DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+              DEPLOY_ENV: ((deploy_env))
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+
+              PROMETHEUS_BASIC_AUTH_USERNAME: custom-broker-acceptance
+              PROMETHEUS_BASIC_AUTH_PASSWORD: ((custom_broker_acceptance_prometheus_password))
+            ensure:
+              task: upload-test-artifacts
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+              params:
+                TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+        ensure:
+          task: remove-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+      - *end-grafana-job-annotation
+
   - name: bosh-tests
     plan:
       - in_parallel:
@@ -3931,10 +3997,10 @@ jobs:
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'aiven-broker-acceptance-tests', 'bosh-tests']
             trigger: true
           - get: paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'aiven-broker-acceptance-tests', 'bosh-tests']
       - task: remove-transitional-flag-for-ca
         tags: [colocated-with-web]
         config:
