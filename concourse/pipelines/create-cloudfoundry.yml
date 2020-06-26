@@ -300,11 +300,11 @@ groups:
       - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
+      - deploy-paas-aiven-broker
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
-      - aiven-broker-acceptance-tests
       - bosh-tests
       - rotate-certs
       - check-certificates-after-rotation
@@ -326,7 +326,6 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
-      - aiven-broker-acceptance-tests
       - bosh-tests
       - tag-release
       - pipeline-unlock
@@ -337,6 +336,7 @@ groups:
       - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
+      - deploy-paas-aiven-broker
   - name: operator
     jobs:
       - generate-git-keys
@@ -359,7 +359,6 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
-      - aiven-broker-acceptance-tests
       - bosh-tests
   - name: health
     jobs:
@@ -2776,73 +2775,6 @@ jobs:
                   bosh run-errand rotate-cc-database-key --when-changed
 
     - in_parallel:
-      - task: deploy-aiven-service-broker
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          inputs:
-            - name: paas-cf
-            - name: paas-aiven-broker
-            - name: config
-          params:
-            AIVEN_API_TOKEN: ((aiven_api_token))
-            AIVEN_PROMETHEUS_ENDPOINT_ID: ((aiven_prometheus_endpoint_id))
-            SERVICE_NAME_PREFIX: ((deploy_env))
-            AIVEN_PROJECT: paas-cf-((aws_account))
-            AIVEN_CLOUD: aws-((aws_region))
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
-            AIVEN_BROKER_PASS: ((secrets_aiven_broker_admin_password))
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                . ./config/config.sh
-                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                  -o admin -s service-brokers
-
-                cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
-                cd paas-aiven-broker/
-
-                ruby -ryaml -e "
-                  env = {
-                    'AIVEN_USERNAME' => 'aiven-broker',
-                    'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
-                    'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
-                    'AIVEN_PROMETHEUS_ENDPOINT_ID' => '$AIVEN_PROMETHEUS_ENDPOINT_ID',
-                    'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
-                    'AIVEN_PROJECT' => '$AIVEN_PROJECT',
-                    'AIVEN_CLOUD' => '$AIVEN_CLOUD',
-                    'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
-                  }
-                  manifest = YAML.load_file('manifest.yml')
-                  manifest['applications'].each { |app|
-                    app['env'] ||= {}
-                    app['env'].merge!(env)
-                    app['routes'] = [
-                      { 'route' => 'aiven-broker.${APPS_DNS_ZONE_NAME}' },
-                    ]
-                  }
-                  File.write('manifest.yml', manifest.to_yaml)
-                "
-                cf zero-downtime-push aiven-broker -f ./manifest.yml
-
-                if cf service-brokers | grep 'aiven-broker\s'; then
-                  cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
-                else
-                  cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
-                fi
-
-                cf enable-service-access elasticsearch -b aiven-broker
-
-                cf enable-service-access influxdb -b aiven-broker
-
       - task: register-elasticache-broker
         tags: [colocated-with-web]
         config:
@@ -3069,7 +3001,7 @@ jobs:
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
         - in_parallel:
-          - task: "Run custom acceptance tests"
+          - task: custom-acceptance-tests
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-acceptance-tests-run.yml
             params:
@@ -3194,7 +3126,7 @@ jobs:
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
         - in_parallel:
-          - task: "Run broker custom acceptance tests"
+          - task: broker-acceptance-tests
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/custom-broker-acceptance-tests-run.yml
             params:
@@ -3203,72 +3135,6 @@ jobs:
               AWS_REGION: ((aws_region))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-
-              PROMETHEUS_BASIC_AUTH_USERNAME: custom-broker-acceptance
-              PROMETHEUS_BASIC_AUTH_PASSWORD: ((custom_broker_acceptance_prometheus_password))
-            ensure:
-              task: upload-test-artifacts
-              tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/upload-test-artifacts.yml
-              params:
-                TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
-
-        ensure:
-          task: remove-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
-          params:
-            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
-      - *end-grafana-job-annotation
-
-  - name: aiven-broker-acceptance-tests
-    plan:
-      - *add-grafana-job-annotation
-      - in_parallel:
-          - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
-            trigger: true
-          - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
-          - get: cf-manifest
-            passed: ['post-deploy']
-          - get: cf-acceptance-tests
-
-      - do:
-        - task: create-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: aiven-broker-acceptance-test-user
-            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
-            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
-
-        - task: generate-test-config
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/generate-test-config.yml
-          params:
-            TEST_PROPERTIES: acceptance_tests
-            APP_DOMAIN: ((apps_dns_zone_name))
-            SYSTEM_DOMAIN: ((system_dns_zone_name))
-            NAME_PREFIX: AIVENBACC
-            TEST_USER_PASSWORD: ((secrets_test_user_password))
-
-        - in_parallel:
-          - task: "Run broker custom acceptance tests"
-            tags: [colocated-with-web]
-            file: paas-cf/concourse/tasks/aiven-broker-acceptance-tests-run.yml
-            params:
-              DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
-              DEPLOY_ENV: ((deploy_env))
-              AWS_REGION: ((aws_region))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-
-              PROMETHEUS_BASIC_AUTH_USERNAME: custom-broker-acceptance
-              PROMETHEUS_BASIC_AUTH_PASSWORD: ((custom_broker_acceptance_prometheus_password))
             ensure:
               task: upload-test-artifacts
               tags: [colocated-with-web]
@@ -3992,15 +3858,184 @@ jobs:
                 ginkgo acceptance
       - *end-grafana-job-annotation
 
+  - name: deploy-paas-aiven-broker
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+
+      - in_parallel:
+          - get: paas-aiven-broker
+            trigger: true
+
+          - get: paas-cf
+            trigger: true
+            passed: ['post-deploy']
+
+          - get: cf-tfstate
+            passed: ['generate-cf-config']
+
+          - get: cf-manifest
+            passed: ['post-deploy']
+
+          - get: cf-acceptance-tests
+
+      - task: retrieve-config
+        tags: [colocated-with-web]
+        config: &post-deploy-config
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          outputs:
+            - name: config
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          image_resource: *ruby-slim-image-resource
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                  < cf-tfstate/cf.tfstate \
+                  > cf-terraform-outputs.yml
+
+                cat << EOT > config/config.sh
+                export BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
+                EOT
+
+                ls -l config/*
+
+      - task: deploy-aiven-broker
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: paas-aiven-broker
+            - name: config
+          params:
+            AIVEN_API_TOKEN: ((aiven_api_token))
+            AIVEN_PROMETHEUS_ENDPOINT_ID: ((aiven_prometheus_endpoint_id))
+            SERVICE_NAME_PREFIX: ((deploy_env))
+            AIVEN_PROJECT: paas-cf-((aws_account))
+            AIVEN_CLOUD: aws-((aws_region))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            AIVEN_BROKER_PASS: ((secrets_aiven_broker_admin_password))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
+                  -o admin -s service-brokers
+
+                cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
+                cd paas-aiven-broker/
+
+                ruby -ryaml -e "
+                  env = {
+                    'AIVEN_USERNAME' => 'aiven-broker',
+                    'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
+                    'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
+                    'AIVEN_PROMETHEUS_ENDPOINT_ID' => '$AIVEN_PROMETHEUS_ENDPOINT_ID',
+                    'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
+                    'AIVEN_PROJECT' => '$AIVEN_PROJECT',
+                    'AIVEN_CLOUD' => '$AIVEN_CLOUD',
+                    'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
+                  }
+                  manifest = YAML.load_file('manifest.yml')
+                  manifest['applications'].each { |app|
+                    app['env'] ||= {}
+                    app['env'].merge!(env)
+                    app['routes'] = [
+                      { 'route' => 'aiven-broker.${APPS_DNS_ZONE_NAME}' },
+                    ]
+                  }
+                  File.write('manifest.yml', manifest.to_yaml)
+                "
+                cf zero-downtime-push aiven-broker -f ./manifest.yml
+
+                if cf service-brokers | grep 'aiven-broker\s'; then
+                  cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                else
+                  cf create-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
+                fi
+
+                cf enable-service-access elasticsearch -b aiven-broker
+
+                cf enable-service-access influxdb -b aiven-broker
+
+      - do:
+        - task: create-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: aiven-broker-acceptance-test-user
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
+
+        - task: generate-test-config
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/generate-test-config.yml
+          params:
+            TEST_PROPERTIES: acceptance_tests
+            APP_DOMAIN: ((apps_dns_zone_name))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
+            NAME_PREFIX: AIVENBACC
+            TEST_USER_PASSWORD: ((secrets_test_user_password))
+
+        - in_parallel:
+          - task: aiven-broker-acceptance-tests
+            tags: [colocated-with-web]
+            file: paas-cf/concourse/tasks/aiven-broker-acceptance-tests-run.yml
+            params:
+              DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+              DEPLOY_ENV: ((deploy_env))
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+
+              PROMETHEUS_BASIC_AUTH_USERNAME: custom-broker-acceptance
+              PROMETHEUS_BASIC_AUTH_PASSWORD: ((custom_broker_acceptance_prometheus_password))
+            ensure:
+              task: upload-test-artifacts
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+              params:
+                TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+        ensure:
+          task: remove-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+
+      - *end-grafana-job-annotation
+
   - name: rotate-certs
     serial: true
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'aiven-broker-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
             trigger: true
           - get: paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'aiven-broker-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
       - task: remove-transitional-flag-for-ca
         tags: [colocated-with-web]
         config:
