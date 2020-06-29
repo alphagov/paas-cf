@@ -28,6 +28,7 @@ run:
 
       echo 'Configuring .ssh/config'
       echo "${GIT_SSH_PRIVATE_KEY}" > private-key
+      chmod 400 private-key
       echo "${GIT_SSH_PUBLIC_KEY}" > private-key.pub
       cat <<EOF > ~/.ssh/config
       Host github.com
