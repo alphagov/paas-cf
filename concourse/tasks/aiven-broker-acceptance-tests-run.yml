@@ -1,0 +1,28 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-acceptance-tests
+    tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+inputs:
+  - name: paas-cf
+  - name: test-config
+  - name: cf-acceptance-tests
+outputs:
+  - name: artifacts
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      ln -s "$(pwd)/artifacts" /tmp/artifacts
+      echo "Running tests"
+      export CONFIG
+      CONFIG="$(pwd)/test-config/config.json"
+      if  [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
+        echo "WARNING: The custom acceptance tests have been disabled. Unset DISABLE_CUSTOM_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
+      else
+        ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/aiven-broker-acceptance/
+      fi

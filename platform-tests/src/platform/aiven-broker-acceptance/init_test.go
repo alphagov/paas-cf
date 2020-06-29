@@ -1,4 +1,4 @@
-package broker_acceptance_test
+package aiven_broker_acceptance_test
 
 import (
 	"crypto/tls"
@@ -28,7 +28,9 @@ var (
 	httpClient  *http.Client
 	testContext *workflowhelpers.ReproducibleTestSuiteSetup
 
-	systemDomain = os.Getenv("SYSTEM_DNS_ZONE_NAME")
+	prometheusBasicAuthUsername = os.Getenv("PROMETHEUS_BASIC_AUTH_USERNAME")
+	prometheusBasicAuthPassword = os.Getenv("PROMETHEUS_BASIC_AUTH_PASSWORD")
+	systemDomain                = os.Getenv("SYSTEM_DNS_ZONE_NAME")
 )
 
 func TestSuite(t *testing.T) {
@@ -51,6 +53,8 @@ func TestSuite(t *testing.T) {
 	BeforeSuite(func() {
 		testContext.Setup()
 
+		Expect(prometheusBasicAuthUsername).NotTo(Equal(""))
+		Expect(prometheusBasicAuthPassword).NotTo(Equal(""))
 		Expect(systemDomain).NotTo(Equal(""))
 	})
 
