@@ -1,0 +1,56 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/git-ssh
+    tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+
+inputs:
+  - name: git-repo
+
+params:
+  DEPLOY_ENV:
+  GIT_EMAIL:
+  GIT_SSH_PRIVATE_KEY:
+  GIT_USER:
+  GIT_REPO_SSH:
+
+run:
+  path: sh
+  args:
+    - -e
+    - -u
+    - -c
+    - |
+      new_tag="${DEPLOY_ENV}-$(date +%Y-%m-%d-%H-%M-%S)"
+
+      echo 'Configuring .ssh/config'
+      echo "${GIT_SSH_PRIVATE_KEY}" > private-key
+      echo "${GIT_SSH_PUBLIC_KEY}" > private-key.pub
+      cat <<EOF > ~/.ssh/config
+      Host github.com
+        StrictHostKeyChecking no
+        IdentityFile $(pwd)/private-key
+      EOF
+
+      cd git-repo
+
+      if [ "$DEPLOY_ENV" = "stg-lon" ]; then
+        echo 'Going to tag repo'
+      else
+        echo 'Skipping: create-cloudfoundry only tags in staging'
+        exit 0
+      fi
+
+      echo 'Configuring git'
+      git config --global user.email "${GIT_EMAIL}"
+      git config --global user.name "${GIT_USER}"
+      git remote add tag_origin "${GIT_REPO_SSH}"
+
+      echo "New tag for ${GIT_REPO_SSH} is ${new_tag}"
+      git tag "${new_tag}"
+
+      echo "Pushing tag refs/tags/${new_tag} to ${GIT_REPO_SSH}"
+      git push tag_origin "refs/tags/${new_tag}"
