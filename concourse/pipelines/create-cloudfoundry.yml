@@ -2142,15 +2142,15 @@ jobs:
 
                 # Reserve some domains so that tenants cannot create them to
                 # mislead others
-                cf target -o govuk-paas
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname status
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname '*'
+                cf target -o govuk-paas -s docs
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname www
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname api
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname status
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname '*'
 
                 # Reserve the london app name so that we don't cause conflicts
                 # when we roll out the London region.
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname london
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname london
 
                 cf target -o admin -s public
                 if ! cf service logit-syslog-drain > /dev/null; then
@@ -2558,16 +2558,16 @@ jobs:
                 cf target -s assets
 
                 if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
-                  cf create-route assets "login.((system_dns_zone_name))" --path create_account
+                  cf create-route "login.((system_dns_zone_name))" --path create_account
                 fi
                 if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
-                  cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
+                  cf create-route "login.((system_dns_zone_name))" --path create_account.do
                 fi
                 if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
-                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
+                  cf create-route "uaa.((system_dns_zone_name))" --path create_account
                 fi
                 if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
-                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do;
+                  cf create-route "uaa.((system_dns_zone_name))" --path create_account.do;
                 fi
 
                 cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
