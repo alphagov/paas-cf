@@ -29,6 +29,7 @@ apk update && apk add git
 cd /tmp
 git clone --branch="${logsearch_for_cloudfoundry_tag}" --depth=1 https://github.com/cloudfoundry-community/logsearch-for-cloudfoundry.git
 cd logsearch-for-cloudfoundry/src/logsearch-config
+rm Gemfile.lock
 bundle install
 bundle exec rake build
 
@@ -66,3 +67,6 @@ sed -i \
 sed -i \
     "s/vcap\.uaa/uaa/" \
     /output/generated_logit_filters.conf
+
+# FIXME: Allowed in Logstash 6
+sed -i '/tag_on_failure.*kv/d' /output/generated_logit_filters.conf
