@@ -1963,7 +1963,7 @@ jobs:
                       memory: 128M
                       disk_quota: 100M
                       instances: 1
-                      buildpack: go_buildpack
+                      buildpacks: [go_buildpack]
                       health-check-type: http
                       stack: cflinuxfs3
                       env:
@@ -1973,7 +1973,8 @@ jobs:
                       command: "src -listen-address=0.0.0.0:\$PORT"
                   EOF
 
-                  cf zero-downtime-push cloudwatch-exporter -f manifest.yml
+                  cf cancel-deployment cloudwatch-exporter || true
+                  cf push --strategy=rolling cloudwatch-exporter
 
         - task: upload-grafana-dashboards
           tags: [colocated-with-web]
@@ -2717,7 +2718,8 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                cf zero-downtime-push healthcheck -f manifest.yml
+                cf cancel-deployment healthcheck || true
+                cf push --strategy=rolling healthcheck
 
                 cd "${BUILD_ROOT}"
                 echo "yes" > deployed-healthcheck/healthcheck-deployed
@@ -3330,7 +3332,9 @@ jobs:
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
-                cf zero-downtime-push paas-accounts -f manifest.yml
+
+                cf cancel-deployment paas-accounts || true
+                cf push --strategy=rolling paas-accounts
                 )
 
                 (
@@ -3517,7 +3521,8 @@ jobs:
 
                 cd paas-admin-dist
 
-                cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
+                cf cancel-deployment paas-admin || true
+                cf push --strategy=rolling paas-admin -f ../paas-admin-manifest/manifest.yml
 
       - do:
         - task: create-temp-user
@@ -3695,13 +3700,11 @@ jobs:
                   File.write('manifest-collector.yml', collector.to_yaml)
                 "
 
-                cf zero-downtime-push \
-                  paas-billing-api \
-                  -f manifest-api.yml
+                cf cancel-deployment paas-billing-api || true
+                cf push --strategy=rolling paas-billing-api -f manifest-api.yml
 
-                cf push \
-                  paas-billing-collector \
-                  -f manifest-collector.yml
+                cf cancel-deployment paas-billing-collector || true
+                cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
 
                 while ! cf service billing-logit-ssl-drain | grep -c 'create succeeded' | grep 2 > /dev/null; do
                   echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
@@ -3834,7 +3837,8 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                cf zero-downtime-push paas-metrics -f ./manifest.yml
+                cf cancel-deployment paas-metrics || true
+                cf push --strategy=rolling paas-metrics
 
       - task: acceptance-tests
         tags: [colocated-with-web]
@@ -3966,7 +3970,9 @@ jobs:
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
-                cf zero-downtime-push aiven-broker -f ./manifest.yml
+
+                cf cancel-deployment aiven-broker || true
+                cf push --strategy=rolling aiven-broker
 
                 if cf service-brokers | grep 'aiven-broker\s'; then
                   cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"

@@ -5,7 +5,7 @@ applications:
    disk_quota: 256M
    instances: 2
    command: "./bin/healthcheck"
-   buildpack: go_buildpack
+   buildpacks: [go_buildpack]
    stack: cflinuxfs3
    env:
      GOVERSION: go1.13
