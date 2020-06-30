@@ -3043,48 +3043,31 @@ jobs:
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                     echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
 
-                    cf buildpacks \
-                    | awk 'NR>3 && $6 != "" && $1 ~ /_buildpack$/ { print $1, $6 } ' \
-                    > actual_buildpacks.txt
+                    echo Expected buildpacks
+                    expected="$(
+                      < paas-cf/config/buildpacks.yml \
+                      ruby -ryaml -e 'puts YAML.load(STDIN.read).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
+                    )"
+                    echo "$expected"
 
-                    ruby <<-RUBY
-                    require 'yaml'
+                    echo Actual buildpacks
+                    actual="$(
+                      cf curl /v3/buildpacks?per_page=100 \
+                      | jq -r '.resources | map([.name, .stack, .filename] | join(" ")) | join("\n")' \
+                      | sort
+                    )"
+                    echo "$actual"
 
-                    expected = YAML
-                      .load_file('paas-cf/config/buildpacks.yml')
-                      .fetch('buildpacks', [])
-                      .map { |pack| pack['name']+' '+pack['stack'] }
+                    echo Diff
+                    diff <(echo "$actual") <(echo "$expected")
+                    same=$?
 
-                    actual = File
-                      .read('actual_buildpacks.txt')
-                      .lines
-                      .map(&:strip)
-                      .to_a
-
-                    puts 'Expected', '-----', expected, '-----'
-                    puts 'Actual',   '-----', actual,   '-----'
-
-                    expected_but_missing = expected - actual
-                    present_but_unexpected = actual - expected
-
-                    exit_code = 0
-
-                    if expected_but_missing.empty?
-                      puts 'All expected buildpacks found in CF'
+                    if [ $same == 0 ]; then
+                      echo Actual is the same as Expected
                     else
-                      puts "Could not find #{expected_but_missing.inspect}"
-                      exit_code = 1
-                    end
-
-                    if present_but_unexpected.empty?
-                      puts 'No unexpected buildpacks found in CF'
-                    else
-                      puts "Unexpected buildpacks found: #{present_but_unexpected.inspect}"
-                      exit_code = 1
-                    end
-
-                    exit exit_code
-                    RUBY
+                      echo Actual differs from Expected
+                      exit 1
+                    fi
 
         ensure:
           task: remove-temp-user
