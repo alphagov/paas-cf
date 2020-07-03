@@ -44,11 +44,3 @@
 - type: replace
   path: /instance_groups/name=prometheus/vm_type
   value: small
-
-- type: replace
-  path: /instance_groups/name=prometheus/persistent_disk_type
-  value: 100GB
-
-- type: replace
-  path: /instance_groups/name=prometheus/jobs/name=prometheus2/properties/prometheus/storage/tsdb/retention/size
-  value: 90GB

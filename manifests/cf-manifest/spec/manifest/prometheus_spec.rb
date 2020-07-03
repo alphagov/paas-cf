@@ -44,9 +44,38 @@ RSpec.describe "prometheus" do
   end
 
   describe "instance_group" do
-    it "has a persistent disk" do
+    it "has a small persistent disk" do
       disk_type = prometheus_instance_group.dig("persistent_disk_type")
-      expect(disk_type).to eq("500GB")
+      expect(disk_type).to eq("100GB")
+
+      retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
+      expect(retention_size).to eq("90GB")
+    end
+
+    context "when the deploy environment is prod-lon" do
+      let(:manifest) { manifest_for_env("prod-lon") }
+
+      it "has a larger persistent disk" do
+        disk_type = prometheus_instance_group.dig("persistent_disk_type")
+        expect(disk_type).to eq("750GB")
+
+        retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
+        expect(retention_size).to eq("700GB")
+      end
+    end
+
+    %w[prod stg-lon].each do |deploy_env|
+      context "when the deploy environment is #{deploy_env}" do
+        let(:manifest) { manifest_for_env(deploy_env) }
+
+        it "has a persistent disk" do
+          disk_type = prometheus_instance_group.dig("persistent_disk_type")
+          expect(disk_type).to eq("500GB")
+
+          retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
+          expect(retention_size).to eq("475GB")
+        end
+      end
     end
 
     it "is highly available" do
