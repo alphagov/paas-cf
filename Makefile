@@ -8,8 +8,8 @@ DEPLOY_ENV_MAX_LENGTH=8
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
-LOGSEARCH_BOSHRELEASE_TAG=v209.0.0
-LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=v207.0.0
+LOGSEARCH_BOSHRELEASE_TAG=v211.1.0
+LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=v211.1.0
 
 .PHONY: check-env
 check-env:
@@ -376,7 +376,7 @@ logit-filters:
 		-v $(CURDIR):/mnt:ro \
 		-v $(CURDIR)/config/logit/output:/output:rw \
 		-w /mnt \
-		jruby:9.1-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
+		jruby:9.2-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
 	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
 
 .PHONY: show-tenant-comms-addresses
