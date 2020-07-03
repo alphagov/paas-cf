@@ -8,3 +8,6 @@ scheduler_instances: 4
 cc_worker_instances: 4
 cc_hourly_rate_limit: 20000
 paas_region_name: ireland
+
+prometheus_disk_size: 500GB
+prometheus_retention_size: 475GB
