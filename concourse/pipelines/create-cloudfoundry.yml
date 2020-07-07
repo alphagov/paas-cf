@@ -289,6 +289,7 @@ groups:
       - pre-deploy
       - generate-secrets
       - app-availability-tests
+      - c2c-availability-tests
       - api-availability-tests
       - cf-terraform
       - generate-cf-config
@@ -316,6 +317,7 @@ groups:
       - pre-deploy
       - generate-secrets
       - app-availability-tests
+      - c2c-availability-tests
       - api-availability-tests
       - cf-terraform
       - generate-cf-config
@@ -355,6 +357,7 @@ groups:
   - name: tests
     jobs:
       - app-availability-tests
+      - c2c-availability-tests
       - api-availability-tests
       - smoke-tests
       - acceptance-tests
@@ -954,6 +957,50 @@ jobs:
 
                 echo "timeout waiting for app-availability-tests job to start"
                 exit 1
+      - task: wait-for-c2c-availability-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          inputs:
+            - name: paas-cf
+            - name: deployed-healthcheck
+            - name: pipeline-trigger
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CF_ADMIN: admin
+            CF_PASS: ((cf_pass))
+          image_resource: *cf-cli-image-resource
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping wait-for-c2c-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
+
+                API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+
+                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+                cf target -o admin -s healthchecks > /dev/null
+
+                echo "Waiting for ~2mins for c2c-availability-tests job to start:"
+                for _ in $(seq 24); do
+                  if cf logs healthcheck-pinger --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
+                    echo "Request detected"
+                    exit 0
+                  fi
+                  printf "."
+                  sleep 5
+                done
+
+                echo "timeout waiting for c2c-availability-tests job to start"
+                exit 1
       - task: wait-for-api-availability-tests
         tags: [colocated-with-web]
         config:
@@ -1050,6 +1097,63 @@ jobs:
 
                 echo "Running app-availability-tests"
                 ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+
+  - name: c2c-availability-tests
+    serial: true
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: ['generate-secrets']
+            trigger: true
+          - get: deployed-healthcheck
+          - get: paas-cf
+            passed: ['generate-secrets']
+      - task: run-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+            - name: deployed-healthcheck
+          params:
+            SKIP_SSL_VALIDATION: true
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CONCOURSE_WEB_USERNAME: admin
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping c2c-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
+
+                export CONCOURSE_WEB_URL
+                CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
+                echo "Running c2c-availability-tests"
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/c2c
 
   - name: api-availability-tests
     serial: true
@@ -2876,11 +2980,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-smoke-tests-release
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -2926,11 +3030,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -2991,10 +3095,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3099,10 +3203,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3158,10 +3262,10 @@ jobs:
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
           - get: cf-manifest
       - task: test-bosh-vms
         tags: [colocated-with-web]
