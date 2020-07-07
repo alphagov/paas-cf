@@ -3,10 +3,6 @@
 set -e
 set -u
 
-SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
-GOPATH="${SCRIPT_DIR}"
-export GOPATH
-
 TESTS_DIR="${1}"
 cd "${TESTS_DIR}"
 

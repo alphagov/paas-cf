@@ -1096,7 +1096,7 @@ jobs:
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/app
 
   - name: c2c-availability-tests
     serial: true
@@ -1153,7 +1153,7 @@ jobs:
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running c2c-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/c2c
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/c2c
 
   - name: api-availability-tests
     serial: true
@@ -1242,7 +1242,7 @@ jobs:
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
 
                 echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/api
         ensure:
           task: delete-job-file
           tags: [colocated-with-web]

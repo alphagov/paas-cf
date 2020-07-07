@@ -11,7 +11,7 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'scripts/vendor/**/*'
-    - 'platform-tests/src/platform/vendor/**/*'
+    - 'platform-tests/vendor/**/*'
     - 'platform-tests/example-apps/healthcheck/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
 

@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"time"
 
-	"platform/availability/helpers"
-	"platform/availability/monitor"
+	"github.com/alphagov/paas-cf/platform-tests/availability/helpers"
+	"github.com/alphagov/paas-cf/platform-tests/availability/monitor"
 
 	"github.com/cloudfoundry-community/go-cfclient"
 	. "github.com/onsi/ginkgo"

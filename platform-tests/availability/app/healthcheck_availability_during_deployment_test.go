@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"platform/availability/helpers"
+	"github.com/alphagov/paas-cf/platform-tests/availability/helpers"
 
 	"github.com/onsi/gomega/ghttp"
 	vegeta "github.com/tsenart/vegeta/lib"
