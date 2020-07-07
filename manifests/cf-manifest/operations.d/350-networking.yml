@@ -4,14 +4,14 @@
   path: /releases/name=silk
   value:
     name: "silk"
-    version: "2.30.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/silk-release?v=2.30.0"
-    sha1: "277e8ec42a58a4e08814a697c762d87366761a4c"
+    version: "2.31.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/silk-release?v=2.31.0"
+    sha1: "8935189b632a8c805e46b8079f5c459d6b70784f"
 
 - type: replace
   path: /releases/name=cf-networking
   value:
     name: "cf-networking"
-    version: "2.30.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cf-networking-release?v=2.30.0"
-    sha1: "41116681554ee548c261625134a43048d93da498"
+    version: "2.31.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cf-networking-release?v=2.31.0"
+    sha1: "f27406853aee40c38615d61cf648936c0ef63d2f"
