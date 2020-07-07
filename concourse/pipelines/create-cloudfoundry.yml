@@ -2722,6 +2722,20 @@ jobs:
                 cf push --strategy=rolling healthcheck
 
                 cd "${BUILD_ROOT}"
+                cd paas-cf/platform-tests/example-apps/healthcheck-pinger
+                cf cancel-deployment healthcheck-pinger || true
+                cf push --strategy=rolling healthcheck-pinger
+
+                cd "${BUILD_ROOT}"
+                cd paas-cf/platform-tests/example-apps/healthcheck-ponger
+                cf cancel-deployment healthcheck-ponger || true
+                cf push --strategy=rolling healthcheck-ponger
+
+                cf add-network-policy \
+                  healthcheck-pinger healthcheck-ponger \
+                  --protocol tcp --port 8080
+
+                cd "${BUILD_ROOT}"
                 echo "yes" > deployed-healthcheck/healthcheck-deployed
         on_success:
           put: deployed-healthcheck
