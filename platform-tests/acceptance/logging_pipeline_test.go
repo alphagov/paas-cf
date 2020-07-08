@@ -24,8 +24,8 @@ var _ = Describe("Logging pipeline", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", testConfig.GetGoBuildpackName(),
-			"-p", "../../../example-apps/logging-pipeline",
-			"-f", "../../../example-apps/logging-pipeline/manifest.yml",
+			"-p", "../example-apps/logging-pipeline",
+			"-f", "../example-apps/logging-pipeline/manifest.yml",
 			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",

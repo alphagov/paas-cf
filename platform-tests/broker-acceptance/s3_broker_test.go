@@ -57,8 +57,8 @@ var _ = Describe("S3 broker", func() {
 					"push", appName,
 					"--no-start",
 					"-b", testConfig.GetGoBuildpackName(),
-					"-p", "../../../example-apps/healthcheck",
-					"-f", "../../../example-apps/healthcheck/manifest.yml",
+					"-p", "../example-apps/healthcheck",
+					"-f", "../example-apps/healthcheck/manifest.yml",
 					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
@@ -103,8 +103,8 @@ var _ = Describe("S3 broker", func() {
 					"push", appOneName,
 					"--no-start",
 					"-b", testConfig.GetGoBuildpackName(),
-					"-p", "../../../example-apps/healthcheck",
-					"-f", "../../../example-apps/healthcheck/manifest.yml",
+					"-p", "../example-apps/healthcheck",
+					"-f", "../example-apps/healthcheck/manifest.yml",
 					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
@@ -114,8 +114,8 @@ var _ = Describe("S3 broker", func() {
 					"push", appTwoName,
 					"--no-start",
 					"-b", testConfig.GetGoBuildpackName(),
-					"-p", "../../../example-apps/healthcheck",
-					"-f", "../../../example-apps/healthcheck/manifest.yml",
+					"-p", "../example-apps/healthcheck",
+					"-f", "../example-apps/healthcheck/manifest.yml",
 					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})

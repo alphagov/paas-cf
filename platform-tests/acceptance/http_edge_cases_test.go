@@ -35,7 +35,7 @@ var _ = Describe("HTTP edge cases", func() {
 			Expect(cf.Cf(
 				"push", appName,
 				"-b", testConfig.GetRubyBuildpackName(),
-				"-p", "../../../../../cf-acceptance-tests/assets/dora",
+				"-p", "../../../cf-acceptance-tests/assets/dora",
 				"-d", testConfig.GetAppsDomain(),
 				"-i", "1",
 				"-m", "256M",
@@ -63,8 +63,8 @@ var _ = Describe("HTTP edge cases", func() {
 			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName,
-				"-p", "../../../example-apps/http_tester",
-				"-f", "../../../example-apps/http_tester/manifest.yml",
+				"-p", "../example-apps/http_tester",
+				"-f", "../example-apps/http_tester/manifest.yml",
 				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
@@ -130,8 +130,8 @@ var _ = Describe("HTTP edge cases", func() {
 			appName2 := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName2,
-				"-p", "../../../example-apps/http_tester",
-				"-f", "../../../example-apps/http_tester/manifest.yml",
+				"-p", "../example-apps/http_tester",
+				"-f", "../example-apps/http_tester/manifest.yml",
 				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			curlArgs := []string{"-k"}

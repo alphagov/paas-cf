@@ -20,7 +20,7 @@ var _ = Describe("CF SSH", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", testConfig.GetStaticFileBuildpackName(),
-			"-p", "../../../example-apps/static-app",
+			"-p", "../example-apps/static-app",
 			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",
@@ -37,7 +37,7 @@ var _ = Describe("CF SSH", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", testConfig.GetStaticFileBuildpackName(),
-			"-p", "../../../example-apps/static-app",
+			"-p", "../example-apps/static-app",
 			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",

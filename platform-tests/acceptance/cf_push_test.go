@@ -28,7 +28,7 @@ var _ = Describe("cf push", func() {
 				"-b", "https://github.com/alphagov/paas-cf-sleepy-buildpack",
 				// The contents of this directory are pushed, but not served
 				// See the buildpack for details.
-				"-p", "../../../example-apps/static-app/",
+				"-p", "../example-apps/static-app/",
 				"-d", testConfig.GetAppsDomain(),
 				"--no-start",
 				"--no-manifest",

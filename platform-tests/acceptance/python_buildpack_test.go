@@ -20,7 +20,7 @@ var _ = Describe("PythonBuildpack", func() {
 			"push", appName,
 			"--no-start",
 			"-m", DEFAULT_MEMORY_LIMIT,
-			"-p", "../../../example-apps/simple-python-app",
+			"-p", "../example-apps/simple-python-app",
 			"-b", "python_buildpack",
 			"-c", "python hello.py",
 			"-d", testConfig.GetAppsDomain(),

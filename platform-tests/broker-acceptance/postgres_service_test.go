@@ -91,8 +91,8 @@ var _ = Describe("Postgres backing service", func() {
 				"push", appName,
 				"--no-start",
 				"-b", testConfig.GetGoBuildpackName(),
-				"-p", "../../../example-apps/healthcheck",
-				"-f", "../../../example-apps/healthcheck/manifest.yml",
+				"-p", "../example-apps/healthcheck",
+				"-f", "../example-apps/healthcheck/manifest.yml",
 				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 

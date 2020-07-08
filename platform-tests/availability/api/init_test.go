@@ -21,7 +21,7 @@ var _ = BeforeSuite(func() {
 
 	Expect(cf.Cf(
 		"push", appName,
-		"-p", "../../../../example-apps/static-app",
+		"-p", "../../example-apps/static-app",
 		"-b", "staticfile_buildpack",
 		"-m", "64M",
 	).Wait(pushTimeout)).To(Exit(0))

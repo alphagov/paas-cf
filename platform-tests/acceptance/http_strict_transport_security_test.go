@@ -28,7 +28,7 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", testConfig.GetStaticFileBuildpackName(),
-			"-p", "../../../example-apps/static-app",
+			"-p", "../example-apps/static-app",
 			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",
@@ -46,7 +46,7 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 		Expect(cf.Cf(
 			"push", appName,
 			"-b", "php_buildpack",
-			"-p", "../../../example-apps/strict-transport-security-app",
+			"-p", "../example-apps/strict-transport-security-app",
 			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "128M",
