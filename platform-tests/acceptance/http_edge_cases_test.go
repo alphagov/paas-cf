@@ -56,15 +56,15 @@ var _ = Describe("HTTP edge cases", func() {
 		})
 	})
 
-	Describe("Using http_tester", func() {
+	Describe("Using http-tester", func() {
 		var appName string
 
 		BeforeEach(func() {
 			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName,
-				"-p", "../example-apps/http_tester",
-				"-f", "../example-apps/http_tester/manifest.yml",
+				"-p", "../example-apps/http-tester",
+				"-f", "../example-apps/http-tester/manifest.yml",
 				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
@@ -130,8 +130,8 @@ var _ = Describe("HTTP edge cases", func() {
 			appName2 := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP-HTTP-TESTER")
 			Expect(cf.Cf(
 				"push", appName2,
-				"-p", "../example-apps/http_tester",
-				"-f", "../example-apps/http_tester/manifest.yml",
+				"-p", "../example-apps/http-tester",
+				"-f", "../example-apps/http-tester/manifest.yml",
 				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			curlArgs := []string{"-k"}
