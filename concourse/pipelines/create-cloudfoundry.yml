@@ -1062,7 +1062,7 @@ jobs:
             - name: deployed-healthcheck
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            AVAILABILITY_TEST_HOST: healthcheck.((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
@@ -1119,7 +1119,7 @@ jobs:
             - name: deployed-healthcheck
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            AVAILABILITY_TEST_HOST: healthcheck-pinger.((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
@@ -1153,7 +1153,7 @@ jobs:
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running c2c-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/c2c
+                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/app
 
   - name: api-availability-tests
     serial: true
