@@ -126,6 +126,44 @@ jobs:
                     echo "timeout waiting for app-availability-tests job to start"
                     exit 1
 
+          - task: wait-for-c2c-availability-tests
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              inputs:
+                - name: paas-cf
+                - name: pipeline-trigger
+              params:
+                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+                CF_ADMIN: admin
+                CF_PASS: ((cf_pass))
+              image_resource: *cf-cli-image-resource
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -u
+                  - -c
+                  - |
+                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+
+                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+                    cf target -o admin -s healthchecks > /dev/null
+
+                    echo "Waiting for ~2mins for c2c-availability-tests job to start:"
+                    for _ in $(seq 24); do
+                      if cf logs healthcheck-pinger --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
+                        echo "Request detected"
+                        exit 0
+                      fi
+                      printf "."
+                      sleep 5
+                    done
+
+                    echo "timeout waiting for c2c-availability-tests job to start"
+                    exit 1
+
           - task: wait-for-api-availability-tests
             tags: [colocated-with-web]
             config:
@@ -180,7 +218,7 @@ jobs:
             - name: pipeline-trigger
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            AVAILABILITY_TEST_HOST: healthcheck.((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
@@ -208,7 +246,60 @@ jobs:
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/app
+                cd paas-cf/platform-tests/availability/app
+                go test -timeout 12h -ginkgo.v
+
+  - name: c2c-availability-tests
+    serial: true
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: [begin]
+            trigger: true
+
+          - get: paas-cf
+            passed: [begin]
+
+      - task: run-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+          params:
+            SKIP_SSL_VALIDATION: true
+            AVAILABILITY_TEST_HOST: healthcheck-pinger.((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CONCOURSE_WEB_USERNAME: admin
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                export CONCOURSE_WEB_URL
+                CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="test-certificate-rotation"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="done"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
+                echo "Running c2c-availability-tests"
+                cd paas-cf/platform-tests/availability/app
+                go test -timeout 12h -ginkgo.v
 
   - name: api-availability-tests
     serial: true
@@ -282,7 +373,8 @@ jobs:
                 cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
 
                 echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/availability/api
+                cd paas-cf/platform-tests/availability/api
+                go test -timeout 12h
         ensure:
           task: delete-job-file
           tags: [colocated-with-web]
@@ -517,7 +609,7 @@ jobs:
     serial: true
     plan:
       - get: pipeline-trigger
-        passed: [done, api-availability-tests, app-availability-tests]
+        passed: [done, api-availability-tests, app-availability-tests, c2c-availability-tests]
         trigger: true
 
       - get: paas-cf
