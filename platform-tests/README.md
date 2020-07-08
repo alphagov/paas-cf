@@ -35,7 +35,3 @@ Example:
   "skip_ssl_validation": true,
   "use_http": false
 }
-```
-
-Run the tests using the `run_tests.sh` script passing the package name of the
-set of tests you want to run (eg `./run_tests.sh acceptance`).

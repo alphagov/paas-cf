@@ -77,8 +77,8 @@ terraform_spec:
 
 .PHONY: platform_tests_spec
 platform_tests_spec:
-	cd platform-tests &&\
-		./run_tests.sh src/platform/availability/monitor/
+	cd platform-tests/availability/monitor &&\
+		go test
 
 .PHONY: config_spec
 config_spec:
