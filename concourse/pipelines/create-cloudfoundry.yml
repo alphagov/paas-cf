@@ -1494,6 +1494,8 @@ jobs:
               - name: terraform-outputs
             outputs:
               - name: paas-cf-cloud-config
+            params:
+              AWS_ACCOUNT: ((aws_account))
             run:
               path: sh
               args:

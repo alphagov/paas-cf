@@ -9,7 +9,18 @@ module CloudConfigHelpers
   end
 
   def cloud_config_with_defaults
-    Cache.instance[:cloud_config_with_defaults] ||= render_cloud_config
+    cloud_config_for_account("prod")
+  end
+
+  def cloud_config_for_account(account)
+    sym = "cloud_config_for_#{account}".to_sym
+
+    old_aws_account = ENV["AWS_ACCOUNT"]
+    ENV["AWS_ACCOUNT"] = account
+    Cache.instance[sym] ||= render_cloud_config
+    ENV["AWS_ACCOUNT"] = old_aws_account
+
+    Cache.instance[sym]
   end
 
 private

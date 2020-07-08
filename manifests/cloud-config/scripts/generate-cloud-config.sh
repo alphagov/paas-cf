@@ -10,6 +10,10 @@ for i in "${PAAS_CF_DIR}"/manifests/cloud-config/operations.d/*.yml; do
   opsfile_args+="-o $i "
 done
 
+if [ "$AWS_ACCOUNT" = "dev" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/cloud-config/operations/use-spot-instances-in-dev.yml"
+fi
+
 # shellcheck disable=SC2086
 bosh interpolate \
   --var-errs \
