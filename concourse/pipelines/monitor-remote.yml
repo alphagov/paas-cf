@@ -48,7 +48,7 @@ jobs:
         type: docker-image
         source:
           repository: governmentpaas/self-update-pipelines
-          tag: 864e80c4793e4fca17a2374e8075af119dd03162
+          tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
       inputs:
       - name: paas-cf
       params:

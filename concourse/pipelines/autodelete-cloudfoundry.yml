@@ -133,7 +133,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli-v2
-              tag: 864e80c4793e4fca17a2374e8075af119dd03162
+              tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
           run:
             path: sh
             args:
@@ -169,7 +169,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/awscli
-              tag: 864e80c4793e4fca17a2374e8075af119dd03162
+              tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh
             args:
