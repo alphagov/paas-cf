@@ -5,32 +5,32 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-uaac
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -45,12 +45,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+        tag: 864e80c4793e4fca17a2374e8075af119dd03162
 
   tasks:
     - &add-grafana-job-annotation
@@ -751,7 +751,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+              tag: 864e80c4793e4fca17a2374e8075af119dd03162
           inputs:
             - name: paas-cf
           params:
@@ -795,7 +795,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+                tag: 864e80c4793e4fca17a2374e8075af119dd03162
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -1345,7 +1345,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+              tag: 864e80c4793e4fca17a2374e8075af119dd03162
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -1963,7 +1963,7 @@ jobs:
                       memory: 128M
                       disk_quota: 100M
                       instances: 1
-                      buildpack: go_buildpack
+                      buildpacks: [go_buildpack]
                       health-check-type: http
                       stack: cflinuxfs3
                       env:
@@ -1973,7 +1973,8 @@ jobs:
                       command: "src -listen-address=0.0.0.0:\$PORT"
                   EOF
 
-                  cf zero-downtime-push cloudwatch-exporter -f manifest.yml
+                  cf cancel-deployment cloudwatch-exporter || true
+                  cf push --strategy=rolling cloudwatch-exporter
 
         - task: upload-grafana-dashboards
           tags: [colocated-with-web]
@@ -2141,15 +2142,15 @@ jobs:
 
                 # Reserve some domains so that tenants cannot create them to
                 # mislead others
-                cf target -o govuk-paas
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname www
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname api
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname status
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname '*'
+                cf target -o govuk-paas -s docs
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname www
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname api
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname status
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname '*'
 
                 # Reserve the london app name so that we don't cause conflicts
                 # when we roll out the London region.
-                cf create-route docs "${APPS_DNS_ZONE_NAME}" --hostname london
+                cf create-route "${APPS_DNS_ZONE_NAME}" --hostname london
 
                 cf target -o admin -s public
                 if ! cf service logit-syslog-drain > /dev/null; then
@@ -2557,16 +2558,16 @@ jobs:
                 cf target -s assets
 
                 if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
-                  cf create-route assets "login.((system_dns_zone_name))" --path create_account
+                  cf create-route "login.((system_dns_zone_name))" --path create_account
                 fi
                 if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
-                  cf create-route assets "login.((system_dns_zone_name))" --path create_account.do
+                  cf create-route "login.((system_dns_zone_name))" --path create_account.do
                 fi
                 if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
-                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account
+                  cf create-route "uaa.((system_dns_zone_name))" --path create_account
                 fi
                 if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
-                  cf create-route assets "uaa.((system_dns_zone_name))" --path create_account.do;
+                  cf create-route "uaa.((system_dns_zone_name))" --path create_account.do;
                 fi
 
                 cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
@@ -2717,7 +2718,8 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                cf zero-downtime-push healthcheck -f manifest.yml
+                cf cancel-deployment healthcheck || true
+                cf push --strategy=rolling healthcheck
 
                 cd "${BUILD_ROOT}"
                 echo "yes" > deployed-healthcheck/healthcheck-deployed
@@ -3041,48 +3043,31 @@ jobs:
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                     echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
 
-                    cf buildpacks \
-                    | awk 'NR>3 && $6 != "" && $1 ~ /_buildpack$/ { print $1, $6 } ' \
-                    > actual_buildpacks.txt
+                    echo Expected buildpacks
+                    expected="$(
+                      < paas-cf/config/buildpacks.yml \
+                      ruby -ryaml -e 'puts YAML.load(STDIN.read).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
+                    )"
+                    echo "$expected"
 
-                    ruby <<-RUBY
-                    require 'yaml'
+                    echo Actual buildpacks
+                    actual="$(
+                      cf curl /v3/buildpacks?per_page=100 \
+                      | jq -r '.resources | map([.name, .stack, .filename] | join(" ")) | join("\n")' \
+                      | sort
+                    )"
+                    echo "$actual"
 
-                    expected = YAML
-                      .load_file('paas-cf/config/buildpacks.yml')
-                      .fetch('buildpacks', [])
-                      .map { |pack| pack['name']+' '+pack['stack'] }
+                    echo Diff
+                    diff <(echo "$actual") <(echo "$expected")
+                    same=$?
 
-                    actual = File
-                      .read('actual_buildpacks.txt')
-                      .lines
-                      .map(&:strip)
-                      .to_a
-
-                    puts 'Expected', '-----', expected, '-----'
-                    puts 'Actual',   '-----', actual,   '-----'
-
-                    expected_but_missing = expected - actual
-                    present_but_unexpected = actual - expected
-
-                    exit_code = 0
-
-                    if expected_but_missing.empty?
-                      puts 'All expected buildpacks found in CF'
+                    if [ $same == 0 ]; then
+                      echo Actual is the same as Expected
                     else
-                      puts "Could not find #{expected_but_missing.inspect}"
-                      exit_code = 1
-                    end
-
-                    if present_but_unexpected.empty?
-                      puts 'No unexpected buildpacks found in CF'
-                    else
-                      puts "Unexpected buildpacks found: #{present_but_unexpected.inspect}"
-                      exit_code = 1
-                    end
-
-                    exit exit_code
-                    RUBY
+                      echo Actual differs from Expected
+                      exit 1
+                    fi
 
         ensure:
           task: remove-temp-user
@@ -3330,7 +3315,9 @@ jobs:
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
-                cf zero-downtime-push paas-accounts -f manifest.yml
+
+                cf cancel-deployment paas-accounts || true
+                cf push --strategy=rolling paas-accounts
                 )
 
                 (
@@ -3431,7 +3418,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+              tag: 864e80c4793e4fca17a2374e8075af119dd03162
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3517,7 +3504,8 @@ jobs:
 
                 cd paas-admin-dist
 
-                cf zero-downtime-push paas-admin -f ../paas-admin-manifest/manifest.yml
+                cf cancel-deployment paas-admin || true
+                cf push --strategy=rolling paas-admin -f ../paas-admin-manifest/manifest.yml
 
       - do:
         - task: create-temp-user
@@ -3695,13 +3683,11 @@ jobs:
                   File.write('manifest-collector.yml', collector.to_yaml)
                 "
 
-                cf zero-downtime-push \
-                  paas-billing-api \
-                  -f manifest-api.yml
+                cf cancel-deployment paas-billing-api || true
+                cf push --strategy=rolling paas-billing-api -f manifest-api.yml
 
-                cf push \
-                  paas-billing-collector \
-                  -f manifest-collector.yml
+                cf cancel-deployment paas-billing-collector || true
+                cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
 
                 while ! cf service billing-logit-ssl-drain | grep -c 'create succeeded' | grep 2 > /dev/null; do
                   echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
@@ -3834,7 +3820,8 @@ jobs:
                   File.write('manifest.yml', manifest.to_yaml)
                 "
 
-                cf zero-downtime-push paas-metrics -f ./manifest.yml
+                cf cancel-deployment paas-metrics || true
+                cf push --strategy=rolling paas-metrics
 
       - task: acceptance-tests
         tags: [colocated-with-web]
@@ -3966,7 +3953,9 @@ jobs:
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
-                cf zero-downtime-push aiven-broker -f ./manifest.yml
+
+                cf cancel-deployment aiven-broker || true
+                cf push --strategy=rolling aiven-broker
 
                 if cf service-brokers | grep 'aiven-broker\s'; then
                   cf update-service-broker aiven-broker aiven-broker "$AIVEN_BROKER_PASS" "https://aiven-broker.${APPS_DNS_ZONE_NAME}"
@@ -4335,7 +4324,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 5b44bd954693937ddd07ee6c9e113923bc620aed
+            tag: 864e80c4793e4fca17a2374e8075af119dd03162
         inputs:
           - name: passwords
         params:

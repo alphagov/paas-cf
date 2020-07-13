@@ -4,5 +4,5 @@ applications:
    memory: 64M
    disk_quota: 100M
    instances: 2
-   buildpack: staticfile_buildpack
+   buildpacks: [staticfile_buildpack]
    stack: cflinuxfs3

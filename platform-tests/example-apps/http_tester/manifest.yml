@@ -4,7 +4,7 @@ applications:
     memory: 64M
     disk_quota: 64M
     instances: 1
-    buildpack: go_buildpack
+    buildpacks: [go_buildpack]
     command: ./bin/http_tester; sleep 1; echo 'done'
     env:
       GOVERSION: 1.13

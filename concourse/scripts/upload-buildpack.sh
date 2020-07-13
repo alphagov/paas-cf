@@ -21,8 +21,8 @@ filename="$3"
 url="$4"
 checksum="$5"
 
-# Check if filename already exists
-if cf buildpacks | grep -qe "^${name} \+[0-9]\+ \+true \+[^ ]\+ \+${filename} \+${stack}"; then
+existing="$(cf curl '/v3/buildpacks?per_page=100' | jq -r --arg name "$name" '.resources | map(select(.name == $name))[0] | [.name, .stack, .filename] | join(" ")')"
+if [ "$existing" = "$name $stack $filename" ]; then
     echo "${filename} already set for ${name} ${stack}, skipping"
     exit 0
 fi
@@ -40,25 +40,22 @@ fi
 
 echo "Setting up ${filename}..."
 
-# Create or upload if needed
-if cf buildpacks | grep -qe "^${name} \+[0-9]\+ \+true \+[^ ]\+ \+[^ ]\+ \+${stack}"; then
-    cf update-buildpack \
-        "${name}" \
-        -p "${filename}" \
-        -s "${stack}" \
-        --enable
+existing="$(cf curl '/v3/buildpacks?per_page=100' | jq -r --arg name "$name" '.resources | map(select(.name == $name))[0] | [.name, .stack] | join(" ")')"
+if [ "$existing" = "$name $stack" ]; then
+  cf update-buildpack \
+    "${name}" \
+    -p "${filename}" \
+    -s "${stack}" \
+    --enable
 else
-    tmpname="__tmp_$$"
-    cf create-buildpack \
-        "${tmpname}" \
-        "${filename}" \
-        9999
-    # Assign buildpack stack if it is not asigned automatically
-    if cf buildpacks | grep -qe "^${tmpname} \+[1-9]\+ \+true \+[^ ]\+ \+${filename} *$"; then
-        cf update-buildpack \
-            "${tmpname}" \
-            --assign-stack "${stack}"
-    fi
-    cf rename-buildpack "${tmpname}" "${name}"
-    cf update-buildpack "${name}" -s "${stack}" --enable
+  tmpname="__tmp_$$"
+  cf create-buildpack \
+    "${tmpname}" \
+    "${filename}" \
+    9999
+
+  cf update-buildpack "${tmpname}" \
+    --rename "${name}" \
+    --assign-stack "${stack}" \
+    --enable
 fi
