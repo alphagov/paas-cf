@@ -152,7 +152,7 @@ RSpec.describe "prometheus" do
         prometheus_config
           .dig("scrape_configs")
           .find { |sc| sc["job_name"] == "aiven" }
-          .dig("relabel_configs")
+          .dig("metric_relabel_configs")
           .select { |rlc| rlc["action"] == "drop" }
           .select { |rlc| rlc["source_labels"].include? "__name__" }
           .map { |rlc| rlc["regex"] }
