@@ -3932,6 +3932,8 @@ jobs:
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
             AIVEN_BROKER_PASS: ((secrets_aiven_broker_admin_password))
+            LOGIT_ADDRESS: ((logit_syslog_address))
+            LOGIT_PORT: ((logit_syslog_port))
           run:
             path: sh
             args:
@@ -3945,6 +3947,16 @@ jobs:
 
                 cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
                 cd paas-aiven-broker/
+
+                if ! cf service logit-syslog-drain > /dev/null; then
+                  cf create-user-provided-service \
+                    logit-syslog-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                else
+                  cf update-user-provided-service \
+                    logit-syslog-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                fi
 
                 ruby -ryaml -e "
                   env = {
@@ -3964,6 +3976,7 @@ jobs:
                     app['routes'] = [
                       { 'route' => 'aiven-broker.${APPS_DNS_ZONE_NAME}' },
                     ]
+                    app['services'] = ['logit-syslog-drain']
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
