@@ -1,0 +1,16 @@
+---
+applications:
+ - name: healthcheck-ponger
+   memory: 64M
+   disk_quota: 256M
+   instances: 2
+   command: "./bin/healthcheck-ponger"
+   buildpacks: [go_buildpack]
+   stack: cflinuxfs3
+
+   env:
+     GOVERSION: go1.13
+     GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck-ponger
+
+   routes:
+     - route: healthcheck-ponger.apps.internal
