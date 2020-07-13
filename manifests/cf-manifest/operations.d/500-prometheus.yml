@@ -92,6 +92,7 @@
                     regex: 'aws-((terraform_outputs_region))'
                     action: keep
 
+                metric_relabel_configs:
                   - source_labels: [__name__]
                     separator: ;
                     regex: 'elasticsearch_(breakers|thread|fs|indices|os)_.*'
