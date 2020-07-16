@@ -110,8 +110,10 @@ jobs:
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                     PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
-                    cf target -o admin -s healthchecks > /dev/null
+                    cf api "${API_ENDPOINT}"
+                    cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                    cf target -o admin -s healthchecks
 
                     echo "Waiting for ~2mins for app-availability-tests job to start:"
                     for _ in $(seq 24); do
@@ -148,8 +150,10 @@ jobs:
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                     PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
-                    cf target -o admin -s healthchecks > /dev/null
+                    cf api "${API_ENDPOINT}"
+                    cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                    cf target -o admin -s healthchecks
 
                     echo "Waiting for ~2mins for c2c-availability-tests job to start:"
                     for _ in $(seq 24); do
@@ -370,7 +374,10 @@ jobs:
 
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
-                cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_USER}" "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
 
                 echo "Running api-availability-tests"
                 cd paas-cf/platform-tests/availability/api

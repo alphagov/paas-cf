@@ -942,8 +942,10 @@ jobs:
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
-                cf target -o admin -s healthchecks > /dev/null
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
 
                 echo "Waiting for ~2mins for app-availability-tests job to start:"
                 for _ in $(seq 24); do
@@ -986,8 +988,10 @@ jobs:
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
-                cf target -o admin -s healthchecks > /dev/null
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
 
                 echo "Waiting for ~2mins for c2c-availability-tests job to start:"
                 for _ in $(seq 24); do
@@ -1241,7 +1245,10 @@ jobs:
 
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
-                cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_USER}" "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
 
                 echo "Running api-availability-tests"
                 cd paas-cf/platform-tests/availability/api
@@ -2058,7 +2065,10 @@ jobs:
                 - -c
                 - |
                   . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                  cf target -o admin -s monitoring
 
                   spruce merge paas-cf/config/cloudwatch-exporter/config.yml > paas-yet-another-cloudwatch-exporter/src/config.yml
 
@@ -2205,7 +2215,8 @@ jobs:
               - -e
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
                 ./paas-cf/concourse/scripts/parse_buildpacks_and_run_uploader.rb paas-cf/config/buildpacks.yml
       - task: create-orgs
         tags: [colocated-with-web]
@@ -2229,7 +2240,9 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
                 cf create-org admin
                 cf set-quota admin medium
 
@@ -2292,7 +2305,8 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 if cf service-brokers | grep 'rds-broker\s'; then
                   cf update-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
@@ -2515,7 +2529,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
 
@@ -2538,7 +2553,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
@@ -2560,7 +2576,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf enable-feature-flag diego_docker
 
@@ -2582,7 +2599,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf enable-feature-flag service_instance_sharing
 
@@ -2605,7 +2623,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 if cf domains | awk '$1=="apps.internal" && $2=="shared" { r=1 } END { exit r }'; then
                   cf curl /v2/shared_domains -d '{"name": "apps.internal", "internal": true}'
@@ -2650,8 +2669,10 @@ jobs:
               - -u
               - -c
               - |
-                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                  -o admin -s assets
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target  -o admin -s assets
 
                 cd paas-cf/platform-tests/example-apps/create-account-holding-page/
                 cf push
@@ -2707,7 +2728,8 @@ jobs:
                   exit 0
                 fi
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf target -o admin -s healthchecks
 
@@ -2793,9 +2815,11 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf target -o admin -s healthchecks
+
                 BUILD_ROOT=$(pwd)
                 cd paas-cf/platform-tests/example-apps/healthcheck
 
@@ -2922,7 +2946,8 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 if cf service-brokers | grep 'elasticache-broker\s'; then
                   cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
@@ -3163,7 +3188,9 @@ jobs:
                     set -ueo pipefail
 
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+
+                    cf api "${API_ENDPOINT}"
+                    cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                     echo Expected buildpacks
                     expected="$(
@@ -3344,7 +3371,10 @@ jobs:
               - |
                 set -ueo pipefail
 
-                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${CF_API_ADDRESS}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 if grep -q '^(prod\|prod-lon\|stg-lon)$' <<< "$DEPLOY_ENV"; then
                   plan="small-11"
@@ -3408,7 +3438,10 @@ jobs:
               - |
                 DB_PLAN="tiny-unencrypted-9.5"
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 if ! cf service accounts-db > /dev/null; then
                   cf create-service postgres "${DB_PLAN}" accounts-db
@@ -3746,7 +3779,10 @@ jobs:
                   BILLING_DB_PLAN="large-9.5"
                 fi
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 if ! cf service billing-db > /dev/null; then
                   cf create-service postgres "${BILLING_DB_PLAN}" billing-db
@@ -3839,7 +3875,10 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 export GOPATH="${PWD}"
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
@@ -3904,7 +3943,10 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s monitoring
 
                 cd paas-cf/tools/metrics
 
@@ -4050,8 +4092,10 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                  -o admin -s service-brokers
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s service-brokers
 
                 cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
                 cd paas-aiven-broker/
@@ -4699,7 +4743,8 @@ jobs:
               }
               EOF
 
-              echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+              cf api "${API_ENDPOINT}"
+              cf auth "${CF_ADMIN}" "${CF_PASS}"
 
               cf create-org continuous-smoke-test
               cf create-space continuous-smoke-test -o continuous-smoke-test
@@ -4937,7 +4982,10 @@ jobs:
                 - -u
                 - -c
                 - |
-                  echo | cf login -a "https://api.${SYSTEM_DNS_ZONE_NAME}" -u "$(cat admin-creds/username)" -p "$(cat admin-creds/password)" -o admin -s billing
+                  cf api "https://api.${SYSTEM_DNS_ZONE_NAME}"
+                  cf auth  "$(cat admin-creds/username)" "$(cat admin-creds/password)"
+
+                  cf target -o admin -s billing
 
                   export GOPATH="${PWD}"
                   export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
@@ -4995,7 +5043,8 @@ jobs:
             - -e
             - -c
             - |
-              echo | cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}"
+              cf api "${API_ENDPOINT}"
+              cf auth "${CF_USER}" "${CF_PASS}"
 
               ./paas-cf/scripts/cleanup-deleted-cf-users.sh --delete
 

@@ -25,6 +25,7 @@ run:
 
       echo "Removing user ${USERNAME}"
 
-      echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+      cf api "${API_ENDPOINT}"
+      cf auth "${CF_ADMIN}" "${CF_PASS}"
 
       cf delete-user "${USERNAME}" -f

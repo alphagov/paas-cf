@@ -20,14 +20,19 @@ run:
         echo "CF API unavailable. Skipping..."
         exit 0
       fi
-      if ! echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"; then
+
+      cf api "${API_ENDPOINT}"
+
+      if ! cf auth "${CF_ADMIN}" "${CF_PASS}"; then
         echo "Login failed.  Skipping..."
         exit 0
       fi
+
       if ! cf target -o "${ORG}" -s "${SPACE}"; then
         echo "${ORG}/${SPACE} space doesn't seem to exist. Skipping..."
         exit 0
       fi
+
       if cf services | grep -q "${DB_NAME}"; then
         # shellcheck disable=SC2153
         for app in ${BOUND_APPS}; do
