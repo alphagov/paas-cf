@@ -108,36 +108,10 @@ jobs:
 
           - task: wait-for-api-availability-tests
             tags: [colocated-with-web]
-            config:
-              platform: linux
-              inputs:
-                - name: paas-cf
-                - name: pipeline-trigger
-              params:
-                AWS_DEFAULT_REGION: ((aws_region))
-              image_resource: *awscli-image-resource
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
-                    JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
-                    bucket=((state_bucket))
-
-                    echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
-                    for _ in $(seq 24); do
-                      if aws s3 ls "s3://${bucket}/${JOB_FILE}" ; then
-                        echo "$JOB_FILE detected"
-                        exit 0
-                      fi
-                      printf "."
-                      sleep 5
-                    done
-
-                    echo "timeout waiting for api-availability-tests job to start"
-                    exit 1
+            file: paas-cf/concourse/tasks/wait-for-api-availability-tests.yml
+            params:
+              AWS_DEFAULT_REGION: ((aws_region))
+              STATE_BUCKET: ((state_bucket))
 
   - name: app-availability-tests
     serial: true
