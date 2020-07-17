@@ -289,7 +289,7 @@ groups:
       - pre-deploy
       - generate-secrets
       - app-availability-tests
-      - c2c-availability-tests
+      - internal-app-availability-tests
       - api-availability-tests
       - cf-terraform
       - generate-cf-config
@@ -317,7 +317,7 @@ groups:
       - pre-deploy
       - generate-secrets
       - app-availability-tests
-      - c2c-availability-tests
+      - internal-app-availability-tests
       - api-availability-tests
       - cf-terraform
       - generate-cf-config
@@ -357,7 +357,7 @@ groups:
   - name: tests
     jobs:
       - app-availability-tests
-      - c2c-availability-tests
+      - internal-app-availability-tests
       - api-availability-tests
       - smoke-tests
       - acceptance-tests
@@ -923,7 +923,7 @@ jobs:
           CF_PASS: ((cf_pass))
           APP_NAME: healthcheck
 
-      - task: wait-for-c2c-availability-tests
+      - task: wait-for-internal-app-availability-tests
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
         params:
@@ -997,7 +997,7 @@ jobs:
                 cd paas-cf/platform-tests/availability/app
                 go test -timeout 12h -ginkgo.v
 
-  - name: c2c-availability-tests
+  - name: internal-app-availability-tests
     serial: true
     plan:
       - in_parallel:
@@ -1033,7 +1033,7 @@ jobs:
               - |
                 HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
                 if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                  echo "Skipping c2c-availability-tests because the healthcheck is not deployed"
+                  echo "Skipping internal-app-availability-tests because the healthcheck is not deployed"
                   exit 0
                 fi
 
@@ -1051,7 +1051,7 @@ jobs:
                 CONCOURSE_RESOURCE_NAME="pipeline-trigger"
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
-                echo "Running c2c-availability-tests"
+                echo "Running internal-app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
                 go test -timeout 12h -ginkgo.v
 
@@ -2903,11 +2903,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-smoke-tests-release
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -2953,11 +2953,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -3018,10 +3018,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3128,10 +3128,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3187,10 +3187,10 @@ jobs:
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','c2c-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
       - task: test-bosh-vms
         tags: [colocated-with-web]

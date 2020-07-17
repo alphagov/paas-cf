@@ -97,7 +97,7 @@ jobs:
               CF_PASS: ((cf_pass))
               APP_NAME: healthcheck
 
-          - task: wait-for-c2c-availability-tests
+          - task: wait-for-internal-app-availability-tests
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
             params:
@@ -165,7 +165,7 @@ jobs:
                 cd paas-cf/platform-tests/availability/app
                 go test -timeout 12h -ginkgo.v
 
-  - name: c2c-availability-tests
+  - name: internal-app-availability-tests
     serial: true
     plan:
       - in_parallel:
@@ -213,7 +213,7 @@ jobs:
                 CONCOURSE_RESOURCE_NAME="pipeline-trigger"
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
-                echo "Running c2c-availability-tests"
+                echo "Running internal-app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
                 go test -timeout 12h -ginkgo.v
 
@@ -528,7 +528,7 @@ jobs:
     serial: true
     plan:
       - get: pipeline-trigger
-        passed: [done, api-availability-tests, app-availability-tests, c2c-availability-tests]
+        passed: [done, api-availability-tests, app-availability-tests, internal-app-availability-tests]
         trigger: true
 
       - get: paas-cf
