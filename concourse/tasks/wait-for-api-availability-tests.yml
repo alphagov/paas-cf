@@ -16,6 +16,7 @@ run:
   path: sh
   args:
     - -e
+    - -u
     - -c
     - |
       if [ -d deployed-healthcheck ]; then
@@ -32,7 +33,7 @@ run:
       PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
       JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
 
-      echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
+      echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${STATE_BUCKET}/${JOB_FILE}"
       for _ in $(seq 24); do
         if aws s3 ls "s3://${STATE_BUCKET}/${JOB_FILE}" ; then
           echo "$JOB_FILE detected"
