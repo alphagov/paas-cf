@@ -77,8 +77,8 @@ terraform_spec:
 
 .PHONY: platform_tests_spec
 platform_tests_spec:
-	cd platform-tests &&\
-		./run_tests.sh src/platform/availability/monitor/
+	cd platform-tests/availability/monitor &&\
+		go test
 
 .PHONY: config_spec
 config_spec:
@@ -90,13 +90,8 @@ spec: config_spec scripts_spec tools_spec concourse_spec manifests_spec terrafor
 
 .PHONY: compile_platform_tests
 compile_platform_tests:
-	GOPATH="$$(pwd)/platform-tests" \
 	go test -run ^$$ \
-		platform/acceptance \
-		platform/availability/api \
-		platform/availability/app \
-		platform/availability/helpers \
-		platform/availability/monitor
+		github.com/alphagov/paas-cf/platform-tests/...
 
 .PHONY: lint_yaml
 lint_yaml:

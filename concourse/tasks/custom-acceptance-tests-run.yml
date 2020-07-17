@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/cf-acceptance-tests
-    tag: 864e80c4793e4fca17a2374e8075af119dd03162
+    tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
 inputs:
   - name: paas-cf
   - name: test-config
@@ -24,5 +24,6 @@ run:
       if  [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
         echo "WARNING: The custom acceptance tests have been disabled. Unset DISABLE_CUSTOM_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
       else
-        ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/acceptance/
+        cd paas-cf/platform-tests/acceptance
+        ginkgo -p -nodes=5 -timeout=20m
       fi

@@ -5,32 +5,32 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-uaac
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -45,12 +45,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
 
   tasks:
     - &add-grafana-job-annotation
@@ -289,6 +289,7 @@ groups:
       - pre-deploy
       - generate-secrets
       - app-availability-tests
+      - internal-app-availability-tests
       - api-availability-tests
       - cf-terraform
       - generate-cf-config
@@ -316,6 +317,7 @@ groups:
       - pre-deploy
       - generate-secrets
       - app-availability-tests
+      - internal-app-availability-tests
       - api-availability-tests
       - cf-terraform
       - generate-cf-config
@@ -355,6 +357,7 @@ groups:
   - name: tests
     jobs:
       - app-availability-tests
+      - internal-app-availability-tests
       - api-availability-tests
       - smoke-tests
       - acceptance-tests
@@ -751,7 +754,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: 864e80c4793e4fca17a2374e8075af119dd03162
+              tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
           inputs:
             - name: paas-cf
           params:
@@ -795,7 +798,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: 864e80c4793e4fca17a2374e8075af119dd03162
+                tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -910,89 +913,31 @@ jobs:
           - get: deployed-healthcheck
           - get: paas-cf
             passed: ['generate-secrets']
+
       - task: wait-for-app-availability-tests
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          inputs:
-            - name: paas-cf
-            - name: deployed-healthcheck
-            - name: pipeline-trigger
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            CF_ADMIN: admin
-            CF_PASS: ((cf_pass))
-          image_resource: *cf-cli-image-resource
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
-                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                  echo "Skipping wait-for-app-availability-tests because the healthcheck is not deployed"
-                  exit 0
-                fi
+        file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+        params:
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          CF_ADMIN: admin
+          CF_PASS: ((cf_pass))
+          APP_NAME: healthcheck
 
-                API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+      - task: wait-for-internal-app-availability-tests
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+        params:
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          CF_ADMIN: admin
+          CF_PASS: ((cf_pass))
+          APP_NAME: healthcheck-pinger
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
-                cf target -o admin -s healthchecks > /dev/null
-
-                echo "Waiting for ~2mins for app-availability-tests job to start:"
-                for _ in $(seq 24); do
-                  if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
-                    echo "Request detected"
-                    exit 0
-                  fi
-                  printf "."
-                  sleep 5
-                done
-
-                echo "timeout waiting for app-availability-tests job to start"
-                exit 1
       - task: wait-for-api-availability-tests
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          inputs:
-            - name: paas-cf
-            - name: deployed-healthcheck
-            - name: pipeline-trigger
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-          image_resource: *awscli-image-resource
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
-                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
-                  echo "Skipping wait-for-api-availability-tests because the healthcheck is not deployed"
-                  exit 0
-                fi
-
-                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
-                JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
-                bucket=((state_bucket))
-
-                echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
-                for _ in $(seq 24); do
-                  if aws s3 ls "s3://${bucket}/${JOB_FILE}" ; then
-                    echo "$JOB_FILE detected"
-                    exit 0
-                  fi
-                  printf "."
-                  sleep 5
-                done
-
-                echo "timeout waiting for api-availability-tests job to start"
-                exit 1
+        file: paas-cf/concourse/tasks/wait-for-api-availability-tests.yml
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          STATE_BUCKET: ((state_bucket))
 
   - name: app-availability-tests
     serial: true
@@ -1015,7 +960,7 @@ jobs:
             - name: deployed-healthcheck
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            AVAILABILITY_TEST_HOST: healthcheck.((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
@@ -1049,7 +994,66 @@ jobs:
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                cd paas-cf/platform-tests/availability/app
+                go test -timeout 12h -ginkgo.v
+
+  - name: internal-app-availability-tests
+    serial: true
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: ['generate-secrets']
+            trigger: true
+          - get: deployed-healthcheck
+          - get: paas-cf
+            passed: ['generate-secrets']
+      - task: run-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+            - name: deployed-healthcheck
+          params:
+            SKIP_SSL_VALIDATION: true
+            AVAILABILITY_TEST_HOST: healthcheck-pinger.((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CONCOURSE_WEB_USERNAME: admin
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                HEALTHCHECK_DEPLOYED=$(cat deployed-healthcheck/healthcheck-deployed)
+                if [ "${HEALTHCHECK_DEPLOYED}" = "no" ]; then
+                  echo "Skipping internal-app-availability-tests because the healthcheck is not deployed"
+                  exit 0
+                fi
+
+                export CONCOURSE_WEB_URL
+                CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
+                echo "Running internal-app-availability-tests"
+                cd paas-cf/platform-tests/availability/app
+                go test -timeout 12h -ginkgo.v
 
   - name: api-availability-tests
     serial: true
@@ -1135,10 +1139,15 @@ jobs:
 
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
-                cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_USER}" "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
 
                 echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                cd paas-cf/platform-tests/availability/api
+                go test -timeout 12h
+
         ensure:
           task: delete-job-file
           tags: [colocated-with-web]
@@ -1345,7 +1354,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: 864e80c4793e4fca17a2374e8075af119dd03162
+              tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -1950,7 +1959,10 @@ jobs:
                 - -c
                 - |
                   . ./config/config.sh
-                  echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                  cf target -o admin -s monitoring
 
                   spruce merge paas-cf/config/cloudwatch-exporter/config.yml > paas-yet-another-cloudwatch-exporter/src/config.yml
 
@@ -2097,7 +2109,8 @@ jobs:
               - -e
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
                 ./paas-cf/concourse/scripts/parse_buildpacks_and_run_uploader.rb paas-cf/config/buildpacks.yml
       - task: create-orgs
         tags: [colocated-with-web]
@@ -2121,7 +2134,9 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
                 cf create-org admin
                 cf set-quota admin medium
 
@@ -2184,7 +2199,8 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 if cf service-brokers | grep 'rds-broker\s'; then
                   cf update-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
@@ -2407,7 +2423,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
 
@@ -2430,7 +2447,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
@@ -2452,7 +2470,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf enable-feature-flag diego_docker
 
@@ -2474,7 +2493,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf enable-feature-flag service_instance_sharing
 
@@ -2497,7 +2517,8 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 if cf domains | awk '$1=="apps.internal" && $2=="shared" { r=1 } END { exit r }'; then
                   cf curl /v2/shared_domains -d '{"name": "apps.internal", "internal": true}'
@@ -2542,8 +2563,10 @@ jobs:
               - -u
               - -c
               - |
-                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                  -o admin -s assets
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target  -o admin -s assets
 
                 cd paas-cf/platform-tests/example-apps/create-account-holding-page/
                 cf push
@@ -2599,7 +2622,8 @@ jobs:
                   exit 0
                 fi
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf target -o admin -s healthchecks
 
@@ -2685,9 +2709,11 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf target -o admin -s healthchecks
+
                 BUILD_ROOT=$(pwd)
                 cd paas-cf/platform-tests/example-apps/healthcheck
 
@@ -2814,7 +2840,8 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 if cf service-brokers | grep 'elasticache-broker\s'; then
                   cf update-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
@@ -2876,11 +2903,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-smoke-tests-release
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -2926,11 +2953,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: cf-acceptance-tests
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -2991,10 +3018,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3055,7 +3082,9 @@ jobs:
                     set -ueo pipefail
 
                     API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
+
+                    cf api "${API_ENDPOINT}"
+                    cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                     echo Expected buildpacks
                     expected="$(
@@ -3099,10 +3128,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3158,10 +3187,10 @@ jobs:
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
             trigger: true
           - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','api-availability-tests']
+            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
           - get: cf-manifest
       - task: test-bosh-vms
         tags: [colocated-with-web]
@@ -3236,7 +3265,10 @@ jobs:
               - |
                 set -ueo pipefail
 
-                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${CF_API_ADDRESS}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 if grep -q '^(prod\|prod-lon\|stg-lon)$' <<< "$DEPLOY_ENV"; then
                   plan="small-11"
@@ -3300,7 +3332,10 @@ jobs:
               - |
                 DB_PLAN="tiny-unencrypted-9.5"
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 if ! cf service accounts-db > /dev/null; then
                   cf create-service postgres "${DB_PLAN}" accounts-db
@@ -3432,7 +3467,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: 864e80c4793e4fca17a2374e8075af119dd03162
+              tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3638,7 +3673,10 @@ jobs:
                   BILLING_DB_PLAN="large-9.5"
                 fi
 
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 if ! cf service billing-db > /dev/null; then
                   cf create-service postgres "${BILLING_DB_PLAN}" billing-db
@@ -3731,7 +3769,10 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s billing
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing
 
                 export GOPATH="${PWD}"
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
@@ -3796,7 +3837,10 @@ jobs:
               - -u
               - -c
               - |
-                echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s monitoring
 
                 cd paas-cf/tools/metrics
 
@@ -3942,8 +3986,10 @@ jobs:
               - -c
               - |
                 . ./config/config.sh
-                cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" \
-                  -o admin -s service-brokers
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s service-brokers
 
                 cp ./paas-cf/config/service-brokers/aiven/config.json ./paas-aiven-broker/
                 cd paas-aiven-broker/
@@ -4351,7 +4397,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: 864e80c4793e4fca17a2374e8075af119dd03162
+            tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
         inputs:
           - name: passwords
         params:
@@ -4591,7 +4637,8 @@ jobs:
               }
               EOF
 
-              echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}"
+              cf api "${API_ENDPOINT}"
+              cf auth "${CF_ADMIN}" "${CF_PASS}"
 
               cf create-org continuous-smoke-test
               cf create-space continuous-smoke-test -o continuous-smoke-test
@@ -4829,7 +4876,10 @@ jobs:
                 - -u
                 - -c
                 - |
-                  echo | cf login -a "https://api.${SYSTEM_DNS_ZONE_NAME}" -u "$(cat admin-creds/username)" -p "$(cat admin-creds/password)" -o admin -s billing
+                  cf api "https://api.${SYSTEM_DNS_ZONE_NAME}"
+                  cf auth  "$(cat admin-creds/username)" "$(cat admin-creds/password)"
+
+                  cf target -o admin -s billing
 
                   export GOPATH="${PWD}"
                   export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
@@ -4887,7 +4937,8 @@ jobs:
             - -e
             - -c
             - |
-              echo | cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}"
+              cf api "${API_ENDPOINT}"
+              cf auth "${CF_USER}" "${CF_PASS}"
 
               ./paas-cf/scripts/cleanup-deleted-cf-users.sh --delete
 

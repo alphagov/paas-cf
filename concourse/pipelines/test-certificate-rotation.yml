@@ -5,22 +5,22 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: 864e80c4793e4fca17a2374e8075af119dd03162
+        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
 
 resource_types:
   - name: metadata
@@ -90,74 +90,28 @@ jobs:
       - in_parallel:
           - task: wait-for-app-availability-tests
             tags: [colocated-with-web]
-            config:
-              platform: linux
-              inputs:
-                - name: paas-cf
-                - name: pipeline-trigger
-              params:
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                CF_ADMIN: admin
-                CF_PASS: ((cf_pass))
-              image_resource: *cf-cli-image-resource
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+            file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              CF_ADMIN: admin
+              CF_PASS: ((cf_pass))
+              APP_NAME: healthcheck
 
-                    echo | cf login -a "${API_ENDPOINT}" -u "${CF_ADMIN}" -p "${CF_PASS}" > /dev/null
-                    cf target -o admin -s healthchecks > /dev/null
-
-                    echo "Waiting for ~2mins for app-availability-tests job to start:"
-                    for _ in $(seq 24); do
-                      if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
-                        echo "Request detected"
-                        exit 0
-                      fi
-                      printf "."
-                      sleep 5
-                    done
-
-                    echo "timeout waiting for app-availability-tests job to start"
-                    exit 1
+          - task: wait-for-internal-app-availability-tests
+            tags: [colocated-with-web]
+            file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              CF_ADMIN: admin
+              CF_PASS: ((cf_pass))
+              APP_NAME: healthcheck-pinger
 
           - task: wait-for-api-availability-tests
             tags: [colocated-with-web]
-            config:
-              platform: linux
-              inputs:
-                - name: paas-cf
-                - name: pipeline-trigger
-              params:
-                AWS_DEFAULT_REGION: ((aws_region))
-              image_resource: *awscli-image-resource
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
-                    JOB_FILE="jobs/${PIPELINE_TRIGGER_VERSION}/api-availability-tests"
-                    bucket=((state_bucket))
-
-                    echo "Waiting for ~2mins for api-availability-tests job to start by polling for ${bucket}/${JOB_FILE}"
-                    for _ in $(seq 24); do
-                      if aws s3 ls "s3://${bucket}/${JOB_FILE}" ; then
-                        echo "$JOB_FILE detected"
-                        exit 0
-                      fi
-                      printf "."
-                      sleep 5
-                    done
-
-                    echo "timeout waiting for api-availability-tests job to start"
-                    exit 1
+            file: paas-cf/concourse/tasks/wait-for-api-availability-tests.yml
+            params:
+              AWS_DEFAULT_REGION: ((aws_region))
+              STATE_BUCKET: ((state_bucket))
 
   - name: app-availability-tests
     serial: true
@@ -180,7 +134,7 @@ jobs:
             - name: pipeline-trigger
           params:
             SKIP_SSL_VALIDATION: true
-            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            AVAILABILITY_TEST_HOST: healthcheck.((apps_dns_zone_name))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             CONCOURSE_WEB_USERNAME: admin
             DEPLOY_ENV: ((deploy_env))
@@ -208,7 +162,60 @@ jobs:
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
                 echo "Running app-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/app
+                cd paas-cf/platform-tests/availability/app
+                go test -timeout 12h -ginkgo.v
+
+  - name: internal-app-availability-tests
+    serial: true
+    plan:
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: [begin]
+            trigger: true
+
+          - get: paas-cf
+            passed: [begin]
+
+      - task: run-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          inputs:
+            - name: paas-cf
+            - name: pipeline-trigger
+          params:
+            SKIP_SSL_VALIDATION: true
+            AVAILABILITY_TEST_HOST: healthcheck-pinger.((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CONCOURSE_WEB_USERNAME: admin
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                export CONCOURSE_WEB_URL
+                CONCOURSE_WEB_URL=https://deployer.${SYSTEM_DNS_ZONE_NAME}
+
+                PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
+                export PIPELINE_TRIGGER_VERSION
+
+                CONCOURSE_TEAM_NAME="main"
+                CONCOURSE_PIPELINE_NAME="test-certificate-rotation"
+                export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
+
+                CONCOURSE_JOB_NAME="done"
+                CONCOURSE_RESOURCE_NAME="pipeline-trigger"
+                export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
+
+                echo "Running internal-app-availability-tests"
+                cd paas-cf/platform-tests/availability/app
+                go test -timeout 12h -ginkgo.v
 
   - name: api-availability-tests
     serial: true
@@ -279,10 +286,14 @@ jobs:
 
                 export API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
 
-                cf login -a "${API_ENDPOINT}" -u "${CF_USER}" -p "${CF_PASS}" -o admin -s healthchecks
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_USER}" "${CF_PASS}"
+
+                cf target -o admin -s healthchecks
 
                 echo "Running api-availability-tests"
-                ./paas-cf/platform-tests/run_tests.sh ./paas-cf/platform-tests/src/platform/availability/api
+                cd paas-cf/platform-tests/availability/api
+                go test -timeout 12h
         ensure:
           task: delete-job-file
           tags: [colocated-with-web]
@@ -517,7 +528,7 @@ jobs:
     serial: true
     plan:
       - get: pipeline-trigger
-        passed: [done, api-availability-tests, app-availability-tests]
+        passed: [done, api-availability-tests, app-availability-tests, internal-app-availability-tests]
         trigger: true
 
       - get: paas-cf

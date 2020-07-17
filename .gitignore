@@ -4,7 +4,7 @@ bin/terraform*
 .idea/
 .vscode/
 platform-tests/pkg
-platform-tests/src/results
+platform-tests/results
 terraform/.terraform/
 org_usage.csv
 *.csv
