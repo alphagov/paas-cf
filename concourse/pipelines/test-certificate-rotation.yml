@@ -90,83 +90,21 @@ jobs:
       - in_parallel:
           - task: wait-for-app-availability-tests
             tags: [colocated-with-web]
-            config:
-              platform: linux
-              inputs:
-                - name: paas-cf
-                - name: pipeline-trigger
-              params:
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                CF_ADMIN: admin
-                CF_PASS: ((cf_pass))
-              image_resource: *cf-cli-image-resource
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
-
-                    cf api "${API_ENDPOINT}"
-                    cf auth "${CF_ADMIN}" "${CF_PASS}"
-
-                    cf target -o admin -s healthchecks
-
-                    echo "Waiting for ~2mins for app-availability-tests job to start:"
-                    for _ in $(seq 24); do
-                      if cf logs healthcheck --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
-                        echo "Request detected"
-                        exit 0
-                      fi
-                      printf "."
-                      sleep 5
-                    done
-
-                    echo "timeout waiting for app-availability-tests job to start"
-                    exit 1
+            file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              CF_ADMIN: admin
+              CF_PASS: ((cf_pass))
+              APP_NAME: healthcheck
 
           - task: wait-for-c2c-availability-tests
             tags: [colocated-with-web]
-            config:
-              platform: linux
-              inputs:
-                - name: paas-cf
-                - name: pipeline-trigger
-              params:
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                CF_ADMIN: admin
-                CF_PASS: ((cf_pass))
-              image_resource: *cf-cli-image-resource
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-                    PIPELINE_TRIGGER_VERSION=$(cat pipeline-trigger/number)
-
-                    cf api "${API_ENDPOINT}"
-                    cf auth "${CF_ADMIN}" "${CF_PASS}"
-
-                    cf target -o admin -s healthchecks
-
-                    echo "Waiting for ~2mins for c2c-availability-tests job to start:"
-                    for _ in $(seq 24); do
-                      if cf logs healthcheck-pinger --recent | grep -q "availability-test=${PIPELINE_TRIGGER_VERSION}"; then
-                        echo "Request detected"
-                        exit 0
-                      fi
-                      printf "."
-                      sleep 5
-                    done
-
-                    echo "timeout waiting for c2c-availability-tests job to start"
-                    exit 1
+            file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              CF_ADMIN: admin
+              CF_PASS: ((cf_pass))
+              APP_NAME: healthcheck-pinger
 
           - task: wait-for-api-availability-tests
             tags: [colocated-with-web]
