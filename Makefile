@@ -283,7 +283,7 @@ showenv: ## Display environment information
 	@scripts/showenv.sh
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people
+upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
@@ -336,6 +336,12 @@ upload-pagerduty-secrets: check-env ## Decrypt and upload pagerduty credentials 
 .PHONY: upload-paas-trusted-people
 upload-paas-trusted-people: check-env
 	@scripts/upload-secrets/upload-paas-trusted-people.sh
+
+.PHONY: upload-zendesk-secrets
+upload-zendesk-secrets: check-env ## Decrypt and upload ZenDesk secrets to Credhub
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@scripts/upload-secrets/upload-zendesk-secrets.rb
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check

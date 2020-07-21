@@ -3517,6 +3517,8 @@ jobs:
                     PROMETHEUS_USERNAME: paas-admin
                     PROMETHEUS_PASSWORD: ((paas_admin_prometheus_password))
                     PROMETHEUS_ENDPOINT: "https://prometheus.${SYSTEM_DNS_ZONE_NAME}"
+                    ZENDESK_API_TOKEN: ((zendesk_api_token))
+                    ZENDESK_USERNAME: ((zendesk_username))
                 EOF
 
                 spruce merge \
