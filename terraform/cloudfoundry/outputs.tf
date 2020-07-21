@@ -213,3 +213,12 @@ output "paas_admin_metrics_aws_secret_access_key" {
   value     = aws_iam_access_key.paas_admin_metrics.secret
 }
 
+output "paas_prometheus_endpoints_aws_access_key_id" {
+  sensitive = true
+  value     = aws_iam_access_key.paas_prometheus_endpoints.id
+}
+
+output "paas_prometheus_endpoints_aws_secret_access_key" {
+  sensitive = true
+  value     = aws_iam_access_key.paas_prometheus_endpoints.secret
+}

@@ -141,6 +141,18 @@
     secret: ((secrets_uaa_clients_paas_metrics_secret))
 
 - type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-prometheus-endpoints?
+  value:
+    access-token-validity: 1209600
+    authorities: oauth.login,cloud_controller.global_auditor,scim.read
+    authorized-grant-types: client_credentials,refresh_token
+    autoapprove: true
+    override: true
+    redirect-uri: https://metrics.((system_domain))/oauth/callback
+    scope: openid,oauth.approvals,cloud_controller.global_auditor
+    secret: ((secrets_uaa_clients_paas_prometheus_endpoints_secret))
+
+- type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/user_invitation?
   value:
     authorities: oauth.login,scim.write,emails.write,scim.userids
@@ -290,6 +302,11 @@
   path: /variables/-
   value:
     name: secrets_uaa_clients_paas_auditor_secret
+    type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_uaa_clients_paas_prometheus_endpoints_secret
     type: password
 
 - type: replace
