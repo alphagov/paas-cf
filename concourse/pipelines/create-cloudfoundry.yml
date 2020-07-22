@@ -2406,6 +2406,54 @@ jobs:
 
                 cf enable-service-access aws-s3-bucket -b s3-broker -p default
 
+      - task: register-csls-splunk-broker
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: config
+          params:
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            S3_BROKER_PASS: ((secrets_s3_broker_admin_password))
+            DEPLOY_ENV: ((deploy_env))
+            CSLS_SPLUNK_BROKER_USERNAME: ((csls_splunk_broker_username))
+            CSLS_SPLUNK_BROKER_PASSWORD: ((csls_splunk_broker_password))
+            CSLS_SPLUNK_BROKER_URL: ((csls_splunk_broker_url))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                # shellcheck disable=SC2039
+                if [[ "${DEPLOY_ENV}" != prod* ]]; then
+                  echo "CSLS Splunk broker is only deployed in production environments"
+                  exit 0
+                fi
+
+                . ./config/config.sh
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                if cf service-brokers | grep 'splunk\s'; then
+                  cf update-service-broker splunk "${CSLS_SPLUNK_BROKER_USERNAME}" "${CSLS_SPLUNK_BROKER_PASSWORD}" "${CSLS_SPLUNK_BROKER_URL}"
+                else
+                  cf create-service-broker splunk "${CSLS_SPLUNK_BROKER_USERNAME}" "${CSLS_SPLUNK_BROKER_PASSWORD}" "${CSLS_SPLUNK_BROKER_URL}"
+                fi
+
+                ALLOWED_ORGS=$(jq -r '.allowed_orgs[]' "./paas-cf/config/service-brokers/csls-splunk/${DEPLOY_ENV}-config.json")
+
+                for ORG in $ALLOWED_ORGS; do
+                  cf enable-service-access splunk \
+                    -b splunk \
+                    -o "${ORG}"
+                done
+
       - task: set-security-groups-from-manifest
         tags: [colocated-with-web]
         config:
