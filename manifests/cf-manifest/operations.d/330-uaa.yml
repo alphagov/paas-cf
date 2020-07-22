@@ -48,7 +48,7 @@
   value:
     homeRedirect: https://admin.((system_domain))/
     passwd: https://admin.((system_domain))/password/request-reset
-    signup: https://www.cloud.service.gov.uk/signup
+    signup: https://admin.london.cloud.service.gov.uk/support/sign-up
 
 - type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/login/self_service_links_enabled?
