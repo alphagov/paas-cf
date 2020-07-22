@@ -1,0 +1,3582 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "limit": 100,
+          "name": "Annotations & Alerts",
+          "showIn": 0,
+          "type": "dashboard"
+        },
+        {
+          "datasource": "-- Grafana --",
+          "enable": false,
+          "hide": false,
+          "iconColor": "rgba(255, 96, 96, 1)",
+          "limit": 100,
+          "name": "Deployment - Detailed",
+          "showIn": 0,
+          "tags": [
+            "deployment",
+            "concourse"
+          ],
+          "type": "tags"
+        },
+        {
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": false,
+          "iconColor": "#37872D",
+          "limit": 100,
+          "name": "Deployment - Overview",
+          "showIn": 0,
+          "tags": [
+            "deployment-overview",
+            "concourse"
+          ],
+          "type": "tags"
+        }
+      ]
+    },
+    "editable": false,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "links": [],
+    "panels": [
+      {
+        "content": "#  Components\n\n***Routing*** - apps should be able to receive traffic from end users\n\n***API*** -  users should be interact with our API via the CLI and Pazmin\n\n***Scheduling*** - apps and tasks should be scheduled and run\n\n***Logging*** - users should be able to read and consume their logs\n\n***Service discovery*** - apps should be able to discover and talk to other apps",
+        "gridPos": {
+          "h": 8,
+          "w": 10,
+          "x": 0,
+          "y": 0
+        },
+        "id": 68,
+        "links": [],
+        "mode": "markdown",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Overview",
+        "type": "text"
+      },
+      {
+        "content": "# Components\n\n- Cell - a server which runs apps (LRPs) and tasks for users\n- LRP - long running process\n- RLP - Reverse Log Proxy\n- UAA - User accounts & authentication server",
+        "gridPos": {
+          "h": 8,
+          "w": 14,
+          "x": 10,
+          "y": 0
+        },
+        "id": 69,
+        "links": [],
+        "mode": "markdown",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Jargon",
+        "type": "text"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 8
+        },
+        "id": 2,
+        "panels": [],
+        "title": "Routing",
+        "type": "row"
+      },
+      {
+        "content": "# Routing\n\nSee [`indicators.yml`](https://github.com/cloudfoundry/routing-release/blob/release/jobs/gorouter/templates/indicators.yml.erb)\n\n## Route registration receipt %\n\nIf route registration messages are not received by gorouter, then users will see 404s.\n\nThis can be >100% because of how the metrics are collected from distributed components. In the long run it should be 100%\n\n## Route registration latency\n\nIf route registration messages are not broadcast in a timely fashion, then users will see 404s.\n\n",
+        "gridPos": {
+          "h": 12,
+          "w": 7,
+          "x": 0,
+          "y": 9
+        },
+        "id": 32,
+        "links": [],
+        "mode": "markdown",
+        "targets": [
+          {
+            "expr": "",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "type": "text"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 9
+        },
+        "id": 18,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeat": "Interval",
+        "repeatDirection": "h",
+        "scopedVars": {
+          "Interval": {
+            "selected": true,
+            "text": "24h",
+            "value": "24h"
+          }
+        },
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg((rate(firehose_counter_event_gorouter_registry_message_route_emitter_total[24h])+rate(firehose_counter_event_gorouter_unregistry_message_route_emitter_total[24h]))) / scalar(sum(rate(firehose_counter_event_route_emitter_http_route_nats_messages_emitted_total[24h])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Receipt % 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 9
+        },
+        "id": 19,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg((rate(firehose_counter_event_gorouter_registry_message_route_emitter_total[48h])+rate(firehose_counter_event_gorouter_unregistry_message_route_emitter_total[48h]))) / scalar(sum(rate(firehose_counter_event_route_emitter_http_route_nats_messages_emitted_total[48h])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Receipt % 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 9
+        },
+        "id": 16,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_gorouter_registry_message_route_emitter_total[5m] offset 1m)+rate(firehose_counter_event_gorouter_unregistry_message_route_emitter_total[5m] offset 1m)) / scalar(sum(rate(firehose_counter_event_route_emitter_http_route_nats_messages_emitted_total[5m] offset 1m)))",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Route registry message receipt %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 12
+        },
+        "id": 20,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg((rate(firehose_counter_event_gorouter_registry_message_route_emitter_total[7d])+rate(firehose_counter_event_gorouter_unregistry_message_route_emitter_total[7d]))) / scalar(sum(rate(firehose_counter_event_route_emitter_http_route_nats_messages_emitted_total[7d])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Receipt % 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 12
+        },
+        "id": 21,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg((rate(firehose_counter_event_gorouter_registry_message_route_emitter_total[30d])+rate(firehose_counter_event_gorouter_unregistry_message_route_emitter_total[30d]))) / scalar(sum(rate(firehose_counter_event_route_emitter_http_route_nats_messages_emitted_total[30d])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Receipt % 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": null,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 15
+        },
+        "id": 22,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(avg_over_time(firehose_value_metric_gorouter_ms_since_last_registry_update[24h]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "400, 600",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Reg latency 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": null,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 15
+        },
+        "id": 23,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(avg_over_time(firehose_value_metric_gorouter_ms_since_last_registry_update[48h]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "400, 600",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Reg latency 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 15
+        },
+        "id": 14,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "avg(max_over_time(firehose_value_metric_gorouter_ms_since_last_registry_update[5m]))\n",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Route registration latency",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "ms",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": null,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 18
+        },
+        "id": 24,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(avg_over_time(firehose_value_metric_gorouter_ms_since_last_registry_update[7d]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "400, 600",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Reg latency 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": null,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 18
+        },
+        "id": 25,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(avg_over_time(firehose_value_metric_gorouter_ms_since_last_registry_update[30d]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "400, 600",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Reg latency 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 21
+        },
+        "id": 6,
+        "panels": [],
+        "title": "API",
+        "type": "row"
+      },
+      {
+        "content": "# API\n\n## Cloud Controller reliability\n\nIf Cloud Controller is unreliable, then our users will have a bad user experience when interacting with the API (CLI and Pazmin).\n\n_(This measure is suboptimal because the metric is generated by CC not by gorouter - timeouts and bad gateways will not get counted)_\n\n## UAA reliability\n\nIf UAA is unreliable, then our users will have a bad user experience when logging in (CLI and Pazmin).\n\n\n_(This measure is suboptimal because the metric is generated by UAA not by gorouter - timeouts and bad gateways will not get counted)_",
+        "gridPos": {
+          "h": 12,
+          "w": 7,
+          "x": 0,
+          "y": 22
+        },
+        "id": 50,
+        "links": [],
+        "mode": "markdown",
+        "targets": [
+          {
+            "expr": "",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "type": "text"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 22
+        },
+        "id": 52,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - (\nsum(rate(firehose_value_metric_cc_http_status_5_xx[24h]) or vector(0))\n/\n(\n sum(rate(firehose_value_metric_cc_http_status_5_xx[24h]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_4_xx[24h]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_3_xx[24h]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_2_xx[24h]) or vector(0))\n)\n)",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CC % 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 22
+        },
+        "id": 53,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - (\nsum(rate(firehose_value_metric_cc_http_status_5_xx[48h]) or vector(0))\n/\n(\n sum(rate(firehose_value_metric_cc_http_status_5_xx[48h]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_4_xx[48h]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_3_xx[48h]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_2_xx[48h]) or vector(0))\n)\n)",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CC % 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 22
+        },
+        "id": 51,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "1 - (\nsum(rate(firehose_value_metric_cc_http_status_5_xx[5m]) or vector(0))\n/\n(\n sum(rate(firehose_value_metric_cc_http_status_5_xx[5m]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_4_xx[5m]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_3_xx[5m]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_2_xx[5m]) or vector(0))\n)\n)",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Cloud controller API reliability %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 25
+        },
+        "id": 54,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - (\nsum(rate(firehose_value_metric_cc_http_status_5_xx[7d]) or vector(0))\n/\n(\n sum(rate(firehose_value_metric_cc_http_status_5_xx[7d]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_4_xx[7d]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_3_xx[7d]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_2_xx[7d]) or vector(0))\n)\n)",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CC % 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 25
+        },
+        "id": 55,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - (\nsum(rate(firehose_value_metric_cc_http_status_5_xx[30d]) or vector(0))\n/\n(\n sum(rate(firehose_value_metric_cc_http_status_5_xx[30d]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_4_xx[30d]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_3_xx[30d]) or vector(0)) +\n sum(rate(firehose_value_metric_cc_http_status_2_xx[30d]) or vector(0))\n)\n)",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CC % 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 28
+        },
+        "id": 57,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1- avg\n(rate(firehose_value_metric_uaa_requests_global_status_5_xx_count[24h])\n/\nrate(firehose_value_metric_uaa_requests_global_completed_count[24h]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "UAA % 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 28
+        },
+        "id": 58,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1- avg\n(rate(firehose_value_metric_uaa_requests_global_status_5_xx_count[48h])\n/\nrate(firehose_value_metric_uaa_requests_global_completed_count[48h]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "UAA % 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 28
+        },
+        "id": 56,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "1- avg\n(rate(firehose_value_metric_uaa_requests_global_status_5_xx_count[5m])\n/\nrate(firehose_value_metric_uaa_requests_global_completed_count[5m]))",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "UAA API reliability %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 31
+        },
+        "id": 59,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1- avg\n(rate(firehose_value_metric_uaa_requests_global_status_5_xx_count[7d])\n/\nrate(firehose_value_metric_uaa_requests_global_completed_count[7d]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "UAA % 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 31
+        },
+        "id": 60,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1- avg\n(rate(firehose_value_metric_uaa_requests_global_status_5_xx_count[30d])\n/\nrate(firehose_value_metric_uaa_requests_global_completed_count[30d]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "UAA % 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 34
+        },
+        "id": 8,
+        "panels": [],
+        "title": "Scheduling",
+        "type": "row"
+      },
+      {
+        "content": "# Scheduling\n\nWhen a user has an app (long-running-process or LRP) or runs a task (eg `cf run-task`) this has to be placed on a cell (server which runs apps and tasks). An auction is held to allocate a task or a LRP to a cell.\n\n## Auction reliability %\n\nWhat % of auctions which are started do not fail. Auctions are important because if an auction cannot be fulfilled, users' tasks and apps cannot run.",
+        "gridPos": {
+          "h": 8,
+          "w": 7,
+          "x": 0,
+          "y": 35
+        },
+        "id": 66,
+        "links": [],
+        "mode": "markdown",
+        "targets": [
+          {
+            "expr": "",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "type": "text"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 35
+        },
+        "id": 62,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - avg((\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_failed_total[24h]) + \nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_failed_total[24h])\n)\n/\n(\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_started_total[24h]) +\nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_started_total[24h])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Auction % 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 35
+        },
+        "id": 63,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - avg((\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_failed_total[48h]) + \nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_failed_total[48h])\n)\n/\n(\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_started_total[48h]) +\nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_started_total[48h])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Auction % 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 35
+        },
+        "id": 61,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "1 - avg((\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_failed_total[5m]) + \nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_failed_total[5m])\n)\n/\n(\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_started_total[5m]) +\nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_started_total[5m])\n))",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Auction reliability %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 38
+        },
+        "id": 64,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - avg((\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_failed_total[7d]) + \nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_failed_total[7d])\n)\n/\n(\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_started_total[7d]) +\nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_started_total[7d])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Auction % 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 38
+        },
+        "id": 65,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "1 - avg((\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_failed_total[30d]) + \nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_failed_total[30d])\n)\n/\n(\nrate(firehose_counter_event_auctioneer_auctioneer_lrp_auctions_started_total[30d]) +\nrate(firehose_counter_event_auctioneer_auctioneer_task_auctions_started_total[30d])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Auction % 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 43
+        },
+        "id": 10,
+        "panels": [],
+        "title": "Logging",
+        "type": "row"
+      },
+      {
+        "content": "# Logging\n\n## RLP egress reliability %\n\nMeasures `egress / (dropped + egress)` as a percentage. If this is too unreliable then logs will not get through to consumers.\n\n## Syslog agent egress reliability %\n\nThe router and diego-cell instances ship logs to syslog consumers. If the syslog agents are too unreliable then logs will not get through to consumers.\n\nA syslog consumer could be a tenant's logging stack, or a SaaS observability service.\n\n_(This is currently unreliably measured due to shortcomings in the firehose exporter)_",
+        "gridPos": {
+          "h": 12,
+          "w": 7,
+          "x": 0,
+          "y": 44
+        },
+        "id": 12,
+        "links": [],
+        "mode": "markdown",
+        "targets": [
+          {
+            "expr": "",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "type": "text"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 44
+        },
+        "id": 28,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_rlp_egress_total[24h])\n/\n(rate(firehose_counter_event_loggregator_rlp_egress_total[24h]) + rate(firehose_counter_event_loggregator_rlp_dropped_total[24h])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "RLP 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 44
+        },
+        "id": 29,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_rlp_egress_total[48h])\n/\n(rate(firehose_counter_event_loggregator_rlp_egress_total[48h]) + rate(firehose_counter_event_loggregator_rlp_dropped_total[48h])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "RLP 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 44
+        },
+        "id": 26,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_rlp_egress_total[5m])\n/\n(rate(firehose_counter_event_loggregator_rlp_egress_total[5m]) + rate(firehose_counter_event_loggregator_rlp_dropped_total[5m])))",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "RLP egress reliability %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 47
+        },
+        "id": 30,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_rlp_egress_total[7d])\n/\n(rate(firehose_counter_event_loggregator_rlp_egress_total[7d]) + rate(firehose_counter_event_loggregator_rlp_dropped_total[7d])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "RLP 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 47
+        },
+        "id": 31,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_rlp_egress_total[30d])\n/\n(rate(firehose_counter_event_loggregator_rlp_egress_total[30d]) + rate(firehose_counter_event_loggregator_rlp_dropped_total[30d])))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "RLP 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 50
+        },
+        "id": 34,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_syslog_agent_egress_total{bosh_job_name=~\"router|diego-cell\"}[24h])\n/\n(\n  rate(firehose_counter_event_loggregator_syslog_agent_dropped_total[24h])\n  +rate(firehose_counter_event_loggregator_syslog_agent_egress_total[24h])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Syslog 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 50
+        },
+        "id": 35,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_syslog_agent_egress_total{bosh_job_name=~\"router|diego-cell\"}[48h])\n/\n(\n  rate(firehose_counter_event_loggregator_syslog_agent_dropped_total[48h])\n  +rate(firehose_counter_event_loggregator_syslog_agent_egress_total[48h])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Syslog 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 50
+        },
+        "id": 33,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "avg by (bosh_job_name) (rate(firehose_counter_event_loggregator_syslog_agent_egress_total{bosh_job_name=~\"router|diego-cell\"}[5m])\n/\n(\n  rate(firehose_counter_event_loggregator_syslog_agent_dropped_total[5m])\n  +rate(firehose_counter_event_loggregator_syslog_agent_egress_total[5m])\n))",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "{{bosh_job_name}}",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Syslog agent egress reliability %",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 53
+        },
+        "id": 36,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_syslog_agent_egress_total{bosh_job_name=~\"router|diego-cell\"}[7d])\n/\n(\n  rate(firehose_counter_event_loggregator_syslog_agent_dropped_total[7d])\n  +rate(firehose_counter_event_loggregator_syslog_agent_egress_total[7d])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Syslog 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#d44a3a",
+          "rgba(237, 129, 40, 0.89)",
+          "#299c46"
+        ],
+        "decimals": 3,
+        "format": "percentunit",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 53
+        },
+        "id": 37,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(rate(firehose_counter_event_loggregator_syslog_agent_egress_total{bosh_job_name=~\"router|diego-cell\"}[30d])\n/\n(\n  rate(firehose_counter_event_loggregator_syslog_agent_dropped_total[30d])\n  +rate(firehose_counter_event_loggregator_syslog_agent_egress_total[30d])\n))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "0.995,0.9999",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Syslog 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 56
+        },
+        "id": 4,
+        "panels": [],
+        "title": "Service discovery",
+        "type": "row"
+      },
+      {
+        "content": "# Service discovery\n\n## Bosh-dns-adapter request time\n\nThe time taken for internal DNS requests to complete, if these requests take too long then services which rely on internal networking may experience timeouts.",
+        "gridPos": {
+          "h": 6,
+          "w": 7,
+          "x": 0,
+          "y": 57
+        },
+        "id": 48,
+        "links": [],
+        "mode": "markdown",
+        "targets": [
+          {
+            "expr": "",
+            "format": "time_series",
+            "intervalFactor": 1,
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "",
+        "type": "text"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 0,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 57
+        },
+        "id": 39,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(quantile_over_time(0.95, firehose_value_metric_bosh_dns_adapter_get_i_ps_request_time[24h]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "DNS ms 24h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 0,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 57
+        },
+        "id": 40,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(quantile_over_time(0.95, firehose_value_metric_bosh_dns_adapter_get_i_ps_request_time[48h]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "DNS ms 48h",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "description": "",
+        "fill": 1,
+        "gridPos": {
+          "h": 6,
+          "w": 11,
+          "x": 13,
+          "y": 57
+        },
+        "id": 38,
+        "legend": {
+          "alignAsTable": false,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "avg(quantile_over_time(0.95, firehose_value_metric_bosh_dns_adapter_get_i_ps_request_time[5m]))",
+            "format": "time_series",
+            "interval": "1h",
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Bosh-dns-adapter request time",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "ms",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 0,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 7,
+          "y": 60
+        },
+        "id": 41,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(quantile_over_time(0.95, firehose_value_metric_bosh_dns_adapter_get_i_ps_request_time[7d]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "DNS ms 7d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      },
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "#299c46",
+          "rgba(237, 129, 40, 0.89)",
+          "#d44a3a"
+        ],
+        "decimals": 0,
+        "format": "ms",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 10,
+          "y": 60
+        },
+        "id": 49,
+        "interval": null,
+        "links": [],
+        "mappingType": 1,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "maxPerRow": 6,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "50%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "null",
+            "text": "N/A",
+            "to": "null"
+          }
+        ],
+        "repeatDirection": "h",
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "Value",
+        "targets": [
+          {
+            "expr": "avg(quantile_over_time(0.95, firehose_value_metric_bosh_dns_adapter_get_i_ps_request_time[30d]))",
+            "format": "time_series",
+            "instant": true,
+            "intervalFactor": 1,
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": "100,200",
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "DNS ms 30d",
+        "type": "singlestat",
+        "valueFontSize": "80%",
+        "valueMaps": [],
+        "valueName": "current"
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 17,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "UTC",
+    "title": "Component Indicators - __DEPLOY_ENV__",
+    "uid": "paas-component-indicators"
+  },
+  "folderId": 0,
+  "overwrite": true
+}
