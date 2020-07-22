@@ -1,0 +1,63 @@
+- type: replace
+  path: /vm_types/name=nano/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=nano/cloud_properties/spot_bid_price?
+  value: ((nano_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=small/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=small/cloud_properties/spot_bid_price?
+  value: ((small_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=medium/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=medium/cloud_properties/spot_bid_price?
+  value: ((medium_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=large/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=large/cloud_properties/spot_bid_price?
+  value: ((large_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=xlarge/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=xlarge/cloud_properties/spot_bid_price?
+  value: ((xlarge_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=router/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=router/cloud_properties/spot_bid_price?
+  value: ((router_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=slim_router/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=slim_router/cloud_properties/spot_bid_price?
+  value: ((slim_router_vm_spot_bid_price))
+
+- type: replace
+  path: /vm_types/name=cell/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=cell/cloud_properties/spot_bid_price?
+  value: ((cell_vm_spot_bid_price))
