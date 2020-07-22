@@ -10,9 +10,24 @@ credhub_namespaces = [
   "/concourse/main/create-cloudfoundry",
 ]
 
+secrets = {}
+
 csls_kinesis_destination_arn = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_kinesis_destination_arn"`
+secrets["cyber_csls_kinesis_destination_arn"] = csls_kinesis_destination_arn
+
+if ENV["MAKEFILE_ENV_TARGET"].start_with?("prod")
+  csls_splunk_broker_url = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_broker_url"`
+  csls_splunk_broker_username = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_broker_username"`
+  csls_splunk_broker_password = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_broker_password"`
+
+  secrets["csls_splunk_broker_url"] = csls_splunk_broker_url
+  secrets["csls_splunk_broker_username"] = csls_splunk_broker_username
+  secrets["csls_splunk_broker_password"] = csls_splunk_broker_password
+else
+  puts "Skipping CSLS -> Splunk broker credentials because the environment \"#{ENV['MAKEFILE_ENV_TARGET']}\" does not start with \"prod\""
+end
 
 upload_secrets(
   credhub_namespaces,
-  "cyber_csls_kinesis_destination_arn" => csls_kinesis_destination_arn,
+  secrets,
 )
