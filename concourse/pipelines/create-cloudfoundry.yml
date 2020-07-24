@@ -558,7 +558,7 @@ resources:
   - name: cf-acceptance-tests
     type: git
     source:
-      uri: https://github.com/cloudfoundry/cf-acceptance-tests
+      uri: https://github.com/alphagov/paas-cf-acceptance-tests
       branch: cf13.2
 
   - name: cf-smoke-tests-release
