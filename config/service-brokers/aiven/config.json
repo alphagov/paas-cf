@@ -108,6 +108,27 @@
                 "version": "6"
               }
             }
+          },
+          {
+            "id": "b036fe1d-0a82-44ac-a70b-1d997b2e0c02",
+            "name": "xlarge-ha-6.x",
+            "aiven_plan": "business-32",
+            "elasticsearch_version": "6",
+            "description": "3 dedicated VMs, 4 CPU per VM, 31GB RAM per VM, 2100GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Large",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 4,
+                "memory": {"amount": 31, "unit": "GB"},
+                "storage": {"amount": 2100, "unit": "GB"},
+                "version": "6"
+              }
+            }
           }
         ]
       },
