@@ -89,3 +89,16 @@
 		}
 	]
 },
+{
+	"name": "elasticsearch xlarge-ha-6.x",
+	"valid_from": "2018-10-01",
+	"plan_guid": "b036fe1d-0a82-44ac-a70b-1d997b2e0c02",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_elasticsearch_business_32") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
