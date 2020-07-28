@@ -1,14 +1,14 @@
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/autoscaler?
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/app_autoscaler?
   value:
     override: true
     authorized-grant-types: client_credentials
-    secret: "((uaa_clients_autoscaler_secret))"
+    secret: "((uaa_clients_app_autoscaler_secret))"
     scope: ""
     authorities: "cloud_controller.read,cloud_controller.admin,uaa.resource"
 
 - type: replace
   path: /variables/-
   value:
-    name: uaa_clients_autoscaler_secret
+    name: uaa_clients_app_autoscaler_secret
     type: password

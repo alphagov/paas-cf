@@ -1,4 +1,4 @@
----
+t---
 compilation_vm_instance_type: c5.large
 
 nano_vm_instance_type: t3.nano
@@ -52,5 +52,5 @@ external_policy_server_database_name: network_policy
 external_policy_server_database_username: network_policy
 external_silk_controller_database_name: network_connectivity
 external_silk_controller_database_username: network_connectivity
-external_autoscaler_database_name: autoscaler
-external_autoscaler_database_username: autoscaler
+external_app_autoscaler_database_name: app_autoscaler
+external_app_autoscaler_database_username: app_autoscaler

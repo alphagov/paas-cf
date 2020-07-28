@@ -294,7 +294,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
-      - autoscaler-deploy
+      - app-autoscaler-deploy
       - prometheus-deploy
       - post-deploy
       - deploy-paas-accounts
@@ -323,7 +323,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
-      - autoscaler-deploy
+      - app-autoscaler-deploy
       - prometheus-deploy
       - post-deploy
       - smoke-tests
@@ -664,12 +664,12 @@ resources:
       region_name: ((aws_region))
       versioned_file: prometheus-manifest-pre-vars.yml
 
-  - name: autoscaler-manifest-pre-vars
+  - name: app-autoscaler-manifest-pre-vars
     type: s3-iam
     source:
       bucket: ((state_bucket))
       region_name: ((aws_region))
-      versioned_file: autoscaler-manifest-pre-vars.yml
+      versioned_file: app-autoscaler-manifest-pre-vars.yml
 
   - name: paas-yet-another-cloudwatch-exporter
     type: git
@@ -860,7 +860,7 @@ jobs:
                     external_silk_controller_database_password
                     external_policy_server_database_password
                     external_credhub_database_password
-                    external_autoscaler_database_password
+                    external_app_autoscaler_database_password
                   )
 
                   concourse_credentials=(
@@ -1214,7 +1214,7 @@ jobs:
                 export TF_VAR_external_uaa_database_password="((external_uaa_database_password))"
                 export TF_VAR_external_silk_controller_database_password="((external_silk_controller_database_password))"
                 export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
-                export TF_VAR_external_autoscaler_database_password="((external_autoscaler_database_password))"
+                export TF_VAR_external_app_autoscaler_database_password="((external_app_autoscaler_database_password))"
                 EOF
 
                 cat <<EOF > terraform-variables/cyber-secrets.tfvars.sh
@@ -2098,7 +2098,7 @@ jobs:
 
       - *end-grafana-job-annotation
 
-  - name: autoscaler-deploy
+  - name: app-autoscaler-deploy
     serial: true
     plan:
       - *add-grafana-job-annotation
@@ -2131,7 +2131,7 @@ jobs:
                   < cf-tfstate/cf.tfstate \
                   > terraform-outputs/cf.yml
 
-      - task: generate-autoscaler-manifest
+      - task: generate-app-autoscaler-manifest
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -2140,8 +2140,8 @@ jobs:
             - name: paas-cf
             - name: terraform-outputs
           outputs:
-            - name: autoscaler-manifest
-            - name: autoscaler-manifest-pre-vars
+            - name: app-autoscaler-manifest
+            - name: app-autoscaler-manifest-pre-vars
           params:
             AWS_ACCOUNT: ((aws_account))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
@@ -2161,25 +2161,25 @@ jobs:
                 BOSH_CA_CERT="$(awk -v ORS='\\n' '1' <(printenv BOSH_CA_CERT | tr -d '\r'))"
                 export BOSH_CA_CERT
 
-                ./paas-cf/manifests/autoscaler/scripts/generate-manifest.sh \
-                  > autoscaler-manifest/autoscaler-manifest.yml
+                ./paas-cf/manifests/app-autoscaler/scripts/generate-manifest.sh \
+                  > app-autoscaler-manifest/app-autoscaler-manifest.yml
 
-                ./paas-cf/manifests/autoscaler/scripts/generate-manifest.sh \
-                  > autoscaler-manifest-pre-vars/autoscaler-manifest-pre-vars.yml
+                ./paas-cf/manifests/app-autoscaler/scripts/generate-manifest.sh \
+                  > app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
 
         on_success:
-          put: autoscaler-manifest-pre-vars
+          put: app-autoscaler-manifest-pre-vars
           params:
-            file: autoscaler-manifest-pre-vars/autoscaler-manifest-pre-vars.yml
+            file: app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
 
-      - task: autoscaler-deploy
+      - task: app-autoscaler-deploy
         tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *gov-paas-bosh-cli-v2-image-resource
           inputs:
             - name: paas-cf
-            - name: autoscaler-manifest
+            - name: app-autoscaler-manifest
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))
@@ -2195,7 +2195,7 @@ jobs:
                 BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
-                bosh -n deploy autoscaler-manifest/autoscaler-manifest.yml
+                bosh -n deploy app-autoscaler-manifest/app-autoscaler-manifest.yml
 
       - *end-grafana-job-annotation
 
@@ -3122,7 +3122,7 @@ jobs:
           - get: pipeline-trigger
             passed: &smoke-tests-resource-passed
               - post-deploy
-              - autoscaler-deploy
+              - app-autoscaler-deploy
               - prometheus-deploy
               - app-availability-tests
               - internal-app-availability-tests
