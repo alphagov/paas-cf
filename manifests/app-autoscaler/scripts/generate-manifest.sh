@@ -40,6 +40,8 @@ database:
   scheme: postgres
   tls:
     ca: ~
+
+skip_ssl_validation: false
 EOF
 
 # shellcheck disable=SC2086
@@ -52,4 +54,7 @@ bosh interpolate \
 | sed "s@dns_api_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_server_tls.@g" \
 | sed "s@dns_healthcheck_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_healthcheck_client_tls.@g" \
 | sed "s@dns_healthcheck_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_healthcheck_server_tls.@g" \
+| sed "s@loggregator_tls_rlp[.]@/$DEPLOY_ENV/$DEPLOY_ENV/loggregator_tls_rlp.@g" \
+| sed "s@loggregator_ca[.]@/$DEPLOY_ENV/$DEPLOY_ENV/loggregator_ca.@g" \
+| sed "s@loggregator_tls_agent[.]@/$DEPLOY_ENV/$DEPLOY_ENV/loggregator_tls_agent.@g" \
 | sed "s@cf_client_secret@/$DEPLOY_ENV/$DEPLOY_ENV/uaa_clients_app_autoscaler_secret@g"
