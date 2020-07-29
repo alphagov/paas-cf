@@ -14,7 +14,7 @@
           "providerDisplayName": "Aiven",
           "longDescription": "Elasticsearch is a search engine based on the Lucene library. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.",
           "documentationUrl": "https://docs.cloud.service.gov.uk/deploying_services/elasticsearch/",
-          "supportUrl": "https://www.cloud.service.gov.uk/support",
+          "supportUrl": "https://admin.london.cloud.service.gov.uk/support",
           "shareable": true,
           "AdditionalMetadata": {
             "otherDocumentation": [
@@ -143,7 +143,7 @@
           "providerDisplayName": "Aiven",
           "longDescription": "InfluxDB is optimized for fast, high-availability storage and retrieval of time series data in fields such as operations monitoring, application metrics, Internet of Things sensor data, and real-time analytics. It also has support for processing data from Graphite.",
           "documentationUrl": "https://docs.cloud.service.gov.uk/deploying_services/influxdb/",
-          "supportUrl": "https://www.cloud.service.gov.uk/support",
+          "supportUrl": "https://admin.london.cloud.service.gov.uk/support",
           "shareable": true,
           "AdditionalMetadata": {
             "otherDocumentation": [

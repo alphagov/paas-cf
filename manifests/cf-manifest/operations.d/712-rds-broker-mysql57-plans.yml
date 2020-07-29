@@ -51,7 +51,7 @@
       longDescription: MySQL is an open-source relational database management system (RDBMS).
       providerDisplayName: Amazon Web Services
       documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/mysql/
-      supportUrl: https://www.cloud.service.gov.uk/support
+      supportUrl: https://admin.london.cloud.service.gov.uk/support
       shareable: true
       AdditionalMetadata:
         otherDocumentation:

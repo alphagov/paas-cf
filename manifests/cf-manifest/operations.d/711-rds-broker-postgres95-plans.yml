@@ -107,7 +107,7 @@
         warehouses or Web services with many concurrent users.
       providerDisplayName: Amazon Web Services
       documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/postgresql/
-      supportUrl: https://www.cloud.service.gov.uk/support
+      supportUrl: https://admin.london.cloud.service.gov.uk/support
       shareable: true
       AdditionalMetadata:
         otherDocumentation:
