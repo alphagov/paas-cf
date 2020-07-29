@@ -40,7 +40,7 @@ private
     env["WORKDIR"] = workdir
     env["VARS_STORE"] = vars_store.path
 
-    output, error, status = Open3.capture3(env, "#{root}/manifests/autoscaler/scripts/generate-manifest.sh")
+    output, error, status = Open3.capture3(env, "#{root}/manifests/app-autoscaler/scripts/generate-manifest.sh")
     expect(status).to be_success, "generate-manifest.sh exited #{status.exitstatus}, stderr:\n#{error}"
 
     DeepFreeze.freeze(PropertyTree.load_yaml(output))

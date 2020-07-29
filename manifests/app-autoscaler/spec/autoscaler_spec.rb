@@ -15,8 +15,8 @@ RSpec.describe "autoscaler" do
 
         cf = scalingengine.dig("properties", "autoscaler", "cf")
 
-        expect(cf["client_id"]).to eq("autoscaler")
-        expect(cf["secret"]).to eq("((/test/test/uaa_clients_autoscaler_secret))")
+        expect(cf["client_id"]).to eq("app_autoscaler")
+        expect(cf["secret"]).to eq("((/test/test/uaa_clients_app_autoscaler_secret))")
       end
     end
 
@@ -26,8 +26,8 @@ RSpec.describe "autoscaler" do
       it "sets the client id and secret" do
         cf = operator.dig("properties", "autoscaler", "cf")
 
-        expect(cf["client_id"]).to eq("autoscaler")
-        expect(cf["secret"]).to eq("((/test/test/uaa_clients_autoscaler_secret))")
+        expect(cf["client_id"]).to eq("app_autoscaler")
+        expect(cf["secret"]).to eq("((/test/test/uaa_clients_app_autoscaler_secret))")
       end
     end
   end
@@ -42,8 +42,8 @@ RSpec.describe "autoscaler" do
       it "sets the client id and secret" do
         cf = apiserver.dig("properties", "autoscaler", "cf")
 
-        expect(cf["client_id"]).to eq("autoscaler")
-        expect(cf["secret"]).to eq("((/test/test/uaa_clients_autoscaler_secret))")
+        expect(cf["client_id"]).to eq("app_autoscaler")
+        expect(cf["secret"]).to eq("((/test/test/uaa_clients_app_autoscaler_secret))")
       end
     end
   end

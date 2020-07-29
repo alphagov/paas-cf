@@ -1,0 +1,13 @@
+---
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=reverse-log-proxy.service.cf.internal/targets/instance_group=log-api/deployment
+  value: ((deploy_env))
+
+- type: replace
+  path: /instance_groups/name=asapi/jobs/name=route_registrar/consumes/nats/deployment
+  value: ((deploy_env))
+
+- type: replace
+  path: /instance_groups/name=asapi/jobs/name=loggregator_agent/consumes/doppler/deployment
+  value: ((deploy_env))
