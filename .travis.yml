@@ -9,7 +9,7 @@ env:
     - BOSH_CLI_VERSION="2.0.48"
     - PROMETHEUS_VERSION="2.6.1"
     - DEPLOY_ENV="travis"
-    - SHELLCHECK_VERSION="0.7.0"
+    - SHELLCHECK_VERSION="0.7.1"
     - TMPDIR="/tmp"
 
 addons:
@@ -26,7 +26,7 @@ before_install:
     export PATH=~/bin:$PATH
   - |
     echo "Fetching shellcheck"
-    wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJv
+    wget -qO- "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJv
     cp "shellcheck-v${SHELLCHECK_VERSION}/shellcheck" ~/bin
   - |
     echo "Fetching Terraform"
