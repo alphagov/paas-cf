@@ -58,5 +58,11 @@
         "account_id": "604925858717",
         "vpc_id": "vpc-08f2b2a7787348c52",
         "subnet_cidr": "172.16.32.0/22"
+    },
+    {
+        "peer_name": "govuk-infrastructure-test",
+        "account_id": "430354129336",
+        "vpc_id": "vpc-9e62bcf8",
+        "subnet_cidr": "172.16.36.0/22"
     }
 ]
