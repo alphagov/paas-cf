@@ -20,7 +20,7 @@ done
 variables_file="$(mktemp)"
 trap 'rm -f "${variables_file}"' EXIT
 
-cat <<EOF > "${variables_file}"
+cat <<EOF | bosh interpolate --vars-file="${WORKDIR}/terraform-outputs/cf.yml" - > "${variables_file}"
 ---
 deploy_env: $DEPLOY_ENV
 system_domain: $SYSTEM_DNS_ZONE_NAME
@@ -46,9 +46,9 @@ EOF
 
 # shellcheck disable=SC2086
 bosh interpolate \
+  ${opsfile_args} \
   --vars-file="${variables_file}" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
-  ${opsfile_args} \
   "${APP_AUTOSCALER_BOSHRELEASE_DIR}/templates/app-autoscaler-deployment.yml" \
 | sed "s@dns_api_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_client_tls.@g" \
 | sed "s@dns_api_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_server_tls.@g" \
