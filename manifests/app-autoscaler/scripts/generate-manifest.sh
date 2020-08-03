@@ -35,7 +35,7 @@ database:
   port: 5432
   host: ((terraform_outputs_cf_db_address))
   username: app_autoscaler
-  password: ((external_app_autoscaler_db_password))
+  password: ((external_app_autoscaler_database_password))
   sslmode: verify-full
   scheme: postgres
   tls:
