@@ -2424,7 +2424,7 @@ jobs:
             CSLS_SPLUNK_BROKER_PASSWORD: ((csls_splunk_broker_password))
             CSLS_SPLUNK_BROKER_URL: ((csls_splunk_broker_url))
           run:
-            path: sh
+            path: bash
             args:
               - -e
               - -u
