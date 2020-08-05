@@ -4276,19 +4276,45 @@ jobs:
           trigger: true
           passed: ['post-deploy']
 
+      - task: create-metrics-domain
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            CF_CLIENT_ID: "paas-prometheus-endpoints"
+            CF_CLIENT_SECRET: ((uaa_clients_paas_prometheus_endpoints_secret))
+            CF_API_ADDRESS: https://api.((system_dns_zone_name))
+
+            DOMAIN_FOR_PROMETHEUS_ENDPOINTS: metrics.((system_dns_zone_name))
+
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                set -ueo pipefail
+
+                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                if ! cf domains | grep "${DOMAIN_FOR_PROMETHEUS_ENDPOINTS}" > /dev/null; then
+                  cf create-private-domain admin "${DOMAIN_FOR_PROMETHEUS_ENDPOINTS}"
+                fi
+
       - task: deploy-paas-prometheus-endpoint-redis
         tags: [colocated-with-web]
         config:
           platform: linux
           image_resource: *cf-cli-image-resource
           params:
-            UAA_API_URL: https://uaa.((system_dns_zone_name))
-
             CF_CLIENT_ID: "paas-prometheus-endpoints"
             CF_CLIENT_SECRET: ((uaa_clients_paas_prometheus_endpoints_secret))
             CF_API_ADDRESS: https://api.((system_dns_zone_name))
 
             DEPLOY_ENV: ((deploy_env))
+            DOMAIN_FOR_PROMETHEUS_ENDPOINTS: metrics.((system_dns_zone_name))
 
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
@@ -4309,8 +4335,12 @@ jobs:
 
                 echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
 
-                cf push paas-prometheus-endpoint-redis \
-                  -f ./redis-manifest.yml \
+                cf cancel-deployment paas-prometheus-endpoint-redis || true
+                cf push \
+                  paas-prometheus-endpoint-redis \
+                  --strategy=rolling \
+                  -f manifest-redis.yml \
+                  --var route="redis.${DOMAIN_FOR_PROMETHEUS_ENDPOINTS}" \
                   --var cf_client_id="$CF_CLIENT_ID" \
                   --var cf_client_secret="$CF_CLIENT_SECRET" \
                   --var cf_api_address="$CF_API_ADDRESS" \
@@ -4318,6 +4348,7 @@ jobs:
                   --var aws_region="$AWS_REGION" \
                   --var aws_access_key_id="$AWS_ACCESS_KEY_ID" \
                   --var aws_secret_access_key="$AWS_SECRET_ACCESS_KEY"
+
       - *end-grafana-job-annotation
 
   - name: deploy-paas-aiven-broker
