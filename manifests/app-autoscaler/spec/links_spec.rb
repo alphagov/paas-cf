@@ -23,7 +23,7 @@ RSpec.describe "autoscaler" do
 
     it "references a valid deployment" do
       refs.each do |ref|
-        err_msg = "#{ref.path} does not reference a valid deployment #{valid_deployments}"
+        err_msg = "#{ref.deployment} at #{ref.path} does not reference a valid deployment #{valid_deployments}"
         expect(valid_deployments).to include(ref.deployment), err_msg
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe "autoscaler" do
 
     it "references a valid deployment" do
       refs.each do |ref|
-        err_msg = "#{ref.path} does not reference a valid deployment #{valid_deployments}"
+        err_msg = "#{ref.deployment} at #{ref.path} does not reference a valid deployment #{valid_deployments}"
         expect(valid_deployments).to include(ref.deployment), err_msg
       end
     end

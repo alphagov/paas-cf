@@ -3,6 +3,7 @@
 set -euo pipefail
 
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
+SHARED_MANIFEST_DIR=${PAAS_CF_DIR}/manifests/shared
 APP_AUTOSCALER_BOSHRELEASE_DIR=${PAAS_CF_DIR}/manifests/app-autoscaler/upstream
 WORKDIR=${WORKDIR:-.}
 
@@ -20,13 +21,13 @@ done
 variables_file="$(mktemp)"
 trap 'rm -f "${variables_file}"' EXIT
 
-cat <<EOF | bosh interpolate --vars-file="${WORKDIR}/terraform-outputs/cf.yml" - > "${variables_file}"
+echo "
 ---
 deploy_env: $DEPLOY_ENV
 system_domain: $SYSTEM_DNS_ZONE_NAME
 app_domain: $APPS_DNS_ZONE_NAME
 aws_account: $AWS_ACCOUNT
-bosh_ca_cert: "$BOSH_CA_CERT"
+bosh_ca_cert: $BOSH_CA_CERT
 vcap_password: $VCAP_PASSWORD
 
 cf_client_id: app_autoscaler
@@ -39,10 +40,14 @@ database:
   sslmode: verify-full
   scheme: postgres
   tls:
-    ca: ~
+    ca: ((aws_rds_combined_ca_bundle))
 
 skip_ssl_validation: false
-EOF
+" \
+  | bosh interpolate - \
+    --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
+    --vars-file="${SHARED_MANIFEST_DIR}/data/aws-rds-combined-ca-bundle-pem.yml" \
+  > "${variables_file}"
 
 # shellcheck disable=SC2086
 bosh interpolate \
