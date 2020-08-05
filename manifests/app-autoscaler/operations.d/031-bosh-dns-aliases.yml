@@ -33,3 +33,9 @@
 - type: replace
   path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=metricsserver.service.cf.internal/targets/0/network
   value: cf
+
+- type: replace
+  path: /variables/name=metricsserver_server/options/alternative_names
+  value:
+    - "metricsserver.service.cf.internal"
+    - "*.asmetrics.cf.app-autoscaler.bosh"
