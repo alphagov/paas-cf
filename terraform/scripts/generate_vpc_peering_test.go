@@ -72,14 +72,24 @@ var _ = Describe("VPC peering", func() {
 				err := json.Unmarshal([]byte(file), &peers)
 				Expect(err).To(BeNil(), "Config file: %s", filename)
 
-				_, reservedRange, _ := net.ParseCIDR("10.0.0.0/8")
+				_, reservedRange0, err := net.ParseCIDR("10.0.0.0/16")
+				Expect(err).NotTo(HaveOccurred())
+				_, reservedRange255, err := net.ParseCIDR("10.255.0.0/16")
+				Expect(err).NotTo(HaveOccurred())
+
+				reservedRanges := []*net.IPNet{
+					reservedRange0,
+					reservedRange255,
+				}
 
 				for _, peer := range peers {
 					_, net, err := net.ParseCIDR(peer["subnet_cidr"])
 					Expect(err).To(BeNil(), "Config file: %s", filename)
 
-					intersection := (net.Contains(reservedRange.IP) || reservedRange.Contains(net.IP))
-					Expect(intersection).To(Equal(false), "%s has intersecting CIDRs: %s, %s", filename, net, reservedRange)
+					for _, reservedRange := range reservedRanges {
+						intersection := (net.Contains(reservedRange.IP) || reservedRange.Contains(net.IP))
+						Expect(intersection).To(Equal(false), "%s has intersecting CIDRs: %s, %s", filename, net, reservedRange)
+					}
 				}
 			}
 		})
