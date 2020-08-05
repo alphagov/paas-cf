@@ -1,6 +1,7 @@
 package scripts_test
 
 import (
+	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -16,6 +17,8 @@ import (
 var _ = Describe("VPC peering", func() {
 
 	var KEY_NAMES = []string{"peer_name", "account_id", "vpc_id", "subnet_cidr"}
+	var ENV_NAMES = []string{"dev", "prod", "staging"}
+	var REGION_NAMES = []string{"eu-west-1", "eu-west-2"}
 
 	Describe("config files", func() {
 		var files []string
@@ -80,6 +83,44 @@ var _ = Describe("VPC peering", func() {
 
 					intersection := (net.Contains(reservedRange.IP) || reservedRange.Contains(net.IP))
 					Expect(intersection).To(Equal(false), "%s has intersecting CIDRs: %s, %s", filename, net, reservedRange)
+				}
+			}
+		})
+
+		Describe("do not intersect with any reserved subnets", func(){
+			for _, region := range REGION_NAMES {
+				for _, envName := range ENV_NAMES {
+					It("for a "+envName+" type deployment in " + region, func(){
+						infraCidrs, err := terraformFindInfraCIDRs(region, envName)
+						Expect(err).ToNot(HaveOccurred())
+
+						var infraNets []*net.IPNet
+						for _, cidr := range infraCidrs {
+							_, net, err := net.ParseCIDR(cidr)
+							Expect(err).ToNot(HaveOccurred(), "Invalid CIDR: %s", cidr)
+
+							infraNets = append(infraNets, net)
+						}
+
+						for _, filename := range files {
+							file, _ := ioutil.ReadFile(filename)
+
+							var peers []map[string]string
+							err := json.Unmarshal([]byte(file), &peers)
+							Expect(err).ToNot(HaveOccurred(), "Config file: %s", filename)
+
+							for _, peer := range peers {
+								_, peerNet, err := net.ParseCIDR(peer["subnet_cidr"])
+								peerName := peer["peer_name"]
+								Expect(err).ToNot(HaveOccurred(), "Config file: %s", filename)
+
+								for _, infraNet := range infraNets {
+									intersection := (peerNet.Contains(infraNet.IP) || infraNet.Contains(peerNet.IP))
+									Expect(intersection).To(Equal(false), "Peer CIDR %s (%s) intersects with infra CIDR %s", peerNet, peerName, infraNet)
+								}
+							}
+						}
+					})
 				}
 			}
 		})
@@ -241,3 +282,29 @@ var _ = Describe("VPC peering", func() {
 		})
 	})
 })
+
+func terraformFindInfraCIDRs(region string, envName string) ([]string, error) {
+	cmdText := fmt.Sprintf(`echo "jsonencode(values(var.infra_cidrs))" | terraform console -var-file %s.tfvars -var-file %s.tfvars .`, region, envName)
+	cmd := exec.Command("bash", "-c", cmdText)
+
+	stdOut := bytes.Buffer{}
+	stdErr := bytes.Buffer{}
+	cmd.Stdout = &stdOut
+	cmd.Stderr = &stdErr
+
+	cmd.Env = os.Environ()
+	cmd.Dir = "../"
+
+	err := cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("%s", string(stdErr.Bytes()))
+	}
+
+	var cidrs []string
+	err = json.Unmarshal(stdOut.Bytes(), &cidrs)
+	if err != nil {
+		return nil, err
+	}
+
+	return cidrs, nil
+}
