@@ -34,4 +34,25 @@ RSpec.describe "bosh dns addon" do
       "((/test/test/dns_healthcheck_server_tls.ca))",
     )
   end
+
+  describe "aliases" do
+    let(:bosh_dns_aliases_addon) do
+      manifest.fetch("addons").find { |a| a["name"] == "bosh-dns-aliases" }
+    end
+
+    let(:bosh_dns_aliases_properties) do
+      bosh_dns_aliases_addon["jobs"]
+        .find { |a| a["name"] == "bosh-dns-aliases" }
+        .fetch("properties")
+    end
+
+    let(:aliases) { bosh_dns_aliases_properties["aliases"] }
+    let(:targets) { aliases.flat_map { |a| a["targets"] } }
+
+    it "sets the networks to cf" do
+      targets.each do |t|
+        expect(t["network"]).to eq("cf"), "#{t} should have network cf"
+      end
+    end
+  end
 end

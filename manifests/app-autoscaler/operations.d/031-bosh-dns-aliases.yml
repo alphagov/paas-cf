@@ -1,0 +1,35 @@
+---
+- type: remove
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=autoscalerpostgres.service.cf.internal
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=apiserver.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=autoscalerscheduler.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=servicebroker.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=eventgenerator.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=scalingengine.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=reverse-log-proxy.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=metricsgateway.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=metricsserver.service.cf.internal/targets/0/network
+  value: cf
