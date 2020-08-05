@@ -71,7 +71,7 @@ orgs_seen.each do |org_guid, _|
   orgs_seen[org_guid] = org_current_metadata["errors"] ? false : org_current_metadata
 end
 
-headers = ["ORG NAME", "ORG STILL EXISTS", "ORG CREATION DATE", "ORG BILLABLE UPGRADE DATE"]
+headers = ["ORG GUID", "ORG NAME", "ORG STILL EXISTS", "ORG CREATION DATE", "ORG BILLABLE UPGRADE DATE"]
 rows = []
 
 org_quota_changes.each do |org_guid, quota_changes|
@@ -79,7 +79,7 @@ org_quota_changes.each do |org_guid, quota_changes|
   current_org_name = quota_changes[-1]["name"]
   org_still_exists = orgs_seen[org_guid]
 
-  row = [current_org_name, org_still_exists.to_s, org_created]
+  row = [org_guid, current_org_name, org_still_exists.to_s, org_created]
 
   currently_on_default = quota_changes[-1]["quota_definition_guid"] == default_quota_guid
   if currently_on_default
