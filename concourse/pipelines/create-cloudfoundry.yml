@@ -1979,6 +1979,7 @@ jobs:
                       instances: 1
                       buildpacks: [go_buildpack]
                       health-check-type: http
+                      health-check-http-endpoint: /
                       stack: cflinuxfs3
                       env:
                         GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
@@ -3772,6 +3773,7 @@ jobs:
                     app['routes'] = [
                       { 'route' => 'billing.${SYSTEM_DNS_ZONE_NAME}' }
                     ]
+                    app['health-check-http-endpoint'] = '/'
                   }
                   File.write('manifest-api.yml', api.to_yaml)
 
