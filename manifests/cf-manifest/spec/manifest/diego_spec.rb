@@ -11,4 +11,12 @@ RSpec.describe "diego" do
       expect(properties.dig("containers", "proxy", "enabled")).to be(true)
     end
   end
+
+  describe "api instance" do
+    let(:manifest) { manifest_with_defaults }
+
+    subject(:instance) { manifest.fetch("instance_groups.diego-api") }
+
+    it_behaves_like "a cf rds client"
+  end
 end

@@ -15,3 +15,11 @@ RSpec.shared_examples "a highly available instance group" do |opts|
     end
   end
 end
+
+RSpec.shared_examples "a cf rds client" do |opts|
+  let(:vm_extensions) { subject.fetch("vm_extensions", []) }
+
+  it "has the cf rds client security group" do
+    expect(vm_extensions).to include("cf_rds_client_sg").or include("cf_cc_security_groups")
+  end
+end

@@ -1,6 +1,7 @@
 RSpec.describe "uaa properties" do
+  let(:manifest) { manifest_with_defaults }
+
   context "with the default certificates" do
-    let(:manifest) { manifest_with_defaults }
     let(:properties) { manifest.fetch("instance_groups.uaa.jobs.uaa.properties") }
 
     it "has a certificate for jwt policy signing keys" do
@@ -13,7 +14,6 @@ RSpec.describe "uaa properties" do
   end
 
   context "when setting the cf cli token validity" do
-    let(:manifest) { manifest_with_defaults }
     let(:cf_client) { manifest.fetch("instance_groups.uaa.jobs.uaa.properties.uaa.clients.cf") }
     let(:refresh_token_validity) { cf_client.fetch("refresh-token-validity") }
     let(:access_token_validity) { cf_client.fetch("access-token-validity") }
@@ -25,5 +25,11 @@ RSpec.describe "uaa properties" do
     it "doesn't set the access token validity to higher than the refresh validity" do
       expect(access_token_validity).to be <= refresh_token_validity
     end
+  end
+
+  describe "instance" do
+    subject(:instance) { manifest.fetch("instance_groups.uaa") }
+
+    it_behaves_like "a cf rds client"
   end
 end

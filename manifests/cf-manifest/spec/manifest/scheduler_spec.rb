@@ -23,4 +23,10 @@ RSpec.describe "scheduler" do
       it_behaves_like("a highly available instance group", min_instances: 3)
     end
   end
+
+  describe "instance" do
+    subject(:instance) { manifest.fetch("instance_groups.scheduler") }
+
+    it_behaves_like "a cf rds client"
+  end
 end
