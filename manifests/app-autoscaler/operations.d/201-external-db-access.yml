@@ -1,0 +1,17 @@
+---
+
+- type: replace
+  path: /instance_groups/name=asactors/vm_extensions?/-
+  value: cf_rds_client_sg
+
+- type: replace
+  path: /instance_groups/name=asapi/vm_extensions?/-
+  value: cf_rds_client_sg
+
+- type: replace
+  path: /instance_groups/name=asmetrics/vm_extensions?/-
+  value: cf_rds_client_sg
+
+- type: replace
+  path: /instance_groups/name=asnozzle/vm_extensions?/-
+  value: cf_rds_client_sg

@@ -4,8 +4,11 @@ RSpec.describe "autoscaler" do
   let(:manifest) { manifest_with_defaults }
 
   describe "actors" do
-    let(:actors) { manifest["instance_groups.asactors"] }
-    let(:jobs) { actors["jobs"] }
+    subject(:actors) { manifest["instance_groups.asactors"] }
+
+    let(:jobs) { subject["jobs"] }
+
+    it_behaves_like "a cf rds client"
 
     describe "scalingengine" do
       let(:scalingengine) { jobs.find { |j| j["name"] == "scalingengine" } }
@@ -33,8 +36,11 @@ RSpec.describe "autoscaler" do
   end
 
   describe "api" do
-    let(:api) { manifest["instance_groups.asapi"] }
-    let(:jobs) { api["jobs"] }
+    subject(:api) { manifest["instance_groups.asapi"] }
+
+    let(:jobs) { subject["jobs"] }
+
+    it_behaves_like "a cf rds client"
 
     describe "golangapiserver" do
       let(:apiserver) { jobs.find { |j| j["name"] == "golangapiserver" } }
@@ -46,5 +52,17 @@ RSpec.describe "autoscaler" do
         expect(cf["secret"]).to eq("((/test/test/uaa_clients_app_autoscaler_secret))")
       end
     end
+  end
+
+  describe "metrics" do
+    subject(:metrics) { manifest["instance_groups.asmetrics"] }
+
+    it_behaves_like "a cf rds client"
+  end
+
+  describe "nozzle" do
+    subject(:nozzle) { manifest["instance_groups.asnozzle"] }
+
+    it_behaves_like "a cf rds client"
   end
 end

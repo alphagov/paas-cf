@@ -69,8 +69,13 @@ prometheus_manifest_spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
 
+.PHONY: app_autoscaler_manifest_spec
+app_autoscaler_manifest_spec:
+	cd manifests/app-autoscaler &&\
+		bundle exec rspec
+
 .PHONY: manifest_spec
-manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec
+manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec app_autoscaler_manifest_spec
 
 .PHONY: terraform_spec
 terraform_spec:
