@@ -2205,6 +2205,81 @@ jobs:
 
                 bosh -n deploy app-autoscaler-manifest/app-autoscaler-manifest.yml
 
+      - task: copy-app-autoscaler-secrets-to-concourse-credhub-ns
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            CREDHUB_CLIENT_ID: credhub-admin
+            CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'Logging into Credhub'
+                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
+                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
+
+                echo 'Getting variables'
+                APP_AUTOSCALER_NS="/${DEPLOY_ENV}/app-autoscaler"
+                APP_AUTOSCALER_SERVICE_BROKER_PASSWORD="$(credhub get -q -n "${APP_AUTOSCALER_NS}/autoscaler_service_broker_password")"
+
+                echo 'Setting secrets'
+                TEAM_NS="/concourse/main"
+                PIPELINE_NS="${TEAM_NS}/create-cloudfoundry"
+                credhub set --name="${PIPELINE_NS}/autoscaler_service_broker_password" --type password --password "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}"
+
+                echo 'Accessible secrets'
+                credhub find --path "${TEAM_NS}"
+
+      - task: register-app-autoscaler-service-broker
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            S3_BROKER_PASS: ((secrets_s3_broker_admin_password))
+            DEPLOY_ENV: ((deploy_env))
+            APP_AUTOSCALER_SERVICE_BROKER_USERNAME: autoscaler_service_broker_user
+            APP_AUTOSCALER_SERVICE_BROKER_PASSWORD: ((autoscaler_service_broker_password))
+            APP_AUTOSCALER_SERVICE_BROKER_URL: https://autoscalerservicebroker.((system_dns_zone_name))
+          run:
+            path: bash
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                if cf service-brokers | grep 'autoscaler\s'; then
+                  cf update-service-broker autoscaler \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_USERNAME}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_URL}"
+                else
+                  cf create-service-broker autoscaler \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_USERNAME}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_URL}"
+                fi
+
       - *end-grafana-job-annotation
 
   - name: post-deploy
