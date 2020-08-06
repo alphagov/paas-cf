@@ -55,6 +55,7 @@
       rds-broker:
         allow_user_provision_parameters: true
         allow_user_update_parameters: true
+        allow_user_bind_parameters: true
         aws_region: "((terraform_outputs_region))"
         password: ((secrets_rds_broker_admin_password))
         state_encryption_key: ((secrets_rds_broker_state_encryption_key))
