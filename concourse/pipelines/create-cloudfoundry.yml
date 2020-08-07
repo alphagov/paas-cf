@@ -307,6 +307,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - app-autoscaler-acceptance-tests
       - bosh-tests
       - rotate-certs
       - check-certificates-after-rotation
@@ -330,6 +331,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - app-autoscaler-acceptance-tests
       - bosh-tests
       - tag-release
       - pipeline-unlock
@@ -365,6 +367,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - app-autoscaler-acceptance-tests
       - bosh-tests
   - name: health
     jobs:
@@ -3529,6 +3532,53 @@ jobs:
                 else
                   echo "Success: All VMs are up and running."
                 fi
+
+  - name: app-autoscaler-acceptance-tests
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: *smoke-tests-resource-passed
+            trigger: true
+          - get: paas-cf
+            passed: *smoke-tests-resource-passed
+          - get: cf-manifest
+            passed: ['post-deploy']
+
+      - do:
+        - task: create-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: app-autoscaler-acceptance-test-user
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
+
+        - task: app-autoscaler-acceptance-tests
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/app-autoscaler-acceptance-tests-run.yml
+          params:
+            DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
+            APPS_DOMAIN: ((apps_dns_zone_name))
+          ensure:
+            task: upload-test-artifacts
+            tags: [colocated-with-web]
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+        ensure:
+          task: remove-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+
+      - *end-grafana-job-annotation
 
   - name: deploy-paas-auditor
     serial: true
