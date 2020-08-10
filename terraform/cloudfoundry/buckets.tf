@@ -125,7 +125,7 @@ resource "aws_s3_bucket" "elb_access_log" {
   bucket        = "${var.assets_prefix}-${var.env}-${var.elb_access_log_bucket_name}"
   acl           = "private"
   force_destroy = "true"
-  policy        = templatefile("${path.module}/policies/elb_access_log_bucket.json.tpl", {
+  policy = templatefile("${path.module}/policies/elb_access_log_bucket.json.tpl", {
     bucket_name = "${var.assets_prefix}-${var.env}-${var.elb_access_log_bucket_name}",
     principal   = var.elb_account_ids[var.region]
   })

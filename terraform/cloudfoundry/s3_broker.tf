@@ -41,7 +41,7 @@ resource "aws_lb_ssl_negotiation_policy" "s3_broker" {
 }
 
 resource "aws_iam_policy" "s3_broker_user_ip_restriction" {
-  policy      = templatefile("${path.module}/policies/s3_broker_user_ip_restriction.json.tpl", {
+  policy = templatefile("${path.module}/policies/s3_broker_user_ip_restriction.json.tpl", {
     nat_gateway_public_ips = jsonencode(aws_nat_gateway.cf.*.public_ip)
   })
   name        = "${var.env}S3BrokerUserIpRestriction"
