@@ -5,22 +5,22 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
+        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
+        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
+        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
+        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
 
 resource_types:
   - name: metadata
