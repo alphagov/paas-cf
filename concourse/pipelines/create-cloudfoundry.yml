@@ -1256,6 +1256,7 @@ jobs:
                 terraform apply \
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
                   -var-file="paas-cf/terraform/((aws_region)).tfvars" \
                   -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
                   -state=updated-tfstate/cf.tfstate \

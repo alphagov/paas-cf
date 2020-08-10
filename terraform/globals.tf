@@ -138,3 +138,12 @@ variable "peer_cidrs" {
   default     = []
 }
 
+variable "pingdom_contact_ids" {
+  description = "The IDs of the contacts in Pingdom who should be alerted"
+  default     = []
+}
+
+variable "support_email" {
+  description = "The email address on which to contact GOV.UK PaaS"
+  default     = ""
+}
