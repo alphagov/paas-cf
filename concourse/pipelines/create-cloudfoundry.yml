@@ -477,19 +477,11 @@ resources:
       initial_version: "-"
       initial_content_text: |
         {
-            "version": 3,
-            "terraform_version": "0.11.14",
+            "version": 4,
+            "terraform_version": "0.12.29",
             "serial": 0,
-            "modules": [
-                {
-                    "path": [
-                        "root"
-                    ],
-                    "outputs": {},
-                    "resources": {},
-                    "depends_on": []
-                }
-            ]
+            "outputs": {},
+            "resources": {}
         }
 
   - name: cyber-tfstate
@@ -501,19 +493,11 @@ resources:
       initial_version: "-"
       initial_content_text: |
         {
-            "version": 3,
-            "terraform_version": "0.11.14",
+            "version": 4,
+            "terraform_version": "0.12.29",
             "serial": 0,
-            "modules": [
-                {
-                    "path": [
-                        "root"
-                    ],
-                    "outputs": {},
-                    "resources": {},
-                    "depends_on": []
-                }
-            ]
+            "outputs": {},
+            "resources": {}
         }
 
   - name: cf-manifest
