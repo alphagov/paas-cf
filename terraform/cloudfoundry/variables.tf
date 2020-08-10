@@ -156,3 +156,4 @@ variable "apps_wildcard_canary_weight" {
   description = "Amount of traffic the wildcard canary DNS record receives"
   default     = 0
 }
+

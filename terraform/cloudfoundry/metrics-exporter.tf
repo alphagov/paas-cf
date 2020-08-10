@@ -5,10 +5,11 @@ resource "aws_iam_user" "metrics_exporter" {
 }
 
 resource "aws_iam_user_group_membership" "metrics_exporter" {
-  user   = "${aws_iam_user.metrics_exporter.name}"
+  user   = aws_iam_user.metrics_exporter.name
   groups = ["metrics-exporters"]
 }
 
 resource "aws_iam_access_key" "metrics_exporter" {
-  user = "${aws_iam_user.metrics_exporter.name}"
+  user = aws_iam_user.metrics_exporter.name
 }
+

@@ -6,6 +6,8 @@ bin/terraform*
 platform-tests/pkg
 platform-tests/results
 terraform/.terraform/
+terraform/*/.terraform/
 org_usage.csv
 *.csv
+
 

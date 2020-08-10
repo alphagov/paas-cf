@@ -1,9 +1,9 @@
 resource "aws_db_subnet_group" "cf_rds" {
   name        = "${var.env}-cf"
   description = "Subnet group for CF RDS"
-  subnet_ids  = ["${split(",", var.infra_subnet_ids)}"]
+  subnet_ids  = split(",", var.infra_subnet_ids)
 
-  tags {
+  tags = {
     Name = "${var.env}-cf-rds"
   }
 }
@@ -11,7 +11,7 @@ resource "aws_db_subnet_group" "cf_rds" {
 resource "aws_security_group" "cf_rds" {
   name        = "${var.env}-cf-rds"
   description = "CF RDS security group"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port = 5432
@@ -19,12 +19,12 @@ resource "aws_security_group" "cf_rds" {
     protocol  = "tcp"
 
     security_groups = [
-      "${aws_security_group.cf_rds_client.id}",
-      "${var.concourse_security_group_id}",
+      aws_security_group.cf_rds_client.id,
+      var.concourse_security_group_id,
     ]
   }
 
-  tags {
+  tags = {
     Name = "${var.env}-cf-rds"
   }
 }
@@ -40,37 +40,38 @@ resource "aws_db_instance" "cf" {
   allocated_storage    = 100
   engine               = "postgres"
   engine_version       = "11.1"
-  instance_class       = "${var.cf_db_instance_type}"
+  instance_class       = var.cf_db_instance_type
   username             = "dbadmin"
-  password             = "${var.secrets_cf_db_master_password}"
-  db_subnet_group_name = "${aws_db_subnet_group.cf_rds.name}"
-  parameter_group_name = "${aws_db_parameter_group.cf_pg_11.id}"
+  password             = var.secrets_cf_db_master_password
+  db_subnet_group_name = aws_db_subnet_group.cf_rds.name
+  parameter_group_name = aws_db_parameter_group.cf_pg_11.id
 
   storage_type              = "gp2"
   backup_window             = "02:00-03:00"
-  maintenance_window        = "${var.cf_db_maintenance_window}"
-  multi_az                  = "${var.cf_db_multi_az}"
-  backup_retention_period   = "${var.cf_db_backup_retention_period}"
+  maintenance_window        = var.cf_db_maintenance_window
+  multi_az                  = var.cf_db_multi_az
+  backup_retention_period   = var.cf_db_backup_retention_period
   final_snapshot_identifier = "${var.env}-cf-rds-final-snapshot"
-  skip_final_snapshot       = "${var.cf_db_skip_final_snapshot}"
-  vpc_security_group_ids    = ["${aws_security_group.cf_rds.id}"]
+  skip_final_snapshot       = var.cf_db_skip_final_snapshot
+  vpc_security_group_ids    = [aws_security_group.cf_rds.id]
 
   allow_major_version_upgrade = false
   auto_minor_version_upgrade  = false
   apply_immediately           = false
 
-  tags {
+  tags = {
     Name       = "${var.env}-cf"
-    deploy_env = "${var.env}"
+    deploy_env = var.env
   }
 }
 
 resource "aws_security_group" "cf_rds_client" {
   name        = "${var.env}-cf-rds-client"
   description = "Security group of the CF RDS clients"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
-  tags {
+  tags = {
     Name = "${var.env}-cf-rds-client"
   }
 }
+

@@ -1,25 +1,19 @@
-variable "pingdom_user" {}
-
-variable "pingdom_password" {}
-
-variable "pingdom_api_key" {}
-
-variable "pingdom_account_email" {}
-
-variable "apps_dns_zone_name" {}
-variable "system_dns_zone_name" {}
-
-variable "env" {}
-
-variable "pingdom_contact_ids" {
-  type = "list"
-}
+variable "pingdom_user" { type = string }
+variable "pingdom_password" { type = string }
+variable "pingdom_api_key" { type = string }
+variable "pingdom_account_email" { type = string }
+variable "apps_dns_zone_name" { type = string }
+variable "system_dns_zone_name" { type = string }
+variable "env" { type = string }
+variable "pingdom_contact_ids" {  type = list(string) }
 
 provider "pingdom" {
-  user          = "${var.pingdom_user}"
-  password      = "${var.pingdom_password}"
-  api_key       = "${var.pingdom_api_key}"
-  account_email = "${var.pingdom_account_email}"
+  version = "1.1.1"
+
+  user          = var.pingdom_user
+  password      = var.pingdom_password
+  api_key       = var.pingdom_api_key
+  account_email = var.pingdom_account_email
 }
 
 resource "pingdom_check" "paas_http_healthcheck" {
@@ -30,11 +24,9 @@ resource "pingdom_check" "paas_http_healthcheck" {
   shouldcontain            = "END OF THIS PROJECT GUTENBERG EBOOK"
   encryption               = true
   resolution               = 1
-  uselegacynotifications   = true
-  sendtoemail              = true
   sendnotificationwhendown = 2
   notifywhenbackup         = true
-  contactids               = ["${var.pingdom_contact_ids}"]
+  userids                  = var.pingdom_contact_ids
 }
 
 resource "pingdom_check" "paas_db_healthcheck" {
@@ -45,11 +37,9 @@ resource "pingdom_check" "paas_db_healthcheck" {
   shouldcontain            = "\"success\": true"
   encryption               = true
   resolution               = 1
-  uselegacynotifications   = true
-  sendtoemail              = true
   sendnotificationwhendown = 2
   notifywhenbackup         = true
-  contactids               = ["${var.pingdom_contact_ids}"]
+  userids                  = var.pingdom_contact_ids
 }
 
 resource "pingdom_check" "cf_api_healthcheck" {
@@ -60,11 +50,9 @@ resource "pingdom_check" "cf_api_healthcheck" {
   shouldcontain            = "api_version"
   encryption               = true
   resolution               = 1
-  uselegacynotifications   = true
-  sendtoemail              = true
   sendnotificationwhendown = 2
   notifywhenbackup         = true
-  contactids               = ["${var.pingdom_contact_ids}"]
+  userids                  = var.pingdom_contact_ids
 }
 
 resource "pingdom_check" "paas_admin_healthcheck" {
@@ -75,9 +63,7 @@ resource "pingdom_check" "paas_admin_healthcheck" {
   shouldcontain            = "\"OK\""
   encryption               = true
   resolution               = 1
-  uselegacynotifications   = true
-  sendtoemail              = true
   sendnotificationwhendown = 2
   notifywhenbackup         = true
-  contactids               = ["${var.pingdom_contact_ids}"]
+  userids                  = var.pingdom_contact_ids
 }

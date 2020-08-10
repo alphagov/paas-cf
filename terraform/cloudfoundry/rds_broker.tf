@@ -1,23 +1,23 @@
 resource "aws_elb" "rds_broker" {
   name                      = "${var.env}-rds-broker"
-  subnets                   = ["${split(",", var.infra_subnet_ids)}"]
-  idle_timeout              = "${var.elb_idle_timeout}"
+  subnets                   = split(",", var.infra_subnet_ids)
+  idle_timeout              = var.elb_idle_timeout
   cross_zone_load_balancing = "true"
   internal                  = true
-  security_groups           = ["${aws_security_group.service_brokers.id}"]
+  security_groups           = [aws_security_group.service_brokers.id]
 
   access_logs {
-    bucket        = "${aws_s3_bucket.elb_access_log.id}"
+    bucket        = aws_s3_bucket.elb_access_log.id
     bucket_prefix = "cf-broker-rds"
     interval      = 5
   }
 
   health_check {
     target              = "HTTP:80/healthcheck"
-    interval            = "${var.health_check_interval}"
-    timeout             = "${var.health_check_timeout}"
-    healthy_threshold   = "${var.health_check_healthy}"
-    unhealthy_threshold = "${var.health_check_unhealthy}"
+    interval            = var.health_check_interval
+    timeout             = var.health_check_timeout
+    healthy_threshold   = var.health_check_healthy
+    unhealthy_threshold = var.health_check_unhealthy
   }
 
   listener {
@@ -25,27 +25,27 @@ resource "aws_elb" "rds_broker" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "${data.aws_acm_certificate.system.arn}"
+    ssl_certificate_id = data.aws_acm_certificate.system.arn
   }
 }
 
 resource "aws_lb_ssl_negotiation_policy" "rds_broker" {
   name          = "paas-${random_pet.elb_cipher.keepers.default_elb_security_policy}-${random_pet.elb_cipher.id}"
-  load_balancer = "${aws_elb.rds_broker.id}"
+  load_balancer = aws_elb.rds_broker.id
   lb_port       = 443
 
   attribute {
     name  = "Reference-Security-Policy"
-    value = "${random_pet.elb_cipher.keepers.default_elb_security_policy}"
+    value = random_pet.elb_cipher.keepers.default_elb_security_policy
   }
 }
 
 resource "aws_db_subnet_group" "rds_broker" {
   name        = "rdsbroker-${var.env}"
   description = "Subnet group for RDS broker managed instances"
-  subnet_ids  = ["${aws_subnet.aws_backing_services.*.id}"]
+  subnet_ids  = aws_subnet.aws_backing_services.*.id
 
-  tags {
+  tags = {
     Name = "rdsbroker-${var.env}"
   }
 }
@@ -53,9 +53,9 @@ resource "aws_db_subnet_group" "rds_broker" {
 resource "aws_security_group" "rds_broker_db_clients" {
   name        = "${var.env}-rds-broker-db-clients"
   description = "Group for clients of RDS broker DB instances"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
-  tags {
+  tags = {
     Name = "${var.env}-rds-broker-db-clients"
   }
 }
@@ -63,7 +63,7 @@ resource "aws_security_group" "rds_broker_db_clients" {
 resource "aws_security_group" "rds_broker_dbs" {
   name        = "${var.env}-rds-broker-dbs"
   description = "Group for RDS broker DB instances"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port = 5432
@@ -71,7 +71,7 @@ resource "aws_security_group" "rds_broker_dbs" {
     protocol  = "tcp"
 
     security_groups = [
-      "${aws_security_group.rds_broker_db_clients.id}",
+      aws_security_group.rds_broker_db_clients.id,
     ]
   }
 
@@ -81,11 +81,11 @@ resource "aws_security_group" "rds_broker_dbs" {
     protocol  = "tcp"
 
     security_groups = [
-      "${aws_security_group.rds_broker_db_clients.id}",
+      aws_security_group.rds_broker_db_clients.id,
     ]
   }
 
-  tags {
+  tags = {
     Name = "${var.env}-rds-broker-dbs"
   }
 }
@@ -103,7 +103,7 @@ resource "aws_db_parameter_group" "rds_broker_postgres95" {
 
   parameter {
     name  = "rds.log_retention_period"
-    value = "10080"                    // 7 days in minutes
+    value = "10080" // 7 days in minutes
   }
 }
 
@@ -120,7 +120,7 @@ resource "aws_db_parameter_group" "rds_broker_postgres10" {
 
   parameter {
     name  = "rds.log_retention_period"
-    value = "10080"                    // 7 days in minutes
+    value = "10080" // 7 days in minutes
   }
 }
 
@@ -129,3 +129,4 @@ resource "aws_db_parameter_group" "rds_broker_mysql57" {
   family      = "mysql5.7"
   description = "RDS Broker MySQL 5.7 parameter group"
 }
+
