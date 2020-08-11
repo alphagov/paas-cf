@@ -54,6 +54,11 @@ cloud_config_manifests_spec:
 	cd manifests/cloud-config &&\
 		bundle exec rspec
 
+.PHONY: runtime_config_manifests_spec
+runtime_config_manifests_spec:
+	cd manifests/runtime-config &&\
+		bundle exec rspec
+
 .PHONY: cf_manifest_spec
 cf_manifest_spec:
 	cd manifests/cf-manifest &&\
@@ -65,7 +70,7 @@ prometheus_manifest_spec:
 		bundle exec rspec
 
 .PHONY: manifest_spec
-manifests_spec: cloud_config_manifests_spec cf_manifest_spec prometheus_manifest_spec
+manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec
 
 .PHONY: terraform_spec
 terraform_spec:

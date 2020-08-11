@@ -16,7 +16,6 @@ fi
 
 # shellcheck disable=SC2086
 bosh interpolate \
-  --var-errs \
   --vars-file="${WORKDIR}/terraform-outputs/vpc.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/bosh.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \

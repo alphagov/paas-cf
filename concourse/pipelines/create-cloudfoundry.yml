@@ -521,6 +521,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: paas-cf-cloud-config.yml
 
+  - name: paas-cf-runtime-config
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: paas-cf-runtime-config.yml
+
   - name: paas-trusted-people
     type: s3-iam
     source:
@@ -1494,6 +1501,31 @@ jobs:
             params:
               file: paas-cf-cloud-config/paas-cf-cloud-config.yml
 
+        - task: generate-paas-cf-runtime-config
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
+            inputs:
+              - name: paas-cf
+              - name: terraform-outputs
+            outputs:
+              - name: paas-cf-runtime-config
+            params:
+              AWS_ACCOUNT: ((aws_account))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  paas-cf/manifests/runtime-config/scripts/generate-runtime-config.sh > paas-cf-runtime-config/paas-cf-runtime-config.yml
+
+          on_success:
+            put: paas-cf-runtime-config
+            params:
+              file: paas-cf-runtime-config/paas-cf-runtime-config.yml
+
         - task: generate-cf-manifest
           tags: [colocated-with-web]
           config:
@@ -1564,6 +1596,8 @@ jobs:
           - get: paas-cf
             passed: ['generate-cf-config']
           - get: paas-cf-cloud-config
+            passed: ['generate-cf-config']
+          - get: paas-cf-runtime-config
             passed: ['generate-cf-config']
           - get: cf-manifest
             passed: ['generate-cf-config']
@@ -1637,6 +1671,33 @@ jobs:
                     --type=cloud \
                     --name=paas-cf \
                     paas-cf-cloud-config/paas-cf-cloud-config.yml
+
+        - task: update-paas-cf-runtime-config
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *gov-paas-bosh-cli-v2-image-resource
+            inputs:
+              - name: paas-cf-runtime-config
+              - name: paas-cf
+            params:
+              BOSH_ENVIRONMENT: ((bosh_fqdn))
+              BOSH_CA_CERT: ((bosh-ca-cert))
+              BOSH_DEPLOYMENT: ((deploy_env))
+              BOSH_CLIENT_SECRET: ((bosh-client-secret))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  BOSH_CLIENT='admin'
+                  export BOSH_CLIENT
+
+                  bosh -n update-config \
+                    --type=runtime \
+                    --name=paas-cf \
+                    paas-cf-runtime-config/paas-cf-runtime-config.yml
 
       - task: cf-deploy
         tags: [colocated-with-web]
