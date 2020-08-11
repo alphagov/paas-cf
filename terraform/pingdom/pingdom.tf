@@ -1,11 +1,11 @@
-variable "pingdom_user" { type = string }
-variable "pingdom_password" { type = string }
-variable "pingdom_api_key" { type = string }
-variable "pingdom_account_email" { type = string }
 variable "apps_dns_zone_name" { type = string }
-variable "system_dns_zone_name" { type = string }
 variable "env" { type = string }
+variable "pingdom_account_email" { type = string }
+variable "pingdom_api_key" { type = string }
 variable "pingdom_contact_ids" { type = list(string) }
+variable "pingdom_password" { type = string }
+variable "pingdom_user" { type = string }
+variable "system_dns_zone_name" { type = string }
 
 provider "pingdom" {
   version = "1.1.1"

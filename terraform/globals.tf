@@ -1,69 +1,3 @@
-variable "aws_account" {
-  description = "the AWS account being deployed to"
-}
-
-variable "env" {
-  description = "Environment name"
-}
-
-variable "region" {
-  description = "AWS region"
-}
-
-variable "vpc_cidr" {
-  description = "CIDR for VPC"
-  default     = "10.0.0.0/16"
-}
-
-variable "vpc_id" {
-  description = "id of VPC created in main 'vpc' terraform"
-  default     = ""
-}
-
-variable "zones" {
-  description = "AWS availability zones"
-  type        = map(string)
-}
-
-variable "zone_count" {
-  description = "Number of zones to use"
-}
-
-variable "infra_cidrs" {
-  description = "CIDR for infrastructure subnet indexed by AZ"
-
-  default = {
-    zone0 = "10.0.0.0/24"
-    zone1 = "10.0.1.0/24"
-    zone2 = "10.0.2.0/24"
-  }
-}
-
-variable "infra_gws" {
-  description = "GW per CIDR"
-
-  default = {
-    "10.0.0.0/24" = "10.0.0.1"
-    "10.0.1.0/24" = "10.0.1.1"
-    "10.0.2.0/24" = "10.0.2.1"
-  }
-}
-
-variable "microbosh_ips" {
-  description = "MicroBOSH IPs per zone"
-  type        = map(string)
-}
-
-variable "infra_subnet_ids" {
-  description = "A comma separated list of infrastructure subnets"
-  default     = ""
-}
-
-variable "microbosh_static_private_ip" {
-  description = "Microbosh internal IP"
-  default     = "10.0.0.6"
-}
-
 /* Operators will mainly be from the office. See https://sites.google.com/a/digital.cabinet-office.gov.uk/gds-internal-it/news/aviationhouse-sourceipaddresses for details. */
 variable "admin_cidrs" {
   description = "List of CIDR addresses with access to operator/admin endpoints"
@@ -84,6 +18,15 @@ variable "admin_cidrs" {
 variable "api_access_cidrs" {
   description = "List of CIDR addresses with access to CloudFoundry API"
   default     = ["0.0.0.0/0"]
+}
+
+variable "assets_prefix" {
+  description = "Prefix for global assests like S3 buckets"
+  default     = "gds-paas"
+}
+
+variable "aws_account" {
+  description = "the AWS account being deployed to"
 }
 
 # See https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html
@@ -113,23 +56,47 @@ variable "elb_account_ids" {
   }
 }
 
-variable "assets_prefix" {
-  description = "Prefix for global assests like S3 buckets"
-  default     = "gds-paas"
+variable "env" {
+  description = "Environment name"
 }
 
-variable "peer_names" {
-  description = "The name of the peer"
-  default     = []
+variable "infra_cidrs" {
+  description = "CIDR for infrastructure subnet indexed by AZ"
+
+  default = {
+    zone0 = "10.0.0.0/24"
+    zone1 = "10.0.1.0/24"
+    zone2 = "10.0.2.0/24"
+  }
+}
+
+variable "infra_gws" {
+  description = "GW per CIDR"
+
+  default = {
+    "10.0.0.0/24" = "10.0.0.1"
+    "10.0.1.0/24" = "10.0.1.1"
+    "10.0.2.0/24" = "10.0.2.1"
+  }
+}
+
+variable "infra_subnet_ids" {
+  description = "A comma separated list of infrastructure subnets"
+  default     = ""
+}
+
+variable "microbosh_ips" {
+  description = "MicroBOSH IPs per zone"
+  type        = map(string)
+}
+
+variable "microbosh_static_private_ip" {
+  description = "Microbosh internal IP"
+  default     = "10.0.0.6"
 }
 
 variable "peer_account_ids" {
   description = "The account ID's that contains the VPC to peer with"
-  default     = []
-}
-
-variable "peer_vpc_ids" {
-  description = "The VPC to peer with"
   default     = []
 }
 
@@ -138,12 +105,45 @@ variable "peer_cidrs" {
   default     = []
 }
 
+variable "peer_names" {
+  description = "The name of the peer"
+  default     = []
+}
+
+variable "peer_vpc_ids" {
+  description = "The VPC to peer with"
+  default     = []
+}
+
 variable "pingdom_contact_ids" {
   description = "The IDs of the contacts in Pingdom who should be alerted"
   default     = []
 }
 
+variable "region" {
+  description = "AWS region"
+}
+
 variable "support_email" {
   description = "The email address on which to contact GOV.UK PaaS"
   default     = ""
+}
+
+variable "vpc_cidr" {
+  description = "CIDR for VPC"
+  default     = "10.0.0.0/16"
+}
+
+variable "vpc_id" {
+  description = "id of VPC created in main 'vpc' terraform"
+  default     = ""
+}
+
+variable "zone_count" {
+  description = "Number of zones to use"
+}
+
+variable "zones" {
+  description = "AWS availability zones"
+  type        = map(string)
 }
