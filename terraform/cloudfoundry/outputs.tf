@@ -158,11 +158,11 @@ output "cloud_controller_security_group" {
 }
 
 output "cell_subnet_cidr_blocks" {
-  value = [aws_subnet.cell.*.cidr_block]
+  value = aws_subnet.cell.*.cidr_block
 }
 
 output "router_subnet_cidr_blocks" {
-  value = [aws_subnet.router.*.cidr_block]
+  value = aws_subnet.router.*.cidr_block
 }
 
 output "nat_public_ips_csv" {
