@@ -69,6 +69,8 @@ manifests_spec: cloud_config_manifests_spec cf_manifest_spec prometheus_manifest
 
 .PHONY: terraform_spec
 terraform_spec:
+	cd terraform &&\
+		terraform init
 	cd terraform/scripts &&\
 		go get -d -t . &&\
 		go test
