@@ -1,12 +1,11 @@
 source "https://rubygems.org"
 
 gem "aws-sdk", "~> 3"
-gem "cf-uaa-lib", "~> 3.11.0"
 gem "cf-uaac", "~> 4.2.0"
+gem "cf-uaa-lib", "~> 3.11.0"
 gem "colorize", "~> 0.8.1"
 gem "fuzzy_match"
 gem "govuk-registers-api-client"
-gem "hcl-checker", "~>1.1.1"
 gem "http", "~> 4.4"
 gem "json-minify", "~> 0.0.2"
 gem "mail", "~> 2.6.4"

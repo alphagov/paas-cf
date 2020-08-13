@@ -21,6 +21,12 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 end
 
-require "hcl/checker"
+hcl2json_path = `which hcl2json`
+if hcl2json_path == ""
+  warn "Install hcl2json before running these tests"
+  warn "go install github.com/tmccombs/hcl2json"
+  exit(1)
+end
+
 TERRAFORM_PATH  = File.expand_path(File.join(__dir__, ".."))
 TERRAFORM_FILES = Dir.glob(File.join(TERRAFORM_PATH, "**", "*.tf"))

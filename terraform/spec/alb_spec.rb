@@ -1,3 +1,16 @@
+require "json"
+require "open3"
+
+def hcl2json(tf)
+  stdout, stderr, exit_status = Open3.capture3("hcl2json", { stdin_data: tf })
+
+  unless exit_status.success?
+    warn stderr
+  end
+
+  JSON.parse(stdout)
+end
+
 def get_lbs(tf)
   tf.dig("resource", "aws_lb").values
 end
@@ -51,7 +64,7 @@ describe "alb" do
       .map { |f| File.read(f) }
       .join("\n\n")
 
-    terraform = HCL::Checker.parse(terraform_contents)
+    terraform = hcl2json(terraform_contents)
 
     it "does not contain any aws_alb resources" do
       expect(
@@ -103,7 +116,7 @@ describe "alb" do
       .map { |f| File.read(f) }
       .join("\n\n")
 
-    terraform = HCL::Checker.parse(terraform_contents)
+    terraform = hcl2json(terraform_contents)
 
     it "is have terraform files describing albs" do
       expect(terraform_files).not_to be_empty
