@@ -185,6 +185,7 @@ jobs:
 
                 bosh -n delete-deployment --force --deployment "((deploy_env))"
                 bosh -n delete-deployment --force --deployment prometheus
+                bosh -n delete-deployment --force --deployment app-autoscaler
                 echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
           put: deployed-healthcheck
