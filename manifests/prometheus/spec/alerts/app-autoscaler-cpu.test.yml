@@ -1,0 +1,32 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - spec/alerts/fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 20m
+    input_series:
+      - series: 'cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage"}'
+        values: 1 1 2 3 4 5
+
+    alert_rule_test:
+      # Does not fire without enough data
+      - eval_time: 0m
+        alertname: AppAutoscalingIsNotScaling
+      # Does not fire until consistently not scaling
+      - eval_time: 30m
+        alertname: AppAutoscalingIsNotScaling
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              organization_name: admin
+              space_name: healthchecks
+              application_name: app-autoscaler-cpu-usage
+            exp_annotations:
+              summary: "App autoscaler is not scaling our healthcheck app"
+              description: "The app autoscaler cpu scaling healthcheck app has scaled 0 times over the last 30 minutes, it should have autoscaled more"
+      # Does not fire after scaling
+      - eval_time: 60m
+        alertname: AppAutoscalingIsNotScaling
