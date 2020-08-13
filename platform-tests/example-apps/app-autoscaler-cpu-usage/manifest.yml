@@ -1,0 +1,21 @@
+---
+applications:
+  - name: app-autoscaler-cpu-usage
+
+    memory: 128M
+    disk_quota: 256M
+
+    services: [scale-app-autoscaler-cpu-usage]
+    buildpacks: [go_buildpack]
+    stack: cflinuxfs3
+
+    health-check-type: process
+    no-route: true
+
+    command: "./bin/app-autoscaler-cpu-usage"
+
+    env:
+      GOVERSION: go1.13
+      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
+
+      DURATION: 5m

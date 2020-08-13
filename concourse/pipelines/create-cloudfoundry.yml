@@ -11,32 +11,32 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-uaac
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -51,12 +51,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
 
   tasks:
     - &add-grafana-job-annotation
@@ -763,7 +763,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
           params:
@@ -807,7 +807,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+                tag: f91084a42c34535e5b9ad61226314155b0854648
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -1375,7 +1375,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -2288,6 +2288,40 @@ jobs:
                     "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}" \
                     "${APP_AUTOSCALER_SERVICE_BROKER_URL}"
                 fi
+
+      - task: deploy-app-autoscaler-cpu-usage
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            CF_CLIENT_SECRET: ((cf_client_secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf target -o admin -s healthchecks
+
+                cd paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
+
+                if ! cf service scale-app-autoscaler-cpu-usage > /dev/null; then
+                  cf create-service autoscaler autoscaler-free-plan scale-app-autoscaler-cpu-usage
+                fi
+
+                cf cancel-deployment app-autoscaler-cpu-usage || true
+                cf push --strategy=rolling app-autoscaler-cpu-usage
+                cf aasp app-autoscaler-cpu-usage policy.json
 
       - *end-grafana-job-annotation
 
@@ -3829,7 +3863,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -4762,7 +4796,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+            tag: f91084a42c34535e5b9ad61226314155b0854648
         inputs:
           - name: passwords
         params:
