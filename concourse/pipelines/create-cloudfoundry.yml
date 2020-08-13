@@ -2905,8 +2905,14 @@ jobs:
                 delete_unused_keys() {
                   terraform_outputs_key=$1
                   username=$2
+                  VERSION=$(jq -r ".version" cf-tfstate/cf.tfstate)
 
-                  jq_path=".modules[].outputs.${terraform_outputs_key}.value"
+                  if [ "$VERSION" -gt 3 ]; then
+                    jq_path=".outputs.${terraform_outputs_key}.value"
+                  else
+                    jq_path=".modules[].outputs.${terraform_outputs_key}.value"
+                  fi
+
                   ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
                   if [ -z "$ACCESS_KEY_ID" ]; then
                     echo "could not find $terraform_outputs_key in terraform outputs"
