@@ -36,6 +36,14 @@
         - vault.service.cf.internal
 
 - type: replace
+  path: /variables/-
+  value:
+    name: vault_admin_password
+    type: password
+    options:
+      length: 64
+
+- type: replace
   path: /instance_groups/-
   value:
     name: vault
@@ -91,3 +99,79 @@
                 uris:
                   - vault.((system_domain))
                 server_cert_domain_san: vault.service.cf.internal
+
+      - name: scripting
+        release: generic-scripting
+        properties:
+          scripting:
+            post-start-script: |
+              set -ueo pipefail
+              vault="/var/vcap/packages/vault/bin/vault"
+              vault_ca_path_arg="-ca-path=/var/vcap/jobs/vault/tls/vault/cert.pem"
+
+              for i in $(seq 60); do
+                if [ $i -eq "60" ]; then
+                  echo "vault not installed after $i attempts...giving up"
+                  exit 1
+                fi
+
+                if [ -x $vault ]; then
+                  break
+                fi
+
+                echo "waiting for vault to be installed"
+                sleep 1
+              done
+
+              for i in $(seq 60); do
+                if [ $i -eq "60" ]; then
+                  echo "vault not up after $i attempts...giving up"
+                  exit 1
+                fi
+
+                if $vault status $vault_ca_path_arg || [ $? = 2 ]; then
+                  break
+                fi
+
+                echo "waiting for vault to be up"
+                sleep 1
+              done
+
+              if grep -q 'Initialized\s*false' <<< $($vault status $vault_ca_path_arg); then
+                echo "Vault not initialized, bootstrapping"
+                init_output=$($vault operator init $vault_ca_path_arg -n 1 -t 1)
+
+                if [ $? != 0]; then
+                  echo "Attempted to init vault but did not succeed"
+                  echo "$init_output"
+                  exit 1
+                fi
+
+                token=$(echo "$init_output" | grep -o 'Token: .*' | awk '{print $2}')
+
+                $vault login $vault_ca_path_arg $token
+                if [ $? != 0 ]; then
+                  echo "Attempted to log in to vault but did not succeed"
+                  exit 1
+                fi
+
+                $vault auth enable $vault_ca_path_arg userpass
+                if [ $? != 0 ]; then
+                  echo "Attempted to enable userpass but did not succeed"
+                  exit 1
+                fi
+
+                $vault write $vault_ca_path_arg auth/userpass/users/admin "password=((vault_admin_password))" policies=admins
+                if [ $? != 0 ]; then
+                  echo "Attempted to add admin user but did not succeed"
+                  exit 1
+                fi
+
+              else
+                echo "Vault already initialized"
+              fi
+
+              if grep -q 'Sealed\s*true' <<< $($vault status $vault_ca_path_arg); then
+                echo "Vault should be unsealed but is sealed...giving up"
+                exit 1
+              fi
