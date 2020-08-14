@@ -223,6 +223,10 @@ vm_extensions:
   cloud_properties:
     iam_instance_profile: cf-cloudcontroller
 
+- name: vault_instance_profile
+  cloud_properties:
+    iam_instance_profile: tlwr-vault
+
 - name: cf_rds_client_sg
   cloud_properties:
     security_groups:

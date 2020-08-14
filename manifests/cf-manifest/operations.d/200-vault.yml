@@ -44,6 +44,9 @@
 
     persistent_disk_type: 10GB
 
+    vm_extensions:
+      - vault_instance_profile
+
     jobs:
       - name: vault
         release: vault
@@ -51,14 +54,31 @@
           vault:
             config: |
               storage "file" {
-                path = "/var/vcap/store/vault/data"
-                }
-                ui = true
-                listener "tcp" {
-                  address = "0.0.0.0:8200"
-                  tls_cert_file = "/var/vcap/jobs/vault/tls/vault/cert.pem"
-                  tls_key_file  = "/var/vcap/jobs/vault/tls/vault/key.pem"
-                  tls_min_version = "tls12"
+                  path = "/var/vcap/store/vault/data"
+              }
+
+              ui = true
+
+              listener "tcp" {
+                address = "0.0.0.0:8200"
+                tls_cert_file = "/var/vcap/jobs/vault/tls/vault/cert.pem"
+                tls_key_file  = "/var/vcap/jobs/vault/tls/vault/key.pem"
+                tls_min_version = "tls12"
+              }
+
+            additional_config:
+              - name: kms.json
+                config: |
+                  {
+                    "seal": [
+                      {
+                        "awskms": [
+                          {
+                            "kms_key_id": "b1380431-d93c-4428-85b7-3589deb42e70"
+                          }
+                        ]
+                      }
+                    ]
                   }
             tls:
               - name: vault
