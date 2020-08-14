@@ -4,9 +4,10 @@
   path: /releases/-
   value:
     name: vault
-    version: 1.1.6
-    url: https://github.com/cloudfoundry-community/vault-boshrelease/releases/download/v1.1.6/vault-1.1.6.tgz
-    sha1: f2a1fbf8797a63f4a99386c552a2459108d7541a
+    # FIXME
+    version: 0.1.1
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/vault-0.1.1.tgz
+    sha1: 1ec4d38c327110bf54e1eec25a3f10f162b1ed4c
 
 - type: replace
   path: /variables/-
