@@ -63,7 +63,7 @@
           vault:
             config: |
               storage "file" {
-                  path = "/var/vcap/store/vault/data"
+                path = "/var/vcap/store/vault/data"
               }
 
               ui = true
@@ -75,20 +75,9 @@
                 tls_min_version = "tls12"
               }
 
-            additional_config:
-              - name: kms.json
-                config: |
-                  {
-                    "seal": [
-                      {
-                        "awskms": [
-                          {
-                            "kms_key_id": "b1380431-d93c-4428-85b7-3589deb42e70"
-                          }
-                        ]
-                      }
-                    ]
-                  }
+              seal "awskms" {
+                kms_key_id = "b1380431-d93c-4428-85b7-3589deb42e70"
+              }
 
       - name: route_registrar
         release: routing
