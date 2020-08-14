@@ -161,7 +161,51 @@
                   exit 1
                 fi
 
-                $vault write $vault_ca_path_arg auth/userpass/users/admin "password=((vault_admin_password))" policies=admins
+                $vault policy write $vault_ca_path_arg admin <(cat <<POLICY
+              # yes this indentation is correct
+              path "auth/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "sys/auth/*" {
+                capabilities = ["create", "update", "delete", "sudo"]
+              }
+
+              path "sys/auth" {
+                capabilities = ["read"]
+              }
+
+              path "sys/policies/acl/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "sys/policies/acl" {
+                capabilities = ["list"]
+              }
+
+              path "secret/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "sys/mounts/*" {
+                capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+              }
+
+              path "sys/health" {
+                capabilities = ["read", "sudo"]
+              }
+
+              path "sys/capabilities" {
+                capabilities = ["create", "update"]
+              }
+
+              path "sys/capabilities-self" {
+                capabilities = ["create", "update"]
+              }
+              POLICY
+                )
+
+                $vault write $vault_ca_path_arg auth/userpass/users/admin "password=((vault_admin_password))" policies=admin
                 if [ $? != 0 ]; then
                   echo "Attempted to add admin user but did not succeed"
                   exit 1
