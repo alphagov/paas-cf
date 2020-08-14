@@ -1781,6 +1781,7 @@ jobs:
                 UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
                 SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
                 CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/custom_broker_acceptance_prometheus_password")
+                VAULT_ADMIN_PASSWORD=$(credhub get -q -n "${BOSH_NS}/vault_admin_password")
 
 
                 echo 'Setting secrets'
@@ -1789,6 +1790,7 @@ jobs:
                 credhub set --name="${TEAM_NS}/cf_admin" --type value --value "${CF_ADMIN}"
                 credhub set --name="${TEAM_NS}/cf_pass" --type password --password "${CF_PASS}"
                 credhub set --name="${PIPELINE_NS}/cf_client_secret" --type password --password "${CF_CLIENT_SECRET}"
+                credhub set --name="${PIPELINE_NS}/vault_admin_password" --type password --password "${VAULT_ADMIN_PASSWORD}"
 
                 credhub set --name="${PIPELINE_NS}/paas_accounts_password" --type password --password "${PAAS_ACCOUNTS_PASSWORD}"
                 credhub set --name="${TEAM_NS}/api_endpoint" --type value --value "${API_ENDPOINT}"
