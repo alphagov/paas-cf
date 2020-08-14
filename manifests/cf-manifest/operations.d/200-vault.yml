@@ -44,6 +44,8 @@
 
     persistent_disk_type: 10GB
 
+    stemcell: default
+    vm_type: small
     vm_extensions:
       - vault_instance_profile
 
