@@ -13,10 +13,9 @@ for i in "${PAAS_CF_DIR}"/manifests/app-autoscaler/operations.d/*.yml; do
   opsfile_args+="-o $i "
 done
 
-# if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
-#   opsfile_args+="-o ${PAAS_CF_DIR}/manifests/app-autoscaler/operations/scale-down-dev.yml "
-#   opsfile_args+="-o ${PAAS_CF_DIR}/manifests/app-autoscaler/operations/speed-up-deployment-dev.yml "
-# fi
+if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/app-autoscaler/operations/scale-down-dev.yml "
+fi
 
 variables_file="$(mktemp)"
 trap 'rm -f "${variables_file}"' EXIT

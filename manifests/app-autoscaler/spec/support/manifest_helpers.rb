@@ -12,6 +12,15 @@ module ManifestHelpers
       render_manifest_with_defaults
   end
 
+  def slim_manifest
+    Cache.instance[:slim_manifest] unless Cache.instance[:slim_manifest].nil?
+
+    ENV["SLIM_DEV_DEPLOYMENT"] = "true"
+    manifest = render_manifest_with_defaults
+    ENV.delete "SLIM_DEV_DEPLOYMENT"
+    manifest
+  end
+
 private
 
   def root
