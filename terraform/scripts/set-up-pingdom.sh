@@ -43,6 +43,7 @@ terraform init \
 # Run Terraform Pingdom Provider
 terraform "${TERRAFORM_ACTION}" \
 	-var-file="${PAAS_CF_DIR}/terraform/${AWS_ACCOUNT}.tfvars" \
+	-var-file="${PAAS_CF_DIR}/terraform/pingdom/${AWS_ACCOUNT}.tfvars" \
 	-var "env=${DEPLOY_ENV}" \
 	-var "pingdom_user=${PINGDOM_USER}" \
 	-var "pingdom_password=${PINGDOM_PASSWORD}" \

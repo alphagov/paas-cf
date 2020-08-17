@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: governmentpaas/bosh-cli-v2
-    tag: b9a032b6ca185690bd679e1802e6b7af6a2bc43a
+    tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
 
 run:
   path: sh
