@@ -51,6 +51,11 @@ meta:
       source:
         repository: governmentpaas/curl-ssl
         tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+    vault: &vault-image-resource
+      type: docker-image
+      source:
+        repository: vault
+        tag: '1.5.0'
 
   tasks:
     - &add-grafana-job-annotation
@@ -302,6 +307,7 @@ groups:
       - deploy-paas-billing
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
+      - deploy-vault-broker
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -339,6 +345,7 @@ groups:
       - deploy-paas-billing
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
+      - deploy-vault-broker
   - name: operator
     jobs:
       - generate-git-keys
@@ -667,6 +674,13 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_master
+
+  - name: vault-service-broker
+    type: git
+    source:
+      uri: https://github.com/hashicorp/vault-service-broker.git
+      branch: master
+      tag_filter: v0.5.3
 
 jobs:
   - name: pipeline-lock
@@ -4209,6 +4223,136 @@ jobs:
           GIT_SSH_PRIVATE_KEY: ((paas-aiven-broker-git-keys.private_key))
           GIT_SSH_PUBLIC_KEY: ((paas-aiven-broker-git-keys.public_key))
           GIT_USER: gov-paas-((deploy_env))
+
+      - *end-grafana-job-annotation
+
+  - name: deploy-vault-broker
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+
+      - <<: *get-paas-cf
+        trigger: true
+        passed: ['post-deploy']
+
+      - get: vault-service-broker
+
+      - task: create-broker-policy
+        config:
+          platform: linux
+          image_resource: *vault-image-resource
+          inputs:
+            - name: paas-cf
+          outputs:
+            - name: vault-broker-token
+          params:
+            VAULT_ADMIN_PASSWORD: ((vault_admin_password))
+            VAULT_ADDR: https://vault.((system_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -c
+              - |
+                set -eu
+
+                vault login \
+                  -method=userpass \
+                  -no-print \
+                  username=admin \
+                  "password=$VAULT_ADMIN_PASSWORD"
+
+                vault policy write \
+                  broker \
+                  paas-cf/config/service-brokers/vault/policy.hcl
+
+                tok="$(vault token create -policy=broker -display-name=broker)"
+                token="$(echo "$tok" \
+                                    | grep 'token\s' \
+                                    | head -n 1 \
+                                    | awk '{print $2}')"
+
+                echo "$token" > vault-broker-token/token
+
+      - task: generate-vault-broker-secrets
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            CREDHUB_CLIENT: credhub-admin
+            CREDHUB_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: bash
+            args:
+              - -c
+              - -e
+              - |
+                credhub login
+
+                credhub generate \
+                  --type password \
+                  --length=64 \
+                  --name "/concourse/main/vault_broker_password" \
+                  --no-overwrite
+
+      - task: deploy-vault-broker
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vault-broker-token
+            - name: vault-service-broker
+          params:
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            CF_CLIENT_SECRET: ((cf_client_secret))
+
+            VAULT_BROKER_PASSWORD: ((vault_broker_password))
+            VAULT_ADDR: https://vault.((system_dns_zone_name))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf target -o admin -s service-brokers
+
+                spruce merge \
+                  vault-service-broker/manifest.yml \
+                  paas-cf/config/service-brokers/vault/env.yml \
+                  > manifest.yml
+
+                cf cancel-deployment vault-broker || true
+                cf push vault-broker \
+                  --strategy=rolling \
+                  --var "vault-addr=$VAULT_ADDR" \
+                  --var "vault-token=$(cat vault-broker-token/token)" \
+                  --var "vault-broker-password=$VAULT_BROKER_PASSWORD" \
+                  -f manifest.yml -p vault-service-broker
+
+                if cf service-brokers | grep 'vault-broker\s'; then
+                  cf update-service-broker vault-broker \
+                    vault-broker "$VAULT_BROKER_PASSWORD" \
+                    "https://vault-broker.${APPS_DNS_ZONE_NAME}"
+                else
+                  cf create-service-broker vault-broker \
+                    vault-broker "$VAULT_BROKER_PASSWORD" \
+                    "https://vault-broker.${APPS_DNS_ZONE_NAME}"
+                fi
+
+                cf enable-service-access hashicorp-vault
 
       - *end-grafana-job-annotation
 
