@@ -9,16 +9,19 @@ module RuntimeConfigHelpers
   end
 
   def runtime_config_with_defaults
-    runtime_config_for_account("prod")
+    runtime_config_for_account("test")
   end
 
   def runtime_config_for_account(account)
     sym = "runtime_config_for_#{account}".to_sym
 
     old_aws_account = ENV["AWS_ACCOUNT"]
+    old_deploy_env = ENV["DEPLOY_ENV"]
     ENV["AWS_ACCOUNT"] = account
+    ENV["DEPLOY_ENV"] = account
     Cache.instance[sym] ||= render_runtime_config
     ENV["AWS_ACCOUNT"] = old_aws_account
+    ENV["DEPLOY_ENV"] = old_deploy_env
 
     Cache.instance[sym]
   end

@@ -20,6 +20,7 @@
         release: syslog
         properties:
           syslog:
+            director: ((bosh_director_name))
             address: ((logit_syslog_address))
             port: ((logit_syslog_port))
             transport: 'tcp'

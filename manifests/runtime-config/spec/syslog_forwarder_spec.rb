@@ -16,6 +16,7 @@ RSpec.describe "syslog forwarder" do
     expect(syslog_properties["syslog"]["port"]).to eq "((logit_syslog_port))"
     expect(syslog_properties["syslog"]["permitted_peer"]).to eq "*.logit.io"
     expect(syslog_properties["syslog"]["ca_cert"]).to eq("((logit_ca_cert))")
+    expect(syslog_properties["syslog"]["director"]).to eq("test")
   end
 
   it "excludes the concourse deployment" do
