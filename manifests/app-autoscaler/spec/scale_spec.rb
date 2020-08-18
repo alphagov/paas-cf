@@ -21,12 +21,12 @@ RSpec.describe "scale" do
   end
 
   describe "slim" do
-    let(:manifest) { manifest = slim_manifest }
+    let(:manifest) { slim_manifest }
 
     it "is not highly available" do
       instance_groups.each do |ig|
         instances = ig["instances"]
-        expect(instances).to be == 1, "#{ig["name"]} should be slim"
+        expect(instances).to be == 1, "#{ig['name']} should be slim"
       end
     end
 

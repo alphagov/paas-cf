@@ -13,9 +13,9 @@ RSpec.describe "diego" do
   end
 
   describe "api instance" do
-    let(:manifest) { manifest_with_defaults }
-
     subject(:instance) { manifest.fetch("instance_groups.diego-api") }
+
+    let(:manifest) { manifest_with_defaults }
 
     it_behaves_like "a cf rds client"
   end
