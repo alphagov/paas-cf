@@ -148,7 +148,13 @@ lint_ruby:
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
 	@# for some reason `git ls-files` is including 'manifests/cf-deployment' in its output...which is a directory
-	git ls-files | grep -v -e vendor/ -e manifests/cf-deployment -e manifests/prometheus/upstream | xargs ./scripts/test_posix_newline.sh
+	git ls-files \
+	| grep -v \
+		-e vendor/ \
+		-e manifests/cf-deployment \
+		-e manifests/prometheus/upstream \
+		-e manifests/app-autoscaler/upstream \
+	| xargs ./scripts/test_posix_newline.sh
 
 .PHONY: lint_symlinks
 lint_symlinks:
