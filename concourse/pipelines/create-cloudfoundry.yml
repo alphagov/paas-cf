@@ -1,5 +1,11 @@
 ---
 meta:
+  resources:
+    get-paas-cf: &get-paas-cf
+      get: paas-cf
+      params: &get-paas-cf-params
+        submodule_recursive: 'false'  # git-resource issue 307
+
   containers:
     awscli: &awscli-image-resource
       type: docker-image
