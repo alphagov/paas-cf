@@ -1513,6 +1513,7 @@ jobs:
               - name: paas-cf-runtime-config
             params:
               AWS_ACCOUNT: ((aws_account))
+              DEPLOY_ENV: ((deploy_env))
             run:
               path: sh
               args:

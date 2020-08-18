@@ -13,5 +13,6 @@ done
 # shellcheck disable=SC2086
 bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
+  --var bosh_director_name="${DEPLOY_ENV}" \
   ${opsfile_args} \
   "${PAAS_CF_DIR}/manifests/runtime-config/paas-cf-runtime-config.yml"
