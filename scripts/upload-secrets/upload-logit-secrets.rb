@@ -11,6 +11,8 @@ deploy_env = ENV.fetch("DEPLOY_ENV")
 credhub_namespaces = [
   "/concourse/main/create-cloudfoundry",
   "/#{deploy_env}/#{deploy_env}",
+  "/#{deploy_env}/prometheus",
+  "/#{deploy_env}/app-autoscaler",
 ]
 
 stack_target = case ENV.fetch("MAKEFILE_ENV_TARGET")

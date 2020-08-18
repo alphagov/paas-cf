@@ -1,7 +1,7 @@
 ---
 
 - type: replace
-  path: /releases/-
+  path: /releases?/-
   value:
     name: syslog
     version: "11.6.1"
@@ -9,9 +9,12 @@
     sha1: "e2649e48c49aedcbd0ff96b00f56b028682f1dd6"
 
 - type: replace
-  path: /addons/-
+  path: /addons?/-
   value:
     name: syslog_forwarder
+    exclude:
+      deployments:
+        - concourse  # from paas-bootstrap
     jobs:
       - name: syslog_forwarder
         release: syslog
