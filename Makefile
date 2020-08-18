@@ -128,7 +128,14 @@ lint_terraform: dev ## Lint the terraform files.
 
 .PHONY: lint_shellcheck
 lint_shellcheck:
-	find . -name '*.sh' -not -path './.git/*' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' -not -path './manifests/prometheus/upstream/*' | xargs shellcheck
+	find . -name '*.sh' \
+		-not -path './.git/*' \
+		-not -path '*/vendor/*' \
+		-not -path './platform-tests/pkg/*'  \
+		-not -path './manifests/cf-deployment/*' \
+		-not -path './manifests/prometheus/upstream/*' \
+		-not -path './manifests/app-autoscaler/upstream/*' \
+	| xargs shellcheck
 
 .PHONY: lint_concourse
 lint_concourse:
