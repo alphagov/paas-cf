@@ -1,0 +1,15 @@
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BoshDirectorPersistentDiskFilling
+    rules:
+      - alert: BoshDirectorPersistentDiskFilling_Critical
+        expr: 'predict_linear(node_filesystem_avail_bytes{instance="10.0.0.6:9100", mountpoint="/var/vcap/store"}[1h], 3 * 24 * 60 * 60) < 0'
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "BOSH director's persistent disk will fill within the next 3 days"
+          description: "In 3 days time the BOSH director's persistent disk will have {{ $value | printf \"%.0f\" }} bytes available"
