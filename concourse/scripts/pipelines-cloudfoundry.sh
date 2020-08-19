@@ -21,9 +21,20 @@ get_git_concourse_pool_clone_full_url_ssh() {
 
   aws s3 cp "s3://${state_bucket}/concourse.tfstate" "${tfstate_file}"
 
-  git_concourse_pool_clone_full_url_ssh=$(ruby < "${tfstate_file}" -rjson -e \
-    'puts JSON.load(STDIN)["modules"][0]["outputs"]["git_concourse_pool_clone_full_url_ssh"]["value"]'
+  terraform_state_version=$(ruby < "${tfstate_file}" -rjson -e \
+    'puts JSON.load(STDIN)["version"]'
   )
+
+  if [ "${terraform_state_version}" == "4" ]
+  then
+    git_concourse_pool_clone_full_url_ssh=$(ruby < "${tfstate_file}" -rjson -e \
+      'puts JSON.load(STDIN)["outputs"]["git_concourse_pool_clone_full_url_ssh"]["value"]'
+    )
+  else
+    git_concourse_pool_clone_full_url_ssh=$(ruby < "${tfstate_file}" -rjson -e \
+      'puts JSON.load(STDIN)["modules"][0]["outputs"]["git_concourse_pool_clone_full_url_ssh"]["value"]'
+    )
+  fi
 
   rm -f "${tfstate_file}"
 }
