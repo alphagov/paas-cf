@@ -284,6 +284,7 @@ jobs:
                 terraform init paas-cf/terraform/cloudfoundry
                 terraform destroy -force -var env="((deploy_env))" \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
                   -var-file="paas-cf/terraform/((aws_region)).tfvars" \
                   -state=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
