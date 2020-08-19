@@ -16,6 +16,7 @@ var _ = Describe("Common service tests", func() {
 	Context("Shareable services", func() {
 
 		shareableServices := map[string]bool{
+			"autoscaler":    false,
 			"elasticsearch": true,
 			"influxdb":      true,
 			"mysql":         true,
