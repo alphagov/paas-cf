@@ -1,5 +1,9 @@
 {
   "allowed_orgs": [
-
+    "digitalmarketplace",
+    "gds-tech-ops",
+    "govuk_development",
+    "govuk-corona-backend-consumers",
+    "govuk-pay"
   ]
 }
