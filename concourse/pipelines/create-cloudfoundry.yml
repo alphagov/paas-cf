@@ -2289,6 +2289,8 @@ jobs:
                     "${APP_AUTOSCALER_SERVICE_BROKER_URL}"
                 fi
 
+                cf enable-service-access autoscaler
+
       - task: deploy-app-autoscaler-cpu-usage
         tags: [colocated-with-web]
         config:
