@@ -57,6 +57,8 @@ RSpec.describe "concourse pipelines" do
         it "has correct branches" do
           valid_branches = %w[gds_master master main ((branch_name))]
 
+          valid_branches << "cf13.2" # FIXME: cf-upgrade
+
           alphagov_git_resources.each do |r|
             name = r.dig("name")
             branch = r.dig("source", "branch")
