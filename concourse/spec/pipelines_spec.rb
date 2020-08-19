@@ -43,6 +43,31 @@ RSpec.describe "concourse pipelines" do
           )
         end
     end
+
+    describe "#{filename} git resources" do
+      let(:pipeline) { YAML.load(contents) }
+      let(:resources) { pipeline["resources"] || [] }
+      let(:git_resources) { resources.select { |r| r["type"] == "git" } }
+
+      describe "alphagov repos" do
+        let(:alphagov_git_resources) do
+          git_resources.select { |r| r["source"]["uri"].match?(/alphagov/) }
+        end
+
+        it "has correct branches" do
+          valid_branches = %w[gds_master master main ((branch_name))]
+
+          valid_branches << "cf13.2" # FIXME: cf-upgrade
+
+          alphagov_git_resources.each do |r|
+            name = r.dig("name")
+            branch = r.dig("source", "branch")
+            expect(valid_branches).to include(branch),
+              "resource #{name} should be in #{valid_branches} got #{branch}"
+          end
+        end
+      end
+    end
   end
 end
 # rubocop:enable Security/YAMLLoad
