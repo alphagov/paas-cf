@@ -878,6 +878,7 @@ jobs:
                     secrets_cf_db_master_password
                     secrets_cdn_db_master_password
                     "${bosh_credentials[@]}"
+                    "${app_autoscaler_credentials[@]}"
                   )
 
                   for secret_name in ${concourse_credentials[*]}; do
