@@ -868,7 +868,6 @@ jobs:
                     external_uaa_database_password
                     external_silk_controller_database_password
                     external_policy_server_database_password
-                    external_credhub_database_password
                   )
 
                   app_autoscaler_credentials=(
