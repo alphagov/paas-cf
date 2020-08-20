@@ -1,0 +1,53 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: governmentpaas/cf-acceptance-tests
+    tag: f91084a42c34535e5b9ad61226314155b0854648
+inputs:
+  - name: paas-cf
+  - name: admin-creds
+outputs:
+  - name: artifacts
+params:
+  DISABLE_CUSTOM_ACCEPTANCE_TESTS:
+  SYSTEM_DOMAIN:
+  APPS_DOMAIN:
+run:
+  path: bash
+  args:
+    - -e
+    - -c
+    - |
+      ln -s "$(pwd)/artifacts" /tmp/artifacts
+
+      echo "Generating configuration"
+      CONFIG="$(pwd)/config.json"
+      export CONFIG
+      cat <<EOF > "$CONFIG"
+      {
+        "service_name": "autoscaler",
+        "service_plan": "autoscaler-free-plan",
+        "aggregate_interval": 60,
+
+        "api": "api.$SYSTEM_DOMAIN",
+        "autoscaler_api": "autoscaler.$SYSTEM_DOMAIN",
+        "apps_domain": "$APPS_DOMAIN",
+
+        "artifacts_directory": "/tmp/artifacts",
+        "admin_user": "$(cat admin-creds/username)",
+        "admin_password": "$(cat admin-creds/password)"
+      }
+      EOF
+
+      if [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
+        echo "WARNING: The custom acceptance tests have been disabled. Unset DISABLE_CUSTOM_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
+        exit 0
+      fi
+
+      echo "Running tests"
+      cd paas-cf/manifests/app-autoscaler/upstream
+      source .envrc
+      cd src/acceptance
+      ./bin/test_default -p -nodes=8

@@ -69,8 +69,13 @@ prometheus_manifest_spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
 
+.PHONY: app_autoscaler_manifest_spec
+app_autoscaler_manifest_spec:
+	cd manifests/app-autoscaler &&\
+		bundle exec rspec
+
 .PHONY: manifest_spec
-manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec
+manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec app_autoscaler_manifest_spec
 
 .PHONY: terraform_spec
 terraform_spec:
@@ -106,7 +111,14 @@ compile_platform_tests:
 
 .PHONY: lint_yaml
 lint_yaml:
-	find . -name '*.yml' -not -path '*/vendor/*' -not -path './manifests/prometheus/upstream/*' -not -path './manifests/cf-deployment/ci/template/*' | grep -v pipecleaner_invalid.yml | xargs yamllint -c yamllint.yml
+	find . -name '*.yml' \
+		-not -path '*/vendor/*' \
+		-not -path './manifests/prometheus/upstream/*' \
+		-not -path './manifests/app-autoscaler/upstream/*' \
+		-not -path './manifests/cf-deployment/ci/template/*' \
+	| grep -v pipecleaner_invalid.yml \
+	| grep -v -- -UPSTREAM.yml \
+	| xargs yamllint -c yamllint.yml
 
 .PHONY: lint_terraform
 lint_terraform: dev ## Lint the terraform files.
@@ -116,7 +128,14 @@ lint_terraform: dev ## Lint the terraform files.
 
 .PHONY: lint_shellcheck
 lint_shellcheck:
-	find . -name '*.sh' -not -path './.git/*' -not -path '*/vendor/*' -not -path './platform-tests/pkg/*'  -not -path './manifests/cf-deployment/*' -not -path './manifests/prometheus/upstream/*' | xargs shellcheck
+	find . -name '*.sh' \
+		-not -path './.git/*' \
+		-not -path '*/vendor/*' \
+		-not -path './platform-tests/pkg/*'  \
+		-not -path './manifests/cf-deployment/*' \
+		-not -path './manifests/prometheus/upstream/*' \
+		-not -path './manifests/app-autoscaler/upstream/*' \
+	| xargs shellcheck
 
 .PHONY: lint_concourse
 lint_concourse:
@@ -129,7 +148,13 @@ lint_ruby:
 .PHONY: lint_posix_newlines
 lint_posix_newlines:
 	@# for some reason `git ls-files` is including 'manifests/cf-deployment' in its output...which is a directory
-	git ls-files | grep -v -e vendor/ -e manifests/cf-deployment -e manifests/prometheus/upstream | xargs ./scripts/test_posix_newline.sh
+	git ls-files \
+	| grep -v \
+		-e vendor/ \
+		-e manifests/cf-deployment \
+		-e manifests/prometheus/upstream \
+		-e manifests/app-autoscaler/upstream \
+	| xargs ./scripts/test_posix_newline.sh
 
 .PHONY: lint_symlinks
 lint_symlinks:

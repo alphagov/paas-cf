@@ -1,36 +1,42 @@
 ---
 meta:
+  resources:
+    get-paas-cf: &get-paas-cf
+      get: paas-cf
+      params: &get-paas-cf-params
+        submodule_recursive: 'false'  # git-resource issue 307
+
   containers:
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/awscli
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: governmentpaas/bosh-cli-v2
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-acceptance-tests
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-cli
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: governmentpaas/cf-uaac
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: governmentpaas/git-ssh
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -45,12 +51,12 @@ meta:
       type: docker-image
       source:
         repository: governmentpaas/terraform
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: governmentpaas/curl-ssl
-        tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+        tag: f91084a42c34535e5b9ad61226314155b0854648
 
   tasks:
     - &add-grafana-job-annotation
@@ -294,6 +300,7 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - app-autoscaler-deploy
       - prometheus-deploy
       - post-deploy
       - deploy-paas-accounts
@@ -306,6 +313,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - app-autoscaler-acceptance-tests
       - bosh-tests
       - rotate-certs
       - check-certificates-after-rotation
@@ -322,12 +330,14 @@ groups:
       - cf-terraform
       - generate-cf-config
       - cf-deploy
+      - app-autoscaler-deploy
       - prometheus-deploy
       - post-deploy
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - app-autoscaler-acceptance-tests
       - bosh-tests
       - tag-release
       - pipeline-unlock
@@ -363,6 +373,7 @@ groups:
       - acceptance-tests
       - custom-acceptance-tests
       - custom-broker-acceptance-tests
+      - app-autoscaler-acceptance-tests
       - bosh-tests
   - name: health
     jobs:
@@ -662,6 +673,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: prometheus-manifest-pre-vars.yml
 
+  - name: app-autoscaler-manifest-pre-vars
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: app-autoscaler-manifest-pre-vars.yml
+
   - name: paas-yet-another-cloudwatch-exporter
     type: git
     source:
@@ -673,7 +691,7 @@ jobs:
     serial: true
     plan:
       - in_parallel:
-        - get: paas-cf
+        - <<: *get-paas-cf
           trigger: ((auto_deploy))
         - get: git-ssh-private-key
       - task: init-pipeline-pool
@@ -745,7 +763,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
           params:
@@ -774,7 +792,7 @@ jobs:
     serial: true
     plan:
       - in_parallel:
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['pipeline-lock']
           - get: pipeline-trigger
             passed: ['pipeline-lock']
@@ -789,7 +807,7 @@ jobs:
               type: docker-image
               source:
                 repository: governmentpaas/certstrap
-                tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+                tag: f91084a42c34535e5b9ad61226314155b0854648
             inputs:
               - name: paas-cf
               - name: ipsec-CA
@@ -850,6 +868,11 @@ jobs:
                     external_uaa_database_password
                     external_silk_controller_database_password
                     external_policy_server_database_password
+                    external_credhub_database_password
+                  )
+
+                  app_autoscaler_credentials=(
+                    external_app_autoscaler_database_password
                   )
 
                   concourse_credentials=(
@@ -865,6 +888,11 @@ jobs:
                   for secret_name in ${bosh_credentials[*]}; do
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
+                  done
+
+                  for secret_name in ${app_autoscaler_credentials[*]}; do
+                    value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
+                    credhub set --type password --name "/$DEPLOY_ENV/app-autoscaler/$secret_name" --password "$value"
                   done
 
         - task: generate-cf-admin-password
@@ -902,7 +930,7 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['generate-secrets']
 
       - task: wait-for-app-availability-tests
@@ -938,7 +966,7 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['generate-secrets']
       - task: run-tests
         tags: [colocated-with-web]
@@ -996,7 +1024,7 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['generate-secrets']
       - task: run-tests
         tags: [colocated-with-web]
@@ -1054,7 +1082,7 @@ jobs:
             passed: ['generate-secrets']
             trigger: true
           - get: deployed-healthcheck
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['generate-secrets']
 
       - task: upload-job-file
@@ -1163,7 +1191,7 @@ jobs:
     plan:
       - *add-grafana-job-annotation
       - in_parallel:
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['pre-deploy']
           - get: pipeline-trigger
             passed: ['pre-deploy']
@@ -1203,6 +1231,7 @@ jobs:
                 export TF_VAR_external_uaa_database_password="((external_uaa_database_password))"
                 export TF_VAR_external_silk_controller_database_password="((external_silk_controller_database_password))"
                 export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
+                export TF_VAR_external_app_autoscaler_database_password="((external_app_autoscaler_database_password))"
                 EOF
 
                 cat <<EOF > terraform-variables/cyber-secrets.tfvars.sh
@@ -1346,7 +1375,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/psql
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -1372,7 +1401,7 @@ jobs:
           - get: pipeline-trigger
             passed: ['cf-terraform']
             trigger: true
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['cf-terraform']
           - get: ipsec-CA
           - get: vpc-tfstate
@@ -2086,6 +2115,218 @@ jobs:
 
       - *end-grafana-job-annotation
 
+  - name: app-autoscaler-deploy
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: ['cf-deploy']
+            trigger: true
+          - get: paas-cf
+            passed: ['cf-deploy']
+          - get: cf-tfstate
+
+      - task: extract-terraform-outputs
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          outputs:
+            - name: terraform-outputs
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                  < cf-tfstate/cf.tfstate \
+                  > terraform-outputs/cf.yml
+
+      - task: generate-app-autoscaler-manifest
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: terraform-outputs
+          outputs:
+            - name: app-autoscaler-manifest
+            - name: app-autoscaler-manifest-pre-vars
+          params:
+            AWS_ACCOUNT: ((aws_account))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+            BOSH_URL: https://((bosh_fqdn)):25555
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            VCAP_PASSWORD: ((vcap-password))
+          run:
+            path: bash
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                BOSH_CA_CERT="$(awk -v ORS='\\n' '1' <(printenv BOSH_CA_CERT | tr -d '\r'))"
+                export BOSH_CA_CERT
+
+                ./paas-cf/manifests/app-autoscaler/scripts/generate-manifest.sh \
+                  > app-autoscaler-manifest/app-autoscaler-manifest.yml
+
+                ./paas-cf/manifests/app-autoscaler/scripts/generate-manifest.sh \
+                  > app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
+
+        on_success:
+          put: app-autoscaler-manifest-pre-vars
+          params:
+            file: app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
+
+      - task: app-autoscaler-deploy
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: app-autoscaler-manifest
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: app-autoscaler
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin'
+                export BOSH_CLIENT
+
+                bosh -n deploy app-autoscaler-manifest/app-autoscaler-manifest.yml
+
+      - task: copy-app-autoscaler-secrets-to-concourse-credhub-ns
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-tfstate
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            CREDHUB_CLIENT_ID: credhub-admin
+            CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
+            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'Logging into Credhub'
+                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
+                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
+
+                echo 'Getting variables'
+                APP_AUTOSCALER_NS="/${DEPLOY_ENV}/app-autoscaler"
+                APP_AUTOSCALER_SERVICE_BROKER_PASSWORD="$(credhub get -q -n "${APP_AUTOSCALER_NS}/autoscaler_service_broker_password")"
+
+                echo 'Setting secrets'
+                TEAM_NS="/concourse/main"
+                PIPELINE_NS="${TEAM_NS}/create-cloudfoundry"
+                credhub set --name="${PIPELINE_NS}/autoscaler_service_broker_password" --type password --password "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}"
+
+                echo 'Accessible secrets'
+                credhub find --path "${TEAM_NS}"
+
+      - task: register-app-autoscaler-service-broker
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            S3_BROKER_PASS: ((secrets_s3_broker_admin_password))
+            DEPLOY_ENV: ((deploy_env))
+            APP_AUTOSCALER_SERVICE_BROKER_USERNAME: autoscaler_service_broker_user
+            APP_AUTOSCALER_SERVICE_BROKER_PASSWORD: ((autoscaler_service_broker_password))
+            APP_AUTOSCALER_SERVICE_BROKER_URL: https://autoscalerservicebroker.((system_dns_zone_name))
+          run:
+            path: bash
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                if cf service-brokers | grep 'autoscaler\s'; then
+                  cf update-service-broker autoscaler \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_USERNAME}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_URL}"
+                else
+                  cf create-service-broker autoscaler \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_USERNAME}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_PASSWORD}" \
+                    "${APP_AUTOSCALER_SERVICE_BROKER_URL}"
+                fi
+
+                cf enable-service-access autoscaler
+
+      - task: deploy-app-autoscaler-cpu-usage
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            CF_CLIENT_SECRET: ((cf_client_secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf target -o admin -s healthchecks
+
+                cd paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
+
+                if ! cf service scale-app-autoscaler-cpu-usage > /dev/null; then
+                  cf create-service autoscaler autoscaler-free-plan scale-app-autoscaler-cpu-usage
+                fi
+
+                cf cancel-deployment app-autoscaler-cpu-usage || true
+                cf push --strategy=rolling app-autoscaler-cpu-usage
+                cf aasp app-autoscaler-cpu-usage policy.json
+
+      - *end-grafana-job-annotation
+
   - name: post-deploy
     serial: true
     plan:
@@ -2094,7 +2335,7 @@ jobs:
       - get: pipeline-trigger
         passed: ['cf-deploy']
         trigger: true
-      - get: paas-cf
+      - <<: *get-paas-cf
         passed: ['cf-deploy']
       - get: cf-manifest
         passed: ['generate-cf-config']
@@ -3007,11 +3248,17 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+            passed: &smoke-tests-resource-passed
+              - post-deploy
+              - app-autoscaler-deploy
+              - prometheus-deploy
+              - app-availability-tests
+              - internal-app-availability-tests
+              - api-availability-tests
             trigger: true
           - get: cf-smoke-tests-release
-          - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+          - <<: *get-paas-cf
+            passed: *smoke-tests-resource-passed
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -3057,11 +3304,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+            passed: *smoke-tests-resource-passed
             trigger: true
           - get: cf-acceptance-tests
-          - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+          - <<: *get-paas-cf
+            passed: *smoke-tests-resource-passed
           - get: cf-manifest
             passed: ['post-deploy']
 
@@ -3122,10 +3369,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+            passed: *smoke-tests-resource-passed
             trigger: true
-          - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+          - <<: *get-paas-cf
+            passed: *smoke-tests-resource-passed
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3232,10 +3479,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+            passed: *smoke-tests-resource-passed
             trigger: true
-          - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+          - <<: *get-paas-cf
+            passed: *smoke-tests-resource-passed
           - get: cf-manifest
             passed: ['post-deploy']
           - get: cf-acceptance-tests
@@ -3291,10 +3538,10 @@ jobs:
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+            passed: *smoke-tests-resource-passed
             trigger: true
-          - get: paas-cf
-            passed: ['post-deploy','prometheus-deploy','app-availability-tests','internal-app-availability-tests','api-availability-tests']
+          - <<: *get-paas-cf
+            passed: *smoke-tests-resource-passed
           - get: cf-manifest
       - task: test-bosh-vms
         tags: [colocated-with-web]
@@ -3328,6 +3575,53 @@ jobs:
                   echo "Success: All VMs are up and running."
                 fi
 
+  - name: app-autoscaler-acceptance-tests
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+          - get: pipeline-trigger
+            passed: *smoke-tests-resource-passed
+            trigger: true
+          - get: paas-cf
+            passed: *smoke-tests-resource-passed
+          - get: cf-manifest
+            passed: ['post-deploy']
+
+      - do:
+        - task: create-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: app-autoscaler-acceptance-test-user
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
+
+        - task: app-autoscaler-acceptance-tests
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/app-autoscaler-acceptance-tests-run.yml
+          params:
+            DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+            SYSTEM_DOMAIN: ((system_dns_zone_name))
+            APPS_DOMAIN: ((apps_dns_zone_name))
+          ensure:
+            task: upload-test-artifacts
+            tags: [colocated-with-web]
+            file: paas-cf/concourse/tasks/upload-test-artifacts.yml
+            params:
+              TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
+
+        ensure:
+          task: remove-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/delete_admin.yml
+          params:
+            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+
+      - *end-grafana-job-annotation
+
   - name: deploy-paas-auditor
     serial: true
     plan:
@@ -3336,7 +3630,7 @@ jobs:
         - get: paas-auditor
           trigger: true
 
-        - get: paas-cf
+        - <<: *get-paas-cf
           trigger: true
           passed: ['post-deploy']
 
@@ -3408,7 +3702,7 @@ jobs:
         trigger: true
 
       - in_parallel:
-        - get: paas-cf
+        - <<: *get-paas-cf
           trigger: true
           passed: ['post-deploy']
 
@@ -3530,7 +3824,7 @@ jobs:
         trigger: true
 
       - in_parallel:
-        - get: paas-cf
+        - <<: *get-paas-cf
           trigger: true
           passed: ['post-deploy']
 
@@ -3571,7 +3865,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/spruce
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
             - name: paas-admin-dist
@@ -3743,7 +4037,7 @@ jobs:
         trigger: true
 
       - in_parallel:
-        - get: paas-cf
+        - <<: *get-paas-cf
           trigger: true
           passed: ['post-deploy']
 
@@ -3905,7 +4199,7 @@ jobs:
     serial: true
     plan:
       - *add-grafana-job-annotation
-      - get: paas-cf
+      - <<: *get-paas-cf
         trigger: true
         passed: ['post-deploy']
 
@@ -4021,7 +4315,7 @@ jobs:
           - get: paas-aiven-broker
             trigger: true
 
-          - get: paas-cf
+          - <<: *get-paas-cf
             trigger: true
             passed: ['post-deploy']
 
@@ -4218,7 +4512,7 @@ jobs:
           - get: pipeline-trigger
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
             trigger: true
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
       - task: remove-transitional-flag-for-ca
         tags: [colocated-with-web]
@@ -4295,7 +4589,7 @@ jobs:
           - get: pipeline-trigger
             passed: [rotate-certs]
             trigger: true
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: [rotate-certs]
           - get: ipsec-CA
             passed: [generate-cf-config]
@@ -4354,7 +4648,7 @@ jobs:
           - get: pipeline-trigger
             passed: [check-certificates-after-rotation]
             trigger: true
-          - get: paas-cf
+          - <<: *get-paas-cf
             passed: [check-certificates-after-rotation]
           - get: git-keys
 
@@ -4504,7 +4798,7 @@ jobs:
           type: docker-image
           source:
             repository: governmentpaas/cf-uaac
-            tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+            tag: f91084a42c34535e5b9ad61226314155b0854648
         inputs:
           - name: passwords
         params:
@@ -4527,7 +4821,7 @@ jobs:
     serial_groups: [smoke-tests]
     plan:
     - in_parallel:
-      - get: paas-cf
+      - <<: *get-paas-cf
       - get: cf-tfstate
 
     - task: rotate-credentials
@@ -4684,7 +4978,7 @@ jobs:
     serial: true
     plan:
     - in_parallel:
-      - get: paas-cf
+      - <<: *get-paas-cf
       - get: cf-tfstate
       - get: expire-aws-keys-timer
         trigger: true
@@ -4788,7 +5082,7 @@ jobs:
 
   - name: generate-paas-admin-git-keys
     plan:
-      - get: paas-cf
+      - <<: *get-paas-cf
       - task: generate-git-keys
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/generate-git-keys.yml
@@ -4802,7 +5096,7 @@ jobs:
 
   - name: generate-paas-aiven-broker-git-keys
     plan:
-      - get: paas-cf
+      - <<: *get-paas-cf
       - task: generate-git-keys
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/generate-git-keys.yml
@@ -4816,7 +5110,7 @@ jobs:
 
   - name: generate-paas-billing-git-keys
     plan:
-      - get: paas-cf
+      - <<: *get-paas-cf
       - task: generate-git-keys
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/generate-git-keys.yml
@@ -4867,7 +5161,7 @@ jobs:
           trigger: true
         - get: deployed-healthcheck
         - get: cf-smoke-tests-release
-        - get: paas-cf
+        - <<: *get-paas-cf
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
@@ -4949,7 +5243,7 @@ jobs:
           trigger: true
         - get: paas-billing
           passed: ['deploy-paas-billing']
-        - get: paas-cf
+        - <<: *get-paas-cf
           passed: ['pipeline-lock']
         - get: cf-manifest
           passed: ['post-deploy']
@@ -5009,7 +5303,7 @@ jobs:
       - in_parallel:
         - get: check-certificates-timer
           trigger: true
-        - get: paas-cf
+        - <<: *get-paas-cf
         - get: ipsec-CA
 
       - task: check-certificates
@@ -5024,7 +5318,7 @@ jobs:
     serial: true
     plan:
       - in_parallel:
-        - get: paas-cf
+        - <<: *get-paas-cf
 
       - task: cleanup-deleted-cf-users
         tags: [colocated-with-web]

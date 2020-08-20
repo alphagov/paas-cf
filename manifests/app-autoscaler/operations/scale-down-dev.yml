@@ -1,0 +1,33 @@
+---
+
+- type: replace
+  path: /instance_groups/name=asactors/vm_type
+  value: nano
+
+- type: replace
+  path: /instance_groups/name=asactors/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=asmetrics/vm_type
+  value: nano
+
+- type: replace
+  path: /instance_groups/name=asmetrics/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=asapi/vm_type
+  value: nano
+
+- type: replace
+  path: /instance_groups/name=asapi/instances
+  value: 1
+
+- type: replace
+  path: /instance_groups/name=asnozzle/vm_type
+  value: nano
+
+- type: replace
+  path: /instance_groups/name=asnozzle/instances
+  value: 1

@@ -90,7 +90,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
           params:
@@ -161,7 +161,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/bosh-cli-v2
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: bosh-vars-store
             - name: paas-cf
@@ -185,6 +185,7 @@ jobs:
 
                 bosh -n delete-deployment --force --deployment "((deploy_env))"
                 bosh -n delete-deployment --force --deployment prometheus
+                bosh -n delete-deployment --force --deployment app-autoscaler
                 echo "no" > deployed-healthcheck/healthcheck-deployed
         on_success:
           put: deployed-healthcheck
@@ -256,7 +257,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/terraform
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: terraform-variables
             - name: paas-cf

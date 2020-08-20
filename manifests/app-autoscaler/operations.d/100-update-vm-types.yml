@@ -1,0 +1,33 @@
+---
+
+- type: replace
+  path: /instance_groups/name=asactors/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=asactors/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=asmetrics/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=asmetrics/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=asapi/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=asapi/instances
+  value: 2
+
+- type: replace
+  path: /instance_groups/name=asnozzle/vm_type
+  value: small
+
+- type: replace
+  path: /instance_groups/name=asnozzle/instances
+  value: 2

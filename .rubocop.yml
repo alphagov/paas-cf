@@ -14,6 +14,8 @@ AllCops:
     - 'platform-tests/vendor/**/*'
     - 'platform-tests/example-apps/healthcheck/vendor/**/*'
     - 'tools/metrics/vendor/**/*'
+    - 'manifests/app-autoscaler/upstream/**/*'
+    - 'manifests/prometheus/upstream/**/*'
 
 Layout/ArgumentAlignment:
   Enabled: false

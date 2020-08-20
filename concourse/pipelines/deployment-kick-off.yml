@@ -61,7 +61,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/awscli
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh
             args:
@@ -75,7 +75,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
           params:
@@ -107,7 +107,7 @@ jobs:
             type: docker-image
             source:
               repository: governmentpaas/self-update-pipelines
-              tag: e1ffec0d1940706f157a8c1e0ab8131b7084fa1c
+              tag: f91084a42c34535e5b9ad61226314155b0854648
           inputs:
             - name: paas-cf
           params:

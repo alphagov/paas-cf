@@ -4,6 +4,7 @@ set -eu -o pipefail
 
 PAAS_CF_DIR=${PAAS_CF_DIR:-paas-cf}
 CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
+SHARED_MANIFEST_DIR=${PAAS_CF_DIR}/manifests/shared
 WORKDIR=${WORKDIR:-.}
 
 opsfile_args=""
@@ -22,7 +23,7 @@ fi
 bosh interpolate \
   --var-file ipsec_ca.private_key="${WORKDIR}/ipsec-CA/ipsec-CA.key" \
   --var-file ipsec_ca.certificate="${WORKDIR}/ipsec-CA/ipsec-CA.crt" \
-  --vars-file="${PAAS_CF_DIR}/manifests/cf-manifest/data/000-aws-rds-combined-ca-bundle-pem.yml" \
+  --vars-file="${SHARED_MANIFEST_DIR}/data/aws-rds-combined-ca-bundle-pem.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/vpc.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/bosh.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \

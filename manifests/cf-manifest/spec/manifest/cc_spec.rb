@@ -1,6 +1,7 @@
 RSpec.describe "cloud controller" do
+  let(:manifest) { manifest_with_defaults }
+
   describe "limits" do
-    let(:manifest) { manifest_with_defaults }
     let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
     let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
     let(:cc_clock_props) { manifest.fetch("instance_groups.scheduler.jobs.cloud_controller_clock.properties.cc") }
@@ -19,7 +20,6 @@ RSpec.describe "cloud controller" do
   end
 
   describe "broker" do
-    let(:manifest) { manifest_with_defaults }
     let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
     let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
 
@@ -56,5 +56,11 @@ RSpec.describe "cloud controller" do
         expect(cc_worker["instances"]).to be > 2
       end
     end
+  end
+
+  describe "instance" do
+    subject(:instance) { manifest.fetch("instance_groups.api") }
+
+    it_behaves_like "a cf rds client"
   end
 end
