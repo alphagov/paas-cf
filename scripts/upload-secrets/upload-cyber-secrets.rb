@@ -12,7 +12,7 @@ credhub_namespaces = [
 
 secrets = {}
 
-csls_kinesis_destination_arn = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_kinesis_destination_arn"`
+csls_kinesis_destination_arn = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_kinesis_destination_arn")
 secrets["cyber_csls_kinesis_destination_arn"] = csls_kinesis_destination_arn
 
 secrets["csls_splunk_broker_url"] = "__STUB_csls_splunk_broker_url__"
@@ -20,9 +20,9 @@ secrets["csls_splunk_broker_username"] = "__STUB_csls_splunk_broker_username__"
 secrets["csls_splunk_broker_password"] = "__STUB_csls_splunk_broker_password__"
 
 if ENV["MAKEFILE_ENV_TARGET"].start_with?("prod")
-  csls_splunk_broker_url = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_broker_url"`
-  csls_splunk_broker_username = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_broker_username"`
-  csls_splunk_broker_password = `pass "cyber/${MAKEFILE_ENV_TARGET}/csls_broker_password"`
+  csls_splunk_broker_url = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_url'")
+  csls_splunk_broker_username = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_username")
+  csls_splunk_broker_password = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_password")
 
   secrets["csls_splunk_broker_url"] = csls_splunk_broker_url
   secrets["csls_splunk_broker_username"] = csls_splunk_broker_username

@@ -13,7 +13,7 @@ credhub_namespaces = [
   "/#{deploy_env}/#{deploy_env}",
 ]
 
-notify_api_key = ENV["NOTIFY_API_KEY"] || `pass "notify/${MAKEFILE_ENV_TARGET}/api_key"`
+notify_api_key = ENV["NOTIFY_API_KEY"] || get_secret("notify/#{ENV['MAKEFILE_ENV_TARGET']}/api_key")
 
 upload_secrets(
   credhub_namespaces,

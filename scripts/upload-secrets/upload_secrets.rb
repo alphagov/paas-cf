@@ -8,6 +8,12 @@ require "English"
 require "yaml"
 require "tempfile"
 
+def get_secret(path)
+  out = `pass "#{path}"`
+  abort out unless $CHILD_STATUS.success?
+  out
+end
+
 def upload_secrets(credhub_namespaces, secrets)
   credentials = secrets.flat_map do |secret, value|
     credhub_namespaces.map do |namespace|

@@ -13,8 +13,8 @@ credhub_namespaces = [
   "/#{deploy_env}/#{deploy_env}",
 ]
 
-zendesk_api_token = ENV["ZENDESK_API_TOKEN"] || `pass "zendesk/api_key"`
-zendesk_username = ENV["ZENDESK_USERNAME"] || `pass "zendesk/api_user"`
+zendesk_api_token = ENV["ZENDESK_API_TOKEN"] || get_secret("zendesk/api_key")
+zendesk_username = ENV["ZENDESK_USERNAME"] || get_secret("zendesk/api_user")
 
 upload_secrets(
   credhub_namespaces,

@@ -13,7 +13,7 @@ credhub_namespaces = [
   "/#{deploy_env}/#{deploy_env}",
 ]
 
-splunk_key = ENV["SPLUNK_KEY"] || `pass "splunk/${MAKEFILE_ENV_TARGET}/hec_token"`
+splunk_key = ENV["SPLUNK_KEY"] || get_secret("splunk/#{ENV['MAKEFILE_ENV_TARGET']}/hec_token")
 
 upload_secrets(
   credhub_namespaces,

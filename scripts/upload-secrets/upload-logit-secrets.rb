@@ -24,11 +24,11 @@ stack_target = case ENV.fetch("MAKEFILE_ENV_TARGET")
                  "prod"
                end
 
-logit_syslog_address = ENV["LOGIT_SYSLOG_ADDRESS"] || `pass "logit/#{stack_target}/syslog_address"`
-logit_syslog_port = ENV["LOGIT_SYSLOG_PORT"] || `pass "logit/#{stack_target}/syslog_port"`
-logit_ca_cert = ENV["LOGIT_CA_CERT"] || `pass "logit/#{stack_target}/ca_cert"`
-logit_elasticsearch_url = ENV["LOGIT_ELASTICSEARCH_URL"] || `pass "logit/#{stack_target}/elasticsearch_url"`
-logit_elasticsearch_api_key = ENV["LOGIT_ELASTICSEARCH_API_KEY"] || `pass "logit/#{stack_target}/elasticsearch_api_key"`
+logit_syslog_address = ENV["LOGIT_SYSLOG_ADDRESS"] || get_secret("logit/#{stack_target}/syslog_address")
+logit_syslog_port = ENV["LOGIT_SYSLOG_PORT"] || get_secret("logit/#{stack_target}/syslog_port")
+logit_ca_cert = ENV["LOGIT_CA_CERT"] || get_secret("logit/#{stack_target}/ca_cert")
+logit_elasticsearch_url = ENV["LOGIT_ELASTICSEARCH_URL"] || get_secret("logit/#{stack_target}/elasticsearch_url")
+logit_elasticsearch_api_key = ENV["LOGIT_ELASTICSEARCH_API_KEY"] || get_secret("logit/#{stack_target}/elasticsearch_api_key")
 
 upload_secrets(
   credhub_namespaces,
