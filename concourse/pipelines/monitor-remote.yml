@@ -19,7 +19,7 @@ resources:
   type: git
   source:
     uri: https://github.com/cloudfoundry/cf-smoke-tests-release
-    tag_filter: "40.0.127"
+    tag_filter: "41.0.1"
     submodules:
       - "src/smoke_tests"
 
