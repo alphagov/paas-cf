@@ -492,7 +492,7 @@ resources:
             "terraform_version": "0.12.29",
             "serial": 0,
             "outputs": {},
-            "resources": {}
+            "resources": []
         }
 
   - name: cyber-tfstate
@@ -508,7 +508,7 @@ resources:
             "terraform_version": "0.12.29",
             "serial": 0,
             "outputs": {},
-            "resources": {}
+            "resources": []
         }
 
   - name: cf-manifest
