@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "English"
 require "yaml"
 require "json"
 require "erb"
@@ -51,6 +52,7 @@ rescue JSON::ParserError
     f.write pretty_json_content
   end
 
-  puts `jq '.' #{__dir__}/output/#{region}.err.json`
+  output = `jq '.' #{__dir__}/output/#{region}.err.json`
+  abort output unless $CHILD_STATUS.success?
   exit 1
 end
