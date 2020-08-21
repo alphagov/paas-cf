@@ -48,7 +48,11 @@ private
 
   def fetch_security_groups
     groups = []
-    `cf security-groups`.each_line do |line|
+
+    security_groups = `cf security-groups`
+    abort security_groups unless $CHILD_STATUS.success?
+
+    security_groups.each_line do |line|
       if line =~ /\A#\d+\s+(\S+)\s*/
         groups << Regexp.last_match(1)
       end

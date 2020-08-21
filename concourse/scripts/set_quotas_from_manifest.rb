@@ -46,7 +46,11 @@ private
   def fetch_quotas
     quotas = []
     headers_done = false
-    `cf quotas`.each_line do |line|
+
+    quotas = `cf quotas`
+    abort quotas unless $CHILD_STATUS.success?
+
+    quotas.each_line do |line|
       unless headers_done
         headers_done = true if line =~ /\Aname\s+/
         next

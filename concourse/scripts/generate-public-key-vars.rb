@@ -8,15 +8,19 @@ gpg_public_keys = { "gpg_public_keys" => [] }
 public_key_ids = File.read("./.gpg-id")
 public_key_ids.each_line do |id|
   # Assert key can be found locally
-  `gpg -k #{id}`
-  if $CHILD_STATUS.exitstatus != 0
+  key_output = `gpg -k #{id}`
+
+  unless $CHILD_STATUS.success?
     puts "This key needs to be imported: #{id}"
     puts """Try running
     gpg --recv #{id}
     """
-    exit $CHILD_STATUS.exitstatus
+    abort key_output
   end
+
   public_key = `gpg --armor --export-options export-minimal --export #{id}`
+  abort public_key unless $CHILD_STATUS.success?
+
   gpg_public_keys["gpg_public_keys"] << public_key
 end
 
