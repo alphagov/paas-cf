@@ -7,7 +7,7 @@
     name: BoshStemcellsNotInSync
     rules:
       - alert: BoshStemcellsNotInSync
-        expr: "sum by (bosh_stemcell_version) (bosh_deployment_stemcell_info) != 3"
+        expr: "count (count by (bosh_stemcell_version) (bosh_deployment_stemcell_info)) != 1"
         for: 12h
         labels:
           severity: warning
