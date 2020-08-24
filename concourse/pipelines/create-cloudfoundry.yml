@@ -1724,8 +1724,7 @@ jobs:
                   BOSH_CLIENT='admin'
                   export BOSH_CLIENT
 
-                  bosh -n update-config \
-                    --type=runtime \
+                  bosh -n update-runtime-config \
                     --name=paas-cf \
                     paas-cf-runtime-config/paas-cf-runtime-config.yml
 
