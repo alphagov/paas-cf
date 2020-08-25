@@ -2705,7 +2705,6 @@ jobs:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
-            S3_BROKER_PASS: ((secrets_s3_broker_admin_password))
             DEPLOY_ENV: ((deploy_env))
             CSLS_SPLUNK_BROKER_USERNAME: ((csls_splunk_broker_username))
             CSLS_SPLUNK_BROKER_PASSWORD: ((csls_splunk_broker_password))
