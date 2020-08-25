@@ -2910,32 +2910,25 @@ jobs:
                 cd paas-cf/platform-tests/example-apps/create-account-holding-page/
                 cf push
 
-                if ! cf domains | grep -q "login.((system_dns_zone_name))"; then
-                  cf create-domain admin "login.((system_dns_zone_name))"
-                fi
-                if ! cf domains | grep -q "uaa.((system_dns_zone_name))"; then
-                  cf create-domain admin "uaa.((system_dns_zone_name))"
-                fi
-
                 cf target -s assets
 
-                if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
-                  cf create-route "login.((system_dns_zone_name))" --path create_account
+                if ! cf routes | grep -qE "\\s+login\\s+((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
+                  cf create-route "((system_dns_zone_name))" --hostname "login" --path create_account
                 fi
-                if ! cf routes | grep -qE "\\s+login.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
-                  cf create-route "login.((system_dns_zone_name))" --path create_account.do
+                if ! cf routes | grep -qE "\\s+login\\s+((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
+                  cf create-route "((system_dns_zone_name))" --hostname "login" --path create_account.do
                 fi
-                if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
-                  cf create-route "uaa.((system_dns_zone_name))" --path create_account
+                if ! cf routes | grep -qE "\\s+uaa\\s+((system_dns_zone_name))\\s+/create_account(\\s+|$)"; then
+                  cf create-route "((system_dns_zone_name))" --hostname "uaa" --path create_account
                 fi
-                if ! cf routes | grep -qE "\\s+uaa.((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
-                  cf create-route "uaa.((system_dns_zone_name))" --path create_account.do;
+                if ! cf routes | grep -qE "\\s+uaa\\s+((system_dns_zone_name))\\s+/create_account\\.do(\\s+|$)"; then
+                  cf create-route "((system_dns_zone_name))" --hostname "uaa" --path create_account.do;
                 fi
 
-                cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account
-                cf map-route create-account-holding-page "login.((system_dns_zone_name))" --path create_account.do
-                cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account
-                cf map-route create-account-holding-page "uaa.((system_dns_zone_name))" --path create_account.do
+                cf map-route create-account-holding-page "((system_dns_zone_name))" --hostname "login" --path create_account
+                cf map-route create-account-holding-page "((system_dns_zone_name))" --hostname "login" --path create_account.do
+                cf map-route create-account-holding-page "((system_dns_zone_name))" --hostname "uaa" --path create_account
+                cf map-route create-account-holding-page "((system_dns_zone_name))" --hostname "uaa" --path create_account.do
 
       - task: deploy-simulated-load-application
         tags: [colocated-with-web]
