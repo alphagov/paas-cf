@@ -11,7 +11,6 @@ import (
 	"net/url"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 )
 
 var _ = Describe("AccountManagement", func() {
@@ -19,7 +18,6 @@ var _ = Describe("AccountManagement", func() {
 
 	var (
 		params   url.Values
-		password string
 		authURL  *url.URL
 		tokenURL *url.URL
 	)
@@ -28,8 +26,6 @@ var _ = Describe("AccountManagement", func() {
 		params = url.Values{}
 		params.Set("client_id", "")
 		params.Set("redirect_uri", "")
-
-		password = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "PASSWORD")
 
 		infoCommand := cf.Cf("curl", "/v2/info")
 		Expect(infoCommand.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
@@ -60,29 +56,10 @@ var _ = Describe("AccountManagement", func() {
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Account creation has been disabled"))
+			Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "wrong status code, body:\n\n %s", body)
 		})
 
-		It("should not allow anonymous users to create accounts", func() {
-			createAccountURL := authURL
-			createAccountURL.Path = "/create_account.do"
-
-			params.Set("email", email)
-			params.Set("password", password)
-			params.Set("password_confirmation", password)
-
-			resp, err := httpClient.PostForm(createAccountURL.String(), params)
-			Expect(err).NotTo(HaveOccurred())
-
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Account creation has been disabled"))
-		})
-
-		It("should allow access to the forgot password page", func() {
+		It("should not allow access to the forgot password page", func() {
 			resetPasswordURL := authURL
 			resetPasswordURL.Path = "/forgot_password"
 
@@ -94,24 +71,7 @@ var _ = Describe("AccountManagement", func() {
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Reset Password"))
-		})
-
-		It("should allow users to reset forgotten passwords", func() {
-			resetPasswordURL := authURL
-			resetPasswordURL.Path = "/forgot_password.do"
-
-			params.Set("username", email)
-
-			resp, err := httpClient.PostForm(resetPasswordURL.String(), params)
-			Expect(err).NotTo(HaveOccurred())
-
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Instructions Sent"))
+			Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "wrong status code, body:\n\n %s", body)
 		})
 	})
 
@@ -126,58 +86,7 @@ var _ = Describe("AccountManagement", func() {
 			defer resp.Body.Close()
 			body, err := ioutil.ReadAll(resp.Body)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Account creation has been disabled"))
-		})
-
-		It("should not allow anonymous users to create accounts", func() {
-			createAccountURL := tokenURL
-			createAccountURL.Path = "/create_account.do"
-
-			params.Set("email", email)
-			params.Set("password", password)
-			params.Set("password_confirmation", password)
-
-			resp, err := httpClient.PostForm(createAccountURL.String(), params)
-			Expect(err).NotTo(HaveOccurred())
-
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Account creation has been disabled"))
-		})
-
-		It("should allow access to the forgot password page", func() {
-			resetPasswordURL := tokenURL
-			resetPasswordURL.Path = "/forgot_password"
-
-			params.Set("username", email)
-
-			resp, err := httpClient.Get(resetPasswordURL.String())
-			Expect(err).NotTo(HaveOccurred())
-
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Reset Password"))
-		})
-
-		It("should allow users to reset forgotten passwords", func() {
-			resetPasswordURL := tokenURL
-			resetPasswordURL.Path = "/forgot_password.do"
-
-			params.Set("username", email)
-
-			resp, err := httpClient.PostForm(resetPasswordURL.String(), params)
-			Expect(err).NotTo(HaveOccurred())
-
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(resp.StatusCode).To(Equal(http.StatusOK), "wrong status code, body:\n\n %s", body)
-			Expect(body).To(ContainSubstring("Instructions Sent"))
+			Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "wrong status code, body:\n\n %s", body)
 		})
 	})
 })
