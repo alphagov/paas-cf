@@ -1,3 +1,5 @@
+# rubocop:disable  RSpec/MultipleDescribes
+
 require_relative "../backtick_cop"
 
 RSpec.describe RuboCop::Cop::CustomCops::MustCaptureXStr do
@@ -203,3 +205,5 @@ RSpec.describe RuboCop::Cop::CustomCops::MustCheckXStrExitstatus do
     end
   end
 end
+
+# rubocop:enable  RSpec/MultipleDescribes
