@@ -63,5 +63,39 @@ before_install:
   - (cd tools/pipecleaner && go install -mod=vendor)
   - bundle install
 
-script:
-  - make test
+jobs:
+  - stage: ci
+    name: 'Config spec'
+    script: make config_spec
+
+  - stage: ci
+    name: 'Scripts spec'
+    script: make scripts_spec
+
+  - stage: ci
+    name: 'Tools spec'
+    script: make tools_spec
+
+  - stage: ci
+    name: 'Concourse spec'
+    script: make concourse_spec
+
+  - stage: ci
+    name: 'Manifests spec'
+    script: make manifests_spec
+
+  - stage: ci
+    name: 'Terraform spec'
+    script: make terraform_spec
+
+  - stage: ci
+    name: 'Platform tests spec'
+    script: make platform_tests_spec
+
+  - stage: ci
+    name: 'Platform tests compilation'
+    script: make compile_platform_tests
+
+  - stage: ci
+    name: 'Lint'
+    script: make lint

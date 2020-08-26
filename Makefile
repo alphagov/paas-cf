@@ -20,7 +20,8 @@ check-env:
 	@./scripts/validate_aws_credentials.sh
 
 .PHONY: test
-test: spec compile_platform_tests lint
+test:
+	make $$(cat .travis.yml  | ruby -ryaml -e 'puts YAML.load(STDIN.read)["jobs"].map { |j| j["script"] }.map { |j| j.gsub("make ", "") }.join(" ")')
 
 .PHONY: scripts_spec
 scripts_spec:
@@ -102,9 +103,6 @@ platform_tests_spec:
 config_spec:
 	cd config &&\
 		bundle exec rspec
-
-.PHONY: spec
-spec: config_spec scripts_spec tools_spec concourse_spec manifests_spec terraform_spec platform_tests_spec
 
 .PHONY: compile_platform_tests
 compile_platform_tests:
