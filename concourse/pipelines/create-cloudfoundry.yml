@@ -1750,7 +1750,7 @@ jobs:
                 BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
-                bosh -n deploy cf-manifest/cf-manifest.yml
+                bosh -n deploy --fix cf-manifest/cf-manifest.yml
 
       - task: copy-cf-secrets-to-concourse-credhub-ns
         tags: [colocated-with-web]
@@ -1978,7 +1978,7 @@ jobs:
                 BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
-                bosh -n deploy prometheus-manifest/prometheus-manifest.yml
+                bosh -n deploy --fix prometheus-manifest/prometheus-manifest.yml
 
       - task: copy-prometheus-secrets-to-concourse-credhub-ns
         tags: [colocated-with-web]
@@ -2211,7 +2211,7 @@ jobs:
                 BOSH_CLIENT='admin'
                 export BOSH_CLIENT
 
-                bosh -n deploy app-autoscaler-manifest/app-autoscaler-manifest.yml
+                bosh -n deploy --fix app-autoscaler-manifest/app-autoscaler-manifest.yml
 
       - task: copy-app-autoscaler-secrets-to-concourse-credhub-ns
         tags: [colocated-with-web]
