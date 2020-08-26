@@ -9,7 +9,7 @@ module RuboCop
         def on_xstr(node)
           return if node.heredoc?
 
-          add_offense(node) unless node.parent.type == :lvasgn
+          add_offense(node) unless node&.parent&.type == :lvasgn
         end
       end
 
@@ -33,12 +33,12 @@ module RuboCop
 
             scope = scope.parent
           end
+          children = scope&.children || []
 
           # Reject anything before the current node
-          followers = scope.children.drop_while do |child|
-            !child.each_descendant.map(&:type).include?(:xstr)
+          followers = children.drop_while do |child_node|
+            child_node.loc.last_line <= node.loc.last_line
           end
-          followers = followers.drop(1)
 
           return add_offense(node) if followers.empty?
 
