@@ -38,6 +38,8 @@ tools_spec:
 		go test -v ./...
 	cd tools/user_management &&\
 		bundle exec rspec --format documentation
+	cd tools/cops &&\
+		bundle exec rspec --format documentation
 
 .PHONY: concourse_spec
 concourse_spec:

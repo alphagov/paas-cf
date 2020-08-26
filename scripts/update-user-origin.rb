@@ -35,6 +35,7 @@ abort usage if desired_origin.nil? || user_guid.nil?
 abort usage unless user_guid.match?(/^\h{8}-\h{4}-\h{4}-\h{4}-\h{12}$/)
 
 resp = `uaac curl '/Users/#{user_guid}' | awk '/RESPONSE BODY/,0'`
+abort resp unless $CHILD_STATUS.success?
 user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(" "))
 
 puts "Current user:"
@@ -53,10 +54,11 @@ command = <<~COMMAND.lines.map(&:chomp).join(" ")
 COMMAND
 
 puts "Updating user: #{user_guid} with origin #{desired_origin}"
-puts `#{command}`
-abort unless $CHILD_STATUS.success?
+update_user = `#{command}`
+abort update_user unless $CHILD_STATUS.success?
 
 resp = `uaac curl '/Users/#{user_guid}' | awk '/RESPONSE BODY/,0'`
+abort resp unless $CHILD_STATUS.success?
 user = JSON.parse(resp.lines.map(&:chomp).drop(1).join(" "))
 
 puts "Updated user:"

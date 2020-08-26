@@ -4,14 +4,20 @@
 script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
 File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
+require "English"
 require "httparty"
 require "optparse"
 require "json"
 require "yaml"
 require "pp"
 
-CF_OAUTH_TOKEN = `cf oauth-token`.freeze
-API_ENDPOINT = `cf api`[/https.*$/].freeze
+token = `cf oauth-token`
+abort token unless $CHILD_STATUS.success?
+CF_OAUTH_TOKEN = token.freeze
+
+api = `cf api`
+abort api unless $CHILD_STATUS.success?
+API_ENDPOINT = api[/https.*$/].freeze
 
 HEADERS = {
   Authorization: CF_OAUTH_TOKEN,

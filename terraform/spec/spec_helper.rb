@@ -1,3 +1,5 @@
+require "English"
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -22,6 +24,8 @@ RSpec.configure do |config|
 end
 
 hcl2json_path = `which hcl2json`
+abort hcl2json_path unless $CHILD_STATUS.success?
+
 if hcl2json_path == ""
   warn "Install hcl2json before running these tests"
   warn "go install github.com/tmccombs/hcl2json"
