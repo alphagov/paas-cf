@@ -12,6 +12,12 @@ env:
     - SHELLCHECK_VERSION="0.7.1"
     - TMPDIR="/tmp"
 
+cache:
+  directories:
+    - /home/travis/.rvm/
+    - /home/travis/gopath/pkg
+    - /home/travis/.cache/pip
+
 addons:
   apt:
     sources:
@@ -22,8 +28,16 @@ addons:
 
 before_install:
   - |
-    mkdir ~/bin
-    export PATH=~/bin:$PATH
+    mkdir -p /home/travis/.cache/pip/wheels
+    for d in .cache/pip/wheels gopath .rvm; do
+      sudo chown -fR $USER /home/travis/$d
+    done
+  - |
+    mkdir /home/travis/bin
+    export PATH=/home/travis/bin:$PATH
+  - |
+  - export GOPATH=$HOME/gopath
+  - export PATH=$HOME/gopath/bin:$PATH
   - |
     echo "Fetching shellcheck"
     wget -qO- "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJv
@@ -52,15 +66,9 @@ before_install:
        --strip-components=1 \
        '*promtool'
     set +e
-  - pip install --user yamllint
   - GIMME_OUTPUT=$(gimme 1.13 | tee -a $HOME/.bashrc) && eval "$GIMME_OUTPUT"
-  - export GOPATH=$HOME/gopath
-  - export PATH=$HOME/gopath/bin:$PATH
-  - mkdir -p $HOME/gopath/src/github.com/alphagov/paas-cf
-  - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/alphagov/paas-cf/
-  - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/alphagov/paas-cf
-  - cd $HOME/gopath/src/github.com/alphagov/paas-cf
   - (cd tools/pipecleaner && go install -mod=vendor)
+  - pip install --user yamllint
   - bundle install
 
 jobs:
