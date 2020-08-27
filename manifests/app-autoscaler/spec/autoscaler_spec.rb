@@ -16,8 +16,6 @@ RSpec.describe "autoscaler" do
       let(:scalingengine) { jobs.find { |j| j["name"] == "scalingengine" } }
 
       it "sets the client id and secret" do
-        puts scalingengine.dig("properties", "autoscaler", "cf")
-
         cf = scalingengine.dig("properties", "autoscaler", "cf")
 
         expect(cf["client_id"]).to eq("app_autoscaler")
