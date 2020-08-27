@@ -1,6 +1,8 @@
 require "ipaddr"
 
 RSpec.describe "autoscaler" do
+  let(:uuid_regexp) { /^\h{8}-\h{4}-\h{4}-\h{4}-\h{12}$/i }
+
   let(:manifest) { manifest_with_defaults }
 
   describe "actors" do
@@ -50,6 +52,33 @@ RSpec.describe "autoscaler" do
 
         expect(cf["client_id"]).to eq("app_autoscaler")
         expect(cf["secret"]).to eq("((/test/test/uaa_clients_app_autoscaler_secret))")
+      end
+
+      describe "catalog" do
+        let(:catalog) do
+          apiserver.dig(
+            "properties", "autoscaler", "apiserver",
+            "broker", "server", "catalog"
+          )
+        end
+
+        let(:services) { catalog["services"] }
+
+        it "has a real guid for each service" do
+          services.each do |service|
+            expect(service["id"]).to match(uuid_regexp),
+              "#{service['name']} should have a guid id instead of #{service['id']}"
+          end
+        end
+
+        it "has a real guid for each plan" do
+          services.each do |service|
+            service["plans"].each do |plan|
+              expect(plan["id"]).to match(uuid_regexp),
+                "#{plan['name']} should have a guid id instead of #{plan['id']}"
+            end
+          end
+        end
       end
     end
   end
