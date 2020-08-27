@@ -1,0 +1,9 @@
+---
+
+- type: replace
+  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/id
+  value: 656a9276-a1f6-4646-aade-08f0a51b29ed
+
+- type: replace
+  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/plans/name=autoscaler-free-plan/id
+  value: 64d9552f-eede-439a-b49d-1efe17fccb1b
