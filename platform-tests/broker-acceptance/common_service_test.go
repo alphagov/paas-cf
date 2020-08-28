@@ -3,6 +3,7 @@ package broker_acceptance_test
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/google/uuid"
@@ -88,6 +89,10 @@ var _ = Describe("Common service tests", func() {
 
 			invalidServiceOfferings := []string{}
 			for _, offering := range offerings {
+				if strings.HasPrefix(offering.Label, "CATS-") {
+					continue
+				}
+
 				if _, err := uuid.Parse(offering.UniqueID); err != nil {
 					invalidServiceOfferings = append(invalidServiceOfferings, offering.Label)
 				}
@@ -107,6 +112,14 @@ var _ = Describe("Common service tests", func() {
 
 			invalidServicePlans := []string{}
 			for _, plan := range plans {
+				if plan.Name == "shared" {
+					continue
+				}
+
+				if strings.HasPrefix(plan.Name, "fake-") {
+					continue
+				}
+
 				if _, err := uuid.Parse(plan.UniqueId); err != nil {
 					invalidServicePlans = append(invalidServicePlans, plan.Name)
 				}
