@@ -18,4 +18,4 @@ applications:
       GOVERSION: go1.13
       GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
 
-      DURATION: 5m
+      DURATION: 11m
