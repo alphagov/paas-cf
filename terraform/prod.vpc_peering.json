@@ -64,5 +64,11 @@
         "account_id": "430354129336",
         "vpc_id": "vpc-9e62bcf8",
         "subnet_cidr": "10.200.0.0/16"
+    },
+    {
+        "peer_name": "govuk-pay-staging",
+        "account_id": "234617505259",
+        "vpc_id": "vpc-08b7d799f1691fd11",
+        "subnet_cidr": "172.16.36.0/22"
     }
 ]
