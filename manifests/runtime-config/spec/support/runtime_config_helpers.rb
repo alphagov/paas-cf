@@ -17,11 +17,17 @@ module RuntimeConfigHelpers
 
     old_aws_account = ENV["AWS_ACCOUNT"]
     old_deploy_env = ENV["DEPLOY_ENV"]
+    old_system_dns_zone_name = ENV["SYSTEM_DNS_ZONE_NAME"]
+
     ENV["AWS_ACCOUNT"] = account
     ENV["DEPLOY_ENV"] = account
+    ENV["SYSTEM_DNS_ZONE_NAME"] = "system.example.com"
+
     Cache.instance[sym] ||= render_runtime_config
+
     ENV["AWS_ACCOUNT"] = old_aws_account
     ENV["DEPLOY_ENV"] = old_deploy_env
+    ENV["SYSTEM_DNS_ZONE_NAME"] = old_system_dns_zone_name
 
     Cache.instance[sym]
   end

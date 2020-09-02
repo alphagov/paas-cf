@@ -1,6 +1,14 @@
 - type: replace
   path: /releases/-
   value:
+    name: "prometheus"
+    version: "26.2.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=26.2.0"
+    sha1: "9a57a9c74ebcb53baaa9cf8eb22f8ef353460169"
+
+- type: replace
+  path: /releases/-
+  value:
     name: caddy
     version: "0.7.0"
     url: "https://bosh.io/d/github.com/dpb587/caddy-bosh-release?v=0.7.0"

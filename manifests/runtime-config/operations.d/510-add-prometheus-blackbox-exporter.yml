@@ -11,6 +11,10 @@
   path: /addons?/-
   value:
     name: prometheus-blackbox-exporter
+    exclude:
+      deployments:
+        - concourse  # from paas-bootstrap
+        - prometheus # has a separate version
     jobs:
       - name: blackbox_exporter
         release: prometheus

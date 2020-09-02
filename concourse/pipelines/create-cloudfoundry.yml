@@ -1543,6 +1543,7 @@ jobs:
             params:
               AWS_ACCOUNT: ((aws_account))
               DEPLOY_ENV: ((deploy_env))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             run:
               path: sh
               args:
