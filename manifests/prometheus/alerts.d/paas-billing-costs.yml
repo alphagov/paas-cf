@@ -4,6 +4,20 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
+    name: PaaSBillingIsNotIncreasing
+    rules:
+      - alert: PaaSBillingCostsAreNotIncreasing
+        expr: sum(increase(paas_billing_total_costs_pounds[24h])) < 1
+        labels:
+          severity: critical
+          layer: billing
+        annotations:
+          summary: "PaaS Billing charges are not increasing"
+          description: "The total cost to all tenants from PaaS Billing has increased by less than £1 in 24 hours. There may be an issue with paas-billing."
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
     name: PaaSBillingDBCostsExceedRDSCosts
     rules:
       - alert: PaaSBillingDBCostsExceedRDSCosts
