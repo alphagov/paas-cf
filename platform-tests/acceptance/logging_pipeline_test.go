@@ -26,7 +26,6 @@ var _ = Describe("Logging pipeline", func() {
 			"-b", testConfig.GetGoBuildpackName(),
 			"-p", "../example-apps/logging-pipeline",
 			"-f", "../example-apps/logging-pipeline/manifest.yml",
-			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))

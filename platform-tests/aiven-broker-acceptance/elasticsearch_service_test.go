@@ -75,7 +75,6 @@ var _ = Describe("Elasticsearch backing service", func() {
 				"-b", testConfig.GetGoBuildpackName(),
 				"-p", "../example-apps/healthcheck",
 				"-f", "../example-apps/healthcheck/manifest.yml",
-				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 			Expect(cf.Cf("bind-service", appName, dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))

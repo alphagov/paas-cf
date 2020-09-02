@@ -29,7 +29,6 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 			"push", appName,
 			"-b", testConfig.GetStaticFileBuildpackName(),
 			"-p", "../example-apps/static-app",
-			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
@@ -47,7 +46,6 @@ var _ = Describe("Strict-Transport-Security headers", func() {
 			"push", appName,
 			"-b", "php_buildpack",
 			"-p", "../example-apps/strict-transport-security-app",
-			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "128M",
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))

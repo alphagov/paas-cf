@@ -90,7 +90,6 @@ var _ = Describe("Redis backing service", func() {
 						"-b", testConfig.GetGoBuildpackName(),
 						"-p", "../example-apps/healthcheck",
 						"-f", "../example-apps/healthcheck/manifest.yml",
-						"-d", testConfig.GetAppsDomain(),
 					).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 				})
 

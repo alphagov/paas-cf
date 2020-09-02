@@ -21,7 +21,6 @@ var _ = Describe("CF SSH", func() {
 			"push", appName,
 			"-b", testConfig.GetStaticFileBuildpackName(),
 			"-p", "../example-apps/static-app",
-			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
@@ -38,7 +37,6 @@ var _ = Describe("CF SSH", func() {
 			"push", appName,
 			"-b", testConfig.GetStaticFileBuildpackName(),
 			"-p", "../example-apps/static-app",
-			"-d", testConfig.GetAppsDomain(),
 			"-i", "1",
 			"-m", "64M",
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))

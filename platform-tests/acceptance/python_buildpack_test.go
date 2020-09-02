@@ -23,7 +23,6 @@ var _ = Describe("PythonBuildpack", func() {
 			"-p", "../example-apps/simple-python-app",
 			"-b", "python_buildpack",
 			"-c", "python hello.py",
-			"-d", testConfig.GetAppsDomain(),
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 	})
