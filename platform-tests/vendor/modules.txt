@@ -67,6 +67,9 @@ github.com/concourse/go-concourse/concourse/internal
 github.com/go-ini/ini
 # github.com/golang/protobuf v1.3.2
 github.com/golang/protobuf/proto
+# github.com/google/uuid v1.1.1
+## explicit
+github.com/google/uuid
 # github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce
 ## explicit
 github.com/hashicorp/errwrap

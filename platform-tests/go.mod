@@ -13,6 +13,7 @@ require (
 	github.com/concourse/atc v0.0.0-20160908214930-406261dbd768
 	github.com/concourse/go-concourse v0.0.0-20160910211037-b260442fef03
 	github.com/go-ini/ini v1.30.0 // indirect
+	github.com/google/uuid v1.1.1
 	github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.0 // indirect
 	github.com/hashicorp/go-multierror v0.0.0-20160811015721-8c5f0ad93604 // indirect

@@ -14,6 +14,7 @@ import (
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
 
+	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	"github.com/cloudfoundry/cf-acceptance-tests/helpers/config"
@@ -29,6 +30,8 @@ var (
 	testContext *workflowhelpers.ReproducibleTestSuiteSetup
 
 	systemDomain = os.Getenv("SYSTEM_DNS_ZONE_NAME")
+
+	cfClient *cfclient.Client
 )
 
 func TestSuite(t *testing.T) {
@@ -52,6 +55,14 @@ func TestSuite(t *testing.T) {
 		testContext.Setup()
 
 		Expect(systemDomain).NotTo(Equal(""))
+
+		var err error
+		cfClient, err = cfclient.NewClient(&cfclient.Config{
+			ApiAddress: "https://" + testContext.RegularUserContext().ApiUrl,
+			Username:   testContext.RegularUserContext().Username,
+			Password:   testContext.RegularUserContext().Password,
+		})
+		Expect(err).NotTo(HaveOccurred())
 	})
 
 	AfterSuite(func() {

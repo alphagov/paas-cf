@@ -3,8 +3,10 @@ package broker_acceptance_test
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
+	"github.com/google/uuid"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -12,9 +14,7 @@ import (
 )
 
 var _ = Describe("Common service tests", func() {
-
 	Context("Shareable services", func() {
-
 		shareableServices := map[string]bool{
 			"autoscaler":    false,
 			"elasticsearch": true,
@@ -79,6 +79,55 @@ var _ = Describe("Common service tests", func() {
 			}
 
 			Expect(servicesCommandResp.Pagination.TotalResults-fakeServicesCount).To(BeNumerically("==", len(shareableServices)), "the amount of services doesn't match")
+		})
+	})
+
+	Context("Service offerings", func() {
+		It("has a valid id", func() {
+			offerings, err := cfClient.ListServices()
+			Expect(err).NotTo(HaveOccurred())
+
+			invalidServiceOfferings := []string{}
+			for _, offering := range offerings {
+				if strings.HasPrefix(offering.Label, "CATS-") {
+					continue
+				}
+
+				if _, err := uuid.Parse(offering.UniqueID); err != nil {
+					invalidServiceOfferings = append(invalidServiceOfferings, offering.Label)
+				}
+			}
+
+			Expect(invalidServiceOfferings).To(
+				BeEmpty(), "All service offerings should have a GUID unique ID",
+			)
+		})
+	})
+
+	Context("Service plans", func() {
+		It("has a valid ID", func() {
+			plans, err := cfClient.ListServicePlans()
+
+			Expect(err).NotTo(HaveOccurred())
+
+			invalidServicePlans := []string{}
+			for _, plan := range plans {
+				if plan.Name == "shared" {
+					continue
+				}
+
+				if strings.HasPrefix(plan.Name, "fake-") {
+					continue
+				}
+
+				if _, err := uuid.Parse(plan.UniqueId); err != nil {
+					invalidServicePlans = append(invalidServicePlans, plan.Name)
+				}
+			}
+
+			Expect(invalidServicePlans).To(
+				BeEmpty(), "All service plans should have a GUID unique ID",
+			)
 		})
 	})
 })
