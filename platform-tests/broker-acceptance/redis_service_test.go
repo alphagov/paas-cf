@@ -15,13 +15,13 @@ import (
 
 var _ = Describe("Redis backing service", func() {
 	var (
-		plansToTestAgainst = []string {
+		plansToTestAgainst = []string{
 			"tiny-3.2",
 			"tiny-4.x",
 			"tiny-5.x",
 		}
 
-		knownPlanNames = []string {
+		knownPlanNames = []string{
 			"tiny-clustered-3.2",
 			"tiny-3.2",
 			"tiny-ha-3.2",
@@ -34,7 +34,7 @@ var _ = Describe("Redis backing service", func() {
 			"tiny-5.x",
 			"tiny-ha-5.x",
 			"small-ha-5.x",
-			"medium-ha-5.x",			
+			"medium-ha-5.x",
 		}
 	)
 
