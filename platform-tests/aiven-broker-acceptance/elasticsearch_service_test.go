@@ -89,7 +89,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 			pollForServiceDeletionCompletion(dbInstanceName)
 		})
 
-		It("is accessible from the healthcheck app", func() {
+		XIt("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
 			resp, err := httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test", testConfig))
 			Expect(err).NotTo(HaveOccurred())
