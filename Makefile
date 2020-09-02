@@ -108,8 +108,8 @@ spec: config_spec scripts_spec tools_spec concourse_spec manifests_spec terrafor
 
 .PHONY: compile_platform_tests
 compile_platform_tests:
-	go test -run ^$$ \
-		github.com/alphagov/paas-cf/platform-tests/...
+	cd platform-tests &&\
+		go vet ./...
 
 .PHONY: lint_yaml
 lint_yaml:
