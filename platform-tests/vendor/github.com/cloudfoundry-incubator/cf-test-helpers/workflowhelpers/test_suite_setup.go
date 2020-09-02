@@ -109,7 +109,7 @@ func NewBaseTestSuiteSetup(config testSuiteConfig, testSpace internal.Space, tes
 		adminUserContext:   adminUserContext,
 
 		SkipUserCreation:      skipUserCreation,
-		SkipSpaceRoleCreation: !config.GetAddExistingUserToExistingSpace() && skipUserCreation,
+		SkipSpaceRoleCreation: !config.GetAddExistingUserToExistingSpace() && config.GetUseExistingSpace() && skipUserCreation,
 		TestSpace:             testSpace,
 		TestUser:              testUser,
 	}
