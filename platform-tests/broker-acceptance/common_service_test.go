@@ -52,21 +52,14 @@ var _ = Describe("Common service tests", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			var message string
-			//during the run of the pipeline we are running few acceptance tests in parallel
-			//this can bring a total number of services in the CF instance to greater than 7 (the normal count)
-			//hence, while checking for 'shareable' services - we need to filter out the fake services created
-			//by other tests.
-			// fake service can be identified by having a value 'fake service' in desciption field.
-			fakeServicesCount := 0
 			for _, service := range servicesCommandResp.Resources {
+				message = fmt.Sprintf("verifying that %s backing service is shareable", service.Name)
+				By(message)
 
-				if service.Description == "fake service" {
-					fakeServicesCount++
+				if _, found := shareableServices[service.Name]; !found {
 					continue
 				}
 
-				message = fmt.Sprintf("verifying that %s backing service is shareable", service.Name)
-				By(message)
 				if shareableServices[service.Name] {
 					Expect(service.BrokerCatalog.Metadata.Shareable).NotTo(BeNil(),
 						"Expected %s to have 'shareable' parameter", service.Name)
@@ -78,8 +71,6 @@ var _ = Describe("Common service tests", func() {
 						"Expected %s NOT to have 'shareable' parameter or to be set to 'false'", service.Name)
 				}
 			}
-
-			Expect(servicesCommandResp.Pagination.TotalResults-fakeServicesCount).To(BeNumerically("==", len(shareableServices)), "the amount of services doesn't match")
 		})
 	})
 
