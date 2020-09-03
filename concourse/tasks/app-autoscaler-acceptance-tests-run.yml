@@ -31,6 +31,9 @@ run:
         "service_plan": "autoscaler-free-plan",
         "aggregate_interval": 60,
 
+        "default_timeout": 60,
+        "sleep_timeout": 60,
+
         "api": "api.$SYSTEM_DOMAIN",
         "autoscaler_api": "autoscaler.$SYSTEM_DOMAIN",
         "apps_domain": "$APPS_DOMAIN",
