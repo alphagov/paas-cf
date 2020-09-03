@@ -117,7 +117,7 @@
             "description": "3 dedicated VMs, 4 CPU per VM, 31GB RAM per VM, 2100GB disk space.",
             "free": false,
             "metadata": {
-              "displayName": "Large",
+              "displayName": "XLarge",
               "AdditionalMetadata": {
                 "backups": true,
                 "encrypted": true,
