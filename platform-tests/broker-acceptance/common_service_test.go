@@ -116,7 +116,7 @@ var _ = Describe("Common service tests", func() {
 					continue
 				}
 
-				if strings.HasPrefix(plan.Name, "fake-") {
+				if strings.HasPrefix(plan.Name, "fake-") || strings.HasPrefix(plan.UniqueId, "CATS-") {
 					continue
 				}
 
