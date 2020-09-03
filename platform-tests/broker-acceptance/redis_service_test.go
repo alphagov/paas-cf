@@ -45,7 +45,7 @@ var _ = Describe("Redis backing service", func() {
 	})
 
 	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", "redis").Wait(testConfig.DefaultTimeoutDuration())
+		plans := cf.Cf("marketplace", "-e", "redis").Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
 
 		for _, name := range knownPlanNames {

@@ -28,7 +28,7 @@ var _ = Describe("InfluxDB backing service", func() {
 	It("has the expected plans available", func() {
 		expectedPlans := []string{"tiny-1.x"}
 
-		actualPlans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+		actualPlans := cf.Cf("marketplace", "-e", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(actualPlans).To(Exit(0))
 		for _, plan := range expectedPlans {
 			Expect(actualPlans.Out.Contents()).To(ContainSubstring(plan))

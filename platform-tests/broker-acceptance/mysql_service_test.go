@@ -28,7 +28,7 @@ var _ = Describe("MySQL backing service", func() {
 
 	It("has only the expected plans available to the user", func() {
 		workflowhelpers.AsUser(testContext.RegularUserContext(), testContext.ShortTimeout(), func() {
-			plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+			plans := cf.Cf("marketplace", "-e", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(plans).To(Exit(0))
 			cfMarketplaceOutput := string(plans.Out.Contents())
 			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-5.7"))

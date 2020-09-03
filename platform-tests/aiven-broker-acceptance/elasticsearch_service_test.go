@@ -40,7 +40,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 			"tiny-7.x", "small-ha-7.x", "medium-ha-7.x", "large-ha-7.x", "xlarge-ha-7.x",
 		}
 
-		actualPlans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+		actualPlans := cf.Cf("marketplace", "-e", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(actualPlans).To(Exit(0))
 		for _, plan := range expectedPlans {
 			Expect(actualPlans.Out.Contents()).To(ContainSubstring(plan))
