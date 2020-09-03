@@ -25,7 +25,7 @@ import (
 var _ = Describe("Elasticsearch backing service", func() {
 	const (
 		serviceName  = "elasticsearch"
-		testPlanName = "tiny-6.x"
+		testPlanName = "tiny-7.x"
 	)
 
 	It("is registered in the marketplace", func() {
@@ -35,7 +35,10 @@ var _ = Describe("Elasticsearch backing service", func() {
 	})
 
 	It("has the expected plans available", func() {
-		expectedPlans := []string{"tiny-6.x", "small-ha-6.x", "medium-ha-6.x", "large-ha-6.x"}
+		expectedPlans := []string{
+			"tiny-6.x", "small-ha-6.x", "medium-ha-6.x", "large-ha-6.x", "xlarge-ha-6.x",
+			"tiny-7.x", "small-ha-7.x", "medium-ha-7.x", "large-ha-7.x", "xlarge-ha-7.x",
+		}
 
 		actualPlans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(actualPlans).To(Exit(0))
@@ -89,7 +92,7 @@ var _ = Describe("Elasticsearch backing service", func() {
 			pollForServiceDeletionCompletion(dbInstanceName)
 		})
 
-		XIt("is accessible from the healthcheck app", func() {
+		It("is accessible from the healthcheck app", func() {
 			By("allowing connections with TLS")
 			resp, err := httpClient.Get(helpers.AppUri(appName, "/elasticsearch-test", testConfig))
 			Expect(err).NotTo(HaveOccurred())
