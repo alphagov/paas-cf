@@ -14,5 +14,6 @@ done
 bosh interpolate \
   --vars-file="${PAAS_CF_DIR}/manifests/variables.yml" \
   --var bosh_director_name="${DEPLOY_ENV}" \
+  --var system_domain="${SYSTEM_DNS_ZONE_NAME}" \
   ${opsfile_args} \
   "${PAAS_CF_DIR}/manifests/runtime-config/paas-cf-runtime-config.yml"
