@@ -117,7 +117,7 @@
             "description": "3 dedicated VMs, 4 CPU per VM, 31GB RAM per VM, 2100GB disk space.",
             "free": false,
             "metadata": {
-              "displayName": "Large",
+              "displayName": "XLarge",
               "AdditionalMetadata": {
                 "backups": true,
                 "encrypted": true,
@@ -129,9 +129,116 @@
                 "version": "6"
               }
             }
+          },
+
+          {
+            "id": "dbe2fd8c-30e8-4b36-9473-81dfbd8ff560",
+            "name": "tiny-7.x",
+            "aiven_plan": "startup-4",
+            "elasticsearch_version": "7",
+            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "free": true,
+            "metadata": {
+              "displayName": "Tiny",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 1,
+                "memory": {"amount": 4, "unit": "GB"},
+                "storage": {"amount": 80, "unit": "GB"},
+                "version": "7"
+              }
+            }
+          },
+          {
+            "id": "28095b16-7324-429a-99bf-75c0b88d58a7",
+            "name": "small-ha-7.x",
+            "aiven_plan": "business-4",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Small",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 1,
+                "memory": {"amount": 4, "unit": "GB"},
+                "storage": {"amount": 240, "unit": "GB"},
+                "version": "7"
+              }
+            }
+          },
+          {
+            "id": "5705d8e7-0374-48c4-8a2e-f28395c61302",
+            "name": "medium-ha-7.x",
+            "aiven_plan": "business-8",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Medium",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 2,
+                "memory": {"amount": 8, "unit": "GB"},
+                "storage": {"amount": 525, "unit": "GB"},
+                "version": "7"
+              }
+            }
+          },
+          {
+            "id": "18b45371-ed22-4d6c-93f3-166ed32cc08a",
+            "name": "large-ha-7.x",
+            "aiven_plan": "business-16",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 2 CPU per VM, 15GB RAM per VM, 1050GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Large",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 2,
+                "memory": {"amount": 15, "unit": "GB"},
+                "storage": {"amount": 1050, "unit": "GB"},
+                "version": "7"
+              }
+            }
+          },
+          {
+            "id": "e58220f9-958c-4216-bd1c-28095a79bb95",
+            "name": "xlarge-ha-7.x",
+            "aiven_plan": "business-32",
+            "elasticsearch_version": "7",
+            "description": "3 dedicated VMs, 4 CPU per VM, 31GB RAM per VM, 2100GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "XLarge",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": true,
+                "nodes": 3,
+                "cpu": 4,
+                "memory": {"amount": 31, "unit": "GB"},
+                "storage": {"amount": 2100, "unit": "GB"},
+                "version": "7"
+              }
+            }
           }
         ]
       },
+
       {
         "id": "9e91681d-d9ae-4ab4-9b1e-8b8fbb54ce52",
         "name": "influxdb",

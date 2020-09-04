@@ -2372,7 +2372,7 @@
 				}
 			]
 		},
-    {
+		{
 			"name": "redis large-ha-4.x",
 			"valid_from": "2020-03-01",
 			"plan_guid": "4b5913cd-c39b-457c-8f77-eb9a95d63ba8",
@@ -2386,7 +2386,7 @@
 				}
 			]
 		},
-    {
+		{
 			"name": "redis xlarge-ha-4.x",
 			"valid_from": "2020-03-01",
 			"plan_guid": "e6e8e4c4-5f2e-4add-89d6-ce417f145c19",
@@ -2456,7 +2456,7 @@
 				}
 			]
 		},
-    {
+		{
 			"name": "redis large-ha-5.x",
 			"valid_from": "2020-03-01",
 			"plan_guid": "883c0549-cacd-4d73-adf8-85096a3c39a4",
@@ -2470,7 +2470,7 @@
 				}
 			]
 		},
-    {
+		{
 			"name": "redis xlarge-ha-5.x",
 			"valid_from": "2020-03-01",
 			"plan_guid": "f60443d9-3e9f-4c9b-8653-c83b6418292e",
@@ -2524,6 +2524,19 @@
 			]
 		},
 		{
+			"name": "elasticsearch tiny-7.x",
+			"valid_from": "2018-09-01",
+			"plan_guid": "dbe2fd8c-30e8-4b36-9473-81dfbd8ff560",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 0.178",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "elasticsearch small-ha-5.x",
 			"valid_from": "2017-01-01",
 			"plan_guid": "0eee9e10-db37-4cc3-bc9b-39e378ff3a5f",
@@ -2540,6 +2553,19 @@
 			"name": "elasticsearch small-ha-6.x",
 			"valid_from": "2017-01-01",
 			"plan_guid": "225e97cc-f786-408c-8b59-d2118248a53d",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 0.548",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "elasticsearch small-ha-7.x",
+			"valid_from": "2017-01-01",
+			"plan_guid": "28095b16-7324-429a-99bf-75c0b88d58a7",
 			"components": [
 				{
 					"name": "instance",
@@ -2576,6 +2602,19 @@
 			]
 		},
 		{
+			"name": "elasticsearch medium-ha-7.x",
+			"valid_from": "2018-10-01",
+			"plan_guid": "5705d8e7-0374-48c4-8a2e-f28395c61302",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 1.096",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "elasticsearch large-ha-6.x",
 			"valid_from": "2018-10-01",
 			"plan_guid": "90f12775-0b60-4a90-b2bc-c8c28a1ca85e",
@@ -2583,6 +2622,45 @@
 				{
 					"name": "instance",
 					"formula": "ceil($time_in_seconds/3600) * 2.192",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "elasticsearch large-ha-7.x",
+			"valid_from": "2018-10-01",
+			"plan_guid": "18b45371-ed22-4d6c-93f3-166ed32cc08a",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 2.192",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "elasticsearch xlarge-ha-6.x",
+			"valid_from": "2018-10-01",
+			"plan_guid": "b036fe1d-0a82-44ac-a70b-1d997b2e0c02",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 4.384",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "elasticsearch xlarge-ha-7.x",
+			"valid_from": "2018-10-01",
+			"plan_guid": "e58220f9-958c-4216-bd1c-28095a79bb95",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 4.384",
 					"currency_code": "USD",
 					"vat_code": "Standard"
 				}
