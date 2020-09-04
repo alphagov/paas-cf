@@ -346,7 +346,7 @@ jobs:
                 export BOSH_CLIENT
 
                 bosh -n manifest > manifest.yml
-                bosh -n deploy manifest.yml
+                bosh -n deploy --fix manifest.yml
 
   - name: rotate-1
     serial: true
@@ -512,7 +512,7 @@ jobs:
                 export BOSH_CLIENT
 
                 bosh -n manifest > manifest.yml
-                bosh -n deploy manifest.yml
+                bosh -n deploy --fix manifest.yml
 
   - name: done
     serial: true
