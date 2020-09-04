@@ -2,7 +2,7 @@ package emails
 
 import (
 	"github.com/alphagov/paas-cf/tools/user_emails/utils"
-	"github.com/xenolf/lego/log"
+	"log"
 	"os"
 	"regexp"
 	"strings"

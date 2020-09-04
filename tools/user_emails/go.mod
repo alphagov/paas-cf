@@ -1,7 +1,7 @@
 module github.com/alphagov/paas-cf/tools/user_emails
 
 require (
-	code.cloudfoundry.org/lager v2.0.0+incompatible
+	code.cloudfoundry.org/lager v2.0.0+incompatible // indirect
 	github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc // indirect
 	github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf // indirect
 	github.com/alphagov/paas-cf-conduit v0.0.7 // indirect
@@ -14,7 +14,6 @@ require (
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.3 // indirect
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.9.0
-	github.com/xenolf/lego v2.5.0+incompatible
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
 

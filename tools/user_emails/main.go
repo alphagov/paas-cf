@@ -6,8 +6,8 @@ import (
 	"github.com/alphagov/paas-cf/tools/user_emails/emails"
 	"github.com/cloudfoundry-community/go-cfclient"
 	"github.com/jszwec/csvutil"
-	"github.com/xenolf/lego/log"
 	"gopkg.in/alecthomas/kingpin.v2"
+	"log"
 	"os"
 )
 
@@ -41,7 +41,7 @@ func main() {
 	}
 
 	if !validFormat(format) {
-		log.Fatalf("Invalid format '%s'", format)
+		log.Fatalf("Invalid format '%s'", *format)
 	}
 
 	client, err := cfclient.NewClient(&cfclient.Config{
