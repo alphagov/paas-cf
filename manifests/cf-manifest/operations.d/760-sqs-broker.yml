@@ -1,0 +1,94 @@
+---
+
+- type: replace
+  path: /releases/-
+  value:
+    name: sqs-broker
+    version: 0.0.1599484562
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.0.1599484562.tgz
+    sha1: 33ade9d498b425c28ccf1a0973753acd1f6b5e4a
+
+- type: replace
+  path: /addons/name=loggregator_agent/exclude/jobs/-
+  value:
+    name: sqs-broker
+    release: sqs-broker
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: sqs_broker
+    azs: [z1, z2]
+    instances: 2
+    vm_type: nano
+    vm_extensions:
+      - sqs_broker
+    stemcell: default
+    networks:
+      - name: cf
+    jobs:
+      - name: sqs-broker
+        release: sqs-broker
+        properties:
+          sqs-broker:
+            port: 80
+            basic_auth_username: sqs-broker
+            basic_auth_password: ((secrets_sqs_broker_admin_password))
+            log_level: INFO
+            aws_region: "((terraform_outputs_region))"
+            resource_prefix: "paas-sqs-broker"
+            permissions_boundary: "((terraform_outputs_sqs_broker_permissions_boundary_arn))"
+            deploy_environment: "((environment))"
+            locket:
+              api_location: "locket.service.cf.internal:8891"
+              ca_cert: "((diego_locket_client.ca))"
+              client_cert: "((diego_locket_client.certificate))"
+              client_key: "((diego_locket_client.private_key))"
+            catalog:
+              services:
+                - id: de4f96ff-0204-41d6-815f-23fdb78a99c3
+                  name: aws-sqs-queue
+                  description: Queue with AWS SQS
+                  metadata:
+                    displayName: AWS SQS Queue service
+                    longDescription: |
+                      Amazon Simple Queue Service (AWS SQS) is a service offered by Amazon Web Services (AWS) that
+                      provides queues through a web service interface.
+                    providerDisplayName: Amazon Web Services
+                    # TODO: write docs
+                    documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/sqs/
+                    supportUrl: https://www.cloud.service.gov.uk/support
+                    shareable: true
+                    AdditionalMetadata:
+                      otherDocumentation:
+                        - https://docs.aws.amazon.com/sqs
+                      usecase:
+                        - Queues
+                  tags:
+                    - sqs
+                  bindable: true
+                  plan_updateable: false
+                  plans:
+                    - id: 8ff216b8-afed-4833-a265-cd1f2feb919d
+                      name: standard
+                      description: A standard SQS queue
+                      free: true
+                      metadata:
+                        displayName: Standard
+                        AdditionalMetadata:
+                          encrypted: true
+
+                    - id: ac129e8a-6423-4792-aa0c-3a192408b3da
+                      name: fifo
+                      description: A FIFO (first-in-first-out) SQS queue
+                      free: true
+                      metadata:
+                        displayName: FIFO
+                        AdditionalMetadata:
+                          encrypted: true
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_sqs_broker_admin_password
+    type: password
