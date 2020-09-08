@@ -15,6 +15,7 @@ import (
 	. "github.com/onsi/gomega/gexec"
 
 	"github.com/cloudfoundry-community/go-cfclient"
+	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers"
 	"github.com/cloudfoundry/cf-acceptance-tests/helpers/config"
@@ -63,6 +64,23 @@ func TestSuite(t *testing.T) {
 			Password:   testContext.RegularUserContext().Password,
 		})
 		Expect(err).NotTo(HaveOccurred())
+
+		// Enable service access for the ephemeral test org.
+		// FIXME: remove this block once sqs is enabled for all
+		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
+			standard := cf.Cf("enable-service-access", "aws-sqs-queue",
+				"-o", testContext.TestSpace.OrganizationName(),
+				"-b", "sqs-broker",
+				"-p", "standard",
+			).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(standard).To(Exit(0))
+			fifo := cf.Cf("enable-service-access", "aws-sqs-queue",
+				"-o", testContext.TestSpace.OrganizationName(),
+				"-b", "sqs-broker",
+				"-p", "fifo",
+			).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(fifo).To(Exit(0))
+		})
 	})
 
 	AfterSuite(func() {
@@ -116,6 +134,34 @@ func pollForServiceDeletionCompletion(dbInstanceName string) {
 		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf services: ", string(command.Out.Contents())))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func pollForServiceBound(dbInstanceName, boundAppName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for async bind operation to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service: ", string(command.Out.Contents())))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 5*time.Second).Should(Say(boundAppName))
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service: ", string(command.Out.Contents())))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 5*time.Second).ShouldNot(Say("in progress"))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func pollForServiceUnbound(dbInstanceName, boundAppName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for async unbind operation to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", dbInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service: ", string(command.Out.Contents())))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 5*time.Second).ShouldNot(Say(boundAppName))
 	fmt.Fprint(GinkgoWriter, "done\n")
 }
 

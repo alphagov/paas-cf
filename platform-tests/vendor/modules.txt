@@ -1,6 +1,11 @@
-# github.com/Masterminds/semver v1.4.2
+# code.cloudfoundry.org/lager v2.0.0+incompatible
 ## explicit
+# github.com/BurntSushi/migration v0.0.0-20140125045755-c45b897f1335
+## explicit
+# github.com/Masterminds/semver v1.4.2
 github.com/Masterminds/semver
+# github.com/Masterminds/squirrel v1.4.0
+## explicit
 # github.com/aws/aws-sdk-go v1.4.22
 ## explicit
 github.com/aws/aws-sdk-go/aws
@@ -51,8 +56,9 @@ github.com/cloudfoundry-incubator/cf-test-helpers/workflowhelpers/internal
 github.com/cloudfoundry/cf-acceptance-tests/helpers/config
 github.com/cloudfoundry/cf-acceptance-tests/helpers/validationerrors
 # github.com/cloudfoundry/gofileutils v0.0.0-20170111115228-4d0c80011a0f
-## explicit
 github.com/cloudfoundry/gofileutils/fileutils
+# github.com/cockroachdb/apd v1.1.0
+## explicit
 # github.com/concourse/atc v0.0.0-20160908214930-406261dbd768
 ## explicit
 github.com/concourse/atc
@@ -65,6 +71,8 @@ github.com/concourse/go-concourse/concourse/internal
 # github.com/go-ini/ini v1.30.0
 ## explicit
 github.com/go-ini/ini
+# github.com/gofrs/uuid v3.3.0+incompatible
+## explicit
 # github.com/golang/protobuf v1.3.2
 github.com/golang/protobuf/proto
 # github.com/google/uuid v1.1.1
@@ -74,7 +82,6 @@ github.com/google/uuid
 ## explicit
 github.com/hashicorp/errwrap
 # github.com/hashicorp/go-cleanhttp v0.5.0
-## explicit
 github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-multierror v0.0.0-20160811015721-8c5f0ad93604
 ## explicit
@@ -88,20 +95,27 @@ github.com/hpcloud/tail/ratelimiter
 github.com/hpcloud/tail/util
 github.com/hpcloud/tail/watch
 github.com/hpcloud/tail/winfile
+# github.com/jackc/fake v0.0.0-20150926172116-812a484cc733
+## explicit
+# github.com/jackc/pgx v3.6.2+incompatible
+## explicit
 # github.com/jmespath/go-jmespath v0.0.0-20151117175822-3433f3ea46d9
 ## explicit
 github.com/jmespath/go-jmespath
 # github.com/json-iterator/go v1.1.9
 ## explicit
 github.com/json-iterator/go
+# github.com/lib/pq v1.8.0
+## explicit
 # github.com/mitchellh/mapstructure v0.0.0-20150717051158-281073eb9eb0
 ## explicit
 github.com/mitchellh/mapstructure
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
-## explicit
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
+# github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
+## explicit
 # github.com/onsi/ginkgo v1.6.0
 ## explicit
 github.com/onsi/ginkgo
@@ -151,9 +165,13 @@ github.com/prometheus/client_golang/api/prometheus/v1
 # github.com/prometheus/common v0.7.0
 ## explicit
 github.com/prometheus/common/model
+# github.com/shopspring/decimal v1.2.0
+## explicit
 # github.com/streadway/quantile v0.0.0-20150917103942-b0c588724d25
 ## explicit
 github.com/streadway/quantile
+# github.com/tedsuo/ifrit v0.0.0-20191009134036-9a97d0632f00
+## explicit
 # github.com/tedsuo/rata v0.0.0-20150202174335-b15ebd8bd97a
 ## explicit
 github.com/tedsuo/rata

@@ -17,6 +17,7 @@ func main() {
 	http.HandleFunc("/influxdb-test", influxdbHandler)
 	http.HandleFunc("/redis-test", redisHandler)
 	http.HandleFunc("/s3-test", s3Handler)
+	http.HandleFunc("/sqs-test", sqsHandler)
 	err := http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatal(err)
