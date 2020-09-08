@@ -117,6 +117,50 @@ output "cf_s3_broker_target_group_name" {
   value = aws_lb_target_group.cf_s3_broker.name
 }
 
+#SQS Broker
+
+resource "aws_lb_listener_rule" "cf_sqs_broker" {
+  listener_arn = aws_lb_listener.cf_brokers.arn
+  priority     = "115"
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cf_sqs_broker.arn
+  }
+
+  condition {
+    host_header {
+      values = ["sqs-broker.*"]
+    }
+  }
+}
+
+resource "aws_lb_target_group" "cf_sqs_broker" {
+  name     = "${var.env}-cf-sqs-broker"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+
+  health_check {
+    port                = 80
+    path                = "/healthcheck"
+    protocol            = "HTTP"
+    interval            = var.health_check_interval
+    timeout             = var.health_check_timeout
+    healthy_threshold   = var.health_check_healthy
+    unhealthy_threshold = var.health_check_unhealthy
+    matcher             = "200-299"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+output "sqs_broker_target_group_name" {
+  value = aws_lb_target_group.cf_sqs_broker.name
+}
+
 # CDN broker
 
 resource "aws_lb_listener_rule" "cf_cdn_broker" {

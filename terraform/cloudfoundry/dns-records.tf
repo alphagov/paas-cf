@@ -124,6 +124,14 @@ resource "aws_route53_record" "s3_broker" {
   records = [aws_elb.s3_broker.dns_name]
 }
 
+resource "aws_route53_record" "sqs_broker" {
+  zone_id = var.system_dns_zone_id
+  name    = "sqs-broker.${var.system_dns_zone_name}."
+  type    = "CNAME"
+  ttl     = "60"
+  records = [aws_elb.sqs_broker.dns_name]
+}
+
 resource "aws_route53_record" "status" {
   zone_id = var.system_dns_zone_id
   name    = "status.${var.system_dns_zone_name}."
