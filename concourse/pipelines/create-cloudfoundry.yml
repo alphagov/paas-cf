@@ -309,6 +309,7 @@ groups:
       - deploy-paas-billing
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
+      - deploy-paas-prometheus-endpoints
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -665,6 +666,13 @@ resources:
       branch: master
       tag_filter: ((deploy_env_tag_prefix))
       commit_verification_keys: ((gpg_public_keys))
+
+  - name: paas-prometheus-endpoints
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-prometheus-endpoints.git
+      branch: main
+      tag_filter: v0.10.0
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
@@ -1799,6 +1807,8 @@ jobs:
                 PAAS_ADMIN_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_ADMIN_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_secret_access_key cf-terraform-outputs.yml)
                 PAAS_ADMIN_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/paas_admin_prometheus_password")
+                PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_access_key_id cf-terraform-outputs.yml)
+                PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_secret_access_key cf-terraform-outputs.yml)
                 UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_cf_exporter_secret")
                 UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret")
                 RDS_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_rds_broker_admin_password")
@@ -1809,6 +1819,7 @@ jobs:
                 UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_admin_client_secret")
                 UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
                 UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
+                UAA_CLIENTS_PAAS_PROMETHEUS_ENDPOINTS_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret")
                 SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
                 CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/custom_broker_acceptance_prometheus_password")
 
@@ -1828,8 +1839,10 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/metrics_aws_access_key_id" --type password --password "${METRICS_AWS_ACCESS_KEY_ID}"
                 credhub set --name="${PIPELINE_NS}/metrics_aws_secret_access_key" --type password --password "${METRICS_AWS_SECRET_ACCESS_KEY}"
                 credhub set --name="${PIPELINE_NS}/paas_admin_aws_access_key_id" --type password --password "${PAAS_ADMIN_AWS_ACCESS_KEY_ID}"
-                credhub set --name="${PIPELINE_NS}/paas_admin_prometheus_password" --type password --password "${PAAS_ADMIN_PROMETHEUS_PASSWORD}"
                 credhub set --name="${PIPELINE_NS}/paas_admin_aws_secret_access_key" --type password --password "${PAAS_ADMIN_AWS_SECRET_ACCESS_KEY}"
+                credhub set --name="${PIPELINE_NS}/paas_admin_prometheus_password" --type password --password "${PAAS_ADMIN_PROMETHEUS_PASSWORD}"
+                credhub set --name="${PIPELINE_NS}/paas_prometheus_endpoints_aws_access_key_id" --type password --password "${PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID}"
+                credhub set --name="${PIPELINE_NS}/paas_prometheus_endpoints_aws_secret_access_key" --type password --password "${PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_cf_exporter_secret" --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_firehose_exporter_secret" --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_rds_broker_admin_password" --type password --password "${RDS_BROKER_PASS}"
@@ -1840,6 +1853,7 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/uaa_admin_client_secret" --type password --password "${UAA_ADMIN_CLIENT_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_admin_secret" --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_auditor_secret" --type password --password "${UAA_CLIENTS_PAAS_AUDITOR_SECRET}"
+                credhub set --name="${PIPELINE_NS}/uaa_clients_paas_prometheus_endpoints_secret" --type password --password "${UAA_CLIENTS_PAAS_PROMETHEUS_ENDPOINTS_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_test_user_password" --type password --password "${SECRETS_TEST_USER_PASSWORD}"
 
                 credhub set --name="${PIPELINE_NS}/custom_broker_acceptance_prometheus_password" --type password --password "${CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD}"
@@ -4251,6 +4265,93 @@ jobs:
                 ginkgo acceptance
       - *end-grafana-job-annotation
 
+  - name: deploy-paas-prometheus-endpoints
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+        - get: paas-prometheus-endpoints
+          trigger: true
+
+        - get: paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+      - task: create-metrics-domain
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            CF_CLIENT_ID: "paas-prometheus-endpoints"
+            CF_CLIENT_SECRET: ((uaa_clients_paas_prometheus_endpoints_secret))
+            CF_API_ADDRESS: https://api.((system_dns_zone_name))
+
+            DOMAIN_FOR_PROMETHEUS_ENDPOINTS: metrics.((system_dns_zone_name))
+
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                set -ueo pipefail
+
+                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                if ! cf domains | grep "${DOMAIN_FOR_PROMETHEUS_ENDPOINTS}" > /dev/null; then
+                  cf create-private-domain admin "${DOMAIN_FOR_PROMETHEUS_ENDPOINTS}"
+                fi
+
+      - task: deploy-paas-prometheus-endpoint-redis
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            CF_CLIENT_ID: "paas-prometheus-endpoints"
+            CF_CLIENT_SECRET: ((uaa_clients_paas_prometheus_endpoints_secret))
+            CF_API_ADDRESS: https://api.((system_dns_zone_name))
+
+            DEPLOY_ENV: ((deploy_env))
+            DOMAIN_FOR_PROMETHEUS_ENDPOINTS: metrics.((system_dns_zone_name))
+
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+
+            AWS_REGION: ((aws_region))
+            AWS_ACCESS_KEY_ID: ((paas_prometheus_endpoints_aws_access_key_id))
+            AWS_SECRET_ACCESS_KEY: ((paas_prometheus_endpoints_aws_secret_access_key))
+          inputs:
+            - name: paas-cf
+            - name: paas-prometheus-endpoints
+          run:
+            path: bash
+            dir: paas-prometheus-endpoints
+            args:
+              - -c
+              - |
+                set -ueo pipefail
+
+                echo | cf login -a "${CF_API_ADDRESS}" -u "${CF_ADMIN}" -p "${CF_PASS}" -o admin -s monitoring
+
+                cf cancel-deployment paas-prometheus-endpoint-redis || true
+                cf push \
+                  paas-prometheus-endpoint-redis \
+                  --strategy=rolling \
+                  -f manifest-redis.yml \
+                  --var route="redis.${DOMAIN_FOR_PROMETHEUS_ENDPOINTS}" \
+                  --var cf_client_id="$CF_CLIENT_ID" \
+                  --var cf_client_secret="$CF_CLIENT_SECRET" \
+                  --var cf_api_address="$CF_API_ADDRESS" \
+                  --var deploy_env="$DEPLOY_ENV" \
+                  --var aws_region="$AWS_REGION" \
+                  --var aws_access_key_id="$AWS_ACCESS_KEY_ID" \
+                  --var aws_secret_access_key="$AWS_SECRET_ACCESS_KEY"
+
+      - *end-grafana-job-annotation
+
   - name: deploy-paas-aiven-broker
     serial: true
     plan:
@@ -4796,6 +4897,7 @@ jobs:
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_metrics_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_cf_exporter_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_cf_smoke_tests_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret" -t password
