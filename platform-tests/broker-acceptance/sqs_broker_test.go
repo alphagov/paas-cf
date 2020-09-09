@@ -45,7 +45,7 @@ var _ = Describe("SQS broker", func() {
 			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-sqs-queue")
 
 			By("creating a standard queue service: "+serviceInstanceName, func() {
-				Expect(cf.Cf("create-service", serviceName, standardPlanName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				Expect(cf.Cf("create-service", serviceName, standardPlanName, serviceInstanceName, "-c", `{"message_retention_period": 60}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 				pollForServiceCreationCompletion(serviceInstanceName)
 			})
 
@@ -54,8 +54,8 @@ var _ = Describe("SQS broker", func() {
 				pollForServiceDeletionCompletion(serviceInstanceName)
 			})
 
-			By("updating the service to set a messageRetentionPeriod", func() {
-				Expect(cf.Cf("update-service", serviceInstanceName, "-c", `{"messageRetentionPeriod": 120}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+			By("updating the service's queue retention period", func() {
+				Expect(cf.Cf("update-service", serviceInstanceName, "-c", `{"message_retention_period": 120}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 				pollForServiceUpdateCompletion(serviceInstanceName)
 			})
 
