@@ -1816,6 +1816,7 @@ jobs:
                 AIVEN_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_aiven_broker_admin_password")
                 ELASTICACHE_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_elasticache_broker_admin_password")
                 S3_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_s3_broker_admin_password")
+                SQS_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_sqs_broker_admin_password")
                 UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_admin_client_secret")
                 UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
                 UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
@@ -1850,6 +1851,7 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/secrets_aiven_broker_admin_password" --type password --password "${AIVEN_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/secrets_elasticache_broker_admin_password" --type password --password "${ELASTICACHE_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/secrets_s3_broker_admin_password" --type password --password "${S3_BROKER_PASS}"
+                credhub set --name="${PIPELINE_NS}/secrets_sqs_broker_admin_password" --type password --password "${SQS_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/uaa_admin_client_secret" --type password --password "${UAA_ADMIN_CLIENT_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_admin_secret" --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_auditor_secret" --type password --password "${UAA_CLIENTS_PAAS_AUDITOR_SECRET}"
@@ -2389,6 +2391,7 @@ jobs:
               export BROKER_IP_WHITELIST=$($VAL_FROM_YAML terraform_outputs_nat_public_ips_csv cf-terraform-outputs.yml)
               export ELASTICACHE_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_elasticache_broker_elb_dns_name cf-terraform-outputs.yml)
               export S3_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_s3_broker_elb_dns_name cf-terraform-outputs.yml)
+              export SQS_BROKER_SERVER=$($VAL_FROM_YAML terraform_outputs_sqs_broker_elb_dns_name cf-terraform-outputs.yml)
               export METRICS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_access_key_id cf-terraform-outputs.yml)
               export METRICS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_metrics_exporter_aws_secret_access_key cf-terraform-outputs.yml)
               EOT
@@ -2707,6 +2710,56 @@ jobs:
                 fi
 
                 cf enable-service-access aws-s3-bucket -b s3-broker -p default
+
+      - task: register-sqs-broker
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: config
+          params:
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            SQS_BROKER_PASS: ((secrets_sqs_broker_admin_password))
+            DEPLOY_ENV: ((deploy_env))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                . ./config/config.sh
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                if cf service-brokers | grep 'sqs-broker\s'; then
+                  cf update-service-broker sqs-broker sqs-broker "${SQS_BROKER_PASS}" "https://${SQS_BROKER_SERVER}"
+                else
+                  cf create-service-broker sqs-broker sqs-broker "${SQS_BROKER_PASS}" "https://${SQS_BROKER_SERVER}"
+                fi
+
+
+                ALLOWED_ORGS_CFG="./paas-cf/config/service-brokers/sqs/${DEPLOY_ENV}-config.json"
+                if [ -f "${ALLOWED_ORGS_CFG}" ]; then
+                  ALLOWED_ORGS="admin $(jq -r '.allowed_orgs[]' "${ALLOWED_ORGS_CFG}")"
+                else
+                  ALLOWED_ORGS="admin"
+                fi
+
+                for ORG in $ALLOWED_ORGS; do
+                  cf enable-service-access aws-sqs-queue \
+                    -b sqs-broker \
+                    -p standard \
+                    -o "${ORG}"
+                  cf enable-service-access aws-sqs-queue \
+                    -b sqs-broker \
+                    -p fifo \
+                    -o "${ORG}"
+                done
 
       - task: register-csls-splunk-broker
         tags: [colocated-with-web]
@@ -4951,6 +5004,7 @@ jobs:
               credhub generate -n "${BOSH_NS}/secrets_aiven_broker_admin_password" -t password
               credhub generate -n "${BOSH_NS}/secrets_elasticache_broker_admin_password" -t password
               credhub generate -n "${BOSH_NS}/secrets_s3_broker_admin_password" -t password
+              credhub generate -n "${BOSH_NS}/secrets_sqs_broker_admin_password" -t password
 
               echo "Broker credentials will be updated on the next deployment pipeline run."
               echo "WARNING: Broker users will experience some downtime during the deploy. Our brokers do not support hot-swapping of credentials."

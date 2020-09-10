@@ -15,6 +15,7 @@ RSpec.describe "dev environment scaling" do
     # It scales back brokers to 1
     expect(dev_manifest.fetch("instance_groups.rds_broker.instances")).to eq(1)
     expect(dev_manifest.fetch("instance_groups.s3_broker.instances")).to eq(1)
+    expect(dev_manifest.fetch("instance_groups.sqs_broker.instances")).to eq(1)
   end
 
   it "does not scale back dev otherwise" do
@@ -23,5 +24,6 @@ RSpec.describe "dev environment scaling" do
     expect(dev_manifest.fetch("instance_groups.diego-cell.instances")).not_to eq(2)
     expect(dev_manifest.fetch("instance_groups.rds_broker.instances")).not_to eq(1)
     expect(dev_manifest.fetch("instance_groups.s3_broker.instances")).not_to eq(1)
+    expect(dev_manifest.fetch("instance_groups.sqs_broker.instances")).not_to eq(1)
   end
 end

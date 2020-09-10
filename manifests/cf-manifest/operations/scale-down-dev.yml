@@ -78,5 +78,9 @@
   value: 1
 
 - type: replace
+  path: /instance_groups/name=sqs_broker/instances
+  value: 1
+
+- type: replace
   path: /instance_groups/name=prometheus/instances
   value: 1

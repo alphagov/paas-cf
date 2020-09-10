@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 variable "apps_dns_zone_id" {
   description = "Amazon Route53 DNS zone identifier for hosted apps. Different per account."
 }

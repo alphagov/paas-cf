@@ -1,0 +1,14 @@
+---
+
+- type: replace
+  path: /vm_extensions/-
+  value:
+    name: sqs_broker
+    cloud_properties:
+      iam_instance_profile: sqs-broker
+      security_groups:
+      - ((terraform_outputs_default_security_group))
+      elbs:
+      - ((terraform_outputs_sqs_broker_elb_name))
+      lb_target_groups:
+      - ((terraform_outputs_sqs_broker_target_group_name))
