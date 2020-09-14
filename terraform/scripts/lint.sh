@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -eu
-RELEASE=v1.1.1
-PINGDOM_TF_VERSION=v1.1.1
+RELEASE=v1.1.2
+PINGDOM_TF_VERSION=v1.1.2
 BINARY=terraform-provider-pingdom_${PINGDOM_TF_VERSION}_$(go env GOOS)_$(go env GOARCH)
 
 # Setup the working grounds.
