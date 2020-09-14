@@ -13,11 +13,11 @@ import (
 )
 
 type SQSCredentials struct {
-	AccessKeyID     string
-	SecretAccessKey string
-	QueueURL        string
-	DLQueueURL      string
-	Region          string
+	AWSAccessKeyID     string `json:"aws_access_key_id"`
+	AWSSecretAccessKey string `json:"aws_secret_access_key"`
+	PrimaryQueueURL    string `json:"primary_queue_url"`
+	SecondaryQueueURL  string `json:"secondary_queue_url"`
+	AWSRegion          string `json:"aws_region"`
 }
 
 func sqsHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,14 +41,18 @@ func testSQSQueueAccess() error {
 	}
 
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region:      aws.String(creds.Region),
-		Credentials: credentials.NewStaticCredentials(creds.AccessKeyID, creds.SecretAccessKey, ""),
+		Region: aws.String(creds.AWSRegion),
+		Credentials: credentials.NewStaticCredentials(
+			creds.AWSAccessKeyID,
+			creds.AWSSecretAccessKey,
+			"",
+		),
 	}))
 	sqsClient := sqs.New(sess)
 
 	queueURLS := []string{
-		creds.QueueURL,
-		creds.DLQueueURL,
+		creds.PrimaryQueueURL,
+		creds.SecondaryQueueURL,
 	}
 
 	for _, queueURL := range queueURLS {
