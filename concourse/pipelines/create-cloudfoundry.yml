@@ -1321,6 +1321,8 @@ jobs:
 
                 terraform init paas-cf/terraform/cloudfoundry
 
+                sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/cf.tfstate
+
                 terraform apply \
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
@@ -1366,6 +1368,8 @@ jobs:
                       cp cyber-tfstate/cyber.tfstate updated-tfstate/cyber.tfstate
 
                       terraform init paas-cf/terraform/cyber
+
+                      sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/cyber.tfstate
 
                       terraform apply \
                         -auto-approve=true \
