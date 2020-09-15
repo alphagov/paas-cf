@@ -27,7 +27,7 @@ var _ = Describe("SQS broker", func() {
 	})
 
 	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+		plans := cf.Cf("marketplace", "-e", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
 		Expect(plans.Out.Contents()).To(ContainSubstring(standardPlanName))
 		Expect(plans.Out.Contents()).To(ContainSubstring(fifoPlanName))
