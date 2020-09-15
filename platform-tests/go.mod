@@ -9,7 +9,6 @@ require (
 	github.com/aws/aws-sdk-go v1.4.22
 	github.com/bmizerany/pat v0.0.0-20160217103242-c068ca2f0aac // indirect
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20180906143114-149e140bbeec
-	github.com/cloudfoundry-incubator/cf-test-helpers v1.0.1-0.20190515214722-ff434af77d37
 	github.com/cloudfoundry-incubator/cf-test-helpers v1.0.1-0.20191216200933-cf8305784c93
 	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20200828223802-b48b42ece754
 	github.com/cloudfoundry/gofileutils v0.0.0-20170111115228-4d0c80011a0f // indirect
