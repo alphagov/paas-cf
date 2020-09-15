@@ -32,6 +32,9 @@ chmod +x "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
 cd "${PAAS_CF_DIR}"/"${WORKING_DIR}"
 
+# Update statefile
+terraform state replace-provider -state="$STATEFILE" -auto-approve  registry.terraform.io/-/pingdom registry.terraform.io/russellcardullo/pingdom
+
 # Initialise Terraform with remote state.
 terraform init \
   -backend=true \
