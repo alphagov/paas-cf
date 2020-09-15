@@ -6,9 +6,6 @@ import (
 
 type CatsConfig interface {
 	GetIncludeApps() bool
-	GetIncludeBackendCompatiblity() bool
-	GetIncludeCapiExperimental() bool
-	GetIncludeCapiNoBridge() bool
 	GetIncludeContainerNetworking() bool
 	GetIncludeCredhubAssisted() bool
 	GetIncludeCredhubNonAssisted() bool
@@ -30,12 +27,10 @@ type CatsConfig interface {
 	GetIncludeDeployments() bool
 	GetIncludeIsolationSegments() bool
 	GetIncludeRoutingIsolationSegments() bool
-	GetIncludeLoggingIsolationSegments() bool
 	GetIncludeServiceInstanceSharing() bool
 	GetIncludeTCPRouting() bool
 	GetIncludeWindows() bool
 	GetIncludeVolumeServices() bool
-	GetUseLogCache() bool
 	GetShouldKeepUser() bool
 	GetSkipSSLValidation() bool
 	GetUseExistingUser() bool
@@ -86,7 +81,6 @@ type CatsConfig interface {
 	GetVolumeServiceName() string
 	GetVolumeServicePlanName() string
 	GetVolumeServiceCreateConfig() string
-	GetVolumeServiceBindConfig() string
 
 	GetReporterConfig() reporterConfig
 
@@ -100,6 +94,8 @@ type CatsConfig interface {
 	SleepTimeoutDuration() time.Duration
 
 	GetPublicDockerAppImage() string
+
+	RunningOnK8s() bool
 }
 
 func NewCatsConfig(path string) (CatsConfig, error) {

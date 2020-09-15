@@ -14,7 +14,7 @@ var _ = Describe("PythonBuildpack", func() {
 		appName string
 	)
 
-	It("should not fail when pushing a python app without Procfile", func() {
+	XIt("should not fail when pushing a python app without Procfile", func() {
 		appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 		Expect(cf.Cf(
 			"push", appName,
@@ -23,7 +23,6 @@ var _ = Describe("PythonBuildpack", func() {
 			"-p", "../example-apps/simple-python-app",
 			"-b", "python_buildpack",
 			"-c", "python hello.py",
-			"-d", testConfig.GetAppsDomain(),
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 	})

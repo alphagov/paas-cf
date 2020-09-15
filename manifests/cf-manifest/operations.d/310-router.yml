@@ -1,12 +1,4 @@
 ---
-- type: replace
-  path: /releases/name=routing
-  value:
-    name: "routing"
-    version: "0.207.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/routing-release?v=0.207.0"
-    sha1: "9e703259a07f032e7ca96dca2730d0e0c2b61685"
-
 - type: remove
   path: /instance_groups/name=router/vm_extensions
 

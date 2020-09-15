@@ -15,13 +15,13 @@ import (
 
 var _ = Describe("Redis backing service", func() {
 	var (
-		plansToTestAgainst = []string {
+		plansToTestAgainst = []string{
 			"tiny-3.2",
 			"tiny-4.x",
 			"tiny-5.x",
 		}
 
-		knownPlanNames = []string {
+		knownPlanNames = []string{
 			"tiny-clustered-3.2",
 			"tiny-3.2",
 			"tiny-ha-3.2",
@@ -34,7 +34,7 @@ var _ = Describe("Redis backing service", func() {
 			"tiny-5.x",
 			"tiny-ha-5.x",
 			"small-ha-5.x",
-			"medium-ha-5.x",			
+			"medium-ha-5.x",
 		}
 	)
 
@@ -45,7 +45,7 @@ var _ = Describe("Redis backing service", func() {
 	})
 
 	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", "redis").Wait(testConfig.DefaultTimeoutDuration())
+		plans := cf.Cf("marketplace", "-e", "redis").Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
 
 		for _, name := range knownPlanNames {
@@ -90,7 +90,6 @@ var _ = Describe("Redis backing service", func() {
 						"-b", testConfig.GetGoBuildpackName(),
 						"-p", "../example-apps/healthcheck",
 						"-f", "../example-apps/healthcheck/manifest.yml",
-						"-d", testConfig.GetAppsDomain(),
 					).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 				})
 

@@ -23,7 +23,6 @@ var _ = Describe("X-Forwarded headers", func() {
 			"push", appName,
 			"-p", "../example-apps/http-tester",
 			"-f", "../example-apps/http-tester/manifest.yml",
-			"-d", testConfig.GetAppsDomain(),
 		).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 
 		curlArgs := []string{"-f", "-H", "X-Forwarded-Proto: IPoAC"}

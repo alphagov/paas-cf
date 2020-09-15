@@ -36,7 +36,6 @@ var _ = Describe("HTTP edge cases", func() {
 				"push", appName,
 				"-b", testConfig.GetRubyBuildpackName(),
 				"-p", "../../../cf-acceptance-tests/assets/dora",
-				"-d", testConfig.GetAppsDomain(),
 				"-i", "1",
 				"-m", "256M",
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
@@ -65,7 +64,6 @@ var _ = Describe("HTTP edge cases", func() {
 				"push", appName,
 				"-p", "../example-apps/http-tester",
 				"-f", "../example-apps/http-tester/manifest.yml",
-				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 		})
 
@@ -132,7 +130,6 @@ var _ = Describe("HTTP edge cases", func() {
 				"push", appName2,
 				"-p", "../example-apps/http-tester",
 				"-f", "../example-apps/http-tester/manifest.yml",
-				"-d", testConfig.GetAppsDomain(),
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			curlArgs := []string{"-k"}
 			response := helpers.CurlApp(testConfig, appName, fmt.Sprintf("/egress?domain=%s.%s", appName2, testConfig.GetAppsDomain()), curlArgs...)

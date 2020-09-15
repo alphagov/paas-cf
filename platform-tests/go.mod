@@ -10,7 +10,9 @@ require (
 	github.com/bmizerany/pat v0.0.0-20160217103242-c068ca2f0aac // indirect
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20180906143114-149e140bbeec
 	github.com/cloudfoundry-incubator/cf-test-helpers v1.0.1-0.20190515214722-ff434af77d37
-	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20190530185750-0dd6680ea367
+	github.com/cloudfoundry-incubator/cf-test-helpers v1.0.1-0.20191216200933-cf8305784c93
+	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20200828223802-b48b42ece754
+	github.com/cloudfoundry/gofileutils v0.0.0-20170111115228-4d0c80011a0f // indirect
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/concourse/atc v0.0.0-20160908214930-406261dbd768
 	github.com/concourse/go-concourse v0.0.0-20160910211037-b260442fef03
@@ -26,9 +28,10 @@ require (
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20150717051158-281073eb9eb0 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
-	github.com/onsi/ginkgo v1.6.0
-	github.com/onsi/gomega v1.4.1
+	github.com/onsi/ginkgo v1.9.0
+	github.com/onsi/gomega v1.6.0
 	github.com/peterhellberg/link v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.3.0
 	github.com/prometheus/common v0.7.0
