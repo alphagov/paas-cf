@@ -2,9 +2,6 @@
 
 set -eu
 TERRAFORM_ACTION=${1}
-PINGDOM_TF_VERSION=0.11.1
-PLUGIN_VERSION=0.2.3
-BINARY=terraform-provider-pingdom-tf-${PINGDOM_TF_VERSION}-$(uname -s)-$(uname -m)
 STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 
 # Get Pingdom credentials
@@ -19,18 +16,11 @@ PAAS_CF_DIR=$(pwd)
 WORKING_DIR=$(mktemp -d terraform-pingdom.XXXXXX)
 trap 'rm -r "${PAAS_CF_DIR}/${WORKING_DIR}"' EXIT
 
-if [ ! -d bin/ ]; then
-  mkdir bin/
-fi
-
-#wget can only check timestamp on a file in work dir
-cd bin/
-wget -N "https://github.com/alphagov/paas-terraform-provider-pingdom/releases/download/${PLUGIN_VERSION}/${BINARY}"
-cp ./"${BINARY}" "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
-chmod +x "${PAAS_CF_DIR}"/"${WORKING_DIR}"/terraform-provider-pingdom
-
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
 cd "${PAAS_CF_DIR}"/"${WORKING_DIR}"
+
+# Update statefile
+terraform state replace-provider -state="$STATEFILE" -auto-approve  registry.terraform.io/-/pingdom registry.terraform.io/russellcardullo/pingdom
 
 # Initialise Terraform with remote state.
 terraform init \

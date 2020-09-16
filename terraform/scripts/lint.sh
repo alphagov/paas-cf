@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -eu
-RELEASE=v1.1.1
-PINGDOM_TF_VERSION=v1.1.1
+RELEASE=v1.1.2
+PINGDOM_TF_VERSION=1.1.2
 BINARY=terraform-provider-pingdom_${PINGDOM_TF_VERSION}_$(go env GOOS)_$(go env GOARCH)
 
 # Setup the working grounds.
@@ -39,8 +39,9 @@ if [ "$(uname -s)" = "Darwin" ]; then
 
   rm -rf "${WORKING_DIR}/pingdom-provider"
 else
-  wget "https://github.com/russellcardullo/terraform-provider-pingdom/releases/download/${RELEASE}/${BINARY}" \
-    -O "${PLUGIN_DIR}/terraform-provider-pingdom_${RELEASE}"
+  wget "https://github.com/russellcardullo/terraform-provider-pingdom/releases/download/${RELEASE}/${BINARY}.zip" \
+    -O "${PLUGIN_DIR}/terraform-provider-pingdom_${RELEASE}.zip"
+  unzip -o "${PLUGIN_DIR}/terraform-provider-pingdom_${RELEASE}.zip" -d "${PLUGIN_DIR}"
   chmod +x "${PLUGIN_DIR}/terraform-provider-pingdom_${RELEASE}"
 fi
 
