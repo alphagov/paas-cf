@@ -9,11 +9,6 @@ module FixtureHelpers
     end
   end
 
-  def copy_ipsec_cert_fixtures(target_dir)
-    copy_fixture_file("ipsec-CA.crt", target_dir)
-    copy_fixture_file("ipsec-CA.key", target_dir)
-  end
-
   def copy_fixture_file(file, target_dir, target_file = file)
     FileUtils.mkdir(target_dir) unless Dir.exist?(target_dir)
     FileUtils.cp(fixtures_dir.join(file), "#{target_dir}/#{target_file}")

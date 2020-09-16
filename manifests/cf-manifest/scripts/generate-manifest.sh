@@ -21,8 +21,6 @@ fi
 
 # shellcheck disable=SC2086
 bosh interpolate \
-  --var-file ipsec_ca.private_key="${WORKDIR}/ipsec-CA/ipsec-CA.key" \
-  --var-file ipsec_ca.certificate="${WORKDIR}/ipsec-CA/ipsec-CA.crt" \
   --vars-file="${SHARED_MANIFEST_DIR}/data/aws-rds-combined-ca-bundle-pem.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/vpc.yml" \
   --vars-file="${WORKDIR}/terraform-outputs/bosh.yml" \
