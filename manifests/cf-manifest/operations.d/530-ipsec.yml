@@ -20,7 +20,7 @@
           targets: ((terraform_outputs_cell_subnet_cidr_blocks))
         certificate_authority_private_key: "((ipsec_ca.private_key))"
         certificate_authority_cert: "((ipsec_ca.certificate))"
-        level: require
+        level: use
         verify_certificate: 'on'
 
 - type: replace
@@ -35,5 +35,5 @@
           targets: ((terraform_outputs_router_subnet_cidr_blocks))
         certificate_authority_private_key: "((ipsec_ca.private_key))"
         certificate_authority_cert: "((ipsec_ca.certificate))"
-        level: require
+        level: use
         verify_certificate: 'on'
