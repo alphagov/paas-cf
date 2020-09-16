@@ -27,7 +27,7 @@ var _ = Describe("SQS broker", func() {
 	})
 
 	It("has the expected plans available", func() {
-		plans := cf.Cf("marketplace", "-s", serviceName).Wait(testConfig.DefaultTimeoutDuration())
+		plans := cf.Cf("marketplace", "-e", serviceName).Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
 		Expect(plans.Out.Contents()).To(ContainSubstring(standardPlanName))
 		Expect(plans.Out.Contents()).To(ContainSubstring(fifoPlanName))
@@ -66,7 +66,6 @@ var _ = Describe("SQS broker", func() {
 					"-b", testConfig.GetGoBuildpackName(),
 					"-p", "../example-apps/healthcheck",
 					"-f", "../example-apps/healthcheck/manifest.yml",
-					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
 
@@ -118,7 +117,6 @@ var _ = Describe("SQS broker", func() {
 					"-b", testConfig.GetGoBuildpackName(),
 					"-p", "../example-apps/healthcheck",
 					"-f", "../example-apps/healthcheck/manifest.yml",
-					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
 
@@ -129,7 +127,6 @@ var _ = Describe("SQS broker", func() {
 					"-b", testConfig.GetGoBuildpackName(),
 					"-p", "../example-apps/healthcheck",
 					"-f", "../example-apps/healthcheck/manifest.yml",
-					"-d", testConfig.GetAppsDomain(),
 				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
 			})
 
