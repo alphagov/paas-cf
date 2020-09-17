@@ -2102,6 +2102,8 @@ jobs:
                       health-check-type: http
                       health-check-http-endpoint: /
                       stack: cflinuxfs3
+                      services:
+                        - logit-syslog-drain
                       env:
                         GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
                         AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
@@ -4273,6 +4275,8 @@ jobs:
             METRICS_AWS_ACCESS_KEY_ID: ((metrics_aws_access_key_id))
             METRICS_AWS_SECRET_ACCESS_KEY: ((metrics_aws_secret_access_key))
 
+            LOGIT_ADDRESS: ((logit_syslog_address))
+            LOGIT_PORT: ((logit_syslog_port))
             LOGIT_ELASTICSEARCH_URL: ((logit_elasticsearch_url))
             LOGIT_ELASTICSEARCH_API_KEY: ((logit_elasticsearch_api_key))
           inputs:
@@ -4288,6 +4292,16 @@ jobs:
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf target -o admin -s monitoring
+
+                if ! cf service logit-syslog-drain > /dev/null; then
+                  cf create-user-provided-service \
+                    logit-syslog-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                else
+                  cf update-user-provided-service \
+                    logit-syslog-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                fi
 
                 cd paas-cf/tools/metrics
 
@@ -4321,6 +4335,7 @@ jobs:
                     app['routes'] = [
                       { 'route' => 'paas-metrics.${APPS_DNS_ZONE_NAME}' },
                     ]
+                    app['services'] = ['logit-syslog-drain']
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
@@ -4436,6 +4451,7 @@ jobs:
                   --var aws_region="$AWS_REGION" \
                   --var aws_access_key_id="$AWS_ACCESS_KEY_ID" \
                   --var aws_secret_access_key="$AWS_SECRET_ACCESS_KEY"
+                cf bind-service paas-prometheus-endpoint-redis logit-syslog-drain
 
       - *end-grafana-job-annotation
 
