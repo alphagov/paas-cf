@@ -8,6 +8,7 @@ import (
 	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
 	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
 	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/extensions/table"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
@@ -39,64 +40,67 @@ var _ = Describe("SQS broker", func() {
 			serviceInstanceName string
 		)
 
-		It("is accessible from the healthcheck app", func() {
+		DescribeTable("is access from the healthcheck app",
+			func(planName string) {
+				appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
+				serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-sqs-queue")
 
-			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
-			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-sqs-queue")
+				By("creating a queue service: "+serviceInstanceName, func() {
+					Expect(cf.Cf("create-service", serviceName, planName, serviceInstanceName, "-c", `{"message_retention_period": 60}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+					pollForServiceCreationCompletion(serviceInstanceName)
+				})
 
-			By("creating a standard queue service: "+serviceInstanceName, func() {
-				Expect(cf.Cf("create-service", serviceName, standardPlanName, serviceInstanceName, "-c", `{"message_retention_period": 60}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceCreationCompletion(serviceInstanceName)
-			})
+				defer By("deleting a queue service", func() {
+					Expect(cf.Cf("delete-service", serviceInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+					pollForServiceDeletionCompletion(serviceInstanceName)
+				})
 
-			defer By("deleting a standard queue service", func() {
-				Expect(cf.Cf("delete-service", serviceInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceDeletionCompletion(serviceInstanceName)
-			})
+				By("updating the service's queue retention period", func() {
+					Expect(cf.Cf("update-service", serviceInstanceName, "-c", `{"message_retention_period": 120}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+					pollForServiceUpdateCompletion(serviceInstanceName)
+				})
 
-			By("updating the service's queue retention period", func() {
-				Expect(cf.Cf("update-service", serviceInstanceName, "-c", `{"message_retention_period": 120}`).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceUpdateCompletion(serviceInstanceName)
-			})
+				By("pushing the healthcheck app", func() {
+					Expect(cf.Cf(
+						"push", appName,
+						"--no-start",
+						"-b", testConfig.GetGoBuildpackName(),
+						"-p", "../example-apps/healthcheck",
+						"-f", "../example-apps/healthcheck/manifest.yml",
+					).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+				})
 
-			By("pushing the healthcheck app", func() {
-				Expect(cf.Cf(
-					"push", appName,
-					"--no-start",
-					"-b", testConfig.GetGoBuildpackName(),
-					"-p", "../example-apps/healthcheck",
-					"-f", "../example-apps/healthcheck/manifest.yml",
-				).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
-			})
+				defer By("deleting the app", func() {
+					cf.Cf("delete", appName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+				})
 
-			defer By("deleting the app", func() {
-				cf.Cf("delete", appName, "-f").Wait(testConfig.DefaultTimeoutDuration())
-			})
+				By("binding the service", func() {
+					Expect(cf.Cf("bind-service", appName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+					pollForServiceBound(serviceInstanceName, appName)
+				})
 
-			By("binding the service", func() {
-				Expect(cf.Cf("bind-service", appName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceBound(serviceInstanceName, appName)
-			})
+				defer By("unbinding the service", func() {
+					Expect(cf.Cf("unbind-service", appName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+					pollForServiceUnbound(serviceInstanceName, appName)
+				})
 
-			defer By("unbinding the service", func() {
-				Expect(cf.Cf("unbind-service", appName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceUnbound(serviceInstanceName, appName)
-			})
+				By("starting the app", func() {
+					Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
+				})
 
-			By("starting the app", func() {
-				Expect(cf.Cf("start", appName).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
-			})
+				By("testing the SQS queue access from the app", func() {
+					resp, err := httpClient.Get(helpers.AppUri(appName, "/sqs-test", testConfig))
+					Expect(err).NotTo(HaveOccurred())
+					body, err := ioutil.ReadAll(resp.Body)
+					Expect(err).NotTo(HaveOccurred())
+					resp.Body.Close()
+					Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
+				})
 
-			By("testing the SQS queue access from the app", func() {
-				resp, err := httpClient.Get(helpers.AppUri(appName, "/sqs-test", testConfig))
-				Expect(err).NotTo(HaveOccurred())
-				body, err := ioutil.ReadAll(resp.Body)
-				Expect(err).NotTo(HaveOccurred())
-				resp.Body.Close()
-				Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
-			})
-
-		})
+			},
+			Entry("standard", standardPlanName),
+			Entry("fifo", fifoPlanName),
+		)
 	})
 
 	Context("multiple operations against a single queue", func() {
