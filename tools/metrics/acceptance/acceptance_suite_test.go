@@ -35,8 +35,8 @@ var (
 var _ = BeforeSuite(func() {
 	log.Printf("Running BeforeSuite")
 
-	SetDefaultEventuallyTimeout(2 * time.Minute)          // Fail after 1m
-	SetDefaultEventuallyPollingInterval(10 * time.Second) // Try every 10s
+	SetDefaultEventuallyTimeout(10 * time.Minute)         // Fail after 10m
+	SetDefaultEventuallyPollingInterval(20 * time.Second) // Try every 10s
 
 	SetDefaultConsistentlyDuration(10 * time.Second)       // Test for 10s
 	SetDefaultConsistentlyPollingInterval(1 * time.Second) // Try every 1s

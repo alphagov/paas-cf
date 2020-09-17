@@ -7,7 +7,7 @@ import (
 
 var _ = Describe("Currency", func() {
 	It("should return currency metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(metricFamilies).Should(SatisfyAll(
 			HaveKey("paas_currency_real_ratio"),
 		))
 	})
