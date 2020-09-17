@@ -5,6 +5,10 @@
   value: cf_rds_client_sg
 
 - type: replace
+  path: /instance_groups/name=uaa/instances
+  value: ((uaa_instances))
+
+- type: replace
   path: /instance_groups/name=uaa/jobs/name=route_registrar/properties/route_registrar/routes/name=uaa/server_cert_domain_san?
   value: uaa.service.cf.internal
 

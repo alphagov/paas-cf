@@ -1,4 +1,7 @@
 ---
+uaa_instances: 2
+nats_instances: 2
+diego_api_instances: 2
 cell_instances: 3
 router_instances: 2
 api_instances: 2

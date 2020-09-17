@@ -6,6 +6,10 @@
     cf_rds_client_sg
 
 - type: replace
+  path: /instance_groups/name=diego-api/instances
+  value: ((diego_api_instances))
+
+- type: replace
   path: /instance_groups/name=diego-api/jobs/name=bbs/properties/diego/bbs/require_ssl?
   value: true
 
