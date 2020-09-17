@@ -12,12 +12,6 @@ env:
     - SHELLCHECK_VERSION="0.7.1"
     - TMPDIR="/tmp"
 
-cache:
-  directories:
-    - /home/travis/.rvm/
-    - /home/travis/gopath/pkg
-    - /home/travis/.cache/pip
-
 addons:
   apt:
     sources:
