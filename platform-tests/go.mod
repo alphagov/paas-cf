@@ -29,8 +29,8 @@ require (
 	github.com/mitchellh/mapstructure v0.0.0-20150717051158-281073eb9eb0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
-	github.com/onsi/ginkgo v1.9.0
-	github.com/onsi/gomega v1.6.0
+	github.com/onsi/ginkgo v1.14.1
+	github.com/onsi/gomega v1.10.1
 	github.com/peterhellberg/link v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.3.0
 	github.com/prometheus/common v0.7.0
