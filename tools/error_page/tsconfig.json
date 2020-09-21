@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es2020",
+    "jsx" :  "react",
+    "lib": [
+      "es2020"
+    ],
+    "sourceMap": true,
+    "inlineSources": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "isolatedModules": false,
+    "pretty": true,
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "typeRoots" : ["./node_modules/@types", "./src/@types"]
+  },
+  "include": [
+    "config/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "docs",
+    "**test**"
+  ],
+  "types": []
+}

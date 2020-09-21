@@ -1,0 +1,12 @@
+@import "govuk-frontend/govuk/base";
+
+@import "govuk-frontend/govuk/core/all";
+@import "govuk-frontend/govuk/objects/all";
+
+@import "govuk-frontend/govuk/components/footer/index";
+@import "govuk-frontend/govuk/components/header/index";
+@import "govuk-frontend/govuk/components/skip-link/index";
+
+.govuk-header__logo {
+  width: auto;
+}
