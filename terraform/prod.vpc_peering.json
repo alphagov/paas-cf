@@ -70,5 +70,11 @@
         "account_id": "234617505259",
         "vpc_id": "vpc-08b7d799f1691fd11",
         "subnet_cidr": "172.16.36.0/22"
+    },
+    {
+        "peer_name": "govuk-pay-test",
+        "account_id": "734876687119",
+        "vpc_id": "vpc-0170bee868cc6fb34",
+        "subnet_cidr": "172.16.40.0/22"
     }
 ]
