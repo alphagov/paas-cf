@@ -18,11 +18,9 @@ import (
 const (
 	availabilityTestRate             = 10
 	availabilityTestMaxDuration      = 12 * time.Hour
-	availabilityTestMaxLatency       = 300 * time.Millisecond
-	availabilityTestMaxErrors        = 0
-	availabilitySuccessRateThreshold = 100.0
 	minimumTestDuration              = 15 * time.Second
 	maximumErrorRate                 = 0.5
+	availabilitySuccessRateThreshold = 100 - maximumErrorRate
 
 	vegetaRunForever = 0 * time.Second
 	vegetaKeepAlive  = true
