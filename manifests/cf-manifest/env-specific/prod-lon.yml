@@ -10,7 +10,7 @@ log_api_instances: 6
 scheduler_instances: 4
 cc_worker_instances: 4
 cc_hourly_rate_limit: 20000
-cc_staging_timeout_in_seconds: 2700
+cc_staging_timeout_in_seconds: 1800
 paas_region_name: london
 
 prometheus_disk_size: 750GB
