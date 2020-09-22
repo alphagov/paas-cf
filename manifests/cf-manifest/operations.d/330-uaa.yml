@@ -321,9 +321,9 @@
   path: /releases/-
   value:
     name: uaa-customized
-    version: 0.1.26
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-customized-0.1.26.tgz
-    sha1: 1194d2a4f87951e8939b1e2618e06f22542a7e73
+    version: 0.1.27
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-customized-0.1.27.tgz
+    sha1: 77e1d7ddeec7717446e0051cb3f279d5dbf9cdb4
 
 - type: replace
   path: /instance_groups/name=uaa/jobs/-
