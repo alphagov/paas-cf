@@ -8,8 +8,6 @@ const app = new Koa();
 app.use(async ctx => {
   const body = await render(ErrorPage(), { title: '{{ .StatusText }}' });
 
-console.log(body);
-
   ctx.body = body
     .replace(/{{ \.Status }}/g, '404')
     .replace(/{{ \.StatusText }}/g, 'Not Found')
