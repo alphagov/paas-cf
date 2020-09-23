@@ -110,7 +110,6 @@ private
     copy_terraform_fixtures("#{workdir}/terraform-outputs")
     copy_fixture_file("bosh-secrets.yml", "#{workdir}/bosh-secrets")
     copy_fixture_file("environment-variables.yml", workdir)
-    copy_ipsec_cert_fixtures("#{workdir}/ipsec-CA")
     render_vpc_peering_opsfile("#{workdir}/vpc-peering-opsfile", environment)
     render_tenant_uaa_clients_opsfile("#{workdir}/tenant-uaa-clients-opsfile", "manifests/cf-manifest/spec/fixtures/tenant-uaa-client-fixtures.yml", "dev")
 

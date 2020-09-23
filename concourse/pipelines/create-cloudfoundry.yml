@@ -471,16 +471,6 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh.tfstate
 
-  - name: ipsec-CA
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: ipsec-CA.tar.gz
-      initial_version: "-"
-      # This is an empty tar.gz file base64 encoded
-      initial_content_binary: "H4sICMtSp1YAA2NvbmNvdXJzZS1jZXJ0cy50YXIA7cEBDQAAAMKg909tDjegAAAAAAAAAAAAgDcDmt4dJwAoAAA="
-
   - name: git-ssh-private-key
     type: s3-iam
     source:
@@ -828,44 +818,7 @@ jobs:
           - get: pipeline-trigger
             passed: ['pipeline-lock']
             trigger: true
-          - get: ipsec-CA
       - in_parallel:
-        - task: generate-ipsec-CA
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: governmentpaas/certstrap
-                tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
-
-            inputs:
-              - name: paas-cf
-              - name: ipsec-CA
-                path: existing-ipsec-CA
-            outputs:
-              - name: generated-ipsec-CA
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  if  [ -z "$(tar -tvzf existing-ipsec-CA/ipsec-CA.tar.gz)" ] ; then
-                    certstrap init --years "10" --passphrase "" --common-name ipsec-CA
-                    (cd out && tar -cvzf ../generated-ipsec-CA/ipsec-CA.tar.gz ipsec-CA.*)
-                  else
-                    echo "The CA cert already exists, skipping generation..."
-                    cp existing-ipsec-CA/ipsec-CA.tar.gz generated-ipsec-CA/ipsec-CA.tar.gz
-                    mkdir out
-                    tar -xvzf generated-ipsec-CA/ipsec-CA.tar.gz -C out
-                  fi
-          on_success:
-            put: ipsec-CA
-            params:
-              file: generated-ipsec-CA/ipsec-CA.tar.gz
-
         - task: generate-cf-secrets
           tags: [colocated-with-web]
           config:
@@ -1440,7 +1393,6 @@ jobs:
             trigger: true
           - <<: *get-paas-cf
             passed: ['cf-terraform']
-          - get: ipsec-CA
           - get: vpc-tfstate
           - get: bosh-tfstate
           - get: cf-tfstate
@@ -1601,7 +1553,6 @@ jobs:
             image_resource: *gov-paas-bosh-cli-v2-image-resource
             inputs:
               - name: paas-cf
-              - name: ipsec-CA
               - name: terraform-outputs
               - name: vpc-peering-opsfile
               - name: tenant-uaa-clients-opsfile
@@ -1633,8 +1584,6 @@ jobs:
                   microsoft_oauth_issuer: $(cat ms-oauth-endpoints/issuer)
                   vcap_password: $VCAP_PASSWORD
                   EOF
-
-                  tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
 
                   ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
                     > cf-manifest/cf-manifest.yml
@@ -4724,8 +4673,6 @@ jobs:
             trigger: true
           - <<: *get-paas-cf
             passed: [rotate-certs]
-          - get: ipsec-CA
-            passed: [generate-cf-config]
 
       - task: check-certificates
         tags: [colocated-with-web]
@@ -4739,7 +4686,6 @@ jobs:
             CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
           inputs:
             - name: paas-cf
-            - name: ipsec-CA
           run:
             path: sh
             args:
@@ -4748,11 +4694,6 @@ jobs:
               - |
                 credhub login
                 ./paas-cf/concourse/scripts/check-certificates.rb 15
-
-                tar -xzf ./ipsec-CA/ipsec-CA.tar.gz -C ./ipsec-CA
-
-                echo "Checking if ipsec-CA.crt expires in the next 30 days"
-                openssl x509 -checkend 2592000 -noout -in ipsec-CA/ipsec-CA.crt
 
       - task: check-certificate-hierarchy
         tags: [colocated-with-web]
@@ -5440,7 +5381,6 @@ jobs:
         - get: check-certificates-timer
           trigger: true
         - <<: *get-paas-cf
-        - get: ipsec-CA
 
       - task: check-certificates
         tags: [colocated-with-web]
