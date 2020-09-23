@@ -1,5 +1,10 @@
 require "ipaddr"
 
+def is_egress_restricted(segment)
+  coredns = segment["jobs"].find { |j| j["name"] == "coredns" }
+  coredns != nil
+end
+
 RSpec.describe "isolation_segments" do
   describe "default" do
     let(:manifest) { manifest_with_defaults }
@@ -11,15 +16,15 @@ RSpec.describe "isolation_segments" do
         .fetch("targets")
     end
 
-    describe "dev-1" do
-      let(:instance_group) { manifest.fetch("instance_groups.diego-cell-iso-seg-dev-1") }
+    describe "egress-restricted-1" do
+      let(:instance_group) { manifest.fetch("instance_groups.diego-cell-iso-seg-egress-restricted-1") }
 
       it "is added to the manifest" do
         expect { instance_group }.not_to raise_error
       end
 
       it "correctly gets a single instance" do
-        expect(instance_group["instances"]).to eq(1)
+        expect(instance_group["instances"]).to eq(0)
       end
 
       it "correctly sets the vm_type when the size is changed" do
@@ -39,7 +44,7 @@ RSpec.describe "isolation_segments" do
             .dig("jobs")
             .find { |j| j["name"] == "rep" }
             .dig("properties", "diego", "rep", "placement_tags"),
-        ).to eq(%w[dev-1])
+        ).to eq(%w[egress-restricted-1])
       end
 
       it "has an override for vxlan-policy-agent provider" do
@@ -48,7 +53,7 @@ RSpec.describe "isolation_segments" do
             .dig("jobs")
             .find { |j| j["name"] == "vxlan-policy-agent" }
             .dig("provides"),
-        ).to eq("vpa" => { "as" => "vpa-dev-1" })
+        ).to eq("vpa" => { "as" => "vpa-egress-restricted-1" })
       end
 
       %w[silk-cni silk-daemon].each do |consumer|
@@ -58,14 +63,14 @@ RSpec.describe "isolation_segments" do
               .dig("jobs")
               .find { |j| j["name"] == consumer }
               .dig("consumes"),
-          ).to eq("vpa" => { "from" => "vpa-dev-1" })
+          ).to eq("vpa" => { "from" => "vpa-egress-restricted-1" })
         end
       end
 
       it "is added to bosh-dns-aliases for cells" do
         expect(bosh_dns_cell_aliases).to include(
           "query" => "_",
-          "instance_group" => "diego-cell-iso-seg-dev-1",
+          "instance_group" => "diego-cell-iso-seg-egress-restricted-1",
           "network" => "cell",
           "deployment" => "unit-test",
           "domain" => "bosh",
@@ -162,8 +167,8 @@ RSpec.describe "isolation_segments" do
       end
     end
 
-    describe "dev-2" do
-      let(:instance_group) { manifest.fetch("instance_groups.diego-cell-iso-seg-dev-2") }
+    describe "not-egress-restricted-1" do
+      let(:instance_group) { manifest.fetch("instance_groups.diego-cell-iso-seg-not-egress-restricted-1") }
 
       it "is added to the manifest" do
         expect { instance_group }.not_to raise_error
@@ -183,7 +188,7 @@ RSpec.describe "isolation_segments" do
             .dig("jobs")
             .find { |j| j["name"] == "rep" }
             .dig("properties", "diego", "rep", "placement_tags"),
-        ).to eq(%w[dev-2])
+        ).to eq(%w[not-egress-restricted-1])
       end
 
       it "has an override for vxlan-policy-agent provider" do
@@ -192,7 +197,7 @@ RSpec.describe "isolation_segments" do
             .dig("jobs")
             .find { |j| j["name"] == "vxlan-policy-agent" }
             .dig("provides"),
-        ).to eq("vpa" => { "as" => "vpa-dev-2" })
+        ).to eq("vpa" => { "as" => "vpa-not-egress-restricted-1" })
       end
 
       it "does not include the coredns job" do
@@ -219,18 +224,39 @@ RSpec.describe "isolation_segments" do
               .dig("jobs")
               .find { |j| j["name"] == consumer }
               .dig("consumes"),
-          ).to eq("vpa" => { "from" => "vpa-dev-2" })
+          ).to eq("vpa" => { "from" => "vpa-not-egress-restricted-1" })
         end
       end
 
       it "is added to bosh-dns-aliases for cells" do
         expect(bosh_dns_cell_aliases).to include(
           "query" => "_",
-          "instance_group" => "diego-cell-iso-seg-dev-2",
+          "instance_group" => "diego-cell-iso-seg-not-egress-restricted-1",
           "network" => "cell",
           "deployment" => "unit-test",
           "domain" => "bosh",
         )
+      end
+    end
+  end
+
+  describe "specific environments" do
+    # while we have no tenants using egress restricted isolation segments
+    # we test that they exist but are scaled to zero
+
+    let(:instance_groups) { manifest.fetch("instance_groups") }
+    let(:segs) { instance_groups.select { |i| i["name"] =~ /diego-cell-iso/ } }
+
+    %w[prod prod-lon stg-lon].each do |env|
+      describe env do
+        let(:manifest) { manifest_for_env(env) }
+
+        it "contains an empty egress restricted isolation segment" do
+          expect(segs.count).to eq(1)
+          seg = segs.first
+          expect(seg["instances"]).to eq(0)
+          expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
+        end
       end
     end
   end
