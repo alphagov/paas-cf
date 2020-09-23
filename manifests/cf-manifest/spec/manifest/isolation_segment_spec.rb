@@ -2,7 +2,7 @@ require "ipaddr"
 
 def is_egress_restricted(segment)
   coredns = segment["jobs"].find { |j| j["name"] == "coredns" }
-  coredns != nil
+  !coredns.nil?
 end
 
 RSpec.describe "isolation_segments" do
