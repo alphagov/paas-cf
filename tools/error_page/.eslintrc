@@ -1,0 +1,87 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/typescript",
+    "plugin:import/warnings"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "ignorePatterns": [
+    "coverage/",
+    "dist/",
+    "node_modules/"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "functional",
+    "import"
+  ],
+  "root": true,
+  "rules": {
+    "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/ban-types": ["error", {"types": {"{}": false, "object": false}}],
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/explicit-function-return-type": "warn",
+    "@typescript-eslint/naming-convention": ["error", { "selector": "function", "format": ["camelCase", "PascalCase"] }],
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/no-unused-vars": ["warn", {"argsIgnorePattern": "^_"}],
+    "@typescript-eslint/prefer-for-of": "error",
+    "@typescript-eslint/prefer-readonly": "error",
+    "@typescript-eslint/promise-function-async": "error",
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": ["error", "always-multiline"],
+    "functional/no-let": "warn",
+    "functional/prefer-readonly-type": ["warn", {"ignoreClass": true}],
+    "import/no-amd": "error",
+    "import/no-commonjs": "error",
+    "import/order": ["warn", {"alphabetize": {"order": "asc", "caseInsensitive": true}, "newlines-between": "always"}],
+    "linebreak-style": ["error", "unix"],
+    "max-len": ["warn", {"code": 120}],
+    "newline-before-return": "warn",
+    "no-case-declarations": "warn",
+    "no-console": "error",
+    "no-delete-var": "error",
+    "no-eval": "error",
+    "no-octal": "error",
+    "no-param-reassign": "error",
+    "no-sequences": "error",
+    "no-trailing-spaces": "warn",
+    "no-unused-expressions": "warn",
+    "object-curly-spacing": ["warn", "always"],
+    "prefer-const": "warn",
+    "prefer-object-spread": "warn",
+    "prefer-template": "warn",
+    "quotes": ["warn", "single"],
+    "require-await": "error",
+    "semi": ["error", "always"],
+    "sort-imports": ["warn", {"ignoreCase": true, "ignoreDeclarationSort": true}],
+    "sort-keys": ["warn", "asc", {"caseSensitive": false, "natural": false, "minKeys": 2}],
+    "use-isnan": "error"
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# http://EditorConfig.org
+# https://gds-way.cloudapps.digital/manuals/programming-languages/editorconfig
+
+root = true
+
+[*]
+indent_size = 2
+indent_style = space
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[**vendor**]
+indent_size =
+indent_style =
+charset =
+end_of_line =
+insert_final_newline =
+trim_trailing_whitespace =
+max_line_length =
