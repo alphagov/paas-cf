@@ -145,6 +145,10 @@ output "s3_broker_ip_restriction_policy_arn" {
   value = aws_iam_policy.s3_broker_user_ip_restriction.arn
 }
 
+output "restrict_to_local_ips_policy_arn" {
+  value = aws_iam_policy.restrict_to_local_ips.arn
+}
+
 output "sqs_broker_elb_name" {
   value = aws_elb.sqs_broker.name
 }
