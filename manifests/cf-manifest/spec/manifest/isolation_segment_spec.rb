@@ -83,13 +83,22 @@ RSpec.describe "isolation_segments" do
           .find { |j| j["name"] == "coredns" }
 
         expected_corefile = <<~COREFILE
-        .:53 {
+        (common) {
           health :8054
           ready
           log
           prometheus :9153
-          forward apps.internal 169.254.0.2:53
           bind 169.254.0.3
+        }
+
+        buildpacks.cloudfoundry.org {
+          import common
+          forward . 169.254.0.2:53
+        }
+
+        apps.internal {
+          import common
+          forward . 169.254.0.2:53
         }
         COREFILE
 
