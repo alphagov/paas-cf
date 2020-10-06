@@ -8,6 +8,7 @@
     rules:
       - alert: AuctioneerLockHeldOnce_Critical
         expr: "sum(firehose_value_metric_auctioneer_lock_held) != 1"
+        for: 10m
         labels:
           severity: critical
         annotations:
