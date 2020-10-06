@@ -7,7 +7,7 @@ import (
 
 var _ = Describe("TLS =", func() {
 	It("should return TLS cert metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(getMetrics).Should(SatisfyAll(
 			HaveKey("paas_tls_certificates_validity_days"),
 		))
 	})
