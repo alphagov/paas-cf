@@ -7,9 +7,9 @@ import (
 
 var _ = Describe("UAA", func() {
 	It("should return UAA user metrics", func() {
-		Eventually(getMetrics).Should(SatisfyAll(
-			HaveKey("paas_uaa_users_count"),
-			HaveKey("paas_uaa_active_users_count"),
+		Eventually(getMetricNames).Should(SatisfyAll(
+			ContainElement("paas_uaa_users_count"),
+			ContainElement("paas_uaa_active_users_count"),
 		))
 	})
 })

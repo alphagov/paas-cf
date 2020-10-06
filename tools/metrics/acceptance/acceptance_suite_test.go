@@ -32,10 +32,12 @@ var (
 	metricsURL = os.Getenv("PAAS_METRICS_URL")
 )
 
-func getMetrics() (map[string]*dto.MetricFamily, error) {
+func getMetricNames() ([]string, error) {
 	var (
 		err            error
 		metricFamilies map[string]*dto.MetricFamily
+
+		metricFamilyNames = []string{}
 	)
 
 	timeBetweenAttempts := 1 * time.Second
@@ -72,10 +74,14 @@ func getMetrics() (map[string]*dto.MetricFamily, error) {
 			time.Sleep(timeBetweenAttempts)
 			continue
 		}
-		return metricFamilies, nil
+		metricsLog.Printf("Parsed metrics")
+		for familyName := range metricFamilies {
+			metricFamilyNames = append(metricFamilyNames, familyName)
+		}
+		return metricFamilyNames, nil
 	}
 
-	return metricFamilies, err
+	return metricFamilyNames, err
 }
 
 var _ = BeforeSuite(func() {
@@ -87,15 +93,17 @@ var _ = BeforeSuite(func() {
 
 	Expect(metricsURL).ToNot(Equal(""), "PAAS_METRICS_URL was empty")
 
-	Eventually(getMetrics).ShouldNot(
+	By("Checking readiness")
+
+	Eventually(getMetricNames).ShouldNot(
 		BeEmpty(), "It returns metrics",
 	)
-	Consistently(getMetrics).ShouldNot(
+	Consistently(getMetricNames).ShouldNot(
 		BeEmpty(), "It consistently returns metrics",
 	)
 
-	Eventually(getMetrics).Should(WithTransform(
-		func(fams map[string]*dto.MetricFamily) int {
+	Eventually(getMetricNames).Should(WithTransform(
+		func(fams []string) int {
 			return len(fams)
 		},
 		BeNumerically(">=", numExpectedMetricFamilies),
@@ -105,4 +113,6 @@ var _ = BeforeSuite(func() {
 			numExpectedMetricFamilies,
 		),
 	)
+
+	By("Ready")
 })

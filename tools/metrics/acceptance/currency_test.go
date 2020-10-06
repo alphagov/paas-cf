@@ -7,8 +7,8 @@ import (
 
 var _ = Describe("Currency", func() {
 	It("should return currency metrics", func() {
-		Eventually(getMetrics).Should(SatisfyAll(
-			HaveKey("paas_currency_real_ratio"),
+		Eventually(getMetricNames).Should(SatisfyAll(
+			ContainElement("paas_currency_real_ratio"),
 		))
 	})
 })
