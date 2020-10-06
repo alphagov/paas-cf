@@ -28,13 +28,63 @@ func TestAcceptanceTests(t *testing.T) {
 }
 
 var (
-	metricsURL     = os.Getenv("PAAS_METRICS_URL")
-	metricFamilies map[string]*dto.MetricFamily
+	metricsLog = log.New(GinkgoWriter, "", log.LstdFlags)
+	metricsURL = os.Getenv("PAAS_METRICS_URL")
 )
 
-var _ = BeforeSuite(func() {
-	log.Printf("Running BeforeSuite")
+func getMetricNames() ([]string, error) {
+	var (
+		err            error
+		metricFamilies map[string]*dto.MetricFamily
 
+		metricFamilyNames = []string{}
+	)
+
+	timeBetweenAttempts := 1 * time.Second
+	maxAttempts := 5
+	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		if attempt > 1 {
+			time.Sleep(timeBetweenAttempts)
+		}
+
+		var resp *http.Response
+		resp, err = http.Get(metricsURL)
+		if err != nil {
+			metricsLog.Printf("Received error: %s", err)
+			time.Sleep(timeBetweenAttempts)
+			continue
+		}
+		metricsLog.Printf("Got HTTP %d from %s", resp.StatusCode, metricsURL)
+
+		if resp.StatusCode != 200 {
+			err = fmt.Errorf(
+				"Non-200 HTTP status code from paas-metrics: %d",
+				resp.StatusCode,
+			)
+			metricsLog.Printf("%s", err)
+			time.Sleep(timeBetweenAttempts)
+			continue
+		}
+
+		metricsLog.Printf("Parsing metrics")
+		parser := expfmt.TextParser{}
+		metricFamilies, err = parser.TextToMetricFamilies(resp.Body)
+		if err != nil {
+			metricsLog.Printf("Received error: %s", err)
+			time.Sleep(timeBetweenAttempts)
+			continue
+		}
+		metricsLog.Printf("Parsed metrics")
+		for familyName := range metricFamilies {
+			metricFamilyNames = append(metricFamilyNames, familyName)
+		}
+		return metricFamilyNames, nil
+	}
+
+	return metricFamilyNames, err
+}
+
+var _ = BeforeSuite(func() {
 	SetDefaultEventuallyTimeout(2 * time.Minute)          // Fail after 1m
 	SetDefaultEventuallyPollingInterval(10 * time.Second) // Try every 10s
 
@@ -43,53 +93,26 @@ var _ = BeforeSuite(func() {
 
 	Expect(metricsURL).ToNot(Equal(""), "PAAS_METRICS_URL was empty")
 
-	getRawMetrics := func() (int, error) {
-		log.Printf("Attempting to get metrics from %s", metricsURL)
+	By("Checking readiness")
 
-		resp, err := http.Get(metricsURL)
-		if err != nil {
-			log.Printf("Received error: %s", err)
-			return 0, err
-		}
-
-		log.Printf("Got HTTP %d from %s", resp.StatusCode, metricsURL)
-		return resp.StatusCode, nil
-	}
-
-	Eventually(getRawMetrics).Should(
-		BeNumerically("==", 200),
-		"It should eventually return a response",
+	Eventually(getMetricNames).ShouldNot(
+		BeEmpty(), "It returns metrics",
+	)
+	Consistently(getMetricNames).ShouldNot(
+		BeEmpty(), "It consistently returns metrics",
 	)
 
-	Consistently(getRawMetrics).Should(
-		BeNumerically("==", 200),
-		"It should consistently return a response",
-	)
-
-	Eventually(func() (int, error) {
-		log.Printf("Getting metrics for parsing from %s", metricsURL)
-
-		resp, err := http.Get(metricsURL)
-		if err != nil {
-			log.Printf("Received error: %s", err)
-			return 0, err
-		}
-
-		log.Printf("Parsing metrics")
-		parser := expfmt.TextParser{}
-		metricFamilies, err = parser.TextToMetricFamilies(resp.Body)
-		if err != nil {
-			log.Printf("Received error: %s", err)
-			return 0, err
-		}
-
-		log.Printf("Parsed %d metric families", len(metricFamilies))
-		return len(metricFamilies), nil
-	}).Should(
+	Eventually(getMetricNames).Should(WithTransform(
+		func(fams []string) int {
+			return len(fams)
+		},
 		BeNumerically(">=", numExpectedMetricFamilies),
+	),
 		fmt.Sprintf(
 			"It should return >= %d valid prometheus metrics",
 			numExpectedMetricFamilies,
 		),
 	)
+
+	By("Ready")
 })
