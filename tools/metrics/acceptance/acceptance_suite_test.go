@@ -28,9 +28,8 @@ func TestAcceptanceTests(t *testing.T) {
 }
 
 var (
-	metricsLog     = log.New(GinkgoWriter, "", log.LstdFlags)
-	metricsURL     = os.Getenv("PAAS_METRICS_URL")
-	metricFamilies map[string]*dto.MetricFamily
+	metricsLog = log.New(GinkgoWriter, "", log.LstdFlags)
+	metricsURL = os.Getenv("PAAS_METRICS_URL")
 )
 
 func getMetrics() (map[string]*dto.MetricFamily, error) {
@@ -101,33 +100,6 @@ var _ = BeforeSuite(func() {
 		},
 		BeNumerically(">=", numExpectedMetricFamilies),
 	),
-		fmt.Sprintf(
-			"It should return >= %d valid prometheus metrics",
-			numExpectedMetricFamilies,
-		),
-	)
-
-	Eventually(func() (int, error) {
-		log.Printf("Getting metrics for parsing from %s", metricsURL)
-
-		resp, err := http.Get(metricsURL)
-		if err != nil {
-			log.Printf("Received error: %s", err)
-			return 0, err
-		}
-
-		log.Printf("Parsing metrics")
-		parser := expfmt.TextParser{}
-		metricFamilies, err = parser.TextToMetricFamilies(resp.Body)
-		if err != nil {
-			log.Printf("Received error: %s", err)
-			return 0, err
-		}
-
-		log.Printf("Parsed %d metric families", len(metricFamilies))
-		return len(metricFamilies), nil
-	}).Should(
-		BeNumerically(">=", numExpectedMetricFamilies),
 		fmt.Sprintf(
 			"It should return >= %d valid prometheus metrics",
 			numExpectedMetricFamilies,
