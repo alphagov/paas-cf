@@ -7,7 +7,7 @@ import (
 
 var _ = Describe("Cloud Foundry", func() {
 	It("should return CF quota metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(getMetrics).Should(SatisfyAll(
 			HaveKey("paas_op_quota_memory_allocated_megabytes"),
 			HaveKey("paas_op_quota_memory_reserved_megabytes"),
 			HaveKey("paas_op_quota_routes_reserved_count"),
@@ -17,14 +17,14 @@ var _ = Describe("Cloud Foundry", func() {
 	})
 
 	It("should return CF application metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(getMetrics).Should(SatisfyAll(
 			HaveKey("paas_op_apps_count"),
 			HaveKey("paas_op_events_app_crash_count"),
 		))
 	})
 
 	It("should return CF org metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(getMetrics).Should(SatisfyAll(
 			HaveKey("paas_op_orgs_count"),
 			HaveKey("paas_op_spaces_count"),
 			HaveKey("paas_op_services_provisioned_count"),
@@ -33,14 +33,14 @@ var _ = Describe("Cloud Foundry", func() {
 	})
 
 	It("should return CF service metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(getMetrics).Should(SatisfyAll(
 			HaveKey("paas_op_services_provisioned_count"),
 			HaveKey("paas_op_users_count"),
 		))
 	})
 
 	It("should return CF user metrics", func() {
-		Expect(metricFamilies).To(SatisfyAll(
+		Eventually(getMetrics).Should(SatisfyAll(
 			HaveKey("paas_op_users_count"),
 		))
 	})
