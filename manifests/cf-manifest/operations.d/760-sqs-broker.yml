@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: sqs-broker
-    version: 0.1.6
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.1.6.tgz
-    sha1: 00f49f6597f6858a88c63825706a94a639a31dc0
+    version: 0.1.8
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.1.8.tgz
+    sha1: 55c741e1c968238cf4c2f03df80e7bfde8f46a75
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -37,6 +37,7 @@
             log_level: INFO
             aws_region: "((terraform_outputs_region))"
             resource_prefix: "paas-sqs-broker"
+            additional_user_policy: "((terraform_outputs_restrict_to_local_ips_policy_arn))"
             permissions_boundary: "((terraform_outputs_sqs_broker_permissions_boundary_arn))"
             deploy_environment: "((environment))"
             locket:
