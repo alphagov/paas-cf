@@ -26,7 +26,5 @@ use_existing_user: false
 include_container_networking: true
 name_prefix: ((name_prefix))
 include_isolation_segments: false
-isolation_segment_name: dev-1
-isolation_segment_domain: ((app_domain))
 stacks:
   - "cflinuxfs3"
