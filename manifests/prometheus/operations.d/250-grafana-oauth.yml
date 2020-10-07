@@ -20,5 +20,4 @@
 
 - type: replace
   path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/allowed_domains
-  value:
-    - digital.cabinet-office.gov.uk
+  value: digital.cabinet-office.gov.uk
