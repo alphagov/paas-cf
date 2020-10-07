@@ -670,9 +670,9 @@
                 "interval": null,
                 "links": [{
                     "targetBlank": true,
-                    "title": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts",
+                    "title": "Currently firing alerts",
                     "type": "absolute",
-                    "url": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts"
+                    "url": "https://grafana-1.__SYSTEM_DNS_ZONE_NAME__/explore?left=%5B\"now-24h\",\"now\",\"prometheus\",%7B\"expr\":\"ALERTS%7Balertstate%3D%5C\"firing%5C\",layer%3D%5C\"%5C\",alertname!~%5C\"%5ECFApp.*$%5C\"%7D\",\"format\":\"time_series\",\"instant\":true,\"intervalFactor\":1,\"legendFormat\":null,\"step\":null%7D,%7B\"ui\":%5Btrue,true,true,\"none\"%5D%7D%5D"
                 }],
                 "mappingType": 1,
                 "mappingTypes": [{
