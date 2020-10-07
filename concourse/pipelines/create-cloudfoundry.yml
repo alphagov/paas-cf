@@ -68,233 +68,43 @@ meta:
 
   tasks:
     - &add-grafana-job-annotation
-      put: metadata
-      on_success:
-        try:
-          task: add-grafana-job-annotation
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *curl-ssl-image-resource
-            inputs:
-              - name: metadata
-            outputs:
-              - name: annotation_details
-            params:
-                  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                  DEPLOY_ENV: ((deploy_env))
-                  SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-                  GRAFANA_PASS: ((grafana_password))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  AZ_COUNT=2
-                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                    AZ_COUNT=1
-                  fi
-                  START_TIME=$(date +%s000)
-                  BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
-                  BUILD_JOB_NAME=$(cat metadata/build_job_name)
-                  BUILD_NAME=$(cat metadata/build_name)
-                  post_data="$(cat <<DATA
-                  {
-                    "tags": [
-                      "deployment",
-                      "concourse",
-                      "incomplete",
-                      "${BUILD_PIPELINE_NAME}",
-                      "${BUILD_JOB_NAME}",
-                      "BUILD_ID=${BUILD_NAME}"
-                    ],
-                    "time": ${START_TIME},
-                    "isRegion": true,
-                    "timeEnd": ${START_TIME},
-                    "text": "Started ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME} #${BUILD_NAME}"
-                  }
-                  DATA
-                  )"
-                  for az in $(seq 1 ${AZ_COUNT}); do
-                    response="$(curl --request POST \
-                      --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations" \
-                      --user "admin:${GRAFANA_PASS}" \
-                      --header 'content-type: application/json' \
-                      --data "${post_data}" \
-                      --silent \
-                      --fail)"
-                    echo "${response}" | jq '.id' > "annotation_details/${az}"
-                  done
-                  echo "${START_TIME}" > "annotation_details/start_time"
+      try:
+        put: grafana-job-annotation
+        tags: [colocated-with-web]
+        params:
+          tags: [incomplete]
+
     - &end-grafana-job-annotation
       try:
-        task: end-grafana-job-annotation
+        put: grafana-job-annotation
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *curl-ssl-image-resource
-          inputs:
-            - name: metadata
-            - name: annotation_details
-          params:
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                DEPLOY_ENV: ((deploy_env))
-                SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-                GRAFANA_PASS: ((grafana_password))
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                AZ_COUNT=2
-                if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                  AZ_COUNT=1
-                fi
-                BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
-                BUILD_JOB_NAME=$(cat metadata/build_job_name)
-                BUILD_NAME=$(cat metadata/build_name)
-                patch_data="$(cat <<DATA
-                {
-                  "tags": [
-                    "deployment",
-                    "concourse",
-                    "completed",
-                    "${BUILD_PIPELINE_NAME}",
-                    "${BUILD_JOB_NAME}",
-                    "BUILD_ID=${BUILD_NAME}"
-                  ],
-                  "text": "${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME} #${BUILD_NAME}",
-                  "time": $(cat annotation_details/start_time),
-                  "isRegion": true,
-                  "timeEnd": $(date +%s000)
-                }
-                DATA
-                )"
-                for az in $(seq 1 ${AZ_COUNT}); do
-                  curl --request PUT \
-                    --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations/$(cat "annotation_details/${az}")" \
-                    --user "admin:${GRAFANA_PASS}" \
-                    --header 'content-type: application/json' \
-                    --data "${patch_data}" \
-                    --silent \
-                    --fail
-                done
+        params:
+          path: grafana-job-annotation
+          tags: [completed]
+
     - &add-grafana-overview-annotation
-      put: metadata
-      on_success:
-        try:
-          task: add-grafana-overview-annotation
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *curl-ssl-image-resource
-            inputs:
-              - name: metadata
-            outputs:
-              - name: marker_id
+      try:
+        do:
+          - put: grafana-overview-annotation
+            tags: [colocated-with-web]
             params:
-                  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                  DEPLOY_ENV: ((deploy_env))
-                  SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-                  GRAFANA_PASS: ((grafana_password))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  AZ_COUNT=2
-                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                    AZ_COUNT=1
-                  fi
-                  BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
-                  post_data="$(cat <<DATA
-                  {
-                    "tags": [
-                      "deployment-overview",
-                      "concourse",
-                      "incomplete",
-                      "${BUILD_PIPELINE_NAME}"
-                    ],
-                    "isRegion": true,
-                    "text": "Deployment of ${BUILD_PIPELINE_NAME} started"
-                  }
-                  DATA
-                  )"
-                  for az in $(seq 1 ${AZ_COUNT}); do
-                    response="$(curl --request POST \
-                      --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations" \
-                      --user "admin:${GRAFANA_PASS}" \
-                      --header 'content-type: application/json' \
-                      --data "${post_data}" \
-                      --silent \
-                      --fail)"
-                    echo "${response}" | jq '.id' >> "marker_id/overview_marker_id"
-                  done
-          on_success:
-            put: overview-marker-id
+              tags: [incomplete]
+
+          - put: grafana-overview-annotation-id
             params:
-              file: marker_id/overview_marker_id
+              file: grafana-overview-annotation/id
 
     - &end-grafana-overview-annotation
-      do:
-        - get: overview-marker-id
-        - put: metadata
-      on_success:
-        try:
-          task: end-grafana-overview-annotation
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *curl-ssl-image-resource
-            inputs:
-              - name: metadata
-              - name: overview-marker-id
+      try:
+        do:
+          - get: grafana-overview-annotation-id
+            passed: [pipeline-lock]
+
+          - put: grafana-overview-annotation
+            tags: [colocated-with-web]
             params:
-                  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                  DEPLOY_ENV: ((deploy_env))
-                  SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-                  GRAFANA_PASS: ((grafana_password))
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  AZ_COUNT=2
-                  if [ "${SLIM_DEV_DEPLOYMENT}" = "true" ]; then
-                    AZ_COUNT=1
-                  fi
-                  BUILD_PIPELINE_NAME=$(cat metadata/build_pipeline_name)
-                  patch_data="$(cat <<DATA
-                  {
-                    "tags": [
-                      "deployment-overview",
-                      "concourse",
-                      "completed",
-                      "${BUILD_PIPELINE_NAME}"
-                    ],
-                    "timeEnd": $(date +%s000),
-                    "text": "Deployment of ${BUILD_PIPELINE_NAME}"
-                  }
-                  DATA
-                  )"
-                  for az in $(seq 1 ${AZ_COUNT}); do
-                    this_grafana_annotation_id=$(sed -n "${az}p" overview-marker-id/overview_marker_id)
-                    curl --request PATCH \
-                      --url "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/annotations/${this_grafana_annotation_id}" \
-                      --user "admin:${GRAFANA_PASS}" \
-                      --header 'content-type: application/json' \
-                      --data "${patch_data}" \
-                      --silent \
-                      --fail
-                  done
+              path: grafana-overview-annotation-id
+              tags: [complete]
 
 groups:
   - name: deploy
@@ -405,12 +215,6 @@ resource_types:
     repository: concourse/pool-resource
     tag: 1.1.1
 
-- name: metadata
-  type: docker-image
-  source:
-    repository: olhtbr/metadata-resource
-    tag: 2.0.1
-
 - name: s3-iam
   type: docker-image
   source:
@@ -423,18 +227,13 @@ resource_types:
     repository: governmentpaas/semver-resource
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
+- name: grafana-annotation
+  type: docker-image
+  source:
+    repository: governmentpaas/grafana-annotation-resource
+    tag: 140506423e1194319fc1e2ed7f8d04a36ca61ae3
+
 resources:
-  - name: metadata
-    type: metadata
-
-  - name: overview-marker-id
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: overview_marker_id
-      initial_version: "-"
-
   - name: pipeline-trigger
     type: semver-iam
     source:
@@ -705,6 +504,47 @@ resources:
     source:
       uri: https://github.com/cloudfoundry/app-autoscaler-release.git
       branch: develop
+
+  - name: grafana-overview-annotation-id
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: grafana-overview-annotation-id/id
+
+  - name: grafana-overview-annotation
+    type: grafana-annotation
+    tags: [colocated-with-web]
+    source:
+      url: https://grafana-1.((system_dns_zone_name))
+      username: admin
+      password: ((grafana_password))
+
+      tags:
+        - deployment-overview
+        - concourse
+        - create-cloudfoundry
+
+      template: |
+        ${BUILD_PIPELINE_NAME}
+        ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}
+
+  - name: grafana-job-annotation
+    type: grafana-annotation
+    tags: [colocated-with-web]
+    source:
+      url: https://grafana-1.((system_dns_zone_name))
+      username: admin
+      password: ((grafana_password))
+
+      tags:
+        - deployment
+        - concourse
+        - create-cloudfoundry
+
+      template: |
+        ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}
+        ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}
 
 jobs:
   - name: pipeline-lock
