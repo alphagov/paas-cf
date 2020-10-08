@@ -20,6 +20,14 @@ if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${CF_MANIFEST_DIR}/operations/speed-up-deployment-dev.yml"
 fi
 
+# We are going to generate a manifest, as if we did not have any isolation
+# segments.
+#
+# We are then going to use the generated manifest as an input to the
+# isolation segment generation script, so that our isolation segment diego
+# cells instance groups are identical to regular diego cells, except for the
+# necessary changes.
+#
 # shellcheck disable=SC2086
 manifest_without_isolation_segments="$(
   bosh interpolate \
@@ -37,8 +45,8 @@ manifest_without_isolation_segments="$(
     "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"
 )"
 
+# Now we have a generated manifest, we can add our isolation segments
 manifest_with_isolation_segments="${manifest_without_isolation_segments}"
-
 for isolation_segment_definition in "${ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR}"/*.yml; do
   diego_cell_base="$(
     bosh interpolate --path /instance_groups/name=diego-cell - <<< "${manifest_without_isolation_segments}"
@@ -57,4 +65,5 @@ for isolation_segment_definition in "${ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR}"/*.y
   )"
 done
 
+# Now we have a manifest with isolation segments, ready for BOSH
 echo "$manifest_with_isolation_segments"
