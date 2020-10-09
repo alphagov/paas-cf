@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
 	"log"
 	"net/http"
@@ -150,6 +151,8 @@ func Main() error {
 		return errors.Wrap(err, "failed to create logit client")
 	}
 
+	healthService := health.NewService(sess)
+
 	// Combine all metrics into single stream
 	gauges := []m.MetricReader{
 		AppCountGauge(c, 5*time.Minute),                 // poll number of apps
@@ -177,6 +180,7 @@ func Main() error {
 		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
 		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
 		RDSDBInstancesGauge(logger, rdsService, 15*time.Minute),
+		AWSHealthEventsGauge(logger, awsRegion, healthService, 15*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))

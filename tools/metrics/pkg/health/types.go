@@ -7,3 +7,6 @@ import (
 type HealthService struct {
 	Client healthiface.HealthAPI
 }
+type HealthServiceInterface interface {
+	CountOpenEventsForServiceInRegion(service string, region string) (int, error)
+}
