@@ -1,16 +1,13 @@
 # code.cloudfoundry.org/gofileutils v0.0.0-20170111115228-4d0c80011a0f
 code.cloudfoundry.org/gofileutils/fileutils
 # code.cloudfoundry.org/lager v1.0.0
-## explicit
 code.cloudfoundry.org/lager
 # github.com/Masterminds/semver v1.4.2
 github.com/Masterminds/semver
 # github.com/alphagov/paas-elasticache-broker v0.18.0
-## explicit
 github.com/alphagov/paas-elasticache-broker/providers
 github.com/alphagov/paas-elasticache-broker/providers/redis
 # github.com/aws/aws-sdk-go v1.29.1
-## explicit
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
 github.com/aws/aws-sdk-go/aws/awserr
@@ -56,6 +53,8 @@ github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface
 github.com/aws/aws-sdk-go/service/costexplorer
 github.com/aws/aws-sdk-go/service/elasticache
 github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface
+github.com/aws/aws-sdk-go/service/health
+github.com/aws/aws-sdk-go/service/health/healthiface
 github.com/aws/aws-sdk-go/service/rds
 github.com/aws/aws-sdk-go/service/rds/rdsiface
 github.com/aws/aws-sdk-go/service/s3
@@ -65,27 +64,19 @@ github.com/aws/aws-sdk-go/service/secretsmanager
 github.com/aws/aws-sdk-go/service/sts
 github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973
-## explicit
 github.com/beorn7/perks/quantile
 # github.com/cloudfoundry-community/go-cfclient v0.0.0-20190808214049-35bcce23fc5f
-## explicit
 github.com/cloudfoundry-community/go-cfclient
 # github.com/cloudfoundry-community/go-uaa v0.2.2
-## explicit
 github.com/cloudfoundry-community/go-uaa
 github.com/cloudfoundry-community/go-uaa/passwordcredentials
-# github.com/davecgh/go-spew v1.1.1
-## explicit
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
-# github.com/gogo/protobuf v1.2.1
-## explicit
 # github.com/golang/protobuf v1.3.1
 github.com/golang/protobuf/proto
 # github.com/hashicorp/errwrap v1.0.0
 github.com/hashicorp/errwrap
 # github.com/hashicorp/go-multierror v1.0.0
-## explicit
 github.com/hashicorp/go-multierror
 # github.com/hpcloud/tail v1.0.0
 github.com/hpcloud/tail
@@ -94,7 +85,6 @@ github.com/hpcloud/tail/util
 github.com/hpcloud/tail/watch
 github.com/hpcloud/tail/winfile
 # github.com/jarcoal/httpmock v1.0.4
-## explicit
 github.com/jarcoal/httpmock
 # github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 github.com/jmespath/go-jmespath
@@ -103,14 +93,11 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.3
 github.com/mattn/go-isatty
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
-## explicit
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/miekg/dns v0.0.0-20171128074819-6da3249dfb57
-## explicit
 github.com/miekg/dns
 github.com/miekg/dns/internal/socket
 # github.com/onsi/ginkgo v1.8.0
-## explicit
 github.com/onsi/ginkgo
 github.com/onsi/ginkgo/config
 github.com/onsi/ginkgo/internal/codelocation
@@ -130,7 +117,6 @@ github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable
 github.com/onsi/ginkgo/reporters/stenographer/support/go-isatty
 github.com/onsi/ginkgo/types
 # github.com/onsi/gomega v1.5.0
-## explicit
 github.com/onsi/gomega
 github.com/onsi/gomega/format
 github.com/onsi/gomega/gbytes
@@ -146,34 +132,24 @@ github.com/onsi/gomega/matchers/support/goraph/edge
 github.com/onsi/gomega/matchers/support/goraph/node
 github.com/onsi/gomega/matchers/support/goraph/util
 github.com/onsi/gomega/types
-# github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
-## explicit
 # github.com/pkg/errors v0.9.1
-## explicit
 github.com/pkg/errors
 # github.com/prometheus/client_golang v0.9.1
-## explicit
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
 # github.com/prometheus/client_model v0.0.0-20180712105110-5c3871d89910
-## explicit
 github.com/prometheus/client_model/go
 # github.com/prometheus/common v0.0.0-20181126121408-4724e9255275
-## explicit
 github.com/prometheus/common/expfmt
 github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg
 github.com/prometheus/common/model
 # github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d
-## explicit
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/util
 github.com/prometheus/procfs/nfs
 github.com/prometheus/procfs/xfs
-# github.com/satori/go.uuid v1.2.0
-## explicit
 # golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678
-## explicit
 golang.org/x/crypto/ed25519
 golang.org/x/crypto/ed25519/internal/edwards25519
 # golang.org/x/net v0.0.0-20200202094626-16171245cfb2
@@ -187,7 +163,6 @@ golang.org/x/oauth2
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
 # golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4
-## explicit
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/encoding
@@ -215,12 +190,9 @@ google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/remote_api
 google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/urlfetch
-# gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15
-## explicit
 # gopkg.in/fsnotify.v1 v1.4.7
 gopkg.in/fsnotify.v1
 # gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
 gopkg.in/tomb.v1
 # gopkg.in/yaml.v2 v2.2.8
-## explicit
 gopkg.in/yaml.v2
