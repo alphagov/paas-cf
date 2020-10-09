@@ -1,0 +1,12 @@
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AWSHealthActiveEvents
+    rules:
+      - alert: AWSHealth_ActiveEvents
+        expr: "sum(paas_aws_health_active_events) > 0"
+        labels:
+          severity: warning
+        annotations:
+          summary: "AWS Health is reporting {{$value}} active health events on 1 or more services (see metric labels)"
