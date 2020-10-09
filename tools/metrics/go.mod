@@ -14,9 +14,10 @@ require (
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/jarcoal/httpmock v1.0.4
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
+	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.3 // indirect
 	github.com/miekg/dns v0.0.0-20171128074819-6da3249dfb57
 	github.com/onsi/ginkgo v1.8.0
-	github.com/onsi/gomega v1.5.0
+	github.com/onsi/gomega v1.9.0
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v0.9.1
