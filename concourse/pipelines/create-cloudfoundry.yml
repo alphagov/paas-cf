@@ -2676,7 +2676,7 @@ jobs:
 
                 ./paas-cf/concourse/scripts/set_quotas_from_manifest.rb cf-manifest/cf-manifest.yml
 
-      - task: enable-diego_docker-feature-flag
+      - task: enable-diego-docker-feature-flag
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -2699,7 +2699,7 @@ jobs:
 
                 cf enable-feature-flag diego_docker
 
-      - task: enable-service_instance_sharing-feature-flag
+      - task: enable-service-instance-sharing-feature-flag
         tags: [colocated-with-web]
         config:
           platform: linux
