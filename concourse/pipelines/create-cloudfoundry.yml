@@ -98,7 +98,16 @@ meta:
       try:
         do:
           - get: grafana-overview-annotation-id
-            passed: [pipeline-lock]
+
+          - task: consume-grafana-overview-annotation-id
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              inputs:
+                - name: grafana-overview-annotation-id
+              image_resource: *cf-cli-image-resource
+              run:
+                path: echo
 
           - put: grafana-overview-annotation
             tags: [colocated-with-web]
