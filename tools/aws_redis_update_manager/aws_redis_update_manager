@@ -49,14 +49,6 @@ parser = OptionParser.new do |opts|
     options[:maintenance_window_time_range] = r
   end
 
-  opts.on("--alt-maintenance-window-date DATE", "Alternative maintenance window date") do |d|
-    options[:alt_maintenance_window_date] = d
-  end
-
-  opts.on("--alt-maintenance-window-time-range RANGE", "Alternative maintenance window time range") do |r|
-    options[:alt_maintenance_window_time_range] = r
-  end
-
   opts.on("--region REGION", 'Region: ["London", "Ireland"]') do |r|
     options[:region] = r
   end
@@ -90,8 +82,6 @@ when "email", "preview"
 
   abort "Please specify --maintenance-window-date" if options[:maintenance_window_date].nil?
   abort "Please specify --maintenance-window-time-range" if options[:maintenance_window_time_range].nil?
-  abort "Please specify --alt-maintenance-window-date" if options[:alt_maintenance_window_date].nil?
-  abort "Please specify --alt-maintenance-window-time-range" if options[:alt_maintenance_window_time_range].nil?
 
   abort "Please specify --region" if options[:region].nil?
 end
@@ -108,8 +98,6 @@ when "email"
     notify_api_key: options[:notify_api_key],
     maintenance_window_date: options[:maintenance_window_date],
     maintenance_window_time_range: options[:maintenance_window_time_range],
-    alt_maintenance_window_date: options[:alt_maintenance_window_date],
-    alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
     region: options[:region],
   )
 when "preview"
@@ -120,8 +108,6 @@ when "preview"
     notify_api_key: options[:notify_api_key],
     maintenance_window_date: options[:maintenance_window_date],
     maintenance_window_time_range: options[:maintenance_window_time_range],
-    alt_maintenance_window_date: options[:alt_maintenance_window_date],
-    alt_maintenance_window_time_range: options[:alt_maintenance_window_time_range],
     region: options[:region],
   )
 when "print"

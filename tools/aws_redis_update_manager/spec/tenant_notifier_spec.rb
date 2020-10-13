@@ -25,9 +25,6 @@ RSpec.describe TenantNotifier do
   let(:maintenance_window_date) { "2038/01/19" }
   let(:maintenance_window_time_range) { "2000-2100" }
 
-  let(:alt_maintenance_window_date) { "2038/01/19" }
-  let(:alt_maintenance_window_time_range) { "2000-2100" }
-
   context "when generating an email" do
     let(:contents) do
       TenantNotifier.new(notify_api_key).generate_email_contents(
@@ -35,8 +32,6 @@ RSpec.describe TenantNotifier do
         service_instances: service_instances,
         maintenance_window_date: maintenance_window_date,
         maintenance_window_time_range: maintenance_window_time_range,
-        alt_maintenance_window_date: alt_maintenance_window_date,
-        alt_maintenance_window_time_range: alt_maintenance_window_time_range,
         region: "London",
       )
     end
@@ -63,12 +58,6 @@ RSpec.describe TenantNotifier do
       )
     end
 
-    it "includes the alternative maintenance window" do
-      expect(contents).to match(
-        "on #{alt_maintenance_window_date}, between #{alt_maintenance_window_time_range}",
-      )
-    end
-
     it "includes the region" do
       expect(contents).to match(
         "(London)",
@@ -85,8 +74,6 @@ RSpec.describe TenantNotifier do
         service_instances: service_instances,
         maintenance_window_date: maintenance_window_date,
         maintenance_window_time_range: maintenance_window_time_range,
-        alt_maintenance_window_date: alt_maintenance_window_date,
-        alt_maintenance_window_time_range: alt_maintenance_window_time_range,
         region: "London",
       )
     end
@@ -104,8 +91,6 @@ RSpec.describe TenantNotifier do
             service_instances: service_instances,
             maintenance_window_date: maintenance_window_date,
             maintenance_window_time_range: maintenance_window_time_range,
-            alt_maintenance_window_date: alt_maintenance_window_date,
-            alt_maintenance_window_time_range: alt_maintenance_window_time_range,
             region: "London",
           ),
         )),

@@ -56,8 +56,6 @@ class TenantNotifier
 
   # If the timing of the update doesn’t work for you
 
-  We can offer you the alternative time slot of <%= alt_maintenance_window_date %> between <%= alt_maintenance_window_time_range %>.
-
   Please reply to this email to request this alternative slot.
 
   If you have any further questions, please contact GOV.UK PaaS support on gov-uk-paas-support@digital.cabinet-office.gov.uk.
@@ -72,7 +70,6 @@ class TenantNotifier
     org_name:,
     service_instances:,
     maintenance_window_date:, maintenance_window_time_range:,
-    alt_maintenance_window_date:, alt_maintenance_window_time_range:,
     region:
   )
     ERB.new(TEMPLATE).result_with_hash(
@@ -80,8 +77,6 @@ class TenantNotifier
       service_instances: service_instances,
       maintenance_window_date: maintenance_window_date,
       maintenance_window_time_range: maintenance_window_time_range,
-      alt_maintenance_window_date: alt_maintenance_window_date,
-      alt_maintenance_window_time_range: alt_maintenance_window_time_range,
       region: region,
     )
   end
@@ -91,7 +86,6 @@ class TenantNotifier
     org_name:,
     service_instances:,
     maintenance_window_date:, maintenance_window_time_range:,
-    alt_maintenance_window_date:, alt_maintenance_window_time_range:,
     region:
   )
     contents = generate_email_contents(
@@ -99,8 +93,6 @@ class TenantNotifier
       service_instances: service_instances,
       maintenance_window_date: maintenance_window_date,
       maintenance_window_time_range: maintenance_window_time_range,
-      alt_maintenance_window_date: alt_maintenance_window_date,
-      alt_maintenance_window_time_range: alt_maintenance_window_time_range,
       region: region,
     )
 
