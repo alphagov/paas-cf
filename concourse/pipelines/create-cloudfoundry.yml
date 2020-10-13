@@ -98,7 +98,6 @@ meta:
       try:
         do:
           - get: grafana-overview-annotation-id
-            passed: [pipeline-lock]
 
           - put: grafana-overview-annotation
             tags: [colocated-with-web]
