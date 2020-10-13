@@ -74,8 +74,6 @@ class AwsRedisUpdateManager
     notify_api_key:,
     maintenance_window_date:,
     maintenance_window_time_range:,
-    alt_maintenance_window_date:,
-    alt_maintenance_window_time_range:,
     region:
   )
     example_service_instance = OpenStruct.new(
@@ -96,8 +94,6 @@ class AwsRedisUpdateManager
       service_instances: [example_service_instance],
       maintenance_window_date: maintenance_window_date,
       maintenance_window_time_range: maintenance_window_time_range,
-      alt_maintenance_window_date: alt_maintenance_window_date,
-      alt_maintenance_window_time_range: alt_maintenance_window_time_range,
       region: region,
     )
 
@@ -108,8 +104,6 @@ class AwsRedisUpdateManager
     notify_api_key:,
     maintenance_window_date:,
     maintenance_window_time_range:,
-    alt_maintenance_window_date:,
-    alt_maintenance_window_time_range:,
     region:
   )
     cf_org_finder = CloudFoundryOrgFinder.new
@@ -134,8 +128,6 @@ class AwsRedisUpdateManager
             service_instances: org_service_instances,
             maintenance_window_date: maintenance_window_date,
             maintenance_window_time_range: maintenance_window_time_range,
-            alt_maintenance_window_date: alt_maintenance_window_date,
-            alt_maintenance_window_time_range: alt_maintenance_window_time_range,
             region: region,
           )
 
