@@ -1,4 +1,7 @@
 ---
+display:
+  background_image: ((background_image_url))
+
 meta:
   resources:
     get-paas-cf: &get-paas-cf

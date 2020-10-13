@@ -67,6 +67,25 @@ elif [ "${DEPLOY_ENV}" = "stg-lon" ]; then
   deploy_env_tag_prefix="v[0-9]*" # this matches all tags created by release ci
 fi
 
+case $DEPLOY_ENV in
+prod-lon)
+  # Flag of Greater London
+  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/2/25/Flag_of_Greater_London.svg"
+  ;;
+prod)
+  # Flag of the City of Dublin
+  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/IRL_Dublin_flag.svg/1500px-IRL_Dublin_flag.svg.png"
+  ;;
+stg-lon)
+  # The Minack Theatre in Cornwall
+  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/1/16/Minack_Theatre.jpg"
+  ;;
+*)
+  # A large inflatable duck
+  BACKGROUND_IMAGE_URL="https://si.wsj.net/public/resources/images/BN-EX226_duck_G_20141008024653.jpg"
+  ;;
+esac
+
 generate_vars_file() {
   cat <<EOF
 ---
@@ -109,6 +128,7 @@ monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}
 deploy_env_tag_prefix: "${deploy_env_tag_prefix}"
 skip_autodelete_await: "${SKIP_AUTODELETE_AWAIT:-false}"
 ca_rotation_expiry_days: "${CA_ROTATION_EXPIRY_DAYS}"
+background_image_url: ${BACKGROUND_IMAGE_URL}
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
