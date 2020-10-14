@@ -1,0 +1,9 @@
+---
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=_.cell.service.cf.internal/targets/-
+  value:
+    query: _
+    instance_group: diego-cell-iso-seg-((isolation_segment_name))
+    network: cell
+    deployment: ((deployment_name))
+    domain: bosh

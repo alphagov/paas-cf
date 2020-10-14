@@ -54,3 +54,17 @@
 - type: replace
   path: /instance_groups/name=diego-cell/networks/0/name
   value: cell
+
+# Override the vpa bosh link, so that we can add isolation segments
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/provides?/vpa?
+  value:
+    as: vpa-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=silk-cni/consumes?/vpa?
+  value:
+    from: vpa-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=silk-daemon/consumes?/vpa?
+  value:
+    from: vpa-default

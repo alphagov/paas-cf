@@ -19,6 +19,9 @@ xlarge_vm_spot_bid_price: 0.1
 cell_instance_type: r5.xlarge
 cell_vm_spot_bid_price: 0.15
 
+small_cell_instance_type: r5.large
+small_cell_vm_spot_bid_price: 0.06
+
 router_instance_type: c5.large
 router_vm_spot_bid_price: 0.042
 

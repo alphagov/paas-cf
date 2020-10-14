@@ -18,9 +18,9 @@
   path: /releases/-
   value:
     name: observability
-    version: 0.1.8
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/observability-0.1.8.tgz
-    sha1: f5488f128cbc0cd906519ced14a8ddfd863af9aa
+    version: 0.1.10
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/observability-0.1.10.tgz
+    sha1: 49da65697f70999b8a40942953334d974b04e596
 
 - type: replace
   path: /variables/-

@@ -1,0 +1,5 @@
+---
+number_of_cells: 0
+isolation_segment_name: egress-restricted-1
+isolation_segment_size: small
+restricted_egress: true

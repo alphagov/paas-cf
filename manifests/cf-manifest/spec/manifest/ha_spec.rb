@@ -8,6 +8,7 @@ RSpec.describe "high availability" do
     perm_groups
       .reject { |i| i["name"] =~ /broker/ }
       .reject { |i| i["name"] == "prometheus" }
+      .reject { |i| i["name"] =~ /^diego-cell-iso-seg-/ }
   end
 
   describe "london" do

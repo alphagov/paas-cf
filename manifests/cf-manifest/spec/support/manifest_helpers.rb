@@ -34,6 +34,7 @@ module ManifestHelpers
       environment: deploy_env,
       vars_store_file: nil,
       env_specific_bosh_vars_file: "#{deploy_env}.yml",
+      env_specific_isolation_segments_dir: deploy_env,
     )
   end
 
@@ -103,7 +104,8 @@ private
   def render_manifest(
     environment:,
     vars_store_file: nil,
-    env_specific_bosh_vars_file: "default.yml"
+    env_specific_bosh_vars_file: "default.yml",
+    env_specific_isolation_segments_dir: "default"
   )
     workdir = Dir.mktmpdir("paas-cf-test")
 
@@ -117,6 +119,7 @@ private
       "PAAS_CF_DIR" => root.to_s,
       "WORKDIR" => workdir,
       "ENV_SPECIFIC_BOSH_VARS_FILE" => root.join("manifests/cf-manifest/env-specific/#{env_specific_bosh_vars_file}").to_s,
+      "ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR" => root.join("manifests/cf-manifest/isolation-segments/#{env_specific_isolation_segments_dir}").to_s,
     }
 
     if vars_store_file
@@ -135,7 +138,8 @@ private
   def render_manifest_with_vars_store(
     environment:,
     custom_vars_store_content: nil,
-    env_specific_bosh_vars_file: "default.yml"
+    env_specific_bosh_vars_file: "default.yml",
+    env_specific_isolation_segments_dir: "default"
   )
     Tempfile.open(["vars-store", ".yml"]) do |vars_store_tempfile|
       vars_store_tempfile << (custom_vars_store_content || Cache.instance[:vars_store])
@@ -145,6 +149,7 @@ private
         environment: environment,
         vars_store_file: vars_store_tempfile.path,
         env_specific_bosh_vars_file: env_specific_bosh_vars_file,
+        env_specific_isolation_segments_dir: env_specific_isolation_segments_dir,
       )
 
       Cache.instance[:vars_store] = File.read(vars_store_tempfile) if custom_vars_store_content.nil?
