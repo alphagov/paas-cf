@@ -13,7 +13,7 @@ credhub_namespaces = [
   "/#{deploy_env}/#{deploy_env}",
 ]
 
-mailchimp_api_key = ENV["MAILCHIMP_API_KEY"] || get_secret("mailchimp/#{ENV['MAKEFILE_ENV_TARGET']}/api_key") || '__MAILCHIMP_API_KEY__'
+mailchimp_api_key = ENV["MAILCHIMP_API_KEY"] || get_secret("mailchimp/#{ENV['MAKEFILE_ENV_TARGET']}/api_key") || "__NO_MAILCHIMP_API_KEY__"
 
 upload_secrets(
   credhub_namespaces,
