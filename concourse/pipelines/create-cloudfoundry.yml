@@ -3919,6 +3919,7 @@ jobs:
             - name: paas-admin-manifest
           params:
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            MAILCHIMP_API_KEY: ((mailchimp_api_key))
             NOTIFY_API_KEY: ((notify_api_key))
             NOTIFY_PWD_RESET_TEMPLATE_ID: d1b440c0-7c45-4c6a-a7cb-10feaa491e52
             NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
@@ -3945,6 +3946,7 @@ jobs:
                     BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_SECRET: ((paas_accounts_password))
+                    MAILCHIMP_API_KEY: "${MAILCHIMP_API_KEY}"
                     NOTIFY_API_KEY: "${NOTIFY_API_KEY}"
                     NOTIFY_PASSWORD_RESET_TEMPLATE_ID: "${NOTIFY_PWD_RESET_TEMPLATE_ID}"
                     NOTIFY_WELCOME_TEMPLATE_ID: "${NOTIFY_WELCOME_TEMPLATE_ID}"
