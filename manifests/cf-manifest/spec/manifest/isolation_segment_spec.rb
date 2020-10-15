@@ -256,7 +256,7 @@ RSpec.describe "isolation_segments" do
     let(:instance_groups) { manifest.fetch("instance_groups") }
     let(:segs) { instance_groups.select { |i| i["name"] =~ /diego-cell-iso/ } }
 
-    %w[prod prod-lon stg-lon].each do |env|
+    %w[prod stg-lon].each do |env|
       describe env do
         let(:manifest) { manifest_for_env(env) }
 
@@ -266,6 +266,17 @@ RSpec.describe "isolation_segments" do
           expect(seg["instances"]).to eq(0)
           expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
         end
+      end
+    end
+
+    describe "prod-lon" do
+      let(:manifest) { manifest_for_env("prod-lon") }
+
+      it "contains an non-empty egress restricted isolation segment" do
+        expect(segs.count).to eq(1)
+        seg = segs.first
+        expect(seg["instances"]).to eq(2)
+        expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
       end
     end
   end
