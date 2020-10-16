@@ -14,7 +14,6 @@ require (
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/jarcoal/httpmock v1.0.4
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/maxbrunsfeld/counterfeiter/v6 v6.2.3 // indirect
 	github.com/miekg/dns v0.0.0-20171128074819-6da3249dfb57
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.9.0
@@ -25,8 +24,10 @@ require (
 	github.com/prometheus/common v0.0.0-20181126121408-4724e9255275
 	github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
+	github.com/sclevine/spec v1.4.0 // indirect
 	golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678 // indirect
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
+	golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
