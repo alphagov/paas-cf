@@ -56,7 +56,7 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-vars-store.yml
 
-  - name: bosh-CA-crt
+  - name: bosh-ca-crt
     type: s3-iam
     source:
       bucket: ((state_bucket))
@@ -121,7 +121,7 @@ jobs:
           - get: bosh-vars-store
           - get: paas-cf
           - get: cf-manifest
-          - get: bosh-CA-crt
+          - get: bosh-ca-crt
 
       - task: get-cf-cli-config
         tags: [colocated-with-web]
@@ -167,10 +167,10 @@ jobs:
           inputs:
             - name: bosh-vars-store
             - name: paas-cf
-            - name: bosh-CA-crt
+            - name: bosh-ca-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: bosh-CA-crt/bosh-CA.crt
+            BOSH_CA_CERT: bosh-ca-crt/bosh-CA.crt
           outputs:
             - name: deployed-healthcheck
           run:
