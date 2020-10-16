@@ -51,6 +51,14 @@ generate-fakes:
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go \
 		S3API
 
+	counterfeiter -o pkg/health/fakes/fake_health_client.go \
+		vendor/github.com/aws/aws-sdk-go/service/health/healthiface/interface.go \
+		HealthAPI
+
+	counterfeiter -o pkg/health/fakes/fake_health_service.go \
+		pkg/health/types.go \
+		HealthServiceInterface
+
 	find pkg -name 'fake*.go' | xargs $(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||"
 
 .PHONY: run

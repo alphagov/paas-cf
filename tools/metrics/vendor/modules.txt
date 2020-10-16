@@ -56,6 +56,8 @@ github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface
 github.com/aws/aws-sdk-go/service/costexplorer
 github.com/aws/aws-sdk-go/service/elasticache
 github.com/aws/aws-sdk-go/service/elasticache/elasticacheiface
+github.com/aws/aws-sdk-go/service/health
+github.com/aws/aws-sdk-go/service/health/healthiface
 github.com/aws/aws-sdk-go/service/rds
 github.com/aws/aws-sdk-go/service/rds/rdsiface
 github.com/aws/aws-sdk-go/service/s3
@@ -129,7 +131,7 @@ github.com/onsi/ginkgo/reporters/stenographer
 github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable
 github.com/onsi/ginkgo/reporters/stenographer/support/go-isatty
 github.com/onsi/ginkgo/types
-# github.com/onsi/gomega v1.5.0
+# github.com/onsi/gomega v1.9.0
 ## explicit
 github.com/onsi/gomega
 github.com/onsi/gomega/format
@@ -172,6 +174,8 @@ github.com/prometheus/procfs/nfs
 github.com/prometheus/procfs/xfs
 # github.com/satori/go.uuid v1.2.0
 ## explicit
+# github.com/sclevine/spec v1.4.0
+## explicit
 # golang.org/x/crypto v0.0.0-20200210222208-86ce3cb69678
 ## explicit
 golang.org/x/crypto/ed25519
@@ -207,6 +211,10 @@ golang.org/x/text/internal/utf8internal
 golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
+# golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898
+## explicit
+golang.org/x/xerrors
+golang.org/x/xerrors/internal
 # google.golang.org/appengine v1.6.1
 google.golang.org/appengine/internal
 google.golang.org/appengine/internal/base
