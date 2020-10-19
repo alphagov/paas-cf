@@ -323,7 +323,7 @@ showenv: ## Display environment information
 	@scripts/showenv.sh
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-mailchimp-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets
+upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
@@ -342,12 +342,6 @@ upload-splunk-secrets: check-env ## Decrypt and upload Splunk HEC Tokens to Cred
 	$(if $(wildcard ${PAAS_HIGH_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_HIGH_PASSWORD_STORE_DIR} (PAAS_HIGH_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_HIGH_PASSWORD_STORE_DIR})
 	@scripts/upload-secrets/upload-splunk-secrets.rb
-
-.PHONY: upload-mailchimp-secrets
-upload-mailchimp-secrets: check-env ## Decrypt and upload MailChimp Credentials to Credhub
-	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
-	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	@scripts/upload-secrets/upload-mailchimp-secrets.rb
 
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to Credhub
