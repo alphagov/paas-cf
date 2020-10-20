@@ -8,10 +8,13 @@ require "English"
 require "yaml"
 require "tempfile"
 
-def get_secret(path)
+def get_secret(path, default = nil)
   out = `pass "#{path}"`
-  abort out unless $CHILD_STATUS.success?
-  out
+
+  return out if $CHILD_STATUS.success?
+  return default.to_s unless default.nil?
+
+  abort out
 end
 
 def upload_secrets(credhub_namespaces, secrets)
