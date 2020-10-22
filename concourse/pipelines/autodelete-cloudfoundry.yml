@@ -3,13 +3,13 @@ resource_types:
 - name: s3-iam
   type: docker-image
   source:
-    repository: governmentpaas/s3-resource
+    repository: ghcr.io/alphagov/paas/s3-resource
     tag: 97e441efbfb06ac7fb09786fd74c64b05f9cc907
 
 - name: semver-iam
   type: docker-image
   source:
-    repository: governmentpaas/semver-resource
+    repository: ghcr.io/alphagov/paas/semver-resource
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
 resources:
@@ -132,7 +132,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/bosh-cli-v2
+              repository: ghcr.io/alphagov/paas/bosh-cli-v2
               tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
           run:
             path: sh
@@ -168,7 +168,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/awscli
+              repository: ghcr.io/alphagov/paas/awscli
               tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh

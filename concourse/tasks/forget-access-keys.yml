@@ -3,7 +3,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: governmentpaas/terraform
+    repository: ghcr.io/alphagov/paas/terraform
     tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
 
 inputs:

@@ -20,7 +20,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/is-the-best
+              repository: ghcr.io/alphagov/paas/is-the-best
           inputs:
             - name: my-git-repo
           run:

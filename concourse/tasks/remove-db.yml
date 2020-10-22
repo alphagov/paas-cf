@@ -6,7 +6,7 @@ inputs:
 image_resource:
   type: docker-image
   source:
-    repository: governmentpaas/cf-cli
+    repository: ghcr.io/alphagov/paas/cf-cli
     tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
 
 run:
