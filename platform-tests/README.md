@@ -15,7 +15,7 @@ The tests have the following dependencies:
 * [`godep`](https://github.com/tools/godep)
 
 When running on concourse, these use our [cf-acceptance-tests
-container](https://hub.docker.com/r/governmentpaas/cf-acceptance-tests/).
+container](https://github.com/orgs/alphagov/packages/container/package/paas%2Fcf-acceptance-tests).
 
 ## Running the tests
 

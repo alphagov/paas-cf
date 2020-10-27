@@ -10,7 +10,7 @@ params:
 image_resource:
   type: registry-image
   source:
-    repository: governmentpaas/awscli
+    repository: ghcr.io/alphagov/paas/awscli
     tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
 
 run:

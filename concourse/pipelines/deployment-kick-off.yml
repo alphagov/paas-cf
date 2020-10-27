@@ -60,7 +60,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/awscli
+              repository: ghcr.io/alphagov/paas/awscli
               tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
 
           run:
@@ -75,7 +75,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/self-update-pipelines
+              repository: ghcr.io/alphagov/paas/self-update-pipelines
               tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
 
           inputs:
@@ -108,7 +108,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: governmentpaas/self-update-pipelines
+              repository: ghcr.io/alphagov/paas/self-update-pipelines
               tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
 
           inputs:

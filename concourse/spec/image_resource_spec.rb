@@ -27,9 +27,9 @@ RSpec.describe "image resources" do
     end
   end
 
-  describe "governmentpaas docker images" do
+  describe "ghcr.io/alphagov/paas docker images" do
     image_tags_by_repo
-      .select { |repo, _| repo.match?(%r{^governmentpaas/}) }
+      .select { |repo, _| repo.match?(%r{^ghcr.io/alphagov/paas/}) }
       .each do |repo, tags|
       context "repo #{repo}" do
         it "has only one tag" do
@@ -44,7 +44,7 @@ RSpec.describe "image resources" do
 
     describe "things that are not resource types" do
       image_tags_by_repo
-        .select { |repo, _| repo.match?(%r{^governmentpaas/}) }
+        .select { |repo, _| repo.match?(%r{^ghcr.io/alphagov/paas/}) }
         .reject { |repo, _| repo.match?(/-resource$/) }
         .to_h.values .flatten .uniq.tap do |all_tags|
           it "onlies have one tag" do
