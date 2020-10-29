@@ -30,7 +30,7 @@
             "name": "tiny-6.x",
             "aiven_plan": "startup-4",
             "elasticsearch_version": "6",
-            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space. Free for trial orgs. Costs for billable orgs.",
             "free": true,
             "metadata": {
               "displayName": "Tiny",
@@ -136,7 +136,7 @@
             "name": "tiny-7.x",
             "aiven_plan": "startup-4",
             "elasticsearch_version": "7",
-            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space.",
+            "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space. Free for trial orgs. Costs for billable orgs.",
             "free": true,
             "metadata": {
               "displayName": "Tiny",
@@ -269,7 +269,7 @@
             "id": "f636ed93-3354-4173-b8bd-031f54866528",
             "name": "tiny-1.x",
             "aiven_plan": "startup-4",
-            "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 4GB RAM per VM, 16GB disk space.",
+            "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 4GB RAM per VM, 16GB disk space. Free for trial orgs. Costs for billable orgs.",
             "free": true,
             "metadata": {
               "displayName": "Tiny",

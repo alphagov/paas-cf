@@ -41,7 +41,7 @@
   value:
     id: "6edc74d2-7eec-41bc-a0be-ae69c4e1cebb"
     name: "tiny-unencrypted-5.7-high-iops"
-    description: "25GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t3.micro."
+    description: "25GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 5.7. DB Instance Class: db.t3.micro. Free for trial orgs. Costs for billable orgs."
     free: true
     metadata:
       AdditionalMetadata:

@@ -41,7 +41,7 @@
   value:
     id: 821e5039-2dde-433c-95ec-db998fdad7fd
     name: "tiny-unencrypted-8.0"
-    description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 8.0. DB Instance Class: db.t3.micro."
+    description: "5GB Storage, NOT BACKED UP, Dedicated Instance. MySQL Version 8.0. DB Instance Class: db.t3.micro.  Free for trial orgs. Costs for billable orgs."
     free: true
     metadata:
       AdditionalMetadata:

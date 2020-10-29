@@ -103,7 +103,7 @@
   value:
     id: "9adbd87b-1ce8-4f9b-8562-b57041988fbe"
     name: "tiny-unencrypted-11"
-    description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.micro."
+    description: "5GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 11. DB Instance Class: db.t3.micro. Free for trial orgs. Costs for billable orgs."
     free: true
     metadata:
       AdditionalMetadata:
