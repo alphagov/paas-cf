@@ -27,6 +27,11 @@ func (hs HealthService) CountOpenEventsForServiceInRegion(service string, region
 			Regions: []*string {
 				aws.String(region),
 			},
+			EventTypeCategories: []*string {
+				aws.String(awshealth.EventTypeCategoryInvestigation),
+				aws.String(awshealth.EventTypeCategoryIssue),
+				aws.String(awshealth.EventTypeCategoryScheduledChange),
+			},
 		},
 		// We don't really expect there to be >100
 		// open events for a single service.

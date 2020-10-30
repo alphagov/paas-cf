@@ -74,5 +74,23 @@ var _ = Describe("Service", func() {
 			Expect(err).To(HaveOccurred())
 			Expect(count).To(Equal(-1))
 		})
+
+		It("excludes account events", func() {
+			healthAPI.DescribeEventsReturns(&awshealth.DescribeEventsOutput{
+				Events:    []*awshealth.Event{},
+			}, nil)
+
+			_ , err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
+
+			Expect(err).ToNot(HaveOccurred())
+			Expect(healthAPI.DescribeEventsCallCount()).To(Equal(1))
+
+			callZero := healthAPI.DescribeEventsArgsForCall(0)
+			Expect(callZero.Filter.EventTypeCategories).To(ConsistOf(
+				aws.String(awshealth.EventTypeCategoryInvestigation),
+				aws.String(awshealth.EventTypeCategoryIssue),
+				aws.String(awshealth.EventTypeCategoryScheduledChange),
+			))
+		})
 	})
 })
