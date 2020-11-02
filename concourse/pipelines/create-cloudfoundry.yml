@@ -3135,6 +3135,7 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          timeout: 5m
           params:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
@@ -3199,6 +3200,7 @@ jobs:
             task: remove-temp-user
             tags: [colocated-with-web]
             file: paas-cf/concourse/tasks/delete_admin.yml
+            timeout: 5m
             params:
               DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
               API_ENDPOINT: ((api_endpoint))
@@ -3309,6 +3311,7 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          timeout: 5m
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -3369,6 +3372,7 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          timeout: 5m
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -3460,6 +3464,7 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          timeout: 5m
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -3858,6 +3863,7 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          timeout: 5m
           params:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
@@ -4434,6 +4440,7 @@ jobs:
           task: remove-temp-user
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/delete_admin.yml
+          timeout: 5m
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -5174,6 +5181,7 @@ jobs:
             - task: remove-temp-user
               tags: [colocated-with-web]
               file: paas-cf/concourse/tasks/delete_admin.yml
+              timeout: 5m
               params:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
@@ -5237,6 +5245,7 @@ jobs:
             - task: remove-temp-user
               tags: [colocated-with-web]
               file: paas-cf/concourse/tasks/delete_admin.yml
+              timeout: 5m
               params:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
