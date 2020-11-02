@@ -1,9 +1,41 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/id
-  value: 656a9276-a1f6-4646-aade-08f0a51b29ed
-
-- type: replace
-  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/plans/name=autoscaler-free-plan/id
-  value: 64d9552f-eede-439a-b49d-1efe17fccb1b
+  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler
+  value:
+    id: 656a9276-a1f6-4646-aade-08f0a51b29ed
+    name: autoscaler
+    description: App instances autoscaler
+    bindable: true
+    AdditionalMetadata:
+      usecase:
+        - Scaling at peak times
+        - Coordinating with sudden traffic increase
+    tags:
+      - autoscale
+      - app
+      - instance
+      - schedule
+      - rules
+    metadata:
+      displayName: Autoscaler
+      longDescription: Apps can be configured to dynamically increase or decrease the number of running instances using autoscaling.
+      providerDisplayName: GOV.UK PaaS
+      documentationUrl: https://docs.cloud.service.gov.uk/managing_apps.html#autoscaling
+      supportUrl: https://admin.london.cloud.service.gov.uk/support
+      shareable: false
+    plans:
+    - id: 64d9552f-eede-439a-b49d-1efe17fccb1b
+      name: autoscaler-free-plan
+      description: Configurable autoscaler to dynamically manage the number of instances of your application.
+      free: true
+      metadata:
+        AdditionalMetadata:
+          backups: false
+          highlyAvailable: false
+          version: standard
+        displayName: Default
+        bullets:
+          - "Custom scaling rules"
+          - "Custom scaling limits"
+          - "Scheduled scaling"
