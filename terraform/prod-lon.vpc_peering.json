@@ -18,6 +18,12 @@
         "subnet_cidr": "172.16.8.0/22"
     },
     {
+        "peer_name": "dit-services_activity-stream",
+        "account_id": "165562107270",
+        "vpc_id": "vpc-04290c3a77ac9036b",
+        "subnet_cidr": "172.16.12.0/22"
+    },
+    {
         "peer_name": "dit-staging_datasci-dev",
         "account_id": "165562107270",
         "vpc_id": "vpc-074a7e7c7b4eccc8c",
