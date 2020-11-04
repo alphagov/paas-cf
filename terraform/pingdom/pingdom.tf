@@ -25,6 +25,7 @@ resource "pingdom_check" "paas_http_healthcheck" {
   encryption               = true
   resolution               = 1
   sendnotificationwhendown = 2
+  responsetime_threshold   = 3000
   notifywhenbackup         = true
   userids                  = var.pingdom_contact_ids
 }
@@ -38,6 +39,7 @@ resource "pingdom_check" "paas_db_healthcheck" {
   encryption               = true
   resolution               = 1
   sendnotificationwhendown = 2
+  responsetime_threshold   = 3000
   notifywhenbackup         = true
   userids                  = var.pingdom_contact_ids
 }
@@ -51,6 +53,7 @@ resource "pingdom_check" "cf_api_healthcheck" {
   encryption               = true
   resolution               = 1
   sendnotificationwhendown = 2
+  responsetime_threshold   = 3000
   notifywhenbackup         = true
   userids                  = var.pingdom_contact_ids
 }
@@ -64,6 +67,7 @@ resource "pingdom_check" "paas_admin_healthcheck" {
   encryption               = true
   resolution               = 1
   sendnotificationwhendown = 2
+  responsetime_threshold   = 3000
   notifywhenbackup         = true
   userids                  = var.pingdom_contact_ids
 }
