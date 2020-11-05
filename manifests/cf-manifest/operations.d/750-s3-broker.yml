@@ -72,7 +72,7 @@
                   plans:
                     - id: 24efab31-8cbd-47c0-8513-a9345f3c512b
                       name: default
-                      description: A single S3 bucket
+                      description: "A single S3 bucket. Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Default

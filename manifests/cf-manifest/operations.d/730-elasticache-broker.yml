@@ -133,7 +133,7 @@
                     # 3.2
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
                       name: tiny-3.2
-                      description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
+                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -191,7 +191,7 @@
                     # 4.x
                     - id: b78c9d07-a031-495f-937c-28613905431c
                       name: tiny-4.x
-                      description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
+                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -277,7 +277,7 @@
                     # 5.x
                     - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
                       name: tiny-5.x
-                      description: 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019)
+                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny

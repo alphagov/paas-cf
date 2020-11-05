@@ -73,7 +73,7 @@
                   plans:
                     - id: 8ff216b8-afed-4833-a265-cd1f2feb919d
                       name: standard
-                      description: A standard SQS queue
+                      description: "A standard SQS queue. Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Standard
@@ -82,7 +82,7 @@
 
                     - id: ac129e8a-6423-4792-aa0c-3a192408b3da
                       name: fifo
-                      description: A FIFO (first-in-first-out) SQS queue
+                      description: "A FIFO (first-in-first-out) SQS queue. Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: FIFO
