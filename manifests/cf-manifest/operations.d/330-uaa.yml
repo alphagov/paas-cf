@@ -134,18 +134,6 @@
     secret: ((secrets_uaa_clients_paas_auditor_secret))
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-vault-plugin?
-  value:
-    access-token-validity: 1209600
-    authorities: cloud_controller.admin_read_only,uaa.resource
-    authorized-grant-types: client_credentials,refresh_token,authorization_code
-    autoapprove: true
-    override: true
-    redirect-uri: https://vault-plugin.((system_domain))/oauth/callback
-    scope: openid,oauth.approvals,cloud_controller.admin_read_only,cloud_controller.read,cloud_controller.global_auditor,cloud_controller.admin
-    secret: ((secrets_uaa_clients_paas_vault_plugin_secret))
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-metrics?
   value:
     access-token-validity: 1209600
@@ -318,11 +306,6 @@
   path: /variables/-
   value:
     name: secrets_uaa_clients_paas_auditor_secret
-    type: password
-- type: replace
-  path: /variables/-
-  value:
-    name: secrets_uaa_clients_paas_vault_plugin_secret
     type: password
 - type: replace
   path: /variables/-

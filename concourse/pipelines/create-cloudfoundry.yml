@@ -1648,7 +1648,6 @@ jobs:
                 UAA_ADMIN_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_admin_client_secret")
                 UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
                 UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
-                UAA_CLIENTS_PAAS_VAULT_PLUGIN_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_vault_plugin_secret")
                 UAA_CLIENTS_PAAS_PROMETHEUS_ENDPOINTS_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret")
                 SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
                 CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/custom_broker_acceptance_prometheus_password")
@@ -4809,7 +4808,6 @@ jobs:
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_login_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_notifications_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret" -t password
-              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_vault_plugin_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_metrics_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret" -t password
