@@ -323,7 +323,7 @@ showenv: ## Display environment information
 	@scripts/showenv.sh
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-mailchimp-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets
+upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-mailchimp-secrets upload-cronitor-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
@@ -348,6 +348,12 @@ upload-mailchimp-secrets: check-env ## Decrypt and upload MailChimp Credentials 
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-secrets/upload-mailchimp-secrets.rb
+
+.PHONY: upload-cronitor-secrets
+upload-cronitor-secrets: check-env ## Decrypt and upload Cronitor secrets to Credhub
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@scripts/upload-secrets/upload-cronitor-secrets.rb
 
 .PHONY: upload-notify-secrets
 upload-notify-secrets: check-env ## Decrypt and upload Notify Credentials to Credhub

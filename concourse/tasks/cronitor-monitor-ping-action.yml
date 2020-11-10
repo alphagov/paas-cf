@@ -1,0 +1,16 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/cf-acceptance-tests
+    tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
+
+run:
+  path: sh
+  args:
+  - -e
+  - -c
+  - |
+    curl -m 10 "https://cronitor.link/${CRONITOR_SMOKE_TEST_MONITOR_CODE}/${CRONITOR_MONITOR_PING_ENDPOINT}?auth_key=${CRONITOR_PING_API_KEY}&host=${DEPLOY_ENV}&series=${CCI_BUILD_NUMBER}&message=${CRONITOR_PING_MESSAGE}" || true
+
